@@ -1,0 +1,20 @@
+uniform mat4 projTransform;
+
+uniform vec4 ambientColor;
+
+attribute vec4 vPosition;
+attribute vec2 vTexture;
+attribute vec4 vColor;
+attribute vec4 vAddColor;
+
+varying vec2 texCoord;
+varying vec4 color;
+varying vec4 addColor;
+
+void main() {
+	gl_Position = projTransform * vPosition;
+	texCoord = vTexture;
+	color = vColor * ambientColor;
+	color = vec4(color.r*color.a,color.g*color.a,color.b*color.a,color.a);
+	addColor = vAddColor * ambientColor;
+}

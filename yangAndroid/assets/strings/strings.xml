@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello</string>
+    <string name="testText">
+		This is a\n
+		text\n
+		\tand a \ttab
+    </string>
+    <string name="app_name">A Touch of Ninja</string>
+	
+	<string name="ch0Title">Ninja school</string>
+	<string name="ch1Title">Ninja school 2</string>
+	<string name="ch2Title">Rise of the Ninja</string>
+	<string name="ch3Title">The Last Ninja</string>
+	
+	<string name="ch0Caption">Tutorial</string>
+	<string name="ch1Caption">Chapter 1</string>
+	<string name="ch2Caption">Chapter 2</string>
+	<string name="ch3Caption">Chapter 3</string>
+	
+	<string name="ch0lvlCaption">Level T-%1</string>
+	<string name="ch1lvlCaption">Level 1-%1</string>
+	<string name="ch2lvlCaption">Level 2-%1</string>
+	<string name="ch3lvlCaption">Level 3-%1</string>
+	
+	<string name="goalTitleNoBulletTime"	>No Bullet time</string>
+	<string name="goalTitleNoDeath"			>Don\'t die</string>
+	<string name="goalTitleKillNoEnemies"	>Kill no Enemies</string>
+	<string name="goalTitleKillAllEnemies"	>Kill all Enemies</string>
+	<string name="goalTitleNotSeen"			>Finish unsighted</string>
+	<string name="goalTitleFinishLevel"		>Finish the Level</string>
+	<string name="goalTitleFinishInTime"	>Finish in %4s</string>
+	<string name="goalTitleKillUnsighted"	>Kill all unsighted</string>
+	<string name="goalTitleCollectCoins"	>Collect all Coins</string>
+	
+	<string name="goalDescriptionNoBulletTime"	>Finish the level\nwithout using\nbullet-time</string>
+	<string name="goalDescriptionNoDeath"		>Finish the level\nwithout dying</string>
+	<string name="goalDescriptionKillNoEnemies"	>Finish the level\nwithout killing\na single enemy</string>
+	<string name="goalDescriptionKillAllEnemies">Kill all enemies\nbefore finishing\nthe level</string>
+	<string name="goalDescriptionNotSeen"		>Finish the level\nwithout being\nseen by enemies</string>
+	<string name="goalDescriptionFinishLevel"	>Finish the level</string>
+	<string name="goalDescriptionFinishInTime"	>Finish the level\nwithin %4 seconds</string>
+	<string name="goalDescriptionKillUnsighted"	>Kill all enemies\nwhile not being\nseen by them</string>
+	<string name="goalDescriptionCollectCoins"	>Find and collect\nall coins in \nthis level</string>
+	
+	<string name="score">Score</string>
+	<string name="settings">Settings</string>
+	<string name="sound">Sound</string>
+	<string name="on">on</string>
+	<string name="off">off</string>
+	<string name="exit">Exit</string>
+	
+	<string name="creditsTitle">Credits</string>
+	<string name="creditsText">
+		\'A Touch of Ninja\' was developed in the course\n
+		of a game programming project in the summer\n
+		semester of 2012 at the TU Berlin by:
+	</string>
+	<string name="creditsNames">
+		Andreas Fender\n
+		Constantin Schmidt\n
+		Dieter Eberle\n
+		Sascha Katzner
+	</string>
+	
+	<string name="titleDeath">You died!</string>
+	<string name="titlePause">Paused</string>
+	<string name="titleWin">Win</string>
+	<string name="start">Start!</string>
+</resources>

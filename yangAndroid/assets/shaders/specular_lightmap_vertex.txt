@@ -1,0 +1,29 @@
+uniform mat4 projTransform;
+uniform mat4 worldTransform;
+
+uniform float time;
+uniform vec4 eyePosition;
+
+attribute vec4 vPosition;
+attribute vec2 vTexture;
+attribute vec4 vColor;
+attribute vec4 vAddColor;
+attribute vec4 vNormal;
+
+varying vec4 texWeights;
+varying vec2 texCoord;
+varying vec4 blendWeights;
+varying vec4 worldPos;
+varying vec4 camVector;
+varying vec4 normal;
+
+void main() {
+	worldPos = worldTransform * vPosition;
+	camVector = worldPos-eyePosition;
+	camVector.w = 0.0;
+	normal = vNormal;
+	normal.w = 0.0;
+	gl_Position = projTransform * worldPos;
+	texCoord = vTexture;
+	blendWeights = vAddColor;
+}

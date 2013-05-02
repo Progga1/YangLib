@@ -1,0 +1,56 @@
+#ANDROID precision mediump float;
+uniform sampler2D texSampler;
+uniform sampler2D depthSampler;
+uniform sampler2D normalSampler;
+uniform sampler2D heightSampler;
+uniform vec4 lightDir;
+uniform vec4 camVector;
+uniform float time;
+uniform vec4 lightProperties;
+
+float fracFac = 0.09;
+float specNormFac = 0.08;
+float waterZoom1 = 2.7;
+float waterZoom2 = 2.8;
+float waterFac = 1.0;
+const vec4 NORMAL_MAP_OFFSET = vec4(1.0,1.0,0.0,0.0); 
+
+varying vec4 worldPos;
+varying vec4 normal;
+varying vec2 texCoord;
+varying vec4 color;
+varying vec4 screenPos;
+varying vec4 depthMapPosition;
+
+void main()
+{
+	vec4 depthValue = texture2D(depthSampler, vec2(depthMapPosition.x,depthMapPosition.y));
+	
+	vec4 waterCl1 = texture2D(normalSampler, vec2(worldPos.x*waterZoom1+time*0.07,worldPos.z*waterZoom1-time*0.1))
+				  + texture2D(normalSampler, vec2(worldPos.x*waterZoom2+time*0.13,worldPos.z*waterZoom2+time*0.13))-NORMAL_MAP_OFFSET;
+	waterCl1.a = 0.0;
+	/*waterCl1.z = waterCl1.z*waterFac+0.2;*/
+	vec4 waterNorm = normalize(waterCl1);
+	
+	float specular;
+	float lgt;
+	if(depthMapPosition.z < depthValue.r) {
+		lgt = lightProperties[0]+lightProperties[2];
+		specular = 0.0;
+	}else{
+		lgt = 1.0;
+		/*vec4 halfVector = reflect(camVector,waterNorm);
+		specular = pow(max(0.0,dot(halfVector,lightDir)),8.0);
+		specular = min(specular,1.0);*/
+		specular = 0.0;
+	}
+	
+	float lightFac = (1.0-(waterNorm.x+0.5));
+	specular = texture2D(heightSampler, vec2(texCoord.x+waterNorm.x*specNormFac,texCoord.y+waterNorm.y*specNormFac)).r;
+
+	lgt *= clamp((1.0-lightFac*0.1),0.8,1.0);
+
+	vec4 texValue = texture2D(texSampler, vec2((screenPos.x+waterNorm.x*fracFac)/screenPos.w*0.5+0.5,1.0-((screenPos.y+waterNorm.y*fracFac)/screenPos.w*0.5+0.5)));
+	
+	gl_FragColor = vec4(min(1.0,texValue.r+specular)*lgt,min(1.0,texValue.g+specular)*lgt,min(1.0,texValue.b+specular)*lgt,texValue.a);
+}

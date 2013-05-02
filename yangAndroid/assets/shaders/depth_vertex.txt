@@ -1,0 +1,10 @@
+uniform mat4 projTransform;
+
+attribute vec4 vPosition;
+
+varying float depth;
+
+void main() {
+	gl_Position = projTransform * vPosition;
+	depth = (-gl_Position.z/gl_Position.w+1.0)*0.5;
+}

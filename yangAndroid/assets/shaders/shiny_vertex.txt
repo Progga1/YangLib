@@ -1,0 +1,20 @@
+uniform mat4 projTransform;
+
+uniform float time;
+uniform vec4 lightDir;
+uniform vec4 lightProperties;
+
+attribute vec4 vPosition;
+attribute vec2 vTexture;
+attribute vec4 vColor;
+
+varying vec2 texCoord;
+varying vec4 color;
+varying vec2 screenPos;
+
+void main() {
+	gl_Position = projTransform * vPosition;
+	screenPos = vec2(gl_Position.x*0.5+0.5,gl_Position.y*0.5+0.5);
+	texCoord = vTexture;
+	color = vColor;
+}

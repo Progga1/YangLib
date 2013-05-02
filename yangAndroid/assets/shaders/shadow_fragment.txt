@@ -1,0 +1,31 @@
+#ANDROID precision mediump float;
+uniform sampler2D texSampler;
+uniform sampler2D depthSampler;
+uniform vec4 lightDir;
+
+uniform vec4 lightProperties;
+varying vec4 normal;
+varying vec2 texCoord;
+varying vec4 color;
+varying vec2 screenPos;
+varying vec4 depthMapPosition;
+varying vec4 worldPosition;
+
+void main()
+{
+	if(worldPosition.y<0.0)
+		discard;
+	else{
+		vec4 depthValue = texture2D(depthSampler, vec2(depthMapPosition.x,depthMapPosition.y));
+		vec4 texValue = texture2D(texSampler, vec2(texCoord.x,texCoord.y));
+		/*vec4 texValue = texture2D(depthSampler, vec2(depthMapPosition.x,depthMapPosition.y));*/
+		
+		float lgt;
+		if(depthMapPosition.z < depthValue.r) {
+			lgt = lightProperties[0];
+		}else{
+			lgt = clamp((dot(normalize(normal),lightDir)+lightProperties[2])*lightProperties[3],lightProperties[0],lightProperties[1]);
+		}
+		gl_FragColor = vec4(texValue.r*color.r*lgt,texValue.g*color.g*lgt,texValue.b*color.b*lgt,texValue.a*color.a);
+	}
+}

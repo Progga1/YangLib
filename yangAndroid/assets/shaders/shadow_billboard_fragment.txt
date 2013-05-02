@@ -1,0 +1,15 @@
+#ANDROID precision mediump float;
+uniform sampler2D texSampler;
+uniform sampler2D depthSampler;
+uniform vec4 lightDir;
+uniform vec4 lightProperties;
+
+varying vec2 texCoord;
+varying vec4 color;
+
+void main()
+{
+	vec4 texValue = texture2D(texSampler, vec2(texCoord.x,texCoord.y));
+
+	gl_FragColor = texValue * color;
+}

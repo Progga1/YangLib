@@ -1,0 +1,129 @@
+package yang.graphics.skeletons.pose;
+
+import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.elements.Joint;
+import yang.graphics.skeletons.elements.JointNormalConstraint;
+import yang.util.Util;
+
+
+public class AnglePose extends Pose<AnglePose>{
+
+	public final static float PI2 = (float)Math.PI/2;
+	
+	public float[] mAngles;
+	
+	protected void init(){ };
+	
+	public AnglePose(float[] angles) {
+		mAngles = angles;
+		init();
+	}
+	
+	public AnglePose() {
+		this(null);
+	}
+	
+	@Override
+	public void applyPose(Skeleton skeleton,AnglePose interpolationPose,float weight) {
+		int c = 0;
+		float dWeight = 1-weight;
+		skeleton.mCurrentPose = this;
+		for(Joint joint:skeleton.mJoints) {
+			//By normal constraint
+			if(joint instanceof JointNormalConstraint) {
+				((JointNormalConstraint)joint).setPosByConstraint();
+			}else{
+				Joint parent = joint.mAngleParent;
+				if(parent==null) {
+					//By position
+					if(joint.mAnimate) {
+						float x = mAngles[c++];
+						float y = mAngles[c++];
+						if(weight!=1) {
+							x = x*weight + interpolationPose.mAngles[c-2]*dWeight;
+							y = y*weight + interpolationPose.mAngles[c-1]*dWeight;
+						}
+						if(skeleton.mRotation==0) {
+							joint.mPosX = x;
+							joint.mPosY = y;
+						}else{
+							joint.mPosX = -Util.rotateGetX(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+							joint.mPosY = Util.rotateGetY(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+						}
+					}else{
+						c += 2;
+					}
+				}else{
+					//By angle
+					if(joint.mAnimate) {
+						float angle;
+						if(c>=mAngles.length)
+							angle = skeleton.mRotation;
+						else
+							angle = mAngles[c]+skeleton.mRotation;
+						if(weight!=1) {
+							float prevAngle = interpolationPose.mAngles[c];
+							if(Math.abs(prevAngle-angle)>Util.F_PI) {
+								float diff;
+								if(prevAngle>angle) {
+									diff = 2*Util.F_PI-(prevAngle-angle);
+								}else
+									diff = 2*Util.F_PI-(angle-prevAngle);
+								angle = angle + (diff)*dWeight;
+							}else
+								angle = angle*weight + prevAngle*dWeight;
+						}
+						joint.setPosByAngle(angle);
+					}
+					c++;
+				}
+				
+			}
+
+		}
+	}
+
+	@Override
+	public void copyFromSkeleton(Skeleton skeleton) {
+		int c = 0;
+		for(Joint joint:skeleton.mJoints) {
+			//By normal constraint
+			if(!(joint instanceof JointNormalConstraint)) {
+				Joint parent = joint.mAngleParent;
+				if(parent==null) {
+					//By position
+					mAngles[c++] = joint.mPosX;
+					mAngles[c++] = joint.mPosY;
+				}else{
+					//By angle
+					float angle = joint.getParentAngle();
+					while(angle>Util.F_PI)
+						angle -= Util.F_PI*2;
+					while(angle<-Util.F_PI)
+						angle += Util.F_PI*2;
+					mAngles[c++] = angle;
+					
+				}
+			}
+
+		}
+	}
+	
+	@Override
+	public String toSourceCode() {
+		String res = "";
+		for(float angle:mAngles) {
+			if(res!="")
+				res += ",";
+			res += Util.round(angle,1000)+"f";
+		}
+		res = "new float[]{"+res+"}";
+		return res;
+	}
+	
+	@Override
+	public String getClassName() {
+		return "AnglePose";
+	}
+	
+}
