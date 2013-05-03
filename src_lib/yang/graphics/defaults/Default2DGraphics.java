@@ -74,9 +74,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 
 	public void loadMinimumResources() {
 		super.loadMinimumResources();
-		mLegacyDefaultFont = new FontSegoeUI();
-		mLegacyDefaultFont.init(mTranslator, 0, 0);
-		setLegacyFont(mLegacyDefaultFont);
+		setLegacyFont(null);
 		
 	}
 	
