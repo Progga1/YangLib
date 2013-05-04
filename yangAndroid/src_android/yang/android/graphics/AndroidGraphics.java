@@ -85,9 +85,13 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 
 	@Override
-	public void derivedClear(float r, float g, float b,float a) {
+	public void setClearColor(float r, float g, float b,float a) {
 		GLES20.glClearColor(r,g,b,a);
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+	}
+	
+	@Override
+	public void clear(int mask) {
+		GLES20.glClear(mask);
 	}
 
 	@Override

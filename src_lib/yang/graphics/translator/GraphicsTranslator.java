@@ -14,6 +14,7 @@ import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
+import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.model.ScreenInfo;
 import yang.model.TransformationFactory;
@@ -67,7 +68,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected final int[] mTempInt = new int[1];
 	protected final int[] mTempInt2 = new int[1];
 	
-	protected abstract void derivedClear(float r, float g, float b,float a);
+	public abstract void setClearColor(float r, float g, float b,float a);
+	public abstract void clear(int mask);
 	protected abstract void derivedInitTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings);
 	public abstract void deleteTextures(int[] ids);
 	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, IndexedVertexBuffer vertexBuffer);
@@ -318,20 +320,28 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mLstTimestamp = curTime;
 	}
 	
-	public final void clear(float r, float g, float b,float a) {
+	public void beginFrame() {
 		measureTime();
 		rectCount = 0;
 		mFlushCount = 0;
-		derivedClear(r,g,b,a);
+	}
+	
+	public void endFrame() {
+		flush();
 	}
 	
 	public final void clear(float r, float g, float b) {
-		clear(r,g,b,1);
+		setClearColor(r,g,b,1);
+		clear(GLMasks.COLOR_BUFFER_BIT);
 	}
 	
-	public void clear(FloatColor color) {
-		clear(color.getRed(), color.getGreen(), color.getBlue());
-		mCurrentVertexBuffer.reset();
+	public final void clear(float r, float g, float b,float a,int additionalMask) {
+		setClearColor(r,g,b,a);
+		clear(GLMasks.COLOR_BUFFER_BIT | additionalMask);
+	}
+	
+	public void clear(FloatColor color,int additionalMask) {
+		clear(color.values[0], color.values[1], color.values[2],color.values[3],additionalMask);
 	}
 
 	public void setAttributeBuffer(int handle,int bufferIndex) {

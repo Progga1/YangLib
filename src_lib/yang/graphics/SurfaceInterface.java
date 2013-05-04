@@ -14,9 +14,14 @@ public abstract class SurfaceInterface {
 	protected InitializationCallback mInitCallback;
 	public StringsXML mStrings;
 	
+	protected double mProgramStartTime;
+	protected long mProgramTime;
+	protected float mDeltaTimeSeconds;
+	protected long mDeltaTimeNanos;
+	
 	protected abstract void initGraphics();
 	protected void resumingFinished(){};
-	public abstract void draw();
+	protected abstract void draw();
 	
 	protected void initializationFinished() { }
 	public void onResume() { }
@@ -24,6 +29,14 @@ public abstract class SurfaceInterface {
 	public SurfaceInterface() {
 		mResuming = false;
 		mInitializedNotifier = new Object();
+		mProgramTime = 0;
+		setUpdatesPerSecond(60);
+	}
+	
+	public void drawFrame() {
+		mGraphics.beginFrame();
+		draw();
+		mGraphics.endFrame();
 	}
 	
 	public void setGraphics(GraphicsTranslator graphics) {
@@ -76,6 +89,26 @@ public abstract class SurfaceInterface {
 	
 	public void setInitializationCallback(InitializationCallback initCallback) {
 		mInitCallback = initCallback;
+	}
+	
+	public void setUpdatesPerSecond(int updatesPerSecond) {
+		mDeltaTimeSeconds = 1f/updatesPerSecond;
+		mDeltaTimeNanos = 1000000000/updatesPerSecond;
+	}
+	
+	public void step(float deltaTime) {
+		
+	}
+	
+	protected boolean update() {
+		if(mProgramTime==0)
+			mProgramTime = System.nanoTime()-1;
+		boolean result = mProgramTime<System.nanoTime();
+		while(mProgramTime<System.nanoTime()) {
+			mProgramTime += mDeltaTimeNanos;
+			step(mDeltaTimeSeconds);
+		}
+		return result;
 	}
 	
 }

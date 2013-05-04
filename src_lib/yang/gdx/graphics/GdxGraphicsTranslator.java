@@ -54,9 +54,13 @@ public class GdxGraphicsTranslator extends GraphicsTranslator {
 	}
 
 	@Override
-	public void derivedClear(float r, float g, float b,float a) {
+	public void setClearColor(float r, float g, float b,float a) {
 		Gdx.gl20.glClearColor(r,g,b,a);
-		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	}
+	
+	@Override
+	public void clear(int mask) {
+		Gdx.gl20.glClear(mask);
 	}
 
 	@Override

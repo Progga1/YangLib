@@ -170,8 +170,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	@Override
 	public void display(GLAutoDrawable glAutoDrawable) {
 		gles2 = glAutoDrawable.getGL().getGL2();
-		mSurface.draw();
-		mSurface.mGraphics.flush();
+		mSurface.drawFrame();
 	}
 
 	@Override
@@ -267,9 +266,13 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
-	public void derivedClear(float r,float g,float b,float a) {
+	public void setClearColor(float r,float g,float b,float a) {
 		gles2.glClearColor(r,g,b,a);
-		gles2.glClear(GL2ES2.GL_COLOR_BUFFER_BIT | GL2ES2.GL_DEPTH_BUFFER_BIT);
+	}
+	
+	@Override
+	public void clear(int mask) {
+		gles2.glClear(mask);
 	}
 
 	@Override

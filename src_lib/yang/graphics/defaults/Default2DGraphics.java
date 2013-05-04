@@ -71,12 +71,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		else
 			return posX<=mTranslator.mRatioX && posY<=mTranslator.mRatioY && (posX>=-mTranslator.mRatioX-width) && (posY>=-mTranslator.mRatioY-height);
 	}
-
-	public void loadMinimumResources() {
-		super.loadMinimumResources();
-		setLegacyFont(null);
-		
-	}
 	
 	@Override
 	public BasicProgram getDefaultProgram() {

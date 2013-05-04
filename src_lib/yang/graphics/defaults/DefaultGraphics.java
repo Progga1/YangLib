@@ -66,10 +66,6 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		super(translator);
 		mPositionBytes = positionBytes;
 	}
-	
-	public void loadMinimumResources() {
-		DrawableString.DEFAULT_FONT = new BitmapFont().init("belligerent");
-	}
 
 	@Override
 	public void restart() {

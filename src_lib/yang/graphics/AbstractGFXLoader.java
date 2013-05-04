@@ -3,6 +3,7 @@ package yang.graphics;
 import java.io.File;
 import java.util.HashMap;
 
+import yang.graphics.font.BitmapFont;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.textures.enums.TextureFilter;
@@ -102,6 +103,16 @@ public abstract class AbstractGFXLoader {
 
 	public void clear() {
 		mTextures.clear();
+	}
+
+	public BitmapFont loadFont(String texAndDatafilename) {
+		BitmapFont result = new BitmapFont();
+		return result.init(texAndDatafilename,this);
+	}
+	
+	public BitmapFont loadFont(Texture texture,String fontDataFilename) {
+		BitmapFont result = new BitmapFont();
+		return result.init(texture,fontDataFilename,mResources);
 	}
 	
 }

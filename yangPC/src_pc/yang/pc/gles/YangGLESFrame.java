@@ -9,7 +9,7 @@ import yang.model.DebugYang;
 import yang.pc.PCEventHandler;
 import yang.pc.PCFrame;
 
-public class GLESFrame extends PCFrame{
+public class YangGLESFrame extends PCFrame{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -17,17 +17,17 @@ public class GLESFrame extends PCFrame{
 	public EventQueueHolder mEventListener;
 	public PCEventHandler mPCEventHandler;
 
-	public GLESFrame(String title) {
+	public YangGLESFrame(String title) {
 		super();
 		setTitle(title);
 		mEventListener = null;
 	}
 	
-	public GLESFrame() {
+	public YangGLESFrame() {
 		this("Yang GL2ES2");
 	}
 	
-	public GLESFrame init(int width,int height,boolean autoBuild,boolean frameDecorator) {
+	public YangGLESFrame init(int width,int height,boolean autoBuild,boolean frameDecorator) {
 		if(DebugYang.FORCE_FULLSCREEN) {
 			width = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
 			height = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -48,11 +48,11 @@ public class GLESFrame extends PCFrame{
 		return this;
 	}
 	
-	public GLESFrame initFullScreen(boolean autoBuild) {
+	public YangGLESFrame initFullScreen(boolean autoBuild) {
 		return init(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width,java.awt.Toolkit.getDefaultToolkit().getScreenSize().height,autoBuild,false);
 	}
 
-	public GLESFrame init(int width,int height) {
+	public YangGLESFrame init(int width,int height) {
 		return init(width,height,true,true);
 	}
 	

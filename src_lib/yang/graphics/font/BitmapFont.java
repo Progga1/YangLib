@@ -3,16 +3,19 @@ package yang.graphics.font;
 import java.io.File;
 import java.util.Properties;
 
+import yang.graphics.AbstractGFXLoader;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
-import yang.model.App;
 import yang.model.DebugYang;
+import yang.systemdependent.AbstractResourceManager;
 
 
 public class BitmapFont {
 	
 	public static String[] ASCII = createASCIIArray();
+	
+	public static TextureFilter TEXTURE_FILTER = TextureFilter.LINEAR_MIP_LINEAR;
 	
 	public TextureCoordinatesQuad[] mCoordinates;
 	public float[][] mPositions;
@@ -42,9 +45,9 @@ public class BitmapFont {
 		
 	}
 	
-	public BitmapFont init(Texture texture,String fontFilename) {
+	public BitmapFont init(Texture texture,String fontFilename,AbstractResourceManager resourceManager) {
 		mTexture = texture;
-		Properties properties = App.resourceManager.loadPropertiesFile("textures"+File.separatorChar+fontFilename+".txt");
+		Properties properties = resourceManager.loadPropertiesFile("textures"+File.separatorChar+fontFilename+".txt");
 		float textureW = Float.parseFloat(properties.getProperty("textureW", "1"));
 		float textureH = Float.parseFloat(properties.getProperty("textureH", ""+textureW));
 		float dWidth = 1/textureW;
@@ -124,8 +127,13 @@ public class BitmapFont {
 		return this;
 	}
 	
-	public BitmapFont init(String filename) {
-		return init(App.gfxLoader.getImage(filename+(DebugYang.drawKerning?"Debug":""), TextureFilter.LINEAR),filename);
+	public BitmapFont init(String filename,AbstractGFXLoader gfxLoader) {
+		Texture tex = null;
+		if(DebugYang.drawKerning)
+			tex = gfxLoader.getImage(filename+"Debug", TEXTURE_FILTER);
+		if(tex==null)
+			tex = gfxLoader.getImage(filename, TEXTURE_FILTER);
+		return init(tex,filename,gfxLoader.mResources);
 	}
 	
 }
