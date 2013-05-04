@@ -25,6 +25,7 @@ public class SceneRenderer implements GLSurfaceView.Renderer {
 	
 	public void onDrawFrame(GL10 ignore) {
 		mSurfaceInterface.draw();
+		mGraphicsTranslator.flush();
 	}
 
 	public void onSurfaceCreated(GL10 ignore, EGLConfig config) {

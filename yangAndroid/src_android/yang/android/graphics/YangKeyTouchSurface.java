@@ -1,6 +1,5 @@
 package yang.android.graphics;
 
-import yang.graphics.events.Keys;
 import yang.graphics.events.eventtypes.AbstractKeyEvent;
 import yang.graphics.translator.GraphicsTranslator;
 import android.content.Context;
@@ -9,23 +8,24 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
-public class KeyTouchSurface extends AndroidTouchSurface implements OnKeyListener {
+public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListener {
 
 	private EditText mEditText;
+	private LinearLayout mLayout;
 	
-	public KeyTouchSurface(Context context, EditText editText) {
+	public YangKeyTouchSurface(Context context) {
 		super(context);
 		
-		mEditText = editText;
+		mLayout = new LinearLayout(context);
+		mEditText = new EditText(context);
+		mEditText.setOnKeyListener(this);
+		
+		mLayout.addView(this);
+		mLayout.addView(mEditText);
+		
 		setKeepScreenOn(true);
-	}
-	
-	public void onBackPressed() {
-		if (mEventQueue!=null) {
-			mEventQueue.putKeyEvent(Keys.ESC, AbstractKeyEvent.ACTION_KEYDOWN);
-			mEventQueue.putKeyEvent(Keys.ESC, AbstractKeyEvent.ACTION_KEYUP);
-		}
 	}
 	
 	@Override
@@ -59,5 +59,9 @@ public class KeyTouchSurface extends AndroidTouchSurface implements OnKeyListene
 
 	public GraphicsTranslator getGraphics() {
 		return mSceneRenderer.getGraphics();
+	}
+
+	public View getView() {
+		return mLayout;
 	}
 }

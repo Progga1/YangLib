@@ -2,7 +2,7 @@ package yang.model;
 
 public class DebugYang {
 
-	public static boolean FULLSCREEN = false;
+	public static boolean FORCE_FULLSCREEN = false;
 	
 	public static int debugLevel = 0;
 	public static boolean drawKerning = false;

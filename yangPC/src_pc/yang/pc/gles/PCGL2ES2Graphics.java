@@ -105,7 +105,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 	
 	public static int channelsToConst(int channels) {
-		int c = GL2ES2.GL_INVERT;
+		//int c = GL2ES2.GL_SCISSOR_TEST;
 		switch(channels) {
 		case 1:
 			return GL2ES2.GL_RED;
@@ -171,6 +171,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public void display(GLAutoDrawable glAutoDrawable) {
 		gles2 = glAutoDrawable.getGL().getGL2();
 		mSurface.draw();
+		mSurface.mGraphics.flush();
 	}
 
 	@Override
@@ -394,5 +395,10 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	@Override
 	public void setStencilOperation(int fail, int zFail, int zPass) {
 		gles2.glStencilOp(fail,zFail,zPass);
+	}
+
+	@Override
+	public void setScissorRectI(int x, int y, int width, int height) {
+		gles2.glScissor(x, y, width, height);
 	}
 }

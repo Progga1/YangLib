@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ninja.android"
+    package="yang.android.sampleexecuters"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -10,12 +10,12 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Minimum Yang Sample"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
         >
         <activity
-            android:name=".AndroidMain"
-            android:label="@string/app_name"
+            android:name=".MinimumSampleActivity"
+            android:label="Minimum Yang Sample"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:screenOrientation="landscape" android:icon="@drawable/ic_launcher">
             <intent-filter>
@@ -24,30 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".GdxMain"
-            android:label="A T o N (Gdx)"
-            android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape" android:icon="@drawable/logo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-	<!--  
-        <activity
-            android:name=".GdxTestMain"
-            android:label="A T o N - GdxTest"
-            android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> 
-	-->
     </application>
 
 </manifest>

@@ -13,7 +13,8 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 	public float mSpeedFactor = 1;
 	
 	public DefaultAnimatorSurface(SoundManager sound,InitializationCallback initCallback) {
-		super(true,false,true);
+		super(true,false);
+		mGraphics2D.loadMinimumResources();
 		mSound = sound;
 		mInitCallback = initCallback;
 		this.setUpdatesPerSecond(120);

@@ -18,13 +18,11 @@ public abstract class DefaultSurface extends SurfaceUpdating implements FullEven
 	public AbstractGFXLoader mGFXLoader;
 	private boolean mInit2DGraphics;
 	private boolean mInit3DGraphics;
-	private boolean mLoadMinimumResources;
 	private InputEventQueue mEventQueue;
 	
-	protected DefaultSurface(boolean init2DGraphics,boolean init3DGraphics,boolean loadMinimumResources) {
+	protected DefaultSurface(boolean init2DGraphics,boolean init3DGraphics) {
 		mInit2DGraphics = init2DGraphics;
 		mInit3DGraphics = init3DGraphics;
-		mLoadMinimumResources = loadMinimumResources;
 		mEventQueue = new InputEventQueue(64);
 	}
 	
@@ -42,8 +40,6 @@ public abstract class DefaultSurface extends SurfaceUpdating implements FullEven
 				mGraphics2D.activate();
 				mGraphics2D.setDefaultProgram();
 			}
-			if(mLoadMinimumResources)
-				mGraphics2D.loadMinimumResources();
 		}
 		if(mInit3DGraphics) {
 			mGraphics3D = new Default3DGraphics(mGraphics);

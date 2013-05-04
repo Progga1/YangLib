@@ -95,7 +95,6 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		App.soundLoader = new PCSoundLoader();
 		App.gfxLoader = mGraphics.mGFXLoader;
 		App.resourceManager = new PCResourceManager();
-		App.exit = this;
 		
 		mFrame.run();
 	}

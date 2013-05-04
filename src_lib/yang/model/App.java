@@ -10,7 +10,6 @@ public class App {
 	
 	public static AbstractDataStorage storage;
 	public static SoundManager soundManager;
-	public static ExitCallback exit;
 	public static AbstractSoundLoader soundLoader;
 	public static AbstractGFXLoader gfxLoader;
 	public static AbstractResourceManager resourceManager;

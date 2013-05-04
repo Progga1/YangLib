@@ -287,4 +287,9 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glStencilOp(fail,zFail,zPass);
 	}
 
+	@Override
+	public void setScissorRectI(int x, int y, int width, int height) {
+		GLES20.glScissor(x, y, width, height);
+	}
+
 }

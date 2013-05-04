@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import yang.graphics.SurfaceInterface;
 import yang.graphics.events.EventQueueHolder;
 import yang.model.App;
+import yang.model.DebugYang;
 import yang.pc.PCEventHandler;
 import yang.pc.PCFrame;
 
@@ -22,9 +23,20 @@ public class GLESFrame extends PCFrame{
 		mEventListener = null;
 	}
 	
-	public void init(int width,int height,boolean autoBuild,boolean frameDecorator) {
+	public GLESFrame() {
+		this("Yang GL2ES2");
+	}
+	
+	public GLESFrame init(int width,int height,boolean autoBuild,boolean frameDecorator) {
+		if(DebugYang.FORCE_FULLSCREEN) {
+			width = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+			height = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+			frameDecorator = false;
+		}
 		setUndecorated(!frameDecorator);
-		mGraphics = new PCGL2ES2Graphics(width,height,false);
+		FullGraphicsInitializer initializer = new FullGraphicsInitializer();
+		initializer.init(width, height);
+		mGraphics = initializer.mTranslator;
 		
 		if(autoBuild) {
 			this.add(mGraphics.getPanel());
@@ -33,15 +45,15 @@ public class GLESFrame extends PCFrame{
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		App.gfxLoader = mGraphics.mGFXLoader;
-		App.exit = this;
+		return this;
 	}
 	
-	public void initFullScreen(boolean autoBuild) {
-		init(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width,java.awt.Toolkit.getDefaultToolkit().getScreenSize().height,autoBuild,false);
+	public GLESFrame initFullScreen(boolean autoBuild) {
+		return init(java.awt.Toolkit.getDefaultToolkit().getScreenSize().width,java.awt.Toolkit.getDefaultToolkit().getScreenSize().height,autoBuild,false);
 	}
 
-	public void init(int width,int height) {
-		init(width,height,true,true);
+	public GLESFrame init(int width,int height) {
+		return init(width,height,true,true);
 	}
 	
 	public void run() {

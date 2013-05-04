@@ -221,4 +221,9 @@ public class GdxGraphicsTranslator extends GraphicsTranslator {
 	public void setStencilOperation(int fail, int zFail, int zPass) {
 		Gdx.gl20.glStencilOp(fail,zFail,zPass);
 	}
+
+	@Override
+	public void setScissorRectI(int x, int y, int width, int height) {
+		Gdx.gl20.glScissor(x, y, width, height);
+	}
 }

@@ -1,20 +1,29 @@
 package yang.android.graphics;
 
+import yang.android.io.AndroidDataStorage;
+import yang.android.io.AndroidResourceManager;
+import yang.android.io.AndroidSoundLoader;
+import yang.android.sound.AndroidSoundManager;
 import yang.graphics.SurfaceInterface;
 import yang.graphics.events.EventQueueHolder;
 import yang.graphics.events.InputEventQueue;
+import yang.graphics.events.Keys;
+import yang.graphics.events.eventtypes.AbstractKeyEvent;
 import yang.graphics.events.eventtypes.PointerEvent;
+import yang.model.App;
+import yang.model.Factory;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import android.view.View;
 
-public class AndroidTouchSurface extends GLSurfaceView{
+public class YangTouchSurface extends GLSurfaceView{
 
 	public InputEventQueue mEventQueue;
 	public SceneRenderer mSceneRenderer;
 	public Context mContext;
 	
-	public AndroidTouchSurface(Context context) {
+	public YangTouchSurface(Context context) {
 		super(context);
 		mContext = context;
 		mEventQueue = null;
@@ -26,6 +35,15 @@ public class AndroidTouchSurface extends GLSurfaceView{
 		super.setEGLContextClientVersion(2);
 		mSceneRenderer = new SceneRenderer(context);
 		super.setRenderer(mSceneRenderer);
+		
+		Factory.init(new AndroidFactory());
+
+		App.soundManager = new AndroidSoundManager(context);
+		App.storage = new AndroidDataStorage(context);
+		App.soundLoader = new AndroidSoundLoader(context);
+		App.gfxLoader = mSceneRenderer.mGraphicsTranslator.mGFXLoader;
+		App.resourceManager = new AndroidResourceManager(context);
+		((AndroidSoundManager)App.soundManager).init(App.soundLoader);
 	}
 	
 	public void setSurface(SurfaceInterface surface) {
@@ -74,6 +92,13 @@ public class AndroidTouchSurface extends GLSurfaceView{
 		return true;
 	}
 	
+	public void onBackPressed() {
+		if (mEventQueue!=null) {
+			mEventQueue.putKeyEvent(Keys.ESC, AbstractKeyEvent.ACTION_KEYDOWN);
+			mEventQueue.putKeyEvent(Keys.ESC, AbstractKeyEvent.ACTION_KEYUP);
+		}
+	}
+	
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -85,5 +110,9 @@ public class AndroidTouchSurface extends GLSurfaceView{
 	public void onResume() {
 		super.onResume();
 		mSceneRenderer.mSurfaceInterface.onResume();
+	}
+	
+	public View getView() {
+		return this;
 	}
 }

@@ -90,6 +90,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void setStencilOperation(int fail,int zFail,int zPass);
 	public abstract void enable(int glConstant);
 	public abstract void disable(int glConstant);
+	public abstract void setScissorRectI(int x,int y,int width,int height);
 	
 	
 	//TODO: glColorMask, glDepthMask, glStencilMask, glScissor, glEnable(GL_SCISSOR_TEST)
@@ -428,6 +429,19 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public void resetTimer() {
 		mTimer = 0;
 		mLstTimestamp = -1;
+	}
+	
+	public void setScissorRectNormalized(float x,float y,float width,float height) {
+		x = x*0.5f*mInvRatioX+0.5f;
+		y = y*0.5f*mInvRatioY+0.5f;
+		setScissorRectI((int)(x*mScreenWidth),(int)(y*mScreenHeight),(int)(width*0.5f*mInvRatioX*mScreenWidth),(int)(height*0.5f*mInvRatioY*mScreenHeight));
+	}
+	
+	public void switchScissor(boolean enabled) {
+		if(enabled)
+			enable(GLOps.SCISSOR_TEST);
+		else
+			disable(GLOps.SCISSOR_TEST);
 	}
 	
 	public void switchZBuffer(boolean enabled) {
