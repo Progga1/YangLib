@@ -2,8 +2,8 @@ package yang.pc.gles;
 
 import javax.swing.JFrame;
 
+import yang.events.EventQueueHolder;
 import yang.graphics.SurfaceInterface;
-import yang.graphics.events.EventQueueHolder;
 import yang.model.App;
 import yang.model.DebugYang;
 import yang.pc.PCEventHandler;

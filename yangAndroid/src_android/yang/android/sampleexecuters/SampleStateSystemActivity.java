@@ -1,17 +1,17 @@
 package yang.android.sampleexecuters;
 
 import yang.android.graphics.YangActivity;
-import yang.samples.small.MinimumSample;
+import yang.samples.statesystem.SampleStateSystem;
 import android.os.Bundle;
 
-public class MinimumSampleActivity extends YangActivity {
+public class SampleStateSystemActivity extends YangActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		super.defaultInit();
-		super.setSurface(new MinimumSample());
+		super.setSurface(new SampleStateSystem());
 	}
 
 }

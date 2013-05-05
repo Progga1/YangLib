@@ -9,21 +9,23 @@
 
     <application
         android:allowBackup="true"
+        android:label="Yang samples"
         android:icon="@drawable/ic_launcher"
-        android:label="Minimum Yang Sample"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
         >
         <activity
-            android:name=".MinimumSampleActivity"
-            android:label="Minimum Yang Sample"
+            android:name=".SampleStateSystemActivity"
+            android:label="Yang state system sample"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape" android:icon="@drawable/ic_launcher">
+            android:screenOrientation="landscape"
+            android:icon="@drawable/ic_launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
     </application>
 
 </manifest>

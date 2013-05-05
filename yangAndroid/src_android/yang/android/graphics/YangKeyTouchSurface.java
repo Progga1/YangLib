@@ -1,6 +1,6 @@
 package yang.android.graphics;
 
-import yang.graphics.events.eventtypes.AbstractKeyEvent;
+import yang.events.eventtypes.AbstractKeyEvent;
 import yang.graphics.translator.GraphicsTranslator;
 import android.content.Context;
 import android.view.KeyEvent;

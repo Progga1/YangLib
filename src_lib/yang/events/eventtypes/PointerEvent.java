@@ -1,8 +1,8 @@
-package yang.graphics.events.eventtypes;
+package yang.events.eventtypes;
 
-import yang.graphics.events.listeners.AbstractPointerEventListener;
+import yang.events.listeners.AbstractPointerEventListener;
 
-public class PointerEvent extends InputEvent {
+public class PointerEvent extends YangInputEvent {
 	
 	public int mAction;
 	public static final int BUTTON_NONE = -1;

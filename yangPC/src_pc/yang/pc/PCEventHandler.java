@@ -8,11 +8,11 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import yang.graphics.events.EventQueueHolder;
-import yang.graphics.events.InputEventQueue;
-import yang.graphics.events.Keys;
-import yang.graphics.events.eventtypes.AbstractKeyEvent;
-import yang.graphics.events.eventtypes.PointerEvent;
+import yang.events.EventQueueHolder;
+import yang.events.InputEventQueue;
+import yang.events.Keys;
+import yang.events.eventtypes.AbstractKeyEvent;
+import yang.events.eventtypes.PointerEvent;
 
 public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	

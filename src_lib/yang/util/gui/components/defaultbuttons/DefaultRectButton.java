@@ -1,10 +1,12 @@
 package yang.util.gui.components.defaultbuttons;
 
 import yang.graphics.FloatColor;
+import yang.graphics.font.DrawableAnchoredLines;
+import yang.graphics.font.DrawableString;
 
 public class DefaultRectButton extends ColoredRectButton {
 
-	public String mCaption;
+	public DrawableString mCaption;
 	public float[] mFontColor;
 	public float mFontSize;
 	public float mBorder = 0.01f;
@@ -15,7 +17,7 @@ public class DefaultRectButton extends ColoredRectButton {
 		mFontColor = FloatColor.BLACK.createArray();
 		mBorderCl = FloatColor.GRAY.createArray();
 		mFontSize = 0.1f;
-		mCaption = "";
+		mCaption = null;
 	}
 	
 	public DefaultRectButton setFontColor(float r,float g,float b) {
@@ -25,9 +27,13 @@ public class DefaultRectButton extends ColoredRectButton {
 		return this;
 	}
 
-	public DefaultRectButton setCaption(String caption) {
+	public DefaultRectButton setCaption(DrawableString caption) {
 		mCaption = caption;
 		return this;
+	}
+	
+	public DefaultRectButton createCaption(String caption) {
+		return setCaption(((DrawableString)new DrawableString().allocString(caption)).setAnchors(DrawableString.ANCHOR_CENTER, DrawableString.ANCHOR_MIDDLE));
 	}
 	
 	@Override
@@ -43,7 +49,8 @@ public class DefaultRectButton extends ColoredRectButton {
 		mGraphics2D.setColor(mRGBA);
 		drawRect(offsetX,offsetY,mBorder);
 		mGraphics2D.setColor(mFontColor);
-		mGraphics2D.drawStringLegacyC(projX(offsetX+getRelativeCenterX()), projY(offsetY+getRelativeCenterY()), mFontSize, 0, mCaption);
+		if(mCaption!=null)
+			mCaption.draw(projX(offsetX+getRelativeCenterX()), projY(offsetY+getRelativeCenterY()), mFontSize, 0);
 	}
 	
 }

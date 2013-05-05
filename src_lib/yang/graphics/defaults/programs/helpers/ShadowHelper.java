@@ -11,6 +11,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
+import yang.graphics.translator.glconsts.GLMasks;
 import yang.model.TransformationMatrix;
 import yang.util.Util;
 
@@ -100,7 +101,7 @@ public class ShadowHelper {
 		if(!mRenderToScreen)
 			mGraphics.setTextureRenderTarget(mDepthMap);
 		mGraphics3D.setShaderProgram(depthProgram);
-		mGraphics.clear(0,0,0);
+		mGraphics.clear(0,0,0,1,GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics3D.setAmbientColor(1);
 	}
 	

@@ -23,7 +23,7 @@ public abstract class SurfaceInterface {
 	protected void resumingFinished(){};
 	protected abstract void draw();
 	
-	protected void initializationFinished() { }
+	protected void postInitGraphics() { }
 	public void onResume() { }
 	
 	public SurfaceInterface() {
@@ -52,7 +52,7 @@ public abstract class SurfaceInterface {
 			resumingFinished();
 		}else{
 			initGraphics();
-			initializationFinished();
+			postInitGraphics();
 			if(mInitCallback!=null)
 				mInitCallback.initializationFinished();
 		}

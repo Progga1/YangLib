@@ -1,6 +1,6 @@
 package yang.util.gui.components;
 
-import yang.graphics.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.PointerEvent;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;

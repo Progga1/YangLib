@@ -13,9 +13,9 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.awt.GLJPanel;
 
+import yang.events.EventQueueHolder;
 import yang.graphics.SurfaceInterface;
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.events.EventQueueHolder;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;

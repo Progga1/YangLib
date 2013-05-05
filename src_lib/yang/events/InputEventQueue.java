@@ -1,10 +1,10 @@
-package yang.graphics.events;
+package yang.events;
 
-import yang.graphics.events.eventtypes.AbstractKeyEvent;
-import yang.graphics.events.eventtypes.AbstractZoomEvent;
-import yang.graphics.events.eventtypes.InputEvent;
-import yang.graphics.events.eventtypes.PointerEvent;
-import yang.graphics.events.listeners.FullEventListener;
+import yang.events.eventtypes.AbstractKeyEvent;
+import yang.events.eventtypes.AbstractZoomEvent;
+import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangInputEvent;
+import yang.events.listeners.FullEventListener;
 import yang.graphics.translator.GraphicsTranslator;
 
 public class InputEventQueue {
@@ -13,7 +13,7 @@ public class InputEventQueue {
 	private PointerEvent[] mPointerEventQueue;
 	private AbstractKeyEvent[] mKeyEventQueue;
 	private AbstractZoomEvent[] mZoomEventQueue;
-	private InputEvent[] mQueue;
+	private YangInputEvent[] mQueue;
 	private int mPointerEventId;
 	private int mKeyEventId;
 	private int mZoomEventId;
@@ -28,7 +28,7 @@ public class InputEventQueue {
 		mKeyEventId = 0;
 		mQueueId = 0;
 		mQueueFirst = 0;
-		mQueue = new InputEvent[maxEvents];
+		mQueue = new YangInputEvent[maxEvents];
 		mPointerEventQueue = new PointerEvent[maxEvents];
 		mKeyEventQueue = new AbstractKeyEvent[maxEvents];
 		mZoomEventQueue = new AbstractZoomEvent[maxEvents];
@@ -39,7 +39,7 @@ public class InputEventQueue {
 		}
 	}
 	
-	public synchronized void putEvent(InputEvent event) {
+	public synchronized void putEvent(YangInputEvent event) {
 		mQueue[mQueueId++] = event;
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
@@ -76,15 +76,15 @@ public class InputEventQueue {
 		putEvent(newEvent);
 	}
 	
-	public InputEvent peekEvent() {
+	public YangInputEvent peekEvent() {
 		if(mQueueFirst==mQueueId)
 			return null;
 		else
 			return mQueue[mQueueFirst];
 	}
 	
-	public synchronized InputEvent pollEvent() {
-		InputEvent result = peekEvent();
+	public synchronized YangInputEvent pollEvent() {
+		YangInputEvent result = peekEvent();
 		if(result==null)
 			return null;
 		else{
@@ -100,7 +100,7 @@ public class InputEventQueue {
 	}
 	
 	public void handleEvents(FullEventListener eventInterface) {
-		InputEvent event;
+		YangInputEvent event;
 		while((event = pollEvent())!=null) {
 			event.handle(eventInterface);
 		}

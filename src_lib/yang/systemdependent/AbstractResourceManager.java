@@ -13,6 +13,10 @@ public abstract class AbstractResourceManager {
 	public abstract String[] getFileList(String directory) throws IOException;
 	public abstract InputStream getInputStream(String filename);
 
+	public boolean fileExists(String filename) {
+		return getInputStream(filename)!=null;
+	}
+	
 	public BufferedReader loadTextFile(String filename) {
 		InputStream stream = getInputStream(filename);
 		return new BufferedReader(new InputStreamReader(stream));
@@ -57,4 +61,5 @@ public abstract class AbstractResourceManager {
 	public void savePropertiesFile(String filename, Properties props) {
 		throw new RuntimeException("Save properties not supported");
 	}
+
 }

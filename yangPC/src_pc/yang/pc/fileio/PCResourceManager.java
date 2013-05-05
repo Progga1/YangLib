@@ -93,4 +93,9 @@ public class PCResourceManager extends AbstractResourceManager {
 		return f.delete();	
 	}
 
+	@Override
+	public boolean fileExists(String filename) {
+		return new File(PathSpecs.ASSET_PATH+filename).exists();
+	}
+
 }

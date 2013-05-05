@@ -1,4 +1,4 @@
-package yang.graphics.events;
+package yang.events;
 
 public class Keys {
 	

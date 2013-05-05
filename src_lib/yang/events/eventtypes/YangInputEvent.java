@@ -1,8 +1,8 @@
-package yang.graphics.events.eventtypes;
+package yang.events.eventtypes;
 
-import yang.graphics.events.listeners.FullEventListener;
+import yang.events.listeners.FullEventListener;
 
-public class InputEvent {
+public class YangInputEvent {
 
 	public final void handle(FullEventListener eventInterface) {
 		eventInterface.rawEvent(this);

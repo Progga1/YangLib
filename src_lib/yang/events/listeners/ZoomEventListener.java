@@ -1,4 +1,4 @@
-package yang.graphics.events.listeners;
+package yang.events.listeners;
 
 public interface ZoomEventListener {
 

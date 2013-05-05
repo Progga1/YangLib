@@ -1,10 +1,11 @@
 package yang.util.gui;
 
+import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangInputEvent;
 import yang.graphics.defaults.Default2DGraphics;
-import yang.graphics.events.eventtypes.InputEvent;
-import yang.graphics.events.eventtypes.PointerEvent;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.util.gui.components.GUIContainer2D;
+import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
@@ -53,7 +54,7 @@ public class BasicGUI {
 		mMainContainer.draw(mShiftX,mShiftY);
 	}
 	
-	public boolean handleEvent(InputEvent event) {
+	public boolean handleEvent(YangInputEvent event) {
 		boolean handled = false;
 		if(event instanceof PointerEvent) {
 			GUIPointerEvent guiEvent = mGUIEventPool[mComponentPoolPos++];
@@ -98,6 +99,10 @@ public class BasicGUI {
 	
 	public float getGUIHeight() {
 		return mGraphics.mRatioY*2;
+	}
+
+	public void addComponent(DefaultRectButton component) {
+		mMainContainer.addComponent(component);
 	}
 	
 }

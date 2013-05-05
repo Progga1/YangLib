@@ -1,18 +1,20 @@
 package yang.graphics.defaults;
 
+import yang.events.EventQueueHolder;
+import yang.events.InputEventQueue;
+import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangInputEvent;
+import yang.events.listeners.FullEventListener;
 import yang.graphics.AbstractGFXLoader;
-import yang.graphics.SurfaceUpdating;
-import yang.graphics.events.EventQueueHolder;
-import yang.graphics.events.InputEventQueue;
-import yang.graphics.events.eventtypes.InputEvent;
-import yang.graphics.events.eventtypes.PointerEvent;
-import yang.graphics.events.listeners.FullEventListener;
+import yang.graphics.SurfaceInterface;
 import yang.graphics.font.DrawableString;
 import yang.systemdependent.AbstractResourceManager;
+import yang.util.StringsXML;
 
-public abstract class DefaultSurface extends SurfaceUpdating implements FullEventListener,EventQueueHolder{
+public abstract class DefaultSurface extends SurfaceInterface implements FullEventListener,EventQueueHolder{
 
 	public AbstractResourceManager mResources;
+	public StringsXML mStrings;
 	public Default2DGraphics mGraphics2D;
 	public Default3DGraphics mGraphics3D;
 	public AbstractGFXLoader mGFXLoader;
@@ -52,6 +54,8 @@ public abstract class DefaultSurface extends SurfaceUpdating implements FullEven
 		}
 		mGFXLoader = mGraphics.mGFXLoader;
 		mResources = mGraphics.mGFXLoader.mResources;
+		if(mResources.fileExists("strings/strings.xml"))
+			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
 		mEventQueue.setGraphics(mGraphics);
 	}
 	
@@ -59,12 +63,12 @@ public abstract class DefaultSurface extends SurfaceUpdating implements FullEven
 		mEventQueue.handleEvents(this);
 	}
 
-	public void rawEvent(InputEvent event) {
+	public void rawEvent(YangInputEvent event) {
 		
 	}
 	
 	public void pointerDown(float x, float y, PointerEvent event) {
-		
+
 	}
 
 	public void pointerDragged(float x, float y, PointerEvent event) {

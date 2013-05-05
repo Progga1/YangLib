@@ -136,4 +136,9 @@ public class GdxResourceManager extends AbstractResourceManager {
 		}
 		
 	}
+
+	@Override
+	public boolean fileExists(String filename) {
+		return true;
+	}
 }

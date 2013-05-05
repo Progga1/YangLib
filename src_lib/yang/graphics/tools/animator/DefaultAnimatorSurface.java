@@ -1,7 +1,7 @@
 package yang.graphics.tools.animator;
 
+import yang.events.eventtypes.YangInputEvent;
 import yang.graphics.defaults.DefaultSurface;
-import yang.graphics.events.eventtypes.InputEvent;
 import yang.graphics.font.DrawableString;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.sound.SoundManager;
@@ -33,8 +33,8 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 	}
 	
 	@Override
-	protected void initializationFinished() {
-		super.initializationFinished();
+	protected void postInitGraphics() {
+		super.postInitGraphics();
 		DrawableString.DEFAULT_FONT = mGFXLoader.loadFont("belligerent");
 		mAnimator = new Animator(mGraphics2D);
 		mAnimator.mSound = mSound;
@@ -43,7 +43,7 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 	}
 	
 	@Override
-	public void rawEvent(InputEvent event) {
+	public void rawEvent(YangInputEvent event) {
 		event.handle(mAnimator);
 	}
 	

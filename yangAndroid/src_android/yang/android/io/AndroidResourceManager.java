@@ -22,7 +22,7 @@ public class AndroidResourceManager extends AbstractResourceManager {
 		try {
 			is = mContext.getAssets().open(filename);
 		} catch (Exception e) {
-			e.printStackTrace();
+			return null;
 		}
 		return is;
 	}

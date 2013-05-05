@@ -1,6 +1,6 @@
 package yang.util.gui;
 
-import yang.graphics.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.PointerEvent;
 import yang.util.gui.components.GUIComponent;
 
 public class GUIPointerEvent extends PointerEvent {

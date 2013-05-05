@@ -2,9 +2,9 @@ package yang.samples.small;
 
 import yang.graphics.defaults.DefaultSurface;
 
-public class MinimumSampleSurface extends DefaultSurface {
+public class MinimumSample extends DefaultSurface {
 
-	public MinimumSampleSurface() {
+	public MinimumSample() {
 		super(true, false);
 	}
 	

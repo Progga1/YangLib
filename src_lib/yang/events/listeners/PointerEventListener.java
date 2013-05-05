@@ -1,6 +1,6 @@
-package yang.graphics.events.listeners;
+package yang.events.listeners;
 
-import yang.graphics.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.PointerEvent;
 
 
 public interface PointerEventListener extends AbstractPointerEventListener<PointerEvent>{

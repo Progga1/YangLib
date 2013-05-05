@@ -1,6 +1,6 @@
 package yang.util.gui.interfaces;
 
-import yang.graphics.events.listeners.AbstractPointerEventListener;
+import yang.events.listeners.AbstractPointerEventListener;
 import yang.util.gui.GUIPointerEvent;
 
 public interface GUIPointerListener extends AbstractPointerEventListener<GUIPointerEvent>{

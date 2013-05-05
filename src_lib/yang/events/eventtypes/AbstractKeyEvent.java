@@ -1,8 +1,8 @@
-package yang.graphics.events.eventtypes;
+package yang.events.eventtypes;
 
-import yang.graphics.events.listeners.KeyEventListener;
+import yang.events.listeners.KeyEventListener;
 
-public class AbstractKeyEvent extends InputEvent {
+public class AbstractKeyEvent extends YangInputEvent {
 	
 	public final static int ACTION_KEYDOWN = 0;
 	public final static int ACTION_KEYUP = 1;

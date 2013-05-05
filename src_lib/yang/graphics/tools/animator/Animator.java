@@ -1,9 +1,9 @@
 package yang.graphics.tools.animator;
 
+import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangInputEvent;
+import yang.events.listeners.FullEventListener;
 import yang.graphics.defaults.Default2DGraphics;
-import yang.graphics.events.eventtypes.InputEvent;
-import yang.graphics.events.eventtypes.PointerEvent;
-import yang.graphics.events.listeners.FullEventListener;
 import yang.graphics.skeletons.Skeleton;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.SkeletonEditing;
@@ -260,7 +260,7 @@ public class Animator implements FullEventListener {
 			selectFrame(mFrameIndex+1,applyFrame);
 	}
 	
-	public void rawEvent(InputEvent event) {
+	public void rawEvent(YangInputEvent event) {
 		
 	}
 
