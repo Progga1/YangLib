@@ -57,14 +57,24 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 			}
 	}
 	
+	@Override
+	public void refreshProjections(float offsetX,float offsetY) {
+		super.refreshProjections(offsetX, offsetY);
+		for(GUIComponent component:mAllComponents) {
+			component.refreshProjections(mPosX+offsetX, mPosY+offsetY);
+		}
+		
+	}
+	
+	@Override
 	public void draw(float offsetX,float offsetY) {
 		for(GUIComponent component:mAllComponents) {
 			if(component.mVisible)
-				component.draw(offsetX+mLeft,+offsetY+mTop);
+				component.draw(offsetX+mPosX,+offsetY+mPosY);
 		}
 	}
 	
-	public void addComponent(GUIComponent component) {
+	public <ComponentType extends GUIComponent> ComponentType addComponent(ComponentType component) {
 		if(component instanceof InteractiveGUIComponent) {
 			InteractiveGUIComponent interComponent = (InteractiveGUIComponent)component;
 			mInteractiveComponents.add(interComponent);
@@ -75,6 +85,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 		}
 		mAllComponents.add(component);
 		component.setGUI(mGUI);
+		return component;
 	}
 	
 }

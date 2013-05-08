@@ -27,8 +27,8 @@ public class GUIPointerEvent extends AbstractPointerEvent {
 	}
 	
 	public void createFromPointerEvent(AbstractPointerEvent pointerEvent,GUIComponent sender) {
-		mX = pointerEvent.mX-sender.mLeft;
-		mY = pointerEvent.mY-sender.mTop;
+		mX = pointerEvent.mX-sender.mPosX;
+		mY = pointerEvent.mY-sender.mPosY;
 		mButton = pointerEvent.mButton;
 		mAction = pointerEvent.mAction;
 		mSender = sender;

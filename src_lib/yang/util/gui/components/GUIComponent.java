@@ -5,17 +5,23 @@ import yang.util.gui.BasicGUI;
 public class GUIComponent {
 
 	public boolean mVisible = true;
-	public float mLeft;
-	public float mTop;
+	public float mPosX;
+	public float mPosY;
+	public float mProjLeft,mProjBottom;
 	protected BasicGUI mGUI;
 	
 	public void draw(float offsetX,float offsetY) {
 		
 	}
 	
+	public void refreshProjections(float offsetX,float offsetY) {
+		mProjLeft = mGUI.mProjShiftX+(mPosX+offsetX)*mGUI.mProjXFactor;
+		mProjBottom = mGUI.mProjShiftY+(mPosY+offsetY)*mGUI.mProjYFactor;
+	}
+	
 	public GUIComponent setPosition(float x,float y) {
-		mLeft = x;
-		mTop = y;
+		mPosX = x;
+		mPosY = y;
 		return this;
 	}
 	
@@ -24,7 +30,7 @@ public class GUIComponent {
 	}
 	
 	public String propertiesToString() {
-		return "pos="+mLeft+","+mTop;
+		return "pos="+mPosX+","+mPosY;
 	}
 	
 	public float projX(float guiX) {

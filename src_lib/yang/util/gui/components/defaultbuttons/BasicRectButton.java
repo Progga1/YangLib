@@ -30,11 +30,11 @@ public class BasicRectButton extends RectangularInteractiveGUIComponent {
 	}
 	
 	public float getRelativeCenterX() {
-		return mLeft+mWidth*0.5f;
+		return mPosX+mWidth*0.5f;
 	}
 	
 	public float getRelativeCenterY() {
-		return mTop+mHeight*0.5f;
+		return mPosY+mHeight*0.5f;
 	}
 	
 	public String propertiesToString() {

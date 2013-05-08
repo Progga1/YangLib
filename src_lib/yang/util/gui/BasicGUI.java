@@ -14,6 +14,9 @@ public class BasicGUI {
 	public static GUIPointerEvent[] mGUIEventPool = createEventPool(512);
 	public static int mComponentPoolPos;
 	
+	private GUICoordinatesMode mCoordinatesMode;
+	
+	private boolean mFirstFrame = true;
 	public GUIContainer2D mMainContainer;
 	public float mShiftX=0,mShiftY=0;
 	
@@ -21,6 +24,9 @@ public class BasicGUI {
 	public Default2DGraphics mGraphics2D;
 	public float mProjShiftX;
 	public float mProjShiftY;
+	public float mProjWidthFactor,mProjHeightFactor;
+	public float mProjShiftYFactor;
+	public float mProjXFactor,mProjYFactor;
 	
 	protected static GUIPointerEvent[] createEventPool(int capacity) {
 		GUIPointerEvent[] result = new GUIPointerEvent[capacity];
@@ -38,8 +44,30 @@ public class BasicGUI {
 		mMainContainer.setGUI(this);
 		mProjShiftX = -mGraphics.mRatioX;
 		mProjShiftY = mGraphics.mRatioY;
+		setCoordinatesMode(GUICoordinatesMode.SCREEN);
 	}
 	
+	private void setCoordinatesMode(GUICoordinatesMode mode) {
+		mCoordinatesMode = mode;
+		switch(mode) {
+		case SCREEN:
+			mProjShiftYFactor = 1;
+			mProjWidthFactor = 2;
+			mProjHeightFactor = 1;
+			mProjXFactor = 1;
+			mProjYFactor = -1;
+			break;
+		case NORMALIZED:
+			mProjShiftYFactor = 0;
+			mProjWidthFactor = 1;
+			mProjHeightFactor = 1;
+			mProjXFactor = 1;
+			mProjYFactor = 1;
+			break;
+		}
+		
+	}
+
 	public void setDefaultActionListener(GUIActionListener actionListener) {
 		mMainContainer.mActionListener = actionListener;
 	}
@@ -49,6 +77,10 @@ public class BasicGUI {
 	}
 	
 	public void draw() {
+		if(mFirstFrame) {
+			refreshProjections();
+			mFirstFrame = false;
+		}
 		mGraphics2D.mTranslator.switchZBuffer(false);
 		mGraphics2D.mTranslator.bindTexture(null);
 		mMainContainer.draw(mShiftX,mShiftY);
@@ -100,9 +132,13 @@ public class BasicGUI {
 	public float getGUIHeight() {
 		return mGraphics.mRatioY*2;
 	}
+	
+	public void refreshProjections() {
+		mMainContainer.refreshProjections(mShiftX,mShiftY);
+	}
 
-	public void addComponent(GUIComponent component) {
-		mMainContainer.addComponent(component);
+	public <ComponentType extends GUIComponent> ComponentType addComponent(ComponentType component) {
+		return mMainContainer.addComponent(component);
 	}
 	
 }

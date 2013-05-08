@@ -111,4 +111,8 @@ public abstract class SurfaceInterface {
 		return result;
 	}
 	
+	public void exit() {
+		System.exit(0);
+	}
+	
 }

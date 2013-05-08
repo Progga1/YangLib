@@ -9,6 +9,7 @@ public class ColoredGUIPanel extends GUIContainer2D{
 	
 	public ColoredGUIPanel() {
 		super();
+		setExtends(1,1);
 		mColor = FloatColor.WHITE.createArray();
 	}
 

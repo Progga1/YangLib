@@ -6,8 +6,6 @@ import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.components.defaults.ColoredGUIPanel;
 import yang.util.gui.interfaces.GUIActionListener;
-import yang.util.statesystem.YangProgramState;
-import yang.util.statesystem.YangProgramStateSystem;
 
 public class GUISampleState extends SampleState implements GUIActionListener {
 
@@ -15,15 +13,14 @@ public class GUISampleState extends SampleState implements GUIActionListener {
 	
 	@Override
 	protected void initGraphics() {
+		mGraphics2D.activate();
 		mGUI = new BasicGUI(mGraphics2D);
-		ColoredGUIPanel panel = new ColoredGUIPanel();
+		ColoredGUIPanel panel = mGUI.addComponent(new ColoredGUIPanel());
+		panel.setPosAndExtends(0.1f, 0.1f, 0.7f, 1);
 		
-		DefaultRectButton button1 = new DefaultRectButton();
+		DefaultRectButton button1 = panel.addComponent(new DefaultRectButton());
 		button1.createCaption("Button1").setColor(1, 0.5f, 0).setPosAndExtends(0.1f, 0.1f, 0.5f, 0.2f);
-		
-		panel.addComponent(button1);
-		
-		mGUI.addComponent(panel);
+
 	}
 	
 	@Override
@@ -33,7 +30,9 @@ public class GUISampleState extends SampleState implements GUIActionListener {
 
 	@Override
 	protected void draw() {
+		mGraphics.clear(0, 0, 0.1f);
 		
+		mGUI.draw();
 	}
 
 	@Override

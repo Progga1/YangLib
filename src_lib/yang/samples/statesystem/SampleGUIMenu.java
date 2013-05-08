@@ -2,6 +2,7 @@ package yang.samples.statesystem;
 
 import java.util.HashMap;
 
+import yang.events.Keys;
 import yang.events.eventtypes.YangInputEvent;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
@@ -57,6 +58,7 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 	@Override
 	public void draw() {
 		mGraphics2D.activate();
+		mGraphics.clear(0, 0, 0.1f);
 		mGUI.draw();
 	}
 	
@@ -71,6 +73,12 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 		YangProgramState<?> state = mProgramStates.get(sender);
 		if(state!=null)
 			mStateSystem.setState(state);
+	}
+	
+	@Override
+	public void keyUp(int code) {
+		if(code==Keys.ESC)
+			mStateSystem.exit();
 	}
 
 }
