@@ -3,7 +3,9 @@ package yang.samples.statesystem;
 import java.util.HashMap;
 
 import yang.events.eventtypes.YangInputEvent;
+import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
+import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.TailsAndPointerSample;
 import yang.util.NonConcurrentList;
@@ -16,6 +18,8 @@ import yang.util.statesystem.YangProgramStateSystem;
 
 public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> implements GUIActionListener {
 
+	public static float SCALE = 1.2f;
+	
 	protected BasicGUI mGUI;
 	protected NonConcurrentList<DefaultRectButton> mButtons;
 	protected HashMap<GUIComponent,YangProgramState<?>> mProgramStates;
@@ -31,13 +35,15 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 		mGUI.setDefaultActionListener(this);
 		addMenuItem("Tails", new TailsAndPointerSample());
 		addMenuItem("Strings", new StringSampleState());
+		addMenuItem("GUI", new GUISampleState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
+		addMenuItem("Polygon", new PolygonSampleState());
 	}
 	
 	public void addMenuItem(String caption, YangProgramState<?> state) {
 		DefaultRectButton newButton = new DefaultRectButton();
-		newButton.createCaption(caption).setExtends(0.6f, 0.15f);
-		newButton.setPosition(mGUI.getGUICenterX()-0.3f, 0.15f+mButtons.size()*0.24f);
+		newButton.createCaption(caption).setExtends(0.6f*SCALE, 0.15f*SCALE);
+		newButton.setPosition(mGUI.getGUICenterX()-0.3f*SCALE, (0.15f+mButtons.size()*0.24f)*SCALE);
 		mGUI.addComponent(newButton);
 		mButtons.add(newButton);
 		mProgramStates.put(newButton, state);
@@ -56,7 +62,8 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 	
 	@Override
 	public void rawEvent(YangInputEvent event) {
-		mGUI.handleEvent(event);
+		if(mGUI!=null)
+			mGUI.handleEvent(event);
 	}
 
 	@Override

@@ -5,14 +5,16 @@ import yang.util.statesystem.YangProgramStateSystem;
 
 public class SampleStateSystem extends YangProgramStateSystem {
 	
+	public SampleGUIMenu mMainMenu;
+	
 	public SampleStateSystem() {
 		super(true, true);
 	}
 	
 	public void postInitGraphics() {
 		DrawableString.DEFAULT_FONT = mGFXLoader.loadFont("default");
-		SampleGUIMenu mainMenu = (SampleGUIMenu)new SampleGUIMenu().init(this);
-		super.setState(mainMenu);
+		mMainMenu = (SampleGUIMenu)new SampleGUIMenu().init(this);
+		super.setState(mMainMenu);
 	}
 	
 	public void draw() {

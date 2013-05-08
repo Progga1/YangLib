@@ -19,7 +19,7 @@ public class BasicRectButton extends RectangularInteractiveGUIComponent {
 		mGraphics2D = gui.mGraphics2D;
 	}
 	
-	public void onClick(GUIPointerEvent event) {
+	public void guiClick(GUIPointerEvent event) {
 		if(mActionListener!=null)
 			mActionListener.onGUIAction(this);
 	}

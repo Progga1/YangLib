@@ -26,7 +26,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 				if(BasicGUI.mComponentPoolPos>BasicGUI.mGUIEventPool.length)
 					BasicGUI.mComponentPoolPos = 0;
 				guiEvent.createFromPointerEvent(pointerEvent,mPressedComponent);
-				mPressedComponent.onFocusedDrag(guiEvent);
+				mPressedComponent.guiFocusedDrag(guiEvent);
 			}else{
 				for(InteractiveGUIComponent component:mInteractiveComponents) {
 					if(component.mVisible && component.mEnabled && component.inArea(x, y)) {
@@ -46,7 +46,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 						
 						if(pointerEvent.mAction==PointerEvent.ACTION_POINTERUP) {
 							if(mPressedComponent==component)
-								component.onClick(guiEvent);
+								component.guiClick(guiEvent);
 							mPressedComponent = null;
 							break;
 						}

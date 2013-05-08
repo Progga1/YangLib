@@ -4,8 +4,8 @@ import yang.events.eventtypes.PointerEvent;
 import yang.events.eventtypes.YangInputEvent;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.GUIContainer2D;
-import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
@@ -101,7 +101,7 @@ public class BasicGUI {
 		return mGraphics.mRatioY*2;
 	}
 
-	public void addComponent(DefaultRectButton component) {
+	public void addComponent(GUIComponent component) {
 		mMainContainer.addComponent(component);
 	}
 	

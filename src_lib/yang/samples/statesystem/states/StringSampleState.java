@@ -2,10 +2,9 @@ package yang.samples.statesystem.states;
 
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.defaultanimatedfonts.RotatingLettersString;
-import yang.util.statesystem.YangProgramState;
-import yang.util.statesystem.YangProgramStateSystem;
+import yang.samples.statesystem.SampleState;
 
-public class StringSampleState extends YangProgramState<YangProgramStateSystem> {
+public class StringSampleState extends SampleState {
 
 	DrawableString mSimpleString;
 	DrawableString mNumberString;

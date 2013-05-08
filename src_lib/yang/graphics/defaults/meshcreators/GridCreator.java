@@ -5,7 +5,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.util.Util;
 
-public class GridCreator<GraphicsType extends DefaultGraphics> extends MeshCreator<GraphicsType>{
+public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCreator<GraphicsType>{
 
 	protected final static float[][] ZERO_FLOAT = {{0}};
 	protected final static float[][] ONE_FLOAT = {{1}};

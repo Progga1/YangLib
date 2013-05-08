@@ -26,10 +26,11 @@ import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
 import yang.model.Boundaries3D;
 import yang.model.TransformationMatrix;
+import yang.samples.statesystem.SampleState;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
-public class IcyTerrainState extends YangProgramState<YangProgramStateSystem> {
+public class IcyTerrainState extends SampleState {
 
 	private static int PATCHES_X = 64;
 	private static int PATCHES_Y = 64;

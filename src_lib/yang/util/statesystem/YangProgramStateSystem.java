@@ -40,7 +40,7 @@ public class YangProgramStateSystem extends DefaultSurface {
 	@Override
 	public void rawEvent(YangInputEvent event) {
 		if(mCurrentState!=null)
-			mCurrentState.rawEvent(event);
+			event.handle(mCurrentState);
 	}
 	
 }

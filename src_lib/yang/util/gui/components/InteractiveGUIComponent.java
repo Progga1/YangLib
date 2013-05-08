@@ -1,5 +1,6 @@
 package yang.util.gui.components;
 
+import yang.events.eventtypes.YangInputEvent;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
@@ -27,28 +28,32 @@ public abstract class InteractiveGUIComponent extends GUIComponent implements GU
 			pointerEvent.handlePointerEvent(mPointerListener);
 		}
 	}
+	
+	public void rawEvent(YangInputEvent event) {
+		
+	}
 
-	public void onClick(GUIPointerEvent event) {
+	public void guiClick(GUIPointerEvent event) {
 		
 	}
 	
-	public void onFocusedDrag(GUIPointerEvent event) {
+	public void guiFocusedDrag(GUIPointerEvent event) {
 		
 	}
 	
-	public void pointerDown(float x, float y, GUIPointerEvent event) {
+	public void guiPointerDown(float x, float y, GUIPointerEvent event) {
 		
 	}
 	
-	public void pointerMoved(float x, float y, GUIPointerEvent event) {
+	public void guiPointerMoved(float x, float y, GUIPointerEvent event) {
 		
 	}
 	
-	public void pointerDragged(float x, float y, GUIPointerEvent event) {
+	public void guiPointerDragged(float x, float y, GUIPointerEvent event) {
 		
 	}
 	
-	public void pointerUp(float x, float y, GUIPointerEvent event) {
+	public void guiPointerUp(float x, float y, GUIPointerEvent event) {
 		
 	}
 	
