@@ -1,6 +1,6 @@
 package yang.util.gui.components;
 
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
@@ -21,7 +21,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 
 			float x = pointerEvent.mX;
 			float y = pointerEvent.mY;
-			if(pointerEvent.mAction==PointerEvent.ACTION_POINTERDRAG && mPressedComponent!=null) {
+			if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDRAG && mPressedComponent!=null) {
 				GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[BasicGUI.mComponentPoolPos++];
 				if(BasicGUI.mComponentPoolPos>BasicGUI.mGUIEventPool.length)
 					BasicGUI.mComponentPoolPos = 0;
@@ -35,16 +35,16 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 							BasicGUI.mComponentPoolPos = 0;
 						guiEvent.createFromPointerEvent(pointerEvent, component);
 						component.rawPointerEvent(guiEvent);
-						guiEvent.handlePointerEvent(component);
+						guiEvent.handle(component);
 
-						if(pointerEvent.mAction==PointerEvent.ACTION_POINTERDOWN) {
+						if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDOWN) {
 							if(component.isPressable()) {
 								mPressedComponent = component;
 								break;
 							}
 						}
 						
-						if(pointerEvent.mAction==PointerEvent.ACTION_POINTERUP) {
+						if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERUP) {
 							if(mPressedComponent==component)
 								component.guiClick(guiEvent);
 							mPressedComponent = null;

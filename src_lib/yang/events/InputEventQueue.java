@@ -1,8 +1,8 @@
 package yang.events;
 
-import yang.events.eventtypes.AbstractKeyEvent;
-import yang.events.eventtypes.AbstractZoomEvent;
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangKeyEvent;
+import yang.events.eventtypes.YangZoomEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangInputEvent;
 import yang.events.listeners.FullEventListener;
 import yang.graphics.translator.GraphicsTranslator;
@@ -10,9 +10,9 @@ import yang.graphics.translator.GraphicsTranslator;
 public class InputEventQueue {
 
 	private int mMaxEvents;
-	private PointerEvent[] mPointerEventQueue;
-	private AbstractKeyEvent[] mKeyEventQueue;
-	private AbstractZoomEvent[] mZoomEventQueue;
+	private YangPointerEvent[] mPointerEventQueue;
+	private YangKeyEvent[] mKeyEventQueue;
+	private YangZoomEvent[] mZoomEventQueue;
 	private YangInputEvent[] mQueue;
 	private int mPointerEventId;
 	private int mKeyEventId;
@@ -29,13 +29,13 @@ public class InputEventQueue {
 		mQueueId = 0;
 		mQueueFirst = 0;
 		mQueue = new YangInputEvent[maxEvents];
-		mPointerEventQueue = new PointerEvent[maxEvents];
-		mKeyEventQueue = new AbstractKeyEvent[maxEvents];
-		mZoomEventQueue = new AbstractZoomEvent[maxEvents];
+		mPointerEventQueue = new YangPointerEvent[maxEvents];
+		mKeyEventQueue = new YangKeyEvent[maxEvents];
+		mZoomEventQueue = new YangZoomEvent[maxEvents];
 		for(int i=0;i<maxEvents;i++) {
-			mPointerEventQueue[i] = new PointerEvent();
-			mKeyEventQueue[i] = new AbstractKeyEvent();
-			mZoomEventQueue[i] = new AbstractZoomEvent();
+			mPointerEventQueue[i] = new YangPointerEvent();
+			mKeyEventQueue[i] = new YangKeyEvent();
+			mZoomEventQueue[i] = new YangZoomEvent();
 		}
 	}
 	
@@ -48,7 +48,7 @@ public class InputEventQueue {
 	public synchronized void putPointerEvent(int button, int x,int y, int action, int id) {
 		if(mGraphics==null)
 			return;
-		PointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
+		YangPointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
 		if(mPointerEventId>=mMaxEvents)
 			mPointerEventId = 0;
 		newEvent.mButton = button;
@@ -60,7 +60,7 @@ public class InputEventQueue {
 	}
 	
 	public synchronized void putKeyEvent(int key, int action) {
-		AbstractKeyEvent newEvent = mKeyEventQueue[mKeyEventId++];
+		YangKeyEvent newEvent = mKeyEventQueue[mKeyEventId++];
 		if(mKeyEventId>=mMaxEvents)
 			mKeyEventId = 0;
 		newEvent.mKey = key;
@@ -69,7 +69,7 @@ public class InputEventQueue {
 	}
 	
 	public void putZoomEvent(float value) {
-		AbstractZoomEvent newEvent = mZoomEventQueue[mZoomEventId++];
+		YangZoomEvent newEvent = mZoomEventQueue[mZoomEventId++];
 		if(mZoomEventId>=mMaxEvents)
 			mZoomEventId = 0;
 		newEvent.mValue = value;

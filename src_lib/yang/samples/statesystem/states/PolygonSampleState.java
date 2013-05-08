@@ -1,6 +1,6 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.meshcreators.PolygonCreator;
 import yang.samples.statesystem.SampleState;
 import yang.util.statesystem.YangProgramState;
@@ -32,7 +32,7 @@ public class PolygonSampleState extends SampleState {
 	}
 
 	@Override
-	public void pointerDown(float x,float y,PointerEvent event) {
+	public void pointerDown(float x,float y,YangPointerEvent event) {
 		mPolygon.addPoint(x, y);
 	}
 	

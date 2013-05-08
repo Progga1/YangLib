@@ -11,8 +11,8 @@ import java.awt.event.MouseWheelListener;
 import yang.events.EventQueueHolder;
 import yang.events.InputEventQueue;
 import yang.events.Keys;
-import yang.events.eventtypes.AbstractKeyEvent;
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangKeyEvent;
+import yang.events.eventtypes.YangPointerEvent;
 
 public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	
@@ -56,12 +56,12 @@ public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionL
 	
 	@Override
 	public void keyPressed(KeyEvent event) {
-		putKeyEvent(event,AbstractKeyEvent.ACTION_KEYDOWN);
+		putKeyEvent(event,YangKeyEvent.ACTION_KEYDOWN);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event) {
-		putKeyEvent(event,AbstractKeyEvent.ACTION_KEYUP);
+		putKeyEvent(event,YangKeyEvent.ACTION_KEYUP);
 	}
 
 	@Override
@@ -78,37 +78,37 @@ public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionL
 
 	public void putPointerEvent(int action,MouseEvent event) {
 		int button;
-		if(action==PointerEvent.ACTION_POINTERMOVE) {
-			button = PointerEvent.BUTTON_NONE;
+		if(action==YangPointerEvent.ACTION_POINTERMOVE) {
+			button = YangPointerEvent.BUTTON_NONE;
 		}else{
 			if((event.getModifiers() & MouseEvent.BUTTON3_MASK) != 0)
-				button = PointerEvent.BUTTON_RIGHT;
+				button = YangPointerEvent.BUTTON_RIGHT;
 			else if((event.getModifiers() & MouseEvent.BUTTON2_MASK) != 0)
-				button = PointerEvent.BUTTON_MIDDLE;
+				button = YangPointerEvent.BUTTON_MIDDLE;
 			else
-				button = PointerEvent.BUTTON_LEFT;
+				button = YangPointerEvent.BUTTON_LEFT;
 		}
 		mEventQueue.putPointerEvent(button, event.getX(), event.getY(), action, 0);
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent event) {
-		putPointerEvent(PointerEvent.ACTION_POINTERDOWN,event);
+		putPointerEvent(YangPointerEvent.ACTION_POINTERDOWN,event);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent event) {
-		putPointerEvent(PointerEvent.ACTION_POINTERUP,event);
+		putPointerEvent(YangPointerEvent.ACTION_POINTERUP,event);
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		putPointerEvent(PointerEvent.ACTION_POINTERDRAG,event);
+		putPointerEvent(YangPointerEvent.ACTION_POINTERDRAG,event);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
-		putPointerEvent(PointerEvent.ACTION_POINTERMOVE,event);
+		putPointerEvent(YangPointerEvent.ACTION_POINTERMOVE,event);
 	}
 
 	@Override

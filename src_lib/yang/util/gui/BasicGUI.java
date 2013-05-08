@@ -1,6 +1,6 @@
 package yang.util.gui;
 
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangInputEvent;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
@@ -23,6 +23,7 @@ public class BasicGUI {
 	
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
+	public float mGUILeft,mGUIBottom,mGUIRight,mGUITop;
 	public float mProjShiftX;
 	public float mProjShiftY;
 	public float mProjWidthFactor,mProjHeightFactor;
@@ -62,6 +63,10 @@ public class BasicGUI {
 			mProjXFactor = 1;
 			mProjYFactor = -1;
 			mProjShiftYFactor = -1;
+			mGUILeft = 0;
+			mGUIRight = mGraphics.mRatioX*2;
+			mGUITop = 0;
+			mGUIBottom = mGraphics.mRatioY*2;
 			break;
 		case NORMALIZED:
 			mProjShiftX = 0;
@@ -71,6 +76,10 @@ public class BasicGUI {
 			mProjXFactor = 1;
 			mProjYFactor = 1;
 			mProjShiftYFactor = 0;
+			mGUILeft = -mGraphics.mRatioX;
+			mGUIRight = mGraphics.mRatioX;
+			mGUITop = mGraphics.mRatioY;
+			mGUIBottom = -mGraphics.mRatioY;
 			break;
 		}
 		
@@ -97,13 +106,13 @@ public class BasicGUI {
 	
 	public boolean handleEvent(YangInputEvent event) {
 		boolean handled = false;
-		if(event instanceof PointerEvent) {
+		if(event instanceof YangPointerEvent) {
 			GUIPointerEvent guiEvent = mGUIEventPool[mComponentPoolPos++];
 			if(mComponentPoolPos>=mGUIEventPool.length)
 				mComponentPoolPos = 0;
-			guiEvent.createFromPointerEvent((PointerEvent)event, mMainContainer);
-			guiEvent.mX = guiEvent.mX*mProjXFactor + mProjShiftX;
-			guiEvent.mY = guiEvent.mY*mProjYFactor + mProjShiftY;
+			guiEvent.createFromPointerEvent((YangPointerEvent)event, mMainContainer);
+			guiEvent.mX = (guiEvent.mX - mProjShiftX)*mProjXFactor;
+			guiEvent.mY = (guiEvent.mY - mProjShiftY)*mProjYFactor;
 			mMainContainer.rawPointerEvent(guiEvent);
 			handled = true;
 		}
@@ -111,27 +120,27 @@ public class BasicGUI {
 	}
 	
 	public float getGUILeft() {
-		return 0;
+		return mGUILeft;
 	}
 	
 	public float getGUITop() {
-		return 0;
+		return mGUITop;
 	}
 	
 	public float getGUIRight() {
-		return -mProjShiftX*2;
+		return mGUIRight;
 	}
 	
 	public float getGUIBottom() {
-		return mProjShiftY*2;
+		return mGUIBottom;
 	}
 	
 	public float getGUICenterX() {
-		return -mProjShiftX;
+		return (mGUILeft+mGUIRight)*0.5f;
 	}
 	
 	public float getGUICenterY() {
-		return mProjShiftY;
+		return (mGUITop+mGUIBottom)*0.5f;
 	}
 	
 	public float getGUIWidth() {

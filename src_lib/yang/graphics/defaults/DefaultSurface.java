@@ -2,7 +2,7 @@ package yang.graphics.defaults;
 
 import yang.events.EventQueueHolder;
 import yang.events.InputEventQueue;
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangInputEvent;
 import yang.events.listeners.FullEventListener;
 import yang.graphics.AbstractGFXLoader;
@@ -67,19 +67,19 @@ public abstract class DefaultSurface extends SurfaceInterface implements FullEve
 		
 	}
 	
-	public void pointerDown(float x, float y, PointerEvent event) {
+	public void pointerDown(float x, float y, YangPointerEvent event) {
 
 	}
 
-	public void pointerDragged(float x, float y, PointerEvent event) {
+	public void pointerDragged(float x, float y, YangPointerEvent event) {
 		
 	}
 	
-	public void pointerMoved(float x, float y, PointerEvent event) {
+	public void pointerMoved(float x, float y, YangPointerEvent event) {
 		
 	}
 
-	public void pointerUp(float x, float y, PointerEvent event) {
+	public void pointerUp(float x, float y, YangPointerEvent event) {
 		
 	}
 	

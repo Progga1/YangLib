@@ -1,7 +1,9 @@
 package yang.util.gui;
 
 import yang.events.eventtypes.AbstractPointerEvent;
+import yang.events.listeners.RawEventListener;
 import yang.util.gui.components.GUIComponent;
+import yang.util.gui.components.InteractiveGUIComponent;
 import yang.util.gui.interfaces.GUIPointerListener;
 
 public class GUIPointerEvent extends AbstractPointerEvent {
@@ -9,19 +11,25 @@ public class GUIPointerEvent extends AbstractPointerEvent {
 	public final static int ACTION_CLICK = 4;
 	public GUIComponent mSender;
 	
-	public void handlePointerEvent(GUIPointerListener eventInterface) {
+	@Override
+	public void handle(RawEventListener eventInterface) {
+		eventInterface.rawEvent(this);
+		if(!(eventInterface instanceof GUIPointerListener))
+			return;
+		GUIPointerListener pointerListener = (GUIPointerListener)eventInterface;
+		
 		switch(mAction) {
 		case ACTION_POINTERDOWN:
-			eventInterface.guiPointerDown(mX, mY, this);
+			pointerListener.guiPointerDown(mX, mY, this);
 			break;
 		case ACTION_POINTERMOVE:
-			eventInterface.guiPointerMoved(mX, mY, this);
+			pointerListener.guiPointerMoved(mX, mY, this);
 			break;
 		case ACTION_POINTERDRAG:
-			eventInterface.guiPointerDragged(mX, mY, this);
-			break;	
+			pointerListener.guiPointerDragged(mX, mY, this);
+			break;
 		case ACTION_POINTERUP:
-			eventInterface.guiPointerUp(mX, mY, this);
+			pointerListener.guiPointerUp(mX, mY, this);
 			break;
 		}
 	}

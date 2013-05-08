@@ -1,6 +1,6 @@
 package yang.graphics.tools.animator;
 
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangInputEvent;
 import yang.events.listeners.FullEventListener;
 import yang.graphics.defaults.Default2DGraphics;
@@ -264,11 +264,11 @@ public class Animator implements FullEventListener {
 		
 	}
 
-	public void pointerMoved(float x, float y, PointerEvent event) {
+	public void pointerMoved(float x, float y, YangPointerEvent event) {
 		
 	}
 	
-	public void pointerDown(float x,float y,PointerEvent event) {
+	public void pointerDown(float x,float y,YangPointerEvent event) {
 		mCurPntX = mGraphics2D.normToGameX(x,y);
 		mCurPntY = mGraphics2D.normToGameY(x,y);
 		mPrevPntX = mCurPntX;
@@ -276,15 +276,15 @@ public class Animator implements FullEventListener {
 		mPrevSX = x;
 		mPrevSY = y;
 		switch(event.mButton) {
-		case PointerEvent.BUTTON_LEFT:
+		case YangPointerEvent.BUTTON_LEFT:
 			mSkeletonEditing.mMarkedJoint = mCurSkeleton.pickJoint(mCurPntX, mCurPntY);
 			if(mSkeletonEditing.mMarkedJoint!=null)
 				mSkeletonEditing.mMarkedJoint.startDrag();
 			break;
-		case PointerEvent.BUTTON_MIDDLE:
+		case YangPointerEvent.BUTTON_MIDDLE:
 			
 			break;
-		case PointerEvent.BUTTON_RIGHT:
+		case YangPointerEvent.BUTTON_RIGHT:
 			Joint pick = mCurSkeleton.pickJoint(mCurPntX, mCurPntY);
 			if(pick!=null)
 				pick.mFixed ^= true;
@@ -292,7 +292,7 @@ public class Animator implements FullEventListener {
 		}
 	}
 	
-	public void pointerDragged(float x,float y,PointerEvent event) {
+	public void pointerDragged(float x,float y,YangPointerEvent event) {
 		
 		mPrevPntX = mCurPntX;
 		mPrevPntY = mCurPntY;
@@ -302,13 +302,13 @@ public class Animator implements FullEventListener {
 		float deltaY = mCurPntY-mPrevPntY;
 		
 		switch(event.mButton) {
-			case PointerEvent.BUTTON_LEFT:
+			case YangPointerEvent.BUTTON_LEFT:
 				if(mSkeletonEditing.mMarkedJoint!=null) {
 					mSkeletonEditing.mMarkedJoint.drag(deltaX, deltaY);
 					mPoseChanged = true;
 				}
 				break;
-			case PointerEvent.BUTTON_MIDDLE:
+			case YangPointerEvent.BUTTON_MIDDLE:
 				mCamera.move((mPrevSX-x)*mCamera.getZoom(),(mPrevSY-y)*mCamera.getZoom());
 				break;
 		}
@@ -317,7 +317,7 @@ public class Animator implements FullEventListener {
 		mPrevSY = y;
 	}
 	
-	public void pointerUp(float x,float y,PointerEvent event) {
+	public void pointerUp(float x,float y,YangPointerEvent event) {
 		if(mSkeletonEditing.mMarkedJoint!=null) {
 			mSkeletonEditing.mMarkedJoint.endDrag();
 			if(mSkeletonEditing.mMarkedJoint.mFixed)

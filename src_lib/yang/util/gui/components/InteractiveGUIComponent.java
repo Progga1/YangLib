@@ -25,7 +25,7 @@ public abstract class InteractiveGUIComponent extends GUIComponent implements GU
 	
 	public void rawPointerEvent(GUIPointerEvent pointerEvent) {
 		if(mPointerListener!=null) {
-			pointerEvent.handlePointerEvent(mPointerListener);
+			pointerEvent.handle(mPointerListener);
 		}
 	}
 	

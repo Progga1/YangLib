@@ -1,6 +1,6 @@
 package yang.android.graphics;
 
-import yang.events.eventtypes.AbstractKeyEvent;
+import yang.events.eventtypes.YangKeyEvent;
 import yang.graphics.translator.GraphicsTranslator;
 import android.content.Context;
 import android.view.KeyEvent;
@@ -49,8 +49,8 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 		
 		if (keyCode == KeyEvent.KEYCODE_ENTER) {
 			if (mEditText.getText().length() == 1) {
-				mEventQueue.putKeyEvent(mEditText.getText().charAt(0),AbstractKeyEvent.ACTION_KEYDOWN);
-				mEventQueue.putKeyEvent(mEditText.getText().charAt(0),AbstractKeyEvent.ACTION_KEYUP);
+				mEventQueue.putKeyEvent(mEditText.getText().charAt(0),YangKeyEvent.ACTION_KEYDOWN);
+				mEventQueue.putKeyEvent(mEditText.getText().charAt(0),YangKeyEvent.ACTION_KEYUP);
 			}
 			mEditText.setText("");
 		}

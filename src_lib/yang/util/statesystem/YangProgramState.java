@@ -1,6 +1,6 @@
 package yang.util.statesystem;
 
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangInputEvent;
 import yang.events.listeners.FullEventListener;
 import yang.graphics.defaults.Default2DGraphics;
@@ -75,22 +75,22 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	}
 	
 	@Override
-	public void pointerDown(float x, float y, PointerEvent event) {
+	public void pointerDown(float x, float y, YangPointerEvent event) {
 
 	}
 
 	@Override
-	public void pointerMoved(float x, float y, PointerEvent event) {
+	public void pointerMoved(float x, float y, YangPointerEvent event) {
 		
 	}
 
 	@Override
-	public void pointerDragged(float x, float y, PointerEvent event) {
+	public void pointerDragged(float x, float y, YangPointerEvent event) {
 		
 	}
 
 	@Override
-	public void pointerUp(float x, float y, PointerEvent event) {
+	public void pointerUp(float x, float y, YangPointerEvent event) {
 		
 	}
 

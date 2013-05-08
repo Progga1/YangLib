@@ -7,8 +7,8 @@ import yang.android.sound.AndroidSoundManager;
 import yang.events.EventQueueHolder;
 import yang.events.InputEventQueue;
 import yang.events.Keys;
-import yang.events.eventtypes.AbstractKeyEvent;
-import yang.events.eventtypes.PointerEvent;
+import yang.events.eventtypes.AbstractPointerEvent;
+import yang.events.eventtypes.YangKeyEvent;
 import yang.graphics.SurfaceInterface;
 import yang.model.App;
 import yang.model.Factory;
@@ -71,12 +71,12 @@ public class YangTouchSurface extends GLSurfaceView{
 		switch (action){
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
-			mEventQueue.putPointerEvent(PointerEvent.BUTTON_LEFT, x, y, PointerEvent.ACTION_POINTERDOWN, id);
+			mEventQueue.putPointerEvent(AbstractPointerEvent.BUTTON_LEFT, x, y, AbstractPointerEvent.ACTION_POINTERDOWN, id);
 			break;
 
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
-			mEventQueue.putPointerEvent(PointerEvent.BUTTON_LEFT, x, y, PointerEvent.ACTION_POINTERUP, id);
+			mEventQueue.putPointerEvent(AbstractPointerEvent.BUTTON_LEFT, x, y, AbstractPointerEvent.ACTION_POINTERUP, id);
 			break;
 
 		case MotionEvent.ACTION_MOVE:
@@ -84,7 +84,7 @@ public class YangTouchSurface extends GLSurfaceView{
 			for(int i = 0; i < event.getPointerCount(); i++){
 				id = event.getPointerId(i);
 				//mEventListener.pointerDragged((int)event.getX(i), (int)event.getY(i), id);
-				mEventQueue.putPointerEvent(PointerEvent.BUTTON_LEFT, x, y, PointerEvent.ACTION_POINTERDRAG, id);
+				mEventQueue.putPointerEvent(AbstractPointerEvent.BUTTON_LEFT, x, y, AbstractPointerEvent.ACTION_POINTERDRAG, id);
 			}
 			break;
 		}
@@ -94,8 +94,8 @@ public class YangTouchSurface extends GLSurfaceView{
 	
 	public void onBackPressed() {
 		if (mEventQueue!=null) {
-			mEventQueue.putKeyEvent(Keys.ESC, AbstractKeyEvent.ACTION_KEYDOWN);
-			mEventQueue.putKeyEvent(Keys.ESC, AbstractKeyEvent.ACTION_KEYUP);
+			mEventQueue.putKeyEvent(Keys.ESC, YangKeyEvent.ACTION_KEYDOWN);
+			mEventQueue.putKeyEvent(Keys.ESC, YangKeyEvent.ACTION_KEYUP);
 		}
 	}
 	
