@@ -16,10 +16,18 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 	
 	@Override
 	public void refreshProjections(float offsetX,float offsetY) {
-		mProjLeft = mGUI.mProjShiftX+(mPosX+offsetX)*mGUI.mProjXFactor;
-		mProjBottom = mGUI.mProjShiftY+(mPosY+offsetY)*mGUI.mProjYFactor+mHeight*mGUI.mProjShiftYFactor;
+		mProjLeft = mGUI.mProjShiftX+mPosX*mGUI.mProjXFactor+offsetX;
+		mProjBottom = mGUI.mProjShiftY+mPosY*mGUI.mProjYFactor+mHeight*mGUI.mProjShiftYFactor+offsetY;
 		mProjWidth = mWidth*mGUI.mProjWidthFactor;
 		mProjHeight = mHeight*mGUI.mProjHeightFactor;
+	}
+	
+	public float getProjCenterX() {
+		return mProjLeft+mProjWidth*0.5f;
+	}
+	
+	public float getProjCenterY() {
+		return mProjBottom+mProjHeight*0.5f;
 	}
 	
 	public RectangularInteractiveGUIComponent setBounds(float left,float top,float right,float bottom) {
@@ -38,14 +46,6 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 		return this;
 	}
 	
-	protected void drawRect(float offsetX,float offsetY) {
-		mGUI.mGraphics2D.drawRect(projX(offsetX+mPosX),projY(offsetY+mPosY+mHeight),projX(offsetX+mPosX+mWidth),projY(offsetY+mPosY));
-	}
-	
-	protected void drawRect(float offsetX,float offsetY,float border) {
-		mGUI.mGraphics2D.drawRect(projX(offsetX+mPosX+border),projY(offsetY+mPosY+mHeight-border),projX(offsetX+mPosX+mWidth-border),projY(offsetY+mPosY+border));
-	}
-	
 	public RectangularInteractiveGUIComponent setPosAndDimCentered(float centerX, float centerY, float width, float height) {
 		return setBounds(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
 	}
@@ -62,6 +62,14 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 		mWidth = width;
 		mHeight = height;
 		return this;
+	}
+	
+	protected void drawRect() {
+		mGUI.mGraphics2D.drawRect(mProjLeft,mProjBottom,mProjLeft+mProjWidth,mProjBottom+mProjHeight);
+	}
+	
+	protected void drawRect(float border) {
+		mGUI.mGraphics2D.drawRect(mProjLeft-border,mProjBottom-border,mProjLeft+mProjWidth+border,mProjBottom+mProjHeight+border);
 	}
 
 	@Override

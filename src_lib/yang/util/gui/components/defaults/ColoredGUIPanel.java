@@ -16,8 +16,8 @@ public class ColoredGUIPanel extends GUIContainer2D{
 	public void draw(float offsetX,float offsetY) {
 		mGraphics2D.mTranslator.bindTexture(null);
 		mGraphics2D.setColor(mColor);
-		drawRect(offsetX,offsetY);
-		super.draw(offsetX, offsetY);
+		drawRect();
+		super.draw();
 	}
 	
 	public ColoredGUIPanel setColor(float r,float g,float b, float a) {

@@ -59,7 +59,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 	
 	@Override
 	public void refreshProjections(float offsetX,float offsetY) {
-		super.refreshProjections(offsetX, offsetY);
+		super.refreshProjections(offsetX,offsetY);
 		for(GUIComponent component:mAllComponents) {
 			component.refreshProjections(mPosX+offsetX, mPosY+offsetY);
 		}
@@ -67,10 +67,10 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 	}
 	
 	@Override
-	public void draw(float offsetX,float offsetY) {
+	public void draw() {
 		for(GUIComponent component:mAllComponents) {
 			if(component.mVisible)
-				component.draw(offsetX+mPosX,+offsetY+mPosY);
+				component.draw();
 		}
 	}
 	

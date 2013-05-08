@@ -25,8 +25,8 @@ public class BasicRectButton extends RectangularInteractiveGUIComponent {
 	}
 	
 	@Override
-	public void draw(float offsetX,float offsetY) {
-		drawRect(offsetX,offsetY);
+	public void draw() {
+		drawRect();
 	}
 	
 	public float getRelativeCenterX() {

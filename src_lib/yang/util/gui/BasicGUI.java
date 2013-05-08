@@ -14,11 +14,12 @@ public class BasicGUI {
 	public static GUIPointerEvent[] mGUIEventPool = createEventPool(512);
 	public static int mComponentPoolPos;
 	
+	public boolean mAutoUpdateProjections = true;
+	
 	private GUICoordinatesMode mCoordinatesMode;
 	
 	private boolean mFirstFrame = true;
 	public GUIContainer2D mMainContainer;
-	public float mShiftX=0,mShiftY=0;
 	
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
@@ -37,32 +38,39 @@ public class BasicGUI {
 		return result;
 	}
 	
-	public BasicGUI(Default2DGraphics graphics2D) {
+	public BasicGUI(Default2DGraphics graphics2D,GUICoordinatesMode coordinatesMode,boolean autoUpdateProjections) {
 		mGraphics2D = graphics2D;
 		mGraphics = graphics2D.mTranslator;
 		mMainContainer = new GUIContainer2D();
 		mMainContainer.setGUI(this);
-		mProjShiftX = -mGraphics.mRatioX;
-		mProjShiftY = mGraphics.mRatioY;
-		setCoordinatesMode(GUICoordinatesMode.SCREEN);
+		mAutoUpdateProjections = autoUpdateProjections;
+		setCoordinatesMode(coordinatesMode);
+	}
+	
+	public BasicGUI(Default2DGraphics graphics2D) {
+		this(graphics2D,GUICoordinatesMode.SCREEN,true);
 	}
 	
 	private void setCoordinatesMode(GUICoordinatesMode mode) {
 		mCoordinatesMode = mode;
 		switch(mode) {
 		case SCREEN:
-			mProjShiftYFactor = 1;
-			mProjWidthFactor = 2;
+			mProjShiftX = -mGraphics.mRatioX;
+			mProjShiftY = mGraphics.mRatioY;
+			mProjWidthFactor = 1;
 			mProjHeightFactor = 1;
 			mProjXFactor = 1;
 			mProjYFactor = -1;
+			mProjShiftYFactor = -1;
 			break;
 		case NORMALIZED:
-			mProjShiftYFactor = 0;
+			mProjShiftX = 0;
+			mProjShiftY = 0;
 			mProjWidthFactor = 1;
 			mProjHeightFactor = 1;
 			mProjXFactor = 1;
 			mProjYFactor = 1;
+			mProjShiftYFactor = 0;
 			break;
 		}
 		
@@ -80,10 +88,11 @@ public class BasicGUI {
 		if(mFirstFrame) {
 			refreshProjections();
 			mFirstFrame = false;
-		}
+		}else if(mAutoUpdateProjections)
+			refreshProjections();
 		mGraphics2D.mTranslator.switchZBuffer(false);
 		mGraphics2D.mTranslator.bindTexture(null);
-		mMainContainer.draw(mShiftX,mShiftY);
+		mMainContainer.draw();
 	}
 	
 	public boolean handleEvent(YangInputEvent event) {
@@ -93,8 +102,8 @@ public class BasicGUI {
 			if(mComponentPoolPos>=mGUIEventPool.length)
 				mComponentPoolPos = 0;
 			guiEvent.createFromPointerEvent((PointerEvent)event, mMainContainer);
-			guiEvent.mX -= mProjShiftX;
-			guiEvent.mY = -guiEvent.mY+mProjShiftY;
+			guiEvent.mX = guiEvent.mX*mProjXFactor + mProjShiftX;
+			guiEvent.mY = guiEvent.mY*mProjYFactor + mProjShiftY;
 			mMainContainer.rawPointerEvent(guiEvent);
 			handled = true;
 		}
@@ -134,11 +143,16 @@ public class BasicGUI {
 	}
 	
 	public void refreshProjections() {
-		mMainContainer.refreshProjections(mShiftX,mShiftY);
+		mMainContainer.refreshProjections(0,0);
 	}
 
 	public <ComponentType extends GUIComponent> ComponentType addComponent(ComponentType component) {
 		return mMainContainer.addComponent(component);
+	}
+	
+	public void setGlobalShift(float shiftX,float shiftY) {
+		mMainContainer.mPosX = shiftX;
+		mMainContainer.mPosY = shiftY;
 	}
 	
 }

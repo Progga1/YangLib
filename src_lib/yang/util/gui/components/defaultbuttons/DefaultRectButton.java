@@ -42,15 +42,15 @@ public class DefaultRectButton extends ColoredRectButton {
 	}
 	
 	@Override
-	public void draw(float offsetX,float offsetY) {
+	public void draw() {
 		mGraphics2D.bindTexture(null);
 		mGraphics2D.setColor(mBorderCl);
-		drawRect(offsetX,offsetY);
+		drawRect();
 		mGraphics2D.setColor(mRGBA);
-		drawRect(offsetX,offsetY,mBorder);
+		drawRect(-mBorder);
 		mGraphics2D.setColor(mFontColor);
 		if(mCaption!=null)
-			mCaption.draw(projX(offsetX+getRelativeCenterX()), projY(offsetY+getRelativeCenterY()), mFontSize, 0);
+			mCaption.draw(getProjCenterX(), getProjCenterY(), mFontSize, 0);
 	}
 	
 }

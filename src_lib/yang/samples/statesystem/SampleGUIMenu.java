@@ -11,6 +11,7 @@ import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.TailsAndPointerSample;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
+import yang.util.gui.GUICoordinatesMode;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.interfaces.GUIActionListener;
@@ -19,7 +20,7 @@ import yang.util.statesystem.YangProgramStateSystem;
 
 public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> implements GUIActionListener {
 
-	public static float SCALE = 1.2f;
+	public static float SCALE = 1.0f;
 	
 	protected BasicGUI mGUI;
 	protected NonConcurrentList<DefaultRectButton> mButtons;
@@ -32,7 +33,8 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 	
 	@Override
 	public void initGraphics() {
-		mGUI = new BasicGUI(mGraphics2D);
+		mGUI = new BasicGUI(mGraphics2D,GUICoordinatesMode.SCREEN,true);
+		//normalized: mGUI = new BasicGUI(mGraphics2D,GUICoordinatesMode.NORMALIZED,true);
 		mGUI.setDefaultActionListener(this);
 		addMenuItem("Tails", new TailsAndPointerSample());
 		addMenuItem("Strings", new StringSampleState());
@@ -43,8 +45,9 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 	
 	public void addMenuItem(String caption, YangProgramState<?> state) {
 		DefaultRectButton newButton = new DefaultRectButton();
-		newButton.createCaption(caption).setExtends(0.6f*SCALE, 0.15f*SCALE);
-		newButton.setPosition(mGUI.getGUICenterX()-0.3f*SCALE, (0.15f+mButtons.size()*0.24f)*SCALE);
+		newButton.createCaption(caption);
+		newButton.setPosAndDimCentered(mGUI.getGUICenterX(), (0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
+		//normalized: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		mGUI.addComponent(newButton);
 		mButtons.add(newButton);
 		mProgramStates.put(newButton, state);

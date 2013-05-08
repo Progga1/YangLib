@@ -35,9 +35,9 @@ public class ColoredRectButton extends BasicRectButton {
 	}
 	
 	@Override
-	public void draw(float offsetX,float offsetY) {
+	public void draw() {
 		mGraphics2D.setColor(mRGBA);
-		super.draw(offsetX,offsetY);
+		super.draw();
 	}
 	
 }

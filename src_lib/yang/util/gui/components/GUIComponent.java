@@ -10,13 +10,13 @@ public class GUIComponent {
 	public float mProjLeft,mProjBottom;
 	protected BasicGUI mGUI;
 	
-	public void draw(float offsetX,float offsetY) {
+	public void draw() {
 		
 	}
 	
 	public void refreshProjections(float offsetX,float offsetY) {
-		mProjLeft = mGUI.mProjShiftX+(mPosX+offsetX)*mGUI.mProjXFactor;
-		mProjBottom = mGUI.mProjShiftY+(mPosY+offsetY)*mGUI.mProjYFactor;
+		mProjLeft = mGUI.mProjShiftX+mPosX*mGUI.mProjXFactor+offsetX;
+		mProjBottom = mGUI.mProjShiftY+mPosY*mGUI.mProjYFactor+offsetY;
 	}
 	
 	public GUIComponent setPosition(float x,float y) {
