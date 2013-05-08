@@ -1,8 +1,9 @@
 package yang.util.statesystem;
 
-import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.InputEventListener;
+import yang.graphics.AbstractGFXLoader;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
@@ -18,6 +19,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected GraphicsTranslator mGraphics;
 	protected Default2DGraphics mGraphics2D;
 	protected Default3DGraphics mGraphics3D;
+	protected AbstractGFXLoader mGFXLoader;
 	protected AbstractResourceManager mResources;
 	protected StringsXML mStrings;
 	
@@ -29,6 +31,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		mGraphics = stateSystem.mGraphics2D.mTranslator;
 		mGraphics2D = stateSystem.mGraphics2D;
 		mGraphics3D = stateSystem.mGraphics3D;
+		mGFXLoader = stateSystem.mGFXLoader;
 		mResources = stateSystem.mResources;
 		mStrings = stateSystem.mStrings;
 		postInit();

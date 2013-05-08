@@ -20,7 +20,7 @@ public class PCGFXLoader extends AbstractGFXLoader {
 	}
 
 	@Override
-	public TextureData loadImageData(String filename) {
+	public TextureData loadImageData(String filename,boolean forceRGBA) {
 		ByteBuffer buffer = null;
 		int width = 0;
 		int height = 0;
@@ -37,16 +37,18 @@ public class PCGFXLoader extends AbstractGFXLoader {
 		height = image.getHeight();
 
 		WritableRaster alphaBuffer = image.getAlphaRaster();
-		int channels = alphaBuffer!=null?4:3;
+		int channels = alphaBuffer!=null || forceRGBA?4:3;
 		buffer = ByteBuffer.allocate(width * height * channels);
 
-		if(alphaBuffer==null || !TextureData.USE_PREMULTIPLICATION) {
+		if(alphaBuffer==null) {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
 					int rgb = image.getRGB(x, y);
 					buffer.put((byte)(((rgb>>16)&0xFF)));
 					buffer.put((byte)(((rgb>>8)&0xFF)));
 					buffer.put((byte)(((rgb)&0xFF)));
+					if(forceRGBA)
+						buffer.put((byte)255);
 				}
 			}
 		}else{
@@ -54,7 +56,7 @@ public class PCGFXLoader extends AbstractGFXLoader {
 				for (int x = 0; x < width; x++) {
 					int rgb = image.getRGB(x, y);
 					int alpha = alphaBuffer.getSample(x, y, 0);
-					if(alpha<255) {
+					if(alpha<255 && !TextureData.USE_PREMULTIPLICATION) {
 						float fac = alpha/255f;
 						buffer.put((byte)(((rgb>>16)&0xFF)*fac));
 						buffer.put((byte)(((rgb>>8)&0xFF)*fac));
@@ -64,8 +66,8 @@ public class PCGFXLoader extends AbstractGFXLoader {
 						buffer.put((byte)(((rgb>>8)&0xFF)));
 						buffer.put((byte)(((rgb)&0xFF)));
 					}
-					if(alphaBuffer!=null)
-						buffer.put((byte)alpha);
+					
+					buffer.put((byte)alpha);
 				}
 			}
 		}

@@ -2,6 +2,7 @@ package yang.graphics.tail;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default2DGraphics;
+import yang.graphics.defaults.DefaultGraphics;
 import yang.model.DebugYang;
 
 public class Tail {
@@ -36,28 +37,28 @@ public class Tail {
 	public float mMinDist;
 	private boolean mInverted;
 	private boolean mSubTails;
-	private Default2DGraphics mGraphics2D;
-	private IndexedVertexBuffer mVertexBuffer;
+	private DefaultGraphics<?> mGraphics;
 	public float mAddColor[];
 	public int mTexXRepeat = 0;
 	protected float mTexYRepeat = 2;
 	public float mTexXShift = 0;
+	public boolean mInterruptAtSmallDistances = true;
 	
-	public Tail(Default2DGraphics graphics,int size,float r,float g,float b,float a,boolean subTails) {
-		mGraphics2D = graphics;
-		mSize = size;
-		mCountLength = size/2;
-		mPosX = new float[size];
-		mPosY = new float[size];
-		mDirX = new float[size];
-		mDirY = new float[size];
-		mDist = new float[size];
+	public Tail(DefaultGraphics<?> graphics,int capacity,boolean subTails) {
+		mGraphics = graphics;
+		mSize = capacity;
+		mCountLength = capacity/2;
+		mPosX = new float[capacity];
+		mPosY = new float[capacity];
+		mDirX = new float[capacity];
+		mDirY = new float[capacity];
+		mDist = new float[capacity];
 		mCounts = new int[mCountLength];
 		mCurColor = new float[4];
-		setColor(r,g,b,a);
+		setColor(1,1,1,1);
 		mWidth = 0.25f;
 		mMinDist = 0.001f;
-		mCreateNodeFreq = 25;
+		mCreateNodeFreq = 1;
 		mAddColor = new float[]{0,0,0,0};
 		mInverted = false;
 		mSubTails = subTails;
@@ -92,7 +93,7 @@ public class Tail {
 		setColor(r,g,b,1);
 	}
 	
-	public void incCountPos() {
+	public void interruptTail() {
 		synchronized(this) {
 			if(mCounts[mCountRingPos]!=0) {
 				mCountRingPos++;
@@ -113,39 +114,46 @@ public class Tail {
 			}else
 				newNode = true;
 			
+			boolean updateIndices = true;
 			if(newNode) {
-				
-				if(mPrevIndex>-1 && (forceDirX!=0 || forceDirY!=0) ) {
-					mDirX[mPrevIndex] = (mDirX[mPrevIndex]+forceDirX)*0.5f;
-					mDirY[mPrevIndex] = (mDirY[mPrevIndex]+forceDirY)*0.5f;
-				}
-				
+				int counts = mCounts[mCountRingPos];
 				if(dist>mMinDist) {
 					//Continue sub tail
-					if(mCounts[mCountRingPos]<0)
-						incCountPos();
+					if(counts<0)
+						interruptTail();
 					if(mCounts[mCountRingPos]<mSize)
 						mCounts[mCountRingPos]++;
 				}else{
 					//New sub tail
-					if(mCounts[mCountRingPos]>0) {
-						mCounts[mCountRingPos]--;
-						incCountPos();
-						mCounts[mCountRingPos]--;
-					}
-					if(mCounts[mCountRingPos]>-mSize)
-						mCounts[mCountRingPos]--;
+					if(mInterruptAtSmallDistances) {
+						if(counts>0) {
+							mCounts[mCountRingPos]--;
+							interruptTail();
+							mCounts[mCountRingPos]--;
+						}
+						if(mCounts[mCountRingPos]>-mSize)
+							mCounts[mCountRingPos]--;
+					}else
+						updateIndices = false;
 				}
 					
-				mPrevIndex = mRingPos;
-				mRingPos++;
-				if(mRingPos>=mSize) {
-					mRingPos = 0;
-					mFilled = true;
+				if(updateIndices) {
+					
+					if(mPrevIndex>-1 && (forceDirX!=0 || forceDirY!=0) ) {
+						mDirX[mPrevIndex] = (mDirX[mPrevIndex]+forceDirX)*0.5f;
+						mDirY[mPrevIndex] = (mDirY[mPrevIndex]+forceDirY)*0.5f;
+					}
+					
+					mPrevIndex = mRingPos;
+					mRingPos++;
+					if(mRingPos>=mSize) {
+						mRingPos = 0;
+						mFilled = true;
+					}
+					
+					mLastNodeX = x;
+					mLastNodeY = y;
 				}
-				
-				mLastNodeX = x;
-				mLastNodeY = y;
 			}
 			
 			mDist[mRingPos] = dist;
@@ -210,10 +218,10 @@ public class Tail {
 	}
 	
 	private void beginSubTail() {
-		mGraphics2D.startStrip();
+		mGraphics.startStrip();
 	}
 	
-	public int initTailDraw() {
+	protected int initTailDraw() {
 		int l = getTailLength();
 		if(l<=1)
 			return l;
@@ -227,27 +235,27 @@ public class Tail {
 	private float curTailTexX;
 	private float tailTexXStep;
 	
-	public void putTailVertices(float scale,float alpha) {
+	protected void putTailVertices(float scale,float alpha) {
 		if(putPos<0) {
 			putPos = mSize-1;
 		}
-		mGraphics2D.continueStrip();
-		mGraphics2D.putPosition(mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
-		mGraphics2D.putPosition(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale);
+		mGraphics.continueStrip();
+		mGraphics.putPosition(mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
+		mGraphics.putPosition(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale);
 		if(mTexXRepeat==0)
-			mGraphics2D.putTextureArray(stdTexCoords);
+			mGraphics.putTextureArray(stdTexCoords);
 		else{
-			mGraphics2D.putTextureCoordPair(curTailTexX, 0, curTailTexX, mTexYRepeat);
+			mGraphics.putTextureCoordPair(curTailTexX, 0, curTailTexX, mTexYRepeat);
 			curTailTexX += tailTexXStep;
 		}
-		mGraphics2D.putAddColorRect(mAddColor);
+		mGraphics.putAddColorRect(mAddColor);
 		mCurColor[3] = mGlobAlpha * alpha;
-		mGraphics2D.putColor(mCurColor);
-		mGraphics2D.putColor(mCurColor);
+		mGraphics.putColor(mCurColor);
+		mGraphics.putColor(mCurColor);
 		putPos--;
 	}
 	
-	public void skipTailVertices() {
+	protected void skipTailVertices() {
 		putPos--;
 		if(putPos<0) {
 			putPos = mSize-1;

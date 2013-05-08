@@ -18,7 +18,7 @@ public class GdxGfxLoader extends AbstractGFXLoader {
 	}
 	
 	@Override
-	public TextureData loadImageData(String name) {		
+	public TextureData loadImageData(String name,boolean forceRGBA) {		
 		FileHandle handle = Gdx.files.internal(IMAGE_PATH+name+IMAGE_EXT);
 		com.badlogic.gdx.graphics.Texture gdxTex = new com.badlogic.gdx.graphics.Texture(handle);
 		gdxTex.getTextureData().prepare();

@@ -22,7 +22,7 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 	}
 	
 	@Override
-	public TextureData loadImageData(String name) {
+	public TextureData loadImageData(String name,boolean forceRGBA) {
 		Bitmap bmp = null;
 		
 		AssetManager mgr = mContext.getAssets();
@@ -45,7 +45,7 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		int width = bmp.getWidth();
 		int height = bmp.getHeight();
 		
-		int channels = bmp.hasAlpha()?4:4;
+		int channels = bmp.hasAlpha() || forceRGBA?4:4;
 		ByteBuffer buf = ByteBuffer.allocateDirect(width*height*channels);
 		bmp.copyPixelsToBuffer(buf);
 		buf.rewind();

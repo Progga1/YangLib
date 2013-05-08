@@ -28,7 +28,7 @@ public abstract class AbstractGFXLoader {
 	
 	public AbstractResourceManager mResources;
 
-	public abstract TextureData loadImageData(String filename);
+	public abstract TextureData loadImageData(String filename,boolean forceRGBA);
 	
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
 		mTextures = new HashMap<String, Texture>();
@@ -38,20 +38,20 @@ public abstract class AbstractGFXLoader {
 	}
 	
 	protected Texture loadImage(String name,TextureSettings textureSettings,boolean redToAlpha) {
-		TextureData data = loadImageData(name);
+		TextureData data = loadImageData(name,redToAlpha);
 		if(redToAlpha)
 			data.redToAlpha();
 		return mGraphics.createTexture(data,textureSettings).finish();
 	}
 	
-	public synchronized Texture getImage(String name,TextureSettings textureSettings, boolean redAsAlpha) {
+	protected synchronized Texture getImage(String name,TextureSettings textureSettings, boolean redToAlpha) {
 		Texture texture = mTextures.get(name);
 		
 		if (texture != null && texture.mSettings.equals(textureSettings))
 			return texture;
 		if(textureSettings==null)
 			textureSettings = new TextureSettings();
-		texture = loadImage(name, textureSettings, redAsAlpha);
+		texture = loadImage(name, textureSettings, redToAlpha);
 		mTextures.put(name, texture);
 		mGraphics.rebindTexture();
 		
