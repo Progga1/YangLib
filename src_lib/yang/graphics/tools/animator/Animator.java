@@ -1,8 +1,8 @@
 package yang.graphics.tools.animator;
 
 import yang.events.eventtypes.YangPointerEvent;
-import yang.events.eventtypes.YangInputEvent;
-import yang.events.listeners.FullEventListener;
+import yang.events.eventtypes.YangEvent;
+import yang.events.listeners.InputEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.skeletons.Skeleton;
 import yang.graphics.skeletons.SkeletonCarrier;
@@ -17,7 +17,7 @@ import yang.graphics.util.Camera2D;
 import yang.sound.SoundManager;
 import yang.util.NonConcurrentList;
 
-public class Animator implements FullEventListener {
+public class Animator implements InputEventListener {
 
 	public SoundManager mSound;
 	public GraphicsTranslator mGraphics;
@@ -260,8 +260,8 @@ public class Animator implements FullEventListener {
 			selectFrame(mFrameIndex+1,applyFrame);
 	}
 	
-	public void rawEvent(YangInputEvent event) {
-		
+	public boolean rawEvent(YangEvent event) {
+		return false;
 	}
 
 	public void pointerMoved(float x, float y, YangPointerEvent event) {

@@ -3,15 +3,15 @@ package yang.graphics.defaults;
 import yang.events.EventQueueHolder;
 import yang.events.InputEventQueue;
 import yang.events.eventtypes.YangPointerEvent;
-import yang.events.eventtypes.YangInputEvent;
-import yang.events.listeners.FullEventListener;
+import yang.events.eventtypes.YangEvent;
+import yang.events.listeners.InputEventListener;
 import yang.graphics.AbstractGFXLoader;
 import yang.graphics.SurfaceInterface;
 import yang.graphics.font.DrawableString;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
-public abstract class DefaultSurface extends SurfaceInterface implements FullEventListener,EventQueueHolder{
+public abstract class DefaultSurface extends SurfaceInterface implements InputEventListener,EventQueueHolder{
 
 	public AbstractResourceManager mResources;
 	public StringsXML mStrings;
@@ -63,8 +63,8 @@ public abstract class DefaultSurface extends SurfaceInterface implements FullEve
 		mEventQueue.handleEvents(this);
 	}
 
-	public void rawEvent(YangInputEvent event) {
-		
+	public boolean rawEvent(YangEvent event) {
+		return false;
 	}
 	
 	public void pointerDown(float x, float y, YangPointerEvent event) {

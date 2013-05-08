@@ -2,15 +2,17 @@ package yang.events.eventtypes;
 
 import yang.events.listeners.PointerEventListener;
 import yang.events.listeners.RawEventListener;
+import yang.util.gui.components.GUIComponent;
 
 public class YangPointerEvent extends AbstractPointerEvent {
 	
 	@Override
-	public void handle(RawEventListener eventInterface) {
-		eventInterface.rawEvent(this);
-		if(!(eventInterface instanceof PointerEventListener))
+	public void handle(RawEventListener listener) {
+		if(listener.rawEvent(this))
 			return;
-		PointerEventListener pointerListener = (PointerEventListener)eventInterface;
+		if(!(listener instanceof PointerEventListener))
+			return;
+		PointerEventListener pointerListener = (PointerEventListener)listener;
 		
 		switch(mAction) {
 		case ACTION_POINTERDOWN:

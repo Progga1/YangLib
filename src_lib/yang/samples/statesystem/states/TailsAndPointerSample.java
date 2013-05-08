@@ -1,13 +1,13 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.YangInputEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.samples.statesystem.SampleState;
 
 public class TailsAndPointerSample extends SampleState {
 
 	@Override
-	public void rawEvent(YangInputEvent event) {
-		
+	public boolean rawEvent(YangEvent event) {
+		return false;
 	}
 
 	@Override

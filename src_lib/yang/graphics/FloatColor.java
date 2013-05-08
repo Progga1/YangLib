@@ -27,13 +27,17 @@ public class FloatColor {
 		values[3] = alpha;
 	}
 	
-	public FloatColor(float red,float green,float blue)
-	{
+	public FloatColor(float red,float green,float blue) {
 		this(red,green,blue,1);
 	}
 	
 	public FloatColor(float brightness) {
 		this(brightness,brightness,brightness,1);
+	}
+	
+	public FloatColor(FloatColor preface) {
+		values = new float[4];
+		set(preface);
 	}
 	
 	public FloatColor() {
@@ -93,6 +97,19 @@ public class FloatColor {
 		values[3] = a;
 	}
 	
+	public void set(float r, float g, float b) {
+		values[0] = r;
+		values[1] = g;
+		values[2] = b;
+	}
+	
+	public void set(FloatColor color) {
+		values[0] = color.values[0];
+		values[1] = color.values[1];
+		values[2] = color.values[2];
+		values[3] = color.values[3];
+	}
+	
 	public void set(FloatColor color1,FloatColor color2,float weight) {
 		float dWeight = 1-weight;
 		values[0] = color1.values[0]*dWeight+color2.values[0]*weight;
@@ -130,6 +147,10 @@ public class FloatColor {
 		float[] result = new float[4];
 		copyToArray(result);
 		return result;
+	}
+	
+	public FloatColor clone() {
+		return new FloatColor(this);
 	}
 	
 }

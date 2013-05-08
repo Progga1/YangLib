@@ -1,6 +1,6 @@
 package yang.graphics.tools.animator;
 
-import yang.events.eventtypes.YangInputEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultSurface;
 import yang.graphics.font.DrawableString;
 import yang.graphics.interfaces.InitializationCallback;
@@ -43,8 +43,9 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 	}
 	
 	@Override
-	public void rawEvent(YangInputEvent event) {
+	public boolean rawEvent(YangEvent event) {
 		event.handle(mAnimator);
+		return true;
 	}
 	
 	@Override

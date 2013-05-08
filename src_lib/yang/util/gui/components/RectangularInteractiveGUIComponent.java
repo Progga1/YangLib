@@ -16,8 +16,8 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 	
 	@Override
 	public void refreshProjections(float offsetX,float offsetY) {
-		mProjLeft = mGUI.mProjShiftX+mPosX*mGUI.mProjXFactor+offsetX;
-		mProjBottom = mGUI.mProjShiftY+mPosY*mGUI.mProjYFactor+mHeight*mGUI.mProjShiftYFactor+offsetY;
+		mProjLeft = mGUI.mProjShiftX+(mPosX+offsetX)*mGUI.mProjXFactor;
+		mProjBottom = mGUI.mProjShiftY+(mPosY+offsetY)*mGUI.mProjYFactor+mHeight*mGUI.mProjShiftYFactor;
 		mProjWidth = mWidth*mGUI.mProjWidthFactor;
 		mProjHeight = mHeight*mGUI.mProjHeightFactor;
 	}

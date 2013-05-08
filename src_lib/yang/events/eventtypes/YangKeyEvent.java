@@ -3,7 +3,7 @@ package yang.events.eventtypes;
 import yang.events.listeners.KeyEventListener;
 import yang.events.listeners.RawEventListener;
 
-public class YangKeyEvent extends YangInputEvent {
+public class YangKeyEvent extends YangEvent {
 	
 	public final static int ACTION_KEYDOWN = 0;
 	public final static int ACTION_KEYUP = 1;
@@ -13,7 +13,8 @@ public class YangKeyEvent extends YangInputEvent {
 	
 	@Override
 	public void handle(RawEventListener listener) {
-		listener.rawEvent(this);
+		if(listener.rawEvent(this))
+			return;
 		if(!(listener instanceof KeyEventListener))
 			return;
 		if(mAction==ACTION_KEYDOWN)

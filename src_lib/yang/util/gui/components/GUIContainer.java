@@ -17,7 +17,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 		mAllComponents = new NonConcurrentList<GUIComponent>();
 	}
 	
-	public void rawPointerEvent(GUIPointerEvent pointerEvent) {
+	public GUIComponent rawPointerEvent(GUIPointerEvent pointerEvent) {
 
 			float x = pointerEvent.mX;
 			float y = pointerEvent.mY;
@@ -27,6 +27,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 					BasicGUI.mComponentPoolPos = 0;
 				guiEvent.createFromPointerEvent(pointerEvent,mPressedComponent);
 				mPressedComponent.guiFocusedDrag(guiEvent);
+				return mPressedComponent;
 			}else{
 				for(InteractiveGUIComponent component:mInteractiveComponents) {
 					if(component.mVisible && component.mEnabled && component.inArea(x, y)) {
@@ -34,13 +35,11 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 						if(BasicGUI.mComponentPoolPos>=BasicGUI.mGUIEventPool.length)
 							BasicGUI.mComponentPoolPos = 0;
 						guiEvent.createFromPointerEvent(pointerEvent, component);
-						component.rawPointerEvent(guiEvent);
-						guiEvent.handle(component);
+						GUIComponent result = component.rawPointerEvent(guiEvent);
 
 						if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDOWN) {
 							if(component.isPressable()) {
 								mPressedComponent = component;
-								break;
 							}
 						}
 						
@@ -48,12 +47,11 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 							if(mPressedComponent==component)
 								component.guiClick(guiEvent);
 							mPressedComponent = null;
-							break;
 						}
-						return;
+						return result;
 					}
 				}
-				super.rawPointerEvent(pointerEvent);
+				return super.rawPointerEvent(pointerEvent);
 			}
 	}
 	

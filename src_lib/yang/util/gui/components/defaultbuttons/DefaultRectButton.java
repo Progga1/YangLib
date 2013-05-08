@@ -1,30 +1,22 @@
 package yang.util.gui.components.defaultbuttons;
 
 import yang.graphics.FloatColor;
-import yang.graphics.font.DrawableAnchoredLines;
 import yang.graphics.font.DrawableString;
 
 public class DefaultRectButton extends ColoredRectButton {
 
 	public DrawableString mCaption;
-	public float[] mFontColor;
+	public FloatColor mFontColor;
 	public float mFontSize;
 	public float mBorder = 0.01f;
-	public float[] mBorderCl;
+	public FloatColor mBorderColor;
 	
 	public DefaultRectButton() {
 		super();
-		mFontColor = FloatColor.BLACK.createArray();
-		mBorderCl = FloatColor.GRAY.createArray();
+		mFontColor = FloatColor.BLACK.clone();
+		mBorderColor = FloatColor.GRAY.clone();
 		mFontSize = 0.1f;
 		mCaption = null;
-	}
-	
-	public DefaultRectButton setFontColor(float r,float g,float b) {
-		mFontColor[0] = r;
-		mFontColor[1] = g;
-		mFontColor[2] = b;
-		return this;
 	}
 
 	public DefaultRectButton setCaption(DrawableString caption) {
@@ -38,19 +30,24 @@ public class DefaultRectButton extends ColoredRectButton {
 	
 	@Override
 	public String propertiesToString() {
-		return "caption="+mCaption+"; "+super.propertiesToString();
+		return "caption="+mCaption.createRawString()+"; "+super.propertiesToString();
 	}
 	
 	@Override
 	public void draw() {
 		mGraphics2D.bindTexture(null);
-		mGraphics2D.setColor(mBorderCl);
+		mGraphics2D.setColor(mBorderColor);
 		drawRect();
 		mGraphics2D.setColor(mRGBA);
 		drawRect(-mBorder);
-		mGraphics2D.setColor(mFontColor);
-		if(mCaption!=null)
+		if(mCaption!=null) {
+			mGraphics2D.setColor(mFontColor);
 			mCaption.draw(getProjCenterX(), getProjCenterY(), mFontSize, 0);
+		}
+	}
+
+	public DrawableString getCaption() {
+		return mCaption;
 	}
 	
 }

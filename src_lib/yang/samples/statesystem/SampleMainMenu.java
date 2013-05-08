@@ -3,7 +3,7 @@ package yang.samples.statesystem;
 import java.util.HashMap;
 
 import yang.events.Keys;
-import yang.events.eventtypes.YangInputEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.PolygonSampleState;
@@ -18,7 +18,7 @@ import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
-public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> implements GUIActionListener {
+public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> implements GUIActionListener {
 
 	public static float SCALE = 1.0f;
 	
@@ -26,7 +26,7 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 	protected NonConcurrentList<DefaultRectButton> mButtons;
 	protected HashMap<GUIComponent,YangProgramState<?>> mProgramStates;
 	
-	public SampleGUIMenu() {
+	public SampleMainMenu() {
 		mButtons = new NonConcurrentList<DefaultRectButton>();
 		mProgramStates = new HashMap<GUIComponent,YangProgramState<?>>(16);
 	}
@@ -66,9 +66,11 @@ public class SampleGUIMenu extends YangProgramState<YangProgramStateSystem> impl
 	}
 	
 	@Override
-	public void rawEvent(YangInputEvent event) {
+	public boolean rawEvent(YangEvent event) {
 		if(mGUI!=null)
-			mGUI.handleEvent(event);
+			return mGUI.handleEvent(event)!=null;
+		else
+			return false;
 	}
 
 	@Override

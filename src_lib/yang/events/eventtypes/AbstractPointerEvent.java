@@ -1,6 +1,6 @@
 package yang.events.eventtypes;
 
-public abstract class AbstractPointerEvent extends YangInputEvent {
+public abstract class AbstractPointerEvent extends YangEvent {
 
 	public int mAction;
 	public static final int BUTTON_NONE = -1;

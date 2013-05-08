@@ -1,9 +1,9 @@
 package yang.events.listeners;
 
-import yang.events.eventtypes.YangInputEvent;
+import yang.events.eventtypes.YangEvent;
 
 public interface RawEventListener {
 
-	public void rawEvent(YangInputEvent event);
+	public boolean rawEvent(YangEvent event);
 	
 }

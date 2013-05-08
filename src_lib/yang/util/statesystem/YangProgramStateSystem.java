@@ -1,6 +1,6 @@
 package yang.util.statesystem;
 
-import yang.events.eventtypes.YangInputEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultSurface;
 
 public class YangProgramStateSystem extends DefaultSurface {
@@ -38,9 +38,10 @@ public class YangProgramStateSystem extends DefaultSurface {
 	}
 	
 	@Override
-	public void rawEvent(YangInputEvent event) {
+	public boolean rawEvent(YangEvent event) {
 		if(mCurrentState!=null)
 			event.handle(mCurrentState);
+		return true;
 	}
 	
 }

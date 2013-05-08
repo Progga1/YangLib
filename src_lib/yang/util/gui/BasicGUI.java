@@ -1,7 +1,7 @@
 package yang.util.gui;
 
 import yang.events.eventtypes.YangPointerEvent;
-import yang.events.eventtypes.YangInputEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.util.gui.components.GUIComponent;
@@ -104,19 +104,21 @@ public class BasicGUI {
 		mMainContainer.draw();
 	}
 	
-	public boolean handleEvent(YangInputEvent event) {
+	public GUIComponent handleEvent(YangEvent event) {
 		boolean handled = false;
 		if(event instanceof YangPointerEvent) {
-			GUIPointerEvent guiEvent = mGUIEventPool[mComponentPoolPos++];
-			if(mComponentPoolPos>=mGUIEventPool.length)
+			int index = mComponentPoolPos++;
+			if(mComponentPoolPos>=mGUIEventPool.length) {
 				mComponentPoolPos = 0;
+				index=0;
+			}
+			GUIPointerEvent guiEvent = mGUIEventPool[index];
 			guiEvent.createFromPointerEvent((YangPointerEvent)event, mMainContainer);
 			guiEvent.mX = (guiEvent.mX - mProjShiftX)*mProjXFactor;
 			guiEvent.mY = (guiEvent.mY - mProjShiftY)*mProjYFactor;
-			mMainContainer.rawPointerEvent(guiEvent);
-			handled = true;
+			return mMainContainer.rawPointerEvent(guiEvent);
 		}
-		return handled;
+		return null;
 	}
 	
 	public float getGUILeft() {
@@ -162,6 +164,14 @@ public class BasicGUI {
 	public void setGlobalShift(float shiftX,float shiftY) {
 		mMainContainer.mPosX = shiftX;
 		mMainContainer.mPosY = shiftY;
+	}
+
+	public float normToGUIX(float x) {
+		return (x - mProjShiftX)*mProjXFactor;
+	}
+	
+	public float normToGUIY(float y) {
+		return (y - mProjShiftY)*mProjYFactor;
 	}
 	
 }

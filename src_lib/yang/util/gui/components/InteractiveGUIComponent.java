@@ -1,6 +1,6 @@
 package yang.util.gui.components;
 
-import yang.events.eventtypes.YangInputEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
@@ -23,14 +23,17 @@ public abstract class InteractiveGUIComponent extends GUIComponent implements GU
 		return this;
 	}
 	
-	public void rawPointerEvent(GUIPointerEvent pointerEvent) {
+	public GUIComponent rawPointerEvent(GUIPointerEvent pointerEvent) {
+		pointerEvent.handle(this);
 		if(mPointerListener!=null) {
 			pointerEvent.handle(mPointerListener);
-		}
+			return this;
+		}else
+			return null;
 	}
 	
-	public void rawEvent(YangInputEvent event) {
-		
+	public boolean rawEvent(YangEvent event) {
+		return false;
 	}
 
 	public void guiClick(GUIPointerEvent event) {

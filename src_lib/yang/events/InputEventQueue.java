@@ -3,8 +3,8 @@ package yang.events;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangZoomEvent;
 import yang.events.eventtypes.YangPointerEvent;
-import yang.events.eventtypes.YangInputEvent;
-import yang.events.listeners.FullEventListener;
+import yang.events.eventtypes.YangEvent;
+import yang.events.listeners.InputEventListener;
 import yang.graphics.translator.GraphicsTranslator;
 
 public class InputEventQueue {
@@ -13,7 +13,7 @@ public class InputEventQueue {
 	private YangPointerEvent[] mPointerEventQueue;
 	private YangKeyEvent[] mKeyEventQueue;
 	private YangZoomEvent[] mZoomEventQueue;
-	private YangInputEvent[] mQueue;
+	private YangEvent[] mQueue;
 	private int mPointerEventId;
 	private int mKeyEventId;
 	private int mZoomEventId;
@@ -28,7 +28,7 @@ public class InputEventQueue {
 		mKeyEventId = 0;
 		mQueueId = 0;
 		mQueueFirst = 0;
-		mQueue = new YangInputEvent[maxEvents];
+		mQueue = new YangEvent[maxEvents];
 		mPointerEventQueue = new YangPointerEvent[maxEvents];
 		mKeyEventQueue = new YangKeyEvent[maxEvents];
 		mZoomEventQueue = new YangZoomEvent[maxEvents];
@@ -39,7 +39,7 @@ public class InputEventQueue {
 		}
 	}
 	
-	public synchronized void putEvent(YangInputEvent event) {
+	public synchronized void putEvent(YangEvent event) {
 		mQueue[mQueueId++] = event;
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
@@ -76,15 +76,15 @@ public class InputEventQueue {
 		putEvent(newEvent);
 	}
 	
-	public YangInputEvent peekEvent() {
+	public YangEvent peekEvent() {
 		if(mQueueFirst==mQueueId)
 			return null;
 		else
 			return mQueue[mQueueFirst];
 	}
 	
-	public synchronized YangInputEvent pollEvent() {
-		YangInputEvent result = peekEvent();
+	public synchronized YangEvent pollEvent() {
+		YangEvent result = peekEvent();
 		if(result==null)
 			return null;
 		else{
@@ -99,8 +99,8 @@ public class InputEventQueue {
 		return mQueueFirst!=mQueueId;
 	}
 	
-	public void handleEvents(FullEventListener eventInterface) {
-		YangInputEvent event;
+	public void handleEvents(InputEventListener eventInterface) {
+		YangEvent event;
 		while((event = pollEvent())!=null) {
 			event.handle(eventInterface);
 		}

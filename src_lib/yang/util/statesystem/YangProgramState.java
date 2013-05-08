@@ -1,15 +1,15 @@
 package yang.util.statesystem;
 
 import yang.events.eventtypes.YangPointerEvent;
-import yang.events.eventtypes.YangInputEvent;
-import yang.events.listeners.FullEventListener;
+import yang.events.eventtypes.YangEvent;
+import yang.events.listeners.InputEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
-public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements FullEventListener {
+public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements InputEventListener {
 
 	private boolean mInitialized = false;
 	protected boolean mFirstFrame = true;
@@ -70,8 +70,8 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	}
 	
 	@Override
-	public void rawEvent(YangInputEvent event) {
-		
+	public boolean rawEvent(YangEvent event) {
+		return false;
 	}
 	
 	@Override

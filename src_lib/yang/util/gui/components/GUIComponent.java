@@ -15,8 +15,8 @@ public class GUIComponent {
 	}
 	
 	public void refreshProjections(float offsetX,float offsetY) {
-		mProjLeft = mGUI.mProjShiftX+mPosX*mGUI.mProjXFactor+offsetX;
-		mProjBottom = mGUI.mProjShiftY+mPosY*mGUI.mProjYFactor+offsetY;
+		mProjLeft = mGUI.mProjShiftX+(mPosX+offsetX)*mGUI.mProjXFactor;
+		mProjBottom = mGUI.mProjShiftY+(mPosY+offsetY)*mGUI.mProjYFactor;
 	}
 	
 	public GUIComponent setPosition(float x,float y) {
