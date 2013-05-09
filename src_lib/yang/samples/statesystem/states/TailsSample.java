@@ -16,13 +16,13 @@ public class TailsSample extends SampleState {
 	
 	@Override
 	protected void initGraphics() {
-		mTail = new Tail(mGraphics2D,270,true);
-		mTail.setColor(0.5f, 0.5f, 0.7f);
-		mTailTexture = mGFXLoader.getAlphaMap("trans_sqrt",new TextureSettings(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
-		mTail.setWidth(0.02f);
+		mTail = new Tail(mGraphics2D,100,true);
+		mTail.setColor(0.7f, 0.7f, 0.99f);
+		mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureSettings(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
+		mTail.setWidth(0.075f);
 		mTail.createNodeEveryNthStep(1);
-		mTail.mMinDist = 0.03f;
-		mTail.mInterruptAtSmallDistances = false;
+		mTail.mMinDist = 0.0085f;
+		mTail.mAutoInterruptSmallDistances = false;
 	}
 	
 	@Override
@@ -30,10 +30,10 @@ public class TailsSample extends SampleState {
 		if(mTail==null)
 			return;
 		if(mCurX<Float.MAX_VALUE) {
-			mTail.mInterruptAtSmallDistances = false;
+			mTail.mAutoInterruptSmallDistances = true;
 			mTail.refreshFront(mCurX, mCurY);
 		}else{
-			mTail.mInterruptAtSmallDistances = true;
+			mTail.mAutoInterruptSmallDistances = true;
 			mTail.refreshFront();
 		}
 	}
@@ -44,6 +44,13 @@ public class TailsSample extends SampleState {
 		
 		mGraphics.bindTexture(mTailTexture);
 		mTail.drawWholeTail();
+		
+//		mGraphics2D.setWhite();
+//		mGraphics.bindTexture(null);
+//		for(int i=0;i<mTail.mCapacity;i++) {
+//			mGraphics2D.drawRectCentered(mTail.mPosX[i], mTail.mPosY[i], 0.02f);
+//		}
+		
 	}
 	
 	@Override

@@ -422,25 +422,50 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	// ---STRIPS---
 
-	private boolean fstStrip = false;
+	private boolean mFstStrip = false;
+	private boolean mStripSinglePoint = false;
 
 	public void startStrip() {
-		fstStrip = true;
+		mFstStrip = true;
 	}
 
 	public void startStrip(float x1, float y1, float x2, float y2) {
+		mStripSinglePoint = false;
 		putPosition(x1, y1);
 		putPosition(x2, y2);
 	}
 
-	public void continueStrip() {
-		if (fstStrip) {
-			fstStrip = false;
-			return;
-		}
+	public void putTriangleIndices() {
 		mCurrentVertexBuffer.putRelativeIndex(-2);
 		mCurrentVertexBuffer.putRelativeIndex(-1);
 		mCurrentVertexBuffer.putRelativeIndex(0);
+	}
+	
+	public void continueStripSinglePoint() {
+		mStripSinglePoint = true;
+		if (mFstStrip) {
+			mFstStrip = false;
+			return;
+		}
+		putTriangleIndices();
+	}
+	
+	public void continueStripSinglePoint(float x,float y) {
+		continueStripSinglePoint();
+		putPosition(x,y);
+	}
+	
+	public void continueStrip() {
+		if (mFstStrip) {
+			mFstStrip = false;
+			return;
+		}
+		if(!mStripSinglePoint) {
+			mCurrentVertexBuffer.putRelativeIndex(-2);
+			mCurrentVertexBuffer.putRelativeIndex(-1);
+			mCurrentVertexBuffer.putRelativeIndex(0);
+		}else
+			mStripSinglePoint = false;
 		mCurrentVertexBuffer.putRelativeIndex(1);
 		mCurrentVertexBuffer.putRelativeIndex(0);
 		mCurrentVertexBuffer.putRelativeIndex(-1);
@@ -537,5 +562,6 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mInterString.setString(s.toString());
 		println(mInterString);
 	}
+	
 
 }

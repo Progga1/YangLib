@@ -56,7 +56,7 @@ public class PCGFXLoader extends AbstractGFXLoader {
 				for (int x = 0; x < width; x++) {
 					int rgb = image.getRGB(x, y);
 					int alpha = alphaBuffer.getSample(x, y, 0);
-					if(alpha<255 && !TextureData.USE_PREMULTIPLICATION) {
+					if(alpha<255 && TextureData.USE_PREMULTIPLICATION) {
 						float fac = alpha/255f;
 						buffer.put((byte)(((rgb>>16)&0xFF)*fac));
 						buffer.put((byte)(((rgb>>8)&0xFF)*fac));

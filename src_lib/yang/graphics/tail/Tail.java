@@ -1,25 +1,23 @@
 package yang.graphics.tail;
 
-import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.model.DebugYang;
+import yang.util.Util;
 
 public class Tail {
 
 	private float[] stdTexCoords = { 0, 0, 0, 2};
 	
 	public String mName;
-	private int mSize;
+	public int mCapacity;
 	private boolean mFilled;
-	private boolean mCountFilled;
 	private int mRingPos;
-	private float[] mPosX;
-	private float[] mPosY;
-	private float[] mDirX;
-	private float[] mDirY;
-	private float[] mDist;
-	private int[] mCounts;
+	public float[] mPosX;
+	public float[] mPosY;
+	public float[] mDirX;
+	public float[] mDirY;
+	public float[] mDist;
+	public int[] mCounts;
 
 	private float[] mCurColor;
 	public float mGlobAlpha;
@@ -42,11 +40,11 @@ public class Tail {
 	public int mTexXRepeat = 0;
 	protected float mTexYRepeat = 2;
 	public float mTexXShift = 0;
-	public boolean mInterruptAtSmallDistances = true;
+	public boolean mAutoInterruptSmallDistances = true;
 	
 	public Tail(DefaultGraphics<?> graphics,int capacity,boolean subTails) {
 		mGraphics = graphics;
-		mSize = capacity;
+		mCapacity = capacity;
 		mCountLength = capacity/2;
 		mPosX = new float[capacity];
 		mPosY = new float[capacity];
@@ -69,7 +67,6 @@ public class Tail {
 	public void clear() {
 		synchronized(this) {
 			mFilled = false;
-			mCountFilled = false;
 			mRingPos = 0;
 			mUpdateCount = 0;
 			mCountRingPos = 0;
@@ -121,17 +118,17 @@ public class Tail {
 					//Continue sub tail
 					if(counts<0)
 						interruptTail();
-					if(mCounts[mCountRingPos]<mSize)
+					if(mCounts[mCountRingPos]<mCapacity)
 						mCounts[mCountRingPos]++;
 				}else{
 					//New sub tail
-					if(mInterruptAtSmallDistances) {
+					if(mAutoInterruptSmallDistances) {
 						if(counts>0) {
-							mCounts[mCountRingPos]--;
+							//mCounts[mCountRingPos]--;
 							interruptTail();
-							mCounts[mCountRingPos]--;
+							//mCounts[mCountRingPos]--;
 						}
-						if(mCounts[mCountRingPos]>-mSize)
+						if(mCounts[mCountRingPos]>-mCapacity)
 							mCounts[mCountRingPos]--;
 					}else
 						updateIndices = false;
@@ -140,13 +137,22 @@ public class Tail {
 				if(updateIndices) {
 					
 					if(mPrevIndex>-1 && (forceDirX!=0 || forceDirY!=0) ) {
-						mDirX[mPrevIndex] = (mDirX[mPrevIndex]+forceDirX)*0.5f;
-						mDirY[mPrevIndex] = (mDirY[mPrevIndex]+forceDirY)*0.5f;
+						float dirX = (mDirX[mPrevIndex]+forceDirX)*0.5f;
+						float dirY = (mDirY[mPrevIndex]+forceDirY)*0.5f;
+						float dirDist = Util.getDistance(dirX, dirY);
+						if(dirDist!=0) {
+							dirX /= dirDist;
+							dirY /= dirDist;
+						}
+						mDirX[mPrevIndex] = dirX;
+						mDirY[mPrevIndex] = dirY;
+//						mDirX[mPrevIndex] = (mDirX[mPrevIndex]+forceDirX)*0.5f;
+//						mDirY[mPrevIndex] = (mDirY[mPrevIndex]+forceDirY)*0.5f;
 					}
 					
 					mPrevIndex = mRingPos;
 					mRingPos++;
-					if(mRingPos>=mSize) {
+					if(mRingPos>=mCapacity) {
 						mRingPos = 0;
 						mFilled = true;
 					}
@@ -198,7 +204,7 @@ public class Tail {
 		if(!mFilled && mRingPos==0)
 			addNode(dist,x,y,0,0);
 		else
-			addNode(dist,x,y,mCurNormY*mWidth,-mCurNormX*mWidth);
+			addNode(dist,x,y,mCurNormY,-mCurNormX);
 	}
 	
 	public void refreshFrontAbsolute(float x1,float y1,float x2,float y2) {
@@ -212,13 +218,9 @@ public class Tail {
 	
 	public int getTailLength() {
 		if(mFilled)
-			return mSize;
+			return mCapacity;
 		else 
 			return mRingPos;
-	}
-	
-	private void beginSubTail() {
-		mGraphics.startStrip();
 	}
 	
 	protected int initTailDraw() {
@@ -237,35 +239,43 @@ public class Tail {
 	
 	protected void putTailVertices(float scale,float alpha) {
 		if(putPos<0) {
-			putPos = mSize-1;
+			putPos = mCapacity-1;
 		}
-		mGraphics.continueStrip();
-		mGraphics.putPosition(mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
-		mGraphics.putPosition(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale);
-		if(mTexXRepeat==0)
-			mGraphics.putTextureArray(stdTexCoords);
-		else{
-			mGraphics.putTextureCoordPair(curTailTexX, 0, curTailTexX, mTexYRepeat);
-			curTailTexX += tailTexXStep;
-		}
-		mGraphics.putAddColorRect(mAddColor);
 		mCurColor[3] = mGlobAlpha * alpha;
+		if(scale==0) {
+			mGraphics.continueStripSinglePoint(mPosX[putPos], mPosY[putPos]);
+			if(mTexXRepeat==0)
+				mGraphics.putTextureCoord(0, 1);
+			else
+				mGraphics.putTextureCoord(curTailTexX, 0);
+		}else{
+			mGraphics.continueStrip();
+			mGraphics.putPosition(mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
+			mGraphics.putPosition(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale);
+			if(mTexXRepeat==0)
+				mGraphics.putTextureArray(stdTexCoords);
+			else
+				mGraphics.putTextureCoordPair(curTailTexX, 0, curTailTexX, mTexYRepeat);
+			mGraphics.putAddColor(mAddColor);
+			mGraphics.putColor(mCurColor);
+		}
 		mGraphics.putColor(mCurColor);
-		mGraphics.putColor(mCurColor);
+		mGraphics.putAddColor(mAddColor);
+		curTailTexX += tailTexXStep;
 		putPos--;
 	}
 	
 	protected void skipTailVertices() {
 		putPos--;
 		if(putPos<0) {
-			putPos = mSize-1;
+			putPos = mCapacity-1;
 		}
 	}
 	
 	public void drawWholeTail() {
 		if(!DebugYang.drawTails)
 			return;
-		
+
 		if(mTexXRepeat>0) {
 			tailTexXStep = 1f/mTexXRepeat;
 			curTailTexX = mTexXShift * tailTexXStep;
@@ -304,7 +314,7 @@ public class Tail {
 							tSub = (float)count/(curCount-1);
 						}
 						if(count==0)
-							beginSubTail();
+							mGraphics.startStrip();
 						float subFac;
 						if(mSubTails) {
 							float sqr = ((float)Math.pow(tSub,0.7f)*2-1);
@@ -316,7 +326,7 @@ public class Tail {
 						scale = (1 - tGlobal * mScaleFallOff) * subFac;
 						alpha = (1-tGlobal) * subFac;
 						
-						putTailVertices(scale,alpha);
+						putTailVertices(scale*mWidth,alpha);
 					}else{
 						if(curCount>0)
 							skipTailVertices();

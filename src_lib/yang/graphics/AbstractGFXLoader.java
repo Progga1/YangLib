@@ -30,6 +30,10 @@ public abstract class AbstractGFXLoader {
 
 	public abstract TextureData loadImageData(String filename,boolean forceRGBA);
 	
+	public TextureData loadImageData(String filename) {
+		return loadImageData(filename,false);
+	}
+	
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
 		mTextures = new HashMap<String, Texture>();
 		mShaders = new HashMap<String, String>();
