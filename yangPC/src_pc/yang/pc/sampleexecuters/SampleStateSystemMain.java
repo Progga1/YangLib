@@ -4,7 +4,7 @@ import yang.model.PathSpecs;
 import yang.pc.gles.YangGLESFrame;
 import yang.samples.statesystem.SampleStateSystem;
 
-public class StateSystemSampleMain {
+public class SampleStateSystemMain {
 
 	public static void main(String[] args) {
 		PathSpecs.ASSET_PATH = "../../yangLib/yangAndroid/assets/";

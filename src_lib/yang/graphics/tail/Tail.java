@@ -33,6 +33,7 @@ public class Tail {
 	private int mCountLength;
 	private float mScaleFallOff;
 	public float mMinDist;
+	public float mMinScalar;
 	private boolean mInverted;
 	private boolean mSubTails;
 	private DefaultGraphics<?> mGraphics;
@@ -61,6 +62,7 @@ public class Tail {
 		mInverted = false;
 		mSubTails = subTails;
 		mScaleFallOff = 0.25f;
+		mMinScalar = 0;
 		clear();
 	}
 	
@@ -118,6 +120,12 @@ public class Tail {
 					//Continue sub tail
 					if(counts<0)
 						interruptTail();
+					else{
+						//Check scalar
+						if(mMinScalar>-1) {
+							
+						}
+					}
 					if(mCounts[mCountRingPos]<mCapacity)
 						mCounts[mCountRingPos]++;
 				}else{
@@ -126,9 +134,8 @@ public class Tail {
 						if(counts>0) {
 							//mCounts[mCountRingPos]--;
 							interruptTail();
-							//mCounts[mCountRingPos]--;
-						}
-						if(mCounts[mCountRingPos]>-mCapacity)
+							mCounts[mCountRingPos]--;
+						}else if(mCounts[mCountRingPos]>-mCapacity)
 							mCounts[mCountRingPos]--;
 					}else
 						updateIndices = false;

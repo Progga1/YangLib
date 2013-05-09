@@ -34,11 +34,11 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	@Override
 	public void initGraphics() {
 		mGUI = new BasicGUI(mGraphics2D,GUICoordinatesMode.SCREEN,true);
-		//normalized: mGUI = new BasicGUI(mGraphics2D,GUICoordinatesMode.NORMALIZED,true);
+		//Alternatively: normalized: mGUI = new BasicGUI(mGraphics2D,GUICoordinatesMode.NORMALIZED,true);
 		mGUI.setDefaultActionListener(this);
-		addMenuItem("Tails", new TailsSample());
 		addMenuItem("Strings", new StringSampleState());
 		addMenuItem("GUI", new GUISampleState());
+		addMenuItem("Tails", new TailsSample());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 	}
@@ -47,7 +47,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		DefaultRectButton newButton = new DefaultRectButton();
 		newButton.createCaption(caption);
 		newButton.setPosAndDimCentered(mGUI.getGUICenterX(), (0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
-		//normalized: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
+		//In normalized coordinates: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		mGUI.addComponent(newButton);
 		mButtons.add(newButton);
 		mProgramStates.put(newButton, state);

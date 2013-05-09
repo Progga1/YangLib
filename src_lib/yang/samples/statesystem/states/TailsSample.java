@@ -21,7 +21,7 @@ public class TailsSample extends SampleState {
 		mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureSettings(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
 		mTail.setWidth(0.075f);
 		mTail.createNodeEveryNthStep(1);
-		mTail.mMinDist = 0.0085f;
+		mTail.mMinDist = 0.085f;
 		mTail.mAutoInterruptSmallDistances = false;
 	}
 	
@@ -30,7 +30,7 @@ public class TailsSample extends SampleState {
 		if(mTail==null)
 			return;
 		if(mCurX<Float.MAX_VALUE) {
-			mTail.mAutoInterruptSmallDistances = true;
+			mTail.mAutoInterruptSmallDistances = false;
 			mTail.refreshFront(mCurX, mCurY);
 		}else{
 			mTail.mAutoInterruptSmallDistances = true;
