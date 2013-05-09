@@ -84,7 +84,7 @@ public class DrawableString extends FixedString {
 	public DrawableString setGraphics(DefaultGraphics<?> graphics) {
 		mGraphics = graphics;
 		if(mGraphics!=null)
-			mHasZComponent = mGraphics.mPositionBytes==3;
+			mHasZComponent = mGraphics.mPositionDimension==3;
 		return this;
 	}
 	
@@ -322,7 +322,7 @@ public class DrawableString extends FixedString {
 		
 		putVertexProperties();
 
-		vertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mGraphics.mPositionBytes,resultTransf.asFloatArraySwallow());
+		vertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mGraphics.mPositionDimension,resultTransf.asFloatArraySwallow());
 	}
 	
 	public void draw(float x,float y,float lineHeight) {

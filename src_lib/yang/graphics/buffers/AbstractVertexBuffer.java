@@ -69,6 +69,10 @@ public abstract class AbstractVertexBuffer {
 		putArray(bufId,array,0,array.length);
 	}
 	
+	public void putArray(int bufId, float[] array, int count) {
+		putArray(bufId,array,0,count);
+	}
+	
 	public void putArrayMultiple(int bufId,float[] array,int amount) {
 		for(int i=0;i<amount;i++)
 			putArray(bufId,array);

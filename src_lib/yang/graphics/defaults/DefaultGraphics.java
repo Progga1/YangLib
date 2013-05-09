@@ -51,7 +51,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	// Buffers
 	protected DrawableString mInterString = new DrawableString(2048).setGraphics(this);
-	public int mPositionBytes;
+	public int mPositionDimension;
 	public ShortBuffer mIndexBuffer;
 	public FloatBuffer mPositions;
 	public FloatBuffer mTextures;
@@ -64,7 +64,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public DefaultGraphics(GraphicsTranslator translator, int positionBytes) {
 		super(translator);
-		mPositionBytes = positionBytes;
+		mPositionDimension = positionBytes;
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices, int maxVertices) {
 		assert mTranslator.preCheck("create vertex buffer");
 		IndexedVertexBuffer vertexBuffer = mTranslator.createVertexBuffer(dynamicVertices, dynamicIndices, maxIndices, maxVertices);
-		vertexBuffer.init(new int[] { mPositionBytes, 2, 4, 4 }, NEUTRAL_ELEMENTS);
+		vertexBuffer.init(new int[] { mPositionDimension, 2, 4, 4 }, NEUTRAL_ELEMENTS);
 		assert mTranslator.checkErrorInst("Create vertex buffer");
 		return vertexBuffer;
 	}

@@ -26,8 +26,8 @@ public class PolygonSampleState extends SampleState {
 		mGraphics2D.setWhite();
 		
 		mGraphics.switchCulling(false);
-		mPolygon.triangulate();
-		mPolygon.finish();
+		mPolygon.putVertices(mGraphics2D);
+		mGraphics2D.fillBuffers();
 		
 		mGraphics.bindTexture(mStateSystem.mCircleTexture);
 		mGraphics2D.setColor(FloatColor.RED);
@@ -40,6 +40,7 @@ public class PolygonSampleState extends SampleState {
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
 		mPolygon.addPoint(x, y);
+		mPolygon.triangulate();
 	}
 	
 	@Override

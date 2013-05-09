@@ -3,7 +3,7 @@ package yang.graphics.defaults.meshcreators;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 
-public class PolygonCreator extends MeshCreator<DefaultGraphics<?>> {
+public class PolygonCreator {
 
 	public final static int ORIENTATION_CLOCKWISE = 1;
 	public final static int ORIENTATION_BOTH = 0;
@@ -12,44 +12,50 @@ public class PolygonCreator extends MeshCreator<DefaultGraphics<?>> {
 	private float[] mPositions;
 	private int[] mIndices;
 	private int[] mWorkingIndices;
+	private int[] mResultIndices;
 	private int mPointCount;
 	private int mIndexCount;
-	private int mIndexOffset;
+	private int mResultIndexCount;
 	private int mPointsLeft;
-	private int mBytesPerPos;
+	private int mElemsPerPos;
 	private int mOrientation = 1;
+	private boolean mAutoClose = true;
 	
-	public PolygonCreator(DefaultGraphics<?> graphics,int capacity) {
-		super(graphics);
-		mBytesPerPos = graphics.mPositionBytes;
-		mPositions = new float[capacity*mBytesPerPos];
+	public PolygonCreator(int elementsPerPosition,int capacity) {
+		mElemsPerPos = elementsPerPosition;
+		mPositions = new float[capacity*mElemsPerPos];
 		mIndices = new int[capacity];
-		mWorkingIndices = new int[capacity];
+		mWorkingIndices = new int[capacity+1];
+		mResultIndices = new int[capacity];
 		clear();
 	}
 	
+	public PolygonCreator(DefaultGraphics<?> graphics,int capacity) {
+		this(graphics.mPositionDimension,capacity);
+	}
+	
 	public void addPoint(float x,float y) {
-		mPositions[mPointCount*mBytesPerPos] = x;
-		mPositions[mPointCount*mBytesPerPos+1] = y;
-		mIndices[mIndexCount++] = mBytesPerPos*mPointCount++;
+		mPositions[mPointCount*mElemsPerPos] = x;
+		mPositions[mPointCount*mElemsPerPos+1] = y;
+		mIndices[mIndexCount++] = mElemsPerPos*mPointCount++;
 	}
 	
 	public void addPointNoIndex(float x,float y) {
-		mPositions[mPointCount*mBytesPerPos] = x;
-		mPositions[mPointCount*mBytesPerPos+1] = y;
+		mPositions[mPointCount*mElemsPerPos] = x;
+		mPositions[mPointCount*mElemsPerPos+1] = y;
 	}
 	
 	public void addIndex(int pointIndex) {
-		mIndices[mIndexCount++] = pointIndex*mBytesPerPos;
+		mIndices[mIndexCount++] = pointIndex*mElemsPerPos;
 	}
 	
 	public void triangulate() {
-		IndexedVertexBuffer vertexBuffer = mGraphics.mCurrentVertexBuffer;
-		mIndexOffset = vertexBuffer.getCurrentIndexWriteCount();
-		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
-
 		System.arraycopy(mIndices, 0, mWorkingIndices, 0, mIndexCount);
+		if(mAutoClose) {
+			mWorkingIndices[mIndexCount] = mIndices[0];
+		}
 		mPointsLeft = mPointCount-2;
+		mResultIndexCount = 0;
 		while(mPointsLeft>0) {
 			int earIndex1=0,earIndex2=0,earIndex3=0;
 			int middleIndex=0;
@@ -95,7 +101,7 @@ public class PolygonCreator extends MeshCreator<DefaultGraphics<?>> {
 				//Find intersecting points
 				boolean intersected = false;
 				for(int p=0;p<mPointCount;p++) {
-					int pI = p*mBytesPerPos;
+					int pI = p*mElemsPerPos;
 
 					if(pI!=earIndex1 && pI!=earIndex2 && pI!=earIndex3) {
 						float pX = mPositions[pI] - x;
@@ -139,12 +145,29 @@ public class PolygonCreator extends MeshCreator<DefaultGraphics<?>> {
 			//remove corner
 			mWorkingIndices[middleIndex] = -1;
 			//put triangle indices
-			vertexBuffer.putIndex((short)(mIndexOffset+earIndex1/2));
-			vertexBuffer.putIndex((short)(mIndexOffset+earIndex2/2));
-			vertexBuffer.putIndex((short)(mIndexOffset+earIndex3/2));
 			
+			mResultIndices[mResultIndexCount++] = earIndex1/mElemsPerPos;
+			mResultIndices[mResultIndexCount++] = earIndex2/mElemsPerPos;
+			mResultIndices[mResultIndexCount++] = earIndex3/mElemsPerPos;
+					
 			mPointsLeft--;
 		}
+	}
+	
+	public void putVertices(DefaultGraphics<?> graphics) {
+		if(mResultIndexCount<0)
+			return;
+		IndexedVertexBuffer vertexBuffer = graphics.mCurrentVertexBuffer;
+		
+		int indexOffset = vertexBuffer.getCurrentVertexWriteCount();
+		int c = 0;
+		for(int index:mResultIndices) {
+			if(c++>=mResultIndexCount)
+				break;
+			vertexBuffer.putIndex((short)(index+indexOffset));
+		}
+		
+		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions, mPointCount*mElemsPerPos);
 	}
 	
 	public void setOrientation(int orientation) {
@@ -160,16 +183,17 @@ public class PolygonCreator extends MeshCreator<DefaultGraphics<?>> {
 	}
 	
 	public float getPosX(int pointNr) {
-		return mPositions[pointNr*mBytesPerPos];
+		return mPositions[pointNr*mElemsPerPos];
 	}
 	
 	public float getPosY(int pointNr) {
-		return mPositions[pointNr*mBytesPerPos+1];
+		return mPositions[pointNr*mElemsPerPos+1];
 	}
 
 	public void clear() {
 		mPointCount = 0;
 		mIndexCount = 0;
+		mResultIndexCount = -1;
 	}
 
 }
