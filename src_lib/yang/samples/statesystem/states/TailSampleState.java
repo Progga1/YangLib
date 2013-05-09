@@ -8,11 +8,12 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.samples.statesystem.SampleState;
 
-public class TailsSample extends SampleState {
+public class TailSampleState extends SampleState {
 
 	private Tail mTail;
 	private Texture mTailTexture;
 	private float mCurX = Float.MAX_VALUE,mCurY;
+	private boolean mShowNodes;
 	
 	@Override
 	protected void initGraphics() {
@@ -45,12 +46,19 @@ public class TailsSample extends SampleState {
 		mGraphics.bindTexture(mTailTexture);
 		mTail.drawWholeTail();
 		
-//		mGraphics2D.setWhite();
-//		mGraphics.bindTexture(null);
-//		for(int i=0;i<mTail.mCapacity;i++) {
-//			mGraphics2D.drawRectCentered(mTail.mPosX[i], mTail.mPosY[i], 0.02f);
-//		}
-		
+		if(mShowNodes) {
+			mGraphics.bindTexture(mStateSystem.mCircleTexture);
+			mGraphics2D.setWhite();
+			for(int i=0;i<mTail.mCapacity;i++) {
+				mGraphics2D.drawRectCentered(mTail.mPosX[i], mTail.mPosY[i], 0.018f);
+			}
+			final float DIR_SCALE = 0.04f;
+			mGraphics2D.setColor(0.6f);
+			for(int i=0;i<mTail.mCapacity;i++) {
+				mGraphics2D.drawRectCentered(mTail.mPosX[i]+mTail.mDirX[i]*DIR_SCALE, mTail.mPosY[i]+mTail.mDirY[i]*DIR_SCALE, 0.008f);
+				mGraphics2D.drawRectCentered(mTail.mPosX[i]-mTail.mDirX[i]*DIR_SCALE, mTail.mPosY[i]-mTail.mDirY[i]*DIR_SCALE, 0.008f);
+			}
+		}
 	}
 	
 	@Override
@@ -67,6 +75,12 @@ public class TailsSample extends SampleState {
 	
 	public void pointerUp(float x,float y,YangPointerEvent event) {
 		mCurX = Float.MAX_VALUE;
+	}
+	
+	@Override
+	public void keyUp(int code) {
+		if(code == 'n')
+			mShowNodes ^= true;
 	}
 
 }

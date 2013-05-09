@@ -8,7 +8,7 @@ import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.StringSampleState;
-import yang.samples.statesystem.states.TailsSample;
+import yang.samples.statesystem.states.TailSampleState;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
@@ -38,7 +38,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		mGUI.setDefaultActionListener(this);
 		addMenuItem("Strings", new StringSampleState());
 		addMenuItem("GUI", new GUISampleState());
-		addMenuItem("Tails", new TailsSample());
+		addMenuItem("Tails", new TailSampleState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 	}

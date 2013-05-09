@@ -1,10 +1,9 @@
 package yang.samples.statesystem.states;
 
 import yang.events.eventtypes.YangPointerEvent;
+import yang.graphics.FloatColor;
 import yang.graphics.defaults.meshcreators.PolygonCreator;
 import yang.samples.statesystem.SampleState;
-import yang.util.statesystem.YangProgramState;
-import yang.util.statesystem.YangProgramStateSystem;
 
 public class PolygonSampleState extends SampleState {
 
@@ -27,13 +26,26 @@ public class PolygonSampleState extends SampleState {
 		mGraphics2D.setWhite();
 		
 		mGraphics.switchCulling(false);
-		mPolygon.putTriangulatedPositions();
+		mPolygon.triangulate();
 		mPolygon.finish();
+		
+		mGraphics.bindTexture(mStateSystem.mCircleTexture);
+		mGraphics2D.setColor(FloatColor.RED);
+		for(int i=0;i<mPolygon.getPointCount();i++) {
+			mGraphics2D.drawRectCentered(mPolygon.getPosX(i), mPolygon.getPosY(i), 0.016f);
+		}
+		
 	}
 
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
 		mPolygon.addPoint(x, y);
+	}
+	
+	@Override
+	public void keyUp(int code) {
+		if(code=='c')
+			mPolygon.clear();
 	}
 	
 }

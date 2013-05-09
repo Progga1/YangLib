@@ -62,7 +62,7 @@ public class Tail {
 		mInverted = false;
 		mSubTails = subTails;
 		mScaleFallOff = 0.25f;
-		mMinScalar = 0;
+		mMinScalar = 0.3f;
 		clear();
 	}
 	
@@ -116,29 +116,42 @@ public class Tail {
 			boolean updateIndices = true;
 			if(newNode) {
 				int counts = mCounts[mCountRingPos];
-				if(dist>mMinDist) {
-					//Continue sub tail
-					if(counts<0)
+				
+				boolean noDistCheck = false;
+				//Check scalar
+				if(counts>1 && mMinScalar>-1 && dist>0.005f && (forceDirX!=0 || forceDirY!=0)) {
+					float scalar = mDirX[mPrevIndex]*forceDirX+mDirY[mPrevIndex]*forceDirY;
+					if(scalar<mMinScalar) {
 						interruptTail();
-					else{
-						//Check scalar
-						if(mMinScalar>-1) {
-							
-						}
+						noDistCheck = true;
+						mCounts[mCountRingPos]--;
 					}
-					if(mCounts[mCountRingPos]<mCapacity)
-						mCounts[mCountRingPos]++;
-				}else{
-					//New sub tail
-					if(mAutoInterruptSmallDistances) {
-						if(counts>0) {
-							//mCounts[mCountRingPos]--;
+				}
+				
+				if(!noDistCheck) {
+					if(dist>mMinDist) {
+						//Continue sub tail
+						if(counts<0) {
 							interruptTail();
-							mCounts[mCountRingPos]--;
-						}else if(mCounts[mCountRingPos]>-mCapacity)
-							mCounts[mCountRingPos]--;
-					}else
-						updateIndices = false;
+							mCounts[mCountRingPos]++;
+						}else if(mCounts[mCountRingPos]<mCapacity)
+							mCounts[mCountRingPos]++;
+						
+					}else{
+						//New sub tail
+						if(mAutoInterruptSmallDistances) {
+							if(counts>0) {
+								//mCounts[mCountRingPos]--;
+								interruptTail();
+								mCounts[mCountRingPos]--;
+							}else{
+								if(mCounts[mCountRingPos]>-mCapacity) {
+									mCounts[mCountRingPos]--;
+								}
+							}
+						}else
+							updateIndices = false;
+					}
 				}
 					
 				if(updateIndices) {

@@ -8,7 +8,7 @@ public class SampleStateSystemMain {
 
 	public static void main(String[] args) {
 		PathSpecs.ASSET_PATH = "../../yangLib/yangAndroid/assets/";
-		YangGLESFrame frame = new YangGLESFrame().init(1024,720);
+		YangGLESFrame frame = new YangGLESFrame().init(1600,900);
 		frame.setSurface(new SampleStateSystem());
 		frame.run();
 	}
