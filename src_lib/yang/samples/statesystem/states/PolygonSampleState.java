@@ -4,17 +4,21 @@ import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.FloatColor;
 import yang.graphics.defaults.meshcreators.PolygonCreator;
+import yang.graphics.translator.Texture;
 import yang.samples.statesystem.SampleState;
 
 public class PolygonSampleState extends SampleState {
 
 	private PolygonCreator mPolygon;
 	private int mPickedPoint;
+	private Texture mFillTexture;
+	private boolean mDrawTexture = false;
+	private boolean mDrawDebug = true;
 	
 	@Override
 	public void initGraphics() {
 		mPolygon = new PolygonCreator(mGraphics2D,128);
-		//mPolygon.setOrientation(0);
+		mFillTexture = mGFXLoader.getImage("grass");
 	}
 	
 	@Override
@@ -25,16 +29,22 @@ public class PolygonSampleState extends SampleState {
 	@Override
 	protected void draw() {
 		mGraphics.clear(0, 0, 0.1f);
-		mGraphics.bindTexture(null);
 		mGraphics2D.setWhite();
 		
+		if(mDrawTexture)
+			mGraphics.bindTexture(mFillTexture);
+		else
+			mGraphics.bindTexture(null);
 		mGraphics.switchCulling(false);
 		mPolygon.putVertices(mGraphics2D);
+		mPolygon.putTextureCoordinates(mGraphics2D, 2);
 		mGraphics2D.fillBuffers();
 		
-		mGraphics2D.setColor(0.3f,0.3f,0.9f);
-		mPolygon.drawTriangleLines(mGraphics2D,0.01f);
-		
+		if(mDrawDebug) {
+			mGraphics2D.setColor(0.3f,0.3f,0.9f);
+			mPolygon.drawTriangleLines(mGraphics2D,0.01f);
+		}
+			
 		mGraphics.bindTexture(mStateSystem.mCircleTexture);
 		mGraphics2D.setColor(FloatColor.RED);
 		for(int i=0;i<mPolygon.getPointCount();i++) {
@@ -76,6 +86,10 @@ public class PolygonSampleState extends SampleState {
 	public void keyUp(int code) {
 		if(code=='c')
 			mPolygon.clear();
+		if(code=='t')
+			mDrawTexture ^= true;
+		if(code=='d')
+			mDrawDebug ^= true;
 	}
 	
 	@Override
