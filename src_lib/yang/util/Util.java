@@ -242,6 +242,22 @@ public class Util {
 		return result;
 	}
 	
+	public static String arrayToString(int[] array,String separator,int spaceEvery) {
+		//String result = "length="+array.length;
+		int c = 0;
+		String result="";
+		for(float t:array) {
+			if(result!="") {
+				result += separator;
+				if(spaceEvery>0 && (c%spaceEvery==0))
+					result += " ";
+			}
+			c++;
+			result += t;
+		}
+		return result;
+	}
+	
 	public static String getClassName(Object object,String ignoreEnding) {
 		String name = object.getClass().getName();
 		int start = name.lastIndexOf(".")+1;
