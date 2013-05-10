@@ -26,6 +26,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	public final static int T_TRIANGLES = 0;
 	public final static int T_STRIP = 1;
+	public final static int MAX_TEXTURES = 32;
 	public static GraphicsTranslator INSTANCE;
 	public static GraphicsTranslator appInstance;
 	
@@ -94,7 +95,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void disable(int glConstant);
 	public abstract void setScissorRectI(int x,int y,int width,int height);
 	
-	
 	//TODO: glColorMask, glDepthMask, glStencilMask, glScissor, glEnable(GL_SCISSOR_TEST)
 	
 	public static String errorCodeToString(int code) {
@@ -136,7 +136,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public GraphicsTranslator() {
 		INSTANCE = this;
-		mCurrentTextures = new Texture[32];
+		mCurrentTextures = new Texture[MAX_TEXTURES];
 		mProjScreenTransform = createTransformationMatrix();
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
@@ -207,10 +207,31 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			bindTexture(textureHolder.getTexture(mGFXLoader));
 	}
 	
-	public final void rebindTexture() {
-		if(mCurrentTextures[0]==null)
-			mCurrentTextures[0] = mNullTexture;
-		bindTexture(mCurrentTextures[0].getId(),0);
+	public final void rebindTexture(int level) {
+		if(mCurrentTextures[level]==null)
+			mCurrentTextures[level] = mNullTexture;
+		bindTexture(mCurrentTextures[level].getId(),0);
+	}
+	
+	public final void rebindTextures() {
+		for(int i=0;i<MAX_TEXTURES;i++) {
+			if(mCurrentTextures[i]==null)
+				return;
+			bindTexture(mCurrentTextures[i].getId(),0);
+		}
+	}
+	
+	public void unbindTexture(int level) {
+		mCurrentTextures[level] = null;
+	}
+	
+	public void unbindTextures() {
+		for(int i=0;i<MAX_TEXTURES;i++) {
+			if(mCurrentTextures[i]==null)
+				return;
+			mCurrentTextures[i] = null;
+			
+		}
 	}
 	
 	public int getSurfaceWidth() {
@@ -411,6 +432,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurrentScreen = renderTarget;
 		setViewPort(renderTarget.mTargetTexture.mWidth,renderTarget.mTargetTexture.mHeight);
 		derivedSetTextureRenderTarget(renderTarget);
+		unbindTextures();
+		assert checkErrorInst("Set texture render target");
 	}
 	
 	public TransformationMatrix getStaticTransformation() {

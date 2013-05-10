@@ -84,6 +84,7 @@ public class PolygonSampleState extends SampleState {
 	
 	@Override
 	public void keyUp(int code) {
+		super.keyUp(code);
 		if(code=='c')
 			mPolygon.clear();
 		if(code=='t')

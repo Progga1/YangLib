@@ -112,7 +112,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		}
 		setVertexBuffer(mDynamicSpriteVertexBuffer);
 		setDefaultProgram();
-		rebindTexture();
+		mTranslator.rebindTexture(0);
 		assert mTranslator.checkErrorInst("Activate");
 	}
 	
@@ -126,10 +126,6 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	
 	public void bindTextureInHolder(TextureHolder textureHolder) {
 		mTranslator.bindTextureInHolder(textureHolder);
-	}
-	
-	public final void rebindTexture() {
-		mTranslator.rebindTexture();
 	}
 	
 	public boolean setShaderProgram(ShaderType program) {

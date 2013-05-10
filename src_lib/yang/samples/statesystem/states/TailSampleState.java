@@ -79,6 +79,7 @@ public class TailSampleState extends SampleState {
 	
 	@Override
 	public void keyUp(int code) {
+		super.keyUp(code);
 		if(code == 'n')
 			mShowNodes ^= true;
 	}

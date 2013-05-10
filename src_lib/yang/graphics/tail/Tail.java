@@ -119,14 +119,14 @@ public class Tail {
 				
 				boolean noDistCheck = false;
 				//Check scalar
-				if(counts>1 && mMinScalar>-1 && dist>0.005f && (forceDirX!=0 || forceDirY!=0)) {
-					float scalar = mDirX[mPrevIndex]*forceDirX+mDirY[mPrevIndex]*forceDirY;
-					if(scalar<mMinScalar) {
-						interruptTail();
-						noDistCheck = true;
-						mCounts[mCountRingPos]--;
-					}
-				}
+//				if(counts>1 && mMinScalar>-1 && dist>0.005f && (forceDirX!=0 || forceDirY!=0)) {
+//					float scalar = mDirX[mPrevIndex]*forceDirX+mDirY[mPrevIndex]*forceDirY;
+//					if(scalar<mMinScalar) {
+//						interruptTail();
+//						noDistCheck = true;
+//						mCounts[mCountRingPos]--;
+//					}
+//				}
 				
 				if(!noDistCheck) {
 					if(dist>mMinDist) {

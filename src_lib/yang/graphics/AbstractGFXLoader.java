@@ -57,7 +57,7 @@ public abstract class AbstractGFXLoader {
 			textureSettings = new TextureSettings();
 		texture = loadImage(name, textureSettings, redToAlpha);
 		mTextures.put(name, texture);
-		mGraphics.rebindTexture();
+		mGraphics.rebindTexture(0);
 		
 		return texture;
 	}
