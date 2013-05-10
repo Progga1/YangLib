@@ -16,15 +16,15 @@ public class FloatColor {
 	public static final FloatColor BLUE = new FloatColor(0,0,1);
 	public static final FloatColor YELLOW = new FloatColor(1,1,0);
 	
-	public float[] values;
+	public float[] mValues;
 	
 	public FloatColor(float red,float green,float blue,float alpha)
 	{
-		values = new float[4];
-		values[0] = red;
-		values[1] = green;
-		values[2] = blue;
-		values[3] = alpha;
+		mValues = new float[4];
+		mValues[0] = red;
+		mValues[1] = green;
+		mValues[2] = blue;
+		mValues[3] = alpha;
 	}
 	
 	public FloatColor(float red,float green,float blue) {
@@ -36,7 +36,7 @@ public class FloatColor {
 	}
 	
 	public FloatColor(FloatColor preface) {
-		values = new float[4];
+		mValues = new float[4];
 		set(preface);
 	}
 	
@@ -46,42 +46,42 @@ public class FloatColor {
 
 	public float getRed()
 	{
-		return values[0];
+		return mValues[0];
 	}
 	
 	public float getGreen()
 	{
-		return values[1];
+		return mValues[1];
 	}
 	
 	public float getBlue()
 	{
-		return values[2];
+		return mValues[2];
 	}
 	
 	public float getAlpha()
 	{
-		return values[3];
+		return mValues[3];
 	}
 	
 	public byte getRedByte()
 	{
-		return (byte)(values[0]*255);
+		return (byte)(mValues[0]*255);
 	}
 	
 	public byte getGreenByte()
 	{
-		return (byte)(values[1]*255);
+		return (byte)(mValues[1]*255);
 	}
 	
 	public byte getBlueByte()
 	{
-		return (byte)(values[2]*255);
+		return (byte)(mValues[2]*255);
 	}
 	
 	public byte getAlphaByte()
 	{
-		return (byte)(values[3]*255);
+		return (byte)(mValues[3]*255);
 	}
 	
 	@Override
@@ -91,56 +91,56 @@ public class FloatColor {
 	}
 
 	public void set(float r, float g, float b, float a) {
-		values[0] = r;
-		values[1] = g;
-		values[2] = b;
-		values[3] = a;
+		mValues[0] = r;
+		mValues[1] = g;
+		mValues[2] = b;
+		mValues[3] = a;
 	}
 	
 	public void set(float r, float g, float b) {
-		values[0] = r;
-		values[1] = g;
-		values[2] = b;
+		mValues[0] = r;
+		mValues[1] = g;
+		mValues[2] = b;
 	}
 	
 	public void set(FloatColor color) {
-		values[0] = color.values[0];
-		values[1] = color.values[1];
-		values[2] = color.values[2];
-		values[3] = color.values[3];
+		mValues[0] = color.mValues[0];
+		mValues[1] = color.mValues[1];
+		mValues[2] = color.mValues[2];
+		mValues[3] = color.mValues[3];
 	}
 	
 	public void set(FloatColor color1,FloatColor color2,float weight) {
 		float dWeight = 1-weight;
-		values[0] = color1.values[0]*dWeight+color2.values[0]*weight;
-		values[1] = color1.values[1]*dWeight+color2.values[1]*weight;
-		values[2] = color1.values[2]*dWeight+color2.values[2]*weight;
-		values[3] = color1.values[3]*dWeight+color2.values[3]*weight;
+		mValues[0] = color1.mValues[0]*dWeight+color2.mValues[0]*weight;
+		mValues[1] = color1.mValues[1]*dWeight+color2.mValues[1]*weight;
+		mValues[2] = color1.mValues[2]*dWeight+color2.mValues[2]*weight;
+		mValues[3] = color1.mValues[3]*dWeight+color2.mValues[3]*weight;
 	}
 		
 	public void writeIntoBuffer(ByteBuffer source,boolean includeAlpha) {
-		source.put((byte)(values[0]*255));
-		source.put((byte)(values[1]*255));
-		source.put((byte)(values[2]*255));
+		source.put((byte)(mValues[0]*255));
+		source.put((byte)(mValues[1]*255));
+		source.put((byte)(mValues[2]*255));
 		if(includeAlpha)
-			source.put((byte)(values[3]*255));
+			source.put((byte)(mValues[3]*255));
 	}
 	
 	public void writeIntoBufferRGBA(ByteBuffer source) {
-		source.put((byte)(values[0]*255));
-		source.put((byte)(values[1]*255));
-		source.put((byte)(values[2]*255));
-		source.put((byte)(values[3]*255));
+		source.put((byte)(mValues[0]*255));
+		source.put((byte)(mValues[1]*255));
+		source.put((byte)(mValues[2]*255));
+		source.put((byte)(mValues[3]*255));
 	}
 	
 	public void writeIntoBufferRGB(ByteBuffer source) {
-		source.put((byte)(values[0]*255));
-		source.put((byte)(values[1]*255));
-		source.put((byte)(values[2]*255));
+		source.put((byte)(mValues[0]*255));
+		source.put((byte)(mValues[1]*255));
+		source.put((byte)(mValues[2]*255));
 	}
 
 	public void copyToArray(float[] target) {
-		System.arraycopy(values, 0, target, 0, 4);
+		System.arraycopy(mValues, 0, target, 0, 4);
 	}
 
 	public float[] createArray() {

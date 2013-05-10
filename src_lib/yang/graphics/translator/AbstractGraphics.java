@@ -247,10 +247,10 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 	
 	public void setColor(FloatColor color) {
-		mCurColor[0] = color.values[0];
-		mCurColor[1] = color.values[1];
-		mCurColor[2] = color.values[2];
-		mCurColor[3] = color.values[3];
+		mCurColor[0] = color.mValues[0];
+		mCurColor[1] = color.mValues[1];
+		mCurColor[2] = color.mValues[2];
+		mCurColor[3] = color.mValues[3];
 	}
 	
 	/**
@@ -259,10 +259,10 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	 */
 	public void setColorWeighted(FloatColor color1,FloatColor color2,float weight) {
 		float dWeight = 1-weight;
-		mCurColor[0] = color1.values[0]*dWeight + color2.values[0]*weight;
-		mCurColor[1] = color1.values[1]*dWeight + color2.values[1]*weight;
-		mCurColor[2] = color1.values[2]*dWeight + color2.values[2]*weight;
-		mCurColor[3] = color1.values[3]*dWeight + color2.values[3]*weight;
+		mCurColor[0] = color1.mValues[0]*dWeight + color2.mValues[0]*weight;
+		mCurColor[1] = color1.mValues[1]*dWeight + color2.mValues[1]*weight;
+		mCurColor[2] = color1.mValues[2]*dWeight + color2.mValues[2]*weight;
+		mCurColor[3] = color1.mValues[3]*dWeight + color2.mValues[3]*weight;
 	}
 	
 	//---Add-Color---

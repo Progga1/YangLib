@@ -1,9 +1,9 @@
 package yang.graphics.defaults.meshcreators;
 
+import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.util.Util;
 
 public class PolygonCreator {
 
@@ -49,7 +49,6 @@ public class PolygonCreator {
 	
 	public void addIndex(int pointIndex) {
 		mIndices[mIndexCount++] = mElemsPerPos*pointIndex;
-		//addPoint(mPositions[mElemsPerPos*pointIndex],mPositions[mElemsPerPos*pointIndex+1]);
 	}
 	
 	public void triangulate() {
@@ -234,6 +233,17 @@ public class PolygonCreator {
 	
 	public void putTextureCoordinates(DefaultGraphics<?> graphics,float scale) {
 		putTextureCoordinates(graphics,0,0,scale,scale);
+	}
+	
+	public void putColor(DefaultGraphics<?> graphics,FloatColor color) {
+		graphics.putColor(color.mValues, mPointCount);
+	}
+	
+	public void putColor(DefaultGraphics<?> graphics,float r,float g,float b,float a) {
+		IndexedVertexBuffer vertexBuffer = graphics.mCurrentVertexBuffer;
+		for(int i=0;i<mPointCount;i++) {
+			vertexBuffer.putVec4(DefaultGraphics.ID_COLORS, r,g,b,a);
+		}
 	}
 
 	public int pickPoint(float x, float y, float radius) {

@@ -17,13 +17,7 @@ public class TailSampleState extends SampleState {
 	
 	@Override
 	protected void initGraphics() {
-		mTail = new Tail(mGraphics2D,100,true);
-		mTail.setColor(0.7f, 0.7f, 0.99f);
-		mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureSettings(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
-		mTail.setWidth(0.075f);
-		mTail.createNodeEveryNthStep(1);
-		mTail.mMinDist = 0.085f;
-		mTail.mAutoInterruptSmallDistances = false;
+		
 	}
 	
 	@Override
@@ -43,6 +37,8 @@ public class TailSampleState extends SampleState {
 	public void draw() {
 		mGraphics.clear(0, 0, 0.1f);
 		
+		if(mTail==null)
+			return;
 		mGraphics.bindTexture(mTailTexture);
 		mTail.drawWholeTail();
 		
@@ -52,7 +48,7 @@ public class TailSampleState extends SampleState {
 			for(int i=0;i<mTail.mCapacity;i++) {
 				mGraphics2D.drawRectCentered(mTail.mPosX[i], mTail.mPosY[i], 0.018f);
 			}
-			final float DIR_SCALE = 0.04f;
+			final float DIR_SCALE = mTail.mWidth*0.54f;
 			mGraphics2D.setColor(0.6f);
 			for(int i=0;i<mTail.mCapacity;i++) {
 				mGraphics2D.drawRectCentered(mTail.mPosX[i]+mTail.mDirX[i]*DIR_SCALE, mTail.mPosY[i]+mTail.mDirY[i]*DIR_SCALE, 0.008f);
@@ -63,7 +59,17 @@ public class TailSampleState extends SampleState {
 	
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
-		mTail.interruptTail();
+		if(mTail==null) {
+			mTail = new Tail(mGraphics2D,100,true);
+			mTail.setColor(0.7f, 0.7f, 0.99f);
+			mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureSettings(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
+			mTail.setWidth(0.095f);
+			mTail.createNodeEveryNthStep(1);
+			mTail.mMinDist = 0.075f;
+			mTail.mAutoInterruptSmallDistances = false;
+		}
+		
+		//mTail.interruptTail();
 	}
 	
 	@Override
@@ -82,6 +88,8 @@ public class TailSampleState extends SampleState {
 		super.keyUp(code);
 		if(code == 'n')
 			mShowNodes ^= true;
+		if(code == 'd')
+			mTail.debugOut();
 	}
 
 }

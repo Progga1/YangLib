@@ -323,7 +323,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void putColor(FloatColor color) {
-		mColors.put(color.values);
+		mColors.put(color.mValues);
 	}
 
 	public void putColorRect(float[] color) {
@@ -403,7 +403,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void putAddColor(FloatColor color) {
-		mAddColors.put(color.values);
+		mAddColors.put(color.mValues);
 	}
 
 	public void putAddColorRect(float[] color) {

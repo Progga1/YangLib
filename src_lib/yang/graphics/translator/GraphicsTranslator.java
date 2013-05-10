@@ -362,7 +362,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public void clear(FloatColor color,int additionalMask) {
-		clear(color.values[0], color.values[1], color.values[2],color.values[3],additionalMask);
+		clear(color.mValues[0], color.mValues[1], color.mValues[2],color.mValues[3],additionalMask);
 	}
 
 	public void setAttributeBuffer(int handle,int bufferIndex) {

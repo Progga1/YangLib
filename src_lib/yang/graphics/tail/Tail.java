@@ -29,10 +29,11 @@ public class Tail {
 	private float mLastNodeY;
 	private float mCurNormX;
 	private float mCurNormY;
-	private float mWidth;
+	public float mWidth;
 	private int mCountLength;
 	private float mScaleFallOff;
 	public float mMinDist;
+	public float mMinScalarDist;
 	public float mMinScalar;
 	private boolean mInverted;
 	private boolean mSubTails;
@@ -56,7 +57,8 @@ public class Tail {
 		mCurColor = new float[4];
 		setColor(1,1,1,1);
 		mWidth = 0.25f;
-		mMinDist = 0.001f;
+		mMinDist = 0.01f;
+		mMinScalarDist = 0.01f;
 		mCreateNodeFreq = 1;
 		mAddColor = new float[]{0,0,0,0};
 		mInverted = false;
@@ -99,11 +101,23 @@ public class Tail {
 				if(mCountRingPos>=mCountLength) 
 					mCountRingPos = 0;
 				mCounts[mCountRingPos] = 0;
+				mPrevIndex = -2;
 			}
 		}
 	}
 	
+	public void debugOut() {
+		System.out.println(Util.arrayToString(mCounts, ";", 0));
+	}
+	
 	private void addNode(float dist,float x,float y,float forceDirX,float forceDirY) {
+		
+		boolean firstNode;
+		if(dist<0) {
+			firstNode = true;
+			dist=0;
+		}else
+			firstNode = false;
 		
 		synchronized(this) {
 			boolean newNode;
@@ -113,29 +127,34 @@ public class Tail {
 			}else
 				newNode = true;
 			
-			boolean updateIndices = true;
+			boolean addNodeOk = newNode;
 			if(newNode) {
 				int counts = mCounts[mCountRingPos];
 				
 				boolean noDistCheck = false;
 				//Check scalar
-//				if(counts>1 && mMinScalar>-1 && dist>0.005f && (forceDirX!=0 || forceDirY!=0)) {
-//					float scalar = mDirX[mPrevIndex]*forceDirX+mDirY[mPrevIndex]*forceDirY;
-//					if(scalar<mMinScalar) {
-//						interruptTail();
-//						noDistCheck = true;
-//						mCounts[mCountRingPos]--;
-//					}
-//				}
+				if(mPrevIndex>-1 && counts>1 && mMinScalar>-1 && dist>mMinScalarDist && (forceDirX!=0 || forceDirY!=0)) {
+					float scalar = mDirX[mPrevIndex]*forceDirX+mDirY[mPrevIndex]*forceDirY;
+					if(scalar<mMinScalar) {
+						mCounts[mCountRingPos]--;
+						interruptTail();
+						mCounts[mCountRingPos]+=2;
+						noDistCheck = true;
+						
+					}
+				}
 				
 				if(!noDistCheck) {
-					if(dist>mMinDist) {
+					if(dist>mMinDist || firstNode) {
 						//Continue sub tail
 						if(counts<0) {
 							interruptTail();
 							mCounts[mCountRingPos]++;
-						}else if(mCounts[mCountRingPos]<mCapacity)
-							mCounts[mCountRingPos]++;
+						}else{
+							
+							if(mCounts[mCountRingPos]<mCapacity)
+								mCounts[mCountRingPos]++;
+						}	
 						
 					}else{
 						//New sub tail
@@ -150,36 +169,41 @@ public class Tail {
 								}
 							}
 						}else
-							updateIndices = false;
+							addNodeOk = false;
 					}
 				}
 					
-				if(updateIndices) {
-					
-					if(mPrevIndex>-1 && (forceDirX!=0 || forceDirY!=0) ) {
-						float dirX = (mDirX[mPrevIndex]+forceDirX)*0.5f;
-						float dirY = (mDirY[mPrevIndex]+forceDirY)*0.5f;
-						float dirDist = Util.getDistance(dirX, dirY);
-						if(dirDist!=0) {
-							dirX /= dirDist;
-							dirY /= dirDist;
-						}
-						mDirX[mPrevIndex] = dirX;
-						mDirY[mPrevIndex] = dirY;
-//						mDirX[mPrevIndex] = (mDirX[mPrevIndex]+forceDirX)*0.5f;
-//						mDirY[mPrevIndex] = (mDirY[mPrevIndex]+forceDirY)*0.5f;
+				
+			}
+			
+			if(addNodeOk) {
+
+				if(mPrevIndex>-1 && (forceDirX!=0 || forceDirY!=0) ) {
+					float dirX = (mDirX[mPrevIndex]+forceDirX)*0.5f;
+					float dirY = (mDirY[mPrevIndex]+forceDirY)*0.5f;
+					float dirDist = Util.getDistance(dirX, dirY);
+					if(dirDist!=0) {
+						dirX /= dirDist;
+						dirY /= dirDist;
 					}
-					
+					mDirX[mPrevIndex] = dirX;
+					mDirY[mPrevIndex] = dirY;
+//					mDirX[mPrevIndex] = (mDirX[mPrevIndex]+forceDirX)*0.5f;
+//					mDirY[mPrevIndex] = (mDirY[mPrevIndex]+forceDirY)*0.5f;
+				}
+				
+				if(mPrevIndex<-1)
+					mPrevIndex++;
+				else
 					mPrevIndex = mRingPos;
-					mRingPos++;
-					if(mRingPos>=mCapacity) {
-						mRingPos = 0;
-						mFilled = true;
-					}
-					
-					mLastNodeX = x;
-					mLastNodeY = y;
+				mRingPos++;
+				if(mRingPos>=mCapacity) {
+					mRingPos = 0;
+					mFilled = true;
 				}
+				
+				mLastNodeX = x;
+				mLastNodeY = y;
 			}
 			
 			mDist[mRingPos] = dist;
@@ -204,8 +228,8 @@ public class Tail {
 			mCurNormX = dx / dist;
 			mCurNormY = dy / dist;
 		}else{
-			mCurNormX = 0;
-			mCurNormY = 0;
+//			mCurNormX = 0;
+//			mCurNormY = 0;
 		}
 		
 		return dist;
@@ -216,15 +240,17 @@ public class Tail {
 	}
 	
 	public void refreshFront() {
-		refreshFront(mLastNodeX,mLastNodeY);
+		refreshFront(mPosX[mRingPos],mPosY[mRingPos]);
 	}
 	
 	public void refreshFront(float x,float y) {
-		float dist = getDistance(x,y);
-		if(!mFilled && mRingPos==0)
-			addNode(dist,x,y,0,0);
-		else
+		
+		if(!mFilled && mRingPos==0) {
+			addNode(-1,x,y,0,0);
+		}else{
+			float dist = getDistance(x,y);
 			addNode(dist,x,y,mCurNormY,-mCurNormX);
+		}	
 	}
 	
 	public void refreshFrontAbsolute(float x1,float y1,float x2,float y2) {
@@ -249,8 +275,6 @@ public class Tail {
 			return l;
 		countPos = mCountRingPos;
 		putPos = mRingPos;
-		//if(!mSubTails)
-			//beginSubTail();
 		return getTailLength();
 	}
 	
@@ -309,9 +333,8 @@ public class Tail {
 			int count = 0;
 			float alpha;
 			float scale;
-			int i=0;
 			while(true) {
-				if(i>=tSize)
+				if(c>=tSize)
 					break;
 				int curCount = mCounts[countPos];
 				if(curCount<0) {
@@ -360,7 +383,6 @@ public class Tail {
 					}
 				}
 				c++;
-				i++;
 			}
 		}
 	}
