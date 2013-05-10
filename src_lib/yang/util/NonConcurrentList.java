@@ -7,24 +7,24 @@ import java.util.ListIterator;
 
 
 public class NonConcurrentList<E> implements List<E> {
-
+	
 	private class Node {
 		E elem;
-		Node prev;
-		Node next;
-		
+		public Node prev;
+		public Node next;
+
 		Node(E e, Node p, Node n) {
 			elem = e;
 			prev = p;
 			next = n;
 		}
 	}
-	
+
 	private class NonConcurrentIterator<T> implements ListIterator<T> {
 
 		Node dummy = new Node(null,null,null);
-		Node current;
-		
+		Node current = dummy;
+
 		public boolean hasNext() {
 			return current.next != null;
 		}
@@ -42,6 +42,13 @@ public class NonConcurrentList<E> implements List<E> {
 		public void prepare(int idx) {
 			current = (Node) first;
 			for (int i = 0; i < idx; i++) current = current.next;
+			
+			dummy.next = current;
+			current = dummy;
+		}
+		
+		public void prepare(Node startElement) {
+			current = (Node) startElement;
 			
 			dummy.next = current;
 			current = dummy;
@@ -76,13 +83,21 @@ public class NonConcurrentList<E> implements List<E> {
 		}
 	}
 	
-	private Node first;
-	private Node last;
-	private NonConcurrentIterator<E> iterator;
+	public Node first;
+	public Node last;
+	private NonConcurrentIterator<E>[] iterators;
 	private int size;
 	
+	@SuppressWarnings("unchecked")
+	public NonConcurrentList(int iteratorCount) {
+		iterators = new NonConcurrentIterator[iteratorCount];
+		for (int i = 0; i < iteratorCount; i++) iterators[i] = new NonConcurrentIterator<E>();
+	}
+	
+	@SuppressWarnings("unchecked")
 	public NonConcurrentList() {
-		iterator = new NonConcurrentIterator<E>();
+		iterators = new NonConcurrentIterator[2];
+		for (int i = 0; i < 2; i++) iterators[i] = new NonConcurrentIterator<E>();
 	}
 	
 	public boolean add(E element) {	//end of list
@@ -159,6 +174,7 @@ public class NonConcurrentList<E> implements List<E> {
 	}
 
 	public Iterator<E> iterator() {
+		NonConcurrentIterator<E> iterator = findFreeIterator();
 		iterator.prepare(0);
 		return iterator;
 	}
@@ -175,14 +191,49 @@ public class NonConcurrentList<E> implements List<E> {
 		return idx;
 	}
 
+	private NonConcurrentIterator<E> findFreeIterator() {
+		NonConcurrentIterator<E> iterator = null;
+		for (int i = 0; i < iterators.length; i++) {
+			if (!iterators[i].hasNext()) {
+				iterator = iterators[i];
+				break;
+			}
+		}
+
+		if (iterator == null) throw new RuntimeException("no free iterator");
+		return iterator;
+	}
+	
 	public ListIterator<E> listIterator() {
+		NonConcurrentIterator<E> iterator = findFreeIterator();
 		iterator.prepare(0);
 		return iterator;
 	}
 
-	public ListIterator<E> listIterator(int index) {
-		if (validIdx(index)) {
-			iterator.prepare(index);
+	public ListIterator<E> listIterator(Node startNode) {
+		NonConcurrentIterator<E> iterator = findFreeIterator();
+		iterator.prepare(startNode);
+		return iterator;
+	}
+
+	public ListIterator<E> listIterator(E startElement) {
+		NonConcurrentIterator<E> iterator = findFreeIterator();
+		Node curr = first;
+		while (curr != null) {
+			if (curr.elem.equals(startElement)) break;
+			curr = curr.next;
+		}
+
+		if (!curr.elem.equals(startElement)) throw new RuntimeException("start element not found: "+startElement); 
+
+		iterator.prepare(curr);
+		return iterator;
+	}
+
+	public ListIterator<E> listIterator(int startIndex) {
+		NonConcurrentIterator<E> iterator = findFreeIterator();
+		if (validIdx(startIndex)) {
+			iterator.prepare(startIndex);
 			return iterator;
 		}
 		return null;
@@ -307,10 +358,10 @@ public class NonConcurrentList<E> implements List<E> {
 	}
 	
 //	public static void main(String[] args) {
-//		NonConcurrentList<String> list = new NonConcurrentList<String>();
-//
+//		NonConcurrentList<String> list = new NonConcurrentList<String>(2);
+//		System.out.println("add/remove test:");
 //		String foo = "z";
-//		
+//
 //		list.add("a");
 //		list.add("b");
 //		list.add("c");
@@ -323,9 +374,29 @@ public class NonConcurrentList<E> implements List<E> {
 //		list.add("i");
 //		list.add("j");
 //		list.add("k");
-//		
-//		list.remove(8);
-//		
+//
+//		list.remove(7);
 //		System.out.println(list);
+//
+//		System.out.println("\nmultiple iterator test:");
+//		for (String string : list) {
+//			for (String string2 : list) {
+//				System.out.print("["+string +" "+string2+"]");
+//			}
+//			System.out.println();
+//		}
+//
+//		System.out.println("\niterator start from node test:");
+//		ListIterator<String> nodeIter = list.listIterator(list.first.next.next);
+//		while (nodeIter.hasNext()) {
+//			System.out.print(nodeIter.next());
+//		}
+//
+//		System.out.println("\n\niterator start from elem");
+//		ListIterator<String> elemIter = list.listIterator(list.first.next.next.next.next.elem);
+//		while (elemIter.hasNext()) {
+//			System.out.print(elemIter.next());
+//		}
+//		System.out.println();
 //	}
 }
