@@ -1,7 +1,7 @@
 package yang.graphics.font;
 
 import yang.graphics.defaults.DefaultGraphics;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 
 public abstract class TransformAnimatedString extends AnimatedString {
 

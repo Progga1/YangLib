@@ -1,7 +1,7 @@
 package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.defaults.Default3DGraphics;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 
 public class SphereCreator extends Grid3DCreator {
 

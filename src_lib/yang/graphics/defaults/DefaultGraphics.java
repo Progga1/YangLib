@@ -15,8 +15,8 @@ import yang.graphics.programs.BasicProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.math.TransformationMatrix;
 import yang.model.PrintInterface;
-import yang.model.TransformationMatrix;
 import yang.util.Util;
 
 public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> implements PrintInterface {

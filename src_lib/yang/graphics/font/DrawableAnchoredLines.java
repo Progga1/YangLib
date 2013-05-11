@@ -2,7 +2,7 @@ package yang.graphics.font;
 
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 
 public class DrawableAnchoredLines extends DrawableString{
 

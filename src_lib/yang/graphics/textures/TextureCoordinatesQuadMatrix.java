@@ -1,7 +1,7 @@
 package yang.graphics.textures;
 
 import yang.graphics.translator.GraphicsTranslator;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 
 public class TextureCoordinatesQuadMatrix extends TextureCoordinatesQuad {
 

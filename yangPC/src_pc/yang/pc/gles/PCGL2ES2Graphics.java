@@ -20,11 +20,11 @@ import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.Texture;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
+import yang.math.YangTransformationMatrix;
 import yang.model.enums.ByteFormat;
 import yang.pc.PCEventHandler;
 import yang.pc.PCGraphics;
-import yang.pc.PCTransformationMatrix;
 import yang.pc.fileio.PCGFXLoader;
 
 import com.jogamp.opengl.util.Animator;
@@ -248,11 +248,6 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	@Override
 	public GLProgram createProgram() {
 		return new PCGLProgram(gles2);
-	}
-
-	@Override
-	public TransformationMatrix createTransformationMatrix() {
-		return new PCTransformationMatrix();
 	}
 
 	@Override

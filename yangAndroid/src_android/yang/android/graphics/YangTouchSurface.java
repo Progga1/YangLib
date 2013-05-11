@@ -11,7 +11,6 @@ import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.graphics.SurfaceInterface;
 import yang.model.App;
-import yang.model.Factory;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
@@ -35,8 +34,6 @@ public class YangTouchSurface extends GLSurfaceView{
 		super.setEGLContextClientVersion(2);
 		mSceneRenderer = new SceneRenderer(context);
 		super.setRenderer(mSceneRenderer);
-		
-		Factory.init(new AndroidFactory());
 
 		App.soundManager = new AndroidSoundManager(context);
 		App.storage = new AndroidDataStorage(context);

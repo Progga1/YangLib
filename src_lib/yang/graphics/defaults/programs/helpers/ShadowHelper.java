@@ -12,7 +12,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 import yang.util.Util;
 
 public class ShadowHelper {
@@ -108,7 +108,7 @@ public class ShadowHelper {
 	public void endDepthRendering() {
 		if(!mRenderToScreen)
 			mGraphics.setScreenRenderTarget();
-		mDepthTransformation.copyFrom(mGraphics3D.mCameraProjectionMatrix);
+		mDepthTransformation.set(mGraphics3D.mCameraProjectionMatrix);
 		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
 	}
 

@@ -9,7 +9,7 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera3D;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
@@ -178,7 +178,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
 	public void setCameraLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
 		mTranslator.flush();
-		mCameraMatrix.lookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, upX,upY,upZ);
+		mCameraMatrix.setLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, upX,upY,upZ);
 	}
 
 	public void setCameraLookAt(float eyeX,float eyeY, float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
@@ -192,7 +192,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	@Override
 	public void refreshResultTransform() {
 		if(mBillboardMode) {
-			mCameraProjectionMatrix.copyFrom(mCameraMatrix);
+			mCameraProjectionMatrix.set(mCameraMatrix);
 			mCameraProjectionMatrix.setTranslationOnly();
 			mCameraProjectionMatrix.multiplyLeft(mProjectionTransform);
 		}else

@@ -10,8 +10,8 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
+import yang.math.TransformationMatrix;
 import yang.model.DebugYang;
-import yang.model.TransformationMatrix;
 
 
 

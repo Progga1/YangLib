@@ -7,8 +7,8 @@ import yang.graphics.programs.BasicProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera2D;
+import yang.math.TransformationMatrix;
 import yang.model.Rect;
-import yang.model.TransformationMatrix;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	
@@ -406,7 +406,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	
 	@Override
 	public void refreshResultTransform() {
-		mCameraProjectionMatrix.copyFrom(mCurProjTransform);
+		mCameraProjectionMatrix.set(mCurProjTransform);
 	}
 
 	public boolean rectInScreen2D(float posX,float posY,Rect mRect) {

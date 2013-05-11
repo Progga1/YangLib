@@ -9,7 +9,7 @@ import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 import yang.model.enums.ByteFormat;
 import android.content.Context;
 import android.opengl.GLES20;
@@ -78,10 +78,6 @@ public class AndroidGraphics extends GraphicsTranslator {
 
 	public GLProgram createProgram() {
 		return new AndroidGLProgram();
-	}
-
-	public TransformationMatrix createTransformationMatrix() {
-		return new AndroidTransformationMatrix();
 	}
 
 	@Override

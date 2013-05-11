@@ -16,9 +16,10 @@ import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
+import yang.math.TransformationMatrix;
+import yang.math.YangTransformationMatrix;
 import yang.model.ScreenInfo;
 import yang.model.TransformationFactory;
-import yang.model.TransformationMatrix;
 import yang.model.enums.ByteFormat;
 import yang.util.NonConcurrentList;
 
@@ -150,6 +151,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurDrawListener = null;
 		appInstance = this;
 		mCurrentScreen = this;
+	}
+	
+	public TransformationMatrix createTransformationMatrix() {
+		return new YangTransformationMatrix();
 	}
 	
 	public final void start() {

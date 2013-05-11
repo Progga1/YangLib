@@ -1,4 +1,4 @@
-package yang.model;
+package yang.math;
 
 import javax.vecmath.Vector3f;
 
@@ -36,9 +36,9 @@ public abstract class TransformationMatrix {
 	 */
 	public abstract float[] asFloatArraySwallow();
 	
-	public abstract void copyFrom(TransformationMatrix src);
+	public abstract void set(TransformationMatrix src);
 
-	public abstract void asInverted(float[] target);
+	public abstract boolean asInverted(float[] target);
 
 	public abstract void loadIdentity();
 
@@ -69,8 +69,6 @@ public abstract class TransformationMatrix {
 	public abstract void setColumn(int col, float x,float y,float z,float w);
 
 	public abstract void setRow(int row, float x,float y,float z,float w);
-	
-	public abstract void setSwallow(float[] matrix);
 	
 	public TransformationMatrix() {
 		mIntermediate = new float[16];
@@ -349,7 +347,7 @@ public abstract class TransformationMatrix {
 		setRow(row,values.x,values.y,values.z);
 	}
 
-	public void lookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ) {
+	public void setLookAt(float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ) {
 		mVec0.set(eyeX,eyeY,eyeZ);
 		mVec3.set(eyeX-lookAtX,eyeY-lookAtY,eyeZ-lookAtZ);
 		mVec4.set(upX,upY,upZ);

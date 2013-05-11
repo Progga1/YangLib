@@ -3,7 +3,7 @@ package yang.graphics.font;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 
 public class DrawableString extends FixedString {
 	

@@ -2,8 +2,6 @@ package yang.pc.gles;
 
 import yang.graphics.SurfaceInterface;
 import yang.model.App;
-import yang.model.Factory;
-import yang.pc.PCFactory;
 import yang.pc.fileio.PCDataStorage;
 import yang.pc.fileio.PCResourceManager;
 import yang.pc.fileio.PCSoundLoader;
@@ -19,7 +17,6 @@ public class FullGraphicsInitializer {
 	
 	public FullGraphicsInitializer init(int resolutionX,int resolutionY) {
 		mTranslator = new PCGL2ES2Graphics(resolutionX,resolutionY);
-		Factory.init(new PCFactory());
 		
 		App.soundManager = new SoundManager();
 		App.storage = new PCDataStorage();

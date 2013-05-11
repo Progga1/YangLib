@@ -8,7 +8,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 
 public class PlanarLightmapHelper {
 
@@ -43,7 +43,7 @@ public class PlanarLightmapHelper {
 	}
 	
 	public void refreshProjections() {
-		mCameraTransform.lookAt(0,0,0, 0,-1,0, 0,0,-1);
+		mCameraTransform.setLookAt(0,0,0, 0,-1,0, 0,0,-1);
 		mOrthoProjection.setOrthogonalProjection(-mObjectWidth*0.5f,mObjectWidth*0.5f, mObjectHeight*0.5f, -mObjectHeight*0.5f, mNear, mFar);
 		mOrthoProjection.asInverted(mInvOrthoProjection);
 	}

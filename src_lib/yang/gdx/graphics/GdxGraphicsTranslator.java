@@ -10,7 +10,7 @@ import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.model.TransformationMatrix;
+import yang.math.TransformationMatrix;
 import yang.model.enums.ByteFormat;
 
 import com.badlogic.gdx.Gdx;
@@ -47,10 +47,6 @@ public class GdxGraphicsTranslator extends GraphicsTranslator {
 
 	public GLProgram createProgram() {
 		return new GdxGLProgram();
-	}
-
-	public TransformationMatrix createTransformationMatrix() {
-		return new PCTransformationMatrix();
 	}
 
 	@Override
