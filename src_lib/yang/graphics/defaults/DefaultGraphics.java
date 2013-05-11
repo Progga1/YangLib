@@ -15,7 +15,8 @@ import yang.graphics.programs.BasicProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.math.TransformationMatrix;
+import yang.math.MatrixOps;
+import yang.math.YangMatrix;
 import yang.model.PrintInterface;
 import yang.util.Util;
 
@@ -63,7 +64,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public FloatBuffer mNormals;
 	
 	protected abstract void refreshResultTransform();
-	public abstract void putTransformedPositionRect(TransformationMatrix transform);
+	public abstract void putTransformedPositionRect(YangMatrix transform);
 
 	public DefaultGraphics(GraphicsTranslator translator, int positionBytes) {
 		super(translator);
@@ -135,16 +136,16 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			refreshResultTransform();
 			if (mWorldTransformEnabled) {
 				if (program.mHasWorldTransform) {
-					program.setWorldTransform(mWorldTransform.asFloatArraySwallow());
-					program.setProjection(mCameraProjectionMatrix.asFloatArraySwallow());
+					program.setWorldTransform(mWorldTransform.mMatrix);
+					program.setProjection(mCameraProjectionMatrix.mMatrix);
 				} else {
 					mResultTransformationMatrix.multiply(mCameraProjectionMatrix, mWorldTransform);
-					program.setProjection(mResultTransformationMatrix.asFloatArraySwallow());
+					program.setProjection(mResultTransformationMatrix.mMatrix);
 				}
 			} else {
-				program.setProjection(mCameraProjectionMatrix.asFloatArraySwallow());
+				program.setProjection(mCameraProjectionMatrix.mMatrix);
 				if (program.mHasWorldTransform)
-					program.setWorldTransform(TransformationMatrix.FLOAT_IDENTITY);
+					program.setWorldTransform(MatrixOps.IDENTITY);
 			}
 		}
 	}
@@ -182,7 +183,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	// ---RECTS---
 
-	public void drawQuad(TransformationMatrix worldTransform, TransformationMatrix textureTransform) {
+	public void drawQuad(YangMatrix worldTransform, YangMatrix textureTransform) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		putTransformedPositionRect(worldTransform);
 		putTransformedTextureRect(textureTransform);
@@ -204,7 +205,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putAddColorRect(mCurAddColor);
 	}
 
-	public void drawQuad(TransformationMatrix worldTransform, TextureCoordinatesQuad texCoordinates) {
+	public void drawQuad(YangMatrix worldTransform, TextureCoordinatesQuad texCoordinates) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		putTransformedPositionRect(worldTransform);
 		if(texCoordinates!=null)
@@ -215,7 +216,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putAddColorRect(mCurAddColor);
 	}
 
-	public void drawQuad(TransformationMatrix transform) {
+	public void drawQuad(YangMatrix transform) {
 		drawQuad(transform, mTexIdentity);
 	}
 
@@ -235,7 +236,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putAddColorRect(mCurAddColor);
 	}
 
-	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, TransformationMatrix textureTransform) {
+	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, YangMatrix textureTransform) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 		putTransformedTextureRect(textureTransform);
@@ -306,11 +307,11 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putTextureRect(x1, y1, x2, y2, DEFAULTTEXBIAS);
 	}
 
-	public void putTransformedTextureRect(TransformationMatrix transform) {
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,1, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,1, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,0, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,0, transform.asFloatArraySwallow());
+	public void putTransformedTextureRect(YangMatrix transform) {
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,1, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,1, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,0, transform.mMatrix);
 	}
 
 	// ---PUT-COLORS---
@@ -476,7 +477,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			mCurrentProgram.setTime(time);
 	}
 	
-	public void drawString(TransformationMatrix transform,DrawableString string) {
+	public void drawString(YangMatrix transform,DrawableString string) {
 		string.draw(transform);
 	}
 	

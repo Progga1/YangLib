@@ -1,10 +1,10 @@
 package yang.model;
 
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 
 public interface TransformationFactory {
 
-	public TransformationMatrix createTransformationMatrix();
+	public YangMatrix createTransformationMatrix();
 	
 }

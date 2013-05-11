@@ -1,11 +1,11 @@
 package yang.graphics.font;
 
 import yang.graphics.defaults.DefaultGraphics;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 public abstract class TransformAnimatedString extends AnimatedString {
 
-	protected TransformationMatrix mCurTransform;
+	protected YangMatrix mCurTransform;
 	
 	protected abstract void onPutLetter(int letterId);
 	

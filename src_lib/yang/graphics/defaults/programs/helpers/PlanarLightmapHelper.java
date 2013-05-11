@@ -8,7 +8,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 public class PlanarLightmapHelper {
 
@@ -23,7 +23,7 @@ public class PlanarLightmapHelper {
 	public static TextureSettings defaultTextureSettingsMipMap = createTextureSettings(true);
 	public boolean mRenderToScreen = false;
 	public ShadowHelper mShadowHelper;
-	public TransformationMatrix mOrthoProjection,mCameraTransform;
+	public YangMatrix mOrthoProjection,mCameraTransform;
 	public float[] mInvOrthoProjection = new float[16];
 	private TextureSettings mTextureSettings;
 	private boolean mMipMapping;

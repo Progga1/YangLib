@@ -5,7 +5,7 @@ import yang.graphics.interfaces.KernelFunction;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.TextureCreator;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 public class TerrainCreator extends Grid3DCreator {
 	
@@ -13,7 +13,7 @@ public class TerrainCreator extends Grid3DCreator {
 		super(graphics);
 	}
 	
-	public void putTerrainPositionRect(float[][] heightValues,TransformationMatrix transform) {
+	public void putTerrainPositionRect(float[][] heightValues,YangMatrix transform) {
 		float left = -mCurDimX*0.5f;
 		float top = mCurDimY*0.5f;
 		compRelations(heightValues);
@@ -35,7 +35,7 @@ public class TerrainCreator extends Grid3DCreator {
 		putTerrainPositionRect(heightValues,null);
 	}
 	
-	public void putTerrainPositionRect(TransformationMatrix transform) {
+	public void putTerrainPositionRect(YangMatrix transform) {
 		putTerrainPositionRect(null,transform);
 	}
 

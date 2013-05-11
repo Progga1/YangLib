@@ -16,8 +16,7 @@ import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
-import yang.math.TransformationMatrix;
-import yang.math.YangTransformationMatrix;
+import yang.math.YangMatrix;
 import yang.model.ScreenInfo;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
@@ -52,9 +51,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private long mLstTimestamp = -1;
 	
 	//Matrices
-	public TransformationMatrix mProjScreenTransform;
+	public YangMatrix mProjScreenTransform;
 	public float[] mInvScreenProjection;
-	public TransformationMatrix mStaticTransformation;
+	public YangMatrix mStaticTransformation;
 	
 	//Counters
 	public int rectCount;
@@ -153,8 +152,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurrentScreen = this;
 	}
 	
-	public TransformationMatrix createTransformationMatrix() {
-		return new YangTransformationMatrix();
+	public YangMatrix createTransformationMatrix() {
+		return new YangMatrix();
 	}
 	
 	public final void start() {
@@ -407,7 +406,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		setViewPort(width,height);
 	}
 	
-	public static TransformationMatrix newTransformationMatrix() {
+	public static YangMatrix newTransformationMatrix() {
 		return appInstance.createTransformationMatrix();
 	}
 	
@@ -441,7 +440,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		assert checkErrorInst("Set texture render target");
 	}
 	
-	public TransformationMatrix getStaticTransformation() {
+	public YangMatrix getStaticTransformation() {
 		mStaticTransformation.loadIdentity();
 		return mStaticTransformation;
 	}

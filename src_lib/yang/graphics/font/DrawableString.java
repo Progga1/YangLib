@@ -3,7 +3,7 @@ package yang.graphics.font;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 public class DrawableString extends FixedString {
 	
@@ -301,9 +301,9 @@ public class DrawableString extends FixedString {
 		putColors();
 	}
 	
-	public void draw(TransformationMatrix transform) {
+	public void draw(YangMatrix transform) {
 		float[] positions;
-		TransformationMatrix resultTransf;
+		YangMatrix resultTransf;
 		if(mConstantPositions==null){
 			createStringPositions(staticPositions,null);
 			positions = staticPositions;
@@ -322,7 +322,7 @@ public class DrawableString extends FixedString {
 		
 		putVertexProperties();
 
-		vertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mGraphics.mPositionDimension,resultTransf.asFloatArraySwallow());
+		vertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mGraphics.mPositionDimension,resultTransf.mMatrix);
 	}
 	
 	public void draw(float x,float y,float lineHeight) {

@@ -10,7 +10,8 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
+import yang.math.YangMatrixRectOps;
 import yang.model.DebugYang;
 
 
@@ -22,16 +23,16 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public final static int MAX_DYNAMIC_VERTICES = 100000;
 	
 	//Matrices
-	public TransformationMatrix mInterWorldTransf1;
-	public TransformationMatrix mInterWorldTransf2;
-	protected TransformationMatrix mInterTexTransf;
-	protected TransformationMatrix mIdentity;
+	public YangMatrixRectOps mInterWorldTransf1;
+	public YangMatrixRectOps mInterWorldTransf2;
+	protected YangMatrixRectOps mInterTexTransf;
+	protected YangMatrixRectOps mIdentity;
 	public TextureCoordinatesQuad mTexIdentity;
-	public TransformationMatrix mWorldTransform;
-	protected TransformationMatrix mProjectionTransform;
-	public TransformationMatrix mCameraProjectionMatrix;
-	protected TransformationMatrix mResultTransformationMatrix;
-	public TransformationMatrix mCurProjTransform;
+	public YangMatrixRectOps mWorldTransform;
+	protected YangMatrix mProjectionTransform;
+	public YangMatrix mCameraProjectionMatrix;
+	protected YangMatrix mResultTransformationMatrix;
+	public YangMatrix mCurProjTransform;
 	protected float[] invGameProjection;
 	
 	//State
@@ -69,14 +70,14 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		
 		mWorldTransformEnabled = false;
 		mProjectionTransform = mTranslator.createTransformationMatrix();
-		mInterWorldTransf1 = mTranslator.createTransformationMatrix();
-		mInterWorldTransf2 = mTranslator.createTransformationMatrix();
-		mWorldTransform = mTranslator.createTransformationMatrix();
+		mInterWorldTransf1 = new YangMatrixRectOps();
+		mInterWorldTransf2 = new YangMatrixRectOps();
+		mWorldTransform = new YangMatrixRectOps();
 		mWorldTransform.loadIdentity();
 		mCameraProjectionMatrix = mTranslator.createTransformationMatrix();
 		mResultTransformationMatrix = mTranslator.createTransformationMatrix();
-		mInterTexTransf = mTranslator.createTransformationMatrix();
-		mIdentity = mTranslator.createTransformationMatrix();
+		mInterTexTransf = new YangMatrixRectOps();
+		mIdentity = new YangMatrixRectOps();
 		mIdentity.loadIdentity();
 //		mIdentity.refreshRect2D();
 		mTexIdentity = mTranslator.createTexCoords();

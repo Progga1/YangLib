@@ -12,19 +12,19 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 import yang.util.Util;
 
 public class ShadowHelper {
 
 	private DepthProgram depthProgram = new DepthProgram();
-	private static TransformationMatrix depthTrafoCorrection;
+	private static YangMatrix depthTrafoCorrection;
 	public static TextureSettings defaultTextureSettings = createTextureSettings();
 	
 	private GraphicsTranslator mGraphics;
 	public Default3DGraphics mGraphics3D;
 	public TextureRenderTarget mDepthMap;
-	public TransformationMatrix mDepthTransformation;
+	public YangMatrix mDepthTransformation;
 	public float[] mLightDirection;
 	public int mSize;
 	public float mMinLight = 0.3f;
@@ -54,7 +54,7 @@ public class ShadowHelper {
 		return depthProgram;
 	}
 	
-	public synchronized TransformationMatrix getDepthTrafoCorrection() {
+	public synchronized YangMatrix getDepthTrafoCorrection() {
 		if(depthTrafoCorrection==null) {
 			depthTrafoCorrection = mGraphics.createTransformationMatrix();
 			depthTrafoCorrection.loadIdentity();
@@ -83,7 +83,7 @@ public class ShadowHelper {
 	
 	public void setShadowShaderProperties(ShadowInterface shadowShader) {
 		setLightShaderProperties(shadowShader);
-		shadowShader.setDepthMapProjection(mDepthTransformation.asFloatArraySwallow());
+		shadowShader.setDepthMapProjection(mDepthTransformation.mMatrix);
 		mGraphics3D.bindTexture(getDepthMap(),ShadowProgram.DEPTH_TEXTURE_LEVEL);
 	}
 	

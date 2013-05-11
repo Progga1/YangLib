@@ -10,7 +10,7 @@ import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 import yang.model.enums.ByteFormat;
 
 import com.badlogic.gdx.Gdx;

@@ -24,7 +24,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 import yang.model.Boundaries3D;
 import yang.samples.statesystem.SampleState;
 import yang.util.statesystem.YangProgramState;
@@ -50,8 +50,8 @@ public class IcyTerrainState extends SampleState {
 	private Texture waterNormal;
 	private Texture cube;
 	private Texture screenShotTex;
-	private TransformationMatrix transfMatrix;
-	private TransformationMatrix cullMatrix;
+	private YangMatrix transfMatrix;
+	private YangMatrix cullMatrix;
 	private float[][] heights;
 	
 	private TerrainCreator mTerrain;
@@ -201,7 +201,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.bindTexture(mShadowHelper.getDepthMap(),WaterProgram.DEPTH_TEXTURE_LEVEL);
 		mGraphics.bindTexture(mHeightTexture, WaterProgram.HEIGHT_TEXTURE_LEVEL);
 		mGraphics.checkErrorInst("Set water textures");
-		mWaterProgram.setDepthMapProjection(mShadowHelper.mDepthTransformation.asFloatArraySwallow());
+		mWaterProgram.setDepthMapProjection(mShadowHelper.mDepthTransformation.mMatrix);
 		mGraphics.checkErrorInst("Set depth map projection");
 		mWaterProgram.setLightDirection(mShadowHelper.mLightDirection);
 		mGraphics.checkErrorInst("Set light direction");

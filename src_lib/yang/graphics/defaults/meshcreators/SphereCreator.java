@@ -1,7 +1,7 @@
 package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.defaults.Default3DGraphics;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 public class SphereCreator extends Grid3DCreator {
 
@@ -12,7 +12,7 @@ public class SphereCreator extends Grid3DCreator {
 		mRadiusOffset = 0;
 	}
 
-	public void putPositions(float[][] radiusValues,TransformationMatrix transform,boolean loopNormals) {
+	public void putPositions(float[][] radiusValues,YangMatrix transform,boolean loopNormals) {
 		compRelations(radiusValues);
 		for(int row=0;row<mCurYCount;row++) {
 			//float beta = (float)Math.sin((float)row/(mCurYCount-1)*PI/2)*PI-PI/2;
@@ -42,7 +42,7 @@ public class SphereCreator extends Grid3DCreator {
 		putPositions(radiusValues,null,loopNormals);
 	}
 	
-	public void putPositions(TransformationMatrix transform,boolean loopNormals) {
+	public void putPositions(YangMatrix transform,boolean loopNormals) {
 		putPositions(null,transform,loopNormals);
 	}
 	

@@ -9,7 +9,7 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera3D;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
@@ -34,10 +34,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
 	public float mCurrentZ;
 	protected boolean mBillboardMode;
-	public TransformationMatrix mCameraMatrix;
-	private TransformationMatrix mInterMatrix;
-	public TransformationMatrix mSavedCamera;
-	public TransformationMatrix mSavedProjection;
+	public YangMatrix mCameraMatrix;
+	private YangMatrix mInterMatrix;
+	public YangMatrix mSavedCamera;
+	public YangMatrix mSavedProjection;
 	public float[] mSavedInvGameProjection;
 	
 	private Basic3DProgram mDefaultProgram;
@@ -120,15 +120,15 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mPositions.put(z);
 	}
 
-	public void putTransformedPosition(float x, float y,float z,TransformationMatrix transform) {
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS, x, y, z, transform.asFloatArraySwallow());
+	public void putTransformedPosition(float x, float y,float z,YangMatrix transform) {
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS, x, y, z, transform.mMatrix);
 	}
 	
-	public void putTransformedPositionRect(TransformationMatrix transform) {
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,0, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,0, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,0, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,0, transform.asFloatArraySwallow());
+	public void putTransformedPositionRect(YangMatrix transform) {
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,0, transform.mMatrix);
 	}
 	
 	public void setOrthogonalProjection(float near,float far,float zoom) {
@@ -149,7 +149,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 	
 	public void setOrthogonalProjection() {
-		setOrthogonalProjection(TransformationMatrix.DEFAULT_NEAR,TransformationMatrix.DEFAULT_FAR);
+		setOrthogonalProjection(YangMatrix.DEFAULT_NEAR,YangMatrix.DEFAULT_FAR);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
@@ -199,7 +199,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			mCameraProjectionMatrix.multiply(mProjectionTransform,mCameraMatrix);
 	}
 	
-	public void putTransformedPositionArray(float[] positions,TransformationMatrix transform) {
+	public void putTransformedPositionArray(float[] positions,YangMatrix transform) {
 		for(int i=0;i<positions.length/3;i++) {
 			int id = i*3;
 			
@@ -211,7 +211,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		}
 	}
 	
-	public void putCubePart(float[] array,TransformationMatrix transform) {
+	public void putCubePart(float[] array,YangMatrix transform) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		if(transform==null)
 			putPositionArray(array);
@@ -222,7 +222,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		putAddColorRect(mCurAddColor);
 	}
 	
-	public void drawCubeCentered(TransformationMatrix transform) {
+	public void drawCubeCentered(YangMatrix transform) {
 		putCubePart(CUBE_FRONT,transform);
 		putCubePart(CUBE_BACK,transform);
 		putCubePart(CUBE_LEFT,transform);
@@ -238,7 +238,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawCubeCentered(mInterMatrix);
 	}
 	
-	public void drawSphere(int verticesAlpha,int verticesBeta,TransformationMatrix transform,float textureCoordFactorX,float textureCoordFactorY) {
+	public void drawSphere(int verticesAlpha,int verticesBeta,YangMatrix transform,float textureCoordFactorX,float textureCoordFactorY) {
 		mSphereCreator.begin(verticesAlpha,verticesBeta,1,1,1);
 		mSphereCreator.putPositions(transform,true);
 		mSphereCreator.putTerrainTextureRect(0,0,textureCoordFactorX,textureCoordFactorY);

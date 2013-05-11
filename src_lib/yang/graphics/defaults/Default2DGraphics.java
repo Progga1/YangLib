@@ -1,13 +1,13 @@
 package yang.graphics.defaults;
 
-import yang.graphics.defaults.meshcreators.StripCreator;
 import yang.graphics.defaults.programs.AdditiveModulateProgram;
 import yang.graphics.font.LegacyAbstractFont;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera2D;
-import yang.math.TransformationMatrix;
+import yang.math.MatrixOps;
+import yang.math.YangMatrix;
 import yang.model.Rect;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
@@ -93,14 +93,14 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mPositions.put(y2);
 	}
 	
-	public void putTransformedPositionRect(TransformationMatrix transform) {
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,0, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,0, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,1, transform.asFloatArraySwallow());
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,1, transform.asFloatArraySwallow());
+	public void putTransformedPositionRect(YangMatrix transform) {
+		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,1, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,1, transform.mMatrix);
 	}
 	
-	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TransformationMatrix textureTransform) {
+	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, YangMatrix textureTransform) {
 		mInterWorldTransf1.setCenteredRect(centerX, centerY, width, height, angle);
 		drawQuad(mInterWorldTransf1, textureTransform);
 		flush();
@@ -147,7 +147,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		drawRectCentered(centerX, centerY, scale, 0, texCoordinates);
 	}
 	
-	public void drawLine(float fromX,float fromY, float toX,float toY, float width, TransformationMatrix textureTransform) {
+	public void drawLine(float fromX,float fromY, float toX,float toY, float width, YangMatrix textureTransform) {
 		mInterWorldTransf1.setLine(fromX, fromY, toX, toY, width);
 		drawQuad(mInterWorldTransf1,textureTransform);
 	}
@@ -363,12 +363,12 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 	
 	public int projScreenX(float gameX,float gameY) {
-		float x = TransformationMatrix.applyFloatMatrixX2D(mCurProjTransform.asFloatArraySwallow(), gameX, gameY);
+		float x = MatrixOps.applyFloatMatrixX2D(mCurProjTransform.mMatrix, gameX, gameY);
 		return (int)((x+1)*mTranslator.mScreenWidth*0.5f);
 	}
 	
 	public int projScreenY(float gameX,float gameY) {
-		float y = TransformationMatrix.applyFloatMatrixY2D(mCurProjTransform.asFloatArraySwallow(), gameX, gameY);
+		float y = MatrixOps.applyFloatMatrixY2D(mCurProjTransform.mMatrix, gameX, gameY);
 		return (int)((-y+1)*mTranslator.mScreenHeight*0.5f);
 	}
 	

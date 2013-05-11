@@ -20,8 +20,6 @@ import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.Texture;
-import yang.math.TransformationMatrix;
-import yang.math.YangTransformationMatrix;
 import yang.model.enums.ByteFormat;
 import yang.pc.PCEventHandler;
 import yang.pc.PCGraphics;

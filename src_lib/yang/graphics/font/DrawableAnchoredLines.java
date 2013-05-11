@@ -2,7 +2,7 @@ package yang.graphics.font;
 
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.math.TransformationMatrix;
+import yang.math.YangMatrix;
 
 public class DrawableAnchoredLines extends DrawableString{
 
@@ -68,9 +68,9 @@ public class DrawableAnchoredLines extends DrawableString{
 	
 
 
-	public void draw(TransformationMatrix transform) {
+	public void draw(YangMatrix transform) {
 		float[] positions;
-		TransformationMatrix resultTransf;
+		YangMatrix resultTransf;
 		if(mConstantPositions==null) {
 			positions = staticPositions;
 			float[] offsets;
@@ -94,7 +94,7 @@ public class DrawableAnchoredLines extends DrawableString{
 
 		putVertexProperties();
 
-		mGraphics.mCurrentVertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mGraphics.mPositionDimension,resultTransf.asFloatArraySwallow());
+		mGraphics.mCurrentVertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mGraphics.mPositionDimension,resultTransf.mMatrix);
 	}
 	
 }
