@@ -1,12 +1,16 @@
 package yang.graphics.tail;
 
+import yang.graphics.FloatColor;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.defaults.meshcreators.DoubleStripCreator;
+import yang.graphics.defaults.meshcreators.StripCreator;
 import yang.model.DebugYang;
 import yang.util.Util;
 
 public class Tail {
 
-	private float[] stdTexCoords = { 0, 0, 0, 2};
+	private float[] mStdTexCoords = { 0, 0, 0, 2};
+	private float[] mDoubleTexCoords = { 0, 0, 0, 2, 0, 1};
 	
 	public String mName;
 	public int mCapacity;
@@ -19,6 +23,7 @@ public class Tail {
 	public float[] mDist;
 	public int[] mCounts;
 
+	private float[] mTexCoords;
 	private float[] mCurColor;
 	public float mGlobAlpha;
 	private int mCountRingPos;
@@ -43,9 +48,15 @@ public class Tail {
 	protected float mTexYRepeat = 2;
 	public float mTexXShift = 0;
 	public boolean mAutoInterruptSmallDistances = true;
+	public StripCreator mStrips;
+	public StripCreator mSingleStrips,mDoubleStrips;
+	public float mMaxWidthAtCount = 5;
 	
 	public Tail(DefaultGraphics<?> graphics,int capacity,boolean subTails) {
 		mGraphics = graphics;
+		mSingleStrips = new StripCreator(graphics);
+		mDoubleStrips = new DoubleStripCreator(graphics);
+		setDoubled(false);
 		mCapacity = capacity;
 		mCountLength = capacity/2;
 		mPosX = new float[capacity];
@@ -68,6 +79,20 @@ public class Tail {
 		clear();
 	}
 	
+	public void setDoubled(boolean doubled) {
+		if(doubled) {
+			mStrips = mDoubleStrips;
+			mTexCoords = mDoubleTexCoords;
+		}else{
+			mStrips = mSingleStrips;
+			mTexCoords = mStdTexCoords;
+		}
+	}
+	
+	public boolean isDoubled() {
+		return mStrips==mDoubleStrips;
+	}
+	
 	public void clear() {
 		synchronized(this) {
 			mFilled = false;
@@ -79,7 +104,8 @@ public class Tail {
 	
 	public void setTexYRepeat(float repeat) {
 		mTexYRepeat = repeat;
-		stdTexCoords[3] = repeat;
+		mStdTexCoords[3] = repeat;
+		mDoubleTexCoords[3] = repeat;
 	}
 	
 	public void setColor(float r,float g,float b,float a) {
@@ -287,21 +313,27 @@ public class Tail {
 		}
 		mCurColor[3] = mGlobAlpha * alpha;
 		if(scale==0) {
-			mGraphics.continueStripSinglePoint(mPosX[putPos], mPosY[putPos]);
+			mStrips.continueStripSinglePoint(mPosX[putPos], mPosY[putPos]);
 			if(mTexXRepeat==0)
 				mGraphics.putTextureCoord(0, 1);
 			else
 				mGraphics.putTextureCoord(curTailTexX, 0);
 		}else{
-			mGraphics.continueStrip();
-			mGraphics.putPosition(mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
-			mGraphics.putPosition(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale);
+			mStrips.continueStrip(mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale,mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale);
 			if(mTexXRepeat==0)
-				mGraphics.putTextureArray(stdTexCoords);
-			else
-				mGraphics.putTextureCoordPair(curTailTexX, 0, curTailTexX, mTexYRepeat);
-			mGraphics.putAddColor(mAddColor);
+				mGraphics.putTextureArray(mTexCoords);
+			else{
+				mGraphics.putTextureCoord(curTailTexX, 0);
+				mGraphics.putTextureCoord(curTailTexX, mTexYRepeat);
+				if(mStrips==mDoubleStrips)
+					mGraphics.putTextureCoord(curTailTexX, mDoubleTexCoords[5]);
+			}
 			mGraphics.putColor(mCurColor);
+			mGraphics.putAddColor(mAddColor);
+			if(mStrips==mDoubleStrips) {
+				mGraphics.putColor(mCurColor);
+				mGraphics.putAddColor(mAddColor);
+			}
 		}
 		mGraphics.putColor(mCurColor);
 		mGraphics.putAddColor(mAddColor);
@@ -348,6 +380,11 @@ public class Tail {
 					}
 				}else {
 					if(curCount>2) {
+						float countFac;
+						if(curCount<mMaxWidthAtCount)
+							countFac = curCount/mMaxWidthAtCount;
+						else
+							countFac = 1;
 						float tGlobal,tSub;
 						if(mInverted) {
 							tGlobal = 1-(float)c/(tSize-1);
@@ -357,13 +394,13 @@ public class Tail {
 							tSub = (float)count/(curCount-1);
 						}
 						if(count==0)
-							mGraphics.startStrip();
+							mStrips.startStrip();
 						float subFac;
 						if(mSubTails) {
 							float sqr = ((float)Math.pow(tSub,0.7f)*2-1);
 							if(sqr*sqr>1)
 								System.err.println("sqr = "+sqr);
-							subFac = (float)Math.sqrt(1-sqr*sqr);
+							subFac = (float)Math.sqrt(1-sqr*sqr) * countFac;
 						}else
 							subFac = 1;
 						scale = (1 - tGlobal * mScaleFallOff) * subFac;

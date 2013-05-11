@@ -63,10 +63,11 @@ public class TailSampleState extends SampleState {
 			mTail = new Tail(mGraphics2D,100,true);
 			mTail.setColor(0.7f, 0.7f, 0.99f);
 			mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureSettings(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
-			mTail.setWidth(0.095f);
+			mTail.setWidth(0.085f);
 			mTail.createNodeEveryNthStep(1);
-			mTail.mMinDist = 0.075f;
+			mTail.mMinDist = 0.06f;
 			mTail.mAutoInterruptSmallDistances = false;
+			mTail.setDoubled(true);
 		}
 		
 		//mTail.interruptTail();
@@ -90,6 +91,8 @@ public class TailSampleState extends SampleState {
 			mShowNodes ^= true;
 		if(code == 'd')
 			mTail.debugOut();
+		if(code == 'q')
+			mTail.setDoubled(!mTail.isDoubled());
 	}
 
 }

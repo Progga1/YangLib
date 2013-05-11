@@ -1,5 +1,6 @@
 package yang.graphics.defaults;
 
+import yang.graphics.defaults.meshcreators.StripCreator;
 import yang.graphics.defaults.programs.AdditiveModulateProgram;
 import yang.graphics.font.LegacyAbstractFont;
 import yang.graphics.programs.BasicProgram;
@@ -19,11 +20,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		0.0f, 1.0f,
 		1.0f, 1.0f,
 	};
-	
-	public float lstStripX1;
-	public float lstStripY1;
-	public float lstStripX2;
-	public float lstStripY2;
 	
 	private BasicProgram mDefaultProgram;
 	public BasicProgram mAdditiveModulateProgram;

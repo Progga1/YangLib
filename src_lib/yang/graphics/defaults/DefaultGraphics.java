@@ -8,6 +8,7 @@ import javax.vecmath.Point4f;
 import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
+import yang.graphics.defaults.meshcreators.StripCreator;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
 import yang.graphics.programs.BasicProgram;
@@ -38,6 +39,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public static final float[] BLACK = { 0, 0, 0, 1 };
 	public static final float[] WHITE = { 1, 1, 1, 1 };
 	
+	public StripCreator mDefaultStripCreator;
+	
 	protected float[] mInterArray = new float[1024];
 
 	//Properties
@@ -65,6 +68,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public DefaultGraphics(GraphicsTranslator translator, int positionBytes) {
 		super(translator);
 		mPositionDimension = positionBytes;
+		mDefaultStripCreator = new StripCreator(this);
 	}
 
 	@Override
@@ -418,63 +422,6 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			putAddColor(color);
 			amount--;
 		}
-	}
-
-	// ---STRIPS---
-
-	private boolean mFstStrip = false;
-	private boolean mStripSinglePoint = false;
-
-	public void startStrip() {
-		mFstStrip = true;
-	}
-
-	public void startStrip(float x1, float y1, float x2, float y2) {
-		mStripSinglePoint = false;
-		putPosition(x1, y1);
-		putPosition(x2, y2);
-	}
-
-	public void putTriangleIndices() {
-		mCurrentVertexBuffer.putRelativeIndex(-2);
-		mCurrentVertexBuffer.putRelativeIndex(-1);
-		mCurrentVertexBuffer.putRelativeIndex(0);
-	}
-	
-	public void continueStripSinglePoint() {
-		mStripSinglePoint = true;
-		if (mFstStrip) {
-			mFstStrip = false;
-			return;
-		}
-		putTriangleIndices();
-	}
-	
-	public void continueStripSinglePoint(float x,float y) {
-		continueStripSinglePoint();
-		putPosition(x,y);
-	}
-	
-	public void continueStrip() {
-		if (mFstStrip) {
-			mFstStrip = false;
-			return;
-		}
-		if(!mStripSinglePoint) {
-			mCurrentVertexBuffer.putRelativeIndex(-2);
-			mCurrentVertexBuffer.putRelativeIndex(-1);
-			mCurrentVertexBuffer.putRelativeIndex(0);
-		}else
-			mStripSinglePoint = false;
-		mCurrentVertexBuffer.putRelativeIndex(1);
-		mCurrentVertexBuffer.putRelativeIndex(0);
-		mCurrentVertexBuffer.putRelativeIndex(-1);
-	}
-
-	public void continueStrip(float x1, float y1, float x2, float y2) {
-		continueStrip();
-		putPosition(x1, y1);
-		putPosition(x2, y2);
 	}
 
 	public String buffersToString() {
