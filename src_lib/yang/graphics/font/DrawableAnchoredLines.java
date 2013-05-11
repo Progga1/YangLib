@@ -80,10 +80,10 @@ public class DrawableAnchoredLines extends DrawableString{
 			}else
 				offsets = mConstantOffsets;
 			offsetsToPositions(offsets,positions);
-			mGraphics.mInterWorldTransf2.loadIdentity();
-			mGraphics.mInterWorldTransf2.translate(0, mRecentStringHeight*mVerticalAnchor);
-			mGraphics.mInterWorldTransf2.multiplyLeft(transform);
-			resultTransf = mGraphics.mInterWorldTransf2;
+			mGraphics.mInterTransf2.loadIdentity();
+			mGraphics.mInterTransf2.translate(0, mRecentStringHeight*mVerticalAnchor);
+			mGraphics.mInterTransf2.multiplyLeft(transform);
+			resultTransf = mGraphics.mInterTransf2;
 		}else{
 			positions = mConstantPositions;
 			resultTransf = transform;

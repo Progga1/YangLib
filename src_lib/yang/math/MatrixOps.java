@@ -224,17 +224,17 @@ public class MatrixOps {
 		return matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
 	}
 
-	public static final void applyFloatMatrix2D(float[] matrix, float x, float y, float[] target, int targetOffset) {
-		target[targetOffset] = applyFloatMatrixX2D(matrix,x,y);
-		target[targetOffset+1] = applyFloatMatrixY2D(matrix,x,y);
+	public static final void applyFloatMatrix2D(float[] matrix, float x, float y, float[] targetVector, int targetOffset) {
+		targetVector[targetOffset] = applyFloatMatrixX2D(matrix,x,y);
+		targetVector[targetOffset+1] = applyFloatMatrixY2D(matrix,x,y);
 	}
 	
-	public static final void applyFloatMatrix3D(float[] matrix, float x, float y, float z, float[] target, int targetOffset) {
-		target[targetOffset] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
-		target[targetOffset+1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
-		target[targetOffset+2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
-		if(target.length>3) {
-			target[targetOffset+3] = applyFloatMatrixW3D(matrix,x,y,z);
+	public static final void applyFloatMatrix3D(float[] matrix, float x, float y, float z, float[] targetVector, int targetOffset) {
+		targetVector[targetOffset] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
+		targetVector[targetOffset+1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
+		targetVector[targetOffset+2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
+		if(targetVector.length>3) {
+			targetVector[targetOffset+3] = applyFloatMatrixW3D(matrix,x,y,z);
 		}
 	}
 	

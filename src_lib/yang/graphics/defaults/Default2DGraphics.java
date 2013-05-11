@@ -93,6 +93,10 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mPositions.put(y2);
 	}
 	
+	public void putPosition(float x,float y,YangMatrix transform) {
+		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,0, transform.mMatrix);
+	}
+	
 	public void putTransformedPositionRect(YangMatrix transform) {
 		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,0, transform.mMatrix);
 		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,0, transform.mMatrix);
@@ -101,14 +105,14 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, YangMatrix textureTransform) {
-		mInterWorldTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterWorldTransf1, textureTransform);
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
+		drawQuad(mInterTransf1, textureTransform);
 		flush();
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle) {
-		mInterWorldTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterWorldTransf1, mTexIdentity);
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
+		drawQuad(mInterTransf1, mTexIdentity);
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height) {
@@ -120,23 +124,23 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, float texX1, float texY1, float texX2, float texY2) {
-		mInterWorldTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterWorldTransf1, mTexIdentity);
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
+		drawQuad(mInterTransf1, mTexIdentity);
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putTransformedPositionRect(mInterWorldTransf1);
+		putTransformedPositionRect(mInterTransf1);
 		putTextureRect(texX1, texY1, texX2, texY2);
 		putColorRect(mCurColor);
 		putAddColorRect(mCurAddColor);
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
-		mInterWorldTransf1.setCenteredRect(centerX, centerY, texCoordinates.getWidth() * width * texCoordinates.getRatio(), texCoordinates.getHeight() * height, angle);
-		drawQuad(mInterWorldTransf1, texCoordinates);
+		mInterTransf1.setCenteredRect(centerX, centerY, texCoordinates.getWidth() * width * texCoordinates.getRatio(), texCoordinates.getHeight() * height, angle);
+		drawQuad(mInterTransf1, texCoordinates);
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float texX1, float texY1, float texX2, float texY2) {
-		mInterWorldTransf1.setCenteredRect(centerX, centerY, width, height, 0);
-		drawQuad(mInterWorldTransf1, mTexIdentity);
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, 0);
+		drawQuad(mInterTransf1, mTexIdentity);
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float scale, float angle, TextureCoordinatesQuad texCoordinates) {
@@ -148,13 +152,13 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 	
 	public void drawLine(float fromX,float fromY, float toX,float toY, float width, YangMatrix textureTransform) {
-		mInterWorldTransf1.setLine(fromX, fromY, toX, toY, width);
-		drawQuad(mInterWorldTransf1,textureTransform);
+		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
+		drawQuad(mInterTransf1,textureTransform);
 	}
 	
 	public void drawLine(float fromX,float fromY, float toX,float toY, float width, TextureCoordinatesQuad texCoordinates) {
-		mInterWorldTransf1.setLine(fromX, fromY, toX, toY, width);
-		drawQuad(mInterWorldTransf1,texCoordinates);
+		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
+		drawQuad(mInterTransf1,texCoordinates);
 	}
 	
 	public void drawLine(float fromX,float fromY, float toX,float toY, float width) {
@@ -172,9 +176,9 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			mCurrentLegacyFont.getFontFix(c, 2) * lineHeight / charHeight,
 			mCurrentLegacyFont.getFontFix(c, 3) * lineHeight / charHeight
 		};
-		mInterWorldTransf2.setRect(x - fix[1], -fix[3], x + sWidth + fix[2], lineHeight + fix[0]);
-		mInterWorldTransf2.multiplyLeft(mInterWorldTransf1);
-		drawQuad(mInterWorldTransf2, mCurrentLegacyFont.getTexTransformation(c));
+		mInterTransf2.setRect(x - fix[1], -fix[3], x + sWidth + fix[2], lineHeight + fix[0]);
+		mInterTransf2.multiplyLeft(mInterTransf1);
+		drawQuad(mInterTransf2, mCurrentLegacyFont.getTexTransformation(c));
 
 		return sWidth;
 	}
@@ -183,8 +187,8 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	private void drawStringLegacy(float lineHeight, float anchorX, float anchorY, float angle, float charDistance,String s) {
 		int sLength = s.length();
 		if (angle != 0.0f)
-			mInterWorldTransf1.rotateZ(angle);
-		mInterWorldTransf1.translate((-(anchorX + 1) * 0.5f) * stringWidth(lineHeight, charDistance, s), (-(anchorY + 1) * 0.5f) * lineHeight);
+			mInterTransf1.rotateZ(angle);
+		mInterTransf1.translate((-(anchorX + 1) * 0.5f) * stringWidth(lineHeight, charDistance, s), (-(anchorY + 1) * 0.5f) * lineHeight);
 		
 		bindTexture(mCurrentLegacyFont.getTexture(),0);
 		
@@ -212,8 +216,8 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	 *            top = -1 , center = 0, bottom = 1
 	 */
 	public void drawStringLegacy(float x, float y, float lineHeight, float anchorX, float anchorY, float angle, float charDistance,String s) {
-		mInterWorldTransf1.loadIdentity();
-		mInterWorldTransf1.translate(x, y);
+		mInterTransf1.loadIdentity();
+		mInterTransf1.translate(x, y);
 		drawStringLegacy(lineHeight, anchorX, anchorY, angle, charDistance, s);
 	}
 	

@@ -307,10 +307,10 @@ public class DrawableString extends FixedString {
 		if(mConstantPositions==null){
 			createStringPositions(staticPositions,null);
 			positions = staticPositions;
-			mGraphics.mInterWorldTransf2.loadIdentity();
-			mGraphics.mInterWorldTransf2.translate(-mRecentStringWidth*mHorizontalAnchor, mRecentStringHeight*mVerticalAnchor);
-			mGraphics.mInterWorldTransf2.multiplyLeft(transform);
-			resultTransf = mGraphics.mInterWorldTransf2;
+			mGraphics.mInterTransf2.loadIdentity();
+			mGraphics.mInterTransf2.translate(-mRecentStringWidth*mHorizontalAnchor, mRecentStringHeight*mVerticalAnchor);
+			mGraphics.mInterTransf2.multiplyLeft(transform);
+			resultTransf = mGraphics.mInterTransf2;
 		}else{
 			positions = mConstantPositions;
 			resultTransf = transform;
@@ -326,18 +326,18 @@ public class DrawableString extends FixedString {
 	}
 	
 	public void draw(float x,float y,float lineHeight) {
-		mGraphics.mInterWorldTransf1.loadIdentity();
-		mGraphics.mInterWorldTransf1.translate(x, y);
-		mGraphics.mInterWorldTransf1.scale(lineHeight);
-		draw(mGraphics.mInterWorldTransf1);
+		mGraphics.mInterTransf1.loadIdentity();
+		mGraphics.mInterTransf1.translate(x, y);
+		mGraphics.mInterTransf1.scale(lineHeight);
+		draw(mGraphics.mInterTransf1);
 	}
 	
 	public void draw(float x,float y,float lineHeight,float rotation) {
-		mGraphics.mInterWorldTransf1.loadIdentity();
-		mGraphics.mInterWorldTransf1.translate(x, y);
-		mGraphics.mInterWorldTransf1.scale(lineHeight);
-		mGraphics.mInterWorldTransf1.rotateZ(rotation);
-		draw(mGraphics.mInterWorldTransf1);
+		mGraphics.mInterTransf1.loadIdentity();
+		mGraphics.mInterTransf1.translate(x, y);
+		mGraphics.mInterTransf1.scale(lineHeight);
+		mGraphics.mInterTransf1.rotateZ(rotation);
+		draw(mGraphics.mInterTransf1);
 	}
 	
 }

@@ -255,6 +255,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	// ---PUT-POSITIONS---
 
 	public abstract void putPosition(float x, float y);
+	public abstract void putPosition(float x, float y,YangMatrix transform);
 
 	public void putPositionArray(float[] positions) {
 		mPositions.put(positions);

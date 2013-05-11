@@ -11,6 +11,7 @@ import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
 import yang.math.YangMatrix;
+import yang.math.YangMatrixCameraOps;
 import yang.math.YangMatrixRectOps;
 import yang.model.DebugYang;
 
@@ -23,13 +24,13 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public final static int MAX_DYNAMIC_VERTICES = 100000;
 	
 	//Matrices
-	public YangMatrixRectOps mInterWorldTransf1;
-	public YangMatrixRectOps mInterWorldTransf2;
+	public YangMatrixRectOps mInterTransf1;
+	public YangMatrixRectOps mInterTransf2;
 	protected YangMatrixRectOps mInterTexTransf;
-	protected YangMatrixRectOps mIdentity;
+	protected YangMatrix mIdentity;
 	public TextureCoordinatesQuad mTexIdentity;
-	public YangMatrixRectOps mWorldTransform;
-	protected YangMatrix mProjectionTransform;
+	public YangMatrix mWorldTransform;
+	protected YangMatrixCameraOps mProjectionTransform;
 	public YangMatrix mCameraProjectionMatrix;
 	protected YangMatrix mResultTransformationMatrix;
 	public YangMatrix mCurProjTransform;
@@ -69,15 +70,15 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		if (DebugYang.showStart) DebugYang.showStackTrace("5", 1);
 		
 		mWorldTransformEnabled = false;
-		mProjectionTransform = mTranslator.createTransformationMatrix();
-		mInterWorldTransf1 = new YangMatrixRectOps();
-		mInterWorldTransf2 = new YangMatrixRectOps();
-		mWorldTransform = new YangMatrixRectOps();
+		mProjectionTransform = new YangMatrixCameraOps();
+		mInterTransf1 = new YangMatrixRectOps();
+		mInterTransf2 = new YangMatrixRectOps();
+		mWorldTransform = new YangMatrix();
 		mWorldTransform.loadIdentity();
 		mCameraProjectionMatrix = mTranslator.createTransformationMatrix();
 		mResultTransformationMatrix = mTranslator.createTransformationMatrix();
 		mInterTexTransf = new YangMatrixRectOps();
-		mIdentity = new YangMatrixRectOps();
+		mIdentity = new YangMatrix();
 		mIdentity.loadIdentity();
 //		mIdentity.refreshRect2D();
 		mTexIdentity = mTranslator.createTexCoords();

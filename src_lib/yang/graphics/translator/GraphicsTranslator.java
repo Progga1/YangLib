@@ -17,6 +17,7 @@ import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.math.YangMatrix;
+import yang.math.YangMatrixCameraOps;
 import yang.model.ScreenInfo;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
@@ -51,8 +52,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private long mLstTimestamp = -1;
 	
 	//Matrices
-	public YangMatrix mProjScreenTransform;
-	public float[] mInvScreenProjection;
+	public YangMatrixCameraOps mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
 	
 	//Counters
@@ -137,10 +137,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public GraphicsTranslator() {
 		INSTANCE = this;
 		mCurrentTextures = new Texture[MAX_TEXTURES];
-		mProjScreenTransform = createTransformationMatrix();
+		mProjScreenTransform = new YangMatrixCameraOps();
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
-		mInvScreenProjection = new float[16];
 		mFlushDisabled = false;
 		rectCount = 0;
 		mFlushCount = 0;
@@ -402,7 +401,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mInvRatioX = 1/mRatioX;
 		mInvRatioY = 1/mRatioY;
 		mProjScreenTransform.setOrthogonalProjection(-mRatioX, mRatioX, mRatioY, -mRatioY);
-		mProjScreenTransform.asInverted(mInvScreenProjection);
+		mProjScreenTransform.refreshInverted();
 		setViewPort(width,height);
 	}
 	

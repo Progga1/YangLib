@@ -8,7 +8,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.YangMatrix;
+import yang.math.YangMatrixCameraOps;
 
 public class PlanarLightmapHelper {
 
@@ -23,7 +23,7 @@ public class PlanarLightmapHelper {
 	public static TextureSettings defaultTextureSettingsMipMap = createTextureSettings(true);
 	public boolean mRenderToScreen = false;
 	public ShadowHelper mShadowHelper;
-	public YangMatrix mOrthoProjection,mCameraTransform;
+	public YangMatrixCameraOps mOrthoProjection,mCameraTransform;
 	public float[] mInvOrthoProjection = new float[16];
 	private TextureSettings mTextureSettings;
 	private boolean mMipMapping;
@@ -63,8 +63,8 @@ public class PlanarLightmapHelper {
 		mFar = -bottomMost;
 		mGraphics.addProgram(mLightmapCreatorProgram);
 		mSize = textureWidthAndHeight;
-		mCameraTransform = mGraphics.createTransformationMatrix();
-		mOrthoProjection = mGraphics.createTransformationMatrix();
+		mCameraTransform = new YangMatrixCameraOps();
+		mOrthoProjection = new YangMatrixCameraOps();
 		refreshProjections();
 		restart();
 	}

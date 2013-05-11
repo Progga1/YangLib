@@ -10,6 +10,7 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera3D;
 import yang.math.YangMatrix;
+import yang.math.YangMatrixCameraOps;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
@@ -34,7 +35,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
 	public float mCurrentZ;
 	protected boolean mBillboardMode;
-	public YangMatrix mCameraMatrix;
+	public YangMatrixCameraOps mCameraMatrix;
 	private YangMatrix mInterMatrix;
 	public YangMatrix mSavedCamera;
 	public YangMatrix mSavedProjection;
@@ -58,7 +59,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public Default3DGraphics(GraphicsTranslator translator) {
 		super(translator,3);
 		mCurrentZ = 0;
-		mCameraMatrix = mTranslator.createTransformationMatrix();
+		mCameraMatrix = new YangMatrixCameraOps();
 		mInterMatrix = mTranslator.createTransformationMatrix();
 		mCameraMatrix.set(3,3,1);
 		mDefaultTerrainCreator = new TerrainCreator(this);
@@ -118,6 +119,21 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mPositions.put(x);
 		mPositions.put(y);
 		mPositions.put(z);
+	}
+	
+	public void putPosition(float x,float y,float z,YangMatrix transform) {
+		transform.apply3D(x, y, z, mInterArray, 0);
+		if(mInterArray[3]!=1) {
+			float d = 1f/mInterArray[3];
+			mInterArray[0] *= d;
+			mInterArray[1] *= d;
+			mInterArray[2] *= d;
+		}
+		mPositions.put(mInterArray, 0, 3);
+	}
+	
+	public void putPosition(float x,float y,YangMatrix transform) {
+		putPosition(x,y,mCurrentZ,transform);
 	}
 
 	public void putTransformedPosition(float x, float y,float z,YangMatrix transform) {
