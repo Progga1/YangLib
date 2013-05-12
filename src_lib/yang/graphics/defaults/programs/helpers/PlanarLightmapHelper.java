@@ -8,7 +8,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.YangMatrixCameraOps;
+import yang.math.objects.matrix.YangMatrixCameraOps;
 
 public class PlanarLightmapHelper {
 

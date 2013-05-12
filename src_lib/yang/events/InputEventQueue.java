@@ -1,9 +1,9 @@
 package yang.events;
 
-import yang.events.eventtypes.YangKeyEvent;
-import yang.events.eventtypes.YangZoomEvent;
-import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangKeyEvent;
+import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangZoomEvent;
 import yang.events.listeners.InputEventListener;
 import yang.graphics.translator.GraphicsTranslator;
 

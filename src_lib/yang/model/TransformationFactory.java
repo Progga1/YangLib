@@ -1,6 +1,6 @@
 package yang.model;
 
-import yang.math.YangMatrix;
+import yang.math.objects.matrix.YangMatrix;
 
 
 public interface TransformationFactory {

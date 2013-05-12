@@ -1,4 +1,4 @@
-package yang.math;
+package yang.math.objects.matrix;
 
 import javax.vecmath.Vector3f;
 

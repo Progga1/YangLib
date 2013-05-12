@@ -7,7 +7,7 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera2D;
 import yang.math.MatrixOps;
-import yang.math.YangMatrix;
+import yang.math.objects.matrix.YangMatrix;
 import yang.model.Rect;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{

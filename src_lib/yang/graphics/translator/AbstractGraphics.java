@@ -10,9 +10,9 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
-import yang.math.YangMatrix;
-import yang.math.YangMatrixCameraOps;
-import yang.math.YangMatrixRectOps;
+import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.matrix.YangMatrixRectOps;
 import yang.model.DebugYang;
 
 

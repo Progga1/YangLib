@@ -5,7 +5,6 @@ import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.util.NonConcurrentList;
-import yang.util.Util;
 import yang.util.lookuptable.LookUpTable;
 
 public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGraphics<?>, ParticleType extends Particle> {
@@ -16,18 +15,17 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	protected int mCurParticleIndex;
 	protected int mMaxParticleCount;
 	protected float mGlobalScale;
-	public boolean mRotationByVelo;
 	public LookUpTable mScaleLookUp;
 	public int mParticleCount;
+	public NonConcurrentList<ParticleType> mParticles;
+	public float mDefaultFriction = 0.9995f;
 	
-	public NonConcurrentList<ParticleType> mParticles;	//TODO arrayList
 	protected abstract ParticleType createParticle();
 	protected abstract void drawParticles();
 	
 	public AbstractParticleRingBuffer() {
 		mTexture = null;
 		mGlobalScale = 1;
-		mRotationByVelo = false;
 		mScaleLookUp = null;
 		mParticleCount = 0;
 	}
@@ -35,18 +33,13 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	public AbstractParticleRingBuffer<GraphicsType,ParticleType> init(GraphicsType graphics,int maxParticleCount) {
 		mGraphics = graphics;
 		mTranslator = graphics.mTranslator;
-		mParticles = new NonConcurrentList<ParticleType>();
 		mMaxParticleCount = maxParticleCount;
+		mParticles = new NonConcurrentList<ParticleType>();
 		for(int i=0;i<maxParticleCount;i++)
 			mParticles.add(createParticle());
 		return this;
 	}
-	
-	public void draw() {
-		mTranslator.bindTexture(mTexture);
-		
-		drawParticles();
-	}
+
 	
 	public void refreshParticleCount() {
 		int particleCount = 0;
@@ -62,20 +55,24 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		for(ParticleType particle:mParticles) {
 			if(particle.mExists) {
 				particle.step();
-				if(mRotationByVelo) {
-					particle.mRotation = Util.getAngle(particle.mVelX,particle.mVelY) + Util.F_PI*0.5f;
-				}
 				particleCount++;
 			}
 		}
 		mParticleCount = particleCount;
 	}
 	
-	public ParticleType spawnParticle(float posX,float posY, float posZ, TextureCoordinatesQuad texCoords, float friction) {
+	public final void draw() {
+		if(mParticleCount<=0)
+			return;
+		mTranslator.bindTexture(mTexture);
+		
+		drawParticles();
+	}
+	
+	public ParticleType spawnParticle(float posX,float posY, float posZ, TextureCoordinatesQuad texCoords) {
 		ParticleType particle = mParticles.get(mCurParticleIndex);
 		particle.mExists = true;
 		particle.mTextureCoordinates = texCoords;
-		particle.mFriction = friction;
 		particle.mScale = 1f;
 		particle.setPosition(posX, posY, posZ);
 		mCurParticleIndex++;
@@ -84,12 +81,8 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		return particle;
 	}
 	
-	public ParticleType spawnParticle(float posX,float posY, TextureCoordinatesQuad texCoords, float friction) {
-		return spawnParticle(posX,posY,0,texCoords,friction);
-	}
-	
 	public ParticleType spawnParticle(float posX,float posY, TextureCoordinatesQuad texCoords) {
-		return spawnParticle(posX,posY,texCoords,0.9995f);
+		return spawnParticle(posX,posY,0,texCoords);
 	}
 	
 	public void removeParticles(int maxAmount) {

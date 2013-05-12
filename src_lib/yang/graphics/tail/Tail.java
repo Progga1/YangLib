@@ -1,9 +1,9 @@
 package yang.graphics.tail;
 
-import yang.graphics.FloatColor;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.DoubleStripCreator;
 import yang.graphics.defaults.meshcreators.StripCreator;
+import yang.math.Geometry;
 import yang.model.DebugYang;
 import yang.util.Util;
 
@@ -207,7 +207,7 @@ public class Tail {
 				if(mPrevIndex>-1 && (forceDirX!=0 || forceDirY!=0) ) {
 					float dirX = (mDirX[mPrevIndex]+forceDirX)*0.5f;
 					float dirY = (mDirY[mPrevIndex]+forceDirY)*0.5f;
-					float dirDist = Util.getDistance(dirX, dirY);
+					float dirDist = Geometry.getDistance(dirX, dirY);
 					if(dirDist!=0) {
 						dirX /= dirDist;
 						dirY /= dirDist;

@@ -9,8 +9,8 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera3D;
-import yang.math.YangMatrix;
-import yang.math.YangMatrixCameraOps;
+import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.matrix.YangMatrixCameraOps;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {

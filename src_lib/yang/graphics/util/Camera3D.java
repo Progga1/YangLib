@@ -1,6 +1,6 @@
 package yang.graphics.util;
 
-import yang.util.Util;
+import yang.math.Geometry;
 
 public class Camera3D {
 
@@ -53,7 +53,7 @@ public class Camera3D {
 	}
 	
 	public float[] getLookDirection() {
-		float dDist = 1f/Util.getDistance(getLookVector());
+		float dDist = 1f/Geometry.getDistance(getLookVector());
 		mLookDirection[0] = mLookVector[0]*dDist;
 		mLookDirection[1] = mLookVector[1]*dDist;
 		mLookDirection[2] = mLookVector[2]*dDist;

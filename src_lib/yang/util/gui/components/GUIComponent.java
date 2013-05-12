@@ -34,11 +34,11 @@ public class GUIComponent {
 	}
 	
 	public float projX(float guiX) {
-		return mGUI.mProjShiftX+guiX;
+		return mGUI.mProjShiftX+guiX*mGUI.mProjXFactor;
 	}
 	
 	public float projY(float guiY) {
-		return mGUI.mProjShiftY-guiY;
+		return mGUI.mProjShiftY+guiY*mGUI.mProjYFactor;
 	}
 	
 	public float screenToGUIX(float screenX) {

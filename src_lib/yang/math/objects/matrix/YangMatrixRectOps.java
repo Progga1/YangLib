@@ -1,4 +1,6 @@
-package yang.math;
+package yang.math.objects.matrix;
+
+import yang.math.MatrixOps;
 
 public class YangMatrixRectOps extends YangMatrix {
 

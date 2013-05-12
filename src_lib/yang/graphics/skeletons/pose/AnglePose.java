@@ -3,6 +3,8 @@ package yang.graphics.skeletons.pose;
 import yang.graphics.skeletons.Skeleton;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.skeletons.elements.JointNormalConstraint;
+import yang.math.Geometry;
+import yang.math.MathConst;
 import yang.util.Util;
 
 
@@ -47,8 +49,8 @@ public class AnglePose extends Pose<AnglePose>{
 							joint.mPosX = x;
 							joint.mPosY = y;
 						}else{
-							joint.mPosX = -Util.rotateGetX(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
-							joint.mPosY = Util.rotateGetY(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+							joint.mPosX = -Geometry.rotateGetX(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+							joint.mPosY = Geometry.rotateGetY(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
 						}
 					}else{
 						c += 2;
@@ -63,12 +65,12 @@ public class AnglePose extends Pose<AnglePose>{
 							angle = mAngles[c]+skeleton.mRotation;
 						if(weight!=1) {
 							float prevAngle = interpolationPose.mAngles[c];
-							if(Math.abs(prevAngle-angle)>Util.F_PI) {
+							if(Math.abs(prevAngle-angle)>MathConst.PI) {
 								float diff;
 								if(prevAngle>angle) {
-									diff = 2*Util.F_PI-(prevAngle-angle);
+									diff = 2*MathConst.PI-(prevAngle-angle);
 								}else
-									diff = 2*Util.F_PI-(angle-prevAngle);
+									diff = 2*MathConst.PI-(angle-prevAngle);
 								angle = angle + (diff)*dWeight;
 							}else
 								angle = angle*weight + prevAngle*dWeight;
@@ -97,10 +99,10 @@ public class AnglePose extends Pose<AnglePose>{
 				}else{
 					//By angle
 					float angle = joint.getParentAngle();
-					while(angle>Util.F_PI)
-						angle -= Util.F_PI*2;
-					while(angle<-Util.F_PI)
-						angle += Util.F_PI*2;
+					while(angle>MathConst.PI)
+						angle -= MathConst.PI*2;
+					while(angle<-MathConst.PI)
+						angle += MathConst.PI*2;
 					mAngles[c++] = angle;
 					
 				}

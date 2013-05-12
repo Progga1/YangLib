@@ -3,7 +3,7 @@ package yang.graphics.defaults.meshcreators;
 import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.util.Util;
+import yang.math.Interpolation;
 
 public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCreator<GraphicsType>{
 
@@ -60,7 +60,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 				//Interpolation
 				for(int y=0;y<mCurYCount;y++) {
 					for(int x=0;x<mCurXCount;x++) {
-						vertexBuffer.putVec4(bufferIndex, Util.bilinInterpolate(map,y,x,4,0),Util.bilinInterpolate(map,y,x,4,1),Util.bilinInterpolate(map,y,x,4,2),Util.bilinInterpolate(map,y,x,4,3));
+						vertexBuffer.putVec4(bufferIndex, Interpolation.bilinInterpolate(map,y,x,4,0),Interpolation.bilinInterpolate(map,y,x,4,1),Interpolation.bilinInterpolate(map,y,x,4,2),Interpolation.bilinInterpolate(map,y,x,4,3));
 					}
 				}
 			}
@@ -182,9 +182,9 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 			return 1;
 		else{
 			if(mSwapXY)
-				return Util.bilinInterpolate(mCurValues, column*mRelationX, row*mRelationY);
+				return Interpolation.bilinInterpolate(mCurValues, column*mRelationX, row*mRelationY);
 			else
-				return Util.bilinInterpolate(mCurValues, row*mRelationY, column*mRelationX);
+				return Interpolation.bilinInterpolate(mCurValues, row*mRelationY, column*mRelationX);
 		}
 	}
 	

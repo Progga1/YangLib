@@ -16,7 +16,7 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MatrixOps;
-import yang.math.YangMatrix;
+import yang.math.objects.matrix.YangMatrix;
 import yang.model.PrintInterface;
 import yang.util.Util;
 

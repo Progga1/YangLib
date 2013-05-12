@@ -1,7 +1,7 @@
 package yang.util.gui;
 
-import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.util.gui.components.GUIComponent;

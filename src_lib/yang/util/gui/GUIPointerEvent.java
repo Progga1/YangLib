@@ -3,7 +3,6 @@ package yang.util.gui;
 import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.listeners.RawEventListener;
 import yang.util.gui.components.GUIComponent;
-import yang.util.gui.components.InteractiveGUIComponent;
 import yang.util.gui.interfaces.GUIPointerListener;
 
 public class GUIPointerEvent extends AbstractPointerEvent {

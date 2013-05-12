@@ -2,7 +2,6 @@ package yang.events.eventtypes;
 
 import yang.events.listeners.PointerEventListener;
 import yang.events.listeners.RawEventListener;
-import yang.util.gui.components.GUIComponent;
 
 public class YangPointerEvent extends AbstractPointerEvent {
 	

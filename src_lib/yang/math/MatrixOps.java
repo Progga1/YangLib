@@ -82,11 +82,11 @@ public class MatrixOps {
 	public static void multiply(float[] target,float[] lhsMatrix,float[] rhsMatrix) {
 		for(int i=0;i<4;i++) {
 			for(int j=0;j<4;j++) {
-				float sum = 0;
-				for(int k=0;k<4;k++) {
-					sum += lhsMatrix[i+k*4]*rhsMatrix[k+j*4];
-				}
-				target[i+j*4] = sum;
+				target[i+j*4] = 
+						 lhsMatrix[i]*rhsMatrix[j*4]
+						+lhsMatrix[i+4]*rhsMatrix[1+j*4]
+						+lhsMatrix[i+8]*rhsMatrix[2+j*4]
+						+lhsMatrix[i+12]*rhsMatrix[3+j*4];
 			}
 		}
 	}

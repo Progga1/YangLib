@@ -1,7 +1,7 @@
 package yang.graphics.tools.animator;
 
-import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.InputEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.skeletons.Skeleton;

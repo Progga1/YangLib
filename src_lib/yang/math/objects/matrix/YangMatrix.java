@@ -1,6 +1,8 @@
-package yang.math;
+package yang.math.objects.matrix;
 
 import javax.vecmath.Vector3f;
+
+import yang.math.MatrixOps;
 
 
 public class YangMatrix {

@@ -1,7 +1,7 @@
 package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.defaults.Default3DGraphics;
-import yang.math.YangMatrix;
+import yang.math.objects.matrix.YangMatrix;
 
 public class PipeCreator extends Grid3DCreator {
 

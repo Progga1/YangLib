@@ -1,7 +1,7 @@
 package yang.graphics.defaults.programs;
 
 import yang.graphics.AbstractGFXLoader;
-import yang.util.Util;
+import yang.math.Geometry;
 
 public class WaterProgram extends ShadowProgram {
 
@@ -39,7 +39,7 @@ public class WaterProgram extends ShadowProgram {
 	
 	public void setCameraVector(float dirX, float dirY, float dirZ, boolean b) {
 		if(mCameraVectorHandle>=0) {
-			float dist = 1/Util.getDistance(dirX, dirY, dirZ);
+			float dist = 1/Geometry.getDistance(dirX, dirY, dirZ);
 			mProgram.setUniform4f(mCameraVectorHandle, dirX*dist, dirY*dist, dirZ*dist, 0);
 		}
 	}

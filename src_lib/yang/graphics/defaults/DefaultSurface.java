@@ -2,8 +2,8 @@ package yang.graphics.defaults;
 
 import yang.events.EventQueueHolder;
 import yang.events.InputEventQueue;
-import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.InputEventListener;
 import yang.graphics.AbstractGFXLoader;
 import yang.graphics.SurfaceInterface;

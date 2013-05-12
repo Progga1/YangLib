@@ -5,7 +5,7 @@ import yang.graphics.interfaces.KernelFunction;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.TextureCreator;
-import yang.math.YangMatrix;
+import yang.math.objects.matrix.YangMatrix;
 
 public class TerrainCreator extends Grid3DCreator {
 	

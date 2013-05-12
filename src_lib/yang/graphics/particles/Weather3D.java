@@ -9,7 +9,7 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 	public Default3DGraphics mGraphics3D;
 	public GraphicsTranslator mGraphics;
 	protected RingBufferType mParticleBuffer;
-	public ParticleProperties mParticleProperties;
+	public EffectParticleProperties mParticleProperties;
 	public boolean mUseWind = false;
 	public float mWindForceX,mWindForceY,mWindForceZ;
 	public float mWindVelX,mWindVelY,mWindVelZ;
@@ -21,7 +21,7 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 		mBoundaries = boundaries;
 	}
 	
-	public Weather3D<RingBufferType> init(RingBufferType ringBuffer,ParticleProperties particleProperties) {
+	public Weather3D<RingBufferType> init(RingBufferType ringBuffer,EffectParticleProperties particleProperties) {
 		mGraphics3D = ringBuffer.mGraphics;
 		mGraphics = mGraphics3D.mTranslator;
 		mParticleBuffer = ringBuffer;

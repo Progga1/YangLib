@@ -1,8 +1,8 @@
 package yang.graphics.skeletons.elements;
 
 import yang.graphics.skeletons.Skeleton;
+import yang.math.Geometry;
 import yang.util.NonConcurrentList;
-import yang.util.Util;
 
 public class Joint {
 
@@ -94,7 +94,7 @@ public class Joint {
 		if(joint==null)
 			return -1;
 		else
-			return Util.getDistance(mPosX,mPosY,joint.mPosX,joint.mPosY);
+			return Geometry.getDistance(mPosX,mPosY,joint.mPosX,joint.mPosY);
 	}
 	
 	public void setSpeed(Joint preface) {
@@ -120,7 +120,7 @@ public class Joint {
 	 * Zero degrees: downwards, CCW
 	 */
 	public float getAngle(Joint joint) {
-		return Util.getAngleDown(joint.mPosX,joint.mPosY,mPosX,mPosY);
+		return Geometry.getAngleDown(joint.mPosX,joint.mPosY,mPosX,mPosY);
 	}
 	
 	/**
@@ -209,7 +209,7 @@ public class Joint {
 			deltaX = -deltaX;
 			deltaY = -deltaY;
 		}
-		float dist = Util.getDistance(deltaX, deltaY);
+		float dist = Geometry.getDistance(deltaX, deltaY);
 		if(dist==0)
 			return;
 		float nX,nY;
@@ -223,7 +223,7 @@ public class Joint {
 		if(xOffset!=0 || yOffset!=0) {
 			nX += xOffset*0;
 			nY += yOffset;
-			dist = Util.getDistance(nX, nY);
+			dist = Geometry.getDistance(nX, nY);
 			nX /= dist;
 			nY /= dist;
 		}
@@ -267,7 +267,7 @@ public class Joint {
 
 		float deltaX = posX - baseX;
 		float deltaY = posY - baseY;
-		float dist = Util.getDistance(deltaX, deltaY);
+		float dist = Geometry.getDistance(deltaX, deltaY);
 		float limDist = mParentDistance*2-0.001f;
 		if(dist>limDist) {
 			deltaX = deltaX/dist * limDist;
@@ -299,7 +299,7 @@ public class Joint {
 		float shoulderY = skeleton.getJointWorldY(mAngleParent.mAngleParent);
 		float dirX = relativeX - shoulderX;
 		float dirY = relativeY - shoulderY;
-		float dist = Util.getDistance(dirX, dirY);
+		float dist = Geometry.getDistance(dirX, dirY);
 		
 		if(dist==0)
 			return;

@@ -1,7 +1,7 @@
 package yang.graphics.textures;
 
-import yang.math.YangMatrix;
-import yang.math.YangMatrixRectOps;
+import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.matrix.YangMatrixRectOps;
 
 public class TextureCoordinatesQuadMatrix extends TextureCoordinatesQuad {
 

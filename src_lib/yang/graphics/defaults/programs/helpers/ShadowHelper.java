@@ -12,8 +12,8 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.YangMatrix;
-import yang.util.Util;
+import yang.math.Geometry;
+import yang.math.objects.matrix.YangMatrix;
 
 public class ShadowHelper {
 
@@ -69,7 +69,7 @@ public class ShadowHelper {
 		float dX = lookAtX-eyeX;
 		float dY = lookAtY-eyeY;
 		float dZ = lookAtZ-eyeZ;
-		float dist = Util.getDistance(dX, dY, dZ);
+		float dist = Geometry.getDistance(dX, dY, dZ);
 		mLightDirection[0] = dX / dist;
 		mLightDirection[1] = dY / dist;
 		mLightDirection[2] = dZ / dist;

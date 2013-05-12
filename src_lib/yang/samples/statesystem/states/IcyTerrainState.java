@@ -9,13 +9,12 @@ import yang.graphics.defaults.programs.DepthProgram;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.defaults.programs.LightmapCreatorProgram;
 import yang.graphics.defaults.programs.LightmapProgram;
-import yang.graphics.defaults.programs.MaskProgram;
 import yang.graphics.defaults.programs.ShadowProgram;
 import yang.graphics.defaults.programs.SpecularLightmapProgram;
 import yang.graphics.defaults.programs.WaterProgram;
 import yang.graphics.defaults.programs.helpers.PlanarLightmapHelper;
 import yang.graphics.defaults.programs.helpers.ShadowHelper;
-import yang.graphics.particles.ParticleProperties;
+import yang.graphics.particles.EffectParticleProperties;
 import yang.graphics.particles.Weather3D;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
@@ -24,11 +23,9 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
-import yang.math.YangMatrix;
+import yang.math.objects.matrix.YangMatrix;
 import yang.model.Boundaries3D;
 import yang.samples.statesystem.SampleState;
-import yang.util.statesystem.YangProgramState;
-import yang.util.statesystem.YangProgramStateSystem;
 
 public class IcyTerrainState extends SampleState {
 
@@ -121,7 +118,7 @@ public class IcyTerrainState extends SampleState {
 		
 		mTerrain = new TerrainCreator(mGraphics3D);
 		mWeather = new Weather3D<DefaultParticles3D>(new Boundaries3D(2,2,2));
-		ParticleProperties particleProperties = new ParticleProperties(0.06f,0.1f, 0.008f,0.01f, 0.05f,0.09f);
+		EffectParticleProperties particleProperties = new EffectParticleProperties(0.06f,0.1f, 0.008f,0.01f, 0.05f,0.09f);
 		particleProperties.setVelocityDirection(0, -1, 0, true);
 		DefaultParticles3D particles3D = new DefaultParticles3D();
 		particles3D.init(mGraphics3D,320);

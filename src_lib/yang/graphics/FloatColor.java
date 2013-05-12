@@ -2,9 +2,16 @@ package yang.graphics;
 
 import java.nio.ByteBuffer;
 
+import yang.math.objects.Quadruple;
 
-public class FloatColor {
 
+public class FloatColor extends Quadruple {
+
+	public static int R = 0;
+	public static int G = 1;
+	public static int B = 2;
+	public static int A = 3;
+	
 	public static final float SILVERVALUE = 0.8f;
 	public static final float GRAYVALUE = 0.5f;
 	public static final FloatColor WHITE = new FloatColor(1,1,1);
@@ -16,15 +23,8 @@ public class FloatColor {
 	public static final FloatColor BLUE = new FloatColor(0,0,1);
 	public static final FloatColor YELLOW = new FloatColor(1,1,0);
 	
-	public float[] mValues;
-	
-	public FloatColor(float red,float green,float blue,float alpha)
-	{
-		mValues = new float[4];
-		mValues[0] = red;
-		mValues[1] = green;
-		mValues[2] = blue;
-		mValues[3] = alpha;
+	public FloatColor(float red,float green,float blue,float alpha) {
+		set(red,green,blue,alpha);
 	}
 	
 	public FloatColor(float red,float green,float blue) {
@@ -36,7 +36,6 @@ public class FloatColor {
 	}
 	
 	public FloatColor(FloatColor preface) {
-		mValues = new float[4];
 		set(preface);
 	}
 	
@@ -82,40 +81,6 @@ public class FloatColor {
 	public byte getAlphaByte()
 	{
 		return (byte)(mValues[3]*255);
-	}
-	
-	@Override
-	public String toString()
-	{
-		return "("+getRed()+", "+getGreen()+", "+getBlue()+", "+getAlpha()+")";
-	}
-
-	public void set(float r, float g, float b, float a) {
-		mValues[0] = r;
-		mValues[1] = g;
-		mValues[2] = b;
-		mValues[3] = a;
-	}
-	
-	public void set(float r, float g, float b) {
-		mValues[0] = r;
-		mValues[1] = g;
-		mValues[2] = b;
-	}
-	
-	public void set(FloatColor color) {
-		mValues[0] = color.mValues[0];
-		mValues[1] = color.mValues[1];
-		mValues[2] = color.mValues[2];
-		mValues[3] = color.mValues[3];
-	}
-	
-	public void set(FloatColor color1,FloatColor color2,float weight) {
-		float dWeight = 1-weight;
-		mValues[0] = color1.mValues[0]*dWeight+color2.mValues[0]*weight;
-		mValues[1] = color1.mValues[1]*dWeight+color2.mValues[1]*weight;
-		mValues[2] = color1.mValues[2]*dWeight+color2.mValues[2]*weight;
-		mValues[3] = color1.mValues[3]*dWeight+color2.mValues[3]*weight;
 	}
 		
 	public void writeIntoBuffer(ByteBuffer source,boolean includeAlpha) {
