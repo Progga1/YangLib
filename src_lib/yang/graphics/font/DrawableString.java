@@ -285,7 +285,7 @@ public class DrawableString extends FixedString {
 	protected void putColors() {
 		for(int i=0;i<mRecentCharCount;i++) {
 			mGraphics.putColorRect(mGraphics.mCurColor);
-			mGraphics.putAddColorRect(mGraphics.mCurAddColor);
+			mGraphics.putSuppDataRect(mGraphics.mCurSuppData);
 		}
 	}
 

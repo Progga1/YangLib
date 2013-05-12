@@ -41,7 +41,7 @@ public abstract class LegacySkeleton {
 	public NonConcurrentList<Bone> mBones;
 	protected float[] mSkeletonColor;
 	protected float[] mContourColor;
-	protected float[] mAddColor;
+	protected float[] mSuppData;
 	public SkeletonCarrier mCarrier;
 	public BasicProgram mShader;
 	public NonConcurrentList<Constraint> mConstraints;
@@ -78,7 +78,7 @@ public abstract class LegacySkeleton {
 		mSkeletonColor = new float[4];
 		mConstraintsActivated = true;
 		mContourColor = new float[]{0,0,0,0};
-		mAddColor = new float[]{0,0,0,0};
+		mSuppData = new float[]{0,0,0,0};
 		setModColor(1,1,1);
 		mShader = null;
 		mSkeletonOffsetX = 0;
@@ -232,20 +232,20 @@ public abstract class LegacySkeleton {
 		if(mUpdateColor) {
 			
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_COLORS,0);
-			mVertexBuffer.setDataPosition(DefaultGraphics.ID_ADDCOLORS, 0);
+			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SuppDataS, 0);
 			for(NonConcurrentList<Bone> layer:mLayers) {
 				//Contour
 				if(mDrawContour)
 					for(Bone bone:layer) {
 						if(bone.mCelShading) {
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.BLACK,4);
-							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_ADDCOLORS, mContourColor,4);
+							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SuppDataS, mContourColor,4);
 						}
 					}
 				//Fill
 				for(Bone bone:layer) {
 					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4);
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_ADDCOLORS, mAddColor,4);
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SuppDataS, mSuppData,4);
 				}
 			}
 			mUpdateColor = false;
@@ -347,7 +347,7 @@ public abstract class LegacySkeleton {
 								);
 							mGraphics2D.putTextureArray(bone.getTextureCoordinates().mAppliedCoordinates);
 							mGraphics2D.putColorRect(COLOR_BLACK);
-							mGraphics2D.putAddColorRect(mContourColor);
+							mGraphics2D.putSuppDataRect(mContourColor);
 							
 						}
 					}
@@ -368,7 +368,7 @@ public abstract class LegacySkeleton {
 								);
 							mGraphics2D.putTextureArray(bone.getTextureCoordinates().mAppliedCoordinates);
 							mGraphics2D.putColorRect(mSkeletonColor);
-							mGraphics2D.putAddColorRect(mAddColor);
+							mGraphics2D.putSuppDataRect(mSuppData);
 							
 						}
 					}
@@ -519,17 +519,17 @@ public abstract class LegacySkeleton {
 		mUpdateColor = true;
 	}
 	
-	public void setAddColor(float r,float g,float b) {
-		mAddColor[0] = r;
-		mAddColor[1] = g;
-		mAddColor[2] = b;
+	public void setSuppData(float r,float g,float b) {
+		mSuppData[0] = r;
+		mSuppData[1] = g;
+		mSuppData[2] = b;
 		mUpdateColor = true;
 	}
 
-	public void setAddColor(float brightness) {
-		mAddColor[0] = brightness;
-		mAddColor[1] = brightness;
-		mAddColor[2] = brightness;
+	public void setSuppData(float brightness) {
+		mSuppData[0] = brightness;
+		mSuppData[1] = brightness;
+		mSuppData[2] = brightness;
 		mUpdateColor = true;
 	}
 	

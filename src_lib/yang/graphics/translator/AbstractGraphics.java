@@ -42,7 +42,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public ShaderType mCurrentProgram;
 	protected float mBold;
 	public float[] mCurColor;
-	public float[] mCurAddColor;
+	public float[] mCurSuppData;
 	public float[] mAmbientColor = new float[4];
 	
 	//Persistent attributes
@@ -88,7 +88,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mCurProjTransform = mProjectionTransform;
 		mCurProjTransform.loadIdentity();
 		mCurColor = new float[4];
-		mCurAddColor = new float[4];
+		mCurSuppData = new float[4];
 		mTime = 0;
 		mBold = 0;
 		mDynamicSpriteVertexBuffer = createVertexBuffer(true,true,MAX_DYNAMIC_VERTICES*6/4,MAX_DYNAMIC_VERTICES);
@@ -101,7 +101,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	
 	public void restart() {
 		setColor(1,1,1);
-		setAddColor(0,0,0);
+		setSuppData(0,0,0);
 	}
 	
 	public final void activate() {
@@ -268,29 +268,29 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 	
 	//---Add-Color---
-	public void setAddColor(float r, float g, float b) {
-		mCurAddColor[0] = r;
-		mCurAddColor[1] = g;
-		mCurAddColor[2] = b;
-		mCurAddColor[3] = 0;
+	public void setSuppData(float r, float g, float b) {
+		mCurSuppData[0] = r;
+		mCurSuppData[1] = g;
+		mCurSuppData[2] = b;
+		mCurSuppData[3] = 0;
 	}
 
-	public void setAddColor(float r, float g, float b, float a) {
-		mCurAddColor[0] = r;
-		mCurAddColor[1] = g;
-		mCurAddColor[2] = b;
-		mCurAddColor[3] = a;
+	public void setSuppData(float r, float g, float b, float a) {
+		mCurSuppData[0] = r;
+		mCurSuppData[1] = g;
+		mCurSuppData[2] = b;
+		mCurSuppData[3] = a;
 	}
 	
-	public void setAddColor(float[] color) {
-		mCurAddColor[0] = color[0];
-		mCurAddColor[1] = color[1];
-		mCurAddColor[2] = color[2];
-		mCurAddColor[3] = color[3];
+	public void setSuppData(float[] color) {
+		mCurSuppData[0] = color[0];
+		mCurSuppData[1] = color[1];
+		mCurSuppData[2] = color[2];
+		mCurSuppData[3] = color[3];
 	}
 	
-	public float[] getCurrentAddColor(){
-		return mCurAddColor;
+	public float[] getCurrentSuppData(){
+		return mCurSuppData;
 	}
 	
 	
@@ -337,7 +337,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 	
 	public void setAddBlack() {
-		setAddColor(0,0,0,0);
+		setSuppData(0,0,0,0);
 	}
 	
 	public void setGlobalTransformEnabled(boolean enabled) {

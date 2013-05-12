@@ -86,12 +86,12 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 		mGraphics.putColor(color, mCurXCount*mCurYCount);
 	}
 	
-	public void putGridAddColor(float[] color) {
-		mGraphics.putAddColor(color, mCurXCount*mCurYCount);
+	public void putGridSuppData(float[] color) {
+		mGraphics.putSuppData(color, mCurXCount*mCurYCount);
 	}
 	
-	public void putGridAddColors(float[][] addColors) {
-		putVec4Map(addColors,DefaultGraphics.ID_ADDCOLORS);
+	public void putGridSuppDatas(float[][] SuppDatas) {
+		putVec4Map(SuppDatas,DefaultGraphics.ID_SuppDataS);
 	}
 	
 	public void putGridColors(FloatColor[][] colors) {
@@ -104,12 +104,12 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 		}
 	}
 	
-	public void putGridAddColors(FloatColor[][] colors) {
+	public void putGridSuppDatas(FloatColor[][] colors) {
 		int stepSize = colors.length / mCurYCount;
 		for(int row=0;row<mCurYCount;row+=stepSize) {
 			FloatColor[] colorRow = colors[row];
 			for(int col=0;col<mCurXCount;col+=stepSize) {
-				mGraphics.putAddColor(colorRow[col]);
+				mGraphics.putSuppData(colorRow[col]);
 			}
 		}
 	}
@@ -125,7 +125,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 	}
 	
 	public void putGridAddBlack() {
-		mGraphics.putAddColorBlack(mCurXCount*mCurYCount);
+		mGraphics.putSuppDataBlack(mCurXCount*mCurYCount);
 	}
 	
 	public void putGridNeutralColors() {

@@ -177,7 +177,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 //		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 //		putTextureArray(textureTransform.mAppliedRect);
 //		putColorRect(mCurColor);
-//		putAddColorRect(mCurAddColor);
+//		putSuppDataRect(mCurSuppData);
 //	}
 	
 	public void drawRectZ(float worldX1, float worldY1, float worldX2, float worldY2, float z, TextureCoordinatesQuad textureCoordinates) {
@@ -185,7 +185,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 		putTextureArray(textureCoordinates.mAppliedCoordinates);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 	
 	public void drawRectZ(float x1, float y1, float x2, float y2, float z) {
@@ -235,7 +235,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			putTransformedPositionArray(array,transform);
 		putTextureArray(RECT_TEXTURECOORDS);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 	
 	public void drawCubeCentered(YangMatrix transform) {
@@ -259,7 +259,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mSphereCreator.putPositions(transform,true);
 		mSphereCreator.putTerrainTextureRect(0,0,textureCoordFactorX,textureCoordFactorY);
 		mSphereCreator.putGridColor(mCurColor);
-		mSphereCreator.putGridAddColor(mCurAddColor);
+		mSphereCreator.putGridSuppData(mCurSuppData);
 		mSphereCreator.finish();
 	}
 	

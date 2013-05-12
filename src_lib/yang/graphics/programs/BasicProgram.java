@@ -58,15 +58,19 @@ public class BasicProgram extends AbstractProgram {
 	public int mPositionHandle = -1;
 	public int mTextureHandle = -1;
 	public int mColorHandle = -1;
-	public int mAddColorHandle = -1;
+	public int mSuppDataHandle = -1;
 	public int mTexSamplerHandle = -1;
 	public int mAmbientHandle = -1;
 	public int mTimeHandle = -1;
 	public boolean mHasTextureCoords = false;
 	public boolean mHasColor = false;
-	public boolean mHasAddColor = false;
+	public boolean mHasSuppData = false;
 	public boolean mHasWorldTransform = false;
 	public boolean mHasAmbientColor = false;
+	
+	protected String getSuppDataIdentifier() {
+		return "vSuppData";
+	}
 	
 	@Override
 	protected void initHandles() {
@@ -75,7 +79,7 @@ public class BasicProgram extends AbstractProgram {
 		mProjHandle = mProgram.getUniformLocation("projTransform");
 		mTextureHandle = mProgram.getAttributeLocation("vTexture");
 		mColorHandle = mProgram.getAttributeLocation("vColor");
-		mAddColorHandle = mProgram.getAttributeLocation("vAddColor");
+		mSuppDataHandle = mProgram.getAttributeLocation(getSuppDataIdentifier());
 		mAmbientHandle = mProgram.getUniformLocation("ambientColor");
 		mTimeHandle = mProgram.getUniformLocation("time");
 		mTexSamplerHandle = mProgram.getUniformLocation("texSampler");
@@ -85,7 +89,7 @@ public class BasicProgram extends AbstractProgram {
 		mHasTextureCoords = (mTextureHandle>=0);
 		mHasWorldTransform = (mWorldTransformHandle>=0);
 		mHasColor = (mColorHandle>=0);
-		mHasAddColor = (mAddColorHandle>=0);
+		mHasSuppData = (mSuppDataHandle>=0);
 		mHasAmbientColor = (mAmbientHandle>=0);
 	}
 

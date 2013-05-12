@@ -32,8 +32,13 @@ public class AdditiveModulateProgram extends BasicProgram{
 			"varying vec4 addColor;\n" +
 			"\n" +
 			"void main() {\n" +
-			"	gl_FragColor = (texture2D(texSampler, vec2(texCoord.x,texCoord.y)) * color + addColor) * ambientColor;\n" +
+			"	gl_FragColor = (texture2D(texSampler, vec2(texCoord.x,texCoord.y)) * color) * ambientColor;\n" +
 			"}\n";
+	
+	@Override
+	protected String getSuppDataIdentifier() {
+		return "vAddColor";
+	}
 	
 	@Override
 	protected String getVertexShader(AbstractGFXLoader gfxLoader) {

@@ -41,7 +41,7 @@ public abstract class ContourSkeleton extends HumanSkeleton{
 			mUpdateTexCoords = true;
 		}
 
-		System.arraycopy(mAddColor, 0, mInterColor, 0, 4);
+		System.arraycopy(mSuppData, 0, mInterColor, 0, 4);
 		mInterColor[3] = 0.5f;
 		final float zInc = 0.01f;
 		
@@ -49,13 +49,13 @@ public abstract class ContourSkeleton extends HumanSkeleton{
 		if(mUpdateColor) {
 			
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_COLORS,0);
-			mVertexBuffer.setDataPosition(DefaultGraphics.ID_ADDCOLORS, 0);
+			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SuppDataS, 0);
 			
 			for(Bone[] layer:mFrontToBackLayers) {
 				//Fill
 				for(Bone bone:layer) {
 					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, new float[]{1,1,1,0.0f},4);
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_ADDCOLORS, mInterColor,4);
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SuppDataS, mInterColor,4);
 					//mInterColor[3] += zInc;
 				}
 				//mInterColor[3] += 0.04f;
@@ -65,7 +65,7 @@ public abstract class ContourSkeleton extends HumanSkeleton{
 				for(Bone bone:layer) {
 					if(bone.mCelShading) {
 						mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.BLACK,4);
-						mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_ADDCOLORS, mInterColor,4);
+						mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SuppDataS, mInterColor,4);
 					}
 				}
 				

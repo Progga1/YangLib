@@ -31,7 +31,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public static final int ID_POSITIONS = 0;
 	public static final int ID_TEXTURES = 1;
 	public static final int ID_COLORS = 2;
-	public static final int ID_ADDCOLORS = 3;
+	public static final int ID_SuppDataS = 3;
 	public static final int ID_NORMALS = 4;
 
 	public static final float DEFAULTBIAS = 0.0018f;
@@ -60,7 +60,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public FloatBuffer mPositions;
 	public FloatBuffer mTextures;
 	public FloatBuffer mColors;
-	public FloatBuffer mAddColors;
+	public FloatBuffer mSuppDatas;
 	public FloatBuffer mNormals;
 	
 	protected abstract void refreshResultTransform();
@@ -99,8 +99,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			mTranslator.setAttributeBuffer(mCurrentProgram.mTextureHandle, DefaultGraphics.ID_TEXTURES);
 		if (mCurrentProgram.mHasColor)
 			mTranslator.setAttributeBuffer(mCurrentProgram.mColorHandle, DefaultGraphics.ID_COLORS);
-		if (mCurrentProgram.mHasAddColor)
-			mTranslator.setAttributeBuffer(mCurrentProgram.mAddColorHandle, DefaultGraphics.ID_ADDCOLORS);
+		if (mCurrentProgram.mHasSuppData)
+			mTranslator.setAttributeBuffer(mCurrentProgram.mSuppDataHandle, DefaultGraphics.ID_SuppDataS);
 		assert mTranslator.checkErrorInst("Bind buffers 2D");
 	}
 
@@ -111,11 +111,11 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			mTranslator.enableAttributePointer(mCurrentProgram.mTextureHandle);
 		if (mCurrentProgram.mHasColor)
 			mTranslator.enableAttributePointer(mCurrentProgram.mColorHandle);
-		if (mCurrentProgram.mHasAddColor)
-			mTranslator.enableAttributePointer(mCurrentProgram.mAddColorHandle);
+		if (mCurrentProgram.mHasSuppData)
+			mTranslator.enableAttributePointer(mCurrentProgram.mSuppDataHandle);
 		assert mTranslator.checkErrorInst("Enable buffers 2D");
 		//if(!mTranslator.checkErrorInst("Enable buffers 2D"))
-			//System.err.println("Handles: "+mCurrentProgram.mPositionHandle+" "+mCurrentProgram.mTextureHandle+" "+mCurrentProgram.mColorHandle+" "+mCurrentProgram.mAddColorHandle);
+			//System.err.println("Handles: "+mCurrentProgram.mPositionHandle+" "+mCurrentProgram.mTextureHandle+" "+mCurrentProgram.mColorHandle+" "+mCurrentProgram.mSuppDataHandle);
 	}
 
 	public void disableBuffers() {
@@ -125,8 +125,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			mTranslator.disableAttributePointer(mCurrentProgram.mTextureHandle);
 		if (mCurrentProgram.mHasColor)
 			mTranslator.disableAttributePointer(mCurrentProgram.mColorHandle);
-		if (mCurrentProgram.mHasAddColor)
-			mTranslator.disableAttributePointer(mCurrentProgram.mAddColorHandle);
+		if (mCurrentProgram.mHasSuppData)
+			mTranslator.disableAttributePointer(mCurrentProgram.mSuppDataHandle);
 		assert mTranslator.checkErrorInst("Disable buffers 2D");
 	}
 
@@ -188,7 +188,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putTransformedPositionRect(worldTransform);
 		putTransformedTextureRect(textureTransform);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 	
 	public void drawQuad(float worldX1,float worldY1,float worldX2,float worldY2,float worldX3,float worldY3,float worldX4,float worldY4, TextureCoordinatesQuad texCoordinates) {
@@ -202,7 +202,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		else
 			putTextureArray(RECT_TEXTURECOORDS);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 
 	public void drawQuad(YangMatrix worldTransform, TextureCoordinatesQuad texCoordinates) {
@@ -213,7 +213,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		else
 			putTextureArray(RECT_TEXTURECOORDS);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 
 	public void drawQuad(YangMatrix transform) {
@@ -225,7 +225,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 		putTextureRect(texX1, texY1, texX2, texY2);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, TextureCoordinatesQuad texCoordinates) {
@@ -233,7 +233,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 		putTextureArray(texCoordinates.mAppliedCoordinates);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, YangMatrix textureTransform) {
@@ -241,7 +241,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 		putTransformedTextureRect(textureTransform);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2) {
@@ -249,7 +249,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 		putTextureArray(this.mTexIdentity.mAppliedCoordinates);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 
 	// ---PUT-POSITIONS---
@@ -390,38 +390,38 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	// ---PUT-ADD-COLORS---
 
-	public void putAddColor(float r, float g, float b, float a) {
-		mAddColors.put(r);
-		mAddColors.put(g);
-		mAddColors.put(b);
-		mAddColors.put(a);
+	public void putSuppData(float r, float g, float b, float a) {
+		mSuppDatas.put(r);
+		mSuppDatas.put(g);
+		mSuppDatas.put(b);
+		mSuppDatas.put(a);
 	}
 
-	public void putAddColorBlack(int amount) {
+	public void putSuppDataBlack(int amount) {
 		while (amount > 0) {
-			putAddColor(NULLCOLOR);
+			putSuppData(NULLCOLOR);
 			amount--;
 		}
 	}
 
-	public void putAddColor(float[] color) {
-		mAddColors.put(color);
+	public void putSuppData(float[] color) {
+		mSuppDatas.put(color);
 	}
 
-	public void putAddColor(FloatColor color) {
-		mAddColors.put(color.mValues);
+	public void putSuppData(FloatColor color) {
+		mSuppDatas.put(color.mValues);
 	}
 
-	public void putAddColorRect(float[] color) {
-		putAddColor(color);
-		putAddColor(color);
-		putAddColor(color);
-		putAddColor(color);
+	public void putSuppDataRect(float[] color) {
+		putSuppData(color);
+		putSuppData(color);
+		putSuppData(color);
+		putSuppData(color);
 	}
 
-	public void putAddColor(float[] color, int amount) {
+	public void putSuppData(float[] color, int amount) {
 		while (amount > 0) {
-			putAddColor(color);
+			putSuppData(color);
 			amount--;
 		}
 	}
@@ -453,7 +453,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mPositions = buffers[ID_POSITIONS];
 		mTextures = buffers[ID_TEXTURES];
 		mColors = buffers[ID_COLORS];
-		mAddColors = buffers[ID_ADDCOLORS];
+		mSuppDatas = buffers[ID_SuppDataS];
 		if (buffers.length > 4)
 			mNormals = buffers[ID_NORMALS];
 		else

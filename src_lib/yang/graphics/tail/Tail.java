@@ -43,7 +43,7 @@ public class Tail {
 	private boolean mInverted;
 	private boolean mSubTails;
 	private DefaultGraphics<?> mGraphics;
-	public float mAddColor[];
+	public float mSuppData[];
 	public int mTexXRepeat = 0;
 	protected float mTexYRepeat = 2;
 	public float mTexXShift = 0;
@@ -71,7 +71,7 @@ public class Tail {
 		mMinDist = 0.01f;
 		mMinScalarDist = 0.01f;
 		mCreateNodeFreq = 1;
-		mAddColor = new float[]{0,0,0,0};
+		mSuppData = new float[]{0,0,0,0};
 		mInverted = false;
 		mSubTails = subTails;
 		mScaleFallOff = 0.25f;
@@ -329,14 +329,14 @@ public class Tail {
 					mGraphics.putTextureCoord(curTailTexX, mDoubleTexCoords[5]);
 			}
 			mGraphics.putColor(mCurColor);
-			mGraphics.putAddColor(mAddColor);
+			mGraphics.putSuppData(mSuppData);
 			if(mStrips==mDoubleStrips) {
 				mGraphics.putColor(mCurColor);
-				mGraphics.putAddColor(mAddColor);
+				mGraphics.putSuppData(mSuppData);
 			}
 		}
 		mGraphics.putColor(mCurColor);
-		mGraphics.putAddColor(mAddColor);
+		mGraphics.putSuppData(mSuppData);
 		curTailTexX += tailTexXStep;
 		putPos--;
 	}

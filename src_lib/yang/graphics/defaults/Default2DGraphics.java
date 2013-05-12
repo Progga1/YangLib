@@ -130,7 +130,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		putTransformedPositionRect(mInterTransf1);
 		putTextureRect(texX1, texY1, texX2, texY2);
 		putColorRect(mCurColor);
-		putAddColorRect(mCurAddColor);
+		putSuppDataRect(mCurSuppData);
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
