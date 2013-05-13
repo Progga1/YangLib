@@ -14,7 +14,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	protected GraphicsTranslator mTranslator;
 	protected int mCurParticleIndex;
 	protected int mMaxParticleCount;
-	protected float mGlobalScale;
+	public float mDefaultScale;
 	public LookUpTable mScaleLookUp;
 	public int mParticleCount;
 	public NonConcurrentList<ParticleType> mParticles;
@@ -25,7 +25,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	
 	public AbstractParticleRingBuffer() {
 		mTexture = null;
-		mGlobalScale = 1;
+		mDefaultScale = 1;
 		mScaleLookUp = null;
 		mParticleCount = 0;
 	}
@@ -65,15 +65,16 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		if(mParticleCount<=0)
 			return;
 		mTranslator.bindTexture(mTexture);
-		
+
 		drawParticles();
 	}
 	
 	public ParticleType spawnParticle(float posX,float posY, float posZ, TextureCoordinatesQuad texCoords) {
 		ParticleType particle = mParticles.get(mCurParticleIndex);
 		particle.mExists = true;
+		particle.mLifeTime = 0;
 		particle.mTextureCoordinates = texCoords;
-		particle.mScale = 1f;
+		particle.mScale = mDefaultScale;
 		particle.setPosition(posX, posY, posZ);
 		mCurParticleIndex++;
 		if(mCurParticleIndex>=mMaxParticleCount)

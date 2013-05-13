@@ -141,6 +141,11 @@ public class GdxGLProgram extends DefaultPCGLProgram {
 	}
 	
 	@Override
+	public void setUniform4f(int handle, float[] values) {
+		Gdx.gl20.glUniform4f(handle, values[0],values[1],values[2],values[3]);
+	}
+	
+	@Override
 	public void setUniformFloat(int handle,float value) {
 		Gdx.gl20.glUniform1f(handle, value);
 	}
@@ -160,4 +165,5 @@ public class GdxGLProgram extends DefaultPCGLProgram {
 		}
 		return null;
 	}
+	
 }

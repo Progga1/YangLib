@@ -45,42 +45,48 @@ public class FloatColor extends Quadruple {
 
 	public float getRed()
 	{
-		return mValues[0];
+		return mValues[R];
 	}
 	
 	public float getGreen()
 	{
-		return mValues[1];
+		return mValues[G];
 	}
 	
 	public float getBlue()
 	{
-		return mValues[2];
+		return mValues[B];
 	}
 	
 	public float getAlpha()
 	{
-		return mValues[3];
+		return mValues[A];
 	}
 	
 	public byte getRedByte()
 	{
-		return (byte)(mValues[0]*255);
+		return (byte)(mValues[R]*255);
 	}
 	
 	public byte getGreenByte()
 	{
-		return (byte)(mValues[1]*255);
+		return (byte)(mValues[G]*255);
 	}
 	
 	public byte getBlueByte()
 	{
-		return (byte)(mValues[2]*255);
+		return (byte)(mValues[B]*255);
 	}
 	
 	public byte getAlphaByte()
 	{
-		return (byte)(mValues[3]*255);
+		return (byte)(mValues[A]*255);
+	}
+	
+	public void premultiplyAlpha() {
+		mValues[R] *= mValues[A];
+		mValues[G] *= mValues[A];
+		mValues[B] *= mValues[A];
 	}
 		
 	public void writeIntoBuffer(ByteBuffer source,boolean includeAlpha) {
@@ -89,13 +95,6 @@ public class FloatColor extends Quadruple {
 		source.put((byte)(mValues[2]*255));
 		if(includeAlpha)
 			source.put((byte)(mValues[3]*255));
-	}
-	
-	public void writeIntoBufferRGBA(ByteBuffer source) {
-		source.put((byte)(mValues[0]*255));
-		source.put((byte)(mValues[1]*255));
-		source.put((byte)(mValues[2]*255));
-		source.put((byte)(mValues[3]*255));
 	}
 	
 	public void writeIntoBufferRGB(ByteBuffer source) {

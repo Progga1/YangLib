@@ -115,7 +115,7 @@ public class BasicProgram extends AbstractProgram {
 	}
 	
 	public void setAmbientColor(FloatColor color) {
-		mProgram.setUniform4f(mAmbientHandle, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+		mProgram.setUniform4f(mAmbientHandle, color.mValues);
 	}
 	
 	public void setTime(float time) {

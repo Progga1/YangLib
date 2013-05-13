@@ -1,5 +1,7 @@
 package yang.math.objects;
 
+import java.nio.ByteBuffer;
+
 
 public class Quadruple {
 
@@ -7,6 +9,11 @@ public class Quadruple {
 	
 	public Quadruple() {
 		mValues = new float[4];
+	}
+	
+	public Quadruple(float v1,float v2,float v3,float v4) {
+		this();
+		set(v1,v2,v3,v4);
 	}
 	
 	@Override
@@ -61,6 +68,13 @@ public class Quadruple {
 		mValues[1] -= values.mValues[1];
 		mValues[2] -= values.mValues[2];
 		mValues[3] -= values.mValues[3];
+	}
+	
+	public void writeIntoBuffer(ByteBuffer source) {
+		source.put((byte)(mValues[0]*255));
+		source.put((byte)(mValues[1]*255));
+		source.put((byte)(mValues[2]*255));
+		source.put((byte)(mValues[3]*255));
 	}
 	
 	/**

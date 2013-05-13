@@ -262,20 +262,20 @@ public abstract class Skeleton {
 		if(mUpdateColor) {
 			
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_COLORS,0);
-			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SuppDataS, 0);
+			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SUPPDATA, 0);
 			for(Bone[] layer:mLayers) {
 				//Contour
 				if(mDrawContour)
 					for(Bone bone:layer) {
 						if(bone.mCelShading) {
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.BLACK,4);
-							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SuppDataS, mContourColor,4);
+							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mContourColor,4);
 						}
 					}
 				//Fill
 				for(Bone bone:layer) {
 					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4);
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SuppDataS, mSuppData,4);
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4);
 					//mInterColor[3] += zInc;
 				}
 				//mInterColor[3] += 0.05f;

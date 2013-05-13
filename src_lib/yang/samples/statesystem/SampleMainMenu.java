@@ -6,6 +6,7 @@ import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
+import yang.samples.statesystem.states.ParticleSampleState;
 import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.TailSampleState;
@@ -41,6 +42,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Tails", new TailSampleState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
+		addMenuItem("Particles", new ParticleSampleState());
 	}
 	
 	public void addMenuItem(String caption, YangProgramState<?> state) {

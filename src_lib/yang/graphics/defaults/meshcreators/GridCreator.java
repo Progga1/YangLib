@@ -91,7 +91,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 	}
 	
 	public void putGridSuppDatas(float[][] SuppDatas) {
-		putVec4Map(SuppDatas,DefaultGraphics.ID_SuppDataS);
+		putVec4Map(SuppDatas,DefaultGraphics.ID_SUPPDATA);
 	}
 	
 	public void putGridColors(FloatColor[][] colors) {
@@ -125,7 +125,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 	}
 	
 	public void putGridAddBlack() {
-		mGraphics.putSuppDataBlack(mCurXCount*mCurYCount);
+		mGraphics.putSuppDataZero(mCurXCount*mCurYCount);
 	}
 	
 	public void putGridNeutralColors() {

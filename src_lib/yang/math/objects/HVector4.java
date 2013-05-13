@@ -7,6 +7,10 @@ public class HVector4 extends Quadruple {
 	public static int Z = 2;
 	public static int W = 3;
 	
+	public HVector4(float v1,float v2,float v3,float v4) {
+		set(v1,v2,v3,v4);
+	}
+	
 	public float getMagnitude() {
 		if(mValues[W]!=1) {
 			if(mValues[W]==0)

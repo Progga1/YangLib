@@ -104,6 +104,8 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,1, transform.mMatrix);
 	}
 	
+	//TODO too many sub routines!!!
+	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, YangMatrix textureTransform) {
 		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
 		drawQuad(mInterTransf1, textureTransform);
@@ -125,7 +127,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, float texX1, float texY1, float texX2, float texY2) {
 		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterTransf1, mTexIdentity);
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		putTransformedPositionRect(mInterTransf1);
 		putTextureRect(texX1, texY1, texX2, texY2);
@@ -134,7 +135,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
-		mInterTransf1.setCenteredRect(centerX, centerY, texCoordinates.getWidth() * width * texCoordinates.getRatio(), texCoordinates.getHeight() * height, angle);
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
 		drawQuad(mInterTransf1, texCoordinates);
 	}
 

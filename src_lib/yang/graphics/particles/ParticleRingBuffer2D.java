@@ -27,7 +27,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 						uScale = mScaleLookUp.get(particle.mLifeTime) * particle.mScale;
 					else
 						uScale = particle.mScale;
-					mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*mCelShading*mGlobalScale, particle.mRotation, particle.mTextureCoordinates);
+					mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*mCelShading, particle.mRotation, particle.mTextureCoordinates);
 				}
 			}
 		}
@@ -40,7 +40,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 					uScale = mScaleLookUp.get(particle.mLifeTime) * particle.mScale;
 				else
 					uScale = particle.mScale;
-				mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*mGlobalScale, particle.mRotation, particle.mTextureCoordinates);
+				mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale, particle.mRotation, particle.mTextureCoordinates);
 			}
 		}
 	}

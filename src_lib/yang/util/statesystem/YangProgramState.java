@@ -52,6 +52,8 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	}
 	
 	public void proceed(float deltaTime) {
+		if(mFirstFrame)
+			return;
 		step(deltaTime);
 		mStateTimer += deltaTime;
 	}
@@ -59,9 +61,9 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	public void drawFrame() {
 		if(mFirstFrame) {
 			initGraphics();
-		}
-		draw();
-		mFirstFrame = false;
+			mFirstFrame = false;
+		}else
+			draw();
 	}
 	
 	public void start() {

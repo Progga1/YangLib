@@ -24,7 +24,7 @@ public abstract class TextureCoordinateSet {
 	}
 
 	public static TextureCoordinatesQuad[] createTexCoordSequencePixels(Texture texture, int startX, int startY, int width, int height, int count) {
-		return createTexCoordSequence((float)(startX/texture.mWidth),(float)(startY/texture.mHeight),(float)(width/texture.mWidth),(float)(height/texture.mHeight),count);
+		return createTexCoordSequence((float)startX/texture.mWidth,(float)startY/texture.mHeight,(float)width/texture.mWidth,(float)height/texture.mHeight,count);
 	}
 	
 	public static TextureCoordinatesQuad[] createTexCoordSequencePixels(Texture texture, int startX, int startY, int size, int count) {

@@ -3,7 +3,7 @@ package yang.graphics.defaults.programs;
 import yang.graphics.AbstractGFXLoader;
 import yang.graphics.programs.BasicProgram;
 
-public class AdditiveModulateProgram extends BasicProgram{
+public class TextureTileRepeatProgram extends BasicProgram{
 	
 	public final static String VERTEX_SHADER = 
 			"uniform mat4 projTransform;\n" +
@@ -11,17 +11,16 @@ public class AdditiveModulateProgram extends BasicProgram{
 			"attribute vec4 vPosition;\n" +
 			"attribute vec2 vTexture;\n" +
 			"attribute vec4 vColor;\n" +
-			"attribute vec4 vAddColor;" +
+			"attribute vec4 vTexBounds;" +
 			"varying vec2 texCoord;\n" +
 			"varying vec4 color;\n" +
-			"varying vec4 addColor;\n" +
+			"varying vec4 texBounds;\n" +
 			"\n" +
 			"void main() {\n" +
 			"	gl_Position = projTransform * vPosition;\n" +
 			"	texCoord = vTexture;\n" +
 			"	color = vColor;\n" +
-			"   color = vec4(color.r*color.a,color.g*color.a,color.b*color.a,color.a);\n" +
-			"	addColor = vAddColor;\n" +
+			"	texBounds = vTexBounds;\n" +
 			"}\n";
 	
 	public final static String FRAGMENT_SHADER = 
@@ -30,17 +29,15 @@ public class AdditiveModulateProgram extends BasicProgram{
 			"uniform vec4 ambientColor;\n" +
 			"varying vec2 texCoord;\n" +
 			"varying vec4 color;\n" +
-			"varying vec4 addColor;\n" +
+			"varying vec4 texBounds;\n" +
 			"\n" +
 			"void main() {\n" +
-			"#NOPREMULT gl_FragColor = texture2D(texSampler, vec2(texCoord.x,texCoord.y)) * color + addColor;\n" +
-			"#PREMULT vec4 texCl = texture2D(texSampler, vec2(texCoord.x,texCoord.y));\n" +
-			"#PREMULT gl_FragColor = texCl * color + addColor*texCl.a;\n" +
+			"	gl_FragColor = (texture2D(texSampler, vec2(texCoord.x%texBounds[2]+texBounds.x,texCoord.y%texBounds[3]+texBounds.y)) * color) * ambientColor;\n" +
 			"}\n";
 	
 	@Override
 	protected String getSuppDataIdentifier() {
-		return "vAddColor";
+		return "vTexBounds";
 	}
 	
 	@Override

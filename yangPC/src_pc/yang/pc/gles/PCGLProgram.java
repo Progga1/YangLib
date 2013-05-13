@@ -134,6 +134,11 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	public void setUniform4f(int handle, float v1, float v2, float v3, float v4) {
 		gl2.glUniform4f(handle, v1,v2,v3,v4);
 	}
+	
+	@Override
+	public void setUniform4f(int handle, float[] values) {
+		gl2.glUniform4f(handle, values[0],values[1],values[2],values[3]);
+	}
 
 	@Override
 	public void setUniformFloat(int handle, float value) {
