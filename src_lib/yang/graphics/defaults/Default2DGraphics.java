@@ -103,68 +103,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,1, transform.mMatrix);
 		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,1, transform.mMatrix);
 	}
-	
-	//TODO too many sub routines!!!
-	
-	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, YangMatrix textureTransform) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterTransf1, textureTransform);
-		flush();
-	}
-
-	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterTransf1, mTexIdentity);
-	}
-	
-	public void drawRectCentered(float centerX, float centerY, float width, float height) {
-		drawRectCentered(centerX,centerY,width,height,0);
-	}
-	
-	public void drawRectCentered(float centerX, float centerY, float scale) {
-		drawRectCentered(centerX,centerY,scale,scale,0);
-	}
-	
-	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, float texX1, float texY1, float texX2, float texY2) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putTransformedPositionRect(mInterTransf1);
-		putTextureRect(texX1, texY1, texX2, texY2);
-		putColorRect(mCurColor);
-		putSuppDataRect(mCurSuppData);
-	}
-	
-	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterTransf1, texCoordinates);
-	}
-
-	public void drawRectCentered(float centerX, float centerY, float width, float height, float texX1, float texY1, float texX2, float texY2) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, 0);
-		drawQuad(mInterTransf1, mTexIdentity);
-	}
-
-	public void drawRectCentered(float centerX, float centerY, float scale, float angle, TextureCoordinatesQuad texCoordinates) {
-		drawRectCentered(centerX,centerY,scale,scale,angle,texCoordinates);
-	}
-
-	public void drawRectCentered(float centerX, float centerY, float scale, TextureCoordinatesQuad texCoordinates) {
-		drawRectCentered(centerX, centerY, scale, 0, texCoordinates);
-	}
-	
-	public void drawLine(float fromX,float fromY, float toX,float toY, float width, YangMatrix textureTransform) {
-		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
-		drawQuad(mInterTransf1,textureTransform);
-	}
-	
-	public void drawLine(float fromX,float fromY, float toX,float toY, float width, TextureCoordinatesQuad texCoordinates) {
-		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
-		drawQuad(mInterTransf1,texCoordinates);
-	}
-	
-	public void drawLine(float fromX,float fromY, float toX,float toY, float width) {
-		drawLine(fromX,fromY,toX,toY,width,mTexIdentity);
-	}
 
 	private float drawChar(float x, float lineHeight, int c) {
 		float charWidth = mCurrentLegacyFont.getFontW(c);

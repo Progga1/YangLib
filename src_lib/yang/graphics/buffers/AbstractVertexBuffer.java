@@ -25,6 +25,7 @@ public abstract class AbstractVertexBuffer {
 	public abstract void putVec3(int bufId, float v1,float v2,float v3);
 	public abstract void putVec4(int bufId, float v1,float v2,float v3,float v4);
 	public abstract void putVec8(int bufId, float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8);
+	public abstract void putRect(int bufId, float x1, float y1, float x2, float y2);
 	public abstract void putArray(int bufId,float[] array,int offset,int elements);
 	public abstract void setIndexPosition(int pos);
 	public abstract int getCurrentIndexWriteCount();
@@ -105,51 +106,65 @@ public abstract class AbstractVertexBuffer {
 				);
 	}
 	
-	public void putTransformedArray(int bufId,float[] array, int vertexCount, int floatsPerVertex, float[] matrix) {
-		if(floatsPerVertex==2) {
-			for(int i=0;i<vertexCount;i++) {
-				float x = array[i*2];
-				float y = array[i*2+1];
-				putVec2(bufId,
-						matrix[0]*x+matrix[4]*y+matrix[12],
-						matrix[1]*x+matrix[5]*y+matrix[13]
-						);
-			}
-		}else{
-			for(int i=0;i<vertexCount;i++) {
-				float x = array[i*2];
-				float y = array[i*2+1];
-				float z = array[i*2+2];
-				putVec3(bufId,
-						matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12],
-						matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13],
-						matrix[2]*x+matrix[6]*y+matrix[10]*z+matrix[14]
-						);
-			}
+	public void putTransformedArray2D(int bufId,float[] array, int vertexCount, float[] matrix) {
+		for(int i=0;i<vertexCount;i++) {
+			float x = array[i*2];
+			float y = array[i*2+1];
+			putVec2(bufId,
+					matrix[0]*x+matrix[4]*y+matrix[12],
+					matrix[1]*x+matrix[5]*y+matrix[13]
+					);
 		}
 	}
 	
-	public void putTransformedArray(int bufId,float[] array, int vertexCount, int floatsPerVertex, float[] matrix,float offsetX,float offsetY,float offsetZ) {
+	public void putTransformedArray3D(int bufId,float[] array, int vertexCount, float[] matrix) {
+		for(int i=0;i<vertexCount;i++) {
+			float x = array[i*2];
+			float y = array[i*2+1];
+			float z = array[i*2+2];
+			putVec3(bufId,
+					matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12],
+					matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13],
+					matrix[2]*x+matrix[6]*y+matrix[10]*z+matrix[14]
+					);
+		}
+	}
+	
+	public void putTransformedArray2D(int bufId,float[] array, int vertexCount, float[] matrix,float offsetX,float offsetY) {
+		for(int i=0;i<vertexCount;i++) {
+			float x = array[i*2];
+			float y = array[i*2+1];
+			putVec2(bufId,
+					matrix[0]*x+matrix[4]*y+matrix[12] + offsetX,
+					matrix[1]*x+matrix[5]*y+matrix[13] + offsetY
+					);
+		}
+	}
+	
+	public void putTransformedArray3D(int bufId,float[] array, int vertexCount, float[] matrix,float offsetX,float offsetY,float offsetZ) {
+		for(int i=0;i<vertexCount;i++) {
+			float x = array[i*2];
+			float y = array[i*2+1];
+			float z = array[i*2+2];
+			putVec3(bufId,
+					matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12] + offsetX,
+					matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13] + offsetY,
+					matrix[2]*x+matrix[6]*y+matrix[10]*z+matrix[14] + offsetZ
+					);
+		}
+	}
+	
+	public void putTransformedArray(int bufId,float[] array, int vertexCount, int floatsPerVertex,float[] matrix,float offsetX,float offsetY,float offsetZ) {
 		if(floatsPerVertex==2) {
-			for(int i=0;i<vertexCount;i++) {
-				float x = array[i*2];
-				float y = array[i*2+1];
-				putVec2(bufId,
-						matrix[0]*x+matrix[4]*y+matrix[12] + offsetX,
-						matrix[1]*x+matrix[5]*y+matrix[13] + offsetY
-						);
-			}
+			if(offsetX==0 && offsetY==0)
+				putTransformedArray2D(bufId,array,vertexCount,matrix);
+			else
+				putTransformedArray2D(bufId,array,vertexCount,matrix,offsetX,offsetY);
 		}else{
-			for(int i=0;i<vertexCount;i++) {
-				float x = array[i*2];
-				float y = array[i*2+1];
-				float z = array[i*2+2];
-				putVec3(bufId,
-						matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12] + offsetX,
-						matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13] + offsetY,
-						matrix[2]*x+matrix[6]*y+matrix[10]*z+matrix[14] + offsetZ
-						);
-			}
+			if(offsetX==0 && offsetY==0)
+				putTransformedArray3D(bufId,array,vertexCount,matrix);
+			else
+				putTransformedArray3D(bufId,array,vertexCount,matrix,offsetX,offsetY,offsetZ);
 		}
 	}
 	

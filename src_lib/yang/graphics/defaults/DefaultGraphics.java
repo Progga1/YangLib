@@ -252,6 +252,64 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putColorRect(mCurColor);
 		putSuppDataRect(mCurSuppData);
 	}
+	
+	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle) {
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
+		drawQuad(mInterTransf1, mTexIdentity);
+	}
+	
+	public void drawRectCentered(float centerX, float centerY, float width, float height) {
+		drawRectCentered(centerX,centerY,width,height,0);
+	}
+	
+	public void drawRectCentered(float centerX, float centerY, float widthAndHeight) {
+		drawRectCentered(centerX,centerY,widthAndHeight,widthAndHeight,0);
+	}
+	
+	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, float texX1, float texY1, float texX2, float texY2) {
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
+		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		putTransformedPositionRect(mInterTransf1);
+		putTextureRect(texX1, texY1, texX2, texY2);
+		putColorRect(mCurColor);
+		putSuppDataRect(mCurSuppData);
+	}
+	
+	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
+		drawQuad(mInterTransf1, texCoordinates);
+	}
+
+	public void drawRectCentered(float centerX, float centerY, float width, float height, float texX1, float texY1, float texX2, float texY2) {
+		mInterTransf1.setCenteredRect(centerX, centerY, width, height, 0);
+		drawQuad(mInterTransf1, mTexIdentity);
+	}
+
+	/**
+	 * width = scale * texCoordRatio
+	 * height = scale
+	 */
+	public void drawRectCentered(float centerX, float centerY, float scale, float angle, TextureCoordinatesQuad texCoordinates) {
+		drawRectCentered(centerX,centerY,scale*texCoordinates.mRatioWidth,scale,angle,texCoordinates);
+	}
+
+	public void drawRectCentered(float centerX, float centerY, float scale, TextureCoordinatesQuad texCoordinates) {
+		drawRectCentered(centerX, centerY, scale, 0, texCoordinates);
+	}
+	
+	public void drawLine(float fromX,float fromY, float toX,float toY, float width, YangMatrix textureTransform) {
+		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
+		drawQuad(mInterTransf1,textureTransform);
+	}
+	
+	public void drawLine(float fromX,float fromY, float toX,float toY, float width, TextureCoordinatesQuad texCoordinates) {
+		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
+		drawQuad(mInterTransf1,texCoordinates);
+	}
+	
+	public void drawLine(float fromX,float fromY, float toX,float toY, float width) {
+		drawLine(fromX,fromY,toX,toY,width,mTexIdentity);
+	}
 
 	// ---PUT-POSITIONS---
 
@@ -307,11 +365,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 	
 	public void putTextureRect(TextureCoordinatesQuad texCoords) {
-		mCurrentVertexBuffer.putVec8(ID_TEXTURES,
-				texCoords.x1,texCoords.y1,
-				texCoords.x2,texCoords.y1,
-				texCoords.x1,texCoords.y2,
-				texCoords.x2,texCoords.y2);
+		mCurrentVertexBuffer.putRect(ID_TEXTURES,texCoords.x1,texCoords.y1,texCoords.x2,texCoords.y2);
 	}
 
 	public void putTransformedTextureRect(YangMatrix transform) {
@@ -324,41 +378,29 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	// ---PUT-COLORS---
 
 	public void putColor(float r, float g, float b, float a) {
-		mColors.put(r);
-		mColors.put(g);
-		mColors.put(b);
-		mColors.put(a);
+		mCurrentVertexBuffer.putVec4(ID_COLORS, r, g, b, a);
 	}
 
 	public void putColor(float[] color) {
-		mColors.put(color);
+		mCurrentVertexBuffer.putArray(ID_COLORS,color);
 	}
 
 	public void putColor(FloatColor color) {
-		mColors.put(color.mValues);
+		mCurrentVertexBuffer.putArray(ID_COLORS,color.mValues);
 	}
 
 	public void putColorRect(float[] color) {
 		if(mCurrentProgram.mHasColor) {
-			putColor(color);
-			putColor(color);
-			putColor(color);
-			putColor(color);
+			mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,color,4);
 		}
 	}
 
 	public void putColorWhite(int amount) {
-		while (amount > 0) {
-			putColor(WHITE);
-			amount--;
-		}
+		putColor(WHITE,amount);
 	}
 
 	public void putColor(float[] color, int amount) {
-		while (amount > 0) {
-			putColor(color);
-			amount--;
-		}
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,color, amount);
 	}
 
 	// ---AMBIENT-COLOR---

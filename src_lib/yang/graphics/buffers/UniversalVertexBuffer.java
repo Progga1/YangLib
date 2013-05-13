@@ -134,4 +134,17 @@ public class UniversalVertexBuffer extends IndexedVertexBuffer{
 	public int getBufferPosition(int bufId) {
 		return mFloatBuffers[bufId].position();
 	}
+
+	@Override
+	public void putRect(int bufId, float x1, float y1, float x2, float y2) {
+		FloatBuffer buf = mFloatBuffers[bufId];
+		buf.put(x1);
+		buf.put(y1);
+		buf.put(x2);
+		buf.put(y1);
+		buf.put(x1);
+		buf.put(y2);
+		buf.put(x2);
+		buf.put(y2);
+	}
 }

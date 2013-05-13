@@ -12,6 +12,7 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 	public float y1;
 	public float x2;
 	public float y2;
+	public float mRatioWidth;
 	public float mWidth;
 	public float mHeight;
 	public float mRatio;
@@ -64,6 +65,7 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 		this.mHeight = y2-y1;
 		refreshCoordArray(rotate);
 		mRatio = 1;
+		mRatioWidth = mWidth/mHeight;
 		return this;
 	}
 	
@@ -86,6 +88,7 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 			 (y2-0.5f) / (float)textureHeight, 
 			 BIASPIXELS/(float)textureWidth, BIASPIXELS/(float)textureHeight);
 		mRatio = (float)textureWidth / textureHeight;
+		mRatioWidth = mWidth*mRatio/mHeight;
 		return this;
 	}
 	
