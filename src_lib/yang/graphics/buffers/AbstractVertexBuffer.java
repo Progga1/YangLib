@@ -25,7 +25,8 @@ public abstract class AbstractVertexBuffer {
 	public abstract void putVec3(int bufId, float v1,float v2,float v3);
 	public abstract void putVec4(int bufId, float v1,float v2,float v3,float v4);
 	public abstract void putVec8(int bufId, float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8);
-	public abstract void putRect(int bufId, float x1, float y1, float x2, float y2);
+	public abstract void putRect2D(int bufId, float x1, float y1, float x2, float y2);
+	public abstract void putRect3D(int bufId, float x1, float y1, float x2,float y2, float z);
 	public abstract void putArray(int bufId,float[] array,int offset,int elements);
 	public abstract void setIndexPosition(int pos);
 	public abstract int getCurrentIndexWriteCount();
@@ -89,6 +90,19 @@ public abstract class AbstractVertexBuffer {
 		float dirY = (float)Math.sin(angle+PI/4)*scale*HALF_ANGLE_SCALE;
 		putVec4(bufId,offsetX-dirX,offsetY-dirY,offsetX+dirY,offsetY-dirX);
 		putVec4(bufId,offsetX-dirY,offsetY+dirX,offsetX+dirX,offsetY+dirY);
+	}
+	
+	public void putRotatedRect2D(int bufId,float width,float height,float offsetX,float offsetY,float angle) {
+		float sinA = (float)Math.sin(angle);
+		float cosA = (float)Math.cos(angle);
+		width *= 0.5f;
+		height *= 0.5f;
+		putVec8(bufId,
+				offsetX-width*cosA+height*sinA,offsetY-width*sinA-height*cosA,
+				offsetX+width*cosA+height*sinA,offsetY+width*sinA-height*cosA,
+				offsetX-width*cosA-height*sinA,offsetY-width*sinA+height*cosA,
+				offsetX+width*cosA-height*sinA,offsetY+width*sinA+height*cosA
+				);
 	}
 	
 	public void putTransformed3D(int bufId,float x,float y,float z,float[] matrix) {

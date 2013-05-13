@@ -25,7 +25,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	public static final float[][] NEUTRAL_ELEMENTS = { { 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
 
-	public static final float[] RECT_TEXTURECOORDS = { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, };
+	public static final float[] RECT_TEXTURECOORDS = { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
+	public static final TextureCoordinatesQuad RECT_TEXQUAD = new TextureCoordinatesQuad().init(0, 0, 1, 1);
 
 	public static final float[] RECT_COLORS = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	
@@ -253,36 +254,50 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putSuppDataRect(mCurSuppData);
 	}
 	
-	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterTransf1, mTexIdentity);
-	}
-	
 	public void drawRectCentered(float centerX, float centerY, float width, float height) {
-		drawRectCentered(centerX,centerY,width,height,0);
+		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		putPositionRect(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
+		mCurrentVertexBuffer.putArray(ID_TEXTURES, RECT_TEXTURECOORDS);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float widthAndHeight) {
-		drawRectCentered(centerX,centerY,widthAndHeight,widthAndHeight,0);
+		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		float d = widthAndHeight*0.5f;
+		mCurrentVertexBuffer.putRect2D(ID_POSITIONS,centerX-d,centerY-d,centerX+d,centerY+d);
+		mCurrentVertexBuffer.putArray(ID_TEXTURES, RECT_TEXTURECOORDS);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, float texX1, float texY1, float texX2, float texY2) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putTransformedPositionRect(mInterTransf1);
-		putTextureRect(texX1, texY1, texX2, texY2);
-		putColorRect(mCurColor);
-		putSuppDataRect(mCurSuppData);
+		mCurrentVertexBuffer.putRotatedRect2D(ID_POSITIONS,width,height,centerX,centerY,angle);
+		mCurrentVertexBuffer.putRect2D(ID_TEXTURES,texX1, texY1, texX2, texY2);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, angle);
-		drawQuad(mInterTransf1, texCoordinates);
+		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.putRotatedRect2D(ID_POSITIONS,width,height,centerX,centerY,angle);
+		mCurrentVertexBuffer.putArray(ID_TEXTURES,texCoordinates.mAppliedCoordinates);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
+	}
+	
+	
+	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle) {
+		drawRectCentered(centerX,centerY,width,height,angle,RECT_TEXQUAD);
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float texX1, float texY1, float texX2, float texY2) {
-		mInterTransf1.setCenteredRect(centerX, centerY, width, height, 0);
-		drawQuad(mInterTransf1, mTexIdentity);
+		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		putPositionRect(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
+		mCurrentVertexBuffer.putVec4(ID_TEXTURES, texX1,texY1,texX2,texY2);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 
 	/**
@@ -365,7 +380,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 	
 	public void putTextureRect(TextureCoordinatesQuad texCoords) {
-		mCurrentVertexBuffer.putRect(ID_TEXTURES,texCoords.x1,texCoords.y1,texCoords.x2,texCoords.y2);
+		mCurrentVertexBuffer.putRect2D(ID_TEXTURES,texCoords.x1,texCoords.y1,texCoords.x2,texCoords.y2);
 	}
 
 	public void putTransformedTextureRect(YangMatrix transform) {

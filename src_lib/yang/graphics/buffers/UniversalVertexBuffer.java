@@ -136,7 +136,7 @@ public class UniversalVertexBuffer extends IndexedVertexBuffer{
 	}
 
 	@Override
-	public void putRect(int bufId, float x1, float y1, float x2, float y2) {
+	public void putRect2D(int bufId, float x1, float y1, float x2, float y2) {
 		FloatBuffer buf = mFloatBuffers[bufId];
 		buf.put(x1);
 		buf.put(y1);
@@ -146,5 +146,22 @@ public class UniversalVertexBuffer extends IndexedVertexBuffer{
 		buf.put(y2);
 		buf.put(x2);
 		buf.put(y2);
+	}
+	
+	@Override
+	public void putRect3D(int bufId, float x1, float y1, float x2, float y2,float z) {
+		FloatBuffer buf = mFloatBuffers[bufId];
+		buf.put(x1);
+		buf.put(y1);
+		buf.put(z);
+		buf.put(x2);
+		buf.put(y1);
+		buf.put(z);
+		buf.put(x1);
+		buf.put(y2);
+		buf.put(z);
+		buf.put(x2);
+		buf.put(y2);
+		buf.put(z);
 	}
 }
