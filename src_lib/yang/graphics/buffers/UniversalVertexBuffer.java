@@ -94,6 +94,23 @@ public class UniversalVertexBuffer extends IndexedVertexBuffer{
 	}
 	
 	@Override
+	public void putVec12(int bufId, float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8,float v9,float v10,float v11,float v12) {
+		FloatBuffer buf = mFloatBuffers[bufId];
+		buf.put(v1);
+		buf.put(v2);
+		buf.put(v3);
+		buf.put(v4);
+		buf.put(v5);
+		buf.put(v6);
+		buf.put(v7);
+		buf.put(v8);
+		buf.put(v9);
+		buf.put(v10);
+		buf.put(v11);
+		buf.put(v12);
+	}
+	
+	@Override
 	public void putArray(int bufId,float[] array) {
 		mFloatBuffers[bufId].put(array);
 	}

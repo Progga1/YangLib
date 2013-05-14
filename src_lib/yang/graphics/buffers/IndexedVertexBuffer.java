@@ -173,10 +173,5 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			c++;
 		}
 	}
-
-	public void putDegeneratedQuad2D(int bufId) {
-		putVec4(bufId,0,0,1,0);
-		putVec4(bufId,0,-1,1,-1);
-	}
 	
 }

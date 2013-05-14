@@ -15,10 +15,10 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public LegacyAbstractFont mLegacyDefaultFont;
 	
 	public static final float[] RECT = {
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 1.0f,
-		1.0f, 1.0f,
+		0.0f, 0.0f, 0,
+		1.0f, 0.0f, 0,
+		0.0f, 1.0f, 0,
+		1.0f, 1.0f, 0,
 	};
 	
 	private BasicProgram mDefaultProgram;
@@ -40,7 +40,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	private int mOrthoHeight;
 
 	public Default2DGraphics(GraphicsTranslator graphics) {
-		super(graphics,2);
+		super(graphics,3);
 	}
 	
 	@Override
@@ -75,33 +75,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	
 	public void resetDebug() {
 		mCurrentDebugY = mDebugOffsetY;
-	}
-	
-	public void putPosition(float x,float y) {
-		mPositions.put(x);
-		mPositions.put(y);
-	}
-	
-	public void putPositionRect(float x1,float y1, float x2,float y2) {
-		mPositions.put(x1);
-		mPositions.put(y1);
-		mPositions.put(x2);
-		mPositions.put(y1);
-		mPositions.put(x1);
-		mPositions.put(y2);
-		mPositions.put(x2);
-		mPositions.put(y2);
-	}
-	
-	public void putPosition(float x,float y,YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,0, transform.mMatrix);
-	}
-	
-	public void putTransformedPositionRect(YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,0,1, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed2D(ID_POSITIONS,1,1, transform.mMatrix);
 	}
 
 	private float drawChar(float x, float lineHeight, int c) {

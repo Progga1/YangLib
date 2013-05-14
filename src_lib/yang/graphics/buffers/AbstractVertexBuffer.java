@@ -25,6 +25,7 @@ public abstract class AbstractVertexBuffer {
 	public abstract void putVec3(int bufId, float v1,float v2,float v3);
 	public abstract void putVec4(int bufId, float v1,float v2,float v3,float v4);
 	public abstract void putVec8(int bufId, float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8);
+	public abstract void putVec12(int bufId, float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8,float v9,float v10,float v11,float v12);
 	public abstract void putRect2D(int bufId, float x1, float y1, float x2, float y2);
 	public abstract void putRect3D(int bufId, float x1, float y1, float x2,float y2, float z);
 	public abstract void putArray(int bufId,float[] array,int offset,int elements);
@@ -81,15 +82,23 @@ public abstract class AbstractVertexBuffer {
 	}
 	
 	public void putRect2D(int bufId, Rect rect, float offsetX,float offsetY) {
-		putVec4(bufId,offsetX + rect.mLeft,offsetY + rect.mBottom,offsetX + rect.mRight,offsetY + rect.mBottom);
-		putVec4(bufId,offsetX + rect.mLeft,offsetY + rect.mTop,offsetX + rect.mRight,offsetY + rect.mTop);
+		putVec8(bufId,offsetX + rect.mLeft,offsetY + rect.mBottom,offsetX + rect.mRight,offsetY + rect.mBottom,offsetX + rect.mLeft,offsetY + rect.mTop,offsetX + rect.mRight,offsetY + rect.mTop);
 	}
 	
 	public void putRotatedSquare2D(int bufId,float scale, float offsetX,float offsetY,float angle) {
 		float dirX = (float)Math.cos(angle+PI/4)*scale*HALF_ANGLE_SCALE;
 		float dirY = (float)Math.sin(angle+PI/4)*scale*HALF_ANGLE_SCALE;
-		putVec4(bufId,offsetX-dirX,offsetY-dirY,offsetX+dirY,offsetY-dirX);
-		putVec4(bufId,offsetX-dirY,offsetY+dirX,offsetX+dirX,offsetY+dirY);
+		putVec8(bufId,offsetX-dirX,offsetY-dirY,offsetX+dirY,offsetY-dirX,offsetX-dirY,offsetY+dirX,offsetX+dirX,offsetY+dirY);
+	}
+	
+
+	public void putRotatedSquare3D(int bufId, float scale, float offsetX, float offsetY, float z, float angle) {
+		float dirX = (float)Math.cos(angle+PI/4)*scale*HALF_ANGLE_SCALE;
+		float dirY = (float)Math.sin(angle+PI/4)*scale*HALF_ANGLE_SCALE;
+		putVec12(bufId,offsetX-dirX,offsetY-dirY,z,
+				offsetX+dirY,offsetY-dirX,z,
+				offsetX-dirY,offsetY+dirX,z,
+				offsetX+dirX,offsetY+dirY,z);
 	}
 	
 	public void putRotatedRect2D(int bufId,float width,float height,float offsetX,float offsetY,float angle) {
@@ -103,6 +112,17 @@ public abstract class AbstractVertexBuffer {
 				offsetX-width*cosA-height*sinA,offsetY-width*sinA+height*cosA,
 				offsetX+width*cosA-height*sinA,offsetY+width*sinA+height*cosA
 				);
+	}
+	
+	public void putRotatedRect3D(int bufId, float width, float height, float offsetX, float offsetY, float z, float angle) {
+		float sinA = (float)Math.sin(angle);
+		float cosA = (float)Math.cos(angle);
+		width *= 0.5f;
+		height *= 0.5f;
+		putVec12(bufId,offsetX-width*cosA+height*sinA,offsetY-width*sinA-height*cosA,z,
+				offsetX+width*cosA+height*sinA,offsetY+width*sinA-height*cosA,z,
+				offsetX-width*cosA-height*sinA,offsetY-width*sinA+height*cosA,z,
+				offsetX+width*cosA-height*sinA,offsetY+width*sinA+height*cosA,z);
 	}
 	
 	public void putTransformed3D(int bufId,float x,float y,float z,float[] matrix) {
@@ -133,9 +153,9 @@ public abstract class AbstractVertexBuffer {
 	
 	public void putTransformedArray3D(int bufId,float[] array, int vertexCount, float[] matrix) {
 		for(int i=0;i<vertexCount;i++) {
-			float x = array[i*2];
-			float y = array[i*2+1];
-			float z = array[i*2+2];
+			float x = array[i*3];
+			float y = array[i*3+1];
+			float z = array[i*3+2];
 			putVec3(bufId,
 					matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12],
 					matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13],

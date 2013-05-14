@@ -33,7 +33,6 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public static final float[] CUBE_TOP = swapCoords(CUBE_FRONT,1,3,-2);
 	public static final float[] CUBE_BOTTOM = swapCoords(CUBE_FRONT,1,-3,2);
 	
-	public float mCurrentZ;
 	protected boolean mBillboardMode;
 	public YangMatrixCameraOps mCameraMatrix;
 	private YangMatrix mInterMatrix;
@@ -108,44 +107,6 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mTranslator.addProgram(mDefaultProgram);
 	}
 
-	@Override
-	public void putPosition(float x, float y) {
-		mPositions.put(x);
-		mPositions.put(y);
-		mPositions.put(mCurrentZ);
-	}
-	
-	public void putPosition(float x, float y,float z) {
-		mPositions.put(x);
-		mPositions.put(y);
-		mPositions.put(z);
-	}
-	
-	public void putPosition(float x,float y,float z,YangMatrix transform) {
-		transform.apply3D(x, y, z, mInterArray, 0);
-		if(mInterArray[3]!=1) {
-			float d = 1f/mInterArray[3];
-			mInterArray[0] *= d;
-			mInterArray[1] *= d;
-			mInterArray[2] *= d;
-		}
-		mPositions.put(mInterArray, 0, 3);
-	}
-	
-	public void putPosition(float x,float y,YangMatrix transform) {
-		putPosition(x,y,mCurrentZ,transform);
-	}
-
-	public void putTransformedPosition(float x, float y,float z,YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS, x, y, z, transform.mMatrix);
-	}
-	
-	public void putTransformedPositionRect(YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,0, transform.mMatrix);
-	}
 	
 	public void setOrthogonalProjection(float near,float far,float zoom) {
 //		mProjectionTransform.setOrthogonalProjection(
@@ -215,24 +176,12 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			mCameraProjectionMatrix.multiply(mProjectionTransform,mCameraMatrix);
 	}
 	
-	public void putTransformedPositionArray(float[] positions,YangMatrix transform) {
-		for(int i=0;i<positions.length/3;i++) {
-			int id = i*3;
-			
-			putPosition(
-					transform.get(0, 0)*positions[id]+transform.get(0, 1)*positions[id+1]+transform.get(0, 2)*positions[id+2]+transform.get(0, 3),
-					transform.get(1, 0)*positions[id]+transform.get(1, 1)*positions[id+1]+transform.get(1, 2)*positions[id+2]+transform.get(1, 3),
-					transform.get(2, 0)*positions[id]+transform.get(2, 1)*positions[id+1]+transform.get(2, 2)*positions[id+2]+transform.get(2, 3)
-					);
-		}
-	}
-	
 	public void putCubePart(float[] array,YangMatrix transform) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		if(transform==null)
-			putPositionArray(array);
+			mCurrentVertexBuffer.putArray(ID_POSITIONS,array);
 		else
-			putTransformedPositionArray(array,transform);
+			mCurrentVertexBuffer.putTransformedArray3D(ID_POSITIONS,array,4,transform.mMatrix);
 		putTextureArray(RECT_TEXTURECOORDS);
 		putColorRect(mCurColor);
 		putSuppDataRect(mCurSuppData);

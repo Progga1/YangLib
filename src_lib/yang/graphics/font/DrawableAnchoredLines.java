@@ -52,7 +52,7 @@ public class DrawableAnchoredLines extends DrawableString{
 	
 	public DrawableAnchoredLines setConstant() {
 		if(mConstantPositions==null)
-			mConstantPositions = new float[mCapacity*8];
+			mConstantPositions = new float[mCapacity*(mHasZComponent?3:2)*4];
 		createStringPositions(null,staticOffsets);
 		offsetsToPositions(staticOffsets,mConstantPositions);
 		applyAnchors(0,mVerticalAnchor,mConstantPositions);

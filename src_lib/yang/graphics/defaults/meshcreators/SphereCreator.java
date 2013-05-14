@@ -28,7 +28,7 @@ public class SphereCreator extends Grid3DCreator {
 				float y = sinBeta * r * mCurDimY;
 				float z = sinAlpha*cosBeta * r * mCurDimZ;
 				if(transform!=null)
-					mGraphics.putTransformedPosition(x,y,z,transform);
+					mGraphics.putPosition(x,y,z,transform);
 				else
 					mGraphics.putPosition(x,y,z);
 			}

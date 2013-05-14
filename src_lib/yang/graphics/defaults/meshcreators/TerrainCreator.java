@@ -23,7 +23,7 @@ public class TerrainCreator extends Grid3DCreator {
 				float x = left + (float)col/(mCurXCount-1)*mCurDimX;
 				float z = interpolate(row,col);
 				if(transform!=null)
-					mGraphics.putTransformedPosition(x,y,z,transform);
+					mGraphics.putPosition(x,y,z,transform);
 				else
 					mGraphics.putPosition(x,y,z);
 			}

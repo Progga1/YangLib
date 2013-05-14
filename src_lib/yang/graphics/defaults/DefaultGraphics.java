@@ -23,7 +23,7 @@ import yang.util.Util;
 
 public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> implements PrintInterface {
 	
-	public static final float[][] NEUTRAL_ELEMENTS = { { 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
+	public static final float[][] NEUTRAL_ELEMENTS = { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
 
 	public static final float[] RECT_TEXTURECOORDS = { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
 	public static final TextureCoordinatesQuad RECT_TEXQUAD = new TextureCoordinatesQuad().init(0, 0, 1, 1);
@@ -41,6 +41,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public static final float[] NULLVECTOR = { 0, 0, 0, 0 };
 	public static final float[] BLACK = { 0, 0, 0, 1 };
 	public static final float[] WHITE = { 1, 1, 1, 1 };
+
+	public static final float[] FLOAT_ZERO_12 = {0,0,0,0,0,0,0,0,0,0,0,0};
 	
 	public StripCreator mDefaultStripCreator;
 	
@@ -54,6 +56,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	//State
 	public float mCurrentDebugX,mCurrentDebugY;
 	public FloatColor mDebugColor = FloatColor.WHITE;
+	public float mCurrentZ;
 	
 	// Buffers
 	protected DrawableString mInterString = new DrawableString(2048).setGraphics(this);
@@ -66,7 +69,6 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public FloatBuffer mNormals;
 	
 	protected abstract void refreshResultTransform();
-	public abstract void putTransformedPositionRect(YangMatrix transform);
 
 	public DefaultGraphics(GraphicsTranslator translator, int positionBytes) {
 		super(translator);
@@ -256,7 +258,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putPositionRect(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f,mCurrentZ);
 		mCurrentVertexBuffer.putArray(ID_TEXTURES, RECT_TEXTURECOORDS);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
@@ -265,7 +267,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public void drawRectCentered(float centerX, float centerY, float widthAndHeight) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		float d = widthAndHeight*0.5f;
-		mCurrentVertexBuffer.putRect2D(ID_POSITIONS,centerX-d,centerY-d,centerX+d,centerY+d);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,centerX-d,centerY-d,centerX+d,centerY+d,mCurrentZ);
 		mCurrentVertexBuffer.putArray(ID_TEXTURES, RECT_TEXTURECOORDS);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
@@ -273,7 +275,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, float texX1, float texY1, float texX2, float texY2) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		mCurrentVertexBuffer.putRotatedRect2D(ID_POSITIONS,width,height,centerX,centerY,angle);
+		mCurrentVertexBuffer.putRotatedRect3D(ID_POSITIONS,width,height,centerX,centerY,mCurrentZ,angle);
 		mCurrentVertexBuffer.putRect2D(ID_TEXTURES,texX1, texY1, texX2, texY2);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
@@ -281,7 +283,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		mCurrentVertexBuffer.putRotatedRect2D(ID_POSITIONS,width,height,centerX,centerY,angle);
+		mCurrentVertexBuffer.putRotatedRect3D(ID_POSITIONS,width,height,centerX,centerY,mCurrentZ,angle);
 		mCurrentVertexBuffer.putArray(ID_TEXTURES,texCoordinates.mAppliedCoordinates);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
@@ -294,7 +296,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float texX1, float texY1, float texX2, float texY2) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putPositionRect(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f,mCurrentZ);
 		mCurrentVertexBuffer.putVec4(ID_TEXTURES, texX1,texY1,texX2,texY2);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
@@ -328,8 +330,35 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	// ---PUT-POSITIONS---
 
-	public abstract void putPosition(float x, float y);
-	public abstract void putPosition(float x, float y,YangMatrix transform);
+	public void putPosition(float x,float y,float z,YangMatrix transform) {
+		transform.apply3D(x, y, z, mInterArray, 0);
+		if(mInterArray[3]!=1) {
+			float d = 1f/mInterArray[3];
+			mInterArray[0] *= d;
+			mInterArray[1] *= d;
+			mInterArray[2] *= d;
+		}
+		mPositions.put(mInterArray, 0, 3);
+	}
+	
+	public void putTransformedPositionRect(YangMatrix transform) {
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,0, transform.mMatrix);
+	}
+	
+	public void putPosition(float x, float y) {
+		mCurrentVertexBuffer.putVec3(ID_POSITIONS, x, y, mCurrentZ);
+	}
+	
+	public void putPosition(float x, float y,YangMatrix transform) {
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS, x, y, mCurrentZ, transform.mMatrix);
+	}
+	
+	public void putPosition(float x, float y,float z) {
+		mCurrentVertexBuffer.putVec3(ID_POSITIONS, x, y, z);
+	}
 
 	public void putPositionArray(float[] positions) {
 		mPositions.put(positions);

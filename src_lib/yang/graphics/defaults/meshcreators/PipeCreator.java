@@ -28,7 +28,7 @@ public class PipeCreator extends Grid3DCreator {
 				float y = top - mCurDimY + (float)row/(mCurYCount-1)*mCurDimY;
 				float z = sinAlpha * r * mCurDimZ;
 				if(transform!=null)
-					mGraphics.putTransformedPosition(x,y,z,transform);
+					mGraphics.putPosition(x,y,z,transform);
 				else
 					mGraphics.putPosition(x,y,z);
 			}

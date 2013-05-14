@@ -61,6 +61,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	public void drawFrame() {
 		if(mFirstFrame) {
 			initGraphics();
+			draw();
 			mFirstFrame = false;
 		}else
 			draw();
