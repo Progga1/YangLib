@@ -125,11 +125,6 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		default: throw new RuntimeException(byteFormat+" not supported");
 		}
 	}
-	
-	@Override
-	protected void derivedInit() {
-		
-	}
 
 	@Override
 	public void reshape(GLAutoDrawable glAutoDrawable, int x, int y, int width, int height) {

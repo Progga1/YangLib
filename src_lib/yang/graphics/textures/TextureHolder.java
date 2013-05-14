@@ -1,7 +1,7 @@
 package yang.graphics.textures;
 
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.textures.enums.TextureFilter;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.Texture;
 
 public class TextureHolder {

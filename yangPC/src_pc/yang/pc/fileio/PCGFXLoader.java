@@ -8,8 +8,8 @@ import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.textures.TextureData;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.PathSpecs;
 

@@ -1,7 +1,7 @@
 package yang.graphics.defaults.programs;
 
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.programs.BasicProgram;
+import yang.graphics.translator.AbstractGFXLoader;
 
 public class TextureTileRepeatProgram extends BasicProgram{
 	

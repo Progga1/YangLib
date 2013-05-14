@@ -2,7 +2,6 @@ package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
 
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.DrawListener;
 import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
@@ -14,6 +13,7 @@ import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureSettings;
+import yang.graphics.translator.glconsts.GLBlendFuncs;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.math.objects.matrix.YangMatrix;
@@ -61,6 +61,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	//Persistent
 	public Texture mNullTexture;
+	private Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
 	
 	private NonConcurrentList<BasicProgram> mPrograms;
@@ -78,7 +79,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void enableAttributePointer(int handle);
 	public abstract void disableAttributePointer(int handle);
 	protected abstract void setViewPort(int width,int height);
-	protected abstract void derivedInit();
 	public abstract void setCullMode(boolean drawClockwise);
 	protected abstract void derivedSetScreenRenderTarget();
 	protected abstract TextureRenderTarget derivedCreateRenderTarget(Texture texture);
@@ -95,7 +95,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void disable(int glConstant);
 	public abstract void setScissorRectI(int x,int y,int width,int height);
 	
-	//TODO: glColorMask, glDepthMask, glStencilMask, glScissor, glEnable(GL_SCISSOR_TEST)
+	protected void postInit() { }
+	
+	//TODO: glColorMask, glDepthMask
 	
 	public static String errorCodeToString(int code) {
 		switch(code) {
@@ -149,31 +151,45 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurDrawListener = null;
 		appInstance = this;
 		mCurrentScreen = this;
+		mNoTexture = new Texture(this);
 	}
 	
 	public YangMatrix createTransformationMatrix() {
 		return new YangMatrix();
 	}
 	
-	public final void start() {
+	private void start() {
 		mThreadId = Thread.currentThread().getId();
 		assert preCheck("Start graphics translator");
 		final int DIM = 2;
 		final int BYTES = DIM*DIM*4;
 		ByteBuffer buf = ByteBuffer.allocateDirect(BYTES);
-
 		for(int i=0;i<BYTES;i++) {
 			buf.put((byte)255);
 		}
 		buf.rewind();
 		mNullTexture = createTexture(buf, DIM,DIM, new TextureSettings());
 		assert checkErrorInst("Create null texture");
+	}
+	
+	public final void init() {
+		start();
 		
 		switchCulling(false);
 		setCullMode(false);
 		
-		derivedInit();
+		enable(GLOps.BLEND);
+		setBlendFunction(GLBlendFuncs.ONE,GLBlendFuncs.ONE_MINUS_SRC_ALPHA);
+		
+		postInit();
 		assert checkErrorInst("Start graphics translator");
+	}
+	
+	public void restart() {
+		start();
+		for(BasicProgram program:mPrograms) {
+			program.restart();
+		}
 	}
 	
 	public void initTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings, boolean finish) {
@@ -225,14 +241,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public void unbindTexture(int level) {
-		mCurrentTextures[level] = null;
+		mCurrentTextures[level] = mNoTexture;
 	}
 	
 	public void unbindTextures() {
 		for(int i=0;i<MAX_TEXTURES;i++) {
 			if(mCurrentTextures[i]==null)
 				return;
-			mCurrentTextures[i] = null;
+			mCurrentTextures[i] = mNoTexture;
 			
 		}
 	}
@@ -311,12 +327,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		program.init(this);
 		mPrograms.add(program);
 		assert checkErrorInst("Add program");
-	}
-	
-	public void restartPrograms() {
-		for(BasicProgram program:mPrograms) {
-			program.restart();
-		}
 	}
 	
 	public void flush() {
@@ -428,6 +438,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurrentScreen = this;
 		setViewPort(mScreenWidth,mScreenHeight);
 		derivedSetScreenRenderTarget();
+		unbindTextures();
+		assert checkErrorInst("Set screen render target");
 	}
 	
 	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {

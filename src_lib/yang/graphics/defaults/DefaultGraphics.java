@@ -23,7 +23,7 @@ import yang.util.Util;
 
 public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> implements PrintInterface {
 	
-	public static final float[][] NEUTRAL_ELEMENTS = { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
+	public static final float[][] DEFAULT_NEUTRAL_ELEMENTS = { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
 
 	public static final float[] RECT_TEXTURECOORDS = { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
 	public static final TextureCoordinatesQuad RECT_TEXQUAD = new TextureCoordinatesQuad().init(0, 0, 1, 1);
@@ -91,7 +91,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices, int maxVertices) {
 		assert mTranslator.preCheck("create vertex buffer");
 		IndexedVertexBuffer vertexBuffer = mTranslator.createVertexBuffer(dynamicVertices, dynamicIndices, maxIndices, maxVertices);
-		vertexBuffer.init(new int[] { mPositionDimension, 2, 4, 4 }, NEUTRAL_ELEMENTS);
+		vertexBuffer.init(new int[] { mPositionDimension, 2, 4, 4 }, DEFAULT_NEUTRAL_ELEMENTS);
 		assert mTranslator.checkErrorInst("Create vertex buffer");
 		return vertexBuffer;
 	}
@@ -226,34 +226,34 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, float texX1, float texY1, float texX2, float texY2) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putPositionRect(worldX1, worldY1, worldX2, worldY2);
-		putTextureRect(texX1, texY1, texX2, texY2);
-		putColorRect(mCurColor);
-		putSuppDataRect(mCurSuppData);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
+		mCurrentVertexBuffer.putRect2D(ID_TEXTURES,texX1, texY1, texX2, texY2);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, TextureCoordinatesQuad texCoordinates) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putPositionRect(worldX1, worldY1, worldX2, worldY2);
-		putTextureArray(texCoordinates.mAppliedCoordinates);
-		putColorRect(mCurColor);
-		putSuppDataRect(mCurSuppData);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
+		mCurrentVertexBuffer.putArray(ID_TEXTURES, texCoordinates.mAppliedCoordinates);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, YangMatrix textureTransform) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putPositionRect(worldX1, worldY1, worldX2, worldY2);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
 		putTransformedTextureRect(textureTransform);
-		putColorRect(mCurColor);
-		putSuppDataRect(mCurSuppData);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
-		putPositionRect(worldX1, worldY1, worldX2, worldY2);
-		putTextureArray(this.mTexIdentity.mAppliedCoordinates);
-		putColorRect(mCurColor);
-		putSuppDataRect(mCurSuppData);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
+		mCurrentVertexBuffer.putArray(ID_TEXTURES, mTexIdentity.mAppliedCoordinates);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 	
 	public void drawRectCentered(float centerX, float centerY, float width, float height) {
@@ -369,17 +369,11 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void putPositionRect(float x1, float y1, float x2, float y2, float bias) {
-		putPosition(x1 - bias, y1 - bias);
-		putPosition(x2 + bias, y1 - bias);
-		putPosition(x1 - bias, y2 + bias);
-		putPosition(x2 + bias, y2 + bias);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,x1+bias,y1+bias,x2-bias,y2-bias,mCurrentZ);
 	}
 
 	public void putPositionRect(float x1, float y1, float x2, float y2) {
-		putPosition(x1, y1);
-		putPosition(x2, y1);
-		putPosition(x1, y2);
-		putPosition(x2, y2);
+		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,x1,y1,x2,y2,mCurrentZ);
 	}
 
 	// ---PUT-TEXTURES---

@@ -85,6 +85,15 @@ public abstract class AbstractVertexBuffer {
 		putVec8(bufId,offsetX + rect.mLeft,offsetY + rect.mBottom,offsetX + rect.mRight,offsetY + rect.mBottom,offsetX + rect.mLeft,offsetY + rect.mTop,offsetX + rect.mRight,offsetY + rect.mTop);
 	}
 	
+	public void putRect3D(int bufId, Rect rect, float offsetX,float offsetY,float z) {
+		putVec12(bufId,
+				offsetX + rect.mLeft,offsetY + rect.mBottom,z,
+				offsetX + rect.mRight,offsetY + rect.mBottom,z,
+				offsetX + rect.mLeft,offsetY + rect.mTop,z,
+				offsetX + rect.mRight,offsetY + rect.mTop,z
+				);
+	}
+	
 	public void putRotatedSquare2D(int bufId,float scale, float offsetX,float offsetY,float angle) {
 		float dirX = (float)Math.cos(angle+PI/4)*scale*HALF_ANGLE_SCALE;
 		float dirY = (float)Math.sin(angle+PI/4)*scale*HALF_ANGLE_SCALE;

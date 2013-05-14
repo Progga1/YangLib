@@ -1,6 +1,6 @@
 package yang.graphics.programs;
 
-import yang.graphics.AbstractGFXLoader;
+import yang.graphics.translator.AbstractGFXLoader;
 
 public class ShaderFileProgram extends BasicProgram {
 

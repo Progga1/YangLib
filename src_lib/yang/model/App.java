@@ -1,6 +1,6 @@
 package yang.model;
 
-import yang.graphics.AbstractGFXLoader;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.sound.AbstractSoundLoader;
 import yang.sound.SoundManager;
 import yang.systemdependent.AbstractDataStorage;

@@ -1,15 +1,14 @@
-package yang.graphics;
+package yang.graphics.translator;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import yang.graphics.font.BitmapFont;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
-import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.translator.Texture;
 import yang.systemdependent.AbstractResourceManager;
 
 
@@ -117,6 +116,13 @@ public abstract class AbstractGFXLoader {
 	public BitmapFont loadFont(Texture texture,String fontDataFilename) {
 		BitmapFont result = new BitmapFont();
 		return result.init(texture,fontDataFilename,mResources);
+	}
+
+	public void reloadTextures() {
+		for(Entry<String,Texture> entry:mTextures.entrySet()) {
+			TextureData data = loadImageData(entry.getKey());
+			entry.getValue().update(data.mData);
+		}
 	}
 	
 }

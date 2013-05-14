@@ -15,7 +15,7 @@ import yang.math.objects.matrix.YangMatrixCameraOps;
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
-	public static final float[][] NEUTRAL_ELEMENTS = {{0,0},{0,0},{1,1,1,1},{0,0,0,0},{0,1,0}};
+	public static final float[][] NEUTRAL_ELEMENTS = {{0,0,0},{0,0},{1,1,1,1},{0,0,0,0},{0,1,0}};
 	private static final int NORMAL_ELEM_SIZE = 3;
 	private static final int POSITION_ELEM_SIZE = 3;
 	public static final float[] ZERO_FLOAT_3 = {0,0,0};

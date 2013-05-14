@@ -9,6 +9,7 @@ public abstract class SurfaceInterface {
 	public GraphicsTranslator mGraphics;
 	protected boolean mResuming;
 
+	protected boolean mAutoReloadOnResume = true;
 	protected boolean mInitialized;
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
@@ -24,7 +25,6 @@ public abstract class SurfaceInterface {
 	protected abstract void draw();
 	
 	protected void postInitGraphics() { }
-	public void onResume() { }
 	
 	public SurfaceInterface() {
 		mResuming = false;
@@ -46,11 +46,13 @@ public abstract class SurfaceInterface {
 	public void surfaceCreated() {
 		if(mInitialized && !mResuming)
 			return;
-		mGraphics.start();
-		if(mResuming) {
-			mGraphics.restartPrograms();
+		if(mResuming && false) {
+			mGraphics.restart();
+			if(mAutoReloadOnResume)
+				mGraphics.mGFXLoader.reloadTextures();
 			resumingFinished();
 		}else{
+			mGraphics.init();
 			initGraphics();
 			postInitGraphics();
 			if(mInitCallback!=null)
@@ -79,10 +81,6 @@ public abstract class SurfaceInterface {
 		surfaceCreated();
 	}
 	
-	public void onPause() {
-		mResuming = true;
-	}
-	
 	public boolean isInitialized() {
 		return mInitialized;
 	}
@@ -101,6 +99,8 @@ public abstract class SurfaceInterface {
 	}
 	
 	protected boolean update() {
+		if(!mInitialized)
+			return true;
 		if(mProgramTime==0)
 			mProgramTime = System.nanoTime()-1;
 		boolean result = mProgramTime<System.nanoTime();
@@ -109,6 +109,14 @@ public abstract class SurfaceInterface {
 			step(mDeltaTimeSeconds);
 		}
 		return result;
+	}
+	
+	public void onPause() {
+		mResuming = true;
+	}
+	
+	public void onResume() {
+		
 	}
 	
 	public void exit() {

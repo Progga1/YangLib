@@ -3,9 +3,9 @@ package yang.graphics.font;
 import java.io.File;
 import java.util.Properties;
 
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.enums.TextureFilter;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.Texture;
 import yang.model.DebugYang;
 import yang.systemdependent.AbstractResourceManager;

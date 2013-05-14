@@ -1,7 +1,7 @@
 package yang.graphics.defaults.programs;
 
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.programs.Basic3DProgram;
+import yang.graphics.translator.AbstractGFXLoader;
 
 public class DepthProgram extends Basic3DProgram {
 

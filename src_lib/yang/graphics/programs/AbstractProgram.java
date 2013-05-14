@@ -1,6 +1,6 @@
 package yang.graphics.programs;
 
-import yang.graphics.AbstractGFXLoader;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 
 public abstract class AbstractProgram {

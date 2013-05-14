@@ -5,9 +5,9 @@ import yang.events.InputEventQueue;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.InputEventListener;
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.SurfaceInterface;
 import yang.graphics.font.DrawableString;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 

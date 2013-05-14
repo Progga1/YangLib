@@ -3,8 +3,8 @@ package yang.gdx.fileio;
 import java.nio.ByteBuffer;
 
 import yang.gdx.graphics.GdxGraphicsTranslator;
-import yang.graphics.AbstractGFXLoader;
 import yang.graphics.textures.TextureData;
+import yang.graphics.translator.AbstractGFXLoader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

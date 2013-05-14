@@ -38,7 +38,7 @@ public class GdxGraphicsTranslator extends GraphicsTranslator {
 	}
 
 	@Override
-	public void derivedInit() {
+	public void postInit() {
 		Gdx.gl20.glEnable(GL20.GL_BLEND);
 		Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 //		Gdx.gl20.glBlendFunc(GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE);

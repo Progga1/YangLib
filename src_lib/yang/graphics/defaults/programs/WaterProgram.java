@@ -1,6 +1,6 @@
 package yang.graphics.defaults.programs;
 
-import yang.graphics.AbstractGFXLoader;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.math.Geometry;
 
 public class WaterProgram extends ShadowProgram {
