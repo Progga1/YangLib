@@ -18,7 +18,10 @@ public abstract class TransformAnimatedString extends AnimatedString {
 	protected void putLetter(float[] target, int c, int letter, int letterNo, float x, float y) {
 		onPutLetter(letterNo);
 		
-		mCurTransform.applyToArray(mFont.mPositions[letter], 4, mHasZComponent, 0, 0, x, y, target, c);
+		if(mHasZComponent)
+			mCurTransform.applyToArray(mFont.mPositions3D[letter], 4, true, 0, 0, x, y, target, c);
+		else
+			mCurTransform.applyToArray(mFont.mPositions2D[letter], 4, false, 0, 0, x, y, target, c);
 	}
 	
 }

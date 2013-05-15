@@ -49,7 +49,7 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		ByteBuffer buf = ByteBuffer.allocateDirect(width*height*channels);
 		bmp.copyPixelsToBuffer(buf);
 		buf.rewind();
-		
+		//TODO bmp recycle?
 		return new TextureData(buf,width,height,channels);
 	}
 

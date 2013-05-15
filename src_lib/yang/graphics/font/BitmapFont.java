@@ -18,7 +18,8 @@ public class BitmapFont {
 	public static TextureFilter TEXTURE_FILTER = TextureFilter.LINEAR_MIP_LINEAR;
 	
 	public TextureCoordinatesQuad[] mCoordinates;
-	public float[][] mPositions;
+	public float[][] mPositions2D;
+	public float[][] mPositions3D;
 	public float[] mWidths,mHeights;
 	public float[][] mKerningValues;
 	public float mCharNormalizeFactorX;
@@ -69,7 +70,8 @@ public class BitmapFont {
 		mKerningValues = new float[len][mKernBoxes*2];
 		mKerningMinX = new float[len];
 		mKerningMaxX = new float[len];
-		mPositions = new float[len][8];
+		mPositions2D = new float[len][8];
+		mPositions3D = new float[len][12];
 		mWidths = new float[len];
 		mHeights = new float[len];
 		
@@ -113,7 +115,7 @@ public class BitmapFont {
 			float h = (newCoordinates.y2-newCoordinates.y1)*mCharNormalizeFactorY;
 			mWidths[i] = w;
 			mHeights[i] = h;
-			float[] positions = mPositions[i];
+			float[] positions = mPositions2D[i];
 			positions[0] = -w*0.5f;
 			positions[1] = -h*0.5f;
 			positions[2] = w*0.5f;
@@ -122,6 +124,19 @@ public class BitmapFont {
 			positions[5] = h*0.5f;
 			positions[6] = w*0.5f;
 			positions[7] = h*0.5f;
+			positions = mPositions3D[i];
+			positions[0] = -w*0.5f;
+			positions[1] = -h*0.5f;
+			positions[2] = 0;
+			positions[3] = w*0.5f;
+			positions[4] = -h*0.5f;
+			positions[5] = 0;
+			positions[6] = -w*0.5f;
+			positions[7] = h*0.5f;
+			positions[8] = 0;
+			positions[9] = w*0.5f;
+			positions[10] = h*0.5f;
+			positions[11] = 0;
 		}
 
 		return this;
