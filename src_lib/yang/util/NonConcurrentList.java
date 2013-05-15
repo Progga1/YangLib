@@ -20,7 +20,7 @@ public class NonConcurrentList<E> implements List<E> {
 		}
 	}
 
-	private class NonConcurrentIterator<T> implements ListIterator<T> {
+	public class NonConcurrentIterator<T> implements ListIterator<T> {
 
 		Node dummy = new Node(null,null,null);
 		Node current = dummy;
@@ -31,6 +31,8 @@ public class NonConcurrentList<E> implements List<E> {
 
 		@SuppressWarnings("unchecked")
 		public T next() {
+			if(current.next==null)
+				return null;
 			current = current.next;
 			return (T) current.elem;
 		}
@@ -69,6 +71,8 @@ public class NonConcurrentList<E> implements List<E> {
 
 		@SuppressWarnings("unchecked")
 		public T previous() {
+			if(current.prev==null)
+				return null;
 			current = current.prev;
 			return (T) current.elem;
 		}

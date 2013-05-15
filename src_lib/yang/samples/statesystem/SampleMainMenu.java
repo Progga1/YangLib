@@ -48,7 +48,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	public void addMenuItem(String caption, YangProgramState<?> state) {
 		DefaultRectButton newButton = new DefaultRectButton();
 		newButton.createCaption(caption);
-		newButton.setPosAndDimCentered(mGUI.getGUICenterX(), (0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
+		newButton.setPosAndExtendsCentered(mGUI.getGUICenterX(), (0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		//In normalized coordinates: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		mGUI.addComponent(newButton);
 		mButtons.add(newButton);
@@ -57,7 +57,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	
 	@Override
 	public void step(float deltaTime) {
-		
+		mGUI.step(deltaTime);
 	}
 
 	@Override

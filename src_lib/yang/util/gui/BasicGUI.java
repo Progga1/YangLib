@@ -6,6 +6,7 @@ import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.GUIContainer2D;
+import yang.util.gui.components.InteractiveGUIComponent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
@@ -29,6 +30,8 @@ public class BasicGUI {
 	public float mProjWidthFactor,mProjHeightFactor;
 	public float mProjShiftYFactor;
 	public float mProjXFactor,mProjYFactor;
+	public float mCurrentTime;
+	public InteractiveGUIComponent mPressedComponent;
 	
 	protected static GUIPointerEvent[] createEventPool(int capacity) {
 		GUIPointerEvent[] result = new GUIPointerEvent[capacity];
@@ -50,6 +53,10 @@ public class BasicGUI {
 	
 	public BasicGUI(Default2DGraphics graphics2D) {
 		this(graphics2D,GUICoordinatesMode.SCREEN,true);
+	}
+	
+	public GUICoordinatesMode getCoordinatesMode() {
+		return mCoordinatesMode;
 	}
 	
 	private void setCoordinatesMode(GUICoordinatesMode mode) {
@@ -104,9 +111,15 @@ public class BasicGUI {
 		mMainContainer.draw();
 	}
 	
+	public void step(float deltaTime) {
+		mCurrentTime += deltaTime;
+	}
+	
 	public GUIComponent handleEvent(YangEvent event) {
 		boolean handled = false;
 		if(event instanceof YangPointerEvent) {
+			YangPointerEvent pointerEvent = (YangPointerEvent)event;
+			
 			int index = mComponentPoolPos++;
 			if(mComponentPoolPos>=mGUIEventPool.length) {
 				mComponentPoolPos = 0;
@@ -116,7 +129,28 @@ public class BasicGUI {
 			guiEvent.createFromPointerEvent((YangPointerEvent)event, mMainContainer);
 			guiEvent.mX = (guiEvent.mX - mProjShiftX)*mProjXFactor;
 			guiEvent.mY = (guiEvent.mY - mProjShiftY)*mProjYFactor;
-			return mMainContainer.rawPointerEvent(guiEvent);
+			
+			if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDRAG && mPressedComponent!=null) {
+				GUIPointerEvent dragEvent = BasicGUI.mGUIEventPool[BasicGUI.mComponentPoolPos++];
+				if(BasicGUI.mComponentPoolPos>BasicGUI.mGUIEventPool.length)
+					BasicGUI.mComponentPoolPos = 0;
+				dragEvent.createFromPointerEvent(pointerEvent,mPressedComponent);
+				mPressedComponent.guiFocusedDrag(dragEvent);
+				return mPressedComponent;
+			}else{
+			
+				GUIComponent result =  mMainContainer.rawPointerEvent(guiEvent);
+				
+				if(mPressedComponent!=null && pointerEvent.mAction==YangPointerEvent.ACTION_POINTERUP) {
+					
+					mPressedComponent.mPressedTime = -mCurrentTime;
+					mPressedComponent = null;
+				}
+						
+				return result;
+			}
+			
+
 		}
 		return null;
 	}
@@ -161,6 +195,10 @@ public class BasicGUI {
 		return mMainContainer.addComponent(component);
 	}
 	
+	public <ComponentType extends GUIComponent> ComponentType addComponent(Class<ComponentType> component) {
+		return mMainContainer.addComponent(component);
+	}
+	
 	public void setGlobalShift(float shiftX,float shiftY) {
 		mMainContainer.mPosX = shiftX;
 		mMainContainer.mPosY = shiftY;
@@ -172,6 +210,11 @@ public class BasicGUI {
 	
 	public float normToGUIY(float y) {
 		return (y - mProjShiftY)*mProjYFactor;
+	}
+
+	public void setPressedComponent(InteractiveGUIComponent component) {
+		mPressedComponent = component;
+		mPressedComponent.mPressedTime = mCurrentTime;
 	}
 	
 }

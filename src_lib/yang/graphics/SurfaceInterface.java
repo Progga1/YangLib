@@ -46,7 +46,7 @@ public abstract class SurfaceInterface {
 	public void surfaceCreated() {
 		if(mInitialized && !mResuming)
 			return;
-		if(mResuming && false) {
+		if(mResuming) {
 			mGraphics.restart();
 			if(mAutoReloadOnResume)
 				mGraphics.mGFXLoader.reloadTextures();

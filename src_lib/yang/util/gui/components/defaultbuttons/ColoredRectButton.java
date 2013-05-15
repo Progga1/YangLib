@@ -6,17 +6,14 @@ import yang.util.Util;
 public class ColoredRectButton extends BasicRectButton {
 
 	public static FloatColor DEFAULT_COLOR = FloatColor.WHITE;
-	public float[] mRGBA = new float[4];
+	public FloatColor mColor = new FloatColor();
 	
 	public ColoredRectButton() {
 		setColor(DEFAULT_COLOR);
 	}
 	
 	public ColoredRectButton setColor(float r,float g,float b, float a) {
-		mRGBA[0] = r;
-		mRGBA[1] = g;
-		mRGBA[2] = b;
-		mRGBA[3] = a;
+		mColor.set(r,g,b,a);
 		return this;
 	}
 	
@@ -25,18 +22,18 @@ public class ColoredRectButton extends BasicRectButton {
 	}
 	
 	public ColoredRectButton setColor(FloatColor color) {
-		color.copyToArray(mRGBA);
+		mColor.set(color);
 		return this;
 	}
 	
 	@Override
 	public String propertiesToString() {
-		return super.propertiesToString()+"; color="+Util.arrayToString(mRGBA,",",0);
+		return super.propertiesToString()+"; color="+Util.arrayToString(mColor.mValues,",",0);
 	}
 	
 	@Override
 	public void draw() {
-		mGraphics2D.setColor(mRGBA);
+		mGraphics2D.setColor(mColor);
 		super.draw();
 	}
 	

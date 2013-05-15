@@ -46,7 +46,7 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 		return this;
 	}
 	
-	public RectangularInteractiveGUIComponent setPosAndDimCentered(float centerX, float centerY, float width, float height) {
+	public RectangularInteractiveGUIComponent setPosAndExtendsCentered(float centerX, float centerY, float width, float height) {
 		return setBounds(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
 	}
 	

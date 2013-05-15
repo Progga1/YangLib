@@ -7,6 +7,7 @@ import yang.util.gui.interfaces.GUIPointerListener;
 
 public abstract class InteractiveGUIComponent extends GUIComponent implements GUIPointerListener {
 
+	public float mPressedTime;
 	public GUIActionListener mActionListener;
 	public GUIPointerListener mPointerListener;
 	public boolean mEnabled = true;

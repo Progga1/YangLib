@@ -78,6 +78,10 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCr
 		}
 	}
 	
+	public void putGridPositions(float[] positions) {
+		mGraphics.getCurrentVertexBuffer().putArray(DefaultGraphics.ID_POSITIONS,positions);
+	}
+	
 	public void putGridColors(float[][] colors) {
 		putVec4Map(colors,DefaultGraphics.ID_COLORS);
 	}
