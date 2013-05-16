@@ -6,7 +6,6 @@ import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.FloatColor;
 import yang.graphics.font.DrawableString;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.ninepatch.NinePatchGrid;
 import yang.graphics.util.ninepatch.NinePatchTexCoords;
@@ -14,12 +13,13 @@ import yang.samples.statesystem.SampleState;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.components.GUIComponent;
-import yang.util.gui.components.defaultbuttons.DefaultCaptionButton;
 import yang.util.gui.components.defaultbuttons.DefaultIconButton;
 import yang.util.gui.components.defaultbuttons.DefaultNinePatchButton;
 import yang.util.gui.components.defaultbuttons.DefaultRectButton;
-import yang.util.gui.components.defaultbuttons.DefaultTextureButton;
-import yang.util.gui.components.defaults.ColoredGUIPanel;
+import yang.util.gui.components.defaultdrawers.GUIIconDrawer;
+import yang.util.gui.components.defaultdrawers.GUINinePatchDrawer;
+import yang.util.gui.components.defaultdrawers.GUIRectDrawer;
+import yang.util.gui.components.defaults.GUIColoredPanel;
 import yang.util.gui.components.defaults.GUILabel;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
@@ -27,10 +27,9 @@ import yang.util.gui.interfaces.GUIPointerListener;
 public class GUISampleState extends SampleState implements GUIActionListener,GUIPointerListener {
 
 	private BasicGUI mGUI;
-	private ColoredGUIPanel mPanel;
+	private GUIColoredPanel mPanel;
 	private DefaultRectButton mToggleButton;
-	private ColoredGUIPanel mInnerPanel;
-	private DefaultTextureButton mTexButton;
+	private GUIColoredPanel mInnerPanel;
 	private DefaultNinePatchButton mNinePatchButton1;
 	private DefaultNinePatchButton mNinePatchButton2;
 	private DefaultIconButton mIconButton;
@@ -38,30 +37,30 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 	@Override
 	protected void initGraphics() {
 		mGraphics2D.activate();
-		mGUI = new BasicGUI(mGraphics2D);
+		mGUI = new BasicGUI(mGraphics2D,4);
 		mGUI.setDefaultActionListener(this);
 		mGUI.setDefaultPointerListener(this);
-		mPanel = mGUI.addComponent(new ColoredGUIPanel());
-		mPanel.setColor(FloatColor.WHITE);
+		mPanel = mGUI.addComponent(GUIColoredPanel.class);
+		mPanel.getPass(GUIRectDrawer.class).mColor.set(FloatColor.WHITE);
 		mPanel.setPosAndExtends(0.1f, 0.3f, 0.9f, 1.2f);
 		
 		DrawableString caption = new DrawableString("Label").setAnchors(DrawableString.ANCHOR_LEFT,DrawableString.ANCHOR_TOP);
-		mPanel.addComponent(new GUILabel(caption).setPosition(0.1f, 0.1f));
+		mPanel.addComponent(new GUILabel().setPosition(0.1f, 0.1f));
 		
 		mToggleButton = mPanel.addComponent(new DefaultRectButton());
-		mToggleButton.createCaption("Button1").setColor(1, 0.5f, 0).setPosAndExtends(0.1f, 0.3f, mPanel.mWidth-0.2f, 0.16f);
+		mToggleButton.createCaption("Button1").setPosAndExtends(0.1f, 0.3f, mPanel.mWidth-0.2f, 0.16f);
+		mToggleButton.getPass(GUIRectDrawer.class).mColor.set(1, 0.5f, 0);
+		mToggleButton.getPass(GUIRectDrawer.class).setBorderSize(0.014f).mBorderColor.set(0.8f, 0.3f, 0);
 		
-		mInnerPanel = mPanel.addComponent(new ColoredGUIPanel());
-		mInnerPanel.setColor(0.8f,0.8f,0.8f).setPosAndExtends(0.1f, 0.5f, mPanel.mWidth-0.2f, 0.5f);
+		GUIRectDrawer.DEFAULT_BORDERSIZE = 0.008f;
+		mInnerPanel = mPanel.addComponent(new GUIColoredPanel());
+		mInnerPanel.getPass(GUIRectDrawer.class).mColor.set(0.8f);
+		mInnerPanel.setPosAndExtends(0.1f, 0.5f, mPanel.mWidth-0.2f, 0.5f);
+		GUIRectDrawer.DEFAULT_BORDERSIZE = 0.01f;
 		mInnerPanel.addComponent(new DefaultRectButton().createCaption("Inner1").setPosAndExtendsCentered(mInnerPanel.mWidth/2, 0.1f, mInnerPanel.mWidth-0.12f, 0.14f));
 		mInnerPanel.addComponent(new DefaultRectButton().createCaption("Inner2").setPosAndExtendsCentered(mInnerPanel.mWidth/2, 0.25f, mInnerPanel.mWidth-0.12f, 0.14f));
 		mInnerPanel.addComponent(new DefaultRectButton().createCaption("Inner3").setPosAndExtendsCentered(mInnerPanel.mWidth/2, 0.4f, mInnerPanel.mWidth-0.12f, 0.14f));
-
-		Texture buttonTex = mGFXLoader.getImage("cube", TextureFilter.LINEAR_MIP_LINEAR);
-		mTexButton = mGUI.addComponent(DefaultTextureButton.class);
-		mTexButton.setTexture(buttonTex).setPosAndExtendsCentered(2, 0.8f, 0.5f, 0.2f);
-		mTexButton.mTexCoords.init(0,0,1,1);
-		mTexButton.createCaption("Texture");
+		GUIRectDrawer.DEFAULT_BORDERSIZE = 0;
 		
 		//Nine patch buttons
 		Texture ninePatchTex = mGFXLoader.getImage("button");
@@ -69,17 +68,21 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		NinePatchGrid ninePatch = new NinePatchGrid(mGraphics2D).setBorderSize(0.01f).setTextureBorder(ninePatchTexCoords);
 		NinePatchGrid ninePatchPressed = ninePatch.cloneWithTextureOffset(0.5f, 0);
 		
+		mGUI.setPassTexture(1, ninePatchTex);
+		mGUI.setPassTexture(2, ninePatchTex);
+		mGUI.setPassTexture(3, null);
+		
 		mNinePatchButton1 = mGUI.addComponent(DefaultNinePatchButton.class);
-		mNinePatchButton1.setTexture(ninePatchTex).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
+		mNinePatchButton1.getPass(GUINinePatchDrawer.class).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
 		mNinePatchButton1.createCaption("Nine patch button").setPosAndExtendsCentered(2, 1.2f, 0.9f, 0.2f);
 		
 		mNinePatchButton2 = mGUI.addComponent(DefaultNinePatchButton.class);
-		mNinePatchButton2.setTexture(ninePatchTex).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
+		mNinePatchButton2.getPass(GUINinePatchDrawer.class).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
 		mNinePatchButton2.createCaption("Wider nine patch button").setPosAndExtendsCentered(2, 1.5f, 1.2f, 0.2f);
 		
 		mIconButton = mGUI.addComponent(DefaultIconButton.class);
-		mIconButton.setTexture(ninePatchTex).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
-		mIconButton.setIcon(new TextureCoordinatesQuad().initBiased(0.5f,0.5f,1,1,0.02f), 0.16f);
+		mIconButton.getPass(GUINinePatchDrawer.class).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
+		mIconButton.getPass(GUIIconDrawer.class).setIcon(new TextureCoordinatesQuad().initBiased(0.5f,0.5f,1,1,0.02f), 0.16f);
 		mIconButton.createCaption("Button with icon").setPosAndExtendsCentered(2, 1.8f, 1.0f, 0.2f);
 	}
 	
@@ -106,8 +109,8 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		if(sender==mToggleButton) {
 			mInnerPanel.mVisible = !mInnerPanel.mVisible;
 		}else{
-			if(sender instanceof DefaultCaptionButton)
-				System.out.println("Clicked "+((DefaultCaptionButton)sender).mCaption.createRawString());
+			if(sender instanceof DefaultRectButton)
+				System.out.println("Clicked "+((DefaultRectButton)sender).getCaption().createRawString());
 		}
 	}
 	

@@ -8,9 +8,9 @@ public class GUIComponent {
 	public float mPosX;
 	public float mPosY;
 	public float mProjLeft,mProjBottom;
-	protected BasicGUI mGUI;
+	public BasicGUI mGUI;
 	
-	public void draw() {
+	public void draw(int pass) {
 		
 	}
 	

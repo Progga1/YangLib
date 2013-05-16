@@ -5,14 +5,16 @@ import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
 
-public class GUIContainer extends RectangularInteractiveGUIComponent {
+public class GUIContainer extends GUIInteractiveRectComponent {
 
 	protected NonConcurrentList<GUIComponent> mAllComponents;
-	protected NonConcurrentList<InteractiveGUIComponent> mInteractiveComponents;
+	protected NonConcurrentList<GUIInteractiveComponent> mInteractiveComponents;
 	
 	public GUIContainer() {
-		super(1024,1024);
-		mInteractiveComponents = new NonConcurrentList<InteractiveGUIComponent>();
+		super();
+		mWidth = 1024;
+		mHeight = 1024;
+		mInteractiveComponents = new NonConcurrentList<GUIInteractiveComponent>();
 		mAllComponents = new NonConcurrentList<GUIComponent>();
 	}
 	
@@ -23,7 +25,7 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 //				ListIterator<InteractiveGUIComponent> iter = mInteractiveComponents.listIterator(mInteractiveComponents.size()-1);
 //				InteractiveGUIComponent component;
 //				while((component=iter.previous())!=null) {
-			for(InteractiveGUIComponent component:mInteractiveComponents) {
+			for(GUIInteractiveComponent component:mInteractiveComponents) {
 				if(component.mVisible && component.mEnabled && component.inArea(x, y)) {
 					int poolPos = BasicGUI.mComponentPoolPos++;
 					if(BasicGUI.mComponentPoolPos>=BasicGUI.mGUIEventPool.length) {
@@ -33,21 +35,23 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 					GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];
 					guiEvent.createFromPointerEvent(pointerEvent, component);
 					GUIComponent result;
-					if(mGUI.mPressedComponent==null)
+					if(mGUI.mPressedComponent==null || pointerEvent.mAction!=YangPointerEvent.ACTION_POINTERDRAG)
 						result = component.rawPointerEvent(guiEvent);
 					else
 						result = null;
-
-					if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDOWN) {
-						if(component.isPressable()) {
-							mGUI.setPressedComponent(component);
-						}
-					}
 					
 					if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERUP) {
 						if(mGUI.mPressedComponent==component)
 							component.guiClick(guiEvent);
 					}
+					
+					if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDOWN) {
+						if(component.isPressable()) {
+							mGUI.setPressedComponent(component);
+							return component;
+						}
+					}
+					
 					return result;
 				}
 			}
@@ -67,16 +71,17 @@ public class GUIContainer extends RectangularInteractiveGUIComponent {
 	}
 	
 	@Override
-	public void draw() {
+	public void draw(int layer) {
+		super.draw(layer);
 		for(GUIComponent component:mAllComponents) {
 			if(component.mVisible)
-				component.draw();
+				component.draw(layer);
 		}
 	}
 	
 	public <ComponentType extends GUIComponent> ComponentType addComponent(ComponentType component) {
-		if(component instanceof InteractiveGUIComponent) {
-			InteractiveGUIComponent interComponent = (InteractiveGUIComponent)component;
+		if(component instanceof GUIInteractiveComponent) {
+			GUIInteractiveComponent interComponent = (GUIInteractiveComponent)component;
 			mInteractiveComponents.add(interComponent);
 			if(mActionListener!=null)
 				interComponent.setActionListener(mActionListener);

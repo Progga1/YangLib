@@ -1,27 +1,29 @@
 package yang.util.gui.components.defaultbuttons;
 
-import yang.graphics.FloatColor;
 import yang.graphics.font.DrawableString;
+import yang.util.gui.components.GUIButton;
+import yang.util.gui.components.defaultdrawers.GUICaptionDrawer;
+import yang.util.gui.components.defaultdrawers.GUIRectDrawer;
 
-public class DefaultRectButton extends DefaultCaptionButton {
+public class DefaultRectButton extends GUIButton {
 
-
-	public float mBorder = 0.01f;
-	public FloatColor mBorderColor;
-	
 	public DefaultRectButton() {
 		super();
-		mBorderColor = FloatColor.GRAY.clone();
+		super.setPasses(new GUIRectDrawer(),null,null,new GUICaptionDrawer());
+	}
+
+	public DefaultRectButton setCaption(DrawableString caption) {
+		getPass(GUICaptionDrawer.class).setCaption(caption);
+		return this;
 	}
 	
-	@Override
-	public void draw() {
-		mGraphics2D.bindTexture(null);
-		mGraphics2D.setColor(mBorderColor);
-		drawRect();
-		mGraphics2D.setColor(mColor);
-		drawRect(-mBorder);
-		drawCaption();
+	public DefaultRectButton createCaption(String caption) {
+		getPass(GUICaptionDrawer.class).createCaption(caption);
+		return this;
+	}
+
+	public DrawableString getCaption() {
+		return ((GUICaptionDrawer)mPasses[3]).mCaption;
 	}
 	
 }

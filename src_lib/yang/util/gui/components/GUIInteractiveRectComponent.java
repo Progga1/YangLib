@@ -1,17 +1,20 @@
 package yang.util.gui.components;
 
+import yang.graphics.FloatColor;
 
-public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIComponent {
+
+public abstract class GUIInteractiveRectComponent extends GUIInteractiveComponent {
 
 	public float mWidth,mHeight;
 	public float mProjWidth,mProjHeight;
+	public FloatColor mIndividualColor = null;
 
-	public RectangularInteractiveGUIComponent(float width,float height) {
+	public GUIInteractiveRectComponent() {
 		super();
 		mPosX = 0;
 		mPosY = 0;
-		mWidth = width;
-		mHeight = height;
+		mWidth = 1;
+		mHeight = 1;
 	}
 	
 	@Override
@@ -30,7 +33,7 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 		return mProjBottom+mProjHeight*0.5f;
 	}
 	
-	public RectangularInteractiveGUIComponent setBounds(float left,float top,float right,float bottom) {
+	public GUIInteractiveRectComponent setBounds(float left,float top,float right,float bottom) {
 		mPosX = left;
 		mPosY = top;
 		mWidth = right-left;
@@ -38,7 +41,7 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 		return this;
 	}
 	
-	public RectangularInteractiveGUIComponent setBounds(RectangularInteractiveGUIComponent preface) {
+	public GUIInteractiveRectComponent setBounds(GUIInteractiveRectComponent preface) {
 		mPosX = preface.mPosX;
 		mPosY = preface.mPosY;
 		mWidth = preface.mWidth;
@@ -46,11 +49,11 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 		return this;
 	}
 	
-	public RectangularInteractiveGUIComponent setPosAndExtendsCentered(float centerX, float centerY, float width, float height) {
+	public GUIInteractiveRectComponent setPosAndExtendsCentered(float centerX, float centerY, float width, float height) {
 		return setBounds(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
 	}
 	
-	public RectangularInteractiveGUIComponent setPosAndExtends(float left, float top, float width, float height) {
+	public GUIInteractiveRectComponent setPosAndExtends(float left, float top, float width, float height) {
 		mPosX = left;
 		mPosY = top;
 		mWidth = width;
@@ -58,7 +61,7 @@ public abstract class RectangularInteractiveGUIComponent extends InteractiveGUIC
 		return this;
 	}
 	
-	public RectangularInteractiveGUIComponent setExtends(float width,float height) {
+	public GUIInteractiveRectComponent setExtends(float width,float height) {
 		mWidth = width;
 		mHeight = height;
 		return this;

@@ -4,9 +4,11 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.Texture;
+import yang.util.NonConcurrentList;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.GUIContainer2D;
-import yang.util.gui.components.InteractiveGUIComponent;
+import yang.util.gui.components.GUIInteractiveComponent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
@@ -31,7 +33,8 @@ public class BasicGUI {
 	public float mProjShiftYFactor;
 	public float mProjXFactor,mProjYFactor;
 	public float mCurrentTime;
-	public InteractiveGUIComponent mPressedComponent;
+	public GUIInteractiveComponent mPressedComponent;
+	public NonConcurrentList<Texture> mPassTextures;
 	
 	protected static GUIPointerEvent[] createEventPool(int capacity) {
 		GUIPointerEvent[] result = new GUIPointerEvent[capacity];
@@ -42,17 +45,26 @@ public class BasicGUI {
 		return result;
 	}
 	
-	public BasicGUI(Default2DGraphics graphics2D,GUICoordinatesMode coordinatesMode,boolean autoUpdateProjections) {
+	public BasicGUI(Default2DGraphics graphics2D,GUICoordinatesMode coordinatesMode,boolean autoUpdateProjections,int maxPasses) {
 		mGraphics2D = graphics2D;
 		mGraphics = graphics2D.mTranslator;
 		mMainContainer = new GUIContainer2D();
 		mMainContainer.setGUI(this);
 		mAutoUpdateProjections = autoUpdateProjections;
 		setCoordinatesMode(coordinatesMode);
+		mPassTextures = new NonConcurrentList<Texture>();
+		setPassTexture(0,null);
+		setPassTexture(maxPasses,null);
 	}
 	
-	public BasicGUI(Default2DGraphics graphics2D) {
-		this(graphics2D,GUICoordinatesMode.SCREEN,true);
+	public void setPassTexture(int pass,Texture texture) {
+		while(mPassTextures.size()<=pass)
+			mPassTextures.add(null);
+		mPassTextures.set(pass,texture);
+	}
+	
+	public BasicGUI(Default2DGraphics graphics2D,int maxPasses) {
+		this(graphics2D,GUICoordinatesMode.SCREEN,true,maxPasses);
 	}
 	
 	public GUICoordinatesMode getCoordinatesMode() {
@@ -108,7 +120,12 @@ public class BasicGUI {
 			refreshProjections();
 		mGraphics2D.mTranslator.switchZBuffer(false);
 		mGraphics2D.mTranslator.bindTexture(null);
-		mMainContainer.draw();
+		int pass=0;
+		for(Texture texture:mPassTextures) {
+			mGraphics.bindTexture(texture);
+			mMainContainer.draw(pass);
+			pass++;
+		}
 	}
 	
 	public void step(float deltaTime) {
@@ -142,7 +159,6 @@ public class BasicGUI {
 				GUIComponent result =  mMainContainer.rawPointerEvent(guiEvent);
 				
 				if(mPressedComponent!=null && pointerEvent.mAction==YangPointerEvent.ACTION_POINTERUP) {
-					
 					mPressedComponent.mPressedTime = -mCurrentTime;
 					mPressedComponent = null;
 				}
@@ -212,7 +228,7 @@ public class BasicGUI {
 		return (y - mProjShiftY)*mProjYFactor;
 	}
 
-	public void setPressedComponent(InteractiveGUIComponent component) {
+	public void setPressedComponent(GUIInteractiveComponent component) {
 		mPressedComponent = component;
 		mPressedComponent.mPressedTime = mCurrentTime;
 	}

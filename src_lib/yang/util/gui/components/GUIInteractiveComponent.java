@@ -1,25 +1,29 @@
 package yang.util.gui.components;
 
 import yang.events.eventtypes.YangEvent;
+import yang.graphics.font.DrawableAnchoredLines;
+import yang.graphics.font.DrawableString;
 import yang.util.gui.GUIPointerEvent;
+import yang.util.gui.components.defaultdrawers.GUICaptionDrawer;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
-public abstract class InteractiveGUIComponent extends GUIComponent implements GUIPointerListener {
+public abstract class GUIInteractiveComponent extends GUIMultipassComponent implements GUIPointerListener {
 
 	public float mPressedTime;
 	public GUIActionListener mActionListener;
 	public GUIPointerListener mPointerListener;
 	public boolean mEnabled = true;
+
 	
 	public abstract boolean inArea(float x,float y);
 	
-	public InteractiveGUIComponent setActionListener(GUIActionListener actionListener) {
+	public GUIInteractiveComponent setActionListener(GUIActionListener actionListener) {
 		mActionListener = actionListener;
 		return this;
 	}
 	
-	public InteractiveGUIComponent setPointerListener(GUIPointerListener pointerListener) {
+	public GUIInteractiveComponent setPointerListener(GUIPointerListener pointerListener) {
 		mPointerListener = pointerListener;
 		return this;
 	}
@@ -62,7 +66,7 @@ public abstract class InteractiveGUIComponent extends GUIComponent implements GU
 	}
 	
 	public boolean isPressable() {
-		return true;
+		return false;
 	}
 	
 }
