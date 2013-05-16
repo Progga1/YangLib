@@ -32,8 +32,7 @@ public class DefaultNinePatchButton extends DefaultCaptionButton {
 		return this;
 	}
 	
-	@Override
-	public void draw() {
+	protected void drawNinePatch() {
 		mGraphics2D.bindTexture(mTexture);
 		NinePatchGrid uNinePatch;
 		if(!mEnabled)
@@ -43,6 +42,11 @@ public class DefaultNinePatchButton extends DefaultCaptionButton {
 		else
 			uNinePatch = mNinePatch;
 		uNinePatch.draw(mProjLeft,mProjBottom,mProjLeft+mProjWidth,mProjBottom+mProjHeight);
+	}
+	
+	@Override
+	public void draw() {
+		drawNinePatch();
 		drawCaption();
 	}
 	

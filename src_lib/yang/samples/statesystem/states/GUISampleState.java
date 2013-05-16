@@ -5,6 +5,7 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.FloatColor;
 import yang.graphics.font.DrawableString;
+import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.ninepatch.NinePatchGrid;
@@ -14,6 +15,7 @@ import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.defaultbuttons.DefaultCaptionButton;
+import yang.util.gui.components.defaultbuttons.DefaultIconButton;
 import yang.util.gui.components.defaultbuttons.DefaultNinePatchButton;
 import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.components.defaultbuttons.DefaultTextureButton;
@@ -31,6 +33,7 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 	private DefaultTextureButton mTexButton;
 	private DefaultNinePatchButton mNinePatchButton1;
 	private DefaultNinePatchButton mNinePatchButton2;
+	private DefaultIconButton mIconButton;
 	
 	@Override
 	protected void initGraphics() {
@@ -68,12 +71,16 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		
 		mNinePatchButton1 = mGUI.addComponent(DefaultNinePatchButton.class);
 		mNinePatchButton1.setTexture(ninePatchTex).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
-		mNinePatchButton1.createCaption("nine patch button").setPosAndExtendsCentered(2, 1.3f, 0.9f, 0.2f);
+		mNinePatchButton1.createCaption("Nine patch button").setPosAndExtendsCentered(2, 1.2f, 0.9f, 0.2f);
 		
 		mNinePatchButton2 = mGUI.addComponent(DefaultNinePatchButton.class);
 		mNinePatchButton2.setTexture(ninePatchTex).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
-		mNinePatchButton2.createCaption("Wider nine patch button").setPosAndExtendsCentered(2, 1.6f, 1.2f, 0.2f);
+		mNinePatchButton2.createCaption("Wider nine patch button").setPosAndExtendsCentered(2, 1.5f, 1.2f, 0.2f);
 		
+		mIconButton = mGUI.addComponent(DefaultIconButton.class);
+		mIconButton.setTexture(ninePatchTex).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
+		mIconButton.setIcon(new TextureCoordinatesQuad().initBiased(0.5f,0.5f,1,1,0.02f), 0.16f);
+		mIconButton.createCaption("Button with icon").setPosAndExtendsCentered(2, 1.8f, 1.0f, 0.2f);
 	}
 	
 	@Override

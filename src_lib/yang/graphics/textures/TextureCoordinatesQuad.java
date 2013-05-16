@@ -57,10 +57,10 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 	}
 	
 	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float biasX, float biasY, boolean rotate) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+		this.x1 = x1+biasX;
+		this.y1 = y1+biasY;
+		this.x2 = x2-biasX;
+		this.y2 = y2-biasY;
 		this.mWidth = x2-x1;
 		this.mHeight = y2-y1;
 		refreshCoordArray(rotate);
@@ -71,6 +71,10 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 	
 	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float biasX, float biasY) {
 		return initBiased(x1,y1,x2,y2,biasX,biasY,false);
+	}
+	
+	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float bias) {
+		return initBiased(x1,y1,x2,y2,bias,bias);
 	}
 	
 	public TextureCoordinatesQuad init(float x1, float y1, float x2, float y2) {
