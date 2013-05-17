@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?> <!-- android:screenOrientation="landscape" --> 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="yang.android.sampleexecuters"
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" />
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="12" />
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
     <application
@@ -12,13 +12,11 @@
         android:label="Yang samples"
         android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-        android:configChanges="keyboard|keyboardHidden|orientation"
         >
         <activity
             android:name=".SampleStateSystemActivity"
             android:label="Yang state system sample"
-            android:screenOrientation="landscape"
-            android:launchMode="singleInstance"
+          	android:configChanges="orientation"
             android:icon="@drawable/ic_launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

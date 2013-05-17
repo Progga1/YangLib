@@ -1,4 +1,4 @@
-package yang.graphics;
+package yang.graphics.listeners;
 
 public interface DrawListener {
 

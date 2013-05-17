@@ -107,7 +107,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		mScaleLookUp = new LookUpTable(0,1,stepSize,function);
 	}
 	
-	public void setFunction(Function function) {
+	public void setScaleFunction(Function function) {
 		setFunction(function,0.001f);
 	}
 	

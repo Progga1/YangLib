@@ -66,9 +66,13 @@ public class YangMatrixCameraOps extends YangMatrix {
 		this.setRow(3, 0,0,-1,0);
 	}
 	
-	public void setPerspectiveProjectionFovy(float fovy,float ratio,float near, float far) {
+	public void setPerspectiveProjectionFovy(float fovy,float ratioX,float ratioY,float near, float far) {
 		float tan = (float)Math.tan(fovy);
-		setPerspectiveProjection(tan*near*ratio,tan*near,near,far);
+		setPerspectiveProjection(tan*near*ratioX,tan*near*ratioY,near,far);
+	}
+	
+	public void setPerspectiveProjectionFovy(float fovy,float ratioX,float near, float far) {
+		setPerspectiveProjectionFovy(fovy,ratioX,1,near,far);
 	}
 	
 }

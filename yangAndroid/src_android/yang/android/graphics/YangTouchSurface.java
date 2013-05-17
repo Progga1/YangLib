@@ -19,7 +19,7 @@ import android.view.View;
 public class YangTouchSurface extends GLSurfaceView{
 
 	public InputEventQueue mEventQueue;
-	public SceneRenderer mSceneRenderer;
+	public YangSceneRenderer mSceneRenderer;
 	public Context mContext;
 	
 	public YangTouchSurface(Context context) {
@@ -32,7 +32,7 @@ public class YangTouchSurface extends GLSurfaceView{
 	protected void initGL(Context context) {
 //		super.setEGLConfigChooser(8,8,8,8,0,0);	//crashes on galaxy nexus
 		super.setEGLContextClientVersion(2);
-		mSceneRenderer = new SceneRenderer(context);
+		mSceneRenderer = new YangSceneRenderer(context);
 		super.setRenderer(mSceneRenderer);
 
 		App.soundManager = new AndroidSoundManager(context);

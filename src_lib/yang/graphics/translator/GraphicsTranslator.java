@@ -2,10 +2,11 @@ package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
 
-import yang.graphics.DrawListener;
 import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
+import yang.graphics.listeners.DrawListener;
+import yang.graphics.listeners.SurfaceListener;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.programs.GLProgramFactory;
 import yang.graphics.textures.TextureCoordinatesQuad;
@@ -39,6 +40,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mInvRatioX;
 	public float mInvRatioY;
 	public long mThreadId;
+	private NonConcurrentList<SurfaceListener> mScreenListeners;
+	public float mMinRatioX = 1;
 	
 	//State
 	protected Texture[] mCurrentTextures;
@@ -152,6 +155,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		appInstance = this;
 		mCurrentScreen = this;
 		mNoTexture = new Texture(this);
+		mScreenListeners = new NonConcurrentList<SurfaceListener>();
+	}
+	
+	public void addScreenListener(SurfaceListener listener) {
+		mScreenListeners.add(listener);
 	}
 	
 	public YangMatrix createTransformationMatrix() {
@@ -399,11 +407,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		vertexBuffer.setAsCurrent();
 	}
 	
-	public void setScreenSize(int width, int height) {
+	public void setSurfaceSize(int width, int height) {
 		this.mScreenWidth = width;
 		this.mScreenHeight = height;
 		this.mRatioX = (float) width / height;
-		if(mRatioX<1){
+		if(mRatioX<mMinRatioX){
 			this.mRatioY = 1/mRatioX;
 			mRatioX = 1;
 		}else
@@ -413,6 +421,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mProjScreenTransform.setOrthogonalProjection(-mRatioX, mRatioX, mRatioY, -mRatioY);
 		mProjScreenTransform.refreshInverted();
 		setViewPort(width,height);
+		for(SurfaceListener surfaceListener:mScreenListeners) {
+			surfaceListener.onSurfaceSizeChanged(width, height);
+		}
 	}
 	
 	public static YangMatrix newTransformationMatrix() {

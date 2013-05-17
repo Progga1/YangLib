@@ -26,7 +26,7 @@ public class ParticleSampleState extends SampleState {
 	@Override
 	protected void initGraphics() {
 		mParticles = new Particles2D<EffectParticle>(EffectParticle.class).init(mGraphics2D, 320);
-		mParticles.setFunction(DefaultFunctions.EXP_GROWING_SQR_SHRINKING);
+		mParticles.setScaleFunction(DefaultFunctions.EXP_GROWING_SQR_SHRINKING);
 		mParticleTexture = mGFXLoader.getImage("particles",TextureFilter.LINEAR_MIP_LINEAR);
 		mParticles.mTexture = mParticleTexture;
 		mParticles.mCelShading = 1.14f;
@@ -38,7 +38,7 @@ public class ParticleSampleState extends SampleState {
 		EffectParticle particle = mParticles.spawnParticle(mCurPntX, mCurPntY, mTexCoords[MathFunc.random(4)]);
 		particle.mFriction = 0.995f;
 		particle.setSpeedRangeSpread2D(0.04f*mParticleSpeed,0.05f*mParticleSpeed, 1.2f, 0.5f);
-		particle.setLifeSteps(170,190);
+		particle.setLifeSteps(190,210);
 		particle.mRotation = 0;
 		particle.setStartScale(1*mSmokeScale, 1.2f*mSmokeScale);
 		particle.shiftPosition2D(0.05f, 0.08f, 0, 2*MathConst.PI);
@@ -57,6 +57,12 @@ public class ParticleSampleState extends SampleState {
 
 	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
+		mCurPntX = x;
+		mCurPntY = y;
+	}
+	
+	@Override
+	public void pointerMoved(float x,float y,YangPointerEvent event) {
 		mCurPntX = x;
 		mCurPntY = y;
 	}

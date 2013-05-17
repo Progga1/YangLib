@@ -240,4 +240,8 @@ public class BasicGUI {
 		mPressedComponent.mPressedTime = mCurrentTime;
 	}
 	
+	public void refreshCoordinateSystem() {
+		setCoordinatesMode(mCoordinatesMode);
+	}
+	
 }

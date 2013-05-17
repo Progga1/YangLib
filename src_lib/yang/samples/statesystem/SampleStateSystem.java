@@ -15,7 +15,7 @@ public class SampleStateSystem extends YangProgramStateSystem {
 	}
 	
 	public void postInitGraphics() {
-		DrawableString.DEFAULT_FONT = mGFXLoader.loadFont("default");
+		DrawableString.DEFAULT_FONT = mGFXLoader.loadFont("arial");
 		mMainMenu = (SampleMainMenu)new SampleMainMenu().init(this);
 		mCircleTexture = mGFXLoader.getImage("circle");
 		super.setState(mMainMenu);

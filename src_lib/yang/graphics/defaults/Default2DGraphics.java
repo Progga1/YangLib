@@ -54,7 +54,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mCamY = 0;
 		mZoom = 1;
 		mCamRot = 0;
-		refreshCamera();
 	}
 	
 	public boolean inScreen2D(float posX,float posY,float width, float height) {
@@ -358,6 +357,11 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mCurrentDebugX = 0;
 		mCurrentDebugY += mDebugLineHeight;
 		
+	}
+
+	@Override
+	public void onSurfaceSizeChanged(int width, int height) {
+		refreshCamera();
 	}
 	
 }

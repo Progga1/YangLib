@@ -2,7 +2,6 @@ package yang.util.gui.components.defaults;
 
 import yang.graphics.font.DrawableString;
 import yang.util.gui.components.GUIMultipassComponent;
-import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.components.defaultdrawers.GUICaptionDrawer;
 
 public class GUILabel extends GUIMultipassComponent {

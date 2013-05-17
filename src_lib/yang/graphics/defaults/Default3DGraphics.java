@@ -44,6 +44,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private TerrainCreator mDefaultTerrainCreator;
 	private SphereCreator mSphereCreator;
 	
+	protected boolean mCurIsPerspective;
+	protected float mCurNear,mCurFar,mCurFovy,mCurZoom;
+	
 	public static float[] swapCoords(float[] original,int x,int y,int z) {
 		float[] result = new float[12];
 		for(int i=0;i<4;i++) {
@@ -107,19 +110,20 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mTranslator.addProgram(mDefaultProgram);
 	}
 
-	
-	public void setOrthogonalProjection(float near,float far,float zoom) {
-//		mProjectionTransform.setOrthogonalProjection(
-//				-mTranslator.mCurrentScreen.getSurfaceRatioX()*zoom, mTranslator.mCurrentScreen.getSurfaceRatioX()*zoom,
-//				 mTranslator.mCurrentScreen.getSurfaceRatioY()*zoom, -mTranslator.mCurrentScreen.getSurfaceRatioY()*zoom, near, far);
-//		mProjectionTransform.asInverted(invGameProjection);
-		setOrthogonalProjection(mTranslator.mCurrentScreen.getSurfaceRatioX()*zoom*2,mTranslator.mCurrentScreen.getSurfaceRatioY()*zoom*2,near,far);
-	}
-	
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
+		mCurIsPerspective = false;
+		mCurNear = near;
+		mCurFar = far;
+		mCurZoom = 1;
 		mProjectionTransform.setOrthogonalProjection(-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
 		mProjectionTransform.asInverted(invGameProjection);
 	}
+		
+	public void setOrthogonalProjection(float near,float far,float zoom) {
+		setOrthogonalProjection(mTranslator.mCurrentScreen.getSurfaceRatioX()*zoom*2,mTranslator.mCurrentScreen.getSurfaceRatioY()*zoom*2,near,far);
+		mCurZoom = zoom;
+	}
+
 		
 	public void setOrthogonalProjection(float near,float far) {
 		setOrthogonalProjection(near,far,1);
@@ -130,7 +134,11 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
-		mProjectionTransform.setPerspectiveProjectionFovy(fovy, mTranslator.mCurrentScreen.getSurfaceRatioX(), near, far);
+		mCurIsPerspective = true;
+		mCurNear = near;
+		mCurFar = far;
+		mCurFovy = fovy;
+		mProjectionTransform.setPerspectiveProjectionFovy(fovy, mTranslator.mCurrentScreen.getSurfaceRatioX(),mTranslator.mCurrentScreen.getSurfaceRatioY(), near, far);
 	}
 	
 //	public void drawRectZ(float worldX1, float worldY1, float worldX2, float worldY2, float z, TransformationMatrix textureTransform) {
@@ -317,4 +325,14 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 //		mProjectionTransform = mSavedProjection;
 //		invGameProjection = mSavedInvGameProjection;
 //	}
+	
+	@Override
+	public void onSurfaceSizeChanged(int width,int height) {
+		if(mCurIsPerspective) {
+			setPerspectiveProjection(mCurFovy,mCurNear,mCurFar);
+		}else{
+			setOrthogonalProjection(mCurNear,mCurFar,mCurZoom);
+		}
+	}
+	
 }

@@ -45,15 +45,25 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 		addMenuItem("Particles", new ParticleSampleState());
+		refreshLayout();
+	}
+	
+	private void refreshLayout() {
+		//mGUI.refreshCoordinateSystem();
+		float y = mGUI.getGUICenterY()-0.24f*(mButtons.size()-1)*0.5f;
+		for(DefaultRectButton button:mButtons) {
+			button.setPosCentered(mGUI.getGUICenterX(), y);
+			y += 0.24f*SCALE;
+		}
 	}
 	
 	public void addMenuItem(String caption, YangProgramState<?> state) {
 		DefaultRectButton newButton = new DefaultRectButton();
 		newButton.getPass(GUICaptionDrawer.class).createCaption(caption);
 		newButton.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
-		newButton.setPosAndExtendsCentered(mGUI.getGUICenterX(), (0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		//In normalized coordinates: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		mGUI.addComponent(newButton);
+		newButton.setExtends(SCALE, 0.15f*SCALE);
 		mButtons.add(newButton);
 		mProgramStates.put(newButton, state);
 	}

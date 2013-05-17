@@ -128,26 +128,21 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 
 	@Override
 	public void reshape(GLAutoDrawable glAutoDrawable, int x, int y, int width, int height) {
-
-		//gles2 = glAutoDrawable.getGL().getGL2ES2();
-
-		mSurface.surfaceChanged(width, height);
+		mSurface.onSurfaceChanged(width, height);
 	}
 
 	@Override
 	public void init(GLAutoDrawable glAutoDrawable) {
 		gles2 = glAutoDrawable.getGL().getGL2();
 		gles2.glEnable(GL2.GL_TEXTURE_2D);
-		gles2.glEnable(GL2ES2.GL_BLEND);
-		//gles2.glBlendFunc(GL2ES2.GL_SRC_ALPHA, GL2ES2.GL_ONE_MINUS_SRC_ALPHA);
-		gles2.glBlendFunc(GL2ES2.GL_ONE, GL2ES2.GL_ONE_MINUS_SRC_ALPHA);
+
 		while(mSurface==null)
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				break;
 			}
-		mSurface.surfaceChanged(glAutoDrawable.getWidth(), glAutoDrawable.getHeight());
+		mSurface.onSurfaceCreated();
 	}
 	
 	public void setSurface(SurfaceInterface surface) {

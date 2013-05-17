@@ -6,15 +6,14 @@ import javax.microedition.khronos.opengles.GL10;
 import yang.graphics.SurfaceInterface;
 import yang.graphics.translator.GraphicsTranslator;
 import android.content.Context;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
-public class SceneRenderer implements GLSurfaceView.Renderer {
+public class YangSceneRenderer implements GLSurfaceView.Renderer {
 
 	public SurfaceInterface mSurfaceInterface;
 	public GraphicsTranslator mGraphicsTranslator;
 	
-	public SceneRenderer(Context context) {
+	public YangSceneRenderer(Context context) {
 		mGraphicsTranslator = new AndroidGraphics(context);
 	}
 	
@@ -28,13 +27,14 @@ public class SceneRenderer implements GLSurfaceView.Renderer {
 	}
 
 	public void onSurfaceCreated(GL10 ignore, EGLConfig config) {
-		
-		GLES20.glDepthFunc(GLES20.GL_LEQUAL);
+		System.out.println("CREATE-SURF--------------");
+		mSurfaceInterface.onSurfaceCreated();
 		
 	}
 	
 	public void onSurfaceChanged(GL10 ignore, int width, int height) {
-		mSurfaceInterface.surfaceChanged(width,height);
+		System.out.println("SET-SURF-SIZE--------------");
+		mSurfaceInterface.onSurfaceChanged(width,height);
 	}
 
 	public GraphicsTranslator getGraphics() {

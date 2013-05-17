@@ -43,8 +43,8 @@ public abstract class SurfaceInterface {
 		mGraphics = graphics;
 	}
 	
-	public void surfaceCreated() {
-		//System.out.println("--------------------------"+this+" "+mResuming+"-------------------------------");
+	public void onSurfaceCreated() {
+		//System.out.println("--------------------------"+(""+this).split("@")[1]+" "+mResuming+"-------------------------------");
 		if(mInitialized && !mResuming)
 			return;
 		if(mResuming) {
@@ -77,9 +77,8 @@ public abstract class SurfaceInterface {
 		}
 	}
 	
-	public void surfaceChanged(int width,int height) {
-		mGraphics.setScreenSize(width, height);
-		surfaceCreated();
+	public void onSurfaceChanged(int width,int height) {
+		mGraphics.setSurfaceSize(width, height);
 	}
 	
 	public boolean isInitialized() {

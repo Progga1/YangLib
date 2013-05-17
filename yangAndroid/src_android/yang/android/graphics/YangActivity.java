@@ -3,32 +3,36 @@ package yang.android.graphics;
 import yang.graphics.SurfaceInterface;
 import yang.model.ExitCallback;
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
 
 public abstract class YangActivity extends Activity implements ExitCallback {
 	
-	public static boolean initialized = false;
+	public static boolean PRINT_ACTIVITY_DEBUG = true;
+	
 	protected YangTouchSurface mGLView;
 	
 	public void defaultInit(YangTouchSurface androidSurface) {
+		
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); 
 		
 		activityOut("INIT");
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		
 		mGLView = androidSurface;
-
+		
 		setContentView(mGLView.getView());
 	}
 	
 	protected void activityOut(Object msg) {
-		System.out.println("--------------------------("+(""+this).split("@")[1]+") "+msg+"---------------------------");
+		if(PRINT_ACTIVITY_DEBUG)
+			System.out.println("--------------------------("+(""+this).split("@")[1]+") "+msg+"---------------------------");
 	}
 	
 	protected void setSurface(SurfaceInterface yangSurface) {
 		mGLView.setSurface(yangSurface);
-		initialized = true;
 	}
 	
 	public void defaultInit() {
@@ -93,6 +97,9 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	public void onConfigurationChanged(Configuration config) {
 		super.onConfigurationChanged(config);
 		activityOut("CONFIG_CHANGED: "+config);
+//		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//			
+//		}
 	}
 
 	public void defaultInit(boolean useDebugEditText) {

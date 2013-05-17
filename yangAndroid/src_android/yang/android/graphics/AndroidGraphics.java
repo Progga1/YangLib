@@ -67,6 +67,11 @@ public class AndroidGraphics extends GraphicsTranslator {
 		}
 	}
 
+	@Override
+	public void postInit() {
+		GLES20.glDepthFunc(GLES20.GL_LEQUAL);
+	}
+	
 	public GLProgram createProgram() {
 		return new AndroidGLProgram();
 	}

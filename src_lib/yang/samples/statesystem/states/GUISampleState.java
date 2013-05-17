@@ -45,7 +45,7 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		mPanel.setPosAndExtends(0.1f, 0.3f, 0.9f, 1.2f);
 		
 		DrawableString caption = new DrawableString("Label").setAnchors(DrawableString.ANCHOR_LEFT,DrawableString.ANCHOR_TOP);
-		mPanel.addComponent(new GUILabel().setPosition(0.1f, 0.1f));
+		mPanel.addComponent(new GUILabel().setCaption(caption).setPosition(0.1f, 0.1f));
 		
 		mToggleButton = mPanel.addComponent(new DefaultRectButton());
 		mToggleButton.createCaption("Button1").setPosAndExtends(0.1f, 0.3f, mPanel.mWidth-0.2f, 0.16f);
@@ -117,8 +117,8 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 	//Always triggered when clicking on the surface (independent of GUI)
 	@Override
 	public void pointerUp(float x,float y,YangPointerEvent event) {
-		if(event.mButton==AbstractPointerEvent.BUTTON_RIGHT)
-			mPanel.setPosition(mGUI.normToGUIX(x), mGUI.normToGUIY(y));
+//		if(event.mButton==AbstractPointerEvent.BUTTON_RIGHT)
+//			mPanel.setPosition(mGUI.normToGUIX(x), mGUI.normToGUIY(y));
 		if(event.mButton==AbstractPointerEvent.BUTTON_MIDDLE)
 			mPanel.mVisible = !mPanel.mVisible;
 	}
@@ -126,8 +126,8 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 	//Triggered, whenever a GUI component was clicked
 	@Override
 	public void guiPointerUp(float x,float y,GUIPointerEvent event) {
-		if(event.mSender == mGUI.mMainContainer)
-			mPanel.setPosition(x,y);
+//		if(event.mSender == mGUI.mMainContainer)
+//			mPanel.setPosition(x,y);
 	}
 
 	@Override

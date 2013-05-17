@@ -3,10 +3,11 @@ package yang.graphics.translator;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-import yang.graphics.DrawListener;
 import yang.graphics.FloatColor;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
+import yang.graphics.listeners.DrawListener;
+import yang.graphics.listeners.SurfaceListener;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
@@ -17,7 +18,7 @@ import yang.model.DebugYang;
 
 
 
-public abstract class AbstractGraphics<ShaderType extends AbstractProgram> implements DrawListener {
+public abstract class AbstractGraphics<ShaderType extends AbstractProgram> implements DrawListener,SurfaceListener {
 
 	//Constants
 	public final static float PI = 3.1415926535f;
@@ -62,6 +63,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public AbstractGraphics(GraphicsTranslator translator) {
 		if (DebugYang.showStart) DebugYang.showStackTrace("4", 1);
 		mTranslator = translator;
+		mTranslator.addScreenListener(this);
 	}
 	
 	public void init() {
@@ -75,12 +77,11 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mInterTransf2 = new YangMatrixRectOps();
 		mWorldTransform = new YangMatrix();
 		mWorldTransform.loadIdentity();
-		mCameraProjectionMatrix = mTranslator.createTransformationMatrix();
-		mResultTransformationMatrix = mTranslator.createTransformationMatrix();
+		mCameraProjectionMatrix = new YangMatrix();
+		mResultTransformationMatrix = new YangMatrix();
 		mInterTexTransf = new YangMatrixRectOps();
 		mIdentity = new YangMatrix();
 		mIdentity.loadIdentity();
-//		mIdentity.refreshRect2D();
 		mTexIdentity = mTranslator.createTexCoords();
 		mTexIdentity.init(0, 0, 1);
 		mTranslator.checkErrorInst("Matrices");
@@ -360,6 +361,11 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	
 	public void fillBuffers() {
 		mCurrentVertexBuffer.fillBuffers();
+	}
+	
+	@Override
+	public void onSurfaceSizeChanged(int width, int height) {
+		
 	}
 	
 }

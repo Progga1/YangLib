@@ -49,6 +49,11 @@ public abstract class GUIInteractiveRectComponent extends GUIInteractiveComponen
 		return this;
 	}
 	
+
+	public GUIInteractiveRectComponent setPosCentered(float centerX, float centerY) {
+		return setBounds(centerX-mWidth*0.5f,centerY-mHeight*0.5f,centerX+mWidth*0.5f,centerY+mHeight*0.5f);
+	}
+	
 	public GUIInteractiveRectComponent setPosAndExtendsCentered(float centerX, float centerY, float width, float height) {
 		return setBounds(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
 	}
