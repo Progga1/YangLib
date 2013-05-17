@@ -22,8 +22,8 @@ public class NonConcurrentList<E> implements List<E> {
 
 	public class NonConcurrentIterator<T> implements ListIterator<T> {
 
-		Node dummy = new Node(null,null,null);
-		Node current = dummy;
+		Node current = null;
+		Node dummy = new Node(null, null, null);
 
 		public boolean hasNext() {
 			return current.next != null;
@@ -46,6 +46,7 @@ public class NonConcurrentList<E> implements List<E> {
 			for (int i = 0; i < idx; i++) current = current.next;
 			
 			dummy.next = current;
+			dummy.prev = current;
 			current = dummy;
 		}
 		
@@ -53,6 +54,7 @@ public class NonConcurrentList<E> implements List<E> {
 			current = (Node) startElement;
 			
 			dummy.next = current;
+			dummy.prev = current;
 			current = dummy;
 		}
 
@@ -62,7 +64,7 @@ public class NonConcurrentList<E> implements List<E> {
 		}
 
 		public boolean hasPrevious() {
-			return current.prev == null;
+			return current.prev != null;
 		}
 
 		public int nextIndex() {
@@ -389,6 +391,20 @@ public class NonConcurrentList<E> implements List<E> {
 //		ListIterator<String> elemIter = list.listIterator(list.first.next.next.next.next.elem);
 //		while (elemIter.hasNext()) {
 //			System.out.print(elemIter.next());
+//		}
+//		System.out.println();
+//		
+//		System.out.print("\n\nfw-iterator: -> ");
+//		ListIterator<String> fwIter = list.listIterator();
+//		while(fwIter.hasNext()) {
+//			System.out.print(fwIter.next());
+//		}
+//		System.out.println();
+//		
+//		System.out.print("\n\nbw-iterator: -> ");
+//		ListIterator<String> bwIter = list.listIterator(list.size-1);
+//		while (bwIter.hasPrevious()) {
+//			System.out.print(bwIter.previous());
 //		}
 //		System.out.println();
 //	}
