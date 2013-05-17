@@ -28,7 +28,7 @@ public class PolygonCreator {
 		mPositions = new float[capacity*mElemsPerPos];
 		mIndices = new int[capacity];
 		mWorkingIndices = new int[capacity+1];
-		mResultIndices = new int[capacity];
+		mResultIndices = new int[capacity*3];
 		clear();
 	}
 	
@@ -176,7 +176,6 @@ public class PolygonCreator {
 	}
 	
 	public void drawTriangleLines(Default2DGraphics graphics2D,float width) {
-		
 		graphics2D.mTranslator.bindTexture(null);
 		for(int i=0;i<mResultIndexCount;i+=3) {
 			float x1 = mPositions[mResultIndices[i]*mElemsPerPos];

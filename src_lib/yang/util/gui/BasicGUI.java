@@ -63,6 +63,13 @@ public class BasicGUI {
 		mPassTextures.set(pass,texture);
 	}
 	
+//	private void addGUILayer() {
+//	GUILayer newLayer = new GUILayer();
+//	newLayer.mMainContainer = new GUIContainer2D();
+//	newLayer.mMainContainer.setGUI(this);
+//	mLayers.add(newLayer);
+//}
+	
 	public BasicGUI(Default2DGraphics graphics2D,int maxPasses) {
 		this(graphics2D,GUICoordinatesMode.SCREEN,true,maxPasses);
 	}

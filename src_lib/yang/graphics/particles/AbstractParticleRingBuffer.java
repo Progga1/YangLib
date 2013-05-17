@@ -5,6 +5,7 @@ import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.util.NonConcurrentList;
+import yang.util.lookuptable.Function;
 import yang.util.lookuptable.LookUpTable;
 
 public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGraphics<?>, ParticleType extends Particle> {
@@ -100,6 +101,14 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 			particle.mExists = false;
 		}
 		mCurParticleIndex = 0;
+	}
+	
+	public void setFunction(Function function,float stepSize) {
+		mScaleLookUp = new LookUpTable(0,1,stepSize,function);
+	}
+	
+	public void setFunction(Function function) {
+		setFunction(function,0.001f);
 	}
 	
 }

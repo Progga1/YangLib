@@ -96,6 +96,11 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 		return this;
 	}
 	
+
+	public TextureCoordinatesQuad initBiasedI(int x1, int y1, int x2, int y2, int textureWidth, int textureHeight, int biasX,int biasY) {
+		return initI(x1+biasX,y1+biasY,x2-biasX,y2-biasY,textureWidth,textureHeight);
+	}
+	
 	public TextureCoordinatesQuad init(int x1, int y1, int x2, int y2, Texture prefaceTexture) {
 		return initI(x1,y1,x2,y2,prefaceTexture.getWidth(),prefaceTexture.getHeight());
 	}

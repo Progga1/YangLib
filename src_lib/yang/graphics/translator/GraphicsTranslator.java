@@ -56,7 +56,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public YangMatrix mStaticTransformation;
 	
 	//Counters
-	public int rectCount;
+	public int mRectCount;
 	public int mFlushCount;
 	
 	//Persistent
@@ -143,7 +143,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
 		mFlushDisabled = false;
-		rectCount = 0;
+		mRectCount = 0;
 		mFlushCount = 0;
 		mDrawMode = T_TRIANGLES;
 		mWireFrames = false;
@@ -336,7 +336,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		int vertexCount = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		if(vertexCount>0) {
 			mCurDrawListener.onPreDraw();
-			rectCount += mCurrentVertexBuffer.getCurrentIndexWriteCount()/6;
+			mRectCount += mCurrentVertexBuffer.getCurrentIndexWriteCount()/6;
 			mCurrentVertexBuffer.finishUpdate();
 			mCurrentVertexBuffer.reset();
 			drawVertices(0,vertexCount,mDrawMode);
@@ -356,7 +356,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public void beginFrame() {
 		measureTime();
-		rectCount = 0;
+		mRectCount = 0;
 		mFlushCount = 0;
 	}
 	
