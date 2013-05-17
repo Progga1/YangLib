@@ -1,5 +1,7 @@
 package yang.graphics.particles;
 
+import java.util.ListIterator;
+
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.programs.BasicProgram;
 
@@ -32,7 +34,9 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 			}
 		}
 		
-		for(ParticleType particle:mParticles) {
+		ListIterator<ParticleType> iter = mParticles.listIteratorLast();
+		ParticleType particle;
+		while((particle=iter.previous())!=null) {
 			if(particle.mExists) {
 				mGraphics.setColor(particle.mColor);
 				float uScale;

@@ -202,6 +202,10 @@ public class NonConcurrentList<E> implements List<E> {
 		iterator.prepare(0);
 		return iterator;
 	}
+	
+	public ListIterator<E> listIteratorLast() {
+		return listIterator(size-1);
+	}
 
 	public ListIterator<E> listIterator(Node startNode) {
 		NonConcurrentIterator<E> iterator = iterators[defaultIteratorIndex];
