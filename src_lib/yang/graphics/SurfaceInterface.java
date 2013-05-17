@@ -44,6 +44,7 @@ public abstract class SurfaceInterface {
 	}
 	
 	public void surfaceCreated() {
+		//System.out.println("--------------------------"+this+" "+mResuming+"-------------------------------");
 		if(mInitialized && !mResuming)
 			return;
 		if(mResuming) {

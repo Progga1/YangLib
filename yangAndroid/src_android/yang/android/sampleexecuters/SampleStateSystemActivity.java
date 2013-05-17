@@ -9,7 +9,7 @@ public class SampleStateSystemActivity extends YangActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		activityOut(this);
 		super.defaultInit(true);
 		super.setSurface(new SampleStateSystem());
 	}

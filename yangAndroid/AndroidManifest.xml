@@ -12,12 +12,13 @@
         android:label="Yang samples"
         android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:configChanges="keyboard|keyboardHidden|orientation"
         >
         <activity
             android:name=".SampleStateSystemActivity"
             android:label="Yang state system sample"
-            android:configChanges="keyboard|keyboardHidden|orientation"
             android:screenOrientation="landscape"
+            android:launchMode="singleInstance"
             android:icon="@drawable/ic_launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
