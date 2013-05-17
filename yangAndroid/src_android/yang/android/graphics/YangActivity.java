@@ -45,6 +45,13 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 		activityOut("PAUSED");
 		mGLView.onPause();
 	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mGLView.mSceneRenderer.mSurfaceInterface.onStop();
+		activityOut("STOP");
+	}
 
 	@Override
 	protected void onResume() {
@@ -75,12 +82,6 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	protected void onSaveInstanceState (Bundle outState) {
 		super.onSaveInstanceState(outState);
 		activityOut("SAVED INSTANCE STATE");
-	}
-		
-	@Override
-	protected void onStop() {
-		super.onStop();
-		activityOut("STOP");
 	}
 
 	@Override

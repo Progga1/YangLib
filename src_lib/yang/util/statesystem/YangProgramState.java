@@ -14,6 +14,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 
 	private boolean mInitialized = false;
 	protected boolean mFirstFrame = true;
+	protected int mRecentSurfaceWidth = 0,mRecentSurfaceHeight = 0;
 	protected StateSystemType mStateSystem;
 	protected float mStateTimer = 0;
 	protected GraphicsTranslator mGraphics;
@@ -22,6 +23,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected AbstractGFXLoader mGFXLoader;
 	protected AbstractResourceManager mResources;
 	protected StringsXML mStrings;
+	private int mRestartCount = 0;
 	
 	protected abstract void step(float deltaTime);
 	protected abstract void draw();
@@ -38,6 +40,9 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		mInitialized = true;
 		return this;
 	}
+	
+	protected void surfaceSizeChanged(int newWidth,int newHeight) { }
+	protected void restartGraphics() { }
 	
 	public boolean isInitialized() {
 		return mInitialized;
@@ -61,10 +66,20 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	public void drawFrame() {
 		if(mFirstFrame) {
 			initGraphics();
-			draw();
-			mFirstFrame = false;
-		}else
-			draw();
+		}
+		if(mRestartCount <mGraphics.mRestartCount) {
+			restartGraphics();
+			mRestartCount = mGraphics.mRestartCount;
+		}
+		int surfWidth = mGraphics.mCurrentScreen.getSurfaceWidth();
+		int surfHeight = mGraphics.mCurrentScreen.getSurfaceHeight();
+		if(surfWidth!=mRecentSurfaceWidth || surfHeight!=mRecentSurfaceHeight) {
+			surfaceSizeChanged(surfWidth,surfHeight);
+			mRecentSurfaceWidth = surfWidth;
+			mRecentSurfaceHeight = surfHeight;
+		}
+		draw();
+		mFirstFrame = false;
 	}
 	
 	public void start() {

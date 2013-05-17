@@ -1,5 +1,6 @@
 package yang.graphics.textures;
 
+import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.ScreenInfo;
 
@@ -37,6 +38,11 @@ public class TextureRenderTarget implements ScreenInfo{
 
 	public float getSurfaceRatioY() {
 		return mRatioY;
+	}
+
+	public void recreate(GraphicsTranslator graphics) {
+		mTargetTexture.update(null);
+		graphics.derivedCreateRenderTarget(mTargetTexture);
 	}
 	
 }

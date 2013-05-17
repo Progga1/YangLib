@@ -126,6 +126,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 			break;
 			default: throw new RuntimeException(textureSettings.mChannels + " channels not supported.");
 		}
+
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, texture.getWidth(), texture.getHeight(), 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
 		assert checkError("Pass texture data");
 		

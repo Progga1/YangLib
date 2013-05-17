@@ -27,13 +27,10 @@ public class YangSceneRenderer implements GLSurfaceView.Renderer {
 	}
 
 	public void onSurfaceCreated(GL10 ignore, EGLConfig config) {
-		System.out.println("CREATE-SURF--------------");
 		mSurfaceInterface.onSurfaceCreated();
-		
 	}
 	
 	public void onSurfaceChanged(GL10 ignore, int width, int height) {
-		System.out.println("SET-SURF-SIZE--------------");
 		mSurfaceInterface.onSurfaceChanged(width,height);
 	}
 

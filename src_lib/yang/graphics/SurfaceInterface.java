@@ -7,7 +7,6 @@ import yang.util.StringsXML;
 public abstract class SurfaceInterface {
 	
 	public GraphicsTranslator mGraphics;
-	protected boolean mResuming;
 
 	protected boolean mAutoReloadOnResume = true;
 	protected boolean mInitialized;
@@ -19,6 +18,7 @@ public abstract class SurfaceInterface {
 	protected long mProgramTime;
 	protected float mDeltaTimeSeconds;
 	protected long mDeltaTimeNanos;
+	protected int mRuntimeState = 0;
 	
 	protected abstract void initGraphics();
 	protected void resumingFinished(){};
@@ -27,13 +27,21 @@ public abstract class SurfaceInterface {
 	protected void postInitGraphics() { }
 	
 	public SurfaceInterface() {
-		mResuming = false;
 		mInitializedNotifier = new Object();
 		mProgramTime = 0;
 		setUpdatesPerSecond(60);
 	}
 	
 	public void drawFrame() {
+		
+		if(mRuntimeState>0) {
+			mGraphics.restart();
+			if(mAutoReloadOnResume)
+				mGraphics.mGFXLoader.reloadTextures();
+			resumingFinished();
+			mRuntimeState = 0;
+		}
+		
 		mGraphics.beginFrame();
 		draw();
 		mGraphics.endFrame();
@@ -44,24 +52,15 @@ public abstract class SurfaceInterface {
 	}
 	
 	public void onSurfaceCreated() {
-		//System.out.println("--------------------------"+(""+this).split("@")[1]+" "+mResuming+"-------------------------------");
-		if(mInitialized && !mResuming)
+		if(mInitialized)
 			return;
-		if(mResuming) {
-			mGraphics.restart();
-			if(mAutoReloadOnResume)
-				mGraphics.mGFXLoader.reloadTextures();
-			resumingFinished();
-		}else{
-			mGraphics.init();
-			initGraphics();
-			postInitGraphics();
-			if(mInitCallback!=null)
-				mInitCallback.initializationFinished();
-		}
+		mGraphics.init();
+		initGraphics();
+		postInitGraphics();
+		if(mInitCallback!=null)
+			mInitCallback.initializationFinished();
 		
 		mInitialized = true;
-		mResuming = false;
 		synchronized(mInitializedNotifier) {
 			mInitializedNotifier.notifyAll();
 		}
@@ -79,6 +78,7 @@ public abstract class SurfaceInterface {
 	
 	public void onSurfaceChanged(int width,int height) {
 		mGraphics.setSurfaceSize(width, height);
+		
 	}
 	
 	public boolean isInitialized() {
@@ -111,8 +111,12 @@ public abstract class SurfaceInterface {
 		return result;
 	}
 	
+	public void onStop() {
+		mRuntimeState = 2;
+	}
+	
 	public void onPause() {
-		mResuming = true;
+		mRuntimeState = 1;
 	}
 	
 	public void onResume() {

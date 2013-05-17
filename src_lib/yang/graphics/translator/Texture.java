@@ -26,7 +26,6 @@ public class Texture {
 	}
 
 	public void set(ByteBuffer source, int width, int height, TextureSettings settings) {
-		source.order(ByteOrder.nativeOrder());
 		mWidth = width;
 		mHeight = height;
 		mSettings = settings;
@@ -61,7 +60,8 @@ public class Texture {
 	
 	public void update(ByteBuffer source) {
 		mGraphics.deleteTexture(mId);
-		source.rewind();
+		if(source!=null)
+			source.rewind();
 		mGraphics.initTexture(this, source, mSettings);
 	}
 	

@@ -115,6 +115,9 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.addProgram(mLightmapProgram);
 		mGraphics.addProgram(mSpecularProgram);
 		mGraphics.addProgram(mBillboardProgram);
+		mGraphics.addProgram(mDepthProgram);
+		mGraphics.addProgram(mShadowProgram);
+		mGraphics.addProgram(mWaterProgram);
 		
 		mTerrain = new TerrainCreator(mGraphics3D);
 		mWeather = new Weather3D<DefaultParticles3D>(new Boundaries3D(2,2,2));
@@ -191,6 +194,7 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	private void drawWater(float pX,float pY,float pZ) {
+		mGraphics.checkErrorInst("Pre set water program");
 		mGraphics3D.setShaderProgram(mWaterProgram);
 		mGraphics.checkErrorInst("Begin draw water");
 		mGraphics.bindTexture(waterTex,WaterProgram.COLOR_TEXTURE_LEVEL);
@@ -254,10 +258,6 @@ public class IcyTerrainState extends SampleState {
 		if(mFirstFrame) {
 			mShadowHelper.init(mGraphics3D,1024);
 			mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
-			mGraphics.addProgram(mShadowProgram);
-			mGraphics.addProgram(mDepthProgram);
-			mGraphics.addProgram(mWaterProgram);
-			
 			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureSettings(TextureWrap.CLAMP,TextureFilter.LINEAR));
 			mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
 		}
@@ -282,6 +282,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics3D.setPerspectiveProjection(0.6f,0.1f,100.5f);
 		
 		if(ENVIRONMENT_MAPPING) {
+			mGraphics.checkErrorInst("Pre environment mapping");
 			mGraphics.setTextureRenderTarget(mEnvironmentMap);
 			mGraphics.clear(0,0,0);
 			mCamera.set(pX,-pY,pZ, 0,0,0, 0,1,0);
@@ -303,6 +304,7 @@ public class IcyTerrainState extends SampleState {
 			
 			mGraphics.setScreenRenderTarget();
 			waterTex = mEnvironmentMap.mTargetTexture;
+			mGraphics.checkErrorInst("Post environment mapping");
 		}
 		
 		//Begin real drawing
@@ -312,7 +314,9 @@ public class IcyTerrainState extends SampleState {
 		mCamera.set(pX,pY,pZ, 0,0,0, 0,1,0);
 		mGraphics3D.setCamera(mCamera);
 
+		mGraphics.checkErrorInst("Pre draw sky");
 		drawSky();
+		mGraphics.checkErrorInst("Draw sky");
 
 		drawWater(pX,pY,pZ);
 		if(USE_LIGHTMAPS)
@@ -338,6 +342,17 @@ public class IcyTerrainState extends SampleState {
 			mGraphics2D.drawRectCentered(0, 0, 1);
 		}
 		
+	}
+	
+	protected void restartGraphics() {
+//		mShadowHelper.restart();
+//		mLightmapHelper.restart();
+//		mEnvironmentMap.recreate(mGraphics);
+//		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
+		mShadowHelper.init(mGraphics3D,1024);
+		mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
+		mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureSettings(TextureWrap.CLAMP,TextureFilter.LINEAR));
+		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
 	}
 
 	@Override

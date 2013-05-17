@@ -1,6 +1,7 @@
 package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
@@ -72,6 +73,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	//Helpers
 	protected final int[] mTempInt = new int[1];
 	protected final int[] mTempInt2 = new int[1];
+	public int mRestartCount = 0;
 	
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
@@ -84,7 +86,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void setViewPort(int width,int height);
 	public abstract void setCullMode(boolean drawClockwise);
 	protected abstract void derivedSetScreenRenderTarget();
-	protected abstract TextureRenderTarget derivedCreateRenderTarget(Texture texture);
+	public abstract TextureRenderTarget derivedCreateRenderTarget(Texture texture);
 	protected abstract void derivedSetTextureRenderTarget(TextureRenderTarget renderTarget);
 	public abstract void setDepthFunction(boolean less);
 	public abstract void generateMipMap();
@@ -178,16 +180,15 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		buf.rewind();
 		mNullTexture = createTexture(buf, DIM,DIM, new TextureSettings());
 		assert checkErrorInst("Create null texture");
+		
+		enable(GLOps.BLEND);
+		setBlendFunction(GLBlendFuncs.ONE,GLBlendFuncs.ONE_MINUS_SRC_ALPHA);
+		switchCulling(false);
+		setCullMode(false);
 	}
 	
 	public final void init() {
 		start();
-		
-		switchCulling(false);
-		setCullMode(false);
-		
-		enable(GLOps.BLEND);
-		setBlendFunction(GLBlendFuncs.ONE,GLBlendFuncs.ONE_MINUS_SRC_ALPHA);
 		
 		postInit();
 		assert checkErrorInst("Start graphics translator");
@@ -198,9 +199,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(BasicProgram program:mPrograms) {
 			program.restart();
 		}
+		mRestartCount++;
 	}
 	
 	public void initTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings, boolean finish) {
+		if(buffer!=null)
+			buffer.order(ByteOrder.nativeOrder());
 		derivedInitTexture(texture,buffer,textureSettings);
 		if(finish)
 			texture.finish();
@@ -307,8 +311,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public Texture createEmptyTexture(int width,int height,TextureSettings settings) {
 		Texture texture = new Texture(this);
-		ByteBuffer emptyBuffer = ByteBuffer.allocateDirect(width*height*settings.mChannels);
-		texture.set(emptyBuffer, width, height, settings);
+		//ByteBuffer emptyBuffer = ByteBuffer.allocateDirect(width*height*settings.mChannels);
+		texture.set(null, width, height, settings);
 		return texture;
 	}
 	

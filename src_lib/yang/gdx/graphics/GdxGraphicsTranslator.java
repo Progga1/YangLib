@@ -163,7 +163,7 @@ public class GdxGraphicsTranslator extends GraphicsTranslator {
 	}
 
 	@Override
-	protected TextureRenderTarget derivedCreateRenderTarget(Texture texture) {
+	public TextureRenderTarget derivedCreateRenderTarget(Texture texture) {
 		// TODO Auto-generated method stub
 		return null;
 	}
