@@ -58,10 +58,11 @@ class FontDrawPanel extends JPanel {
     	mTransparent = new Color(0,0,0,0);
     }
     
-    public void setParameters(String fontName, int outputWidth, int outputHeight, int asciiStartID, int asciiEndID, int kernBoxes, int fontSize, String filename, int debug){
+    public void setParameters(String fontName, int outputWidth, int outputHeight, int asciiStartID, int asciiEndID, int kernBoxes, int fontSize, String filename, int pixelBorder, int debug){
     	mFontName = fontName;
     	mWidth	  = outputWidth;
     	mHeight	  = outputHeight;
+    	mBorder = pixelBorder;
     	
     	mBaseLine = mHeight / 2;
     	mFontSize = fontSize;
