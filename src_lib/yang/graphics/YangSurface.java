@@ -20,6 +20,7 @@ public abstract class YangSurface {
 	protected float mDeltaTimeSeconds;
 	protected long mDeltaTimeNanos;
 	protected int mRuntimeState = 0;
+	private float mLoadingProgress = -1;
 	
 	/**
 	 * GL-Thread
@@ -35,7 +36,13 @@ public abstract class YangSurface {
 	protected void resumedFromPause(){};
 	protected abstract void draw();
 	
+	//Optional methods
 	protected void postInitGraphics() { }
+	protected void initGraphicsForResume() { }
+	
+	protected void drawResume() {
+		mGraphics.clear(0, 0, 0.1f);
+	}
 	
 	public YangSurface() {
 		mInitializedNotifier = new Object();
@@ -45,27 +52,36 @@ public abstract class YangSurface {
 	
 	public final void drawFrame() {
 		
-		if(mRuntimeState>1) {
+		if(mRuntimeState>0 && mLoadingProgress<0) {
 			mGraphics.restart();
+			mLoadingProgress = 0;
+			initGraphicsForResume();
+			
+			if(mAutoReloadTexturesOnResume) {
+				mGraphics.beginFrame();
+				drawResume();
+				mGraphics.endFrame();
+				return;
+			}
+		}
+		
+		if(mRuntimeState>0) {
 			if(mAutoReloadTexturesOnResume) {
 				mGraphics.mGFXLoader.reloadTextures();
 			}
 			mGraphics.unbindTextures();
-			resumedFromStop();
-			mRuntimeState = 1;
-		}else if(mRuntimeState>0) {
-			mGraphics.restart();
-			if(mAutoReloadTexturesOnResume) {
-				mGraphics.mGFXLoader.reloadTextures();
-			}
-			mGraphics.unbindTextures();
-			resumedFromPause();
+			
+			if(mRuntimeState==1)
+				resumedFromPause();
+			if(mRuntimeState==2)
+				resumedFromStop();
 			mRuntimeState = 0;
 		}
 		
 		mGraphics.beginFrame();
 		draw();
 		mGraphics.endFrame();
+		
 	}
 	
 	public void setGraphics(GraphicsTranslator graphics) {
@@ -136,6 +152,7 @@ public abstract class YangSurface {
 	
 	public void stop() {
 		mRuntimeState = 2;
+		mLoadingProgress = -1;
 	}
 	
 	/**
@@ -144,6 +161,7 @@ public abstract class YangSurface {
 	public void pause() {
 		mProgramTime = 0;
 		mRuntimeState = 1;
+		mLoadingProgress = -1;
 	}
 	
 	/**
