@@ -1,9 +1,9 @@
 package yang.android.graphics;
 
 import yang.graphics.YangSurface;
+import yang.model.DebugYang;
 import yang.model.ExitCallback;
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	
 	public static boolean PRINT_ACTIVITY_DEBUG = true;
 	
-	protected YangTouchSurface mGLView;
+	protected static YangTouchSurface mGLView;
 	
 	public void defaultInit(YangTouchSurface androidSurface) {
 		
@@ -28,15 +28,25 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	
 	protected void activityOut(Object msg) {
 		if(PRINT_ACTIVITY_DEBUG)
-			System.out.println("--------------------------("+(""+this).split("@")[1]+") "+msg+"---------------------------");
+			DebugYang.println("--------------------------("+(""+this).split("@")[1]+") "+msg+"---------------------------",1);
 	}
 	
 	protected void setSurface(YangSurface yangSurface) {
 		mGLView.setSurface(yangSurface);
 	}
 	
-	public void defaultInit() {
-		defaultInit(new YangTouchSurface(super.getApplicationContext()));
+	public void defaultInit() {if(mGLView!=null)System.out.println(mGLView);
+		if(mGLView!=null)
+			defaultInit(mGLView);
+		else
+			defaultInit(new YangTouchSurface(super.getApplicationContext()));
+	}
+	
+	public void defaultInit(boolean useDebugEditText) {
+		if(mGLView==null && useDebugEditText)
+			defaultInit(new YangKeyTouchSurface(super.getApplicationContext()));
+		else
+			defaultInit();
 	}
 
 	@Override
@@ -70,6 +80,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	protected void onDestroy() {
 		super.onDestroy();
 		activityOut("DESTROY");
+		System.exit(0);
 	}
 	
 	@Override
@@ -101,12 +112,5 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 //		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 //			
 //		}
-	}
-
-	public void defaultInit(boolean useDebugEditText) {
-		if(useDebugEditText)
-			defaultInit(new YangKeyTouchSurface(super.getApplicationContext()));
-		else
-			defaultInit();
 	}
 }

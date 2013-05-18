@@ -4,7 +4,7 @@ public class DebugYang {
 
 	public static boolean FORCE_FULLSCREEN = false;
 	
-	public static int debugLevel = 0;
+	public static int debugLevel = 1;
 	public static boolean drawKerning = false;
 	public static boolean showStart = false;
 	public static boolean drawTails = true;

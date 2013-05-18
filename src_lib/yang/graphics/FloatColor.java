@@ -3,7 +3,6 @@ package yang.graphics;
 import java.nio.ByteBuffer;
 
 import yang.math.objects.Quadruple;
-import yang.util.gui.components.GUIInteractiveRectComponent;
 
 
 public class FloatColor extends Quadruple {

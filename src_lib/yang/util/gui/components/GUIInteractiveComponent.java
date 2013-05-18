@@ -1,10 +1,7 @@
 package yang.util.gui.components;
 
 import yang.events.eventtypes.YangEvent;
-import yang.graphics.font.DrawableAnchoredLines;
-import yang.graphics.font.DrawableString;
 import yang.util.gui.GUIPointerEvent;
-import yang.util.gui.components.defaultdrawers.GUICaptionDrawer;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 

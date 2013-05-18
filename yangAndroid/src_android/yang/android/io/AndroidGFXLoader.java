@@ -6,9 +6,7 @@ import java.nio.ByteBuffer;
 
 import yang.android.graphics.AndroidGraphics;
 import yang.graphics.textures.TextureData;
-import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.AbstractGFXLoader;
-import yang.graphics.translator.Texture;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;

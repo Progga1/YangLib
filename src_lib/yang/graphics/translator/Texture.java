@@ -1,7 +1,6 @@
 package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.textures.enums.TextureFilter;

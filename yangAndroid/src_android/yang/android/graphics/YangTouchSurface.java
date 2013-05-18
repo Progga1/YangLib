@@ -11,6 +11,7 @@ import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.graphics.YangSurface;
 import yang.model.App;
+import yang.model.DebugYang;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
@@ -31,16 +32,21 @@ public class YangTouchSurface extends GLSurfaceView{
 	
 	protected void initGL(Context context) {
 //		super.setEGLConfigChooser(8,8,8,8,0,0);	//crashes on galaxy nexus
+		DebugYang.println("INITIALIZE OPENGL");
 		super.setEGLContextClientVersion(2);
 		mSceneRenderer = new YangSceneRenderer(context);
 		super.setRenderer(mSceneRenderer);
 
-		App.soundManager = new AndroidSoundManager(context);
-		App.storage = new AndroidDataStorage(context);
-		App.soundLoader = new AndroidSoundLoader(context);
-		App.gfxLoader = mSceneRenderer.mGraphicsTranslator.mGFXLoader;
-		App.resourceManager = new AndroidResourceManager(context);
-		((AndroidSoundManager)App.soundManager).init(App.soundLoader);
+		if(App.soundManager==null) {
+			App.soundManager = new AndroidSoundManager(context);
+			App.storage = new AndroidDataStorage(context);
+			App.soundLoader = new AndroidSoundLoader(context);
+			App.gfxLoader = mSceneRenderer.mGraphicsTranslator.mGFXLoader;
+			App.resourceManager = new AndroidResourceManager(context);
+			((AndroidSoundManager)App.soundManager).init(App.soundLoader);
+		}else{
+			DebugYang.println("App references already set");
+		}
 	}
 	
 	public void setSurface(YangSurface surface) {

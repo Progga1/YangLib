@@ -1,6 +1,5 @@
 package yang.graphics.textures;
 
-import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.ScreenInfo;
 

@@ -2,6 +2,7 @@ package yang.graphics;
 
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.model.DebugYang;
 import yang.util.StringsXML;
 
 public abstract class YangSurface {
@@ -72,6 +73,8 @@ public abstract class YangSurface {
 	}
 	
 	public void onSurfaceCreated() {
+		if(mInitialized)
+			DebugYang.println("ALREADY INITIALIZED");
 		if(mInitialized)
 			return;
 		mGraphics.init();
