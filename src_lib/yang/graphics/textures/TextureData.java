@@ -98,6 +98,7 @@ public class TextureData {
 				mData.put((byte)(alpha));
 			}
 		}
+		mData.rewind();
 		return this;
 	}
 	

@@ -15,9 +15,11 @@ public class Texture {
 	public int mHeight;
 	public int mId;
 	public TextureSettings mSettings;
+	public boolean mIsAlphaMap;
 	
 	public Texture(GraphicsTranslator graphics) {
 		mGraphics = graphics;
+		mIsAlphaMap = false;
 	}
 	
 	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureSettings settings) {

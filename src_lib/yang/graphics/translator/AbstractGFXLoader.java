@@ -44,7 +44,9 @@ public abstract class AbstractGFXLoader {
 		TextureData data = loadImageData(name,redToAlpha);
 		if(redToAlpha)
 			data.redToAlpha();
-		return mGraphics.createTexture(data,textureSettings).finish();
+		Texture result = mGraphics.createTexture(data,textureSettings).finish();
+		result.mIsAlphaMap = redToAlpha;
+		return result;
 	}
 	
 	protected synchronized Texture getImage(String name,TextureSettings textureSettings, boolean redToAlpha) {
@@ -126,9 +128,12 @@ public abstract class AbstractGFXLoader {
 	public void reloadTextures() {
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
 			TextureData data = loadImageData(entry.getKey());
+			Texture tex = entry.getValue();
 			//System.out.println(entry.getKey());
 			//entry.getValue().update(data.mData);
-			mGraphics.initTexture(entry.getValue(), data.mData, entry.getValue().mSettings);
+			if(tex.mIsAlphaMap)
+				data.redToAlpha();
+			mGraphics.initTexture(tex, data.mData, tex.mSettings);
 		}
 	}
 	
