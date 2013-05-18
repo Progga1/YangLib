@@ -14,7 +14,7 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.awt.GLJPanel;
 
 import yang.events.EventQueueHolder;
-import yang.graphics.SurfaceInterface;
+import yang.graphics.YangSurface;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureRenderTarget;
@@ -30,7 +30,7 @@ import com.jogamp.opengl.util.Animator;
 public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 
 	private GL2ES2 gles2;
-	private SurfaceInterface mSurface;
+	private YangSurface mSurface;
 	private Component mPanel;
 	private Animator mGLAnimator;
 	public static boolean DEFAULT_USE_GLPANEL = false;
@@ -145,7 +145,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		mSurface.onSurfaceCreated();
 	}
 	
-	public void setSurface(SurfaceInterface surface) {
+	public void setSurface(YangSurface surface) {
 		mSurface = surface;
 	}
 

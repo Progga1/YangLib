@@ -3,7 +3,7 @@ package yang.pc.gles;
 import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
-import yang.graphics.SurfaceInterface;
+import yang.graphics.YangSurface;
 import yang.model.App;
 import yang.model.DebugYang;
 import yang.pc.PCEventHandler;
@@ -61,7 +61,7 @@ public class YangGLESFrame extends PCFrame{
 		mGraphics.run();
 	}
 	
-	public void setSurface(SurfaceInterface surface) {
+	public void setSurface(YangSurface surface) {
 		mSurface = surface;
 		mSurface.setGraphics(mGraphics);
 		mGraphics.setSurface(mSurface);

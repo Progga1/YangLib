@@ -1,6 +1,6 @@
 package yang.pc.gles;
 
-import yang.graphics.SurfaceInterface;
+import yang.graphics.YangSurface;
 import yang.model.App;
 import yang.pc.fileio.PCDataStorage;
 import yang.pc.fileio.PCResourceManager;
@@ -26,7 +26,7 @@ public class FullGraphicsInitializer {
 		return this;
 	}
 	
-	public FullGraphicsInitializer setSurface(SurfaceInterface surface) {
+	public FullGraphicsInitializer setSurface(YangSurface surface) {
 		mTranslator.setSurface(surface);
 		surface.setGraphics(mTranslator);
 		
