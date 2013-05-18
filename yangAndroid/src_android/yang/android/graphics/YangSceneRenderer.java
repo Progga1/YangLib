@@ -3,21 +3,21 @@ package yang.android.graphics;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import yang.graphics.SurfaceInterface;
+import yang.graphics.YangSurface;
 import yang.graphics.translator.GraphicsTranslator;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
 public class YangSceneRenderer implements GLSurfaceView.Renderer {
 
-	public SurfaceInterface mSurfaceInterface;
+	public YangSurface mSurfaceInterface;
 	public GraphicsTranslator mGraphicsTranslator;
 	
 	public YangSceneRenderer(Context context) {
 		mGraphicsTranslator = new AndroidGraphics(context);
 	}
 	
-	public void setSurface(SurfaceInterface surface) {
+	public void setSurface(YangSurface surface) {
 		mSurfaceInterface = surface;
 		mSurfaceInterface.setGraphics(mGraphicsTranslator);
 	}

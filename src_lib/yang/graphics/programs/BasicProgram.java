@@ -94,6 +94,7 @@ public class BasicProgram extends AbstractProgram {
 	}
 
 	public void setProjection(float[] mvpMatrix) {
+		assert mGraphics.preCheck("Set projection");
 		mProgram.setUniformMatrix(mProjHandle, mvpMatrix);
 		assert mGraphics.checkErrorInst("Set projection");
 	}
@@ -125,7 +126,9 @@ public class BasicProgram extends AbstractProgram {
 
 	public void activate() {
 		mProgram.activate();
+		assert mGraphics.checkErrorInst("Activate");
 		mProgram.setUniformInt(mTexSamplerHandle, 0);
+		assert mGraphics.checkErrorInst("Set tex handle");
 	}
 
 	@Override

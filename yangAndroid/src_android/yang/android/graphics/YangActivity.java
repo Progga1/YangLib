@@ -1,6 +1,6 @@
 package yang.android.graphics;
 
-import yang.graphics.SurfaceInterface;
+import yang.graphics.YangSurface;
 import yang.model.ExitCallback;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -31,7 +31,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 			System.out.println("--------------------------("+(""+this).split("@")[1]+") "+msg+"---------------------------");
 	}
 	
-	protected void setSurface(SurfaceInterface yangSurface) {
+	protected void setSurface(YangSurface yangSurface) {
 		mGLView.setSurface(yangSurface);
 	}
 	

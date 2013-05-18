@@ -53,7 +53,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected DrawListener mCurDrawListener;
 	public ScreenInfo mCurrentScreen;
 	public float mTimer;
-	private long mLstTimestamp = -1;
+	private long mLstTimestamp;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
@@ -186,6 +186,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		setBlendFunction(GLBlendFuncs.ONE,GLBlendFuncs.ONE_MINUS_SRC_ALPHA);
 		switchCulling(false);
 		setCullMode(false);
+		mLstTimestamp = -1;
 	}
 	
 	public final void init() {

@@ -9,7 +9,7 @@ import yang.events.InputEventQueue;
 import yang.events.Keys;
 import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangKeyEvent;
-import yang.graphics.SurfaceInterface;
+import yang.graphics.YangSurface;
 import yang.model.App;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -43,7 +43,7 @@ public class YangTouchSurface extends GLSurfaceView{
 		((AndroidSoundManager)App.soundManager).init(App.soundLoader);
 	}
 	
-	public void setSurface(SurfaceInterface surface) {
+	public void setSurface(YangSurface surface) {
 		mSceneRenderer.setSurface(surface);
 		
 		if (surface instanceof EventQueueHolder)

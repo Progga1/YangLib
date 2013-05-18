@@ -4,7 +4,7 @@ import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.util.StringsXML;
 
-public abstract class SurfaceInterface {
+public abstract class YangSurface {
 	
 	public GraphicsTranslator mGraphics;
 
@@ -20,27 +20,45 @@ public abstract class SurfaceInterface {
 	protected long mDeltaTimeNanos;
 	protected int mRuntimeState = 0;
 	
+	/**
+	 * GL-Thread
+	 */
 	protected abstract void initGraphics();
-	protected void resumingFinished(){};
+	/**
+	 * GL-Thread
+	 */
+	protected void resumedFromStop(){};
+	/**
+	 * GL-Thread
+	 */
+	protected void resumedFromPause(){};
 	protected abstract void draw();
 	
 	protected void postInitGraphics() { }
 	
-	public SurfaceInterface() {
+	public YangSurface() {
 		mInitializedNotifier = new Object();
 		mProgramTime = 0;
 		setUpdatesPerSecond(60);
 	}
 	
-	public void drawFrame() {
+	public final void drawFrame() {
 		
-		if(mRuntimeState>0) {
+		if(mRuntimeState>1) {
 			mGraphics.restart();
 			if(mAutoReloadTexturesOnResume) {
 				mGraphics.mGFXLoader.reloadTextures();
 			}
 			mGraphics.unbindTextures();
-			resumingFinished();
+			resumedFromStop();
+			mRuntimeState = 1;
+		}else if(mRuntimeState>0) {
+			mGraphics.restart();
+			if(mAutoReloadTexturesOnResume) {
+				mGraphics.mGFXLoader.reloadTextures();
+			}
+			mGraphics.unbindTextures();
+			resumedFromPause();
 			mRuntimeState = 0;
 		}
 		

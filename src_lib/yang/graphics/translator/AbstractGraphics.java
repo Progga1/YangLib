@@ -105,12 +105,12 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		setSuppData(0,0,0);
 	}
 	
-	public void onRestartGraphics() {
+	public void onRestartGraphics() {System.out.println("start prog rebind----------------------------------------");
 		if(mCurrentProgram!=null) {
 			ShaderType program = mCurrentProgram;
 			mCurrentProgram = null;
-			setShaderProgram(program);
-		}
+			setShaderProgram(program);System.out.println("rebinded program----------------------------------------");
+		}else System.out.println("prog null----------------------------------------");
 			
 	}
 	

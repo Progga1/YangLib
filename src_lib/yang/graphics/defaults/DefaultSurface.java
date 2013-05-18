@@ -5,13 +5,13 @@ import yang.events.InputEventQueue;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.InputEventListener;
-import yang.graphics.SurfaceInterface;
+import yang.graphics.YangSurface;
 import yang.graphics.font.DrawableString;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
-public abstract class DefaultSurface extends SurfaceInterface implements InputEventListener,EventQueueHolder{
+public abstract class DefaultSurface extends YangSurface implements InputEventListener,EventQueueHolder{
 
 	public AbstractResourceManager mResources;
 	public StringsXML mStrings;

@@ -74,7 +74,11 @@ public abstract class AbstractGFXLoader {
 	}
 	
 	public Texture getImage(String name) {
-		return getImage(name,new TextureSettings());
+		Texture texture = mTextures.get(name);
+		if (texture != null)
+			return texture;
+		else
+			return getImage(name,new TextureSettings());
 	}
 	
 	public Texture getAlphaMap(String name,TextureSettings textureSettings) {
@@ -118,10 +122,11 @@ public abstract class AbstractGFXLoader {
 		return result.init(texture,fontDataFilename,mResources);
 	}
 
-	//TODO delete texture not working - double assigned ids
+	//TODO handling same filenames with different texture settings
 	public void reloadTextures() {
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
 			TextureData data = loadImageData(entry.getKey());
+			//System.out.println(entry.getKey());
 			//entry.getValue().update(data.mData);
 			mGraphics.initTexture(entry.getValue(), data.mData, entry.getValue().mSettings);
 		}
