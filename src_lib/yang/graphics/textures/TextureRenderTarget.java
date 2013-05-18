@@ -39,10 +39,5 @@ public class TextureRenderTarget implements ScreenInfo{
 	public float getSurfaceRatioY() {
 		return mRatioY;
 	}
-
-	public void recreate(GraphicsTranslator graphics) {
-		mTargetTexture.update(null);
-		graphics.derivedCreateRenderTarget(mTargetTexture);
-	}
 	
 }

@@ -353,12 +353,7 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	protected void restartGraphics() {
-		mShadowHelper.restart();
-		mLightmapHelper.restart();
-		mEnvironmentMap.recreate(mGraphics);
 		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
-//		initGraphics();
-//		mFirstFrame = true;
 	}
 
 	@Override

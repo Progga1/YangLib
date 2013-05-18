@@ -39,10 +39,6 @@ public class ShadowHelper {
 		return result;
 	}
 	
-	public void restart() {
-		mDepthMap = mGraphics.createRenderTarget(mSize, mSize, defaultTextureSettings);
-	}
-	
 	public ShadowHelper() {
 		mLightDirection = new float[4];
 	}
@@ -91,7 +87,7 @@ public class ShadowHelper {
 		mGraphics3D = graphics3D;
 		mGraphics = graphics3D.mTranslator;
 		mSize = size;
-		restart();
+		mDepthMap = mGraphics.createRenderTarget(mSize, mSize, defaultTextureSettings);
 		getDepthProgram();
 		getDepthTrafoCorrection();
 		mDepthTransformation = mGraphics.createTransformationMatrix();

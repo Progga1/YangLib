@@ -38,10 +38,6 @@ public class PlanarLightmapHelper {
 
 	}
 	
-	public void restart() {
-		mLightMap = mGraphics.createRenderTarget(mSize, mSize, mTextureSettings);
-	}
-	
 	public void refreshProjections() {
 		mCameraTransform.setLookAt(0,0,0, 0,-1,0, 0,0,-1);
 		mOrthoProjection.setOrthogonalProjection(-mObjectWidth*0.5f,mObjectWidth*0.5f, mObjectHeight*0.5f, -mObjectHeight*0.5f, mNear, mFar);
@@ -66,7 +62,7 @@ public class PlanarLightmapHelper {
 		mCameraTransform = new YangMatrixCameraOps();
 		mOrthoProjection = new YangMatrixCameraOps();
 		refreshProjections();
-		restart();
+		mLightMap = mGraphics.createRenderTarget(mSize, mSize, mTextureSettings);
 	}
 	
 	public void init(ShadowHelper shadowHelper,int textureWidthAndHeight,float objectWidth,float objectHeight,boolean mipMapping) {

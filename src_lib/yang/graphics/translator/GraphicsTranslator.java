@@ -67,7 +67,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public Texture mNullTexture;
 	private Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
-	
+	private NonConcurrentList<TextureRenderTarget> mRenderTargets;
 	private NonConcurrentList<BasicProgram> mPrograms;
 	
 	//Helpers
@@ -158,6 +158,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurrentScreen = this;
 		mNoTexture = new Texture(this);
 		mScreenListeners = new NonConcurrentList<SurfaceListener>();
+		mRenderTargets = new NonConcurrentList<TextureRenderTarget>();
 	}
 	
 	public void addScreenListener(SurfaceListener listener) {
@@ -201,6 +202,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		if(mCurDrawListener!=null)
 			mCurDrawListener.onRestartGraphics();
+		for(TextureRenderTarget renderTarget:mRenderTargets) {
+			renderTarget.mTargetTexture.update(null);
+			derivedCreateRenderTarget(renderTarget.mTargetTexture);
+		}
 		mRestartCount++;
 	}
 	
@@ -451,7 +456,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public TextureRenderTarget createRenderTarget(int width,int height,TextureSettings textureSettings) {
 		Texture texture = createEmptyTexture(width,height,textureSettings);
-		return derivedCreateRenderTarget(texture);
+		TextureRenderTarget result = derivedCreateRenderTarget(texture);
+		mRenderTargets.add(result);
+		return result;
 	}
 	
 	public void setScreenRenderTarget() {
