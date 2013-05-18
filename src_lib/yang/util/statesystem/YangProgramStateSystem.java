@@ -44,4 +44,20 @@ public class YangProgramStateSystem extends DefaultSurface {
 		return true;
 	}
 	
+	@Override
+	public void resume() {
+		super.resume();
+		if(mCurrentState!=null && !mCurrentState.mFirstFrame) {
+			mCurrentState.resume();
+		}
+	}
+	
+	@Override
+	public void pause() {
+		super.pause();
+		if(mCurrentState!=null && !mCurrentState.mFirstFrame) {
+			mCurrentState.pause();
+		}
+	}
+	
 }

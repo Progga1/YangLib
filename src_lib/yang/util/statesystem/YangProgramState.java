@@ -28,6 +28,11 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected abstract void step(float deltaTime);
 	protected abstract void draw();
 	
+	protected void surfaceSizeChanged(int newWidth,int newHeight) { }
+	protected void restartGraphics() { }
+	protected void pause() { }
+	protected void resume() { }
+	
 	public final YangProgramState<StateSystemType> init(StateSystemType stateSystem) {
 		mStateSystem = stateSystem;
 		mGraphics = stateSystem.mGraphics2D.mTranslator;
@@ -40,9 +45,6 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		mInitialized = true;
 		return this;
 	}
-	
-	protected void surfaceSizeChanged(int newWidth,int newHeight) { }
-	protected void restartGraphics() { }
 	
 	public boolean isInitialized() {
 		return mInitialized;
@@ -66,8 +68,9 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	public void drawFrame() {
 		if(mFirstFrame) {
 			initGraphics();
+			mRestartCount = mGraphics.mRestartCount;
 		}
-		if(mRestartCount <mGraphics.mRestartCount) {
+		if(mRestartCount<mGraphics.mRestartCount) {
 			restartGraphics();
 			mRestartCount = mGraphics.mRestartCount;
 		}

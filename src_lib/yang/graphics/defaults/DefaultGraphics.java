@@ -135,6 +135,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	protected void updateProgramProjection() {
+		assert mTranslator.preCheck("Set program projection");
 		BasicProgram program = mCurrentProgram;
 		if (program != null) {
 			refreshResultTransform();

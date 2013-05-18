@@ -254,7 +254,7 @@ public class IcyTerrainState extends SampleState {
 			mGraphics3D.drawSphere(12, 12, 0,0,0, -10, 2,-2);
 			mSkyBoxBatch = mGraphics3D.finishBatchRecording().setName("SkyBox");
 		}
-		
+
 		if(mFirstFrame) {
 			mShadowHelper.init(mGraphics3D,1024);
 			mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
@@ -280,7 +280,7 @@ public class IcyTerrainState extends SampleState {
 		float pZ = (float)Math.cos(time*fac)*rad;
 		
 		mGraphics3D.setPerspectiveProjection(0.6f,0.1f,100.5f);
-		
+			
 		if(ENVIRONMENT_MAPPING) {
 			mGraphics.checkErrorInst("Pre environment mapping");
 			mGraphics.setTextureRenderTarget(mEnvironmentMap);
@@ -314,6 +314,14 @@ public class IcyTerrainState extends SampleState {
 		mCamera.set(pX,pY,pZ, 0,0,0, 0,1,0);
 		mGraphics3D.setCamera(mCamera);
 
+//		if(true) {
+//			mGraphics3D.setDefaultProgram();
+//			mGraphics.bindTexture(grass);
+//			mGraphics.bindTexture(mGraphics.mGFXLoader.getImage("sky"));
+//			mGraphics3D.drawCubeCentered(0, 0, 0, 2);
+//			return;
+//		}
+		
 		mGraphics.checkErrorInst("Pre draw sky");
 		drawSky();
 		mGraphics.checkErrorInst("Draw sky");
@@ -345,14 +353,12 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	protected void restartGraphics() {
-//		mShadowHelper.restart();
-//		mLightmapHelper.restart();
-//		mEnvironmentMap.recreate(mGraphics);
-//		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
-		mShadowHelper.init(mGraphics3D,1024);
-		mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
-		mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureSettings(TextureWrap.CLAMP,TextureFilter.LINEAR));
+		mShadowHelper.restart();
+		mLightmapHelper.restart();
+		mEnvironmentMap.recreate(mGraphics);
 		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
+//		initGraphics();
+//		mFirstFrame = true;
 	}
 
 	@Override

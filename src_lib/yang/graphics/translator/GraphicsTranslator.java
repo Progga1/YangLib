@@ -199,6 +199,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(BasicProgram program:mPrograms) {
 			program.restart();
 		}
+		if(mCurDrawListener!=null)
+			mCurDrawListener.onRestartGraphics();
 		mRestartCount++;
 	}
 	
@@ -347,10 +349,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			return;
 		int vertexCount = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		if(vertexCount>0) {
+			assert preCheck("Prepare draw vertices");
 			mCurDrawListener.onPreDraw();
+			assert preCheck("Draw vertices listener");
 			mRectCount += mCurrentVertexBuffer.getCurrentIndexWriteCount()/6;
 			mCurrentVertexBuffer.finishUpdate();
+			assert preCheck("Draw vertices finish update");
 			mCurrentVertexBuffer.reset();
+			assert preCheck("Draw vertices reset");
 			drawVertices(0,vertexCount,mDrawMode);
 			mFlushCount++;
 		}

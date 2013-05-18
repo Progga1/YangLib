@@ -95,6 +95,7 @@ public class BasicProgram extends AbstractProgram {
 
 	public void setProjection(float[] mvpMatrix) {
 		mProgram.setUniformMatrix(mProjHandle, mvpMatrix);
+		assert mGraphics.checkErrorInst("Set projection");
 	}
 	
 	public void setWorldTransform(float[] worldMatrix) {

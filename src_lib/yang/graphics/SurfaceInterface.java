@@ -8,7 +8,7 @@ public abstract class SurfaceInterface {
 	
 	public GraphicsTranslator mGraphics;
 
-	protected boolean mAutoReloadOnResume = true;
+	protected boolean mAutoReloadTexturesOnResume = true;
 	protected boolean mInitialized;
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
@@ -36,8 +36,10 @@ public abstract class SurfaceInterface {
 		
 		if(mRuntimeState>0) {
 			mGraphics.restart();
-			if(mAutoReloadOnResume)
+			if(mAutoReloadTexturesOnResume) {
 				mGraphics.mGFXLoader.reloadTextures();
+			}
+			mGraphics.unbindTextures();
 			resumingFinished();
 			mRuntimeState = 0;
 		}
@@ -111,15 +113,29 @@ public abstract class SurfaceInterface {
 		return result;
 	}
 	
-	public void onStop() {
+	public void stop() {
 		mRuntimeState = 2;
 	}
 	
-	public void onPause() {
+	/**
+	 * Non-GL-Thread!
+	 */
+	public void pause() {
+		mProgramTime = 0;
 		mRuntimeState = 1;
 	}
 	
-	public void onResume() {
+	/**
+	 * Non-GL-Thread!
+	 */
+	public void destroy() {
+		mGraphics.mGFXLoader.deleteTextures();
+	}
+	
+	/**
+	 * Non-GL-Thread!
+	 */
+	public void resume() {
 		
 	}
 	

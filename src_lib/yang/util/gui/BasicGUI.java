@@ -126,7 +126,6 @@ public class BasicGUI {
 		}else if(mAutoUpdateProjections)
 			refreshProjections();
 		mGraphics2D.mTranslator.switchZBuffer(false);
-		mGraphics2D.mTranslator.bindTexture(null);
 		int pass=0;
 		for(Texture texture:mPassTextures) {
 			mGraphics.bindTexture(texture);

@@ -99,14 +99,14 @@ public class YangTouchSurface extends GLSurfaceView{
 	@Override
 	public void onPause() {
 		super.onPause();
-		mSceneRenderer.mSurfaceInterface.onPause();
+		mSceneRenderer.mSurfaceInterface.pause();
 	}
 
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		mSceneRenderer.mSurfaceInterface.onResume();
+		mSceneRenderer.mSurfaceInterface.resume();
 	}
 	
 	public View getView() {

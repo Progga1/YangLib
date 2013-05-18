@@ -236,6 +236,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	public void bindTexture(int texId,int level) {
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0+level);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
+		assert checkError("Bind texture");
 	}
 
 	@Override

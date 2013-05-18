@@ -118,10 +118,18 @@ public abstract class AbstractGFXLoader {
 		return result.init(texture,fontDataFilename,mResources);
 	}
 
+	//TODO delete texture not working - double assigned ids
 	public void reloadTextures() {
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
 			TextureData data = loadImageData(entry.getKey());
-			entry.getValue().update(data.mData);
+			//entry.getValue().update(data.mData);
+			mGraphics.initTexture(entry.getValue(), data.mData, entry.getValue().mSettings);
+		}
+	}
+	
+	public void deleteTextures() {
+		for(Entry<String,Texture> entry:mTextures.entrySet()) {
+			entry.getValue().free();
 		}
 	}
 	
