@@ -15,7 +15,7 @@ import android.graphics.BitmapFactory;
 public class AndroidGFXLoader extends AbstractGFXLoader {
 	
 	private Context mContext;
-	private ByteBuffer tempBuf = ByteBuffer.allocateDirect(2048*2048*4);
+	private ByteBuffer tempBuf = ByteBuffer.allocateDirect(1024*1024*4);
 	
 	public AndroidGFXLoader(AndroidGraphics graphics,Context context) {
 		super(graphics,new AndroidResourceManager(context));
@@ -45,8 +45,10 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		int width = bmp.getWidth();
 		int height = bmp.getHeight();
 		
+		if((width>1024 || height>1024) && tempBuf.capacity()<(2048*2048*4))
+			 tempBuf = ByteBuffer.allocateDirect(2048*2048*4);
+		
 		int channels = bmp.hasAlpha() || forceRGBA?4:4;
-		//ByteBuffer buf = ByteBuffer.allocateDirect(width*height*channels);	//TODO  !!!!! use one buffer!
 		bmp.copyPixelsToBuffer(tempBuf);
 		bmp.recycle();
 		tempBuf.rewind();

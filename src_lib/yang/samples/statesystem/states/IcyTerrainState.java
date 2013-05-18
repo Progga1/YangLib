@@ -33,6 +33,7 @@ public class IcyTerrainState extends SampleState {
 	private static int PATCHES_Y = 64;
 	private static int WATER_PATCHES_X = 8;
 	private static int WATER_PATCHES_Y = 8;
+	private static final int COAST_KERNELSIZE = 2;
 	private static final float PI = 3.141592653589f;
 	private static final float GLOBAL_SHIFT = 1f;
 	private static boolean STATIC_SHADOWS = false;
@@ -120,14 +121,14 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.addProgram(mWaterProgram);
 		
 		mTerrain = new TerrainCreator(mGraphics3D);
-		mWeather = new Weather3D<DefaultParticles3D>(new Boundaries3D(2,2,2));
+		mWeather = new Weather3D<DefaultParticles3D>(new Boundaries3D(-2,2, 0,2, -2,2));
 		EffectParticleProperties particleProperties = new EffectParticleProperties(0.06f,0.1f, 0.008f,0.01f, 0.05f,0.09f);
 		particleProperties.setVelocityDirection(0, -1, 0, true);
 		DefaultParticles3D particles3D = new DefaultParticles3D();
 		particles3D.init(mGraphics3D,320);
 		particles3D.mTexture = cube;
 		mWeather.init(particles3D,particleProperties);
-		mWeather.createRandomParticles(100);
+		mWeather.createRandomParticles(50);
 	}
 	
 	private void drawShadCube() {
@@ -213,6 +214,13 @@ public class IcyTerrainState extends SampleState {
 		mWaterBatch.draw();
 	}
 	
+	private void drawWeather() {
+		mGraphics.bindTexture(cube);
+		mGraphics3D.setDefaultProgram();
+		mGraphics.switchCulling(false);
+		mWeather.draw();
+	}
+	
 	@Override
 	public void draw() {
 		mWeather.step(0.01f);
@@ -259,7 +267,7 @@ public class IcyTerrainState extends SampleState {
 			mShadowHelper.init(mGraphics3D,1024);
 			mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
 			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureSettings(TextureWrap.CLAMP,TextureFilter.LINEAR));
-			mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
+			mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureSettings(4),1,1.5f);
 		}
 
 		if(mFirstFrame || !STATIC_SHADOWS) {
@@ -284,23 +292,23 @@ public class IcyTerrainState extends SampleState {
 		if(ENVIRONMENT_MAPPING) {
 			mGraphics.checkErrorInst("Pre environment mapping");
 			mGraphics.setTextureRenderTarget(mEnvironmentMap);
-			mGraphics.clear(0,0,0);
+			mGraphics.clear(0,0,0,1,GLMasks.DEPTH_BUFFER_BIT);
 			mCamera.set(pX,-pY,pZ, 0,0,0, 0,1,0);
 			mGraphics3D.setCamera(mCamera);
 			
+			drawSky();
+			
 			mGraphics3D.setShaderProgram(mShadowProgram);
 			mShadowHelper.setShadowShaderProperties(mShadowProgram);
-
-			mGraphics.switchZBuffer(true);
+			mGraphics.bindTexture(ice);
 			mGraphics.switchCulling(true);
-			mGraphics.bindTexture(grass);
-			mGraphics3D.setAmbientColor(1);
+			mGraphics.switchZBuffer(true);
+			mTerrainBatch.draw();
 			
-			mTerrainBatchLowPoly.draw();
-			
+			mGraphics3D.setDefaultProgram();
 			drawShadCube();
-			
-			drawSky();
+
+			//drawWeather();
 			
 			mGraphics.setScreenRenderTarget();
 			waterTex = mEnvironmentMap.mTargetTexture;
@@ -333,10 +341,7 @@ public class IcyTerrainState extends SampleState {
 		else
 			drawTerrain();
 
-		mGraphics.bindTexture(cube);
-		mGraphics3D.setDefaultProgram();
-		mGraphics.switchCulling(false);
-		mWeather.draw();
+		drawWeather();
 		
 		mGraphics3D.setDefaultProgram();
 		drawShadCube();
@@ -353,7 +358,7 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	protected void restartGraphics() {
-		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(5), new TextureSettings(4),1,1.5f);
+		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureSettings(4),1,1.5f);
 	}
 
 	@Override
