@@ -39,7 +39,8 @@ public class GUINinePatchDrawer extends GUIComponentDrawPass<GUIInteractiveRectC
 			uNinePatch = mNinePatchPressed;
 		else
 			uNinePatch = mNinePatch;
-		uNinePatch.draw(component.mProjLeft, component.mProjBottom, component.mProjLeft+component.mProjWidth, component.mProjBottom+component.mProjHeight);
+		if(uNinePatch!=null)
+			uNinePatch.draw(component.mProjLeft, component.mProjBottom, component.mProjLeft+component.mProjWidth, component.mProjBottom+component.mProjHeight);
 	}
 
 }

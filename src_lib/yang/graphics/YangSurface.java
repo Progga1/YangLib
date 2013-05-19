@@ -88,11 +88,17 @@ public abstract class YangSurface {
 		mGraphics = graphics;
 	}
 	
+	private boolean assertMessage() {
+		System.out.println("ASSERTIONS ARE ACTIVATED");
+		return true;
+	}
+	
 	public void onSurfaceCreated() {
-		if(mInitialized)
+		if(mInitialized) {
 			DebugYang.println("ALREADY INITIALIZED");
-		if(mInitialized)
 			return;
+		}
+		assert assertMessage();
 		mGraphics.init();
 		initGraphics();
 		postInitGraphics();

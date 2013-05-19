@@ -109,8 +109,5 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	public void onConfigurationChanged(Configuration config) {
 		super.onConfigurationChanged(config);
 		activityOut("CONFIG_CHANGED: "+config);
-//		if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//			
-//		}
 	}
 }

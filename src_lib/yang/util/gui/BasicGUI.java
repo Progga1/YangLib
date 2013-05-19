@@ -57,6 +57,14 @@ public class BasicGUI {
 		setPassTexture(maxPasses,null);
 	}
 	
+	public BasicGUI(Default2DGraphics graphics2D,int maxPasses) {
+		this(graphics2D,GUICoordinatesMode.SCREEN,true,maxPasses);
+	}
+	
+	public BasicGUI(Default2DGraphics graphics2D) {
+		this(graphics2D,4);
+	}
+	
 	public void setPassTexture(int pass,Texture texture) {
 		while(mPassTextures.size()<=pass)
 			mPassTextures.add(null);
@@ -69,10 +77,6 @@ public class BasicGUI {
 //	newLayer.mMainContainer.setGUI(this);
 //	mLayers.add(newLayer);
 //}
-	
-	public BasicGUI(Default2DGraphics graphics2D,int maxPasses) {
-		this(graphics2D,GUICoordinatesMode.SCREEN,true,maxPasses);
-	}
 	
 	public GUICoordinatesMode getCoordinatesMode() {
 		return mCoordinatesMode;
