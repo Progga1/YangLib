@@ -29,7 +29,7 @@ public abstract class Skeleton {
 	public static final TextureFilter DEFAULTFILTER = TextureFilter.LINEAR_MIP_LINEAR;
 	public static Texture CURSOR_TEXTURE;
 	
-	public float mContourFactor = 0.02f;
+	public float mContourFactor = 0.015f;
 	
 	public boolean mSkeletonAngleConstraints = true;
 	public float mFloorFriction = 0.98f;

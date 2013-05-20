@@ -64,10 +64,11 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mKeyMainMenu.nextSubMenu("Edit");
 		mKeyMainMenu.addItem("PREVIOUSFRAME", "Next Frame").setShortCut('1');
 		mKeyMainMenu.addItem("NEXTFRAME", "Previous Frame").setShortCut('2');
-		mKeyMainMenu.addItem("PREVIOUSFRAMENOTLOAD", "Next Frame unload").setShortCut('3');
-		mKeyMainMenu.addItem("NEXTFRAMENOTLOAD", "Previous Frame unload").setShortCut('4');
+		mKeyMainMenu.addItem("PREVIOUSFRAMENOTLOAD", "Next Frame no loading").setShortCut('3');
+		mKeyMainMenu.addItem("NEXTFRAMENOTLOAD", "Previous Frame no loading").setShortCut('4');
 		mKeyMainMenu.addSeparator();
 		mKeyMainMenu.addItem("UNFIX", "Unfix all joints").setShortCut('F');
+		mKeyMainMenu.addItem("UNDO", "Undo").setShortCut('Z');
 		mKeyMainMenu.nextSubMenu("Animation");
 		mKeyMainMenu.addItem("PLAY", "Play/Pause").setShortCut('W');
 		mKeyMainMenu.addItem("STOP", "Stop").setShortCut('Q');
@@ -162,6 +163,9 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 			for(Joint joint:animator.getCurrentSkeleton().mJoints) {
 				joint.mFixed = false;
 			}
+		}
+		if(key=="UNDO") {
+			animator.reselect();
 		}
 		if(key=="PLAY") {
 			if(animator.isPlaying())

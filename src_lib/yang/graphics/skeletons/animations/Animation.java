@@ -13,7 +13,7 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	public KeyFrame[] mPreviousFrames;
 	public KeyFrame[] mNextFrames;
 	protected WrapMode mWrap;
-	protected boolean mAutoAnimate;
+	public boolean mAutoAnimate;
 	protected float mAutoRotation;
 	protected float mFramesPerSecond;
 	public Interpolation mInterpolation;
@@ -94,14 +94,14 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 
 	}
 	
-	protected void setFrames(KeyFrame[] frames,WrapMode clampMode) {
+	protected void setFrames(WrapMode clampMode,KeyFrame... frames) {
 		mFrames = frames;
 		mWrap = clampMode;
 		refreshKeyFrames();
 	}
 	
-	protected void setFrames(KeyFrame[] frames) {
-		setFrames(frames,DEFAULT_WRAP_MODE);
+	protected void setFrames(KeyFrame... frames) {
+		setFrames(DEFAULT_WRAP_MODE,frames);
 	}
 	
 	protected void setFrames(Pose[] frames,WrapMode clampMode) {
@@ -109,7 +109,7 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 		for(int i=0;i<frames.length;i++) {
 			mFrames[i] = new KeyFrame(frames[i]);
 		}
-		setFrames(mFrames,clampMode);
+		setFrames(clampMode,mFrames);
 	}
 	
 	protected void setFrames(Pose[] frames) {
@@ -117,7 +117,7 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	}
 	
 	protected void setFrame(Pose frame,WrapMode clampMode) {
-		setFrames(new KeyFrame[]{new KeyFrame(frame)},clampMode);
+		setFrames(clampMode,new KeyFrame[]{new KeyFrame(frame)});
 	}
 	
 	protected void setFrame(Pose frame) {

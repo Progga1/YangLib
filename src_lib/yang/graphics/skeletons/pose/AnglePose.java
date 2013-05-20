@@ -88,6 +88,20 @@ public class AnglePose extends Pose<AnglePose>{
 	@Override
 	public void copyFromSkeleton(Skeleton skeleton) {
 		int c = 0;
+		//get array length
+		for(Joint joint:skeleton.mJoints) {
+			if(!(joint instanceof JointNormalConstraint)) {
+				Joint parent = joint.mAngleParent;
+				if(parent==null) {
+					c+=2;
+				}else{
+					c++;
+				}
+			}
+		}
+		if(c!=mAngles.length)
+			mAngles = new float[c];
+		c = 0;
 		for(Joint joint:skeleton.mJoints) {
 			//By normal constraint
 			if(!(joint instanceof JointNormalConstraint)) {
@@ -104,7 +118,6 @@ public class AnglePose extends Pose<AnglePose>{
 					while(angle<-MathConst.PI)
 						angle += MathConst.PI*2;
 					mAngles[c++] = angle;
-					
 				}
 			}
 

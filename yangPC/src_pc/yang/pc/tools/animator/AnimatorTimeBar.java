@@ -76,7 +76,7 @@ public class AnimatorTimeBar extends JPanel implements MouseListener,MouseMotion
 
 	@Override
 	public void mousePressed(MouseEvent ev) {
-		
+		mAnimator.saveChangedPose();
 	}
 
 	@Override
