@@ -5,7 +5,7 @@ import yang.graphics.defaults.DefaultSurface;
 
 public class YangProgramStateSystem extends DefaultSurface {
 
-	private YangProgramState<?> mCurrentState;
+	protected YangProgramState<?> mCurrentState;
 	
 	protected YangProgramStateSystem(boolean init2dGraphics, boolean init3dGraphics) {
 		super(init2dGraphics, init3dGraphics);
