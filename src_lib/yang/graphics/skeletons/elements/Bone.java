@@ -193,6 +193,21 @@ public class Bone {
 		mShiftX1 = shift;
 		mShiftX2 = shift;
 	}
+	
+	public void addShiftX(float shift) {
+		mShiftX1 += shift;
+		mShiftX2 += shift;
+	}
+	
+	public void setShiftY(float shift) {
+		mShiftY1 = shift;
+		mShiftY2 = shift;
+	}
+	
+	public void addShiftY(float shift) {
+		mShiftY1 += shift;
+		mShiftY2 += shift;
+	}
 
 	public void addShift(float x1, float y1, float x2, float y2) {
 		mShiftX1 += x1;
@@ -224,6 +239,10 @@ public class Bone {
 		mShiftY2 *= f;
 		mWidth1 *= f;
 		mWidth2 *= f;
+	}
+
+	public void addLength(float length) {
+		mShiftY2 -= length;
 	}
 	
 }

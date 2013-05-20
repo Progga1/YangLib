@@ -14,6 +14,7 @@ import yang.graphics.skeletons.pose.Pose;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureSettings;
 import yang.graphics.textures.enums.TextureFilter;
+import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.Rect;
@@ -164,7 +165,7 @@ public abstract class Skeleton {
 	}
 	
 	public void setTexture(String filename,TextureFilter filter) {
-		setTexture(filename,new TextureSettings(filter));
+		setTexture(filename,new TextureSettings(TextureWrap.CLAMP,filter));
 	}
 	
 	public void refreshBoundariesRect() {
