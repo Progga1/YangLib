@@ -86,6 +86,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glClear(mask);
 	}
 
+	//TODO split generate - load
 	@Override
 	protected void derivedInitTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings) {
 		assert preCheck("init texture");

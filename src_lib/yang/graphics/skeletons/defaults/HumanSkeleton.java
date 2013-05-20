@@ -245,8 +245,10 @@ public abstract class HumanSkeleton extends Skeleton{
 		super.addBone(mLeftLowerArmBone,6);
 		super.addBone(mLeftUpperArmBone,6);
 		
-		super.addBone(mRightFootBone,2);
-		super.addBone(mLeftFootBone,4);
+		if(mRightFootBone!=null) {
+			super.addBone(mRightFootBone,2);
+			super.addBone(mLeftFootBone,4);
+		}
 	}
 	
 }

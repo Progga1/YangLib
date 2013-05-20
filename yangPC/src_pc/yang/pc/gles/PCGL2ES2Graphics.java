@@ -133,15 +133,14 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 
 	@Override
 	public void init(GLAutoDrawable glAutoDrawable) {
-		gles2 = glAutoDrawable.getGL().getGL2();
-		gles2.glEnable(GL2.GL_TEXTURE_2D);
-
 		while(mSurface==null)
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				break;
 			}
+		gles2 = glAutoDrawable.getGL().getGL2();
+		gles2.glEnable(GL2.GL_TEXTURE_2D);
 		mSurface.onSurfaceCreated();
 	}
 	
