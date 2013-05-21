@@ -244,5 +244,10 @@ public class Bone {
 	public void addLength(float length) {
 		mShiftY2 -= length;
 	}
+
+	public void setContourBottom(float val) {
+		mContourY3 = val;
+		mContourY4 = val;
+	}
 	
 }

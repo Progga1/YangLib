@@ -221,7 +221,7 @@ public class Joint {
 			nY = deltaY/dist;
 		}
 		if(xOffset!=0 || yOffset!=0) {
-			nX += xOffset*0;
+			nX += xOffset*Math.signum(deltaX);
 			nY += yOffset;
 			dist = Geometry.getDistance(nX, nY);
 			nX /= dist;

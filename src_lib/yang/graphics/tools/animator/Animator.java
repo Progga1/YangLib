@@ -175,10 +175,17 @@ public class Animator implements InputEventListener {
 	
 	public void selectFrame(int index,boolean apply) {
 		mFrameIndex = index;
+
 		mCurFrame = mCurAnimation.mFrames[mFrameIndex];
-		mCurAnimationPlayer.setNormalizedAnimationTime((float)mCurFrame.mFirstFrame/mCurAnimation.mFrameCount);
-		if(apply)
-			mCurFrame.mPose.applyPose(mCurSkeleton);
+
+		if(!apply) 
+			mCurAnimationPlayer.mCurrentAnimationTime = (float)mCurFrame.mFirstFrame/mCurAnimation.mFrameCount*mCurAnimationPlayer.mCurrentAnimation.mTotalDuration;
+		else{
+			mCurAnimationPlayer.setNormalizedAnimationTime((float)mCurFrame.mFirstFrame/mCurAnimation.mFrameCount);
+			if(!mCurAnimationPlayer.mCurrentAnimation.mAutoAnimate)
+				mCurFrame.mPose.applyPose(mCurSkeleton);
+		}
+		
 	}
 	
 	public void reselect() {
