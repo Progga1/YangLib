@@ -17,7 +17,6 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 		super(true,false);
 		mSound = sound;
 		mInitCallback = initCallback;
-		this.setUpdatesPerSecond(120);
 	}
 	
 	@Override

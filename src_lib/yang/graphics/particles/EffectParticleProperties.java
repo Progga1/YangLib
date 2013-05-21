@@ -45,7 +45,7 @@ public class EffectParticleProperties {
 	public <ParticleType extends EffectParticle, RingBufferType extends AbstractParticleRingBuffer<?,? extends ParticleType>> ParticleType spawnParticle(RingBufferType ringBuffer,float x,float y,float z) {
 		ParticleType particle = ringBuffer.spawnParticle(x, y, z, mTextureCoordinates);
 		particle.mFriction = mFriction;
-		particle.setStartScale(mMinScale, mMaxScale);
+		particle.setScale(mMinScale, mMaxScale);
 		particle.setRotationSpeedRange(mMinRotationV, mMaxRotationV, mMirrorRotation && (Math.random()>0.5));
 		float vel = mMinSpeed + (float)Math.random()*(mMaxSpeed-mMinSpeed);
 		particle.setVelocity(mVelDirX*vel, mVelDirY*vel, mVelDirZ*vel);

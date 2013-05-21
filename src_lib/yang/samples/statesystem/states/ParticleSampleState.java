@@ -14,11 +14,13 @@ import yang.util.DefaultFunctions;
 
 public class ParticleSampleState extends SampleState {
 
+	private static final int PARTICLES_PER_FRAME = 1;
+	
 	private Particles2D<EffectParticle> mParticles;
 	private Texture mParticleTexture;
 	private TextureCoordinatesQuad[] mTexCoords;
-	private float mCurPntX=0,mCurPntY=0;
-	private float mSmokeScale = 0.5f;
+	private float mCurPntX=0,mCurPntY=0,mDelayedPntX=0,mDelayedPntY=0;
+	private float mSmokeScale = 0.4f;
 	private float mParticleSpeed = 0.4f;
 	
 	
@@ -34,17 +36,19 @@ public class ParticleSampleState extends SampleState {
 	}
 	
 	@Override
-	protected void step(float deltaTime) {		
-		EffectParticle particle = mParticles.spawnParticle(mCurPntX, mCurPntY, mTexCoords[MathFunc.random(4)]);
-		particle.mFriction = 0.995f;
-		particle.setSpeedRangeSpread2D(0.04f*mParticleSpeed,0.05f*mParticleSpeed, 1.2f, 0.5f);
-		particle.setLifeSteps(190,210);
-		particle.mRotation = 0;
-		particle.setStartScale(1*mSmokeScale, 1.2f*mSmokeScale);
-		particle.shiftPosition2D(0.05f, 0.08f, 0, 2*MathConst.PI);
-		particle.setRotationSpeedRange(0.01f, 0.02f, true);
-		particle.setAcceleration(-0.00001f*mParticleSpeed, 0.000005f*mParticleSpeed);
-		particle.setScaleSpeedRange(-0.025f*mParticleSpeed, -0.038f*mParticleSpeed);
+	protected void step(float deltaTime) {
+		for(int i=0;i<PARTICLES_PER_FRAME;i++) {
+			mDelayedPntX += (mCurPntX-mDelayedPntX)*0.2f;
+			mDelayedPntY += (mCurPntY-mDelayedPntY)*0.2f;
+			EffectParticle particle = mParticles.spawnParticle(mDelayedPntX, mDelayedPntY, mTexCoords[MathFunc.random(4)]);
+			particle.mFriction = 0.995f;
+			particle.setSpeedRangeSpread2D(5.2f*mParticleSpeed,6.0f*mParticleSpeed, 1.2f, 0.5f);
+			particle.setLifeTime(0.7f,0.9f);
+			particle.setScale(1*mSmokeScale, 1.2f*mSmokeScale);
+			particle.shiftPosition2D(0.05f, 0.08f, 0, 2*MathConst.PI);
+			particle.setRotationSpeedRange(1, 1.5f, true);
+			particle.setAcceleration(-0.00001f*mParticleSpeed, 0.000005f*mParticleSpeed);
+		}
 		
 		mParticles.step();
 	}
@@ -55,6 +59,14 @@ public class ParticleSampleState extends SampleState {
 		mParticles.draw();
 	}
 
+	@Override
+	public void pointerDown(float x,float y,YangPointerEvent event) {
+		mCurPntX = x;
+		mCurPntY = y;
+		mDelayedPntX = x;
+		mDelayedPntY = y;
+	}
+	
 	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
 		mCurPntX = x;

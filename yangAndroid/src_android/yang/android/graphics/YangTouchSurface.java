@@ -31,7 +31,8 @@ public class YangTouchSurface extends GLSurfaceView{
 	}
 	
 	protected void initGL(Context context) {
-//		super.setEGLConfigChooser(8,8,8,8,0,0);	//crashes on galaxy nexus
+		//TODO crashes on galaxy nexus
+//		super.setEGLConfigChooser(8,8,8,8,0,0);
 		DebugYang.println("INITIALIZE OPENGL");
 		super.setEGLContextClientVersion(2);
 		mSceneRenderer = new YangSceneRenderer(context);

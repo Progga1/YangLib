@@ -26,9 +26,9 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 				if(particle.mExists) {
 					float uScale;
 					if(mScaleLookUp!=null)
-						uScale = mScaleLookUp.get(particle.mLifeTime) * particle.mScale;
+						uScale = mScaleLookUp.get(particle.mNormLifeTime) * particle.mScale;
 					else
-						uScale = particle.mScale;
+						uScale = (1-particle.mNormLifeTime)*particle.mScale;
 					mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*mCelShading, particle.mRotation, particle.mTextureCoordinates);
 				}
 			}
@@ -41,9 +41,9 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 				mGraphics.setColor(particle.mColor);
 				float uScale;
 				if(mScaleLookUp!=null)
-					uScale = mScaleLookUp.get(particle.mLifeTime) * particle.mScale;
+					uScale = mScaleLookUp.get(particle.mNormLifeTime) * particle.mScale;
 				else
-					uScale = particle.mScale;
+					uScale = (1-particle.mNormLifeTime)*particle.mScale;
 				mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale, particle.mRotation, particle.mTextureCoordinates);
 			}
 		}

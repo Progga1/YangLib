@@ -1,18 +1,20 @@
 package yang.graphics.particles;
 
+import yang.graphics.YangSurface;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.MathFunc;
 
 public class Particle {
-
+	
 	//Properties
 	public TextureCoordinatesQuad mTextureCoordinates;
 	
 	//State
 	public boolean mExists;
 	public float mPosX,mPosY,mPosZ;
-	public float mLifeTime;
-	public float mLifeTimeStep;
+	public float mNormLifeTime;
+	public float mScaleLifeTimeFactor;
+	public float mLifeTimeNormFactor;
 	public float[] mColor;
 
 	public float mRotation;
@@ -25,8 +27,13 @@ public class Particle {
 		setColor(1,1,1,1);
 		mRotation = 0;
 		mScale = 1;
+		mScaleLifeTimeFactor = 1;
 		mTextureCoordinates = TextureCoordinatesQuad.FULL_TEXTURE;
-		mLifeTimeStep = 0;
+		mLifeTimeNormFactor = 0;
+	}
+	
+	public void setScaleLifeTimeFactor(float minFactor,float maxFactor) {
+		mScaleLifeTimeFactor = MathFunc.random(minFactor, maxFactor);
 	}
 	
 	public void setPosition(float x, float y, float z) {
@@ -56,28 +63,24 @@ public class Particle {
 	public void step() {
 		if(!mExists)
 			return;
-	    mLifeTime+=mLifeTimeStep;
+	    mNormLifeTime += YangSurface.deltaTimeSeconds*mLifeTimeNormFactor;
 	    
 	    derivedStep();
 	    
-	    if(mLifeTime>1)
+	    if(mNormLifeTime>1)
 	    	mExists = false;
 	}
 	
-	public void setStartScale(float minScale, float maxScale) {
+	public void setScale(float minScale, float maxScale) {
 		mScale = MathFunc.random(minScale, maxScale);
 	}
 	
-	public void setLifeSteps(int steps) {
-		mLifeTime = 0;
-		if(steps<=0)
-			mLifeTimeStep = 0;
-		else
-			mLifeTimeStep = 1f/steps;
+	public void setLifeTime(float lifeTime) {
+		mLifeTimeNormFactor = 1/lifeTime;
 	}
 	
-	public void setLifeSteps(int minSteps,int maxSteps) {
-		setLifeSteps(MathFunc.random(minSteps, maxSteps));
+	public void setLifeTime(float minLifeTime,float maxLifeTime) {
+		mLifeTimeNormFactor = 1/MathFunc.random(minLifeTime, maxLifeTime);
 	}
 	
 	public float shiftPosition2D(float minRadius, float maxRadius, float minAngle, float maxAngle) {
@@ -92,9 +95,13 @@ public class Particle {
 		return shiftPosition2D(minRadius,maxRadius, direction-spreadAngle*0.5f, direction+spreadAngle*0.5f);
 	}
 	
-	public void spawn() {
-		mLifeTime = 0;
+	public void spawn(float posX, float posY, float posZ) {
+		mNormLifeTime = 0;
 		mExists = true;
+		mRotation = 0;
+		mPosX = posX;
+		mPosY = posY;
+		mPosZ = posZ;
 	}
 	
 	public void kill() {

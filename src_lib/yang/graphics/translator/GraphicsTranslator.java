@@ -54,6 +54,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public ScreenInfo mCurrentScreen;
 	public float mTimer;
 	private long mLstTimestamp;
+	public float mCurFrameDeltaTime = 0;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
@@ -180,8 +181,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(int i=0;i<BYTES;i++) {
 			buf.put((byte)255);
 		}
-		buf.rewind();
-		mNullTexture = createTexture(buf, DIM,DIM, new TextureSettings());
+		if(mNullTexture==null)
+			mNullTexture = createTexture(buf, DIM,DIM, new TextureSettings());
+		else
+			mNullTexture.update(buf);
 		assert checkErrorInst("Create null texture");
 		
 		enable(GLOps.BLEND);
@@ -366,7 +369,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			assert preCheck("Prepare draw vertices");
 			mCurDrawListener.onPreDraw();
 			assert preCheck("Draw vertices listener");
-			mRectCount += mCurrentVertexBuffer.getCurrentIndexWriteCount()/6;
+			mRectCount += vertexCount/6;
 			mCurrentVertexBuffer.finishUpdate();
 			assert preCheck("Draw vertices finish update");
 			mCurrentVertexBuffer.reset();
@@ -380,7 +383,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public final void measureTime() {
 		long curTime = System.currentTimeMillis();
 		if(mLstTimestamp>0) {
-			mTimer += (curTime-mLstTimestamp)*0.001f;
+			mCurFrameDeltaTime = (curTime-mLstTimestamp)*0.001f;
+			mTimer += mCurFrameDeltaTime;
 		}else
 			mTimer = 0;
 		mLstTimestamp = curTime;

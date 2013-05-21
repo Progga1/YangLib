@@ -8,7 +8,7 @@ import yang.util.StringsXML;
 public abstract class YangSurface {
 	
 	public GraphicsTranslator mGraphics;
-
+	
 	protected boolean mAutoReloadTexturesOnResume = true;
 	protected boolean mInitialized;
 	protected Object mInitializedNotifier;
@@ -17,7 +17,7 @@ public abstract class YangSurface {
 	
 	protected double mProgramStartTime;
 	protected long mProgramTime;
-	protected float mDeltaTimeSeconds;
+	public static float deltaTimeSeconds;
 	protected long mDeltaTimeNanos;
 	protected int mRuntimeState = 0;
 	private float mLoadingProgress = -1;
@@ -47,7 +47,7 @@ public abstract class YangSurface {
 	public YangSurface() {
 		mInitializedNotifier = new Object();
 		mProgramTime = 0;
-		setUpdatesPerSecond(60);
+		setUpdatesPerSecond(120);
 	}
 	
 	public final void drawFrame() {
@@ -135,7 +135,7 @@ public abstract class YangSurface {
 	}
 	
 	public void setUpdatesPerSecond(int updatesPerSecond) {
-		mDeltaTimeSeconds = 1f/updatesPerSecond;
+		deltaTimeSeconds = 1f/updatesPerSecond;
 		mDeltaTimeNanos = 1000000000/updatesPerSecond;
 	}
 	
@@ -151,7 +151,7 @@ public abstract class YangSurface {
 		boolean result = mProgramTime<System.nanoTime();
 		while(mProgramTime<System.nanoTime()) {
 			mProgramTime += mDeltaTimeNanos;
-			step(mDeltaTimeSeconds);
+			step(deltaTimeSeconds);
 		}
 		return result;
 	}

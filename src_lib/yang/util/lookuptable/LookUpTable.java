@@ -15,6 +15,7 @@ public class LookUpTable {
 		this.function = function;
 		this.stepSize = stepSize;
 		this.values = new float[(int)((endX-startX)/stepSize)];
+		this.stepSize = (endX-startX)/(this.values.length-1);
 		create();
 	}
 	
