@@ -86,17 +86,18 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glClear(mask);
 	}
 
-	//TODO split generate - load
 	@Override
-	protected void derivedInitTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings) {
-		assert preCheck("init texture");
-		int[] ids = new int[1];
-		GLES20.glGenTextures(1, ids, 0);
+	public void genTextures(int[] target,int count) {
+		assert preCheck("Generate texture");
+		GLES20.glGenTextures(count, target, 0);
 		assert checkError("Generate texture");
-		int id = ids[0];
-		texture.setId(id);
+	}
+	
+	@Override
+	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureSettings textureSettings) {
+		assert preCheck("Set texture data");
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, id);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
 		assert checkError("Bind new texture");
 		GLES20.glPixelStorei(GLES20.GL_UNPACK_ALIGNMENT, GLES20.GL_TRUE);
 		switch(textureSettings.mWrapX) {
@@ -128,7 +129,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 			default: throw new RuntimeException(textureSettings.mChannels + " channels not supported.");
 		}
 
-		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, texture.getWidth(), texture.getHeight(), 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
+		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, width, height, 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
 		assert checkError("Pass texture data");
 		
 		switch(textureSettings.mFilter) {

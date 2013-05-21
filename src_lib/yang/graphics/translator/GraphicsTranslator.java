@@ -73,11 +73,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	//Helpers
 	protected final int[] mTempInt = new int[1];
 	protected final int[] mTempInt2 = new int[1];
+	protected final int[] mTempIntArray = new int[128];
 	public int mRestartCount = 0;
 	
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
-	protected abstract void derivedInitTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings);
+	protected abstract void genTextures(int[] target,int count);
+	protected abstract void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureSettings textureSettings);
 	public abstract void deleteTextures(int[] ids);
 	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, IndexedVertexBuffer vertexBuffer);
 	public abstract void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer);
@@ -210,22 +212,28 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mRestartCount++;
 	}
 	
-	public void initTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings, boolean finish) {
-		if(buffer!=null)
-			buffer.order(ByteOrder.nativeOrder());
-		derivedInitTexture(texture,buffer,textureSettings);
-		if(finish)
-			texture.finish();
+	
+	public int genTexture() {
+		genTextures(mTempInt,1);
+		return mTempInt[0];
 	}
 	
-	public void initTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings) {
-		initTexture(texture,buffer,textureSettings,true);
+	protected void setTextureData(Texture targetTexture,ByteBuffer data) {
+		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),data,targetTexture.mSettings);
+	}
+	
+	protected void initTexture(Texture targetTexture, ByteBuffer buffer) {
+		if(buffer!=null)
+			buffer.order(ByteOrder.nativeOrder());
+		targetTexture.setId(genTexture());
+		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),buffer,targetTexture.mSettings);
+		if(buffer!=null)
+			targetTexture.finish();
 	}
 	
 	public final void bindTexture(Texture texture,int level) {
 		assert checkErrorInst("PRE bind texture");
-		if(texture!=mCurrentTextures[level] && (texture!=null || mCurrentTextures[level]!=mNullTexture))
-		{
+		if(texture!=mCurrentTextures[level] && (texture!=null || mCurrentTextures[level]!=mNullTexture)) {
 			flush();
 			if(texture==null)
 				texture = mNullTexture;
@@ -319,7 +327,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public Texture createEmptyTexture(int width,int height,TextureSettings settings) {
 		Texture texture = new Texture(this);
-		//ByteBuffer emptyBuffer = ByteBuffer.allocateDirect(width*height*settings.mChannels);
 		texture.set(null, width, height, settings);
 		return texture;
 	}
@@ -330,7 +337,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public Texture createTexture(ByteBuffer source, int width, int height, TextureSettings settings) {
 		source.rewind();
-		return new Texture(this,source,width,height,settings);
+		Texture result = new Texture(this,source,width,height,settings);
+		return result;
 	}
 	
 	public Texture createTexture(TextureData textureData, TextureSettings settings) {

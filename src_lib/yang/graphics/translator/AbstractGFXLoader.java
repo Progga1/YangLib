@@ -129,11 +129,9 @@ public abstract class AbstractGFXLoader {
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
 			TextureData data = loadImageData(entry.getKey());
 			Texture tex = entry.getValue();
-			//System.out.println(entry.getKey());
-			//entry.getValue().update(data.mData);
 			if(tex.mIsAlphaMap)
 				data.redToAlpha();
-			mGraphics.initTexture(tex, data.mData, tex.mSettings);
+			tex.update(data.mData);
 		}
 	}
 	

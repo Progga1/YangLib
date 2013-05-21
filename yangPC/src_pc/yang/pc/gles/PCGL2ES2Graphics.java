@@ -159,17 +159,18 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		gles2 = glAutoDrawable.getGL().getGL2();
 		mSurface.drawFrame();
 	}
+	
+	public void genTextures(int[] target,int count) {
+		assert checkErrorInst("PRE create texture");
+		gles2.glGenTextures(count, target, 0);
+		assert checkErrorInst("Generate texture");
+	}
 
 	@Override
-	protected void derivedInitTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings) {
-		assert checkErrorInst("PRE create texture");
-		int[] ids = new int[1];
-		gles2.glGenTextures(1, ids, 0);
-		assert checkErrorInst("Generate texture");
-		int id = ids[0];
-		texture.setId(id);
+	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureSettings textureSettings) {
+		assert preCheck("Init texture");
 		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
-		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, id);
+		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);
 		gles2.glPixelStorei(GL2ES2.GL_UNPACK_ALIGNMENT, GL2ES2.GL_TRUE);
 		assert checkErrorInst("Bind new texture");
 		switch(textureSettings.mWrapX) {
@@ -185,7 +186,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		assert checkErrorInst("Set texture repeat");
 		
 		int format = channelsToConst(textureSettings.mChannels);
-		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, texture.getWidth(), texture.getHeight(), 0, format, GL2ES2.GL_UNSIGNED_BYTE, buffer);
+		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL2ES2.GL_UNSIGNED_BYTE, buffer);
 		assert checkErrorInst("Pass texture data with "+textureSettings.mChannels+" channels");
 
 		switch(textureSettings.mFilter) {

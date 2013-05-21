@@ -58,13 +58,17 @@ public class GdxGraphicsTranslator extends GraphicsTranslator {
 		Gdx.gl20.glClear(mask);
 	}
 
-	@Override
-	protected void derivedInitTexture(Texture texture, ByteBuffer buffer, TextureSettings textureSettings) {
-		ByteBuffer buf = ByteBuffer.allocateDirect(4);
+	public void genTextures(int[] target,int count) {
+		ByteBuffer buf = ByteBuffer.allocateDirect(4*count);
 		buf.order(ByteOrder.nativeOrder());
-		Gdx.gl20.glGenTextures(1, buf.asIntBuffer());
-		int id = buf.get(0);
-		texture.setId(id);
+		Gdx.gl20.glGenTextures(count, buf.asIntBuffer());
+		buf.rewind();
+		for(int i=0;i<count;i++)
+			target[i] = buf.getInt();
+	}
+	
+	@Override
+	protected void setTextureData(int id,int width,int height, ByteBuffer buffer, TextureSettings textureSettings) {
 		Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
 		Gdx.gl20.glBindTexture(GL20.GL_TEXTURE_2D, id);
 		checkError("Bind new texture");
@@ -99,7 +103,7 @@ public class GdxGraphicsTranslator extends GraphicsTranslator {
 		}
 		checkError("TexFilter");
 		int format = textureSettings.mChannels==4?GL20.GL_RGBA:GL20.GL_RGB;
-		Gdx.gl20.glTexImage2D(GL20.GL_TEXTURE_2D, 0, format, texture.getWidth(), texture.getHeight(), 0, format, GL20.GL_UNSIGNED_BYTE, buffer);
+		Gdx.gl20.glTexImage2D(GL20.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL20.GL_UNSIGNED_BYTE, buffer);
 		checkError("TexImage2D");
 	}
 

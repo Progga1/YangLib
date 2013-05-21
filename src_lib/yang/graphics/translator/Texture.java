@@ -32,7 +32,7 @@ public class Texture {
 		mSettings = settings;
 		if(settings==null)
 			settings = new TextureSettings();
-		mGraphics.initTexture(this, source, settings);
+		mGraphics.initTexture(this, source);
 	}
 	
 //	public void updateRegion(ByteBuffer source, int left,int top, int width,int height) {
@@ -59,11 +59,19 @@ public class Texture {
 		mGraphics.deleteTexture(mId);
 	}
 	
+//	public void update(ByteBuffer source) {
+//		mGraphics.deleteTexture(mId);
+//		if(source!=null)
+//			source.rewind();
+//		mGraphics.initTexture(this, source, mSettings);
+//	}
+
 	public void update(ByteBuffer source) {
-		mGraphics.deleteTexture(mId);
 		if(source!=null)
 			source.rewind();
-		mGraphics.initTexture(this, source, mSettings);
+		mGraphics.setTextureData(this, source);
+		if(source!=null)
+			finish();
 	}
 	
 	public Texture finish() {

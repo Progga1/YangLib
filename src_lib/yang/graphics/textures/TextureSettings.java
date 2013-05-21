@@ -7,7 +7,7 @@ import yang.graphics.textures.enums.TextureWrap;
 public class TextureSettings {
 
 	public final static TextureWrap DEFAULT_WRAP = TextureWrap.REPEAT;
-	public final static TextureFilter DEFAULT_FILTER = TextureFilter.NEAREST_MIP_LINEAR;
+	public final static TextureFilter DEFAULT_FILTER = TextureFilter.NEAREST;
 	
 	public TextureWrap mWrapX;
 	public TextureWrap mWrapY;

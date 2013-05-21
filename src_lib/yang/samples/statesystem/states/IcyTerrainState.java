@@ -33,7 +33,7 @@ public class IcyTerrainState extends SampleState {
 	private static int PATCHES_Y = 64;
 	private static int WATER_PATCHES_X = 8;
 	private static int WATER_PATCHES_Y = 8;
-	private static final int COAST_KERNELSIZE = 2;
+	private static final int COAST_KERNELSIZE = 3;
 	private static final float PI = 3.141592653589f;
 	private static final float GLOBAL_SHIFT = 1f;
 	private static boolean STATIC_SHADOWS = false;
