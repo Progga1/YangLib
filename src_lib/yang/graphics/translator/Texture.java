@@ -15,6 +15,7 @@ public class Texture {
 	public int mId;
 	public TextureSettings mSettings;
 	public boolean mIsAlphaMap;
+	public boolean mFreed = false;
 	
 	public Texture(GraphicsTranslator graphics) {
 		mGraphics = graphics;
@@ -56,6 +57,7 @@ public class Texture {
 	}
 
 	public void free() {
+		mFreed = true;
 		mGraphics.deleteTexture(mId);
 	}
 	
@@ -79,6 +81,10 @@ public class Texture {
 			mGraphics.generateMipMap();
 		}
 		return this;
+	}
+	
+	public void finalize() {
+		assert mFreed;
 	}
 	
 }

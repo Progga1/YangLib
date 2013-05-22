@@ -7,13 +7,11 @@ import yang.graphics.defaults.DefaultGraphics;
 
 public class NinePatchGrid {
 
-	private Default2DGraphics mGraphics2D;
 	public float mBorderLeft,mBorderBottom,mBorderTop,mBorderRight;
 	public FloatColor mColor;
 	public NinePatchTexCoords mTexCoords;
 	
-	public NinePatchGrid(Default2DGraphics graphics) {
-		mGraphics2D = graphics;
+	public NinePatchGrid() {
 		mColor = FloatColor.WHITE.clone();
 	}
 	
@@ -44,8 +42,7 @@ public class NinePatchGrid {
 		this.setTextureBorder(size, size, size, size);
 	}
 	
-	public void draw(float left,float bottom,float right,float top) {
-		IndexedVertexBuffer vertexBuffer = mGraphics2D.mCurrentVertexBuffer;
+	public void draw(IndexedVertexBuffer vertexBuffer,float left,float bottom,float right,float top) {
 		vertexBuffer.putGridIndices(4, 4);
 		vertexBuffer.putVec12(DefaultGraphics.ID_POSITIONS, 
 				left,bottom,0, left+mBorderLeft,bottom,0, right-mBorderRight,bottom,0, right,bottom,0
@@ -64,7 +61,7 @@ public class NinePatchGrid {
 	}
 	
 	public NinePatchGrid cloneWithTextureOffset(float offsetX,float offsetY) {
-		NinePatchGrid result = new NinePatchGrid(mGraphics2D);
+		NinePatchGrid result = new NinePatchGrid();
 		result.setBorderSize(mBorderLeft,mBorderTop,mBorderRight,mBorderBottom);
 		result.mColor.set(mColor);
 		result.setTextureBorder(mTexCoords.cloneWithOffset(offsetX, offsetY));

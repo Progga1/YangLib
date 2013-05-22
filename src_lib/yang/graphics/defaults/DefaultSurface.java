@@ -8,6 +8,7 @@ import yang.events.listeners.InputEventListener;
 import yang.graphics.YangSurface;
 import yang.graphics.font.DrawableString;
 import yang.graphics.translator.AbstractGFXLoader;
+import yang.model.enums.UpdateMode;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
@@ -23,6 +24,7 @@ public abstract class DefaultSurface extends YangSurface implements InputEventLi
 	private InputEventQueue mEventQueue;
 	
 	protected DefaultSurface(boolean init2DGraphics,boolean init3DGraphics) {
+		super();
 		mInit2DGraphics = init2DGraphics;
 		mInit3DGraphics = init3DGraphics;
 		mEventQueue = new InputEventQueue(64);

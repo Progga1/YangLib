@@ -3,12 +3,14 @@ package yang.graphics;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.DebugYang;
+import yang.model.enums.UpdateMode;
 import yang.util.StringsXML;
 
 public abstract class YangSurface {
 	
 	public GraphicsTranslator mGraphics;
 	
+	private UpdateMode mUpdateMode;
 	protected boolean mAutoReloadTexturesOnResume = true;
 	protected boolean mInitialized;
 	protected Object mInitializedNotifier;
@@ -18,9 +20,11 @@ public abstract class YangSurface {
 	protected double mProgramStartTime;
 	protected long mProgramTime;
 	public static float deltaTimeSeconds;
+	protected int mUpdateWaitMillis = 1000/70;
 	protected long mDeltaTimeNanos;
 	protected int mRuntimeState = 0;
 	private float mLoadingProgress = -1;
+	private Thread mUpdateThread = null;
 	
 	/**
 	 * GL-Thread
@@ -48,6 +52,31 @@ public abstract class YangSurface {
 		mInitializedNotifier = new Object();
 		mProgramTime = 0;
 		setUpdatesPerSecond(120);
+		mUpdateMode = UpdateMode.SYNCHRONOUS;
+	}
+	
+	public void setUpdateMode(UpdateMode updateMode) {
+		mUpdateMode = updateMode;
+		if(mUpdateMode==UpdateMode.ASYNCHRONOUS) {
+			mUpdateThread = new Thread() {
+				@Override
+				public void run() {
+					
+					while(true) {
+						try {
+							if(mRuntimeState>0) {
+								Thread.sleep(100);
+								continue;
+							}else
+								Thread.sleep(mUpdateWaitMillis);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						update();
+					}
+				}
+			};
+		}
 	}
 	
 	public final void drawFrame() {
@@ -76,7 +105,12 @@ public abstract class YangSurface {
 			if(mRuntimeState==2)
 				resumedFromStop();
 			mRuntimeState = 0;
+			if(mGraphics.mCurDrawListener!=null)
+				mGraphics.mCurDrawListener.onRestartGraphics();
 		}
+		
+		if(mUpdateMode==UpdateMode.SYNCHRONOUS)
+			update();
 		
 		mGraphics.beginFrame();
 		draw();
@@ -109,6 +143,9 @@ public abstract class YangSurface {
 		synchronized(mInitializedNotifier) {
 			mInitializedNotifier.notifyAll();
 		}
+		
+		if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
+			mUpdateThread.start();
 	}
 	
 	public void waitUntilInitialized() {
@@ -144,7 +181,7 @@ public abstract class YangSurface {
 	}
 	
 	protected boolean update() {
-		if(!mInitialized)
+		if(!mInitialized || mRuntimeState>0)
 			return true;
 		if(mProgramTime==0)
 			mProgramTime = System.nanoTime()-1;
@@ -165,8 +202,12 @@ public abstract class YangSurface {
 	 * Non-GL-Thread!
 	 */
 	public void pause() {
-		mProgramTime = 0;
+//		if(mUpdateThread!=null)
+//			synchronized (mUpdateThread) {
+//				mUpdateThread.suspend();
+//			}
 		mRuntimeState = 1;
+		mProgramTime = 0;
 		mLoadingProgress = -1;
 	}
 	
@@ -181,7 +222,11 @@ public abstract class YangSurface {
 	 * Non-GL-Thread!
 	 */
 	public void resume() {
-		
+//		if(mUpdateThread!=null && mUpdateThread.isAlive())
+//			synchronized (mUpdateThread) {
+//				mUpdateThread.resume();
+//			}
+		mProgramTime = 0;
 	}
 	
 	public void exit() {

@@ -2,6 +2,7 @@ package yang.samples.statesystem;
 
 import yang.graphics.font.DrawableString;
 import yang.graphics.translator.Texture;
+import yang.model.enums.UpdateMode;
 import yang.util.statesystem.YangProgramStateSystem;
 
 public class SampleStateSystem extends YangProgramStateSystem {
@@ -12,6 +13,7 @@ public class SampleStateSystem extends YangProgramStateSystem {
 	
 	public SampleStateSystem() {
 		super(true, true);
+		super.setUpdateMode(UpdateMode.ASYNCHRONOUS);
 	}
 	
 	public void postInitGraphics() {
@@ -19,11 +21,6 @@ public class SampleStateSystem extends YangProgramStateSystem {
 		mMainMenu = (SampleMainMenu)new SampleMainMenu().init(this);
 		mCircleTexture = mGFXLoader.getImage("circle");
 		super.setState(mMainMenu);
-	}
-	
-	public void draw() {
-		update();
-		super.draw();
 	}
 
 }

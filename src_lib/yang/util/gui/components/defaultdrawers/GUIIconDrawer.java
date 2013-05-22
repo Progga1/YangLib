@@ -20,8 +20,10 @@ public class GUIIconDrawer extends GUIComponentDrawPass<GUIInteractiveRectCompon
 
 	@Override
 	public void draw(DefaultGraphics<?> graphics, GUIInteractiveRectComponent component) {
-		graphics.setColor(mIconColor.mValues);
-		graphics.drawRectCentered(component.getProjCenterX(),component.getProjCenterY(),mIconSize,mIconTexCoords);
+		if(mIconTexCoords!=null) {
+			graphics.setColor(mIconColor.mValues);
+			graphics.drawRectCentered(component.getProjCenterX(),component.getProjCenterY(),mIconSize,mIconTexCoords);
+		}
 	}
 	
 }

@@ -50,7 +50,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected boolean mFlushDisabled;
 	public int mDrawMode;
 	public boolean mWireFrames;
-	protected DrawListener mCurDrawListener;
+	public DrawListener mCurDrawListener;
 	public ScreenInfo mCurrentScreen;
 	public float mTimer;
 	private long mLstTimestamp;
@@ -206,8 +206,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(BasicProgram program:mPrograms) {
 			program.restart();
 		}
-		if(mCurDrawListener!=null)
-			mCurDrawListener.onRestartGraphics();
 		for(TextureRenderTarget renderTarget:mRenderTargets) {
 			renderTarget.mTargetTexture.update(null);
 			derivedCreateRenderTarget(renderTarget.mTargetTexture);

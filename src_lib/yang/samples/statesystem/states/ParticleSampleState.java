@@ -49,14 +49,17 @@ public class ParticleSampleState extends SampleState {
 			particle.setRotationSpeedRange(1, 1.5f, true);
 			particle.setAcceleration(-0.00001f*mParticleSpeed, 0.000005f*mParticleSpeed);
 		}
-		
-		mParticles.step();
+		synchronized(mParticles) {
+			mParticles.step();
+		}
 	}
 
 	@Override
 	protected void draw() {
 		mGraphics.clear(0.3f, 0.3f, 0.6f);
-		mParticles.draw();
+		synchronized(mParticles) {
+			mParticles.draw();
+		}
 	}
 
 	@Override
