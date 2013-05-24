@@ -1,11 +1,9 @@
 package yang.graphics.skeletons.animations;
 
-import ninja.entities.enemies.karateenemy.animations.KarateEnemyKick;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.interpolation.ConstantInterpolation;
 import yang.graphics.skeletons.animations.interpolation.Interpolation;
 import yang.graphics.skeletons.pose.Pose;
-import yang.util.Util;
 
 public class Animation<CarrierType extends SkeletonCarrier> {
 
