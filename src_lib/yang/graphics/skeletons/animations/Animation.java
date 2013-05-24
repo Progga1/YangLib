@@ -1,15 +1,17 @@
 package yang.graphics.skeletons.animations;
 
+import ninja.entities.enemies.karateenemy.animations.KarateEnemyKick;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.interpolation.ConstantInterpolation;
 import yang.graphics.skeletons.animations.interpolation.Interpolation;
 import yang.graphics.skeletons.pose.Pose;
+import yang.util.Util;
 
 public class Animation<CarrierType extends SkeletonCarrier> {
 
 	public static WrapMode DEFAULT_WRAP_MODE = WrapMode.LOOP;
 	
-	public KeyFrame[] mFrames;
+	public KeyFrame[] mKeyFrames;
 	public KeyFrame[] mPreviousFrames;
 	public KeyFrame[] mNextFrames;
 	protected WrapMode mWrap;
@@ -21,6 +23,7 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	public float mTotalDuration;
 	public boolean mInterpolate;
 	public boolean mAutoSetAnimationTime = true;
+	public boolean mBlocking = false;
 	
 	protected void startVisuals(CarrierType body) { }
 	public void startPhysics(CarrierType body) { }
@@ -51,24 +54,26 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	public void refreshKeyFrames() {
 		mFrameCount = 0;
 		mTotalDuration = 0;
-		boolean insertFrame = mWrap==WrapMode.LOOP || mFrames.length==1;
-		for(int i=insertFrame?0:1;i<mFrames.length;i++) {
-			mFrameCount += mFrames[i].mDuration;
+		boolean insertFrame = mWrap==WrapMode.LOOP || mKeyFrames.length==1;
+		mKeyFrames[0].mId = 0;
+		for(int i=insertFrame?0:1;i<mKeyFrames.length;i++) {
+			mFrameCount += mKeyFrames[i].mDuration;
+			mKeyFrames[i].mId = i;
 		}
 		mTotalDuration = mFrameCount/mFramesPerSecond;
 		mPreviousFrames = new KeyFrame[mFrameCount+1];
 		mNextFrames = new KeyFrame[mFrameCount+1];
 		int c = 0;
-		int l = mFrames.length;
+		int l = mKeyFrames.length;
 		for(int i=0;i<l;i++) {
 			int index = i;
 			
-			KeyFrame curPrevFrame = mFrames[index];
+			KeyFrame curPrevFrame = mKeyFrames[index];
 			KeyFrame curNextFrame;
-			if(index>=mFrames.length-1) {
+			if(index>=mKeyFrames.length-1) {
 				curNextFrame = null;
 			}else
-				curNextFrame = mFrames[index+1];
+				curNextFrame = mKeyFrames[index+1];
 			curPrevFrame.mFirstFrame = c;
 			int d;
 			if(curNextFrame==null)
@@ -80,22 +85,23 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 				mNextFrames[c] = curNextFrame;
 				c++;
 			}
+			curPrevFrame.mTimeFactor = 1f/d;
 		}
 		
 		if(insertFrame) {
-			KeyFrame curPrevFrame = mFrames[mFrames.length-1];
-			mNextFrames[c-1] = mFrames[0];
-			for(int j=0;j<mFrames[0].mDuration;j++) {
+			KeyFrame curPrevFrame = mKeyFrames[mKeyFrames.length-1];
+			mNextFrames[c-1] = mKeyFrames[0];
+			for(int j=0;j<mKeyFrames[0].mDuration;j++) {
 				mPreviousFrames[c] = curPrevFrame;
-				mNextFrames[c] = mFrames[0];
+				mNextFrames[c] = mKeyFrames[0];
 				c++;
 			}
+			curPrevFrame.mTimeFactor = 1f/mKeyFrames[0].mDuration;
 		}
-
 	}
 	
 	protected void setFrames(WrapMode clampMode,KeyFrame... frames) {
-		mFrames = frames;
+		mKeyFrames = frames;
 		mWrap = clampMode;
 		refreshKeyFrames();
 	}
@@ -105,11 +111,11 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	}
 	
 	protected void setFrames(Pose[] frames,WrapMode clampMode) {
-		mFrames = new KeyFrame[frames.length];
+		mKeyFrames = new KeyFrame[frames.length];
 		for(int i=0;i<frames.length;i++) {
-			mFrames[i] = new KeyFrame(frames[i]);
+			mKeyFrames[i] = new KeyFrame(frames[i]);
 		}
-		setFrames(clampMode,mFrames);
+		setFrames(clampMode,mKeyFrames);
 	}
 	
 	protected void setFrames(Pose[] frames) {
@@ -131,7 +137,7 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	public String toSourceCode() {
 		String res = "";
 		int c = 0;
-		for(KeyFrame keyFrame:mFrames) {
+		for(KeyFrame keyFrame:mKeyFrames) {
 			if(res!="")
 				res += "\n";
 			res += keyFrame.toSourceCode(c);
@@ -142,11 +148,11 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	
 	public int timeToKeyFrameIndex(float animationTime) {
 		int index = (int)(animationTime/mTotalDuration * mFrameCount);
-		if(index>=mFrames.length)
-			index = mFrames.length-1;
+		if(index>=mPreviousFrames.length)
+			index = mPreviousFrames.length-1;
 		if(index<0)
 			index = 0;
-		return mFrames[index].mFirstFrame;
+		return mPreviousFrames[index].mId;
 	}
 	
 }

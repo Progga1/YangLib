@@ -17,6 +17,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public int mCurFrame;
 	public SoundManager mSound;
 	public float mAnimationSpeed;
+	public boolean mLockedAnimation;
 	
 	public AnimationPlayer(Skeleton skeleton,AnimationType startAnimation) {
 		mSkeleton = skeleton;
@@ -41,6 +42,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 				newTime -= mCurrentAnimation.mFrameCount;
 			else{
 				if(mCurrentAnimation.mWrap==WrapMode.CALL_STOP) {
+					mLockedAnimation = false;
 					stopNode();
 					return;
 				}else
@@ -53,6 +55,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 				newTime += mCurrentAnimation.mFrameCount;
 			else{
 				if(mCurrentAnimation.mWrap==WrapMode.CALL_STOP) {
+					mLockedAnimation = false;
 					stopNode();
 					return;
 				}else
@@ -63,13 +66,17 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		
 		if(mCurrentAnimation.mAutoAnimate) {
 			int frameId = (int)newTime;
-			KeyFrame prevFrame = mCurrentAnimation.mPreviousFrames[frameId];
-			if(!mCurrentAnimation.mInterpolate || frameId==newTime) {
-				prevFrame.mPose.applyPose(mSkeleton);
+			if(!mCurrentAnimation.mInterpolate) {
+				mCurrentAnimation.mPreviousFrames[frameId].mPose.applyPose(mSkeleton);
 			}else{
+				KeyFrame prevFrame = mCurrentAnimation.mPreviousFrames[frameId];
 				KeyFrame nextFrame = mCurrentAnimation.mNextFrames[frameId];
-				float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mInvDuration;
-				nextFrame.mPose.applyPose(mSkeleton, prevFrame.mPose, t);
+				if(nextFrame==null)
+					prevFrame.mPose.applyPose(mSkeleton);
+				else{
+					float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mTimeFactor;
+					nextFrame.mPose.applyPose(mSkeleton, prevFrame.mPose, t);
+				}
 			}
 		}
 		
@@ -80,9 +87,12 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	}
 	
 	public void setAnimation(AnimationType animation) {
+		if(mLockedAnimation)
+			return;
 		mCurrentAnimation = animation;
 		mCurrentAnimationTime = 0;
 		proceed(0);
+		mLockedAnimation = mCurrentAnimation.mBlocking;
 	}
 	
 	public void crossAnimation(AnimationType animation) {

@@ -38,14 +38,14 @@ public class AnimatorTimeBar extends JPanel implements MouseListener,MouseMotion
 		
 		int frameNr = 0;
 		Animation<?> anim = mAnimator.getCurrentAnimation();
-		if(anim==null || anim.mFrames==null)
+		if(anim==null || anim.mKeyFrames==null)
 			return;
 		AnimationPlayer<?> animPlayer = mAnimator.mCurAnimationPlayer;
 		gfx.setColor(CL_KEYFRAME);
-		for(KeyFrame frame:anim.mFrames) {
+		for(KeyFrame frame:anim.mKeyFrames) {
 			int x = (int)((float)frameNr/anim.mFrameCount*getWidth());
 			gfx.drawLine(x, 0, x, getHeight());
-			frameNr += frame.mDuration;
+			frameNr += 1/frame.mTimeFactor;
 		}
 		
 		gfx.setColor(CL_MARKER);
@@ -86,9 +86,9 @@ public class AnimatorTimeBar extends JPanel implements MouseListener,MouseMotion
 			norm-=1;
 		while(norm<0)
 			norm+=1;
-		int frameNr = mAnimator.mCurAnimation.timeToKeyFrameIndex(norm*mAnimator.mCurAnimation.mTotalDuration);
+		int frameNr = mAnimator.mCurAnimation.timeToKeyFrameIndex((norm+0.5f/mAnimator.mCurAnimation.mPreviousFrames.length)*mAnimator.mCurAnimation.mTotalDuration);
 
-		mAnimator.selectFrame(frameNr, true);
+		mAnimator.selectKeyFrame(frameNr, true);
 	}
 
 	@Override

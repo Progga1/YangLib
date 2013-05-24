@@ -170,13 +170,12 @@ public class Animator implements InputEventListener {
 		mCurAnimation = mCurAnimationSystem.mAnimations.get(index);
 		mCurAnimationPlayer.setAnimation(mCurAnimation);
 		mAnimationIndex = index;
-		selectFrame(0,true);
+		selectKeyFrame(0,true);
 	}
 	
-	public void selectFrame(int index,boolean apply) {
+	public void selectKeyFrame(int index,boolean apply) {
+		mCurFrame = mCurAnimation.mKeyFrames[index];
 		mFrameIndex = index;
-
-		mCurFrame = mCurAnimation.mFrames[mFrameIndex];
 
 		if(!apply) 
 			mCurAnimationPlayer.mCurrentAnimationTime = (float)mCurFrame.mFirstFrame/mCurAnimation.mFrameCount*mCurAnimationPlayer.mCurrentAnimation.mTotalDuration;
@@ -189,7 +188,7 @@ public class Animator implements InputEventListener {
 	}
 	
 	public void reselect() {
-		selectFrame(mFrameIndex,true);
+		selectKeyFrame(mFrameIndex,true);
 	}
 	
 	public boolean selectSkeleton(Class<? extends Skeleton> skeletonClass) {
@@ -254,17 +253,17 @@ public class Animator implements InputEventListener {
 	public void previousFrame(boolean applyFrame) {
 		saveChangedPose();
 		if(mFrameIndex<=0)
-			selectFrame(mCurAnimation.mFrames.length-1,applyFrame);
+			selectKeyFrame(mCurAnimation.mKeyFrames.length-1,applyFrame);
 		else
-			selectFrame(mFrameIndex-1,applyFrame);
+			selectKeyFrame(mFrameIndex-1,applyFrame);
 	}
 	
 	public void nextFrame(boolean applyFrame) {
 		saveChangedPose();
-		if(mFrameIndex>=mCurAnimation.mFrames.length-1)
-			selectFrame(0,applyFrame);
+		if(mFrameIndex>=mCurAnimation.mKeyFrames.length-1)
+			selectKeyFrame(0,applyFrame);
 		else
-			selectFrame(mFrameIndex+1,applyFrame);
+			selectKeyFrame(mFrameIndex+1,applyFrame);
 	}
 	
 	public boolean rawEvent(YangEvent event) {

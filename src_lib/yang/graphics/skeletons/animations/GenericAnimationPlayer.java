@@ -13,6 +13,8 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 	}
 	
 	public void setAnimation(AnimationType animation) {
+		if(mLockedAnimation)
+			return;
 		if(mCurrentAnimation!=null)
 			cleanUp();
 		
@@ -74,11 +76,11 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 
 	public void setFrame(int frame) {
 		if(frame!=mCurFrame)
-			mCurrentAnimation.mFrames[frame].mPose.applyPose(mSkeleton);
+			mCurrentAnimation.mKeyFrames[frame].mPose.applyPose(mSkeleton);
 	}
 
 	public void setFrameForceUpdate(int frame) {
-		mCurrentAnimation.mFrames[frame].mPose.applyPose(mSkeleton);
+		mCurrentAnimation.mKeyFrames[frame].mPose.applyPose(mSkeleton);
 	}
 
 	public void restart() {
