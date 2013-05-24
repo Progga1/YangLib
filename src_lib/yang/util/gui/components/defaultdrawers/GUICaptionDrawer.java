@@ -12,16 +12,18 @@ public class GUICaptionDrawer extends GUIComponentDrawPass<GUIMultipassComponent
 
 	public DrawableString mCaption;
 	public FloatColor mFontColor;
+	public FloatColor mDisabledFontColor;
 	public float mFontSize = 0.1f;
 	
 	public GUICaptionDrawer() {
 		mFontColor = FloatColor.BLACK.clone();
+		mDisabledFontColor = FloatColor.GRAY.clone();
 	}
 	
 	@Override
 	public void draw(DefaultGraphics<?> graphics, GUIMultipassComponent component) {
 		if(mCaption!=null) {
-			graphics.setColor(mFontColor);
+			graphics.setColor(component.mEnabled?mFontColor:mDisabledFontColor);
 			mCaption.draw(component.getProjCenterX(), component.getProjCenterY(), mFontSize);
 		}
 	}

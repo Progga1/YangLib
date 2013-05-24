@@ -22,7 +22,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected Default3DGraphics mGraphics3D;
 	protected AbstractGFXLoader mGFXLoader;
 	protected AbstractResourceManager mResources;
-	protected StringsXML mStrings;
+	public StringsXML mStrings;
 	private int mRestartCount = 0;
 	
 	protected abstract void step(float deltaTime);

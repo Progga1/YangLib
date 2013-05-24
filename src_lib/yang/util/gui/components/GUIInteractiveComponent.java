@@ -10,8 +10,6 @@ public abstract class GUIInteractiveComponent extends GUIMultipassComponent impl
 	public float mPressedTime;
 	public GUIActionListener mActionListener;
 	public GUIPointerListener mPointerListener;
-	public boolean mEnabled = true;
-
 	
 	public abstract boolean inArea(float x,float y);
 	

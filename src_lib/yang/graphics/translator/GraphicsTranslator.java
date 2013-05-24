@@ -65,7 +65,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public int mFlushCount;
 	
 	//Persistent
-	public Texture mNullTexture;
+	public Texture mWhiteTexture;
+	public Texture mBlackTexture;
 	private Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
 	private NonConcurrentList<TextureRenderTarget> mRenderTargets;
@@ -178,14 +179,23 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		final int DIM = 2;
 		final int BYTES = DIM*DIM*4;
 		ByteBuffer buf = ByteBuffer.allocateDirect(BYTES);
-		for(int i=0;i<BYTES;i++) {
+		for(int i=0;i<BYTES;i++)
 			buf.put((byte)255);
-		}
-		if(mNullTexture==null)
-			mNullTexture = createTexture(buf, DIM,DIM, new TextureSettings());
+		if(mWhiteTexture==null)
+			mWhiteTexture = createTexture(buf, DIM,DIM, new TextureSettings());
 		else
-			mNullTexture.update(buf);
-		assert checkErrorInst("Create null texture");
+			mWhiteTexture.update(buf);
+		buf = ByteBuffer.allocateDirect(BYTES);
+		for(int i=0;i<BYTES;i++)
+			if(i%4==3)
+				buf.put((byte)255);
+			else
+				buf.put((byte)0);
+		if(mBlackTexture==null)
+			mBlackTexture = createTexture(buf, DIM,DIM, new TextureSettings());
+		else
+			mBlackTexture.update(buf);
+		assert checkErrorInst("Create def textures");
 		
 		enable(GLOps.BLEND);
 		setBlendFunction(GLBlendFuncs.ONE,GLBlendFuncs.ONE_MINUS_SRC_ALPHA);
@@ -234,10 +244,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public final void bindTexture(Texture texture,int level) {
 		assert checkErrorInst("PRE bind texture");
-		if(texture!=mCurrentTextures[level] && (texture!=null || mCurrentTextures[level]!=mNullTexture)) {
+		if(texture!=mCurrentTextures[level] && (texture!=null || mCurrentTextures[level]!=mWhiteTexture)) {
 			flush();
 			if(texture==null)
-				texture = mNullTexture;
+				texture = mWhiteTexture;
 			mCurrentTextures[level] = texture;
 			bindTexture(texture.getId(),level);
 		}
@@ -257,7 +267,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public final void rebindTexture(int level) {
 		if(mCurrentTextures[level]==null)
-			mCurrentTextures[level] = mNullTexture;
+			mCurrentTextures[level] = mWhiteTexture;
 		bindTexture(mCurrentTextures[level].getId(),0);
 	}
 	

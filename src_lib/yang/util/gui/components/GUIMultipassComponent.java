@@ -5,6 +5,7 @@ package yang.util.gui.components;
 public class GUIMultipassComponent extends GUIComponent {
 
 	protected GUIComponentDrawPass[] mPasses;
+	public boolean mEnabled = true;
 	
 //	public GUIMultipassComponent setPasses(GUIComponentDrawPass[] passes) {
 //		mPasses = passes;

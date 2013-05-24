@@ -19,6 +19,20 @@ public class Boundaries3D {
 		this(-dimX/2,dimX/2, -dimY,dimY, -dimZ,dimZ);
 	}
 	
+	public Boundaries3D set(float minX,float maxX,float minY,float maxY,float minZ,float maxZ) {
+		mMinX = minX;
+		mMaxX = maxX;
+		mMinY = minY;
+		mMaxY = maxY;
+		mMinZ = minZ;
+		mMaxZ = maxZ;
+		return this;
+	}
+	
+	public Boundaries3D set(float dimX,float dimY,float dimZ) {
+		return set(-dimX/2,dimX/2, -dimY,dimY, -dimZ,dimZ);
+	}
+	
 	public float deltaX() {
 		return mMaxX-mMinX;
 	}

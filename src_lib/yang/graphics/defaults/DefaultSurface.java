@@ -8,7 +8,6 @@ import yang.events.listeners.InputEventListener;
 import yang.graphics.YangSurface;
 import yang.graphics.font.DrawableString;
 import yang.graphics.translator.AbstractGFXLoader;
-import yang.model.enums.UpdateMode;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 

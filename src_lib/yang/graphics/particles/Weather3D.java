@@ -21,6 +21,10 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 		mBoundaries = boundaries;
 	}
 	
+	public Weather3D() {
+		this(new Boundaries3D(1,1,1));
+	}
+	
 	public Weather3D<RingBufferType> init(RingBufferType ringBuffer,EffectParticleProperties particleProperties) {
 		mGraphics3D = ringBuffer.mGraphics;
 		mGraphics = mGraphics3D.mTranslator;
