@@ -21,7 +21,7 @@ public class PolygonCreator {
 	private int mPointsLeft;
 	private int mElemsPerPos;
 	private int mOrientation = 1;
-	private boolean mAutoClose = false;
+	public boolean mAutoClose = false;
 	
 	public PolygonCreator(int elementsPerPosition,int capacity) {
 		mElemsPerPos = elementsPerPosition;
@@ -117,11 +117,9 @@ public class PolygonCreator {
 						float r = -1;
 						if(aX!=0) {
 							//Normalize row 1
-							float raX = 1;
 							float sbX = bX/aX;
 							pX /= aX;
-							// row2 - aY*row1
-							float raY = 0;
+							
 							float sbY = bY - aY*sbX;
 							pY -= aY*pX;
 							if(sbY==0)
@@ -134,7 +132,7 @@ public class PolygonCreator {
 							s = pX/bX;
 							r = (pY - s*bY)/aY;
 						}
-						if(s>0 && s<1 && r>0 && r<1 && r+s<1) {
+						if(s>=0 && s<=1 && r>=0 && r<=1 && r+s<=1) {
 							intersected = true;
 							break;
 						}
