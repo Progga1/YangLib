@@ -24,6 +24,6 @@
 	<classpathentry kind="lib" path="lib/gdx/gdx.jar" sourcepath="lib/gdx/gdx-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/opengl/swt.jar"/>
-	<classpathentry kind="lib" path="/yangAndroid/libs/vecmath.jar"/>
+	<classpathentry kind="lib" path="../yangAndroid/libs/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

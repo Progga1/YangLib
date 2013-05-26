@@ -4,6 +4,8 @@ import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.math.Geometry;
+import yang.math.MathFunc;
 
 public class PolygonCreator {
 
@@ -21,6 +23,7 @@ public class PolygonCreator {
 	private int mPointsLeft;
 	private int mElemsPerPos;
 	private int mOrientation = 1;
+	private boolean mAutoOrientation = true;
 	public boolean mAutoClose = false;
 	
 	public PolygonCreator(int elementsPerPosition,int capacity) {
@@ -52,6 +55,8 @@ public class PolygonCreator {
 	}
 	
 	public void triangulate() {
+		if(mAutoOrientation)
+			setOrientationByPoints();
 		int uIndexCount = mIndexCount;
 		System.arraycopy(mIndices, 0, mWorkingIndices, 0, mIndexCount);
 		if(mAutoClose) {
@@ -191,7 +196,35 @@ public class PolygonCreator {
 	}
 	
 	public void setOrientation(int orientation) {
+		mAutoOrientation = false;
 		mOrientation = orientation;
+	}
+	
+	public void setOrientationByPoints() {
+		float topMost = Float.MIN_VALUE;
+		int topI = -1;
+		int l = mPointCount*mElemsPerPos;
+		for(int i=0;i<l;i+=mElemsPerPos) {
+			if(mPositions[i+1]>topMost) {
+				topMost = mPositions[i+1];
+				topI = i;
+			}
+		}
+		float x = mPositions[topI];
+		float y = mPositions[topI+1];
+		float pX = topI==0?mPositions[l-mElemsPerPos]:mPositions[topI-mElemsPerPos];
+		float pY = topI==0?mPositions[l-mElemsPerPos+1]:mPositions[topI-mElemsPerPos+1];
+		float sX = topI==l-mElemsPerPos?mPositions[0]:mPositions[topI+mElemsPerPos];
+		float sY = topI==l-mElemsPerPos?mPositions[1]:mPositions[topI+mElemsPerPos+1];
+		if(y==sY && y==pY) {
+			mOrientation = MathFunc.sign(sX-pX);
+		}else{
+			mOrientation = MathFunc.sign(Geometry.cross2D(sX-x, sY-y, pX-x, pY-y));
+		}
+	}
+	
+	public int getOrientation() {
+		return mOrientation;
 	}
 
 	public int getPointCount() {

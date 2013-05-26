@@ -339,17 +339,6 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	// ---PUT-POSITIONS---
-
-	public void putPosition(float x,float y,float z,YangMatrix transform) {
-		transform.apply3D(x, y, z, mInterArray, 0);
-		if(mInterArray[3]!=1) {
-			float d = 1f/mInterArray[3];
-			mInterArray[0] *= d;
-			mInterArray[1] *= d;
-			mInterArray[2] *= d;
-		}
-		mPositions.put(mInterArray, 0, 3);
-	}
 	
 	public void putTransformedPositionRect(YangMatrix transform) {
 		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,0, transform.mMatrix);
@@ -368,6 +357,17 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	public void putPosition(float x, float y,float z) {
 		mCurrentVertexBuffer.putVec3(ID_POSITIONS, x, y, z);
+	}
+	
+	public void putPosition(float x,float y,float z,YangMatrix transform) {
+		transform.apply3D(x, y, z, mInterArray, 0);
+		if(mInterArray[3]!=1) {
+			float d = 1f/mInterArray[3];
+			mInterArray[0] *= d;
+			mInterArray[1] *= d;
+			mInterArray[2] *= d;
+		}
+		mPositions.put(mInterArray, 0, 3);
 	}
 
 	public void putPositionArray(float[] positions) {
