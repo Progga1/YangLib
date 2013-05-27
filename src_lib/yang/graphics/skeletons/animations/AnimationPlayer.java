@@ -114,6 +114,10 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		
 	}
 	
+	public void interruptAnimation() {
+		mLockedAnimation = false;
+	}
+	
 	public void setNormalizedAnimationTime(float normalAnimationTime) {
 		setAnimationTime(normalAnimationTime*mCurrentAnimation.mTotalDuration);
 	}

@@ -43,6 +43,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public long mThreadId;
 	private NonConcurrentList<SurfaceListener> mScreenListeners;
 	public float mMinRatioX = 1;
+	public float mMaxTime = 60;
 	
 	//State
 	protected Texture[] mCurrentTextures;
@@ -53,6 +54,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public DrawListener mCurDrawListener;
 	public ScreenInfo mCurrentScreen;
 	public float mTimer;
+	public float mShaderTimer;
 	private long mLstTimestamp;
 	public float mCurFrameDeltaTime = 0;
 	
@@ -393,8 +395,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(mLstTimestamp>0) {
 			mCurFrameDeltaTime = (curTime-mLstTimestamp)*0.001f;
 			mTimer += mCurFrameDeltaTime;
-		}else
+			mShaderTimer += mCurFrameDeltaTime;
+			if(mShaderTimer>mMaxTime)
+				mShaderTimer-=mMaxTime;
+		}else{
+			mShaderTimer = 0;
 			mTimer = 0;
+		}
 		mLstTimestamp = curTime;
 	}
 	
@@ -525,6 +532,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	public void resetTimer() {
 		mTimer = 0;
+		mShaderTimer = 0;
 		mLstTimestamp = -1;
 	}
 	
