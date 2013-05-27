@@ -108,7 +108,12 @@ public class Camera2D {
 		set(x,y,zoom,0);
 	}
 	
-
+	public void scrollInstant(float x, float y) {
+		mPos.x += x;
+		mPos.y += y;
+		mTarPos.x += x;
+		mTarPos.y += y;	
+	}
 
 	public float getRotation() {
 		return mTarRotation;
