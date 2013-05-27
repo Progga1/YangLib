@@ -14,6 +14,7 @@ public class PolygonSampleState extends SampleState {
 	private Texture mFillTexture;
 	private boolean mDrawTexture = false;
 	private boolean mDrawDebug = true;
+	//private float grid = 0.1f;
 	
 	@Override
 	public void initGraphics() {
@@ -62,7 +63,8 @@ public class PolygonSampleState extends SampleState {
 			if(pick>=0)
 				mPolygon.addIndex(pick);
 			else	
-				mPolygon.addPoint(x, y);
+				mPolygon.addPoint(x,y);
+				//mPolygon.addPoint((int)(x/grid)*grid, (int)(y/grid)*grid);
 			mPolygon.triangulate();
 		}
 	}
@@ -71,7 +73,8 @@ public class PolygonSampleState extends SampleState {
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
 		if(mPickedPoint>=0) {
 			mPolygon.triangulate();
-			mPolygon.setPointPos(mPickedPoint, x, y);
+			//mPolygon.setPointPos(mPickedPoint, (int)(x/grid)*grid, (int)(y/grid)*grid);
+			mPolygon.setPointPos(mPickedPoint, x,y);
 		}
 	}
 	
