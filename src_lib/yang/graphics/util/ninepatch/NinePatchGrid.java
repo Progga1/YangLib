@@ -60,6 +60,10 @@ public class NinePatchGrid {
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, 16);
 	}
 	
+	public void drawCentered(IndexedVertexBuffer vertexBuffer,float centerX,float centerY,float width,float height) {
+		draw(vertexBuffer,centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
+	}
+	
 	public NinePatchGrid cloneWithTextureOffset(float offsetX,float offsetY) {
 		NinePatchGrid result = new NinePatchGrid();
 		result.setBorderSize(mBorderLeft,mBorderTop,mBorderRight,mBorderBottom);

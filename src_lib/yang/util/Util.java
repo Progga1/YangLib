@@ -129,6 +129,33 @@ public class Util {
 		return result;
 	}
 	
+	public static String arrayToString(float[][] array,String separator,int spaceEvery) {
+		//String result = "length="+array.length;
+		String result="";
+		for(float[] row:array) {
+			int c = 0;
+			String line = "";
+			for(float f:row) {
+				if(line!="") {
+					line += separator;
+					if(spaceEvery>0 && (c%spaceEvery==0))
+						line += " ";
+				}
+				c++;
+				line += f;
+			}
+			if(result!="") {
+				result += "\r\n";
+			}
+			result += line;
+		}
+		return result;
+	}
+	
+	public static String arrayToString(float[][] array) {
+		return arrayToString(array," ",0);
+	}
+	
 	public static String arrayToString(int[] array,String separator,int spaceEvery) {
 		//String result = "length="+array.length;
 		int c = 0;

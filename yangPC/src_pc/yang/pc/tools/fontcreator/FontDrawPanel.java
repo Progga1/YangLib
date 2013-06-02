@@ -158,11 +158,14 @@ class FontDrawPanel extends JPanel {
 		out.println("firstCharID = " + mStartID);
 		out.println("lastCharID = " + (mEndID-1));
 		
-		if(savePixelCoords) out.println("spaceWidth = " + (mAvgWidth));
-		else out.println("spaceWidth = " + ((float)mAvgWidth/mWidth));
+		if(savePixelCoords) out.println("spaceWidth = " + (mAvgWidth/2));
+		else out.println("spaceWidth = " + ((float)mAvgWidth/mWidth/2));
 		
-		if(savePixelCoords) out.println("spacing = " + (int)((mGlobalB-mGlobalT)/69f * 18) );
-		else out.println("spacing = " + ((mGlobalB-mGlobalT)/69f * 18));
+//		if(savePixelCoords) out.println("spacing = " + (int)((mGlobalB-mGlobalT)/69f * 18) );
+//		else out.println("spacing = " + ((mGlobalB-mGlobalT)/69f * 18));
+		
+		if(savePixelCoords) out.println("spacing = " + (int)(2/512f*mWidth));	//spacing is added to kerning
+		else out.println("spacing = " + 2/512f);
 		
 		out.println("# CHAR=minX minY maxX maxY [kernMin(1) kernMax(1) ... kernMin(kernBoxes) kernMax(kernBoxes)]");
 		
@@ -283,7 +286,7 @@ class FontDrawPanel extends JPanel {
 		
 		if(x/*-box.l*/+box.w > mWidth) return 1;
 		
-		g2.setColor(Color.BLACK);
+		g2.setColor(Color.WHITE);
 		g2.drawString( String.valueOf(symbol) , x - box.l, y); 
 		
 		if(mShowTextureBoxes) {

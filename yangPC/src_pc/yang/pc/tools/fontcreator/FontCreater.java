@@ -87,7 +87,7 @@ public class FontCreater {
 	    
 	    private static boolean loadArgs(String[] args) {			
 	    	if(args.length >= 10){
-	    		mFontName 		= args[0];
+	    		mFontName 		= args[0].replace("_", " ");
 	    		mFilename		= args[1];
 	    		mPath		    = args[2];
 	    		mOutputWidth 	= Integer.valueOf( args[3] );
