@@ -33,8 +33,8 @@ public class StringSampleState extends SampleState {
 		mAnimatedString = new RotatingLettersString(3.2f,0.8f,0.36f);
 		mAnimatedString.allocString("Animated");
 		
-		mAutoLineBreakString = new DrawableString();
-		mAutoLineBreakString.allocString("A long Text with automatic line breaks..\nas well as manual line breaks.");
+		mAutoLineBreakString = new DrawableAnchoredLines();
+		mAutoLineBreakString.allocString("A long Text with auto´matic line breaks..\nas well as manual line breaks.");
 	}
 	
 	@Override
@@ -73,6 +73,7 @@ public class StringSampleState extends SampleState {
 		mMaxLineWidth = (float)Math.sin(mStateTimer*0.5f)*4.2f+8.5f;
 		mAutoLineBreakString.setMaxLineWidth(mMaxLineWidth);
 		mAutoLineBreakString.draw(LEFT, TOP, FONT_SIZE);
+		mAutoLineBreakString.setHorizontalAnchor(DrawableString.ANCHOR_LEFT);
 		//Show line break bar
 		mGraphics.bindTexture(null);
 		mGraphics2D.setColor(0.8f);

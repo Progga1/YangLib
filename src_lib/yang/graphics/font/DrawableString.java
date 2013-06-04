@@ -10,6 +10,7 @@ public class DrawableString extends FixedString {
 	public static int CHAR_LINEBREAK = '\n';
 	public static int CHAR_TAB = '\t';
 	public static int CHAR_SPACE = ' ';
+	public static int CHAR_WORD_SPLITTER = '´';
 	protected static float LINEBREAK_FLOAT = Float.MIN_VALUE;
 	public static float DEFAULT_LINE_WIDTH = Float.MAX_VALUE;
 	
@@ -118,6 +119,7 @@ public class DrawableString extends FixedString {
 		mRecentCharCount = 0;
 		mRecentLineCount = 1;
 		mRecentStringHeight = 0;
+		boolean wordSplit = false;
 		float spacing = mFont.mSpacing+mAdditionalSpacing;
 		int lstVal = -1;
 		int lstSpaceVal = -1;
@@ -146,13 +148,27 @@ public class DrawableString extends FixedString {
 					if(lstVal>0 && (!mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
 						lstSpace = i;
 						lstSpaceVal = lstVal;
-						spaceCharX = charX;
-						if(mKerningEnabled)
-							charX += mFont.mKerningMaxX[lstVal]+mFont.mSpaceWidth;
-						else
+						
+						wordSplit = false;
+						if(mKerningEnabled) {
+							spaceCharX = charX+mFont.mKerningMaxX[lstVal];
+							charX = spaceCharX+mFont.mSpaceWidth;
+						}else{
+							spaceCharX = charX + spacing;
 							charX += spacing*2;
+						}
 					}
 					lstVal = -1;
+				}else if(val == CHAR_WORD_SPLITTER){
+					lstSpace = i;
+					lstSpaceVal = lstVal;
+					spaceCharX = charX;
+					wordSplit = true;
+					if(mKerningEnabled) {
+						spaceCharX = charX+mFont.mKerningMaxX[lstVal];
+					}else{
+						spaceCharX = charX + spacing;
+					}
 				}else if(val!=CHAR_LINEBREAK) {
 					if(val == CHAR_TAB) {
 						//Tab
@@ -189,16 +205,16 @@ public class DrawableString extends FixedString {
 							}
 						}
 						
+						int uVal = val;
 						TextureCoordinatesQuad coords = mFont.mCoordinates[val];
 						float w = mFont.mWidths[val];
-						float h = mFont.mHeights[val];
 						float uX;
 						if(mKerningEnabled)
 							uX = charX;
 						else
 							uX = charX+mFont.mConstantCharDistance*0.5f-w*0.5f;
 						
-						if(mMaxLineWidth<Float.MAX_VALUE && uX+mFont.mKerningMaxX[val]>mMaxLineWidth && lstSpace>=0) {
+						if(mMaxLineWidth<Float.MAX_VALUE && uX+mFont.mKerningMaxX[val]>mMaxLineWidth-0.2f && lstSpace>=0) {
 							//Auto line break
 							int charCount = i-lstSpace-1;
 							val = CHAR_LINEBREAK;
@@ -208,9 +224,18 @@ public class DrawableString extends FixedString {
 							charX = spaceCharX;
 							lstVal = lstSpaceVal;
 							mRecentCharCount -= charCount;
-						}else{
+							if(wordSplit) {
+								uVal = '-';
+								uX = charX;
+								coords = mFont.mCoordinates[uVal];
+								w = mFont.mWidths[uVal];
+							}else
+								uVal = CHAR_LINEBREAK;
+						}
+						if(uVal!=CHAR_LINEBREAK) {
 							//Add char
-							mLetters[mRecentCharCount] = val;
+							float h = mFont.mHeights[uVal];
+							mLetters[mRecentCharCount] = uVal;
 							mTexCoords[mRecentCharCount] = coords;
 							
 							if(positionTarget!=null) {
@@ -236,7 +261,7 @@ public class DrawableString extends FixedString {
 							}
 							mRecentCharCount++;
 							curLineCharCount++;
-							lstVal = val;
+							lstVal = uVal;
 						}
 						
 					}
