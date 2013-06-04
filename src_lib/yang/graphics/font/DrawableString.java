@@ -172,8 +172,12 @@ public class DrawableString extends FixedString {
 				}else if(val!=CHAR_LINEBREAK) {
 					if(val == CHAR_TAB) {
 						//Tab
-						int tabs = (curLineCharCount/mTabs+1)*mTabs-curLineCharCount;
-						charX += spaceWidth*tabs;
+						if(mKerningEnabled) {
+							charX += spaceWidth*mTabs;
+						}else{
+							int tabs = (curLineCharCount/mTabs+1)*mTabs-curLineCharCount;
+							charX += spaceWidth*tabs;
+						}
 						lstVal = -1;
 					}else if(val>=0) {
 						//Character
@@ -197,10 +201,7 @@ public class DrawableString extends FixedString {
 							//first char of line
 							if(curLineCharCount==0) {
 								if(mKerningEnabled) {
-									lineShift = -mFont.mKerningMinX[val];
-									charX = lineShift;
-								}else{
-									charX = 0;
+									charX -= -mFont.mKerningMinX[val];
 								}
 							}
 						}
@@ -296,6 +297,7 @@ public class DrawableString extends FixedString {
 					}
 					offsetsTarget[o++] =LINEBREAK_FLOAT;
 				}
+				charX = 0;
 			}
 			
 		}

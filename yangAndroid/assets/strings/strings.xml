@@ -5,7 +5,7 @@
     <string name="testText">
 		This is a\n
 		text\n
-		\tand a \ttab
+		\tand a tab
     </string>
     
 </resources>
