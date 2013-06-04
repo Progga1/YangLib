@@ -10,6 +10,8 @@ public class DrawableString extends FixedString {
 	public static int CHAR_LINEBREAK = '\n';
 	public static int CHAR_TAB = '\t';
 	public static int CHAR_SPACE = ' ';
+	protected static float LINEBREAK_FLOAT = Float.MIN_VALUE;
+	public static float DEFAULT_LINE_WIDTH = Float.MAX_VALUE;
 	
 	public static final float ANCHOR_LEFT = 0;
 	public static final float ANCHOR_CENTER = 0.5f;
@@ -30,6 +32,7 @@ public class DrawableString extends FixedString {
 	protected DefaultGraphics<?> mGraphics;
 	
 	//Properties
+	//TODO create class
 	public float mLineHeight = 1;
 	public boolean mKerningEnabled = true;
 	public BitmapFont mFont;
@@ -39,6 +42,7 @@ public class DrawableString extends FixedString {
 	public boolean mIgnoreSpaceAtLineStart = true;
 	public float mVerticalAnchor;
 	public float mHorizontalAnchor;
+	public float mMaxLineWidth = Float.MAX_VALUE;
 	
 	//String properties
 	public int mRecentCharCount = 0;
@@ -79,12 +83,18 @@ public class DrawableString extends FixedString {
 		setFont(DEFAULT_FONT);
 		mVerticalAnchor = DEFAULT_VERTICAL_ANCHOR;
 		mHorizontalAnchor = DEFAULT_HORIZONTAL_ANCHOR;
+		mMaxLineWidth = DEFAULT_LINE_WIDTH;
 	}
 	
 	public DrawableString setGraphics(DefaultGraphics<?> graphics) {
 		mGraphics = graphics;
 		if(mGraphics!=null)
 			mHasZComponent = mGraphics.mPositionDimension==3;
+		return this;
+	}
+	
+	public DrawableString setMaxLineWidth(float lineWidth) {
+		mMaxLineWidth = lineWidth;
 		return this;
 	}
 	
@@ -102,6 +112,7 @@ public class DrawableString extends FixedString {
 		int c=0;
 		int o=0;
 		float lineShift = 0;
+		int lstSpace = -1;
 		mRecentStringWidth = 0;
 		mRecentCharCount = 0;
 		mRecentLineCount = 1;
@@ -127,6 +138,30 @@ public class DrawableString extends FixedString {
 			else
 				val = mChars[i];
 			if(val>0) {
+				
+				if(val == CHAR_SPACE) {
+					//Space
+					if(lstVal>0 && (!mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
+						if(charX>mMaxLineWidth && lstSpace>=0) {
+							//Auto line break
+							int charCount = i-lstSpace-1;
+							val = CHAR_LINEBREAK;
+							i = lstSpace;
+							o -= charCount;
+							c -= charCount*(mHasZComponent?3:2)*4;
+							mRecentCharCount -= charCount;
+						}else{
+							lstSpace = i;
+							val = -1;
+						}
+						if(mKerningEnabled)
+							charX += mFont.mKerningMaxX[lstVal]+mFont.mSpaceWidth;
+						else
+							charX += spacing*2;
+					}
+					lstVal = -1;
+				}
+				
 				if(val == CHAR_LINEBREAK) {
 					//Line break
 					if(lstVal>0) {
@@ -139,6 +174,7 @@ public class DrawableString extends FixedString {
 					if(charX>mRecentStringWidth)
 						mRecentStringWidth = charX;
 					lstVal = -1;
+					lstSpace = -1;
 					charY -= mLineHeight;
 					curLineCharCount = 0;
 					mRecentLineCount++;
@@ -147,28 +183,19 @@ public class DrawableString extends FixedString {
 						if(mHorizontalAnchor>0) {
 							int k=o-1;
 							float shift = -(charX+lineShift)*mHorizontalAnchor;
-							while(k>=0 && offsetsTarget[k]!=Float.MIN_VALUE) {
+							while(k>=0 && offsetsTarget[k]!=LINEBREAK_FLOAT) {
 								offsetsTarget[k] += shift;
 								k--;
 							}
 						}
-						offsetsTarget[o++] = Float.MIN_VALUE;
+						offsetsTarget[o++] =LINEBREAK_FLOAT;
 					}
-				}else if(val == CHAR_SPACE) {
-					//Space
-					if(lstVal>0 && (!mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
-						if(mKerningEnabled)
-							charX += mFont.mKerningMaxX[lstVal]+mFont.mSpaceWidth;
-						else
-							charX += spacing*2;
-					}
-					lstVal = -1;
 				}else if(val == CHAR_TAB) {
 					//Tab
 					int tabs = (curLineCharCount/mTabs+1)*mTabs-curLineCharCount;
 					charX += spaceWidth*tabs;
 					lstVal = -1;
-				}else{
+				}else if(val>=0) {
 					//Character
 					if(lstVal>0) {
 						if(mKerningEnabled) {

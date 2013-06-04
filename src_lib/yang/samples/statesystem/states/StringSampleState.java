@@ -11,6 +11,7 @@ public class StringSampleState extends SampleState {
 	DrawableString mFormatString;
 	RotatingLettersString mAnimatedString;
 	DrawableString mFromStringXML;
+	DrawableString mAutoLineBreakString;
 	
 	@Override
 	protected void initGraphics() {
@@ -29,6 +30,10 @@ public class StringSampleState extends SampleState {
 		
 		mAnimatedString = new RotatingLettersString(3.2f,0.8f,0.36f);
 		mAnimatedString.allocString("Animated");
+		
+		mAutoLineBreakString = new DrawableString();
+		mAutoLineBreakString.setMaxLineWidth(10);
+		mAutoLineBreakString.allocString("A long Text with automatic line breaks \nas well as manual line breaks.");
 	}
 	
 	@Override
@@ -58,6 +63,9 @@ public class StringSampleState extends SampleState {
 		mAnimatedString.draw(-1.2f, -0.3f, 0.2f, -0.3f);
 		mGraphics2D.setWhite();
 		mFormatString.draw(-0.3f,-0.5f, 0.2f);
+		
+		mGraphics2D.setColor(0.8f);
+		mAutoLineBreakString.draw(0.6f, 0.5f, 0.1f);
 	}
 	
 }

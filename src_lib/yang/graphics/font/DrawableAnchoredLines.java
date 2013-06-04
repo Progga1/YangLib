@@ -23,7 +23,7 @@ public class DrawableAnchoredLines extends DrawableString{
 		int count = mRecentCharCount+mRecentLineCount-1;
 		for(int i=0;i<count;i++) {
 			float charX = offsets[i];
-			if(charX!=Float.MIN_VALUE) {
+			if(charX!=LINEBREAK_FLOAT) {
 				TextureCoordinatesQuad coords = mTexCoords[o];
 				float x2 = charX+(coords.x2-coords.x1)*mFont.mCharNormalizeFactorX;
 				float y2 = charY+(coords.y2-coords.y1)*mFont.mCharNormalizeFactorY;
