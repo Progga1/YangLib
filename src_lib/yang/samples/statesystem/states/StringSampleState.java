@@ -1,5 +1,6 @@
 package yang.samples.statesystem.states;
 
+import yang.graphics.font.DrawableAnchoredLines;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.defaultanimatedfonts.RotatingLettersString;
 import yang.samples.statesystem.SampleState;
@@ -64,6 +65,7 @@ public class StringSampleState extends SampleState {
 		mGraphics2D.setWhite();
 		mFormatString.draw(-0.3f,-0.5f, 0.2f);
 		
+		//Draw text with automatic line break
 		final float FONT_SIZE = 0.07f;
 		final float LEFT = 0.6f;
 		final float TOP = 0.5f;
@@ -71,6 +73,7 @@ public class StringSampleState extends SampleState {
 		mMaxLineWidth = (float)Math.sin(mStateTimer*0.5f)*4.2f+8.5f;
 		mAutoLineBreakString.setMaxLineWidth(mMaxLineWidth);
 		mAutoLineBreakString.draw(LEFT, TOP, FONT_SIZE);
+		//Show line break bar
 		mGraphics.bindTexture(null);
 		mGraphics2D.setColor(0.8f);
 		mGraphics2D.drawLine(LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP, LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP-mAutoLineBreakString.mRecentStringHeight*FONT_SIZE, 0.02f);

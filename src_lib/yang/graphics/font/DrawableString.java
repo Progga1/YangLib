@@ -113,12 +113,14 @@ public class DrawableString extends FixedString {
 		int o=0;
 		float lineShift = 0;
 		int lstSpace = -1;
+		float spaceCharX = -1;
 		mRecentStringWidth = 0;
 		mRecentCharCount = 0;
 		mRecentLineCount = 1;
 		mRecentStringHeight = 0;
 		float spacing = mFont.mSpacing+mAdditionalSpacing;
 		int lstVal = -1;
+		int lstSpaceVal = -1;
 		int curLineCharCount = 0;
 		float spaceWidth;
 		if(mKerningEnabled)
@@ -143,6 +145,8 @@ public class DrawableString extends FixedString {
 					//Space
 					if(lstVal>0 && (!mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
 						lstSpace = i;
+						lstSpaceVal = lstVal;
+						spaceCharX = charX;
 						if(mKerningEnabled)
 							charX += mFont.mKerningMaxX[lstVal]+mFont.mSpaceWidth;
 						else
@@ -201,6 +205,8 @@ public class DrawableString extends FixedString {
 							i = lstSpace;
 							o -= charCount;
 							c -= charCount*(mHasZComponent?3:2)*4;
+							charX = spaceCharX;
+							lstVal = lstSpaceVal;
 							mRecentCharCount -= charCount;
 						}else{
 							//Add char
