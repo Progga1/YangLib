@@ -12,6 +12,7 @@ public class StringSampleState extends SampleState {
 	RotatingLettersString mAnimatedString;
 	DrawableString mFromStringXML;
 	DrawableString mAutoLineBreakString;
+	float mMaxLineWidth = 10;
 	
 	@Override
 	protected void initGraphics() {
@@ -32,8 +33,7 @@ public class StringSampleState extends SampleState {
 		mAnimatedString.allocString("Animated");
 		
 		mAutoLineBreakString = new DrawableString();
-		mAutoLineBreakString.setMaxLineWidth(10);
-		mAutoLineBreakString.allocString("A long Text with automatic line breaks \nas well as manual line breaks.");
+		mAutoLineBreakString.allocString("A long Text with automatic line breaks..\nas well as manual line breaks.");
 	}
 	
 	@Override
@@ -64,8 +64,16 @@ public class StringSampleState extends SampleState {
 		mGraphics2D.setWhite();
 		mFormatString.draw(-0.3f,-0.5f, 0.2f);
 		
+		final float FONT_SIZE = 0.07f;
+		final float LEFT = 0.6f;
+		final float TOP = 0.5f;
 		mGraphics2D.setColor(0.8f);
-		mAutoLineBreakString.draw(0.6f, 0.5f, 0.1f);
+		mMaxLineWidth = (float)Math.sin(mStateTimer*0.5f)*4.2f+8.5f;
+		mAutoLineBreakString.setMaxLineWidth(mMaxLineWidth);
+		mAutoLineBreakString.draw(LEFT, TOP, FONT_SIZE);
+		mGraphics.bindTexture(null);
+		mGraphics2D.setColor(0.8f);
+		mGraphics2D.drawLine(LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP, LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP-mAutoLineBreakString.mRecentStringHeight*FONT_SIZE, 0.02f);
 	}
 	
 }

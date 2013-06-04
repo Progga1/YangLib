@@ -142,7 +142,59 @@ public class DrawableString extends FixedString {
 				if(val == CHAR_SPACE) {
 					//Space
 					if(lstVal>0 && (!mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
-						if(charX>mMaxLineWidth && lstSpace>=0) {
+						lstSpace = i;
+						if(mKerningEnabled)
+							charX += mFont.mKerningMaxX[lstVal]+mFont.mSpaceWidth;
+						else
+							charX += spacing*2;
+					}
+					lstVal = -1;
+				}else if(val!=CHAR_LINEBREAK) {
+					if(val == CHAR_TAB) {
+						//Tab
+						int tabs = (curLineCharCount/mTabs+1)*mTabs-curLineCharCount;
+						charX += spaceWidth*tabs;
+						lstVal = -1;
+					}else if(val>=0) {
+						//Character
+						if(lstVal>0) {
+							if(mKerningEnabled) {
+								//Kerning
+								float maxKernShift = 0;
+								float[] kernBoxes1 = mFont.mKerningValues[lstVal];
+								float[] kernBoxes2 = mFont.mKerningValues[val];
+								for(int k=0;k<mFont.mKernBoxes;k++) {
+									float shift = kernBoxes1[k*2+1]-kernBoxes2[k*2];
+									if(shift>maxKernShift) {
+										maxKernShift = shift;
+									}
+								}
+								charX += maxKernShift+spacing;
+							}else
+								charX += mFont.mConstantCharDistance;
+							charX += mAdditionalSpacing;
+						}else{
+							//first char of line
+							if(curLineCharCount==0) {
+								if(mKerningEnabled) {
+									lineShift = -mFont.mKerningMinX[val];
+									charX = lineShift;
+								}else{
+									charX = 0;
+								}
+							}
+						}
+						
+						TextureCoordinatesQuad coords = mFont.mCoordinates[val];
+						float w = mFont.mWidths[val];
+						float h = mFont.mHeights[val];
+						float uX;
+						if(mKerningEnabled)
+							uX = charX;
+						else
+							uX = charX+mFont.mConstantCharDistance*0.5f-w*0.5f;
+						
+						if(mMaxLineWidth<Float.MAX_VALUE && uX+mFont.mKerningMaxX[val]>mMaxLineWidth && lstSpace>=0) {
 							//Auto line break
 							int charCount = i-lstSpace-1;
 							val = CHAR_LINEBREAK;
@@ -151,114 +203,67 @@ public class DrawableString extends FixedString {
 							c -= charCount*(mHasZComponent?3:2)*4;
 							mRecentCharCount -= charCount;
 						}else{
-							lstSpace = i;
-							val = -1;
+							//Add char
+							mLetters[mRecentCharCount] = val;
+							mTexCoords[mRecentCharCount] = coords;
+							
+							if(positionTarget!=null) {
+								positionTarget[c++] = uX;
+								positionTarget[c++] = charY;
+								if(mHasZComponent)
+									positionTarget[c++] = 0;
+								positionTarget[c++] = uX + w;
+								positionTarget[c++] = charY;
+								if(mHasZComponent)
+									positionTarget[c++] = 0;
+								positionTarget[c++] = uX;
+								positionTarget[c++] = charY + h;
+								if(mHasZComponent)
+									positionTarget[c++] = 0;
+								positionTarget[c++] = uX + w;
+								positionTarget[c++] = charY + h;
+								if(mHasZComponent)
+									positionTarget[c++] = 0;
+							}
+							if(offsetsTarget!=null) {
+								offsetsTarget[o++] = uX;
+							}
+							mRecentCharCount++;
+							curLineCharCount++;
+							lstVal = val;
 						}
-						if(mKerningEnabled)
-							charX += mFont.mKerningMaxX[lstVal]+mFont.mSpaceWidth;
-						else
-							charX += spacing*2;
+						
 					}
-					lstVal = -1;
 				}
+			}
 				
-				if(val == CHAR_LINEBREAK) {
-					//Line break
-					if(lstVal>0) {
-						if(mKerningEnabled) {
-							charX += mFont.mKerningMaxX[lstVal]+spacing;
-						}else{
-							charX += mFont.mConstantCharDistance+spacing;
-						}
-					}
-					if(charX>mRecentStringWidth)
-						mRecentStringWidth = charX;
-					lstVal = -1;
-					lstSpace = -1;
-					charY -= mLineHeight;
-					curLineCharCount = 0;
-					mRecentLineCount++;
-					mRecentStringHeight+=mLineHeight;
-					if(offsetsTarget!=null) {
-						if(mHorizontalAnchor>0) {
-							int k=o-1;
-							float shift = -(charX+lineShift)*mHorizontalAnchor;
-							while(k>=0 && offsetsTarget[k]!=LINEBREAK_FLOAT) {
-								offsetsTarget[k] += shift;
-								k--;
-							}
-						}
-						offsetsTarget[o++] =LINEBREAK_FLOAT;
-					}
-				}else if(val == CHAR_TAB) {
-					//Tab
-					int tabs = (curLineCharCount/mTabs+1)*mTabs-curLineCharCount;
-					charX += spaceWidth*tabs;
-					lstVal = -1;
-				}else if(val>=0) {
-					//Character
-					if(lstVal>0) {
-						if(mKerningEnabled) {
-							//Kerning
-							float maxKernShift = 0;
-							float[] kernBoxes1 = mFont.mKerningValues[lstVal];
-							float[] kernBoxes2 = mFont.mKerningValues[val];
-							for(int k=0;k<mFont.mKernBoxes;k++) {
-								float shift = kernBoxes1[k*2+1]-kernBoxes2[k*2];
-								if(shift>maxKernShift) {
-									maxKernShift = shift;
-								}
-							}
-							charX += maxKernShift+spacing;
-						}else
-							charX += mFont.mConstantCharDistance;
-						charX += mAdditionalSpacing;
+			if(val == CHAR_LINEBREAK) {
+				//Line break
+				if(lstVal>0) {
+					if(mKerningEnabled) {
+						charX += mFont.mKerningMaxX[lstVal]+spacing;
 					}else{
-						//first char of line
-						if(curLineCharCount==0) {
-							if(mKerningEnabled) {
-								lineShift = -mFont.mKerningMinX[val];
-								charX = lineShift;
-							}else{
-								charX = 0;
-							}
+						charX += mFont.mConstantCharDistance+spacing;
+					}
+				}
+				if(charX>mRecentStringWidth)
+					mRecentStringWidth = charX;
+				lstVal = -1;
+				lstSpace = -1;
+				charY -= mLineHeight;
+				curLineCharCount = 0;
+				mRecentLineCount++;
+				mRecentStringHeight+=mLineHeight;
+				if(offsetsTarget!=null) {
+					if(mHorizontalAnchor>0) {
+						int k=o-1;
+						float shift = -(charX+lineShift)*mHorizontalAnchor;
+						while(k>=0 && offsetsTarget[k]!=LINEBREAK_FLOAT) {
+							offsetsTarget[k] += shift;
+							k--;
 						}
 					}
-					
-					TextureCoordinatesQuad coords = mFont.mCoordinates[val];
-					mLetters[mRecentCharCount] = val;
-					mTexCoords[mRecentCharCount] = coords;
-					float w = mFont.mWidths[val];
-					float h = mFont.mHeights[val];
-					float uX;
-					if(mKerningEnabled)
-						uX = charX;
-					else
-						uX = charX+mFont.mConstantCharDistance*0.5f-w*0.5f;
-					if(positionTarget!=null) {
-						positionTarget[c++] = uX;
-						positionTarget[c++] = charY;
-						if(mHasZComponent)
-							positionTarget[c++] = 0;
-						positionTarget[c++] = uX + w;
-						positionTarget[c++] = charY;
-						if(mHasZComponent)
-							positionTarget[c++] = 0;
-						positionTarget[c++] = uX;
-						positionTarget[c++] = charY + h;
-						if(mHasZComponent)
-							positionTarget[c++] = 0;
-						positionTarget[c++] = uX + w;
-						positionTarget[c++] = charY + h;
-						if(mHasZComponent)
-							positionTarget[c++] = 0;
-					}
-					if(offsetsTarget!=null) {
-						offsetsTarget[o++] = uX;
-					}
-					mRecentCharCount++;
-					curLineCharCount++;
-					lstVal = val;
+					offsetsTarget[o++] =LINEBREAK_FLOAT;
 				}
 			}
 			
