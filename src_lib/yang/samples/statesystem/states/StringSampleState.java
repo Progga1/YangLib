@@ -13,6 +13,7 @@ public class StringSampleState extends SampleState {
 	RotatingLettersString mAnimatedString;
 	DrawableString mFromStringXML;
 	DrawableString mAutoLineBreakString;
+	DrawableString mColorString;
 	float mMaxLineWidth = 10;
 	
 	@Override
@@ -30,6 +31,10 @@ public class StringSampleState extends SampleState {
 		
 		mFormatString = new DrawableString();
 		mFormatString.allocFormatString("A number: %6\nThe word '%8'");
+		
+		mColorString = new DrawableAnchoredLines();
+		mColorString.allocFormatString("A [WHITE]string[DEFAULT] with\n[GREEN]c[BLUE]o[YELLOW]l[RED]o[GREEN]r[BLUE]s");
+		mColorString.setAnchors(DrawableString.ANCHOR_RIGHT, DrawableString.ANCHOR_MIDDLE);
 		
 		mAnimatedString = new RotatingLettersString(3.2f,0.8f,0.36f);
 		mAnimatedString.allocString("Animated");
@@ -65,19 +70,21 @@ public class StringSampleState extends SampleState {
 		mAnimatedString.draw(-1.2f, -0.3f, 0.2f, -0.3f);
 		mGraphics2D.setWhite();
 		mFormatString.draw(-0.3f,-0.5f, 0.2f);
+		mGraphics2D.setColor(0.7f);
+		mColorString.draw(1.45f,-0.3f, 0.13f);
 		
 		//Draw text with automatic line break
 		final float FONT_SIZE = 0.07f;
 		final float LEFT = 0.6f;
 		final float TOP = 0.5f;
-		mGraphics2D.setColor(0.8f);
+		mGraphics2D.setColor(0.85f);
 		mMaxLineWidth = (float)Math.sin(mStateTimer*0.5f)*4.2f+8.5f;
 		mAutoLineBreakString.setMaxLineWidth(mMaxLineWidth);
 		mAutoLineBreakString.draw(LEFT, TOP, FONT_SIZE);
 		mAutoLineBreakString.setHorizontalAnchor(DrawableString.ANCHOR_LEFT);
 		//Show line break bar
 		mGraphics.bindTexture(null);
-		mGraphics2D.setColor(0.8f);
+		mGraphics2D.setColor(0.85f);
 		mGraphics2D.drawLine(LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP, LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP-mAutoLineBreakString.mRecentStringHeight*FONT_SIZE, 0.02f);
 	}
 	

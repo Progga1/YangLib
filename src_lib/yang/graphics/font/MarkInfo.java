@@ -10,4 +10,9 @@ public class MarkInfo {
 		mLength = length;
 	}
 	
+	@Override
+	public String toString() {
+		return "pos="+mPos+",len="+mLength;
+	}
+	
 }

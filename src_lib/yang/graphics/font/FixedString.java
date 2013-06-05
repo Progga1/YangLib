@@ -1,6 +1,7 @@
 package yang.graphics.font;
 
 import yang.util.NonConcurrentList;
+import yang.util.Util;
 
 public class FixedString {
 
@@ -42,11 +43,24 @@ public class FixedString {
 		return character>='0' && character<='9';
 	}
 	
+	protected void startFormatStringParse() {
+		
+	}
+	
+	protected void handleMacro(String macro,int curPos,int lastMacro) {
+		
+	}
+	
+	protected void endFormatStringParse(int pos,int lastMacro) {
+		
+	}
+	
 	public FixedString allocFormatString(String formatString) {
 		int markerCount = 0;
 		boolean escaped = false;
 		NonConcurrentList<MarkInfo> markList = new NonConcurrentList<MarkInfo>();
 		int charCount = 0;
+		
 		for(int i=0;i<formatString.length();i++) {
 			if(escaped) {
 				escaped = false;
@@ -66,6 +80,11 @@ public class FixedString {
 						charCount+=alloc;
 						if(i<formatString.length())
 							i--;
+					}else if(formatString.charAt(i)=='[') {
+						int p = formatString.indexOf("]", i+1);
+						if(p<=i)
+							p = formatString.length()-1;
+						i = p;
 					}else{
 						charCount++;
 					}
@@ -80,9 +99,13 @@ public class FixedString {
 			c++;
 		}
 
-		int markInfoIndex = 0;
 		allocString(charCount);
+		
+		int markInfoIndex = 0;
+		int lstMacro = -1;
+		startFormatStringParse();
 		c=0;
+		int charPos = 0;
 		for(int i=0;i<charCount;i++) {
 			if(escaped) {
 				escaped = false;
@@ -104,14 +127,32 @@ public class FixedString {
 						i--;
 						while(++c<formatString.length() && isDigit(formatString.charAt(c)));
 						
+					}else if(formatString.charAt(c)=='[') {
+						int p = formatString.indexOf("]", c+1);
+						if(p<=c)
+							p = formatString.length()-1;
+						String macro = formatString.substring(c+1,p);
+						
+						handleMacro(macro,i,lstMacro);
+						c = p+1;
+						lstMacro = i;
+						i--;
 					}else{
-						mChars[i] = formatString.charAt(c++);
+						char ch = formatString.charAt(c++);
+						mChars[i] = ch;
+//						if(ch!=' ' && ch!='\t' && ch!='\n')
+//							charPos++;
 					}
+					
 				}
 			}
 		}
 		mLength = charCount;
 		mMarker = mLength;
+		
+		endFormatStringParse(charCount,lstMacro);
+		
+		//System.out.println(mLength+" "+Util.arrayToString(mFormatStringMarks));
 		return this;
 	}
 	
