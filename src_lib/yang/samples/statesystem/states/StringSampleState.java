@@ -25,7 +25,8 @@ public class StringSampleState extends SampleState {
 		
 		mNumberString = new DrawableString(16);		//16 = maximum char count
 		mNumberString.setAnchors(DrawableString.ANCHOR_RIGHT,DrawableString.ANCHOR_TOP);
-		mNumberString.mKerningEnabled = false;
+		mNumberString.setSettings(DrawableString.DEFAULT_SETTINGS.clone());
+		mNumberString.mSettings.mKerningEnabled = false;
 		
 		mFormatString = new DrawableString();
 		mFormatString.allocFormatString("A number: %6\nThe word '%8'");

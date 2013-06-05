@@ -9,19 +9,17 @@ public abstract class TransformAnimatedString extends AnimatedString {
 	
 	protected abstract void onPutLetter(int letterId);
 	
-	public TransformAnimatedString setGraphics(DefaultGraphics<?> graphics) {
-		super.setGraphics(graphics);
-		mCurTransform = graphics.mTranslator.createTransformationMatrix();
-		return this;
+	public TransformAnimatedString() {
+		mCurTransform = new YangMatrix();
 	}
-
+	
 	protected void putLetter(float[] target, int c, int letter, int letterNo, float x, float y) {
 		onPutLetter(letterNo);
 		
-		if(mHasZComponent)
-			mCurTransform.applyToArray(mFont.mPositions3D[letter], 4, true, 0, 0, x, y, target, c);
+		if(mSettings.mHasZComponent)
+			mCurTransform.applyToArray(mSettings.mFont.mPositions3D[letter], 4, true, 0, 0, x, y, target, c);
 		else
-			mCurTransform.applyToArray(mFont.mPositions2D[letter], 4, false, 0, 0, x, y, target, c);
+			mCurTransform.applyToArray(mSettings.mFont.mPositions2D[letter], 4, false, 0, 0, x, y, target, c);
 	}
 	
 }

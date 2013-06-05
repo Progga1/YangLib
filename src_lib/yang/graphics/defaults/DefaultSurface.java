@@ -38,7 +38,6 @@ public abstract class DefaultSurface extends YangSurface implements InputEventLi
 		if(mInit2DGraphics) {
 			mGraphics2D = new Default2DGraphics(mGraphics);
 			mGraphics2D.init();
-			DrawableString.DEFAULT_GRAPHICS = mGraphics2D;
 			if(!mInit3DGraphics) {
 				mGraphics2D.activate();
 				mGraphics2D.setDefaultProgram();
@@ -48,7 +47,6 @@ public abstract class DefaultSurface extends YangSurface implements InputEventLi
 			mGraphics3D = new Default3DGraphics(mGraphics);
 			mGraphics3D.init();
 			if(!mInit2DGraphics) {
-				DrawableString.DEFAULT_GRAPHICS = mGraphics3D;
 				mGraphics3D.activate();
 				mGraphics3D.setDefaultProgram();
 			}

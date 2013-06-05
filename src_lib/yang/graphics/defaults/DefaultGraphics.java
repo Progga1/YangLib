@@ -59,7 +59,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public float mCurrentZ;
 	
 	// Buffers
-	protected DrawableString mInterString = new DrawableString(2048).setGraphics(this);
+	protected DrawableString mInterString = new DrawableString(2048);
 	public int mPositionDimension;
 	public ShortBuffer mIndexBuffer;
 	public FloatBuffer mPositions;

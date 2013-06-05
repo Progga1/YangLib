@@ -15,7 +15,7 @@ public class RotatingLettersString extends TransformAnimatedString {
 	@Override
 	protected void onPutLetter(int letterId) {
 		mCurTransform.loadIdentity();
-		float t = mGraphics.mTranslator.mTimer;
+		float t = mSettings.mGraphics.mTranslator.mTimer;
 		mCurTransform.rotateZ((float)Math.sin(t*mFrequency+letterId*mLetterTimeOffset)*mIntensity);
 	}
 

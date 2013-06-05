@@ -7,6 +7,8 @@ import yang.math.objects.matrix.YangMatrix;
 
 public class DrawableString extends FixedString {
 	
+	public static StringSettings DEFAULT_SETTINGS;
+	
 	public static int CHAR_LINEBREAK = '\n';
 	public static int CHAR_TAB = '\t';
 	public static int CHAR_SPACE = ' ';
@@ -21,31 +23,20 @@ public class DrawableString extends FixedString {
 	public static final float ANCHOR_MIDDLE = 0.5f;
 	public static final float ANCHOR_BOTTOM = 1;
 	
-	public static DefaultGraphics<?> DEFAULT_GRAPHICS;
-	public static BitmapFont DEFAULT_FONT;
 	public static float DEFAULT_HORIZONTAL_ANCHOR = ANCHOR_LEFT;
 	public static float DEFAULT_VERTICAL_ANCHOR = ANCHOR_TOP;
 	
 	protected static float[] staticOffsets = new float[2048];
 	protected static float[] staticPositions = new float[2048];
 	
-	//References
-	protected DefaultGraphics<?> mGraphics;
-	
 	//Properties
 	//TODO create class
-	public float mLineHeight = 1;
-	public boolean mKerningEnabled = true;
-	public BitmapFont mFont;
-	public boolean mHasZComponent;
-	public float mAdditionalSpacing = 0;
-	public int mTabs = 4;
-	public boolean mIgnoreSpaceAtLineStart = true;
 	public float mVerticalAnchor;
 	public float mHorizontalAnchor;
+	public StringSettings mSettings;
 	public float mMaxLineWidth = Float.MAX_VALUE;
 	
-	//String properties
+	//String attributes
 	public int mRecentCharCount = 0;
 	public int mRecentLineCount;
 	public float mRecentStringWidth = 0;
@@ -79,19 +70,16 @@ public class DrawableString extends FixedString {
 		return this;
 	}
 	
+	public DrawableString setSettings(StringSettings settings) {
+		mSettings = settings;
+		return this;
+	}
+	
 	protected void setDefaults() {
-		setGraphics(DEFAULT_GRAPHICS);
-		setFont(DEFAULT_FONT);
+		setSettings(DEFAULT_SETTINGS);
 		mVerticalAnchor = DEFAULT_VERTICAL_ANCHOR;
 		mHorizontalAnchor = DEFAULT_HORIZONTAL_ANCHOR;
 		mMaxLineWidth = DEFAULT_LINE_WIDTH;
-	}
-	
-	public DrawableString setGraphics(DefaultGraphics<?> graphics) {
-		mGraphics = graphics;
-		if(mGraphics!=null)
-			mHasZComponent = mGraphics.mPositionDimension==3;
-		return this;
 	}
 	
 	public DrawableString setMaxLineWidth(float lineWidth) {
@@ -99,19 +87,11 @@ public class DrawableString extends FixedString {
 		return this;
 	}
 	
-	public DrawableString setFont(BitmapFont font) {
-		mFont = font;
-		return this;
-	}
-	
-	public DrawableString setHasZComponent(boolean hasZComponent) {
-		mHasZComponent = hasZComponent;
-		return this;
-	}
-	
 	public void createStringPositions(float[] positionTarget,float[] offsetsTarget) {
 		int c=0;
 		int o=0;
+		BitmapFont mFont = mSettings.mFont; //TODO rename
+		boolean mKerningEnabled = mSettings.mKerningEnabled;
 		float lineShift = 0;
 		int lstSpace = -1;
 		float spaceCharX = -1;
@@ -120,7 +100,7 @@ public class DrawableString extends FixedString {
 		mRecentLineCount = 1;
 		mRecentStringHeight = 0;
 		boolean wordSplit = false;
-		float spacing = mFont.mSpacing+mAdditionalSpacing;
+		float spacing = mFont.mSpacing+mSettings.mAdditionalSpacing;
 		int lstVal = -1;
 		int lstSpaceVal = -1;
 		int curLineCharCount = 0;
@@ -129,10 +109,10 @@ public class DrawableString extends FixedString {
 			spaceWidth = mFont.mSpaceWidth;
 		else
 			spaceWidth = mFont.mConstantCharDistance;
-		spaceWidth += mAdditionalSpacing;
+		spaceWidth += mSettings.mAdditionalSpacing;
 		
 		float charX = 0;
-		float charY = -mLineHeight;
+		float charY = -mSettings.mLineHeight;
 		int i;
 		int count = mLength+1;
 		for(i=0;i<count;i++) {
@@ -145,7 +125,7 @@ public class DrawableString extends FixedString {
 				
 				if(val == CHAR_SPACE) {
 					//Space
-					if(lstVal>0 && (!mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
+					if(lstVal>0 && (!mSettings.mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
 						lstSpace = i;
 						lstSpaceVal = lstVal;
 						
@@ -173,9 +153,9 @@ public class DrawableString extends FixedString {
 					if(val == CHAR_TAB) {
 						//Tab
 						if(mKerningEnabled) {
-							charX += spaceWidth*mTabs;
+							charX += spaceWidth*mSettings.mTabs;
 						}else{
-							int tabs = (curLineCharCount/mTabs+1)*mTabs-curLineCharCount;
+							int tabs = (curLineCharCount/mSettings.mTabs+1)*mSettings.mTabs-curLineCharCount;
 							charX += spaceWidth*tabs;
 						}
 						lstVal = -1;
@@ -196,7 +176,7 @@ public class DrawableString extends FixedString {
 								charX += maxKernShift+spacing;
 							}else
 								charX += mFont.mConstantCharDistance;
-							charX += mAdditionalSpacing;
+							charX += mSettings.mAdditionalSpacing;
 						}else{
 							//first char of line
 							if(curLineCharCount==0) {
@@ -221,7 +201,7 @@ public class DrawableString extends FixedString {
 							val = CHAR_LINEBREAK;
 							i = lstSpace;
 							o -= charCount;
-							c -= charCount*(mHasZComponent?3:2)*4;
+							c -= charCount*(mSettings.mPosDim)*4;
 							charX = spaceCharX;
 							lstVal = lstSpaceVal;
 							mRecentCharCount -= charCount;
@@ -242,19 +222,19 @@ public class DrawableString extends FixedString {
 							if(positionTarget!=null) {
 								positionTarget[c++] = uX;
 								positionTarget[c++] = charY;
-								if(mHasZComponent)
+								if(mSettings.mHasZComponent)
 									positionTarget[c++] = 0;
 								positionTarget[c++] = uX + w;
 								positionTarget[c++] = charY;
-								if(mHasZComponent)
+								if(mSettings.mHasZComponent)
 									positionTarget[c++] = 0;
 								positionTarget[c++] = uX;
 								positionTarget[c++] = charY + h;
-								if(mHasZComponent)
+								if(mSettings.mHasZComponent)
 									positionTarget[c++] = 0;
 								positionTarget[c++] = uX + w;
 								positionTarget[c++] = charY + h;
-								if(mHasZComponent)
+								if(mSettings.mHasZComponent)
 									positionTarget[c++] = 0;
 							}
 							if(offsetsTarget!=null) {
@@ -282,10 +262,10 @@ public class DrawableString extends FixedString {
 					mRecentStringWidth = charX;
 				lstVal = -1;
 				lstSpace = -1;
-				charY -= mLineHeight;
+				charY -= mSettings.mLineHeight;
 				curLineCharCount = 0;
 				mRecentLineCount++;
-				mRecentStringHeight+=mLineHeight;
+				mRecentStringHeight += mSettings.mLineHeight;
 				if(offsetsTarget!=null) {
 					if(mHorizontalAnchor>0) {
 						int k=o-1;
@@ -306,7 +286,7 @@ public class DrawableString extends FixedString {
 
 	public DrawableString setConstant() {
 		if(mConstantPositions==null)
-			mConstantPositions = new float[mCapacity*(mHasZComponent?3:2)*4];
+			mConstantPositions = new float[mCapacity*(mSettings.mPosDim)*4];
 		createStringPositions(mConstantPositions,null);
 		applyAnchors(mHorizontalAnchor,mVerticalAnchor,mConstantPositions);
 		return this;
@@ -319,7 +299,7 @@ public class DrawableString extends FixedString {
 		for(int i=0;i<mRecentCharCount*4;i++) {
 			positionTarget[c++] += shiftX;
 			positionTarget[c++] += shiftY;
-			if(mHasZComponent)
+			if(mSettings.mHasZComponent)
 				c++;
 		}
 	}
@@ -349,13 +329,13 @@ public class DrawableString extends FixedString {
 	
 	protected void putColors() {
 		for(int i=0;i<mRecentCharCount;i++) {
-			mGraphics.putColorRect(mGraphics.mCurColor);
-			mGraphics.putSuppDataRect(mGraphics.mCurSuppData);
+			mSettings.mGraphics.putColorRect(mSettings.mGraphics.mCurColor);
+			mSettings.mGraphics.putSuppDataRect(mSettings.mGraphics.mCurSuppData);
 		}
 	}
 
 	protected void putVertexProperties() {
-		IndexedVertexBuffer vertexBuffer = mGraphics.mCurrentVertexBuffer;
+		IndexedVertexBuffer vertexBuffer = mSettings.mGraphics.mCurrentVertexBuffer;
 		short offset = (short)vertexBuffer.getCurrentVertexWriteCount();
 		for(int i=0;i<mRecentCharCount;i++) {
 			vertexBuffer.beginQuad(false,offset);
@@ -363,7 +343,8 @@ public class DrawableString extends FixedString {
 			offset += 4;
 		}
 		
-		putColors();
+		if(mSettings.mAutoPutColors)
+			putColors();
 	}
 	
 	public void draw(YangMatrix transform) {
@@ -372,40 +353,45 @@ public class DrawableString extends FixedString {
 		if(mConstantPositions==null){
 			createStringPositions(staticPositions,null);
 			positions = staticPositions;
-			mGraphics.mInterTransf2.loadIdentity();
-			mGraphics.mInterTransf2.translate(-mRecentStringWidth*mHorizontalAnchor, mRecentStringHeight*mVerticalAnchor);
-			mGraphics.mInterTransf2.multiplyLeft(transform);
-			resultTransf = mGraphics.mInterTransf2;
+			mSettings.mGraphics.mInterTransf2.loadIdentity();
+			mSettings.mGraphics.mInterTransf2.translate(-mRecentStringWidth*mHorizontalAnchor, mRecentStringHeight*mVerticalAnchor);
+			mSettings.mGraphics.mInterTransf2.multiplyLeft(transform);
+			resultTransf = mSettings.mGraphics.mInterTransf2;
 		}else{
 			positions = mConstantPositions;
 			resultTransf = transform;
 		}
 		
-		IndexedVertexBuffer vertexBuffer = mGraphics.mCurrentVertexBuffer;
+		IndexedVertexBuffer vertexBuffer = mSettings.mGraphics.mCurrentVertexBuffer;
 		
-		mGraphics.mTranslator.bindTexture(mFont.mTexture);
+		mSettings.mGraphics.mTranslator.bindTexture(mSettings.mFont.mTexture);
 		
 		putVertexProperties();
 
-		if(mGraphics.mPositionDimension==2)
+		if(mSettings.mGraphics.mPositionDimension==2)
 			vertexBuffer.putTransformedArray2D(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,resultTransf.mMatrix);
 		else
 			vertexBuffer.putTransformedArray3D(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,resultTransf.mMatrix);
 	}
 	
 	public void draw(float x,float y,float lineHeight) {
-		mGraphics.mInterTransf1.loadIdentity();
-		mGraphics.mInterTransf1.translate(x, y);
-		mGraphics.mInterTransf1.scale(lineHeight);
-		draw(mGraphics.mInterTransf1);
+		mSettings.mGraphics.mInterTransf1.loadIdentity();
+		mSettings.mGraphics.mInterTransf1.translate(x, y);
+		mSettings.mGraphics.mInterTransf1.scale(lineHeight);
+		draw(mSettings.mGraphics.mInterTransf1);
 	}
 	
 	public void draw(float x,float y,float lineHeight,float rotation) {
-		mGraphics.mInterTransf1.loadIdentity();
-		mGraphics.mInterTransf1.translate(x, y);
-		mGraphics.mInterTransf1.scale(lineHeight);
-		mGraphics.mInterTransf1.rotateZ(rotation);
-		draw(mGraphics.mInterTransf1);
+		mSettings.mGraphics.mInterTransf1.loadIdentity();
+		mSettings.mGraphics.mInterTransf1.translate(x, y);
+		mSettings.mGraphics.mInterTransf1.scale(lineHeight);
+		mSettings.mGraphics.mInterTransf1.rotateZ(rotation);
+		draw(mSettings.mGraphics.mInterTransf1);
+	}
+
+	public StringSettings cloneSettings() {
+		mSettings = mSettings.clone();
+		return mSettings;
 	}
 	
 }

@@ -17,7 +17,7 @@ public class DrawableAnchoredLines extends DrawableString{
 	}
 	
 	protected void offsetsToPositions(float[] offsets,float[] positionTarget) {
-		float charY = -mLineHeight;
+		float charY = -mSettings.mLineHeight;
 		int o = 0;
 		int c = 0;
 		int count = mRecentCharCount+mRecentLineCount-1;
@@ -25,34 +25,34 @@ public class DrawableAnchoredLines extends DrawableString{
 			float charX = offsets[i];
 			if(charX!=LINEBREAK_FLOAT) {
 				TextureCoordinatesQuad coords = mTexCoords[o];
-				float x2 = charX+(coords.x2-coords.x1)*mFont.mCharNormalizeFactorX;
-				float y2 = charY+(coords.y2-coords.y1)*mFont.mCharNormalizeFactorY;
+				float x2 = charX+(coords.x2-coords.x1)*mSettings.mFont.mCharNormalizeFactorX;
+				float y2 = charY+(coords.y2-coords.y1)*mSettings.mFont.mCharNormalizeFactorY;
 				positionTarget[c++] = charX;
 				positionTarget[c++] = charY;
-				if(mHasZComponent)
+				if(mSettings.mHasZComponent)
 					positionTarget[c++] = 0;
 				positionTarget[c++] = x2;
 				positionTarget[c++] = charY;
-				if(mHasZComponent)
+				if(mSettings.mHasZComponent)
 					positionTarget[c++] = 0;
 				positionTarget[c++] = charX;
 				positionTarget[c++] = y2;
-				if(mHasZComponent)
+				if(mSettings.mHasZComponent)
 					positionTarget[c++] = 0;
 				positionTarget[c++] = x2;
 				positionTarget[c++] = y2;
-				if(mHasZComponent)
+				if(mSettings.mHasZComponent)
 					positionTarget[c++] = 0;
 				o++;
 			}else{
-				charY -= mLineHeight;
+				charY -= mSettings.mLineHeight;
 			}
 		}
 	}
 	
 	public DrawableAnchoredLines setConstant() {
 		if(mConstantPositions==null)
-			mConstantPositions = new float[mCapacity*(mHasZComponent?3:2)*4];
+			mConstantPositions = new float[mCapacity*(mSettings.mPosDim)*4];
 		createStringPositions(null,staticOffsets);
 		offsetsToPositions(staticOffsets,mConstantPositions);
 		applyAnchors(0,mVerticalAnchor,mConstantPositions);
@@ -80,21 +80,21 @@ public class DrawableAnchoredLines extends DrawableString{
 			}else
 				offsets = mConstantOffsets;
 			offsetsToPositions(offsets,positions);
-			mGraphics.mInterTransf2.loadIdentity();
-			mGraphics.mInterTransf2.translate(0, mRecentStringHeight*mVerticalAnchor);
-			mGraphics.mInterTransf2.multiplyLeft(transform);
-			resultTransf = mGraphics.mInterTransf2;
+			mSettings.mGraphics.mInterTransf2.loadIdentity();
+			mSettings.mGraphics.mInterTransf2.translate(0, mRecentStringHeight*mVerticalAnchor);
+			mSettings.mGraphics.mInterTransf2.multiplyLeft(transform);
+			resultTransf = mSettings.mGraphics.mInterTransf2;
 		}else{
 			positions = mConstantPositions;
 			resultTransf = transform;
 		}
 		
 		
-		mGraphics.mTranslator.bindTexture(mFont.mTexture);
+		mSettings.mGraphics.mTranslator.bindTexture(mSettings.mFont.mTexture);
 
 		putVertexProperties();
 
-		mGraphics.mCurrentVertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mGraphics.mPositionDimension,resultTransf.mMatrix, 0,0,0);
+		mSettings.mGraphics.mCurrentVertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mSettings.mGraphics.mPositionDimension,resultTransf.mMatrix, 0,0,0);
 	}
 	
 }

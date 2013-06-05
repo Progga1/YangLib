@@ -3,6 +3,7 @@ package yang.graphics.tools.animator;
 import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultSurface;
 import yang.graphics.font.DrawableString;
+import yang.graphics.font.StringSettings;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.sound.SoundManager;
 
@@ -34,7 +35,7 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 	@Override
 	protected void postInitGraphics() {
 		super.postInitGraphics();
-		DrawableString.DEFAULT_FONT = mGFXLoader.loadFont("belligerent");
+		DrawableString.DEFAULT_SETTINGS = new StringSettings(mGraphics2D,mGFXLoader.loadFont("belligerent"));
 		mAnimator = new Animator(mGraphics2D);
 		mAnimator.mSound = mSound;
 		if(mInitCallback!=null)
