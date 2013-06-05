@@ -13,6 +13,7 @@ public class DrawableString extends FixedString {
 	
 	public static StringSettings DEFAULT_SETTINGS;
 	protected static YangMatrix interMatrix;
+	protected static YangMatrix interMatrix2;
 	
 	public static int CHAR_LINEBREAK = '\n';
 	public static int CHAR_TAB = '\t';
@@ -63,8 +64,10 @@ public class DrawableString extends FixedString {
 		super();
 		setDefaults();
 		mLetterColors = null;
-		if(interMatrix==null)
+		if(interMatrix==null) {
 			interMatrix = new YangMatrix();
+			interMatrix2 = new YangMatrix();
+		}
 	}
 	
 	public DrawableString(String string) {
@@ -401,18 +404,18 @@ public class DrawableString extends FixedString {
 	}
 	
 	public void draw(float x,float y,float lineHeight) {
-		mSettings.mGraphics.mInterTransf1.loadIdentity();
-		mSettings.mGraphics.mInterTransf1.translate(x, y);
-		mSettings.mGraphics.mInterTransf1.scale(lineHeight);
-		draw(mSettings.mGraphics.mInterTransf1);
+		interMatrix2.loadIdentity();
+		interMatrix2.translate(x, y);
+		interMatrix2.scale(lineHeight);
+		draw(interMatrix2);
 	}
 	
 	public void draw(float x,float y,float lineHeight,float rotation) {
-		mSettings.mGraphics.mInterTransf1.loadIdentity();
-		mSettings.mGraphics.mInterTransf1.translate(x, y);
-		mSettings.mGraphics.mInterTransf1.scale(lineHeight);
-		mSettings.mGraphics.mInterTransf1.rotateZ(rotation);
-		draw(mSettings.mGraphics.mInterTransf1);
+		interMatrix2.loadIdentity();
+		interMatrix2.translate(x, y);
+		interMatrix2.scale(lineHeight);
+		interMatrix2.rotateZ(rotation);
+		draw(interMatrix2);
 	}
 
 	public StringSettings cloneSettings() {

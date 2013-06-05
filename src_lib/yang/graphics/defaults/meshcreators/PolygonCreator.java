@@ -201,6 +201,8 @@ public class PolygonCreator {
 	}
 	
 	public void setOrientationByPoints() {
+		if(mPointCount<3)
+			return;
 		float topMost = Float.MIN_VALUE;
 		int topI = -1;
 		int l = mPointCount*mElemsPerPos;
