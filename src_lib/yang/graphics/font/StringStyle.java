@@ -43,9 +43,15 @@ public class StringStyle {
 	}
 
 	public int addColor(String key, FloatColor color) {
-		int id = addColor(color);
-		mColorHash.put(key.toUpperCase(), id);
-		return id;
+		Integer prev = mColorHash.get(key.toUpperCase());
+		if(prev==null) {
+			int id = addColor(color);
+			mColorHash.put(key, id);
+			return id;
+		}else{
+			mColorHash.put(key, prev);
+			return prev;
+		}
 	}
 
 	public FloatColor getColorByKey(String key) {

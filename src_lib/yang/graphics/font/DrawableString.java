@@ -453,7 +453,7 @@ public class DrawableString extends FixedString {
 		FloatColor lstColor = mLetterColors[lstMacro];	
 		for(int i=lstMacro;i<mCapacity;i++)
 			mLetterColors[i] = lstColor;
-		mWorkingColors = new FloatColor[mCapacity];
+		mWorkingColors = new FloatColor[mCapacity-mSpaceCount];
 		//System.out.println(mColors);
 	}
 	

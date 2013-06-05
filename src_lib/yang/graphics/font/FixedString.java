@@ -12,6 +12,7 @@ public class FixedString {
 	public int[] mChars;
 	public int mMarker;
 	public MarkInfo[] mFormatStringMarks;
+	protected int mSpaceCount;
 	
 	public FixedString() {
 		
@@ -60,16 +61,18 @@ public class FixedString {
 		boolean escaped = false;
 		NonConcurrentList<MarkInfo> markList = new NonConcurrentList<MarkInfo>();
 		int charCount = 0;
+		mSpaceCount = 0;
 		
 		for(int i=0;i<formatString.length();i++) {
 			if(escaped) {
 				escaped = false;
 				charCount++;
 			}else{
-				if(formatString.charAt(i)=='\\')
+				char ch = formatString.charAt(i);
+				if(ch=='\\')
 					escaped = true;
 				else{
-					if(formatString.charAt(i)=='%') {
+					if(ch=='%') {
 						markerCount++;
 						i++;
 						int preI = i;
@@ -80,13 +83,15 @@ public class FixedString {
 						charCount+=alloc;
 						if(i<formatString.length())
 							i--;
-					}else if(formatString.charAt(i)=='[') {
+					}else if(ch=='[') {
 						int p = formatString.indexOf("]", i+1);
 						if(p<=i)
 							p = formatString.length()-1;
 						i = p;
 					}else{
 						charCount++;
+						if(ch==' ' || ch=='\n' || ch=='\t')
+							mSpaceCount++;
 					}
 				}
 			}
