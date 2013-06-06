@@ -5,9 +5,6 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.objects.matrix.YangMatrix;
-import yang.model.Pair;
-import yang.util.NonConcurrentList;
-import yang.util.Util;
 
 public class DrawableString extends FixedString {
 	
@@ -15,12 +12,11 @@ public class DrawableString extends FixedString {
 	protected static YangMatrix interMatrix;
 	protected static YangMatrix interMatrix2;
 	
-	public static int CHAR_LINEBREAK = '\n';
-	public static int CHAR_TAB = '\t';
-	public static int CHAR_SPACE = ' ';
-	public static int CHAR_WORD_SPLITTER = '´';
+	public static int CHAR_MACRO = 1024;
+	public static int CHAR_WORD_SPLITTER = '~';
 	protected static float LINEBREAK_FLOAT = Float.MIN_VALUE;
 	public static float DEFAULT_LINE_WIDTH = Float.MAX_VALUE;
+	public static float DEFAULT_SIZE = 1;
 	
 	public static final float ANCHOR_LEFT = 0;
 	public static final float ANCHOR_CENTER = 0.5f;
@@ -28,6 +24,7 @@ public class DrawableString extends FixedString {
 	public static final float ANCHOR_TOP = 0;
 	public static final float ANCHOR_MIDDLE = 0.5f;
 	public static final float ANCHOR_BOTTOM = 1;
+	public float mSize;
 	
 	public static float DEFAULT_HORIZONTAL_ANCHOR = ANCHOR_LEFT;
 	public static float DEFAULT_VERTICAL_ANCHOR = ANCHOR_TOP;
@@ -35,7 +32,7 @@ public class DrawableString extends FixedString {
 	protected static float[] staticOffsets = new float[2048];
 	protected static float[] staticPositions = new float[2048];
 	
-	public NonConcurrentList<Pair<FloatColor,Integer>> mColors;
+	//public NonConcurrentList<Pair<FloatColor,Integer>> mColors;
 	
 	//Properties
 	public float mVerticalAnchor;
@@ -54,16 +51,18 @@ public class DrawableString extends FixedString {
 	public TextureCoordinatesQuad[] mTexCoords;
 	protected float[] mConstantPositions;
 	public int[] mLetters;
+
+	//public FloatColor[] mLetterColors;
 	/**
 	 * Swallow, read only!
 	 */
-	public FloatColor[] mLetterColors;
 	public FloatColor[] mWorkingColors;
 	
 	public DrawableString() {
 		super();
 		setDefaults();
-		mLetterColors = null;
+		//mLetterColors = null;
+		mWorkingColors = null;
 		if(interMatrix==null) {
 			interMatrix = new YangMatrix();
 			interMatrix2 = new YangMatrix();
@@ -87,6 +86,11 @@ public class DrawableString extends FixedString {
 		return this;
 	}
 	
+	public DrawableString setSize(float size) {
+		mSize = size;
+		return this;
+	}
+	
 	public DrawableString setSettings(StringSettings settings) {
 		mSettings = settings;
 		return this;
@@ -97,6 +101,7 @@ public class DrawableString extends FixedString {
 		mVerticalAnchor = DEFAULT_VERTICAL_ANCHOR;
 		mHorizontalAnchor = DEFAULT_HORIZONTAL_ANCHOR;
 		mMaxLineWidth = DEFAULT_LINE_WIDTH;
+		mSize = DEFAULT_SIZE;
 	}
 	
 	public DrawableString setMaxLineWidth(float lineWidth) {
@@ -111,12 +116,15 @@ public class DrawableString extends FixedString {
 		BitmapFont font = mSettings.mFont;
 		boolean kerningEnabled = mSettings.mKerningEnabled;
 		float lineShift = 0;
-		int lstSpace = -1;
+		int lstSpaceO = -1;
+		int lstSpaceI = -1;
 		float spaceCharX = -1;
+		FloatColor curColor = mSettings.getColor(0);
 		mRecentStringWidth = 0;
 		mRecentCharCount = 0;
 		mRecentLineCount = 1;
 		mRecentStringHeight = 0;
+		float lineWidth = mMaxLineWidth/mSize-0.2f;
 		boolean wordSplit = false;
 		float spacing = font.mSpacing+mSettings.mAdditionalSpacing;
 		int lstVal = -1;
@@ -141,132 +149,142 @@ public class DrawableString extends FixedString {
 				val = mChars[i];
 			if(val>0) {
 				
-				if(val == CHAR_SPACE) {
-					//Space
-					if(lstVal>0 && (!mSettings.mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
-						lstSpace = i;
-						lstSpaceVal = lstVal;
-						
-						wordSplit = false;
-						if(kerningEnabled) {
-							spaceCharX = charX+font.mKerningMaxX[lstVal];
-							charX = spaceCharX+font.mSpaceWidth;
-						}else{
-							spaceCharX = charX + spacing;
-							charX += spacing*2;
-						}
-					}
-					lstVal = -1;
-				}else if(val == CHAR_WORD_SPLITTER){
-					lstSpace = i;
-					lstSpaceVal = lstVal;
-					spaceCharX = charX;
-					wordSplit = true;
-					if(kerningEnabled) {
-						spaceCharX = charX+font.mKerningMaxX[lstVal];
-					}else{
-						spaceCharX = charX + spacing;
-					}
-				}else if(val!=CHAR_LINEBREAK) {
-					if(val == CHAR_TAB) {
-						//Tab
-						if(kerningEnabled) {
-							charX += spaceWidth*mSettings.mTabs;
-						}else{
-							int tabs = (curLineCharCount/mSettings.mTabs+1)*mSettings.mTabs-curLineCharCount;
-							charX += spaceWidth*tabs;
+				if(val == CHAR_MACRO) {
+					i++;
+					curColor = mSettings.mStyle.mPalette[mChars[i]];
+				}else{
+					if(val == CHAR_SPACE) {
+						//Space
+						if(lstVal>0 && (!mSettings.mIgnoreSpaceAtLineStart || curLineCharCount>0)) {
+							lstSpaceI = i;
+							lstSpaceO = o;
+							lstSpaceVal = lstVal;
+							
+							wordSplit = false;
+							if(kerningEnabled) {
+								spaceCharX = charX+font.mKerningMaxX[lstVal];
+								charX = spaceCharX+font.mSpaceWidth;
+							}else{
+								spaceCharX = charX + spacing;
+								charX += spacing*2;
+							}
 						}
 						lstVal = -1;
-					}else if(val>=0) {
-						//Character
-						if(lstVal>0) {
+					}else if(val == CHAR_WORD_SPLITTER){
+						lstSpaceI = i;
+						lstSpaceO = o;
+						lstSpaceVal = lstVal;
+						spaceCharX = charX;
+						wordSplit = true;
+						if(kerningEnabled) {
+							spaceCharX = charX+font.mKerningMaxX[lstVal];
+						}else{
+							spaceCharX = charX + spacing;
+						}
+					}else if(val!=CHAR_LINEBREAK) {
+						if(val == CHAR_TAB) {
+							//Tab
 							if(kerningEnabled) {
-								//Kerning
-								float maxKernShift = 0;
-								float[] kernBoxes1 = font.mKerningValues[lstVal];
-								float[] kernBoxes2 = font.mKerningValues[val];
-								for(int k=0;k<font.mKernBoxes;k++) {
-									float shift = kernBoxes1[k*2+1]-kernBoxes2[k*2];
-									if(shift>maxKernShift) {
-										maxKernShift = shift;
+								charX += spaceWidth*mSettings.mTabs;
+							}else{
+								int tabs = (curLineCharCount/mSettings.mTabs+1)*mSettings.mTabs-curLineCharCount;
+								charX += spaceWidth*tabs;
+							}
+							lstVal = -1;
+						}else if(val>=0) {
+							//Character
+							if(lstVal>0) {
+								if(kerningEnabled) {
+									//Kerning
+									float maxKernShift = 0;
+									float[] kernBoxes1 = font.mKerningValues[lstVal];
+									float[] kernBoxes2 = font.mKerningValues[val];
+									for(int k=0;k<font.mKernBoxes;k++) {
+										float shift = kernBoxes1[k*2+1]-kernBoxes2[k*2];
+										if(shift>maxKernShift) {
+											maxKernShift = shift;
+										}
+									}
+									charX += maxKernShift+spacing;
+								}else
+									charX += font.mConstantCharDistance;
+								charX += mSettings.mAdditionalSpacing;
+							}else{
+								//first char of line
+								if(curLineCharCount==0) {
+									if(kerningEnabled) {
+										charX -= -font.mKerningMinX[val];
 									}
 								}
-								charX += maxKernShift+spacing;
-							}else
-								charX += font.mConstantCharDistance;
-							charX += mSettings.mAdditionalSpacing;
-						}else{
-							//first char of line
-							if(curLineCharCount==0) {
-								if(kerningEnabled) {
-									charX -= -font.mKerningMinX[val];
-								}
 							}
-						}
-						
-						int uVal = val;
-						TextureCoordinatesQuad coords = font.mCoordinates[val];
-						float w = font.mWidths[val];
-						float uX;
-						if(kerningEnabled)
-							uX = charX;
-						else
-							uX = charX+font.mConstantCharDistance*0.5f-w*0.5f;
-						
-						if(mMaxLineWidth<Float.MAX_VALUE && uX+font.mKerningMaxX[val]>mMaxLineWidth-0.2f && lstSpace>=0) {
-							//Auto line break
-							int charCount = i-lstSpace-1;
-							val = CHAR_LINEBREAK;
-							i = lstSpace;
-							o -= charCount;
-							c -= charCount*(mSettings.mPosDim)*4;
-							charX = spaceCharX;
-							lstVal = lstSpaceVal;
-							mRecentCharCount -= charCount;
-							if(wordSplit) {
-								uVal = '-';
-								uX = charX;
-								coords = font.mCoordinates[uVal];
-								w = font.mWidths[uVal];
-							}else
-								uVal = CHAR_LINEBREAK;
-						}
-						if(uVal!=CHAR_LINEBREAK) {
-							//Add char
-							float h = font.mHeights[uVal];
-							mLetters[mRecentCharCount] = uVal;
-							mTexCoords[mRecentCharCount] = coords;
 							
-							if(positionTarget!=null) {
-								positionTarget[c++] = uX;
-								positionTarget[c++] = charY;
-								if(mSettings.mHasZComponent)
-									positionTarget[c++] = 0;
-								positionTarget[c++] = uX + w;
-								positionTarget[c++] = charY;
-								if(mSettings.mHasZComponent)
-									positionTarget[c++] = 0;
-								positionTarget[c++] = uX;
-								positionTarget[c++] = charY + h;
-								if(mSettings.mHasZComponent)
-									positionTarget[c++] = 0;
-								positionTarget[c++] = uX + w;
-								positionTarget[c++] = charY + h;
-								if(mSettings.mHasZComponent)
-									positionTarget[c++] = 0;
+							int uVal = val;
+							TextureCoordinatesQuad coords = font.mCoordinates[val];
+							float w = font.mWidths[val];
+							float uX;
+							if(kerningEnabled)
+								uX = charX;
+							else
+								uX = charX+font.mConstantCharDistance*0.5f-w*0.5f;
+							
+							if(lineWidth<Float.MAX_VALUE && uX+font.mKerningMaxX[val]>lineWidth && lstSpaceI>=0) {
+								//Auto line break
+								int charCount = o-lstSpaceO;
+								val = CHAR_LINEBREAK;
+								i = lstSpaceI;
+								o = lstSpaceO;
+								clId -= charCount;
+								c -= charCount*(mSettings.mPosDim)*4;
+								charX = spaceCharX;
+								lstVal = lstSpaceVal;
+								mRecentCharCount -= charCount;
+								if(wordSplit) {
+									uVal = '-';
+									uX = charX;
+									coords = font.mCoordinates[uVal];
+									w = font.mWidths[uVal];
+								}else
+									uVal = CHAR_LINEBREAK;
 							}
-							if(offsetsTarget!=null) {
-								offsetsTarget[o++] = uX;
+							if(uVal!=CHAR_LINEBREAK) {
+								//Add char
+								float h = font.mHeights[uVal];
+								mLetters[mRecentCharCount] = uVal;
+								mTexCoords[mRecentCharCount] = coords;
+								float uY = charY;
+								
+								if(positionTarget!=null) {
+									positionTarget[c++] = uX;
+									positionTarget[c++] = uY;
+									if(mSettings.mHasZComponent)
+										positionTarget[c++] = 0;
+									positionTarget[c++] = uX + w;
+									positionTarget[c++] = uY;
+									if(mSettings.mHasZComponent)
+										positionTarget[c++] = 0;
+									positionTarget[c++] = uX;
+									positionTarget[c++] = uY + h;
+									if(mSettings.mHasZComponent)
+										positionTarget[c++] = 0;
+									positionTarget[c++] = uX + w;
+									positionTarget[c++] = uY + h;
+									if(mSettings.mHasZComponent)
+										positionTarget[c++] = 0;
+								}
+								if(offsetsTarget!=null) {
+									offsetsTarget[o] = uX;
+								}
+								o++;
+								if(mWorkingColors!=null) {
+									//mWorkingColors[clId++] = mLetterColors[i];
+									mWorkingColors[clId++] = curColor;
+								}
+	
+								mRecentCharCount++;
+								curLineCharCount++;
+								lstVal = uVal;
 							}
-							if(mWorkingColors!=null) {
-								mWorkingColors[clId++] = mLetterColors[i];
-							}
-
-							mRecentCharCount++;
-							curLineCharCount++;
-							lstVal = uVal;
 						}
-						
 					}
 				}
 			}
@@ -283,7 +301,8 @@ public class DrawableString extends FixedString {
 				if(charX>mRecentStringWidth)
 					mRecentStringWidth = charX;
 				lstVal = -1;
-				lstSpace = -1;
+				lstSpaceI = -1;
+				lstSpaceO = -1;
 				charY -= mSettings.mLineHeight;
 				curLineCharCount = 0;
 				mRecentLineCount++;
@@ -349,8 +368,12 @@ public class DrawableString extends FixedString {
 		return this;
 	}
 	
+	public DrawableString setCentered() {
+		return setAnchors(ANCHOR_CENTER,ANCHOR_MIDDLE);
+	}
+	
 	protected void putColors() {
-		if(mLetterColors==null) {
+		if(mWorkingColors==null) {
 			for(int i=0;i<mRecentCharCount;i++) {
 				mSettings.mGraphics.putColorRect(mSettings.mGraphics.mCurColor);
 				mSettings.mGraphics.putSuppDataRect(mSettings.mGraphics.mCurSuppData);
@@ -406,14 +429,14 @@ public class DrawableString extends FixedString {
 	public void draw(float x,float y,float lineHeight) {
 		interMatrix2.loadIdentity();
 		interMatrix2.translate(x, y);
-		interMatrix2.scale(lineHeight);
+		interMatrix2.scale(lineHeight*mSize);
 		draw(interMatrix2);
 	}
 	
 	public void draw(float x,float y,float lineHeight,float rotation) {
 		interMatrix2.loadIdentity();
 		interMatrix2.translate(x, y);
-		interMatrix2.scale(lineHeight);
+		interMatrix2.scale(lineHeight*mSize);
 		interMatrix2.rotateZ(rotation);
 		draw(interMatrix2);
 	}
@@ -428,35 +451,45 @@ public class DrawableString extends FixedString {
 		
 	}
 	
+	public void allocLetterColors() {
+		if(mWorkingColors==null)
+			mWorkingColors = new FloatColor[mCapacity];
+	}
+	
 	@Override
-	protected void handleMacro(String macro, int pos,int lstMacro) {
+	protected int handleMacro(String macro, int pos,int lstMacro) {
 //		if(lstMacro==0) {
 //			mColors = new NonConcurrentList<Pair<FloatColor,Integer>>();
 //			mColors.add(new Pair<FloatColor,Integer>(mSettings.mStyle.mPalette[0],0));
 //		}
 //		FloatColor color = mSettings.getColorByKey(macro);
 //		mColors.add(new Pair<FloatColor,Integer>(color,pos));
-		if(lstMacro==-1) {
-			mLetterColors = new FloatColor[mCapacity];
-			mLetterColors[0] = mSettings.getColor(0);
-			lstMacro = 0;
-		}
-		FloatColor lstColor = mLetterColors[lstMacro];	
-		for(int i=lstMacro;i<=pos;i++)
-			mLetterColors[i] = lstColor;
-		FloatColor color = mSettings.getColorByKey(macro);
-		mLetterColors[pos] = color;
-		
+//		if(lstMacro==-1) {
+//			mLetterColors = new FloatColor[mCapacity];
+//			mLetterColors[0] = mSettings.getColor(0);
+//			lstMacro = 0;
+//		}
+//		FloatColor lstColor = mLetterColors[lstMacro];	
+//		for(int i=lstMacro;i<=pos;i++)
+//			mLetterColors[i] = lstColor;
+//		FloatColor color = mSettings.getColorByKey(macro);
+//		mLetterColors[pos] = color;
+		int colorId = mSettings.mStyle.mColorHash.get(macro);
+		mChars[pos] = CHAR_MACRO;
+		mChars[pos+1] = colorId;
+		if(mWorkingColors==null)
+			allocLetterColors();
+		return pos+2;
 	}
 	
 	@Override
 	protected void endFormatStringParse(int pos,int lstMacro) {
-		if(mLetterColors==null)
-			return;
-		FloatColor lstColor = mLetterColors[lstMacro];	
-		for(int i=lstMacro;i<mCapacity;i++)
-			mLetterColors[i] = lstColor;
-		mWorkingColors = new FloatColor[mCapacity-mSpaceCount];
+//		if(mLetterColors==null)
+//			return;
+//		FloatColor lstColor = mLetterColors[lstMacro];	
+//		for(int i=lstMacro;i<mCapacity;i++)
+//			mLetterColors[i] = lstColor;
+//		mWorkingColors = new FloatColor[mCapacity];
 		//System.out.println(mColors);
 	}
 	

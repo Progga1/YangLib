@@ -22,7 +22,7 @@ public class StringSampleState extends SampleState {
 		mSimpleString = new DrawableString("A string");
 		mSimpleString.setHorizontalAnchor(DrawableString.ANCHOR_CENTER).setConstant();
 		
-		mFromStringXML = mStrings.createDrawableString("testText",DrawableString.ANCHOR_CENTER);
+		mFromStringXML = mStrings.createDrawableFormatString("testText",DrawableString.ANCHOR_CENTER);
 		
 		mNumberString = new DrawableString(16);		//16 = maximum char count
 		mNumberString.setAnchors(DrawableString.ANCHOR_RIGHT,DrawableString.ANCHOR_TOP);
@@ -40,7 +40,7 @@ public class StringSampleState extends SampleState {
 		mAnimatedString.allocString("Animated");
 		
 		mAutoLineBreakString = new DrawableAnchoredLines();
-		mAutoLineBreakString.allocString("A long Text with auto´matic line breaks..\nas well as manual line breaks.");
+		mAutoLineBreakString.allocFormatString("A long Text with auto~matic line breaks..\nas well as manual line breaks.");
 	}
 	
 	@Override
@@ -76,15 +76,15 @@ public class StringSampleState extends SampleState {
 		//Draw text with automatic line break
 		final float FONT_SIZE = 0.07f;
 		final float LEFT = 0.6f;
-		final float TOP = 0.5f;
-		mGraphics2D.setColor(0.85f);
+		final float TOP = 0.6f;
+		mGraphics2D.setColor(0.88f);
 		mMaxLineWidth = (float)Math.sin(mStateTimer*0.5f)*4.2f+8.5f;
 		mAutoLineBreakString.setMaxLineWidth(mMaxLineWidth);
 		mAutoLineBreakString.draw(LEFT, TOP, FONT_SIZE);
 		mAutoLineBreakString.setHorizontalAnchor(DrawableString.ANCHOR_LEFT);
 		//Show line break bar
 		mGraphics.bindTexture(null);
-		mGraphics2D.setColor(0.85f);
+		mGraphics2D.setColor(0.88f);
 		mGraphics2D.drawLine(LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP, LEFT+0.01f+mMaxLineWidth*FONT_SIZE, TOP-mAutoLineBreakString.mRecentStringHeight*FONT_SIZE, 0.02f);
 	}
 	

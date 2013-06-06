@@ -64,4 +64,8 @@ public class StringsXML {
 		return (DrawableAnchoredLines)new DrawableAnchoredLines().allocFormatString(getRawString(name));
 	}
 	
+	public DrawableAnchoredLines createDrawableFormatString(String name,float anchor) {
+		return (DrawableAnchoredLines)new DrawableAnchoredLines().setHorizontalAnchor(anchor).allocFormatString(getRawString(name));
+	}
+	
 }

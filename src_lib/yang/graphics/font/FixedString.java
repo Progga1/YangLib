@@ -5,7 +5,10 @@ import yang.util.Util;
 
 public class FixedString {
 
-	public static char DOT_CHAR = '.';
+	public static char CHAR_DOT = '.';
+	public static int CHAR_LINEBREAK = '\n';
+	public static int CHAR_TAB = '\t';
+	public static int CHAR_SPACE = ' ';
 	
 	public int mCapacity;
 	public int mLength;
@@ -48,8 +51,8 @@ public class FixedString {
 		
 	}
 	
-	protected void handleMacro(String macro,int curPos,int lastMacro) {
-		
+	protected int handleMacro(String macro,int curPos,int lastMacro) {
+		return curPos;
 	}
 	
 	protected void endFormatStringParse(int pos,int lastMacro) {
@@ -80,13 +83,14 @@ public class FixedString {
 							i++;
 						int alloc = Integer.parseInt(formatString.substring(preI, i));
 						markList.add(new MarkInfo(charCount,alloc));
-						charCount+=alloc;
+						charCount += alloc;
 						if(i<formatString.length())
 							i--;
 					}else if(ch=='[') {
 						int p = formatString.indexOf("]", i+1);
 						if(p<=i)
 							p = formatString.length()-1;
+						charCount += 2;
 						i = p;
 					}else{
 						charCount++;
@@ -111,7 +115,7 @@ public class FixedString {
 		startFormatStringParse();
 		c=0;
 		int charPos = 0;
-		for(int i=0;i<charCount;i++) {
+		for(int i=0;i<charCount;) {
 			if(escaped) {
 				escaped = false;
 				if(formatString.charAt(c)=='%')
@@ -119,34 +123,32 @@ public class FixedString {
 				if(formatString.charAt(c)=='\\')
 					mChars[i] = '\\';
 				c++;
+				i++;
 			}else{
 				if(formatString.charAt(c)=='\\'){
 					escaped = true;
 					c++;
-					i--;
 				}else{
 					if(formatString.charAt(c)=='%') {
 						int count = mFormatStringMarks[markInfoIndex++].mLength;
 						for(int k=0;k<count;k++)
 							mChars[i++] = 0;
-						i--;
 						while(++c<formatString.length() && isDigit(formatString.charAt(c)));
-						
 					}else if(formatString.charAt(c)=='[') {
 						int p = formatString.indexOf("]", c+1);
 						if(p<=c)
 							p = formatString.length()-1;
 						String macro = formatString.substring(c+1,p);
 						
-						handleMacro(macro,i,lstMacro);
+						i = handleMacro(macro,i,lstMacro);
 						c = p+1;
 						lstMacro = i;
-						i--;
 					}else{
 						char ch = formatString.charAt(c++);
 						mChars[i] = ch;
 //						if(ch!=' ' && ch!='\t' && ch!='\n')
 //							charPos++;
+						i++;
 					}
 					
 				}
@@ -279,7 +281,7 @@ public class FixedString {
 			intVal/=10;
 			c++;
 			if(c==fracDigits) {
-				mChars[mMarker+ c] = DOT_CHAR;
+				mChars[mMarker+ c] = CHAR_DOT;
 				c++;
 			}
 				
