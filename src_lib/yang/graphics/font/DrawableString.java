@@ -474,9 +474,12 @@ public class DrawableString extends FixedString {
 //			mLetterColors[i] = lstColor;
 //		FloatColor color = mSettings.getColorByKey(macro);
 //		mLetterColors[pos] = color;
-		int colorId = mSettings.mStyle.mColorHash.get(macro);
+		
 		mChars[pos] = CHAR_MACRO;
-		mChars[pos+1] = colorId;
+		if(macro.equals("\\"))
+			mChars[pos+1] = 0;
+		else
+			mChars[pos+1] = mSettings.mStyle.mColorHash.get(macro);
 		if(mWorkingColors==null)
 			allocLetterColors();
 		return pos+2;

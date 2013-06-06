@@ -33,7 +33,7 @@ public class StringSampleState extends SampleState {
 		mFormatString.allocFormatString("A number: %6\nThe word '%8'");
 		
 		mColorString = new DrawableAnchoredLines();
-		mColorString.allocFormatString("A [WHITE]string[DEFAULT] with\n[GREEN]c[BLUE]o[YELLOW]l[RED]o[GREEN]r[BLUE]s");
+		mColorString.allocFormatString("A [WHITE]string[\\] with\n[GREEN]c[BLUE]o[YELLOW]l[RED]o[GREEN]r[BLUE]s");
 		mColorString.setAnchors(DrawableString.ANCHOR_RIGHT, DrawableString.ANCHOR_MIDDLE);
 		
 		mAnimatedString = new RotatingLettersString(3.2f,0.8f,0.36f);
