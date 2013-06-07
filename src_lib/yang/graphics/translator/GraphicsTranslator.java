@@ -327,7 +327,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public final TextureCoordinatesQuad createTexCoords(int x1, int y1, int x2, int y2, int textureWidth, int textureHeight) {
-		return createTexCoords().initI(x1,y1,x2,y2,textureWidth,textureHeight);
+		return createTexCoords().init(x1,y1,x2,y2,textureWidth,textureHeight);
 	}
 	
 	public final TextureCoordinatesQuad createTexCoords(float x1,float y1,float x2,float y2) {

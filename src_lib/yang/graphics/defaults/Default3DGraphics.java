@@ -133,13 +133,19 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		setOrthogonalProjection(YangMatrix.DEFAULT_NEAR,YangMatrix.DEFAULT_FAR);
 	}
 
-	public void setPerspectiveProjection(float fovy, float near, float far) {
+	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
 		mCurIsPerspective = true;
 		mCurNear = near;
 		mCurFar = far;
 		mCurFovy = fovy;
-		mProjectionTransform.setPerspectiveProjectionFovy(fovy, mTranslator.mCurrentScreen.getSurfaceRatioX(),mTranslator.mCurrentScreen.getSurfaceRatioY(), near, far);
+		mProjectionTransform.setPerspectiveProjectionFovy(fovy, mTranslator.mCurrentScreen.getSurfaceRatioX()*stretchX,mTranslator.mCurrentScreen.getSurfaceRatioY(), near, far);
 	}
+	
+	public void setPerspectiveProjection(float fovy, float near, float far) {
+		setPerspectiveProjection(fovy,near,far,1);
+	}
+	
+
 	
 //	public void drawRectZ(float worldX1, float worldY1, float worldX2, float worldY2, float z, TransformationMatrix textureTransform) {
 //		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);

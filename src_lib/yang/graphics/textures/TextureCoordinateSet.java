@@ -27,19 +27,19 @@ public abstract class TextureCoordinateSet {
 		return createTexCoordSequence(startX,startY,size,size,count);
 	}
 	
-	public static TextureCoordinatesQuad[] createTexCoordSequencePixelsBias(Texture texture, int startX, int startY, int width, int height, int count, int biasX,int biasY) {
+	public static TextureCoordinatesQuad[] createTexCoordSequencePixelsBias(Texture texture, float startX, float startY, float width, float height, int count, float biasX,float biasY) {
 		TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
 		for(int i=0;i<count;i++) {
-			result[i] = new TextureCoordinatesQuad().initBiasedI(startX+i*width,startY,startX+i*width+width,startY+height,texture.mWidth,texture.mHeight,biasX,biasY);
+			result[i] = new TextureCoordinatesQuad().initBiased(startX+i*width,startY,startX+i*width+width,startY+height,texture.mWidth,texture.mHeight,biasX,biasY);
 		}
 		return result;
 	}
 
-	public static TextureCoordinatesQuad[] createTexCoordSequencePixels(Texture texture, int startX, int startY, int width, int height, int count) {
+	public static TextureCoordinatesQuad[] createTexCoordSequencePixels(Texture texture, float startX, float startY, float width, float height, int count) {
 		return createTexCoordSequencePixelsBias(texture,startX,startY,width,height,count,0,0);
 	}
 	
-	public static TextureCoordinatesQuad[] createTexCoordSequencePixels(Texture texture, int startX, int startY, int size, int count) {
+	public static TextureCoordinatesQuad[] createTexCoordSequencePixels(Texture texture, float startX, float startY, float size, int count) {
 		return createTexCoordSequencePixelsBias(texture,startX,startY,size,size,count,0,0);
 	}
 	

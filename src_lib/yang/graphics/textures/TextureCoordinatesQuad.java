@@ -6,7 +6,7 @@ public class TextureCoordinatesQuad {
 
 	private static final float BIASPIXELS = 0;
 
-public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinatesQuad().init(0,0,1,1);
+	public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinatesQuad().init(0,0,1,1);
 	
 	public float x1;
 	public float y1;
@@ -85,7 +85,7 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 		return initBiased(x1,y1,x1+widthAndHeight,y1+widthAndHeight,0,0);
 	}
 	
-	public TextureCoordinatesQuad initI(int x1, int y1, int x2, int y2, int textureWidth, int textureHeight) {
+	public TextureCoordinatesQuad init(float x1, float y1, float x2, float y2, float textureWidth, float textureHeight) {
 		initBiased((x1+0.5f) / (float)textureWidth, 
 			  (y1+0.5f) / (float)textureHeight,
 			 (x2-0.5f) / (float)textureWidth, 
@@ -97,12 +97,12 @@ public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinates
 	}
 	
 
-	public TextureCoordinatesQuad initBiasedI(int x1, int y1, int x2, int y2, int textureWidth, int textureHeight, int biasX,int biasY) {
-		return initI(x1+biasX,y1+biasY,x2-biasX,y2-biasY,textureWidth,textureHeight);
+	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float textureWidth, float textureHeight, float biasX,float biasY) {
+		return init(x1+biasX,y1+biasY,x2-biasX,y2-biasY,textureWidth,textureHeight);
 	}
 	
-	public TextureCoordinatesQuad init(int x1, int y1, int x2, int y2, Texture prefaceTexture) {
-		return initI(x1,y1,x2,y2,prefaceTexture.getWidth(),prefaceTexture.getHeight());
+	public TextureCoordinatesQuad init(float x1, float y1, float x2, float y2, Texture prefaceTexture) {
+		return init(x1,y1,x2,y2,prefaceTexture.getWidth(),prefaceTexture.getHeight());
 	}
 	
 	

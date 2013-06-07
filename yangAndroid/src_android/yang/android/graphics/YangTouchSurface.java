@@ -32,7 +32,7 @@ public class YangTouchSurface extends GLSurfaceView{
 	
 	protected void initGL(Context context) {
 		super.setEGLContextClientVersion(2);
-		super.setEGLConfigChooser(8,8,8,0,16,0);	//Valid on Nexus: super.setEGLConfigChooser(8,8,8,8 or 0,16,0)
+		super.setEGLConfigChooser(8,8,8,0,16,0);
 		DebugYang.println("INITIALIZE OPENGL");
 		
 		mSceneRenderer = new YangSceneRenderer(context);
