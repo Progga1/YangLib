@@ -74,7 +74,7 @@ public class TextureData {
 		copyRect(left,top,source,source.mWidth/targetWidth);
 	}
 	
-	public TextureData redToAlpha() {
+	public TextureData redToAlpha() {//if(true)return this;
 		mData.rewind();
 		if(USE_PREMULTIPLICATION) {
 			for(int i=0;i<mWidth*mHeight;i++) {

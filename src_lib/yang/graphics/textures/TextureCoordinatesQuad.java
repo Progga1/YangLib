@@ -4,7 +4,7 @@ import yang.graphics.translator.Texture;
 
 public class TextureCoordinatesQuad {
 
-	private static final float BIASPIXELS = 0;
+	public static final float BIASPIXELS = 0.5f;
 
 	public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinatesQuad().init(0,0,1,1);
 	
@@ -86,10 +86,10 @@ public class TextureCoordinatesQuad {
 	}
 	
 	public TextureCoordinatesQuad init(float x1, float y1, float x2, float y2, float textureWidth, float textureHeight) {
-		initBiased((x1+0.5f) / (float)textureWidth, 
-			  (y1+0.5f) / (float)textureHeight,
-			 (x2-0.5f) / (float)textureWidth, 
-			 (y2-0.5f) / (float)textureHeight, 
+		initBiased((x1) / (float)textureWidth, 
+			  (y1) / (float)textureHeight,
+			 (x2) / (float)textureWidth, 
+			 (y2) / (float)textureHeight, 
 			 BIASPIXELS/(float)textureWidth, BIASPIXELS/(float)textureHeight);
 		mRatio = (float)textureWidth / textureHeight;
 		mRatioWidth = mWidth*mRatio/mHeight;

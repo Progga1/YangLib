@@ -22,7 +22,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 
 	//Constants
 	public final static float PI = 3.1415926535f;
-	public final static int MAX_DYNAMIC_VERTICES = 100000;
+	public static int MAX_DYNAMIC_VERTICES = 100000;
 	
 	//Matrices
 	public YangMatrixRectOps mInterTransf1;

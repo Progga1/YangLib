@@ -13,7 +13,7 @@ import org.w3c.dom.NodeList;
 
 import yang.graphics.font.DrawableAnchoredLines;
 
-
+//TODO xml comments not working
 public class StringsXML {
 	
 	private HashMap<String, String> mStrings;

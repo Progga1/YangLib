@@ -12,7 +12,7 @@ public class PolygonSampleState extends SampleState {
 	private PolygonCreator mPolygon;
 	private int mPickedPoint;
 	private Texture mFillTexture;
-	private boolean mDrawTexture = false;
+	private boolean mDrawTexture = true;
 	private boolean mDrawDebug = true;
 	//private float grid = 0.1f;
 	

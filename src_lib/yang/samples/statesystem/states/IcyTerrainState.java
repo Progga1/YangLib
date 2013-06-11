@@ -47,7 +47,7 @@ public class IcyTerrainState extends SampleState {
 	private Texture sky;
 	private Texture waterTex;
 	private Texture waterNormal;
-	private Texture cube;
+	private Texture mCubeTex;
 	private Texture screenShotTex;
 	private YangMatrix transfMatrix;
 	private YangMatrix cullMatrix;
@@ -100,7 +100,7 @@ public class IcyTerrainState extends SampleState {
 	public void initGraphics() {
 		grass = mGraphics.mGFXLoader.getImage("grass",TEXTURE_SETTINGS);
 		waterNormal = mGraphics.mGFXLoader.getImage("water_normal",TEXTURE_SETTINGS);
-		cube = mGraphics.mGFXLoader.getImage("cube",TEXTURE_SETTINGS);
+		mCubeTex = mGraphics.mGFXLoader.getImage("cube",TEXTURE_SETTINGS);
 		ice = mGraphics.mGFXLoader.getImage("ice1",TEXTURE_SETTINGS);
 		waterTex = mGraphics.mGFXLoader.getImage("sky",TEXTURE_SETTINGS);
 		sky = mGraphics.mGFXLoader.getImage("sky",TEXTURE_SETTINGS);
@@ -127,13 +127,13 @@ public class IcyTerrainState extends SampleState {
 		particleProperties.setVelocityDirection(0, -1, 0, true);
 		DefaultParticles3D particles3D = new DefaultParticles3D();
 		particles3D.init(mGraphics3D,320);
-		particles3D.mTexture = cube;
+		particles3D.mTexture = mCubeTex;
 		mWeather.init(particles3D,particleProperties);
 		mWeather.createRandomParticles(50);
 	}
 	
 	private void drawShadCube() {
-		mGraphics.bindTexture(cube);
+		mGraphics.bindTexture(mCubeTex);
 		mGraphics3D.setColor(1, 1, 1, 0.65f);
 		float r = 0.5f;
 		float t = STATIC_SHADOWS?0:time;
@@ -216,7 +216,7 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	private void drawWeather() {
-		mGraphics.bindTexture(cube);
+		mGraphics.bindTexture(mCubeTex);
 		mGraphics3D.setDefaultProgram();
 		mGraphics.switchCulling(false);
 		mWeather.draw();

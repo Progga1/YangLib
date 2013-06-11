@@ -6,6 +6,7 @@ import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
+import yang.samples.statesystem.states.MatrixStackState;
 import yang.samples.statesystem.states.ParticleSampleState;
 import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.StringSampleState;
@@ -23,7 +24,7 @@ import yang.util.statesystem.YangProgramStateSystem;
 
 public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> implements GUIActionListener {
 
-	public static float SCALE = 1.0f;
+	public static float SCALE = 1.1f;
 	
 	protected BasicGUI mGUI;
 	protected NonConcurrentList<DefaultRectButton> mButtons;
@@ -42,6 +43,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Strings", new StringSampleState());
 		addMenuItem("GUI", new GUISampleState());
 		addMenuItem("Tails", new TailSampleState());
+		addMenuItem("Matrix stack", new MatrixStackState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 		addMenuItem("Particles", new ParticleSampleState());

@@ -13,6 +13,7 @@ import yang.graphics.YangSurface;
 import yang.model.App;
 import yang.model.DebugYang;
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,7 +33,9 @@ public class YangTouchSurface extends GLSurfaceView{
 	
 	protected void initGL(Context context) {
 		super.setEGLContextClientVersion(2);
-		super.setEGLConfigChooser(8,8,8,0,16,0);
+		super.setEGLConfigChooser(8,8,8,0, 16,0);
+		//HTC working: TRANSLUCENT, RGBA_8888
+		super.getHolder().setFormat(PixelFormat.RGBA_8888);	//TODO try out formats
 		DebugYang.println("INITIALIZE OPENGL");
 		
 		mSceneRenderer = new YangSceneRenderer(context);

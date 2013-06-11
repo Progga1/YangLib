@@ -73,6 +73,10 @@ public class NinePatchTexCoords {
 		setBorder(size,size,size,size);
 		return this;
 	}
+	
+	public NinePatchTexCoords setBorder(float horizontal,float vertical) {
+		return setBorder(horizontal,vertical,horizontal,vertical);
+	}
 
 	public NinePatchTexCoords cloneWithOffset(float offsetX, float offsetY) {
 		NinePatchTexCoords result = new NinePatchTexCoords();
