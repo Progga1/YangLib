@@ -6,7 +6,6 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.InputEventListener;
 import yang.graphics.YangSurface;
-import yang.graphics.font.DrawableString;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;

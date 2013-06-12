@@ -1,7 +1,6 @@
 package yang.samples.statesystem.states;
 
 import yang.graphics.translator.Texture;
-import yang.graphics.translator.glconsts.GLMasks;
 import yang.samples.statesystem.SampleState;
 
 public class MatrixStackState extends SampleState {

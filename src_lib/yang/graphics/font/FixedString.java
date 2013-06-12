@@ -1,7 +1,6 @@
 package yang.graphics.font;
 
 import yang.util.NonConcurrentList;
-import yang.util.Util;
 
 public class FixedString {
 

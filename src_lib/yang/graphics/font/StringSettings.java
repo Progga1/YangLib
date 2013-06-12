@@ -1,7 +1,5 @@
 package yang.graphics.font;
 
-import java.util.HashMap;
-
 import yang.graphics.FloatColor;
 import yang.graphics.defaults.DefaultGraphics;
 

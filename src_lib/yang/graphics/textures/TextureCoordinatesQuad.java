@@ -4,7 +4,7 @@ import yang.graphics.translator.Texture;
 
 public class TextureCoordinatesQuad {
 
-	public static final float BIASPIXELS = 0.5f;
+	public static float BIASPIXELS = 0.5f;
 
 	public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinatesQuad().init(0,0,1,1);
 	

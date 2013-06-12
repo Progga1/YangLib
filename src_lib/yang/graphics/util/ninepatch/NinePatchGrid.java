@@ -2,7 +2,6 @@ package yang.graphics.util.ninepatch;
 
 import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 
 public class NinePatchGrid {
