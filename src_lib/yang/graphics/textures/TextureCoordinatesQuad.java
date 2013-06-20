@@ -139,5 +139,16 @@ public class TextureCoordinatesQuad {
 	public String toString() {
 		return "("+x1+","+y1+","+x2+","+y2+")";
 	}
+
+	public TextureCoordinatesQuad intoRect(float left,float top,float right,float bottom) {
+		float deltaX = right-left;
+		float deltaY = bottom-top;
+		x1 = x1*deltaX+left;
+		y1 = y1*deltaY+top;
+		x2 = x2*deltaX+left;
+		y2 = y2*deltaY+top;
+		refreshCoordArray();
+		return this;
+	}
 	
 }

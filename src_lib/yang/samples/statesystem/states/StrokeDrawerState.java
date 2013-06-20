@@ -2,6 +2,7 @@ package yang.samples.statesystem.states;
 
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeCreator;
+import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeDefaultProperties;
 import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
@@ -11,13 +12,13 @@ public class StrokeDrawerState extends SampleState {
 
 	private OrthoStrokeCreator mStroke;
 	private OrthoStrokeProperties mStrokeProperties;
-	private Texture mOutlineTex;
+	private Texture mStrokeTex;
 	private float mLstX,mLstY;
 	
 	@Override
 	protected void initGraphics() {
-		mOutlineTex = mGFXLoader.getImage("stroke",TextureFilter.LINEAR_MIP_LINEAR);
-		mStrokeProperties = new OrthoStrokeProperties();
+		mStrokeTex = mGFXLoader.getImage("stroke",TextureFilter.NEAREST);
+		mStrokeProperties = new OrthoStrokeDefaultProperties(0,0,1,1);
 		mStroke = new OrthoStrokeCreator(mGraphics2D,256,mStrokeProperties);
 		reset();
 	}
@@ -37,12 +38,13 @@ public class StrokeDrawerState extends SampleState {
 		mGraphics2D.activate();
 		mGraphics.clear(0,0,0);
 		
-		mGraphics.switchCulling(false);
-		mGraphics.bindTexture(null);
-		mGraphics2D.setColor(0.5f,0.5f,0.9f);
+		
+		mGraphics.switchCulling(true);
+		mGraphics.bindTexture(mStrokeTex);
+		mGraphics2D.setColor(0.8f,0.8f,0.9f);
 		//mStroke.drawDebugOutput(0.01f);
 		
-		mStroke.draw();
+		mStroke.drawCompletely();
 		mGraphics2D.fillBuffers();
 	}
 	

@@ -110,8 +110,12 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 			mGraphics.drawLine(line.mPosX, line.mPosY, line.mPosX+line.mDeltaX, line.mPosY+line.mDeltaY, lineWidth);
 		}
 	}
+	
+	public int getVertexCount() {
+		return mLineCount*4+mPatchCount*4;
+	}
 
-	public void draw() {
+	public void putPositions() {
 		float w = mProperties.mWidth*0.5f;
 		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
 		for(int i=0;i<mLineCount;i++) {
@@ -123,11 +127,13 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 					mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY-w);
 					mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
 					mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+w);
+					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[1].mAppliedCoordinates);
 				}else{
 					mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
 					mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+w);
 					mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
 					mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY-w);
+					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[3].mAppliedCoordinates);
 				}
 			}else{
 				if(line.mDeltaY>0) {
@@ -135,14 +141,38 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 					mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY-w);
 					mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
 					mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY-w);
+					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[0].mAppliedCoordinates);
 				}else{
 					mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
 					mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY+w);
 					mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
 					mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY+w);
+					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[2].mAppliedCoordinates);
 				}
 			}
 		}
+		for(int i=0;i<mPatchCount;i++) {
+			OrthoStrokePatch patch = mPatches[i];
+			vertexBuffer.beginQuad(false);
+			vertexBuffer.putVec12(DefaultGraphics.ID_POSITIONS,
+					patch.mPosX-w, patch.mPosY-w, mGraphics.mCurrentZ,
+					patch.mPosX+w, patch.mPosY-w, mGraphics.mCurrentZ,
+					patch.mPosX-w, patch.mPosY+w, mGraphics.mCurrentZ,
+					patch.mPosX+w, patch.mPosY+w, mGraphics.mCurrentZ
+					);
+			vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mTexCoordTable[patch.mInterLines].mAppliedCoordinates);
+		}
+	}
+	
+	public void putColors() {
+		int vCount = getVertexCount();
+		mGraphics.putColor(mGraphics.mCurColor, vCount);
+		mGraphics.putSuppData(mGraphics.mCurSuppData, vCount);
+	}
+	
+	public void drawCompletely() {
+		putPositions();
+		putColors();
 	}
 	
 }
