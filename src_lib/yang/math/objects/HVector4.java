@@ -46,4 +46,8 @@ public class HVector4 extends Quadruple {
 		mValues[Z] -= values.mValues[Z];
 	}
 	
+	public float dot(HVector4 vector) {
+		return mValues[X]*vector.mValues[X] + mValues[Y]*vector.mValues[Y] + mValues[Z]*vector.mValues[Z] + mValues[W]*vector.mValues[W];
+	}
+	
 }

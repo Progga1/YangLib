@@ -57,7 +57,6 @@ public class MatrixStackState extends SampleState {
 		mTransform.translate(3, 0);
 		drawSphere();
 	}
-
 	
 	
 }

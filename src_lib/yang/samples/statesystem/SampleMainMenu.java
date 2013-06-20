@@ -10,6 +10,7 @@ import yang.samples.statesystem.states.MatrixStackState;
 import yang.samples.statesystem.states.ParticleSampleState;
 import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.StringSampleState;
+import yang.samples.statesystem.states.StrokeDrawerState;
 import yang.samples.statesystem.states.TailSampleState;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
@@ -44,6 +45,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("GUI", new GUISampleState());
 		addMenuItem("Tails", new TailSampleState());
 		addMenuItem("Matrix stack", new MatrixStackState());
+		addMenuItem("Stroke", new StrokeDrawerState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 		addMenuItem("Particles", new ParticleSampleState());
