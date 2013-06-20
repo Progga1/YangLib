@@ -1,15 +1,22 @@
 package yang.samples.statesystem.states;
 
+import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
+import yang.graphics.translator.glconsts.GLMasks;
+import yang.math.MathFunc;
+import yang.math.objects.matrix.YangMatrix;
 import yang.samples.statesystem.SampleState;
 
 public class MatrixStackState extends SampleState {
 
 	private Texture mCubeTex;
+	private YangMatrix mTransform;
 	
 	@Override
 	protected void initGraphics() {
-		mCubeTex = mGFXLoader.getImage("cube");
+		mCubeTex = mGFXLoader.getImage("grass",TextureFilter.LINEAR_MIP_LINEAR);
+		mTransform = new YangMatrix();
+		mTransform.initStack(16);
 	}
 	
 	@Override
@@ -17,17 +24,38 @@ public class MatrixStackState extends SampleState {
 		
 	}
 
+	protected void drawSphere() {
+		mGraphics3D.drawSphere(20, 20, mTransform, 2, 1.5f);
+	}
+	
 	@Override
 	protected void draw() {
-//		mGraphics3D.activate();
-//		mGraphics.clear(0,0,0,0,GLMasks.DEPTH_BUFFER_BIT);
-//		mGraphics.bindTexture(mCubeTex);
-//		mGraphics3D.drawCubeCentered(0, 0, 0, 1);
+		mGraphics3D.activate();
+		mGraphics.switchZBuffer(true);
+		mGraphics.clear(0,0,0,0,GLMasks.DEPTH_BUFFER_BIT);
+		mTransform.stackClear();
 		
-		mGraphics2D.activate();
-		mGraphics.clear(0, 0, 0);
+		mTransform.loadIdentity();
+		mTransform.scale(0.7f);
+		mTransform.translate(MathFunc.sin(mStateTimer*1.1f)*0.3f, 0);
+		mTransform.rotateY(mStateTimer*0.1f);
+		mTransform.scale(0.3f);
+		mTransform.rotateZ(mStateTimer*0.6f);
 		mGraphics.bindTexture(mCubeTex);
-		mGraphics2D.drawRectCentered(0, 0, 1);
+		drawSphere();
+		mTransform.stackPush();
+		mTransform.scale(0.6f);
+		mTransform.stackPush();
+		mTransform.translate(3, 0);
+		mTransform.rotateY(mStateTimer);
+		drawSphere();
+		mTransform.stackPop();
+		mTransform.translate(-5, 0);
+		drawSphere();
+		mTransform.rotateY(mStateTimer*0.9f);
+		mTransform.scale(0.7f);
+		mTransform.translate(3, 0);
+		drawSphere();
 	}
 
 	

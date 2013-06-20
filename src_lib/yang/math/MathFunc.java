@@ -51,5 +51,13 @@ public class MathFunc {
 	public static int random(int lowerBound,int upperBound) {
 		return (int)(Math.random()*(upperBound-lowerBound)+lowerBound);
 	}
+
+	public static float sin(float x) {
+		return (float)Math.sin(x);
+	}
+	
+	public static float cos(float x) {
+		return (float)Math.cos(x);
+	}
 	
 }

@@ -217,6 +217,22 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawCubeCentered(mInterMatrix);
 	}
 	
+	public void drawCuboidCentered(float x,float y,float z,float sizeX,float sizeY,float sizeZ) {
+		mInterMatrix.loadIdentity();
+		mInterMatrix.translate(x, y, z);
+		mInterMatrix.scale(sizeX,sizeY,sizeZ);
+		drawCubeCentered(mInterMatrix);
+	}
+	
+	public void drawCuboidCentered(float x,float y,float z,float sizeX,float sizeY,float sizeZ,YangMatrix transform) {
+		mInterMatrix.loadIdentity();
+		mInterMatrix.translate(x, y, z);
+		mInterMatrix.scale(sizeX,sizeY,sizeZ);
+		if(transform!=null)
+			mInterMatrix.multiplyLeft(transform);
+		drawCubeCentered(mInterMatrix);
+	}
+	
 	public void drawSphere(int verticesAlpha,int verticesBeta,YangMatrix transform,float textureCoordFactorX,float textureCoordFactorY) {
 		mSphereCreator.begin(verticesAlpha,verticesBeta,1,1,1);
 		mSphereCreator.putPositions(transform,true);

@@ -66,7 +66,7 @@ public class MatrixOps {
 		target[M00] = cosA;
 		target[M20] = sinA;
 		target[M02] = -sinA;
-		target[22] = cosA;
+		target[M22] = cosA;
 	}
 	
 	public static void setRotationZ(float[] target,float angle) {

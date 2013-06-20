@@ -35,7 +35,7 @@ public class ShadowHelper {
 	
 	private static TextureSettings createTextureSettings() {
 		TextureSettings result = new TextureSettings(TextureWrap.CLAMP,TextureWrap.CLAMP,TextureFilter.LINEAR);
-		result.mChannels = 3;
+		result.mChannels = 4;
 		return result;
 	}
 	

@@ -27,10 +27,11 @@ public class PlanarLightmapHelper {
 	public float[] mInvOrthoProjection = new float[16];
 	private TextureSettings mTextureSettings;
 	private boolean mMipMapping;
+	private boolean mFinished = false;
 	
 	private static TextureSettings createTextureSettings(boolean mipMapping) {
 		TextureSettings result = new TextureSettings(TextureWrap.CLAMP,TextureWrap.CLAMP,mipMapping?TextureFilter.LINEAR_MIP_LINEAR:TextureFilter.LINEAR);
-		result.mChannels = 3;
+		result.mChannels = 4;
 		return result;
 	}
 	
@@ -72,6 +73,7 @@ public class PlanarLightmapHelper {
 	public void beginRender() {
 		if(!mRenderToScreen)
 			mGraphics.setTextureRenderTarget(mLightMap);
+		mFinished = false;
 		mGraphics3D.setAmbientColor(1);
 		mGraphics.clear(0, 0, 0, 1, GLMasks.DEPTH_BUFFER_BIT);
 		//mGraphics3D.setCameraProjection(mCameraTransform,mOrthoProjection,mInvOrthoProjection);
@@ -85,12 +87,23 @@ public class PlanarLightmapHelper {
 	public void finishRender() {
 		if(!mRenderToScreen)
 			mGraphics.setScreenRenderTarget();
-		if(mMipMapping) {
+		mFinished = true;
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		mGraphics.setCullMode(false);
+		//mGraphics3D.restoreCameraProjection();
+		generateMipMaps();
+	}
+	
+	public void generateMipMaps() {
+		if(mFinished && mMipMapping) {
 			mGraphics3D.bindTexture(mLightMap.mTargetTexture);
 			mGraphics.generateMipMap();
 		}
-		mGraphics.setCullMode(false);
-		//mGraphics3D.restoreCameraProjection();
 	}
 	
 }

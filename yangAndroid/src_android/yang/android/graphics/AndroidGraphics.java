@@ -83,7 +83,9 @@ public class AndroidGraphics extends GraphicsTranslator {
 	
 	@Override
 	public void clear(int mask) {
+		assert preCheck("Clear");
 		GLES20.glClear(mask);
+		assert checkError("Clear");
 	}
 
 	@Override
@@ -212,6 +214,13 @@ public class AndroidGraphics extends GraphicsTranslator {
 		int depthId = mTempInt2[0];
 		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthId);
 		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, texture.getWidth(), texture.getHeight());
+//		while(GLES20.glCheckFramebufferStatus(depthId)==0 && GLES20.glCheckFramebufferStatus(frameId)==0) {System.out.println(GLES20.glCheckFramebufferStatus(depthId)+GLES20.glCheckFramebufferStatus(frameId));
+//			try {
+//				Thread.sleep(10);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		assert checkError("Create render target");
 		return new TextureRenderTarget(texture,frameId,depthId);
 	}

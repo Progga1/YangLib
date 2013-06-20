@@ -32,6 +32,8 @@ public class YangMatrix {
 	public float[] mInverted;
 	protected float[] mMatrixBack;
 	protected float[] mTempMat1,mTempMat2;
+	protected float[][] mStack;
+	public int mStackPointer;	//pre increment
 
 	public static float TO_RAD_FACTOR = (float) Math.PI / 180;
 	public static float TO_DEG_FACTOR = 180 / (float) Math.PI;
@@ -42,6 +44,52 @@ public class YangMatrix {
 		mTempMat1 = new float[16];
 		mTempMat2 = new float[16];
 		mInverted = null;
+		mStack = null;
+		mStackPointer = -1;
+	}
+	
+	public void initStack(int capacity) {
+		mStack = new float[capacity][16];
+	}
+	
+	public void stackClear() {
+		mStackPointer = -1;
+	}
+	
+	public void stackGoto(int absoluteIndex) {
+		mStackPointer = absoluteIndex;
+	}
+	
+	public void stackDecPointer(int dec) {
+		mStackPointer-=dec;
+	}
+	
+	public void stackIncPointer(int dec) {
+		mStackPointer+=dec;
+	}
+	
+	public void stackPush() {
+		System.arraycopy(mMatrix,0,mStack[++mStackPointer],0,16);
+	}
+	
+	public void stackPop() {
+		System.arraycopy(mStack[mStackPointer--],0,mMatrix,0,16);
+	}
+	
+	public void stackGetTop() {
+		System.arraycopy(mStack[mStackPointer],0,mMatrix,0,16);
+	}
+	
+	public void stackRefreshTop() {
+		System.arraycopy(mMatrix,0,mStack[mStackPointer],0,16);
+	}
+	
+	public void stackGet(int index) {
+		System.arraycopy(mStack[mStackPointer-index],0,mMatrix,0,16);
+	}
+	
+	public void stackSet(int index) {
+		System.arraycopy(mMatrix,0,mStack[mStackPointer-index],0,16);
 	}
 
 	public void loadIdentity() {
