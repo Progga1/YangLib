@@ -7,9 +7,11 @@ public class OrthoStrokeLine extends Point2f {
 
 	public float mDeltaX;
 	public float mDeltaY;
+	public boolean mDeleted;
 	
 	public OrthoStrokeLine setX(float x,float y,float distance) {
 		super.set(x,y);
+		mDeleted = false;
 		mDeltaX = distance;
 		mDeltaY = 0;
 		return this;
@@ -17,6 +19,7 @@ public class OrthoStrokeLine extends Point2f {
 	
 	public OrthoStrokeLine setY(float x,float y,float distance) {
 		super.set(x,y);
+		mDeleted = false;
 		mDeltaX = 0;
 		mDeltaY = distance;
 		return this;

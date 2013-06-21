@@ -66,13 +66,12 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 		patch.mInterLines |= line.getStartPointMask();
 		patch = pickOrAddPatch(line.mPosX+line.mDeltaX,line.mPosY+line.mDeltaY,SNAP_TOLERANCE*0.01f);
 		patch.mInterLines |= line.getEndPointMask();
-		
-		return true;
+		line.mDeleted = Math.abs(line.mDeltaX)+Math.abs(line.mDeltaY)<=mProperties.mWidth*1.0001f;
+		return !line.mDeleted;
 	}
 	
 	private OrthoStrokeLine lineAdded(OrthoStrokeLine line) {
 		if(!handleLine(line)) {
-			
 			return null;
 		}else{
 			mLineCount++;
@@ -120,34 +119,36 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
 		for(int i=0;i<mLineCount;i++) {
 			OrthoStrokeLine line = mLines[i];
-			vertexBuffer.beginQuad(false);
-			if(line.mDeltaX!=0) {
-				if(line.mDeltaX>0) {
-					mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
-					mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY-w);
-					mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
-					mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+w);
-					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[1].mAppliedCoordinates);
+			if(!line.mDeleted) {
+				vertexBuffer.beginQuad(false);
+				if(line.mDeltaX!=0) {
+					if(line.mDeltaX>0) {
+						mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+w);
+						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[1].mAppliedCoordinates);
+					}else{
+						mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY-w);
+						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[3].mAppliedCoordinates);
+					}
 				}else{
-					mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
-					mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+w);
-					mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
-					mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY-w);
-					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[3].mAppliedCoordinates);
-				}
-			}else{
-				if(line.mDeltaY>0) {
-					mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
-					mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY-w);
-					mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
-					mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY-w);
-					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[0].mAppliedCoordinates);
-				}else{
-					mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
-					mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY+w);
-					mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
-					mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY+w);
-					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[2].mAppliedCoordinates);
+					if(line.mDeltaY>0) {
+						mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY-w);
+						mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY-w);
+						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[0].mAppliedCoordinates);
+					}else{
+						mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY+w);
+						mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY+w);
+						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[2].mAppliedCoordinates);
+					}
 				}
 			}
 		}
