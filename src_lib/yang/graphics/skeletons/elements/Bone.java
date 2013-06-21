@@ -81,13 +81,13 @@ public class Bone {
 		mContourTexCoords.set(mContourTexCoords.size()-1,texCoords);
 	}
 	
-	public void putTextureCoords(float x1,float y1,float x2,float y2,boolean rotate) {
-		TextureCoordinatesQuad texCoords = mGraphics.createTexCoords().initBiased(x1,y1,x2,y2,0,0,rotate);
+	public void putTextureCoords(float x1,float y1,float x2,float y2,int rotation) {
+		TextureCoordinatesQuad texCoords = mGraphics.createTexCoords().initBiased(x1,y1,x2,y2,0,0,rotation);
 		putTextureCoords(texCoords);
 	}
 	
 	public void putTextureCoords(float x1,float y1,float x2,float y2) {
-		putTextureCoords(x1,y1,x2,y2,false);
+		putTextureCoords(x1,y1,x2,y2,0);
 	}
 	
 	public void setContour(float contourX1,float contourY1,float contourX2,float contourY2,float contourX3,float contourY3,float contourX4,float contourY4) {

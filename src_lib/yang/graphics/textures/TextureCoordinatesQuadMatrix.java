@@ -10,7 +10,7 @@ public class TextureCoordinatesQuadMatrix extends TextureCoordinatesQuad {
 	private YangMatrixRectOps mTrafoMatrix;
 	
 	@Override
-	public TextureCoordinatesQuadMatrix initBiased(float x1, float y1, float x2, float y2, float biasX, float biasY, boolean rotate) {
+	public TextureCoordinatesQuadMatrix initBiased(float x1, float y1, float x2, float y2, float biasX, float biasY, int rotation) {
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
@@ -22,8 +22,8 @@ public class TextureCoordinatesQuadMatrix extends TextureCoordinatesQuad {
 		mAppliedCoordinates = new float[8];
 		mTrafoMatrix.applyToRect2DInvertY(mAppliedCoordinates);
 		mRatio = 1;
-		if(rotate)
-			super.rotateCoords();
+		if(rotation!=0)
+			super.rotateCoords(rotation);
 		return this;
 	}
 	
