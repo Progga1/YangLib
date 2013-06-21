@@ -24,6 +24,7 @@ public class StrokeDrawerState extends SampleState {
 		mStrokeProperties = new OrthoStrokeDefaultProperties();
 		mStrokeProperties.init();
 		mStroke = new OrthoStrokeCreator(mGraphics2D,256,mStrokeProperties);
+		mStroke.mColor.setAlpha(0.8f);
 		reset();
 	}
 	
@@ -44,8 +45,6 @@ public class StrokeDrawerState extends SampleState {
 		
 		mGraphics.switchCulling(true);
 		mGraphics.bindTexture(mStrokeTex);
-		mGraphics2D.setColor(0.8f,0.8f,0.9f);
-		//mStroke.drawDebugOutput(0.01f);
 		
 		mStroke.drawCompletely();
 		mGraphics2D.fillBuffers();
@@ -75,8 +74,17 @@ public class StrokeDrawerState extends SampleState {
 				mStroke.marchY(deltaY);
 				mLstY = y;
 			}
+			mStroke.resolveIntersections();
 		}
 		
+	}
+	
+	@Override
+	public void keyDown(int code) {
+		if(code=='c') {
+			mStroke.reset();
+			mLstX = Float.MIN_VALUE;
+		}
 	}
 	
 }

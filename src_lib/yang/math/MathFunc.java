@@ -59,5 +59,9 @@ public class MathFunc {
 	public static float cos(float x) {
 		return (float)Math.cos(x);
 	}
+
+	public static boolean equals(float x, float y,float tolerance) {
+		return (Math.abs(x-y)<tolerance);
+	}
 	
 }

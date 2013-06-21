@@ -36,29 +36,69 @@ public class OrthoStrokeLine extends Point2f {
 	public int getStartPointMask() {
 		if(mDeltaX!=0) {
 			if(mDeltaX>0)
-				return 1 << 1;
+				return OrthoStrokeProperties.RIGHT;
 			else
-				return 1 << 3;
-		}else{
-			if(mDeltaY>0)
-				return 1 << 0;
-			else
-				return 1 << 2;
+				return OrthoStrokeProperties.LEFT;
 		}
+		if(mDeltaY!=0) {
+			if(mDeltaY>0)
+				return OrthoStrokeProperties.UP;
+			else
+				return OrthoStrokeProperties.DOWN;
+		}
+		return 0;
 	}
 	
 	public int getEndPointMask() {
 		if(mDeltaX!=0) {
 			if(mDeltaX>0)
-				return 1 << 3;
+				return OrthoStrokeProperties.LEFT;
 			else
-				return 1 << 1;
-		}else{
-			if(mDeltaY>0)
-				return 1 << 2;
-			else
-				return 1 << 0;
+				return OrthoStrokeProperties.RIGHT;
 		}
+		if(mDeltaY!=0) {
+			if(mDeltaY>0)
+				return OrthoStrokeProperties.DOWN;
+			else
+				return OrthoStrokeProperties.UP;
+		}
+		return 0;
+	}
+
+	public float getEndX() {
+		return mPosX+mDeltaX;
+	}
+	
+	public float getEndY() {
+		return mPosY+mDeltaY;
+	}
+
+	public float getLeft() {
+		if(mDeltaX>=0)
+			return mPosX;
+		else
+			return mPosX+mDeltaX;
+	}
+	
+	public float getRight() {
+		if(mDeltaX>=0)
+			return mPosX+mDeltaX;
+		else
+			return mPosX;
+	}
+	
+	public float getTop() {
+		if(mDeltaY>=0)
+			return mPosY;
+		else
+			return mPosY+mDeltaY;
+	}
+	
+	public float getBottom() {
+		if(mDeltaY>=0)
+			return mPosY+mDeltaY;
+		else
+			return mPosY;
 	}
 	
 }

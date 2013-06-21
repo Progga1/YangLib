@@ -120,5 +120,9 @@ public class FloatColor extends Quadruple {
 	public void set(float brightness) {
 		set(brightness,brightness,brightness,1);
 	}
+
+	public void setAlpha(float alpha) {
+		mValues[3] = alpha;
+	}
 	
 }

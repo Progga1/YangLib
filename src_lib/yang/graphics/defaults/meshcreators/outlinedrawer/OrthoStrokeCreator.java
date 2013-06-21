@@ -1,18 +1,23 @@
 package yang.graphics.defaults.meshcreators.outlinedrawer;
 
+import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
+import yang.math.MathFunc;
 
 public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 
 	public static float SNAP_TOLERANCE = 0.001f;
+	public static float BIAS = 0.0001f;
 	public OrthoStrokePatch[] mPatches;
 	public OrthoStrokeLine[] mLines;
 	public OrthoStrokeProperties mProperties;
 	public int mPatchCount;
 	public int mLineCount;
-	private float mCurX,mCurY;
+	public float mCurX,mCurY;
+	public boolean mHandleLineIntersections = true;
+	public FloatColor mColor = FloatColor.WHITE.clone();
 	
 	public OrthoStrokeCreator(DefaultGraphics<?> graphics,int capacity,OrthoStrokeProperties properties) {
 		super(graphics);
@@ -60,41 +65,139 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 			return patch;
 	}
 	
-	private boolean handleLine(OrthoStrokeLine line) {
-		float w = mProperties.mWidth*0.5f;
-		OrthoStrokePatch patch = pickOrAddPatch(line.mPosX,line.mPosY,SNAP_TOLERANCE);
-		patch.mInterLines |= line.getStartPointMask();
-		patch = pickOrAddPatch(line.mPosX+line.mDeltaX,line.mPosY+line.mDeltaY,SNAP_TOLERANCE*0.01f);
-		patch.mInterLines |= line.getEndPointMask();
+	protected void handlePatch(OrthoStrokePatch patch) {
+		float w = mProperties.mWidth*0.4f;
+		for(int i=0;i<mLineCount;i++) {
+			OrthoStrokeLine line = mLines[i];
+			if(!line.mDeleted) {
+				if(line.mDeltaX!=0) {
+					float prevEnd = line.getEndX();
+					if(MathFunc.equals(line.mPosY,patch.mPosY,SNAP_TOLERANCE) && ((line.mPosX<patch.mPosX-w && prevEnd>patch.mPosX+w) || (line.mPosX>patch.mPosX+w && prevEnd<patch.mPosX-w))) {
+						splitLine(line,patch.mPosX-line.mPosX);
+						patch.mInterLines |= OrthoStrokeProperties.LEFT | OrthoStrokeProperties.RIGHT;
+					}
+				}
+				if(line.mDeltaY!=0) {
+					float prevEnd = line.getEndY();
+					if(MathFunc.equals(line.mPosX,patch.mPosX,SNAP_TOLERANCE) && ((line.mPosY<patch.mPosY-w && prevEnd>patch.mPosY+w) || (line.mPosY>patch.mPosY+w && prevEnd<patch.mPosY-w))) {
+						splitLine(line,patch.mPosY-line.mPosY);
+						patch.mInterLines |= OrthoStrokeProperties.UP | OrthoStrokeProperties.DOWN;
+					}
+				}
+			}
+		}
+	}
+	
+	protected void checkLineInclusion(OrthoStrokeLine line) {
+		if(line.mDeleted)
+			return;
+		for(int i=0;i<mLineCount;i++) {
+			OrthoStrokeLine otherLine = mLines[i];
+			if(!otherLine.mDeleted && line!=otherLine) {
+				if(line.mDeltaX!=0) {
+					if(otherLine.mDeltaX!=0 && MathFunc.equals(line.mPosY,otherLine.mPosY,BIAS) && line.getLeft()>=otherLine.getLeft()-BIAS && line.getRight()<=otherLine.getRight()+BIAS) {
+						line.mDeleted = true;
+					}
+				}
+				if(line.mDeltaY!=0) {
+					if(otherLine.mDeltaY!=0 && MathFunc.equals(line.mPosX,otherLine.mPosX,BIAS) && line.getBottom()>=otherLine.getBottom()-BIAS && line.getTop()<=otherLine.getTop()+BIAS) {
+						line.mDeleted = true;
+					}
+				}
+			}
+		}
+	}
+	
+	protected void splitLine(OrthoStrokeLine line, float newDelta) {
+		if(line.mDeltaX!=0) {
+			addLineX(line.mPosX+newDelta,line.mPosY,line.mDeltaX-newDelta,false);
+			line.mDeltaX = newDelta;
+		}
+		if(line.mDeltaY!=0) {
+			addLineY(line.mPosX,line.mPosY+newDelta,line.mDeltaY-newDelta,false);
+			line.mDeltaY = newDelta;
+		}
+	}
+
+	public void resolveIntersections() {
+		for(int i=0;i<mPatchCount;i++) {
+			handlePatch(mPatches[i]);
+		}
+		for(int i=0;i<mLineCount;i++) {
+			checkLineInclusion(mLines[i]);
+		}
+	}
+	
+	private boolean handleLine(OrthoStrokeLine line,boolean updatePatches) {
+	
 		line.mDeleted = Math.abs(line.mDeltaX)+Math.abs(line.mDeltaY)<=mProperties.mWidth*1.0001f;
+
+		if(!updatePatches)
+			return !line.mDeleted;
+	
+		OrthoStrokePatch patch1 = pickOrAddPatch(line.mPosX,line.mPosY,SNAP_TOLERANCE);
+		patch1.mInterLines |= line.getStartPointMask();
+		OrthoStrokePatch patch2 = pickOrAddPatch(line.mPosX+line.mDeltaX,line.mPosY+line.mDeltaY,SNAP_TOLERANCE*0.01f);
+		patch2.mInterLines |= line.getEndPointMask();
+		
+		if(mHandleLineIntersections) {
+			//Intersections
+			for(int i=0;i<mLineCount;i++) {
+				OrthoStrokeLine oldLine = mLines[i];
+				if(!oldLine.mDeleted && oldLine!=line) {
+					float deltaX = line.mPosX-oldLine.mPosX;
+					float deltaY = line.mPosY-oldLine.mPosY;
+					float prevDeltaX = line.mDeltaX;
+					float prevDeltaY = line.mDeltaY;
+					float oldPrevDeltaX = oldLine.mDeltaX;
+					float oldPrevDeltaY = oldLine.mDeltaY;
+					if(line.mDeltaX!=0) {
+						if(oldLine.mDeltaY!=0 && deltaY*oldLine.mDeltaY>=0 && Math.abs(deltaY)<Math.abs(oldLine.mDeltaY)) {
+							if((line.mPosX<oldLine.mPosX && line.mPosX+line.mDeltaX>oldLine.mPosX) || (line.mPosX>oldLine.mPosX && line.mPosX+line.mDeltaX<oldLine.mPosX)) {
+								OrthoStrokePatch newPatch = pickOrAddPatch(line.mPosX-deltaX,line.mPosY,SNAP_TOLERANCE);
+							}
+						}
+					}
+					if(line.mDeltaY!=0) {
+						if(oldLine.mDeltaX!=0 && deltaX*oldLine.mDeltaX>=0 && Math.abs(deltaX)<Math.abs(oldLine.mDeltaX)) {
+							if((line.mPosY<oldLine.mPosY && line.mPosY+line.mDeltaY>oldLine.mPosY) || (line.mPosY>oldLine.mPosY && line.mPosY+line.mDeltaY<oldLine.mPosY)) {
+								OrthoStrokePatch newPatch = pickOrAddPatch(line.mPosX,line.mPosY-deltaY,SNAP_TOLERANCE);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
 		return !line.mDeleted;
 	}
 	
-	private OrthoStrokeLine lineAdded(OrthoStrokeLine line) {
-		if(!handleLine(line)) {
+	private OrthoStrokeLine lineAdded(OrthoStrokeLine line,boolean updatePatches) {
+		if(!handleLine(line,updatePatches)) {
+			mLineCount--;
 			return null;
 		}else{
-			mLineCount++;
 			return line;
 		}
 	}
 	
-	public OrthoStrokeLine addLineX(float startX,float startY,float distance) {
-		return lineAdded(mLines[mLineCount].setX(startX,startY,distance));
+	public OrthoStrokeLine addLineX(float startX,float startY,float distance,boolean updatePatches) {
+		return lineAdded(mLines[mLineCount++].setX(startX,startY,distance),updatePatches);
 	}
 	
-	public OrthoStrokeLine addLineY(float startX,float startY,float distance) {
-		return lineAdded(mLines[mLineCount].setY(startX,startY,distance));
+	public OrthoStrokeLine addLineY(float startX,float startY,float distance,boolean updatePatches) {
+		return lineAdded(mLines[mLineCount++].setY(startX,startY,distance),updatePatches);
 	}
 
 	public OrthoStrokeLine marchX(float distance) {
-		OrthoStrokeLine result = addLineX(mCurX,mCurY,distance);
+		OrthoStrokeLine result = addLineX(mCurX,mCurY,distance,true);
 		mCurX += distance;
 		return result;
 	}
 	
 	public OrthoStrokeLine marchY(float distance) {
-		OrthoStrokeLine result = addLineY(mCurX,mCurY,distance);
+		OrthoStrokeLine result = addLineY(mCurX,mCurY,distance,true);
 		mCurY += distance;
 		return result;
 	}
@@ -167,7 +270,7 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	
 	public void putColors() {
 		int vCount = getVertexCount();
-		mGraphics.putColor(mGraphics.mCurColor, vCount);
+		mGraphics.putColor(mColor.mValues, vCount);
 		mGraphics.putSuppData(mGraphics.mCurSuppData, vCount);
 	}
 	
