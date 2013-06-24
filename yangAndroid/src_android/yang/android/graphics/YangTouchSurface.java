@@ -5,8 +5,8 @@ import yang.android.io.AndroidResourceManager;
 import yang.android.io.AndroidSoundLoader;
 import yang.android.sound.AndroidSoundManager;
 import yang.events.EventQueueHolder;
-import yang.events.InputEventQueue;
 import yang.events.Keys;
+import yang.events.YangEventQueue;
 import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.graphics.YangSurface;
@@ -20,7 +20,7 @@ import android.view.View;
 
 public class YangTouchSurface extends GLSurfaceView{
 
-	public InputEventQueue mEventQueue;
+	public YangEventQueue mEventQueue;
 	public YangSceneRenderer mSceneRenderer;
 	public Context mContext;
 	
@@ -34,7 +34,7 @@ public class YangTouchSurface extends GLSurfaceView{
 	protected void initGL(Context context) {
 		super.setEGLContextClientVersion(2);
 		super.setEGLConfigChooser(8,8,8,0, 16,0);
-		//HTC working: TRANSLUCENT, RGBA_8888
+		//HTC working: RGBA_8888
 		super.getHolder().setFormat(PixelFormat.RGBA_8888);	//TODO try out formats
 		DebugYang.println("INITIALIZE OPENGL");
 		
