@@ -24,6 +24,7 @@ public class YangEventQueue {
 	private int mMetaEventQueueFirst;
 	private GraphicsTranslator mGraphics;
 	private boolean[] mMetaKeys;
+	public boolean mMetaMode = false;
 	
 	public YangEventQueue(int maxEvents) {
 		mGraphics = null;
@@ -51,6 +52,10 @@ public class YangEventQueue {
 	}
 	
 	public synchronized void putEvent(YangEvent event) {
+		if(mMetaMode) {
+			putMetaEvent(event);
+			return;
+		}
 		mQueue[mQueueId++] = event;
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
@@ -162,6 +167,12 @@ public class YangEventQueue {
 
 	public void setGraphics(GraphicsTranslator graphics) {
 		mGraphics = graphics;
+	}
+
+	public void setMetaKeys(int startKey, int count) {
+		for(int i=0;i<count;i++) {
+			setMetaKey(startKey+i);
+		}
 	}
 	
 }

@@ -1,11 +1,11 @@
 package yang.graphics.model;
 
+import yang.graphics.YangSurface;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.model.DebugYang;
 import yang.model.PrintInterface;
 
 public class GFXDebug implements PrintInterface {
@@ -21,6 +21,7 @@ public class GFXDebug implements PrintInterface {
 	public static int TEXBIND_COUNT = 1<<8;
 	public static int SHADERSWITCH_COUNT = 1<<9;
 	
+	public YangSurface mSurface;
 	public DrawableString mString;
 	public int mDebugValuesMask = Integer.MAX_VALUE;
 	public float mDebugOffsetX=0.025f,mDebugOffsetY=0.025f;
@@ -30,18 +31,20 @@ public class GFXDebug implements PrintInterface {
 	public int mMinKeyChars = 10;
 	public int mRefreshEvery = 2;
 	public long mRefreshCount = 0;
+	public DrawableString mSpeedString;
 	
 	protected GraphicsTranslator mTranslator;
 	protected DefaultGraphics<?> mGraphics;
 	
-	public GFXDebug(DefaultGraphics<?> graphics,BitmapFont font) {
+	public GFXDebug(YangSurface surface, DefaultGraphics<?> graphics,BitmapFont font) {
+		mSurface = surface;
 		mGraphics = graphics;
 		mTranslator = mGraphics.mTranslator;
 		
 		StringProperties properties = new StringProperties(graphics,font);
 		properties.mKerningEnabled = true;
 		mString = new DrawableString(1024).setProperties(properties).setLeftTopJustified();
-	
+		mSpeedString = new DrawableString(32).setProperties(properties).setRightTopJustified();
 		reset();
 	}
 	
@@ -111,28 +114,57 @@ public class GFXDebug implements PrintInterface {
 		mString.appendLineBreak();
 	}
 	
-	public void draw() {		
-		if(mString.mMarker==0)
+	public void println(boolean value) {
+		mString.appendString(value?"true":"false");
+		mString.appendLineBreak();
+	}
+	
+	public void draw() {
+		
+		
+		float playSpeed = mSurface.mPlaySpeed;
+		
+		if(playSpeed==1 && mString.mMarker==0)
 			return;
+		
 		mTranslator.flush();
-		if(mRefreshCount%mRefreshEvery==0) {
-			mPolygonCount = mTranslator.mPolygonCount;
-			mDynamicPolygonCount = mTranslator.mPolygonCount;
-			mBatchPolygonCount = mTranslator.mBatchPolygonCount;
-			mDrawCount = mTranslator.mDrawCount;
-			mFlushCount = mTranslator.mFlushCount;
-			mBatchCount = mTranslator.mBatchCount;
-			mTexBindCount = mTranslator.mTexBindCount;
-			mShaderSwitchCount = mTranslator.mShaderSwitchCount;
-		}
-		mRefreshCount++;
 		mGraphics.activate();
 		mTranslator.switchZBuffer(false);
 		mGraphics.setDefaultProgram();
 		mGraphics.switchGameCoordinates(false);
 		mGraphics.setColor(mFontColor);
 		mGraphics.resetGlobalTransform();
-		mString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+		
+		if(playSpeed!=1) {
+			mSpeedString.reset();
+			if(playSpeed==0) 
+				mSpeedString.appendString("0");
+			else
+				if(playSpeed<1) {
+					mSpeedString.appendString("x");
+					mSpeedString.appendInt((int)(1f/playSpeed));
+				}else{
+					mSpeedString.appendString("/");
+					mSpeedString.appendInt((int)playSpeed);
+					
+				}
+			mSpeedString.draw(mGraphics.getScreenRight()-mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*1.6f);
+		}
+		
+		if(mString.mMarker!=0) {
+			if(mRefreshCount%mRefreshEvery==0) {
+				mPolygonCount = mTranslator.mPolygonCount;
+				mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
+				mBatchPolygonCount = mTranslator.mBatchPolygonCount;
+				mDrawCount = mTranslator.mDrawCount;
+				mFlushCount = mTranslator.mFlushCount;
+				mBatchCount = mTranslator.mBatchCount;
+				mTexBindCount = mTranslator.mTexBindCount;
+				mShaderSwitchCount = mTranslator.mShaderSwitchCount;
+			}
+			mRefreshCount++;
+			mString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+		}
 	}
 
 }

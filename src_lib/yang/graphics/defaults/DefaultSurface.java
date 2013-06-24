@@ -58,7 +58,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 	}
 	
 	protected void initDebugOutput(BitmapFont font) {
-		initDebugOutput(mGraphics2D,font,Keys.F2);
+		initDebugOutput(mGraphics2D,font);
 	}
 	
 	public boolean rawEvent(YangEvent event) {

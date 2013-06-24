@@ -59,6 +59,14 @@ public class MathFunc {
 	public static float cos(float x) {
 		return (float)Math.cos(x);
 	}
+	
+	public static float sin(double x) {
+		return (float)Math.sin(x);
+	}
+	
+	public static float cos(double x) {
+		return (float)Math.cos(x);
+	}
 
 	public static boolean equals(float x, float y,float tolerance) {
 		return (Math.abs(x-y)<tolerance);

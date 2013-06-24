@@ -55,7 +55,7 @@ public class StringSampleState extends SampleState {
 		mGraphics2D.switchGameCoordinates(false);
 		
 		//Update strings
-		mNumberString.setFloat(mStateTimer, 2);
+		mNumberString.setFloat((float)(mStateTimer), 2);
 		
 		mFormatString.appendIntAtMark(0, 312);
 		mFormatString.appendStringAtMark(1, "Hello");

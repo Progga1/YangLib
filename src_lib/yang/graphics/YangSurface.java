@@ -23,8 +23,7 @@ public abstract class YangSurface {
 	public StringsXML mStrings;
 	public GFXDebug mDebug;
 	
-	protected double mProgramStartTime;
-	protected long mProgramTime;
+	protected long mCatchUpTime;
 	public static float deltaTimeSeconds;
 	protected int mUpdateWaitMillis = 1000/70;
 	protected long mDeltaTimeNanos;
@@ -35,6 +34,8 @@ public abstract class YangSurface {
 	public YangEventListener mMetaEventListener;
 	public YangEventQueue mEventQueue;
 	public int mDebugSwitchKey = -1;
+	public boolean mPaused = false;
+	public float mPlaySpeed = 1;
 	
 	/**
 	 * GL-Thread
@@ -60,7 +61,7 @@ public abstract class YangSurface {
 	
 	public YangSurface() {
 		mInitializedNotifier = new Object();
-		mProgramTime = 0;
+		mCatchUpTime = 0;
 		mEventQueue = new YangEventQueue(getMaxEventCount());
 		setUpdatesPerSecond(120);
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
@@ -98,10 +99,8 @@ public abstract class YangSurface {
 		}
 	}
 	
-	protected void initDebugOutput(DefaultGraphics<?> graphics, BitmapFont font,int key) {
-		mDebugSwitchKey = key;
-		mEventQueue.setMetaKey(key);
-		mDebug = new GFXDebug(graphics,font);
+	protected void initDebugOutput(DefaultGraphics<?> graphics, BitmapFont font) {
+		mDebug = new GFXDebug(this,graphics,font);
 	}
 	
 	public final void drawFrame() {
@@ -216,7 +215,13 @@ public abstract class YangSurface {
 	protected void catchUp() {
 		if(!mInitialized || mRuntimeState>0)
 			return;
-		while(mProgramTime<System.nanoTime()) {
+		if(mPlaySpeed==0) {
+			if(!mPaused && mEventListener!=null)
+				mEventQueue.handleEvents(mEventListener);
+			mCatchUpTime = 0;
+			return;
+		}
+		while(mCatchUpTime<System.nanoTime()) {
 			proceed(deltaTimeSeconds);
 		}
 	}
@@ -224,12 +229,16 @@ public abstract class YangSurface {
 	public void proceed(float deltaTime) {
 		if(!mInitialized || mRuntimeState>0)
 			return;
-		if(mProgramTime==0)
-			mProgramTime = System.nanoTime()-1;
-		mProgramTime += mDeltaTimeNanos;
-		if(mEventListener!=null)
-			mEventQueue.handleEvents(mEventListener);
-		step(deltaTime);
+		if(mCatchUpTime==0)
+			mCatchUpTime = System.nanoTime()-1;
+
+		mCatchUpTime += (long)(mDeltaTimeNanos*mPlaySpeed);
+
+		if(!mPaused) {
+			if(mEventListener!=null)
+				mEventQueue.handleEvents(mEventListener);
+			step(deltaTime);
+		}
 	}
 	
 	protected void step(float deltaTime) {
@@ -250,7 +259,7 @@ public abstract class YangSurface {
 //				mUpdateThread.suspend();
 //			}
 		mRuntimeState = 1;
-		mProgramTime = 0;
+		mCatchUpTime = 0;
 		mLoadingProgress = -1;
 	}
 	
@@ -269,7 +278,16 @@ public abstract class YangSurface {
 //			synchronized (mUpdateThread) {
 //				mUpdateThread.resume();
 //			}
-		mProgramTime = 0;
+		mCatchUpTime = 0;
+	}
+	
+	public void setPaused(boolean paused) {
+		mPaused = paused;
+		mEventQueue.mMetaMode = paused;
+	}
+	
+	public boolean isPaused() {
+		return mPaused;
 	}
 	
 	public void exit() {

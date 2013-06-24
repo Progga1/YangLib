@@ -499,5 +499,9 @@ public class DrawableString extends FixedString {
 	public DrawableString setLeftTopJustified() {
 		return setAnchors(ANCHOR_LEFT,ANCHOR_TOP);
 	}
+
+	public DrawableString setRightTopJustified() {
+		return setAnchors(ANCHOR_RIGHT,ANCHOR_TOP);
+	}
 	
 }
