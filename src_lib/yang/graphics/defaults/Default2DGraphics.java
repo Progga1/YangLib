@@ -69,10 +69,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public BasicProgram getDefaultProgram() {
 		return mDefaultProgram;
 	}
-	
-	public void resetDebug() {
-		mCurrentDebugY = mDebugOffsetY;
-	}
 
 	private float drawChar(float x, float lineHeight, int c) {
 		float charWidth = mCurrentLegacyFont.getFontW(c);
@@ -342,19 +338,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	@Deprecated
 	public void setDefaultLegacyFont() {
 		setLegacyFont(mLegacyDefaultFont);
-	}
-	
-	public void debugPrint(Object s) {
-		setColor(mDebugColor);
-		drawStringLegacy(mDebugOffsetX+mCurrentDebugX,mCurrentDebugY,mDebugLineHeight,-1,-1,s.toString());
-		mCurrentDebugX += mDebugColumnWidth;
-	}
-	
-	public void debugPrintln(Object s) {
-		debugPrint(s);
-		mCurrentDebugX = 0;
-		mCurrentDebugY += mDebugLineHeight;
-		
 	}
 
 	@Override

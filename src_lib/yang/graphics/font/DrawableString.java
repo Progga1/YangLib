@@ -1,14 +1,14 @@
 package yang.graphics.font;
 
-import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.objects.matrix.YangMatrix;
 
 public class DrawableString extends FixedString {
 	
-	public static StringSettings DEFAULT_SETTINGS;
+	public static StringProperties DEFAULT_PROPERTIES;
 	protected static YangMatrix interMatrix;
 	protected static YangMatrix interMatrix2;
 	
@@ -37,7 +37,7 @@ public class DrawableString extends FixedString {
 	//Properties
 	public float mVerticalAnchor;
 	public float mHorizontalAnchor;
-	public StringSettings mSettings;
+	public StringProperties mSettings;
 	public float mMaxLineWidth = Float.MAX_VALUE;
 	
 	//String attributes
@@ -91,13 +91,13 @@ public class DrawableString extends FixedString {
 		return this;
 	}
 	
-	public DrawableString setSettings(StringSettings settings) {
+	public DrawableString setProperties(StringProperties settings) {
 		mSettings = settings;
 		return this;
 	}
 	
 	protected void setDefaults() {
-		setSettings(DEFAULT_SETTINGS);
+		setProperties(DEFAULT_PROPERTIES);
 		mVerticalAnchor = DEFAULT_VERTICAL_ANCHOR;
 		mHorizontalAnchor = DEFAULT_HORIZONTAL_ANCHOR;
 		mMaxLineWidth = DEFAULT_LINE_WIDTH;
@@ -441,7 +441,7 @@ public class DrawableString extends FixedString {
 		draw(interMatrix2);
 	}
 
-	public StringSettings cloneSettings() {
+	public StringProperties cloneSettings() {
 		mSettings = mSettings.clone();
 		return mSettings;
 	}
@@ -494,6 +494,10 @@ public class DrawableString extends FixedString {
 //			mLetterColors[i] = lstColor;
 //		mWorkingColors = new FloatColor[mCapacity];
 		//System.out.println(mColors);
+	}
+
+	public DrawableString setLeftTopJustified() {
+		return setAnchors(ANCHOR_LEFT,ANCHOR_TOP);
 	}
 	
 }

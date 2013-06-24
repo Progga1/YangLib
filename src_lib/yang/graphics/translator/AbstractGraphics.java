@@ -3,11 +3,11 @@ package yang.graphics.translator;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-import yang.graphics.FloatColor;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.listeners.DrawListener;
 import yang.graphics.listeners.SurfaceListener;
+import yang.graphics.model.FloatColor;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
@@ -44,10 +44,10 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	protected float mBold;
 	public float[] mCurColor;
 	public float[] mCurSuppData;
-	public float[] mAmbientColor = new float[4];
 	
 	//Persistent attributes
 	public GraphicsTranslator mTranslator;
+	public boolean mAutoUpdateAmbientColor = true;
 	
 	//Counters
 	protected float mTime;
@@ -146,9 +146,12 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 			if(mCurrentProgram!=null)
 				disableBuffers();
 			mCurrentProgram = program;
+			mTranslator.mShaderSwitchCount++;
 			program.activate();
 			enableBuffers();
-			setColor(1, 1, 1);
+			//setColor(1, 1, 1);
+			//if(mAutoUpdateAmbientColor)
+				
 			return true;
 		}else
 			return false;

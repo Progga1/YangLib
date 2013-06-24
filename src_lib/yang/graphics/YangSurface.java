@@ -1,6 +1,11 @@
 package yang.graphics;
 
+import yang.events.YangEventQueue;
+import yang.events.listeners.YangEventListener;
+import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.font.BitmapFont;
 import yang.graphics.interfaces.InitializationCallback;
+import yang.graphics.model.GFXDebug;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
@@ -16,6 +21,7 @@ public abstract class YangSurface {
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
 	public StringsXML mStrings;
+	public GFXDebug mDebug;
 	
 	protected double mProgramStartTime;
 	protected long mProgramTime;
@@ -25,6 +31,10 @@ public abstract class YangSurface {
 	protected int mRuntimeState = 0;
 	private float mLoadingProgress = -1;
 	private Thread mUpdateThread = null;
+	public YangEventListener mEventListener;
+	public YangEventListener mMetaEventListener;
+	public YangEventQueue mEventQueue;
+	public int mDebugSwitchKey = -1;
 	
 	/**
 	 * GL-Thread
@@ -51,8 +61,17 @@ public abstract class YangSurface {
 	public YangSurface() {
 		mInitializedNotifier = new Object();
 		mProgramTime = 0;
+		mEventQueue = new YangEventQueue(getMaxEventCount());
 		setUpdatesPerSecond(120);
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
+	}
+	
+	public YangEventQueue getEventQueue() {
+		return mEventQueue;
+	}
+	
+	protected int getMaxEventCount() {
+		return 2048;
 	}
 	
 	public void setUpdateMode(UpdateMode updateMode) {
@@ -72,14 +91,23 @@ public abstract class YangSurface {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						update();
+						catchUp();
 					}
 				}
 			};
 		}
 	}
 	
+	protected void initDebugOutput(DefaultGraphics<?> graphics, BitmapFont font,int key) {
+		mDebugSwitchKey = key;
+		mEventQueue.setMetaKey(key);
+		mDebug = new GFXDebug(graphics,font);
+	}
+	
 	public final void drawFrame() {
+		
+		if(mMetaEventListener!=null)
+			mEventQueue.handleMetaEvents(mMetaEventListener);
 		
 		if(mRuntimeState>0 && mLoadingProgress<0) {
 			mGraphics.restart();
@@ -110,10 +138,18 @@ public abstract class YangSurface {
 		}
 		
 		if(mUpdateMode==UpdateMode.SYNCHRONOUS)
-			update();
-		
+			catchUp();
+
+		if(mDebug!=null) {
+			mDebug.reset();
+			if(DebugYang.DRAW_GFX_VALUES)
+				mDebug.printGFXDebugValues();
+		}
 		mGraphics.beginFrame();
 		draw();
+		if(mDebug!=null) {
+			mDebug.draw();
+		}
 		mGraphics.endFrame();
 		
 	}
@@ -135,6 +171,7 @@ public abstract class YangSurface {
 		assert assertMessage();
 		mGraphics.init();
 		initGraphics();
+		mEventQueue.setGraphics(mGraphics);
 		postInitGraphics();
 		if(mInitCallback!=null)
 			mInitCallback.initializationFinished();
@@ -176,21 +213,27 @@ public abstract class YangSurface {
 		mDeltaTimeNanos = 1000000000/updatesPerSecond;
 	}
 	
-	public void step(float deltaTime) {
-		
+	protected void catchUp() {
+		if(!mInitialized || mRuntimeState>0)
+			return;
+		while(mProgramTime<System.nanoTime()) {
+			proceed(deltaTimeSeconds);
+		}
 	}
 	
-	protected boolean update() {
+	public void proceed(float deltaTime) {
 		if(!mInitialized || mRuntimeState>0)
-			return true;
+			return;
 		if(mProgramTime==0)
 			mProgramTime = System.nanoTime()-1;
-		boolean result = mProgramTime<System.nanoTime();
-		while(mProgramTime<System.nanoTime()) {
-			mProgramTime += mDeltaTimeNanos;
-			step(deltaTimeSeconds);
-		}
-		return result;
+		mProgramTime += mDeltaTimeNanos;
+		if(mEventListener!=null)
+			mEventQueue.handleEvents(mEventListener);
+		step(deltaTime);
+	}
+	
+	protected void step(float deltaTime) {
+		
 	}
 	
 	public void stop() {

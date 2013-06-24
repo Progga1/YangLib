@@ -5,12 +5,12 @@ import java.nio.ShortBuffer;
 
 import javax.vecmath.Point4f;
 
-import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
 import yang.graphics.defaults.meshcreators.StripCreator;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
+import yang.graphics.model.FloatColor;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
@@ -21,7 +21,7 @@ import yang.math.objects.matrix.YangMatrix;
 import yang.model.PrintInterface;
 import yang.util.Util;
 
-public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> implements PrintInterface {
+public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> {
 	
 	public static final float[][] DEFAULT_NEUTRAL_ELEMENTS = { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
 
@@ -50,13 +50,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	//Properties
 	public BitmapFont mDefaultFont;
-	public float mDebugOffsetX=0.025f,mDebugOffsetY=0.025f;
-	public float mDebugColumnWidth=0.1f,mDebugLineHeight=0.05f;
 	
 	//State
-	public float mCurrentDebugX,mCurrentDebugY;
-	public FloatColor mDebugColor = FloatColor.WHITE;
 	public float mCurrentZ;
+	public float[] mAmbientColor;
 	
 	// Buffers
 	protected DrawableString mInterString = new DrawableString(2048);
@@ -74,6 +71,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		super(translator);
 		mPositionDimension = positionBytes;
 		mDefaultStripCreator = new StripCreator(this);
+		mAmbientColor = new float[4];
 	}
 
 	@Override
@@ -587,28 +585,5 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public void drawString(float x,float y,float lineHeight,float rotation,DrawableString string) {
 		string.draw(x,y,lineHeight,rotation);
 	}
-	
-	public void print(DrawableString string) {
-		setColor(mDebugColor);
-		drawString(mDebugOffsetX+mCurrentDebugX,mCurrentDebugY,mDebugLineHeight,string);
-		mCurrentDebugX += mDebugColumnWidth;
-	}
-	
-	public void println(DrawableString string) {
-		print(string);
-		mCurrentDebugX = 0;
-		mCurrentDebugY += mDebugLineHeight;
-	}
-	
-	public void debugPrint(Object s) {
-		mInterString.setString(s.toString());
-		print(mInterString);
-	}
-	
-	public void debugPrintln(Object s) {
-		mInterString.setString(s.toString());
-		println(mInterString);
-	}
-	
 
 }

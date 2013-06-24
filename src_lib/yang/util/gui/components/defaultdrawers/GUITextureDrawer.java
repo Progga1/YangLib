@@ -1,7 +1,7 @@
 package yang.util.gui.components.defaultdrawers;
 
-import yang.graphics.FloatColor;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.util.Util;
 import yang.util.gui.components.GUIComponentDrawPass;

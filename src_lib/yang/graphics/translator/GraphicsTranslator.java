@@ -3,11 +3,11 @@ package yang.graphics.translator;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
 import yang.graphics.listeners.DrawListener;
 import yang.graphics.listeners.SurfaceListener;
+import yang.graphics.model.FloatColor;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.programs.GLProgramFactory;
 import yang.graphics.textures.TextureCoordinatesQuad;
@@ -32,6 +32,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public final static int MAX_TEXTURES = 32;
 	public static GraphicsTranslator INSTANCE;
 	public static GraphicsTranslator appInstance;
+	public static int FPS_REFRESH_FRAMES = 20;
 	
 	//Properties
 	public int mScreenWidth;
@@ -57,14 +58,24 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mShaderTimer;
 	private long mLstTimestamp;
 	public float mCurFrameDeltaTime = 0;
+	public float mFPS = 0;
+	private long mFPSStartTime = 0;
+	public long mFrameCount = 0;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
 	
 	//Counters
-	public int mRectCount;
+	public int mPolygonCount;
+	public int mDynamicPolygonCount;
+	public int mBatchPolygonCount;
+	public int mDrawCount;
 	public int mFlushCount;
+	public int mBatchCount;
+	public int mTexBindCount;
+	public int mShaderSwitchCount;
+
 	
 	//Persistent
 	public Texture mWhiteTexture;
@@ -154,7 +165,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
 		mFlushDisabled = false;
-		mRectCount = 0;
+		mPolygonCount = 0;
 		mFlushCount = 0;
 		mDrawMode = T_TRIANGLES;
 		mWireFrames = false;
@@ -251,6 +262,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			if(texture==null)
 				texture = mWhiteTexture;
 			mCurrentTextures[level] = texture;
+			mTexBindCount++;
 			bindTexture(texture.getId(),level);
 		}
 		assert checkErrorInst("bind texture");
@@ -270,6 +282,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public final void rebindTexture(int level) {
 		if(mCurrentTextures[level]==null)
 			mCurrentTextures[level] = mWhiteTexture;
+		mTexBindCount++;
 		bindTexture(mCurrentTextures[level].getId(),0);
 	}
 	
@@ -277,6 +290,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(int i=0;i<MAX_TEXTURES;i++) {
 			if(mCurrentTextures[i]==null)
 				return;
+			mTexBindCount++;
 			bindTexture(mCurrentTextures[i].getId(),0);
 		}
 	}
@@ -379,13 +393,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			assert preCheck("Prepare draw vertices");
 			mCurDrawListener.onPreDraw();
 			assert preCheck("Draw vertices listener");
-			mRectCount += vertexCount/6;
 			mCurrentVertexBuffer.finishUpdate();
 			assert preCheck("Draw vertices finish update");
 			mCurrentVertexBuffer.reset();
 			assert preCheck("Draw vertices reset");
 			drawVertices(0,vertexCount,mDrawMode);
 			mFlushCount++;
+			mDynamicPolygonCount += vertexCount/3;
 		}
 		assert checkErrorInst("Flush");
 	}
@@ -398,17 +412,30 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mShaderTimer += mCurFrameDeltaTime;
 			if(mShaderTimer>mMaxTime)
 				mShaderTimer-=mMaxTime;
+			if(mFrameCount%FPS_REFRESH_FRAMES==0) {
+				if(mFPSStartTime>0)
+					mFPS = 1f/((curTime-mFPSStartTime)*0.001f)*FPS_REFRESH_FRAMES;
+				mFPSStartTime = curTime;
+			}
 		}else{
 			mShaderTimer = 0;
 			mTimer = 0;
+			mFPSStartTime = -1;
 		}
 		mLstTimestamp = curTime;
 	}
 	
 	public void beginFrame() {
+		mFrameCount++;
 		measureTime();
-		mRectCount = 0;
+		mPolygonCount = 0;
+		mDynamicPolygonCount = 0;
+		mBatchPolygonCount = 0;
+		mDrawCount = 0;
 		mFlushCount = 0;
+		mBatchCount = 0;
+		mTexBindCount = 0;
+		mShaderSwitchCount = 0;
 	}
 	
 	public void endFrame() {
@@ -444,6 +471,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		assert preCheck("Draw vertices");
 		mCurDrawListener.onPreDraw();
 		mCurDrawListener.bindBuffers();
+		mPolygonCount += vertexCount/3;
+		mDrawCount++;
 		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
 			drawDefaultVertices(bufferStart,vertexCount,mWireFrames,mCurrentVertexBuffer);
 		}

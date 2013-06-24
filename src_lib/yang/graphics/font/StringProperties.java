@@ -1,9 +1,9 @@
 package yang.graphics.font;
 
-import yang.graphics.FloatColor;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 
-public class StringSettings {
+public class StringProperties {
 	
 	public static StringStyle DEFAULT_STYLE;
 	public static DefaultGraphics<?> DEFAULT_GRAPHICS;
@@ -21,7 +21,7 @@ public class StringSettings {
 	public boolean mAutoPutColors = true;
 	public int mPosDim;
 	
-	public StringSettings(DefaultGraphics<?> graphics,BitmapFont font) {
+	public StringProperties(DefaultGraphics<?> graphics,BitmapFont font) {
 		setGraphics(graphics);
 		setFont(font);
 		if(DEFAULT_STYLE==null) {
@@ -41,11 +41,11 @@ public class StringSettings {
 		mStyle = DEFAULT_STYLE;
 	}
 	
-	public StringSettings(BitmapFont font) {
+	public StringProperties(BitmapFont font) {
 		this(DEFAULT_GRAPHICS,font);
 	}
 	
-	public StringSettings setGraphics(DefaultGraphics<?> graphics) {
+	public StringProperties setGraphics(DefaultGraphics<?> graphics) {
 		if(DEFAULT_GRAPHICS==null)
 			DEFAULT_GRAPHICS = graphics;
 		mGraphics = graphics;
@@ -55,13 +55,13 @@ public class StringSettings {
 		return this;
 	}
 	
-	public StringSettings setFont(BitmapFont font) {
+	public StringProperties setFont(BitmapFont font) {
 		mFont = font;
 		return this;
 	}
 	
-	public StringSettings clone(boolean clonePalette) {
-		StringSettings result = new StringSettings(mGraphics,mFont);
+	public StringProperties clone(boolean clonePalette) {
+		StringProperties result = new StringProperties(mGraphics,mFont);
 		result.mLineHeight = mLineHeight;
 		result.mKerningEnabled = mKerningEnabled;
 		result.mAdditionalSpacing = mAdditionalSpacing;
@@ -76,7 +76,7 @@ public class StringSettings {
 	}
 
 	@Override
-	public StringSettings clone() {
+	public StringProperties clone() {
 		return clone(false);
 	}
 

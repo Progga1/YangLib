@@ -1,9 +1,9 @@
 package yang.graphics.defaults.meshcreators.outlinedrawer;
 
-import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
+import yang.graphics.model.FloatColor;
 import yang.math.MathFunc;
 
 public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
@@ -231,6 +231,7 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 						mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
 						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+w);
 						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[1].mAppliedCoordinates);
+						
 					}else{
 						mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
 						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+w);

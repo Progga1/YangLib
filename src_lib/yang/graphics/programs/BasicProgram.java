@@ -1,6 +1,6 @@
 package yang.graphics.programs;
 
-import yang.graphics.FloatColor;
+import yang.graphics.model.FloatColor;
 import yang.graphics.translator.AbstractGFXLoader;
 
 public class BasicProgram extends AbstractProgram {

@@ -9,7 +9,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import yang.events.EventQueueHolder;
-import yang.events.InputEventQueue;
+import yang.events.YangEventQueue;
 import yang.events.Keys;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangPointerEvent;
@@ -17,7 +17,7 @@ import yang.events.eventtypes.YangPointerEvent;
 public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	
 	private EventQueueHolder mEventListener;
-	private InputEventQueue mEventQueue;
+	private YangEventQueue mEventQueue;
 	
 	public PCEventHandler(EventQueueHolder eventListener) {
 		this.mEventListener = eventListener;

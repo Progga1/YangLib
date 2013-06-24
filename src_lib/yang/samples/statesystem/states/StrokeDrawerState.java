@@ -3,7 +3,6 @@ package yang.samples.statesystem.states;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeCreator;
 import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeDefaultProperties;
-import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
 import yang.math.MathFunc;

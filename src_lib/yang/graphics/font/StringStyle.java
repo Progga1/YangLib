@@ -2,7 +2,7 @@ package yang.graphics.font;
 
 import java.util.HashMap;
 
-import yang.graphics.FloatColor;
+import yang.graphics.model.FloatColor;
 
 public class StringStyle {
 

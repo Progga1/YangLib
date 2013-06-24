@@ -2,6 +2,6 @@ package yang.events;
 
 public interface EventQueueHolder {
 
-	public InputEventQueue getEventQueue();
+	public YangEventQueue getEventQueue();
 	
 }

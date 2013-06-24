@@ -3,7 +3,7 @@ package yang.graphics.util;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import yang.graphics.FloatColor;
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureData;
 import yang.model.map.DefaultIntMap;
 import yang.model.map.IntMap;

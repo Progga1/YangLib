@@ -1,9 +1,9 @@
 package yang.graphics.defaults.meshcreators;
 
-import yang.graphics.FloatColor;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 import yang.math.Geometry;
 import yang.math.MathFunc;
 

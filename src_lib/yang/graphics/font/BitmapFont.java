@@ -61,7 +61,7 @@ public class BitmapFont {
 		int firstCharID = Integer.parseInt(properties.getProperty("firstCharID", "32"));
 		int lastCharID = Integer.parseInt(properties.getProperty("lastCharID", "128"));
 		mKernBoxes = Integer.parseInt(properties.getProperty("kernBoxes", "0"));
-		mConstantCharDistance = defaultCharWidth/charHeight;
+		mConstantCharDistance = defaultCharWidth/charHeight*1.5f;
 		mSpaceWidth = Float.parseFloat(properties.getProperty("spaceWidth", ""+(0.25f*textureW)))*dWidth*mCharNormalizeFactorX;
 		mSpacing = Float.parseFloat(properties.getProperty("spacing", ""+(0.035f*textureW)))*dWidth*mCharNormalizeFactorY;
 		

@@ -2,7 +2,7 @@ package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
-import yang.events.listeners.InputEventListener;
+import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.translator.AbstractGFXLoader;
@@ -10,7 +10,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
-public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements InputEventListener {
+public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener {
 
 	private boolean mInitialized = false;
 	protected boolean mFirstFrame = true;

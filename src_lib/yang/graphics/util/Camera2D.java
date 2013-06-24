@@ -66,7 +66,7 @@ public class Camera2D {
 	
 	public void update(){		
 		mPos.interpolate(mTarPos, mAdaption);
-		mZoom = mAdaption * mZoom + (1-mAdaption)*mTarZoom;
+		mZoom = (1-mAdaption) * mZoom + (mAdaption)*mTarZoom;
 	}
 	
 	public void zoomOut(){

@@ -1,4 +1,4 @@
-package yang.graphics;
+package yang.graphics.model;
 
 import java.nio.ByteBuffer;
 

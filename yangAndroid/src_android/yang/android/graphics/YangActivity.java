@@ -35,7 +35,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 		mGLView.setSurface(yangSurface);
 	}
 	
-	public void defaultInit() {if(mGLView!=null)System.out.println(mGLView);
+	public void defaultInit() {
 		if(mGLView!=null)
 			defaultInit(mGLView);
 		else

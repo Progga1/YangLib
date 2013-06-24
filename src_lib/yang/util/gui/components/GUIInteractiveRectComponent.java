@@ -1,6 +1,6 @@
 package yang.util.gui.components;
 
-import yang.graphics.FloatColor;
+import yang.graphics.model.FloatColor;
 
 
 public abstract class GUIInteractiveRectComponent extends GUIInteractiveComponent {

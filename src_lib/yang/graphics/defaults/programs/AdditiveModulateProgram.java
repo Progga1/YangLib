@@ -35,7 +35,7 @@ public class AdditiveModulateProgram extends BasicProgram{
 			"void main() {\n" +
 			"#NOPREMULT gl_FragColor = texture2D(texSampler, vec2(texCoord.x,texCoord.y)) * color + addColor;\n" +
 			"#PREMULT vec4 texCl = texture2D(texSampler, vec2(texCoord.x,texCoord.y));\n" +
-			"#PREMULT gl_FragColor = texCl * color + addColor*texCl.a;\n" +
+			"#PREMULT gl_FragColor = (texCl * color + addColor*texCl.a) * ambientColor;\n" +
 			"}\n";
 	
 	@Override

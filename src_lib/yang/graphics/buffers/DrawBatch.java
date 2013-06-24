@@ -31,7 +31,8 @@ public class DrawBatch {
 			return;
 		mGraphics.setVertexBuffer(mVertexBuffer);
 		mVertexBuffer.reset();
-		mGraphics.mTranslator.mFlushCount++;
+		mGraphics.mTranslator.mBatchCount++;
+		mGraphics.mTranslator.mBatchPolygonCount += mVertexBuffer.getIndexCount()/3;
 		mGraphics.mTranslator.drawVertices(0, mVertexBuffer.getIndexCount(), GraphicsTranslator.T_TRIANGLES);
 		mGraphics.resetVertexBuffer();
 		assert mGraphics.mTranslator.checkErrorInst("Draw batch");

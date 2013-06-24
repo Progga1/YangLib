@@ -200,6 +200,10 @@ public class FixedString {
 			mLength = mMarker;
 	}
 	
+	public void appendLineBreak() {
+		appendString("\n");
+	}
+	
 	public void appendString(String string) {
 		int l= string.length();
 		for(int i=0;i<l;i++) {
@@ -247,6 +251,10 @@ public class FixedString {
 		
 		if(mMarker>mLength)
 			mLength = mMarker;
+	}
+	
+	public void appendInt(int value) {
+		appendInt(value,-1);
 	}
 	
 	public void appendIntAtMark(int markIndex,int value) {
@@ -303,6 +311,10 @@ public class FixedString {
 		
 		if(mMarker>mLength)
 			mLength = mMarker;
+	}
+	
+	public void appendFloat(float value,int fracDigits) {
+		appendFloat(value,fracDigits,-1);
 	}
 	
 	public void appendFloatAtMark(int markIndex,float value,int fracDigits) {
@@ -365,6 +377,13 @@ public class FixedString {
 	public void appendZerosUntil(int index) {
 		while(mMarker<=index)
 			mChars[mMarker++] = 0;
+	}
+	
+	public void appendStringRightJustified(String string, int characters) {
+		int index = characters-string.length();
+		while(mMarker<=index)
+			mChars[mMarker++] = ' ';
+		appendString(string);
 	}
 	
 }

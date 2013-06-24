@@ -2,7 +2,7 @@ package yang.model;
 
 public interface PrintInterface {
 
-	public void debugPrint(Object s);
-	public void debugPrintln(Object s);
+	public void print(Object s);
+	public void println(Object s);
 	
 }

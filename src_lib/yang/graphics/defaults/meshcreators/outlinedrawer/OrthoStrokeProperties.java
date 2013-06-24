@@ -13,6 +13,7 @@ public class OrthoStrokeProperties {
 	public float mTexBias = 0.005f;
 	public TextureCoordinatesQuad[] mTexCoordTable;
 	public float mWidth = 0.1f;
+	public float mLineTexWidthFactor = 4;
 	public TextureCoordinatesQuad[] mLineTexCoords;
 	protected float mPatchSize = 0.25f;
 	protected Rect mTexRect = new Rect(0,0,1,1);

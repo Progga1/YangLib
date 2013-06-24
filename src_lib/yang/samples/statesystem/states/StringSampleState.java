@@ -26,7 +26,7 @@ public class StringSampleState extends SampleState {
 		
 		mNumberString = new DrawableString(16);		//16 = maximum char count
 		mNumberString.setAnchors(DrawableString.ANCHOR_RIGHT,DrawableString.ANCHOR_TOP);
-		mNumberString.setSettings(DrawableString.DEFAULT_SETTINGS.clone());
+		mNumberString.setProperties(DrawableString.DEFAULT_PROPERTIES.clone());
 		mNumberString.mSettings.mKerningEnabled = false;
 		
 		mFormatString = new DrawableString();

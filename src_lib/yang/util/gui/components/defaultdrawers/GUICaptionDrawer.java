@@ -1,9 +1,9 @@
 package yang.util.gui.components.defaultdrawers;
 
-import yang.graphics.FloatColor;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.DrawableAnchoredLines;
 import yang.graphics.font.DrawableString;
+import yang.graphics.model.FloatColor;
 import yang.util.Util;
 import yang.util.gui.components.GUIComponentDrawPass;
 import yang.util.gui.components.GUIMultipassComponent;

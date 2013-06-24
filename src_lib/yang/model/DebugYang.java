@@ -8,6 +8,7 @@ public class DebugYang {
 	public static boolean drawKerning = false;
 	public static boolean showStart = false;
 	public static boolean drawTails = true;
+	public static boolean DRAW_GFX_VALUES = false;
 	
 	public static void showStackTrace() {
 		try{
