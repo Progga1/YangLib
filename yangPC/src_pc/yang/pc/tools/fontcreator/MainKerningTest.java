@@ -25,7 +25,7 @@ public class MainKerningTest extends JFrame {
 	private int mWidth;
 	private int mHeight;
 	private BufferedImage mCanvas;
-	private Font mFont;
+	private SampleFont mFont;
 	BufferedImage mTexture; 
 
 	public MainKerningTest() {
@@ -38,7 +38,7 @@ public class MainKerningTest extends JFrame {
         
         mWidth = 300;
         mHeight = 300;
-        mFont = new Font();
+        mFont = new SampleFont();
         
         
         try {

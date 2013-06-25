@@ -2,7 +2,7 @@ package yang.pc.tools.fontcreator;
 
 import java.io.File;
 
-public class Font {
+public class SampleFont {
 	
 	private static FontGraphics mGraphics = new FontGraphics();
 		

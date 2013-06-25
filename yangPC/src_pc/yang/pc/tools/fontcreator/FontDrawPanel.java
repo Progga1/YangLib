@@ -43,6 +43,7 @@ class FontDrawPanel extends JPanel {
 	private boolean savePixelCoords;
 	private boolean code;
 	private int mAvgWidth;
+	private String mArgs;
 
 	public FontDrawPanel() {
 		mGlobalB = 0;
@@ -58,7 +59,8 @@ class FontDrawPanel extends JPanel {
     	mTransparent = new Color(0,0,0,0);
     }
     
-    public void setParameters(String fontName, int outputWidth, int outputHeight, int asciiStartID, int asciiEndID, int kernBoxes, int fontSize, String filename, int pixelBorder, int debug){
+    public void setParameters(String userInput,String fontName, int outputWidth, int outputHeight, int asciiStartID, int asciiEndID, int kernBoxes, int fontSize, String filename, int pixelBorder, int debug){
+    	mArgs = userInput;
     	mFontName = fontName;
     	mWidth	  = outputWidth;
     	mHeight	  = outputHeight;
@@ -91,9 +93,7 @@ class FontDrawPanel extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-    	
-    	
-    	
+
     	canvas = new BufferedImage(mWidth, mHeight, BufferedImage.TYPE_INT_ARGB);    	
     	Graphics2D g2 = canvas.createGraphics();    	
         super.paintComponent(g); 
@@ -143,6 +143,7 @@ class FontDrawPanel extends JPanel {
 	}
 
 	private void WritePropFile(PrintWriter out) {
+		out.println("# "+mArgs);
     	if(savePixelCoords) out.println("textureW = "+ mWidth);
     	else				out.println("textureW = "+ 1);
     		
@@ -317,7 +318,7 @@ class FontDrawPanel extends JPanel {
 
 	private void ScanEachLetter(Graphics2D g2, Graphics g) {    	
 		
-		g2.setFont(new Font(FontCreater.mFontName, 0 , mFontSize));
+		g2.setFont(new Font(FontCreator.mFontName, FontCreator.mFontStyle , mFontSize));
 		
     	for(int i=mStartID; i<mEndID; i++){
 	        LetterBox box = drawLetter((char)i,g2);
@@ -337,7 +338,7 @@ class FontDrawPanel extends JPanel {
 	
 	private void ScanKernBoxes(Graphics2D g2, Graphics g) {    	
 		
-		g2.setFont(new Font(FontCreater.mFontName, 0 , mFontSize));
+		g2.setFont(new Font(FontCreator.mFontName, FontCreator.mFontStyle , mFontSize));
 		
     	for(int i=mStartID; i<mEndID; i++){
     		g2.setColor(Color.WHITE);
