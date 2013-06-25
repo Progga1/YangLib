@@ -31,7 +31,8 @@ class FontDrawPanel extends JPanel {
 	private int mLetters;
 	private LetterBox mBoxes[];
 	private int mCharHeight;
-	private int mBorder;
+	private int mBorderHorizontal;
+	private int mBorderVertical;
 	private int mKernBoxes;
 	private boolean mShowTextureBoxes;
 	private boolean mShowKerningBoxes;
@@ -48,7 +49,8 @@ class FontDrawPanel extends JPanel {
 	public FontDrawPanel() {
 		mGlobalB = 0;
     	mGlobalT = 10000;   
-    	mBorder = 2;
+    	mBorderHorizontal = 2;
+    	mBorderVertical = 2;
     	
     	mShowTextureBoxes = false;
     	mShowKerningBoxes = false; 
@@ -59,12 +61,13 @@ class FontDrawPanel extends JPanel {
     	mTransparent = new Color(0,0,0,0);
     }
     
-    public void setParameters(String userInput,String fontName, int outputWidth, int outputHeight, int asciiStartID, int asciiEndID, int kernBoxes, int fontSize, String filename, int pixelBorder, int debug){
+    public void setParameters(String userInput,String fontName, int outputWidth, int outputHeight, int asciiStartID, int asciiEndID, int kernBoxes, int fontSize, String filename, int pixelBorderHor, int pixelBorderVer, int debug){
     	mArgs = userInput;
     	mFontName = fontName;
     	mWidth	  = outputWidth;
     	mHeight	  = outputHeight;
-    	mBorder = pixelBorder;
+    	mBorderHorizontal = pixelBorderHor;
+    	mBorderVertical = pixelBorderVer;
     	
     	mBaseLine = mHeight / 2;
     	mFontSize = fontSize;
@@ -469,10 +472,10 @@ class FontDrawPanel extends JPanel {
     		}    		
     	}	    	 
     	
-    	l -= mLeftStart + mBorder;
-    	r -= mLeftStart - mBorder;
-    	t -= mBaseLine + mBorder;
-    	b -= mBaseLine - mBorder;
+    	l -= mLeftStart + mBorderHorizontal;
+    	r -= mLeftStart - mBorderHorizontal;
+    	t -= mBaseLine + mBorderVertical;
+    	b -= mBaseLine - mBorderVertical;
     	return new LetterBox(c,l,t,r,b, mKernBoxes);
     }
     
