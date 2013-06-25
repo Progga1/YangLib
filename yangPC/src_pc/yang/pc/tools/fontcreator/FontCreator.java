@@ -78,7 +78,7 @@ public class FontCreator {
 	    		printParam("font name : style (e.g. 'Arial:bold_italic'",null);
 	    		printParam("resolution wxh","1024x1024");
 	    		printParam("font size","112 @resolution=1024");
-	    		printParam("extra border x:y","7:7 @fontSize=112");
+	    		printParam("extra border x:y","9:7 @fontSize=112");
 	    		printParam("kern boxes","6");
 	    		printParam("ascii range","23-123");
 	    		printParam("generation loc","workspace");
@@ -146,7 +146,7 @@ public class FontCreator {
 	    		if(args.length>=3)
 	    			mFontSize		= Integer.valueOf( args[2] );
 	    		else
-	    			mFontSize 		= (int)((float)mOutputWidth/1024*(mFontStyle&Font.BOLD)!=0?112:124);
+	    			mFontSize 		= (int)((float)mOutputWidth/1024*(mFontStyle&(Font.ITALIC | Font.BOLD))!=0?112:124);
 	    		
 //	    		if(args.length>=4) {
 //	    			String style = args[3].trim().toUpperCase();
@@ -164,9 +164,9 @@ public class FontCreator {
 	    			if(borders.length>1) 
 	    				mBorderVertical 		= Integer.valueOf( borders[1] );
 	    			else
-	    				mBorderVertical			= mBorderHorizontal;
+	    				mBorderVertical			= (int)(mBorderHorizontal*0.9f);
 	    		}else{
-	    			mBorderHorizontal			= (int)((float)mFontSize/112*((mFontStyle&Font.ITALIC)!=0?11:7));
+	    			mBorderHorizontal			= (int)((float)mFontSize/112*((mFontStyle&Font.ITALIC)!=0?11:9));
 	    			mBorderVertical				= (int)((float)mFontSize/112*7);
 	    		}
 	    		
@@ -177,7 +177,10 @@ public class FontCreator {
 	    		if(args.length>= 6) {
 	    			res = args[5].split("-");
 		    		mAsciiStartID   = Integer.valueOf( res[0] );
-		    		mAsciiEndID     = Integer.valueOf( res[1] );
+		    		if(res.length>1)
+		    			mAsciiEndID     = Integer.valueOf( res[1] );
+		    		else
+		    			mAsciiEndID 	= 123;
 	    		}
 	    		if(args.length>=7) {
 	    			mPath		    = args[6];
@@ -193,7 +196,7 @@ public class FontCreator {
 	    		}
 	    		
 	    		mFilename = mPath + File.separatorChar + mFilename;
-	    		mArgs = args[0] + " " + mOutputWidth+"x"+mOutputHeight + " " + mFontSize + " " + mBorderHorizontal + " " + mKernBoxes + " " + mAsciiStartID+"-"+mAsciiEndID + " ";
+	    		mArgs = args[0] + " " + mOutputWidth+"x"+mOutputHeight + " " + mFontSize + " " + mBorderHorizontal+":"+mBorderVertical + " " + mKernBoxes + " " + mAsciiStartID+"-"+mAsciiEndID + " ";
 	    		return true;
 	    	}
 	    	

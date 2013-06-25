@@ -168,8 +168,8 @@ class FontDrawPanel extends JPanel {
 //		if(savePixelCoords) out.println("spacing = " + (int)((mGlobalB-mGlobalT)/69f * 18) );
 //		else out.println("spacing = " + ((mGlobalB-mGlobalT)/69f * 18));
 		
-		if(savePixelCoords) out.println("spacing = " + (int)(2/512f*mWidth));	//spacing is added to kerning
-		else out.println("spacing = " + 2/512f);
+		if(savePixelCoords) out.println("spacing = " + (int)(4/512f*mWidth));	//spacing is added to kerning
+		else out.println("spacing = " + 4/512f);
 		
 		out.println("# CHAR=minX minY maxX maxY [kernMin(1) kernMax(1) ... kernMin(kernBoxes) kernMax(kernBoxes)]");
 		
