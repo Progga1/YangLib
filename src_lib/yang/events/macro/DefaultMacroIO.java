@@ -5,7 +5,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangZoomEvent;
 import yang.graphics.YangSurface;
 
 public class DefaultMacroIO extends AbstractMacroIO {
@@ -28,6 +30,11 @@ public class DefaultMacroIO extends AbstractMacroIO {
 			stream.writeByte(pointerEvent.mId | pointerEvent.mButton<<4);
 			stream.writeFloat(pointerEvent.mX);
 			stream.writeFloat(pointerEvent.mY);
+		} else if(event instanceof YangKeyEvent) {
+			YangKeyEvent keyEvent = (YangKeyEvent)event;
+			stream.writeByte(ID_KEY_EVENT+keyEvent.mAction);
+		} else if(event instanceof YangZoomEvent) {
+			
 		}
 	}
 

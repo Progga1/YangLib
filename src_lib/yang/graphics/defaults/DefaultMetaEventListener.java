@@ -72,6 +72,9 @@ public class DefaultMetaEventListener implements YangEventListener {
 				mSurface.mPlaySpeed = 32;
 			}
 		}
+		if(code==Keys.F7) {
+			mSurface.proceed();
+		}
 	}
 
 	@Override

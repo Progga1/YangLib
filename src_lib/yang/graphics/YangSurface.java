@@ -37,8 +37,8 @@ public abstract class YangSurface {
 	public double mProgramTime;
 	public int mStepCount;
 	public static float deltaTimeSeconds;
+	protected static long deltaTimeNanos;
 	protected int mUpdateWaitMillis = 1000/70;
-	protected long mDeltaTimeNanos;
 	protected int mRuntimeState = 0;
 	private float mLoadingProgress = -1;
 	private Thread mUpdateThread = null;
@@ -168,9 +168,9 @@ public abstract class YangSurface {
 		mInitCallback = initCallback;
 	}
 	
-	public void setUpdatesPerSecond(int updatesPerSecond) {
+	public static void setUpdatesPerSecond(int updatesPerSecond) {
 		deltaTimeSeconds = 1f/updatesPerSecond;
-		mDeltaTimeNanos = 1000000000/updatesPerSecond;
+		deltaTimeNanos = 1000000000/updatesPerSecond;
 	}
 	
 	public void setUpdateMode(UpdateMode updateMode) {
@@ -214,20 +214,20 @@ public abstract class YangSurface {
 			return;
 		}
 		while(mCatchUpTime<System.nanoTime()) {
-			mCatchUpTime += (long)(mDeltaTimeNanos*mPlaySpeed);
-			proceed(deltaTimeSeconds);
+			mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
+			proceed();
 		}
 	}
 	
-	public void proceed(float deltaTime) {
+	public void proceed() {
 		if(!mPaused) {
 			if(mMacro!=null)
 				mMacro.step();
 			if(mEventListener!=null)
 				mEventQueue.handleEvents(mEventListener);
-			mProgramTime += deltaTime;
+			mProgramTime += deltaTimeSeconds;
 			mStepCount ++;
-			step(deltaTime);
+			step(deltaTimeSeconds);
 		}
 	}
 	
