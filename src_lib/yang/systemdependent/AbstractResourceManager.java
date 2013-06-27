@@ -65,5 +65,9 @@ public abstract class AbstractResourceManager {
 	public void savePropertiesFile(String filename, Properties props) {
 		throw new RuntimeException("Save properties not supported");
 	}
+	
+	public InputStream getFileSystemInputStream(String string) {
+		throw new RuntimeException("File system input stream not supported");
+	}
 
 }

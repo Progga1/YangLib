@@ -32,7 +32,7 @@ public class DefaultMacroIO extends AbstractMacroIO {
 	}
 
 	@Override
-	protected void readEvent(DataInputStream stream) throws IOException {
+	protected YangEvent readEvent(DataInputStream stream) throws IOException {
 		int id = stream.readByte();
 		if(id>=ID_POINTER_EVENT && id<ID_POINTER_EVENT+COUNT_POINTER_ACTIONS) {
 			YangPointerEvent pointerEvent = mEventQueue.newPointerEvent();
@@ -42,8 +42,10 @@ public class DefaultMacroIO extends AbstractMacroIO {
 			pointerEvent.mId = read & 0x0F;
 			pointerEvent.mX = stream.readFloat();
 			pointerEvent.mY = stream.readFloat();
-			mEventQueue.putEvent(pointerEvent);
+			return pointerEvent;
 		}
+		
+		return null;
 	}
 
 	

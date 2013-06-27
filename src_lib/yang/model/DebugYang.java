@@ -1,5 +1,7 @@
 package yang.model;
 
+import java.io.IOException;
+
 public class DebugYang {
 
 	public static boolean AUTO_RECORD_MACRO = true;
@@ -63,13 +65,19 @@ public class DebugYang {
 		println(message,1);
 	}
 	
-	public static void printerr(Object message,int debugLevel) {
-		if(debugLevel>=debugLevel)
+	public static void printerr(Object message,int level) {
+		if(debugLevel>=level)
 			System.err.println(message);
 	}
 	
 	public static void printerr(Object message) {
 		printerr(1);
+	}
+
+	public static void exception(IOException e) {
+		if(debugLevel>=1) {
+			e.printStackTrace();
+		}
 	}
 	
 }

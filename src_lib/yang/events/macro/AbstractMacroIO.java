@@ -14,7 +14,7 @@ public abstract class AbstractMacroIO {
 	public YangSurface mSurface;
 	
 	protected abstract void writeEvent(DataOutputStream stream,YangEvent event) throws IOException;
-	protected abstract void readEvent(DataInputStream stream) throws IOException; 
+	protected abstract YangEvent readEvent(DataInputStream stream) throws IOException; 
 	
 	public AbstractMacroIO(YangSurface surface) {
 		mSurface = surface;

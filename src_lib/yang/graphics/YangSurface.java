@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import yang.events.YangEventQueue;
 import yang.events.listeners.YangEventListener;
 import yang.events.macro.DefaultMacroIO;
+import yang.events.macro.MacroExecuter;
 import yang.events.macro.MacroWriter;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
@@ -47,6 +48,9 @@ public abstract class YangSurface {
 	public int mDebugSwitchKey = -1;
 	public boolean mPaused = false;
 	public float mPlaySpeed = 1;
+	
+	private MacroExecuter mMacro;
+	public DefaultMacroIO mDefaultMacroIO;
 	
 	/**
 	 * GL-Thread
@@ -117,11 +121,14 @@ public abstract class YangSurface {
 		
 		if(mInitCallback!=null)
 			mInitCallback.initializationFinished();
-		if(DebugYang.AUTO_RECORD_MACRO) {
+		
+		mDefaultMacroIO = new DefaultMacroIO(this);
+		//mMacro = new MacroExecuter(mResources.getFileSystemInputStream("run.ym"), mDefaultMacroIO);
+		if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
 			MacroWriter writer;
 			String filename = "run.ym";
 			try {
-				writer = new MacroWriter(mResources.getFileSystemOutputStream(filename), new DefaultMacroIO(this));
+				writer = new MacroWriter(mResources.getFileSystemOutputStream(filename), mDefaultMacroIO);
 				mEventQueue.registerEventWriter(writer);
 			} catch (FileNotFoundException e) {
 				DebugYang.printerr("Could not create '"+filename+"'");
@@ -199,7 +206,6 @@ public abstract class YangSurface {
 			return;
 		if(mCatchUpTime==0)
 			mCatchUpTime = System.nanoTime()-1;
-
 		
 		if(mPlaySpeed==0) {
 			if(!mPaused && mEventListener!=null)
@@ -215,6 +221,8 @@ public abstract class YangSurface {
 	
 	public void proceed(float deltaTime) {
 		if(!mPaused) {
+			if(mMacro!=null)
+				mMacro.step();
 			if(mEventListener!=null)
 				mEventQueue.handleEvents(mEventListener);
 			mProgramTime += deltaTime;

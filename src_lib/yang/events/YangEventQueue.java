@@ -101,6 +101,10 @@ public class YangEventQueue {
 		writer.start();
 	}
 	
+	public void removeEventWriter(MacroWriter writer) {
+		mEventWriters.remove(writer);
+	}
+	
 	public void setMetaKey(int code) {
 		mMetaKeys[code] = true;
 	}

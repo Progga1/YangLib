@@ -27,6 +27,18 @@ public class PCResourceManager extends AbstractResourceManager {
 		}
 		return fis;
 	}
+	
+	@Override
+	public InputStream getFileSystemInputStream(String filename) {
+		File file = new File(filename);
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return fis;
+	}
 
 	//Optional override
 	@Override
