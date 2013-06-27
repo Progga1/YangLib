@@ -35,13 +35,25 @@ public class MacroExecuter {
 				mNextStep = mStream.readLong();
 			if(mStepCount>=mNextStep) {
 				YangEvent event = mMacroIO.readEvent(mStream);
+
 				mMacroIO.mEventQueue.putEvent(event);
-				if(mStream.available()<=0)
+				if(mStream.available()<=0) {
+					mStream.close();
 					mFinished = true;
-				else
+				}else
 					mNextStep = mStream.readLong();
 			}
 			mStepCount++;
+		} catch (IOException e) {
+			DebugYang.exception(e);
+		}
+	}
+
+	public void close() {
+		try {
+			if(!mFinished)
+				mStream.close();
+			mFinished = true;
 		} catch (IOException e) {
 			DebugYang.exception(e);
 		}

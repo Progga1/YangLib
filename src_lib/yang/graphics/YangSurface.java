@@ -339,6 +339,8 @@ public abstract class YangSurface {
 	
 	public void exit() {
 		mEventQueue.close();
+		if(mMacro!=null)
+			mMacro.close();
 		System.exit(0);
 	}
 	

@@ -138,7 +138,7 @@ public class GFXDebug implements PrintInterface {
 		mGraphics.setColor(mFontColor);
 		mGraphics.resetGlobalTransform();
 		
-		if(mSurface.mMacro!=null && !mSurface.mMacro.mFinished && ((int)(mSurface.mProgramTime*2)%2==0)) {
+		if(mSurface.mMacro!=null && !mSurface.mMacro.mFinished && ((System.currentTimeMillis()/500)%2==0)) {
 			mExecMacroString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY-mFontSize*2, mFontSize);
 		}
 		
