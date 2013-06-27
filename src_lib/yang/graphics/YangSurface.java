@@ -48,8 +48,9 @@ public abstract class YangSurface {
 	public int mDebugSwitchKey = -1;
 	public boolean mPaused = false;
 	public float mPlaySpeed = 1;
+	public String mMacroFilename;
 	
-	private MacroExecuter mMacro;
+	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
 	
 	/**
@@ -80,6 +81,11 @@ public abstract class YangSurface {
 		mEventQueue = new YangEventQueue(getMaxEventCount());
 		setUpdatesPerSecond(120);
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
+		mMacroFilename = null;
+	}
+	
+	public void setMacroFilename(String filename) {
+		mMacroFilename = filename;
 	}
 	
 	public YangEventQueue getEventQueue() {
@@ -123,7 +129,8 @@ public abstract class YangSurface {
 			mInitCallback.initializationFinished();
 		
 		mDefaultMacroIO = new DefaultMacroIO(this);
-		//mMacro = new MacroExecuter(mResources.getFileSystemInputStream("run.ym"), mDefaultMacroIO);
+		if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
+			mMacro = new MacroExecuter(mResources.getFileSystemInputStream(mMacroFilename), mDefaultMacroIO);
 		if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
 			MacroWriter writer;
 			String filename = "run.ym";
@@ -331,7 +338,15 @@ public abstract class YangSurface {
 	}
 	
 	public void exit() {
+		mEventQueue.close();
 		System.exit(0);
+	}
+	
+	public void handleArgs(String[] args,int startIndex) {
+		if(args==null)
+			return;
+		if(args.length>=0)
+			setMacroFilename(args[0]);
 	}
 	
 }

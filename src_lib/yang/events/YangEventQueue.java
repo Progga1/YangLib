@@ -32,7 +32,7 @@ public class YangEventQueue {
 	private GraphicsTranslator mGraphics;
 	private boolean[] mMetaKeys;
 	public boolean mMetaMode = false;
-	public NonConcurrentList<MacroWriter> mEventWriters;
+	public NonConcurrentList<MacroWriter> mMacroWriters;
 	
 	public YangEventQueue(int maxEvents,int eventTypes) {
 		mGraphics = null;
@@ -75,8 +75,8 @@ public class YangEventQueue {
 		mQueue[mQueueId++] = event;
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
-		if(mEventWriters!=null) {
-			for(MacroWriter writer:mEventWriters) {
+		if(mMacroWriters!=null) {
+			for(MacroWriter writer:mMacroWriters) {
 				writer.writeEvent(event);
 			}
 		}
@@ -95,14 +95,14 @@ public class YangEventQueue {
 	}
 	
 	public void registerEventWriter(MacroWriter writer) {
-		if(mEventWriters==null)
-			mEventWriters = new NonConcurrentList<MacroWriter>();
-		mEventWriters.add(writer);
+		if(mMacroWriters==null)
+			mMacroWriters = new NonConcurrentList<MacroWriter>();
+		mMacroWriters.add(writer);
 		writer.start();
 	}
 	
 	public void removeEventWriter(MacroWriter writer) {
-		mEventWriters.remove(writer);
+		mMacroWriters.remove(writer);
 	}
 	
 	public void setMetaKey(int code) {
@@ -231,6 +231,13 @@ public class YangEventQueue {
 	public void setMetaKeys(int startKey, int count) {
 		for(int i=0;i<count;i++) {
 			setMetaKey(startKey+i);
+		}
+	}
+
+	public void close() {
+		if(mMacroWriters!=null) {
+			for(MacroWriter writer:mMacroWriters)
+				writer.close();
 		}
 	}
 	

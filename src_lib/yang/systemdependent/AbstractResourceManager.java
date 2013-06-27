@@ -66,8 +66,12 @@ public abstract class AbstractResourceManager {
 		throw new RuntimeException("Save properties not supported");
 	}
 	
-	public InputStream getFileSystemInputStream(String string) {
+	public InputStream getFileSystemInputStream(String filename) {
 		throw new RuntimeException("File system input stream not supported");
+	}
+	
+	public boolean fileExistsInFileSystem(String filename) {
+		return false;
 	}
 
 }

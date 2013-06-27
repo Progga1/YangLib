@@ -114,5 +114,10 @@ public class PCResourceManager extends AbstractResourceManager {
 	public boolean fileExists(String filename) {
 		return new File(PathSpecs.ASSET_PATH+filename).exists();
 	}
+	
+	@Override
+	public boolean fileExistsInFileSystem(String filename) {
+		return new File(filename).exists();
+	}
 
 }

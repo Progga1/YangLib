@@ -33,8 +33,10 @@ public class DefaultMacroIO extends AbstractMacroIO {
 		} else if(event instanceof YangKeyEvent) {
 			YangKeyEvent keyEvent = (YangKeyEvent)event;
 			stream.writeByte(ID_KEY_EVENT+keyEvent.mAction);
+			stream.writeShort(keyEvent.mKey);
 		} else if(event instanceof YangZoomEvent) {
-			
+			stream.writeByte(ID_ZOOM_EVENT);
+			stream.writeFloat(((YangZoomEvent)event).mValue);
 		}
 	}
 
@@ -50,8 +52,17 @@ public class DefaultMacroIO extends AbstractMacroIO {
 			pointerEvent.mX = stream.readFloat();
 			pointerEvent.mY = stream.readFloat();
 			return pointerEvent;
+		}else if(id>=ID_KEY_EVENT && id<ID_KEY_EVENT+COUNT_KEY_ACTIONS) {
+			YangKeyEvent keyEvent = mEventQueue.newKeyEvent();
+			keyEvent.mAction = id-ID_KEY_EVENT;
+			keyEvent.mKey = stream.readShort();
+			return keyEvent;
+		}else if(id==ID_ZOOM_EVENT) {
+			YangZoomEvent zoomEvent = mEventQueue.newZoomEvent();
+			zoomEvent.mValue = stream.readFloat();
+			return zoomEvent;
 		}
-		
+
 		return null;
 	}
 

@@ -79,11 +79,11 @@ public class YangGLESFrame extends PCFrame{
 			mPCEventHandler = eventHandler;
 		}
 	}
-	
+
 	@Override
-	public void exit() {
+	protected void close() {
+		super.close();
 		mGraphics.stop();
-		super.exit();
 	}
 	
 }

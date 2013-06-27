@@ -32,6 +32,7 @@ public class GFXDebug implements PrintInterface {
 	public int mRefreshEvery = 2;
 	public long mRefreshCount = 0;
 	public DrawableString mSpeedString;
+	public DrawableString mExecMacroString;
 	
 	protected GraphicsTranslator mTranslator;
 	protected DefaultGraphics<?> mGraphics;
@@ -45,6 +46,7 @@ public class GFXDebug implements PrintInterface {
 		properties.mKerningEnabled = true;
 		mString = new DrawableString(1024).setProperties(properties).setLeftTopJustified();
 		mSpeedString = new DrawableString(32).setProperties(properties).setRightTopJustified();
+		mExecMacroString = new DrawableString("Macro...").setProperties(properties).setRightTopJustified().setConstant();
 		reset();
 	}
 	
@@ -121,11 +123,12 @@ public class GFXDebug implements PrintInterface {
 	
 	public void draw() {
 		
-		
 		float playSpeed = mSurface.mPlaySpeed;
 		
-		if(playSpeed==1 && mString.mMarker==0)
+		if(playSpeed==1 && mString.mMarker==0 && (mSurface.mMacro==null || mSurface.mMacro.mFinished))
 			return;
+		
+		float right = mGraphics.getScreenRight()-mDebugOffsetX;
 		
 		mTranslator.flush();
 		mGraphics.activate();
@@ -134,6 +137,10 @@ public class GFXDebug implements PrintInterface {
 		mGraphics.switchGameCoordinates(false);
 		mGraphics.setColor(mFontColor);
 		mGraphics.resetGlobalTransform();
+		
+		if(mSurface.mMacro!=null && !mSurface.mMacro.mFinished && ((int)(mSurface.mProgramTime*2)%2==0)) {
+			mExecMacroString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY-mFontSize*2, mFontSize);
+		}
 		
 		if(playSpeed!=1) {
 			mSpeedString.reset();
@@ -148,7 +155,7 @@ public class GFXDebug implements PrintInterface {
 					mSpeedString.appendInt((int)playSpeed);
 					
 				}
-			mSpeedString.draw(mGraphics.getScreenRight()-mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*2f);
+			mSpeedString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*2f);
 		}
 		
 		if(mString.mMarker!=0) {

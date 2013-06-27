@@ -31,6 +31,7 @@ public class MatrixStackState extends SampleState {
 	@Override
 	protected void draw() {
 		mGraphics3D.activate();
+		mGraphics3D.setWhite();
 		mGraphics.switchZBuffer(true);
 		mGraphics.clear(0,0,0,0,GLMasks.DEPTH_BUFFER_BIT);
 		mTransform.stackClear();
