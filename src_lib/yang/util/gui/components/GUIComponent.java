@@ -5,6 +5,7 @@ import yang.util.gui.BasicGUI;
 public class GUIComponent {
 
 	public boolean mVisible = true;
+	public boolean mEnabled = true;
 	public float mPosX;
 	public float mPosY;
 	public float mProjLeft,mProjBottom;
@@ -51,6 +52,24 @@ public class GUIComponent {
 	
 	public void setGUI(BasicGUI gui) {
 		mGUI = gui;
+	}
+	
+	public GUIComponent cloneSwallow() {
+		try {
+			GUIComponent instance = this.getClass().newInstance();
+			instance.mPosX = mPosX;
+			instance.mPosY = mPosY;
+			instance.mVisible = mVisible;
+			instance.mEnabled = mEnabled;
+			instance.mGUI = mGUI;
+			return instance;
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

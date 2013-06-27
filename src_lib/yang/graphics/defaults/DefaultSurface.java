@@ -17,11 +17,8 @@ import yang.util.StringsXML;
 
 public abstract class DefaultSurface extends YangSurface implements YangEventListener,EventQueueHolder{
 
-	public AbstractResourceManager mResources;
-	public StringsXML mStrings;
 	public Default2DGraphics mGraphics2D;
 	public Default3DGraphics mGraphics3D;
-	public AbstractGFXLoader mGFXLoader;
 	private boolean mInit2DGraphics;
 	private boolean mInit3DGraphics;
 	
@@ -51,10 +48,6 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 				mGraphics3D.setDefaultProgram();
 			}
 		}
-		mGFXLoader = mGraphics.mGFXLoader;
-		mResources = mGraphics.mGFXLoader.mResources;
-		if(mResources.fileExists("strings/strings.xml"))
-			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
 	}
 	
 	protected void initDebugOutput(BitmapFont font) {

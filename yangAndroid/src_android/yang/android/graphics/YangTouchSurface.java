@@ -78,12 +78,12 @@ public class YangTouchSurface extends GLSurfaceView{
 		switch (action){
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
-			mEventQueue.putPointerEvent(AbstractPointerEvent.BUTTON_LEFT, x, y, AbstractPointerEvent.ACTION_POINTERDOWN, id);
+			mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDOWN, x, y, AbstractPointerEvent.BUTTON_LEFT, id);
 			break;
 
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
-			mEventQueue.putPointerEvent(AbstractPointerEvent.BUTTON_LEFT, x, y, AbstractPointerEvent.ACTION_POINTERUP, id);
+			mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERUP, x, y, AbstractPointerEvent.BUTTON_LEFT, id);
 			break;
 
 		case MotionEvent.ACTION_MOVE:
@@ -91,7 +91,7 @@ public class YangTouchSurface extends GLSurfaceView{
 			for(int i = 0; i < event.getPointerCount(); i++){
 				id = event.getPointerId(i);
 				//mEventListener.pointerDragged((int)event.getX(i), (int)event.getY(i), id);
-				mEventQueue.putPointerEvent(AbstractPointerEvent.BUTTON_LEFT, x, y, AbstractPointerEvent.ACTION_POINTERDRAG, id);
+				mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDRAG, x, y, AbstractPointerEvent.BUTTON_LEFT, id);
 			}
 			break;
 		}

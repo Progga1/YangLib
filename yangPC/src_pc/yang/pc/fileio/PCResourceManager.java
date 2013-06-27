@@ -86,6 +86,11 @@ public class PCResourceManager extends AbstractResourceManager {
 	public FileOutputStream getOutputStream(String filename) throws FileNotFoundException {
 		return new FileOutputStream(PathSpecs.ASSET_PATH+filename);
 	}
+	
+	@Override
+	public FileOutputStream getFileSystemOutputStream(String filename) throws FileNotFoundException {
+		return new FileOutputStream(filename);
+	}
 
 	@Override
 	public boolean deleteFile(String filename) {		

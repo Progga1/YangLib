@@ -148,7 +148,7 @@ public class GFXDebug implements PrintInterface {
 					mSpeedString.appendInt((int)playSpeed);
 					
 				}
-			mSpeedString.draw(mGraphics.getScreenRight()-mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*1.6f);
+			mSpeedString.draw(mGraphics.getScreenRight()-mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*2f);
 		}
 		
 		if(mString.mMarker!=0) {

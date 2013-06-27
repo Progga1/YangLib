@@ -1,5 +1,10 @@
 package yang.events.eventtypes;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import yang.events.YangEventQueue;
 import yang.events.listeners.KeyEventListener;
 import yang.events.listeners.RawEventListener;
 
@@ -22,5 +27,23 @@ public class YangKeyEvent extends YangEvent {
 		else
 			((KeyEventListener)listener).keyUp(mKey);
 	}
+	
+//	@Override
+//	public int getID() {
+//		return YangEventQueue.ID_KEY_EVENT;
+//	}
+//
+//	@Override
+//	public void writeToStream(DataOutputStream outStream) throws IOException {
+//		outStream.writeByte(mAction);
+//		outStream.writeShort(mKey);
+//	}
+//
+//	@Override
+//	public void readFromStream(DataInputStream inStream) throws IOException {
+//		mAction = inStream.readByte();
+//		
+//	}
+//	
 	
 }

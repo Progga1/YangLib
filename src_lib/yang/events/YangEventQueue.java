@@ -5,14 +5,21 @@ import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangZoomEvent;
 import yang.events.listeners.YangEventListener;
+import yang.events.macro.MacroWriter;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.util.NonConcurrentList;
 
 public class YangEventQueue {
 
+	public static final int ID_POINTER_EVENT = 0;
+	public static final int ID_KEY_EVENT = 1;
+	public static final int ID_ZOOM_EVENT = 2;
+	
 	private int mMaxEvents;
 	private YangPointerEvent[] mPointerEventQueue;
 	private YangKeyEvent[] mKeyEventQueue;
 	private YangZoomEvent[] mZoomEventQueue;
+	public YangEvent[][] mQueuePools;
 	private YangEvent[] mQueue;
 	private YangEvent[] mMetaEventQueue;
 	private int mPointerEventId;
@@ -25,8 +32,9 @@ public class YangEventQueue {
 	private GraphicsTranslator mGraphics;
 	private boolean[] mMetaKeys;
 	public boolean mMetaMode = false;
+	public NonConcurrentList<MacroWriter> mEventWriters;
 	
-	public YangEventQueue(int maxEvents) {
+	public YangEventQueue(int maxEvents,int eventTypes) {
 		mGraphics = null;
 		mMaxEvents = maxEvents;
 		mPointerEventId = 0;
@@ -49,13 +57,32 @@ public class YangEventQueue {
 		for(int i=0;i<mMetaKeys.length;i++) {
 			mMetaKeys[i] = false;
 		}
+		mQueuePools = new YangEvent[eventTypes][];
+		mQueuePools[ID_POINTER_EVENT] = mPointerEventQueue;
+		mQueuePools[ID_KEY_EVENT] = mKeyEventQueue;
+		mQueuePools[ID_ZOOM_EVENT] = mZoomEventQueue;
 	}
 	
-	public synchronized void putEvent(YangEvent event) {
+	public YangEventQueue(int maxEvents) {
+		this(maxEvents,3);
+	}
+	
+	public synchronized void putRuntimeEvent(YangEvent event) {
 		if(mMetaMode) {
 			putMetaEvent(event);
 			return;
 		}
+		mQueue[mQueueId++] = event;
+		if(mQueueId>=mMaxEvents)
+			mQueueId = 0;
+		if(mEventWriters!=null) {
+			for(MacroWriter writer:mEventWriters) {
+				writer.writeEvent(event);
+			}
+		}
+	}
+	
+	public synchronized void putEvent(YangEvent event) {
 		mQueue[mQueueId++] = event;
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
@@ -67,11 +94,39 @@ public class YangEventQueue {
 			mMetaEventQueueId = 0;
 	}
 	
+	public void registerEventWriter(MacroWriter writer) {
+		if(mEventWriters==null)
+			mEventWriters = new NonConcurrentList<MacroWriter>();
+		mEventWriters.add(writer);
+		writer.start();
+	}
+	
 	public void setMetaKey(int code) {
 		mMetaKeys[code] = true;
 	}
 	
-	public synchronized void putPointerEvent(int button, int x,int y, int action, int id) {
+	public synchronized YangPointerEvent newPointerEvent() {
+		YangPointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
+		if(mPointerEventId>=mMaxEvents)
+			mPointerEventId = 0;
+		return newEvent;
+	}
+	
+	public synchronized YangKeyEvent newKeyEvent() {
+		YangKeyEvent newEvent = mKeyEventQueue[mKeyEventId++];
+		if(mKeyEventId>=mMaxEvents)
+			mKeyEventId = 0;
+		return newEvent;
+	}
+	
+	public synchronized YangZoomEvent newZoomEvent() {
+		YangZoomEvent newEvent = mZoomEventQueue[mZoomEventId++];
+		if(mZoomEventId>=mMaxEvents)
+			mZoomEventId = 0;
+		return newEvent;
+	}
+	
+	public synchronized void putPointerEvent(int action, int x,int y, int button, int id) {
 		if(mGraphics==null)
 			return;
 		YangPointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
@@ -82,7 +137,7 @@ public class YangEventQueue {
 		newEvent.mY = mGraphics.toNormY(y);
 		newEvent.mAction = action;
 		newEvent.mId = id;
-		putEvent(newEvent);
+		putRuntimeEvent(newEvent);
 	}
 	
 	public synchronized void putKeyEvent(int key, int action) {
@@ -94,7 +149,7 @@ public class YangEventQueue {
 		if(key<512 && mMetaKeys[key]) 
 			putMetaEvent(newEvent);
 		else
-			putEvent(newEvent);
+			putRuntimeEvent(newEvent);
 	}
 	
 	public void putZoomEvent(float value) {
@@ -102,7 +157,7 @@ public class YangEventQueue {
 		if(mZoomEventId>=mMaxEvents)
 			mZoomEventId = 0;
 		newEvent.mValue = value;
-		putEvent(newEvent);
+		putRuntimeEvent(newEvent);
 	}
 	
 	public YangEvent peekEvent() {

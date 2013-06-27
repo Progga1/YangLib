@@ -25,7 +25,7 @@ import yang.util.statesystem.YangProgramStateSystem;
 
 public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> implements GUIActionListener {
 
-	public static float SCALE = 1.1f;
+	public static float SCALE = 1.16f;
 	
 	protected BasicGUI mGUI;
 	protected NonConcurrentList<DefaultRectButton> mButtons;
@@ -57,7 +57,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		float y = mGUI.getGUICenterY()-0.24f*(mButtons.size()-1)*0.5f;
 		for(DefaultRectButton button:mButtons) {
 			button.setPosCentered(mGUI.getGUICenterX(), y);
-			y += 0.24f*SCALE;
+			y += 0.2f*SCALE;
 		}
 	}
 	

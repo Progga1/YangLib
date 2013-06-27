@@ -53,6 +53,10 @@ public abstract class AbstractResourceManager {
 	public OutputStream getOutputStream(String filename) throws FileNotFoundException {
 		throw new RuntimeException("Output stream not supported");
 	}
+	
+	public OutputStream getFileSystemOutputStream(String filename) throws FileNotFoundException {
+		throw new RuntimeException("Output stream not supported");
+	}
 
 	public boolean deleteFile(String filename) {		
 		throw new RuntimeException("Delete file not supported");

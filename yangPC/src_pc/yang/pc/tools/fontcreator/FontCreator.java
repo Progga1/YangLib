@@ -13,6 +13,8 @@ import yang.util.Util;
 
 public class FontCreator {
     
+		static final int DEFAULT_KERN_BOXES = 8;
+	
 		/*
 		// BELLIGERENT SETUP
 		static String mFontName 			= "Belligerent Madness";
@@ -79,7 +81,7 @@ public class FontCreator {
 	    		printParam("resolution wxh","1024x1024");
 	    		printParam("font size","112 @resolution=1024");
 	    		printParam("extra border x:y","9:7 @fontSize=112");
-	    		printParam("kern boxes","6");
+	    		printParam("kern boxes",""+DEFAULT_KERN_BOXES);
 	    		printParam("ascii range","23-123");
 	    		printParam("generation loc","workspace");
 	    		printParam("output name","font name + style");
@@ -114,7 +116,7 @@ public class FontCreator {
 	    private static boolean loadArgs(String[] args) {
 	    	mAsciiStartID = 33;
 	    	mAsciiEndID = 123;
-	    	mKernBoxes = 6;
+	    	mKernBoxes = DEFAULT_KERN_BOXES;
 	    	mFontStyle = Font.PLAIN;
 	    	mPath = "../../";
 	    	

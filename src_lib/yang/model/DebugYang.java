@@ -2,6 +2,8 @@ package yang.model;
 
 public class DebugYang {
 
+	public static boolean AUTO_RECORD_MACRO = true;
+
 	public static boolean FORCE_FULLSCREEN = false;
 	
 	public static int debugLevel = 1;
@@ -59,6 +61,15 @@ public class DebugYang {
 	
 	public static void println(Object message) {
 		println(message,1);
+	}
+	
+	public static void printerr(Object message,int debugLevel) {
+		if(debugLevel>=debugLevel)
+			System.err.println(message);
+	}
+	
+	public static void printerr(Object message) {
+		printerr(1);
 	}
 	
 }

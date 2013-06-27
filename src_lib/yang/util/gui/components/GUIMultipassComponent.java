@@ -5,7 +5,6 @@ package yang.util.gui.components;
 public class GUIMultipassComponent extends GUIComponent {
 
 	protected GUIComponentDrawPass[] mPasses;
-	public boolean mEnabled = true;
 	
 //	public GUIMultipassComponent setPasses(GUIComponentDrawPass[] passes) {
 //		mPasses = passes;
@@ -39,6 +38,21 @@ public class GUIMultipassComponent extends GUIComponent {
 			if(pass!=null && pass.getClass() == passClass)
 				return (PassType)pass;
 		return null;
+	}
+	
+	public GUIMultipassComponent cloneSwallow(boolean ownPassesArray) {
+		GUIMultipassComponent instance = (GUIMultipassComponent)super.cloneSwallow();
+		if(ownPassesArray) {
+			instance.mPasses = new GUIComponentDrawPass[mPasses.length];
+			for(int i=0;i<mPasses.length;i++)
+				instance.mPasses[i] = mPasses[i];
+		}else
+			instance.mPasses = mPasses;
+		return instance;
+	}
+	
+	public GUIMultipassComponent cloneSwallow() {
+		return cloneSwallow(true);
 	}
 	
 }

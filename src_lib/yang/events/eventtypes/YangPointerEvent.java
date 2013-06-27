@@ -1,5 +1,10 @@
 package yang.events.eventtypes;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import yang.events.YangEventQueue;
 import yang.events.listeners.PointerEventListener;
 import yang.events.listeners.RawEventListener;
 
@@ -28,5 +33,21 @@ public class YangPointerEvent extends AbstractPointerEvent {
 			break;
 		}
 	}
+
+//	@Override
+//	public int getID() {
+//		return YangEventQueue.ID_POINTER_EVENT;
+//	}
+//
+//	@Override
+//	public void writeToStream(DataOutputStream outStream) throws IOException {
+//		
+//	}
+//
+//	@Override
+//	public void readFromStream(DataInputStream inStream) throws IOException {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }

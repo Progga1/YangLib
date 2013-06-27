@@ -84,4 +84,12 @@ public abstract class GUIInteractiveRectComponent extends GUIInteractiveComponen
 	public boolean inArea(float x, float y) {
 		return (x>=mPosX && x<=mPosX+mWidth && y>=mPosY && y<mPosY+mHeight);
 	}
+	
+	public GUIInteractiveRectComponent cloneSwallow(boolean ownPassesArray) {
+		GUIInteractiveRectComponent instance = (GUIInteractiveRectComponent)super.cloneSwallow(ownPassesArray);
+		instance.mWidth = mWidth;
+		instance.mHeight = mHeight;
+		return instance;
+	}
+	
 }

@@ -1,14 +1,21 @@
 package yang.graphics;
 
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+
 import yang.events.YangEventQueue;
 import yang.events.listeners.YangEventListener;
+import yang.events.macro.DefaultMacroIO;
+import yang.events.macro.MacroWriter;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
+import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
 public abstract class YangSurface {
@@ -21,9 +28,13 @@ public abstract class YangSurface {
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
 	public StringsXML mStrings;
+	public AbstractResourceManager mResources;
+	public AbstractGFXLoader mGFXLoader;
 	public GFXDebug mDebug;
 	
 	protected long mCatchUpTime;
+	public double mProgramTime;
+	public int mStepCount;
 	public static float deltaTimeSeconds;
 	protected int mUpdateWaitMillis = 1000/70;
 	protected long mDeltaTimeNanos;
@@ -75,6 +86,86 @@ public abstract class YangSurface {
 		return 2048;
 	}
 	
+	public void setGraphics(GraphicsTranslator graphics) {
+		mGraphics = graphics;
+	}
+	
+	private boolean assertMessage() {
+		System.out.println("ASSERTIONS ARE ACTIVATED");
+		return true;
+	}
+	
+	public void setMacro(BufferedInputStream stream) {
+		
+	}
+	
+	public void onSurfaceCreated() {
+		if(mInitialized) {
+			DebugYang.println("ALREADY INITIALIZED");
+			return;
+		}
+		mProgramTime = 0;
+		mStepCount = 0;
+		assert assertMessage();
+		mGraphics.init();
+		mGFXLoader = mGraphics.mGFXLoader;
+		mResources = mGraphics.mGFXLoader.mResources;
+		mEventQueue.setGraphics(mGraphics);
+		if(mResources.fileExists("strings/strings.xml"))
+			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
+		initGraphics();
+		
+		if(mInitCallback!=null)
+			mInitCallback.initializationFinished();
+		if(DebugYang.AUTO_RECORD_MACRO) {
+			MacroWriter writer;
+			String filename = "run.ym";
+			try {
+				writer = new MacroWriter(mResources.getFileSystemOutputStream(filename), new DefaultMacroIO(this));
+				mEventQueue.registerEventWriter(writer);
+			} catch (FileNotFoundException e) {
+				DebugYang.printerr("Could not create '"+filename+"'");
+			}
+		}
+		mInitialized = true;
+		synchronized(mInitializedNotifier) {
+			mInitializedNotifier.notifyAll();
+		}
+		
+		if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
+			mUpdateThread.start();
+		
+		postInitGraphics();
+	}
+	
+	public void waitUntilInitialized() {
+		synchronized(mInitializedNotifier) {
+			try {
+				mInitializedNotifier.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void onSurfaceChanged(int width,int height) {
+		mGraphics.setSurfaceSize(width, height);
+		
+	}
+	
+	public boolean isInitialized() {
+		return mInitialized;
+	}
+	
+	public void setInitializationCallback(InitializationCallback initCallback) {
+		mInitCallback = initCallback;
+	}
+	
+	public void setUpdatesPerSecond(int updatesPerSecond) {
+		deltaTimeSeconds = 1f/updatesPerSecond;
+		mDeltaTimeNanos = 1000000000/updatesPerSecond;
+	}
+	
 	public void setUpdateMode(UpdateMode updateMode) {
 		mUpdateMode = updateMode;
 		if(mUpdateMode==UpdateMode.ASYNCHRONOUS) {
@@ -101,6 +192,39 @@ public abstract class YangSurface {
 	
 	protected void initDebugOutput(DefaultGraphics<?> graphics, BitmapFont font) {
 		mDebug = new GFXDebug(this,graphics,font);
+	}
+	
+	protected void catchUp() {
+		if(!mInitialized || mRuntimeState>0)
+			return;
+		if(mCatchUpTime==0)
+			mCatchUpTime = System.nanoTime()-1;
+
+		
+		if(mPlaySpeed==0) {
+			if(!mPaused && mEventListener!=null)
+				mEventQueue.handleEvents(mEventListener);
+			mCatchUpTime = 0;
+			return;
+		}
+		while(mCatchUpTime<System.nanoTime()) {
+			mCatchUpTime += (long)(mDeltaTimeNanos*mPlaySpeed);
+			proceed(deltaTimeSeconds);
+		}
+	}
+	
+	public void proceed(float deltaTime) {
+		if(!mPaused) {
+			if(mEventListener!=null)
+				mEventQueue.handleEvents(mEventListener);
+			mProgramTime += deltaTime;
+			mStepCount ++;
+			step(deltaTime);
+		}
+	}
+	
+	protected void step(float deltaTime) {
+		
 	}
 	
 	public final void drawFrame() {
@@ -150,98 +274,6 @@ public abstract class YangSurface {
 			mDebug.draw();
 		}
 		mGraphics.endFrame();
-		
-	}
-	
-	public void setGraphics(GraphicsTranslator graphics) {
-		mGraphics = graphics;
-	}
-	
-	private boolean assertMessage() {
-		System.out.println("ASSERTIONS ARE ACTIVATED");
-		return true;
-	}
-	
-	public void onSurfaceCreated() {
-		if(mInitialized) {
-			DebugYang.println("ALREADY INITIALIZED");
-			return;
-		}
-		assert assertMessage();
-		mGraphics.init();
-		initGraphics();
-		mEventQueue.setGraphics(mGraphics);
-		postInitGraphics();
-		if(mInitCallback!=null)
-			mInitCallback.initializationFinished();
-		
-		mInitialized = true;
-		synchronized(mInitializedNotifier) {
-			mInitializedNotifier.notifyAll();
-		}
-		
-		if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
-			mUpdateThread.start();
-	}
-	
-	public void waitUntilInitialized() {
-		synchronized(mInitializedNotifier) {
-			try {
-				mInitializedNotifier.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public void onSurfaceChanged(int width,int height) {
-		mGraphics.setSurfaceSize(width, height);
-		
-	}
-	
-	public boolean isInitialized() {
-		return mInitialized;
-	}
-	
-	public void setInitializationCallback(InitializationCallback initCallback) {
-		mInitCallback = initCallback;
-	}
-	
-	public void setUpdatesPerSecond(int updatesPerSecond) {
-		deltaTimeSeconds = 1f/updatesPerSecond;
-		mDeltaTimeNanos = 1000000000/updatesPerSecond;
-	}
-	
-	protected void catchUp() {
-		if(!mInitialized || mRuntimeState>0)
-			return;
-		if(mPlaySpeed==0) {
-			if(!mPaused && mEventListener!=null)
-				mEventQueue.handleEvents(mEventListener);
-			mCatchUpTime = 0;
-			return;
-		}
-		while(mCatchUpTime<System.nanoTime()) {
-			proceed(deltaTimeSeconds);
-		}
-	}
-	
-	public void proceed(float deltaTime) {
-		if(!mInitialized || mRuntimeState>0)
-			return;
-		if(mCatchUpTime==0)
-			mCatchUpTime = System.nanoTime()-1;
-
-		mCatchUpTime += (long)(mDeltaTimeNanos*mPlaySpeed);
-
-		if(!mPaused) {
-			if(mEventListener!=null)
-				mEventQueue.handleEvents(mEventListener);
-			step(deltaTime);
-		}
-	}
-	
-	protected void step(float deltaTime) {
 		
 	}
 	
