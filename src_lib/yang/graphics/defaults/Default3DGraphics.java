@@ -105,9 +105,17 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void derivedInit() {
 		super.derivedInit();
 		setOrthogonalProjection();
-		setCameraLookAt(0,0,0, 0,0,-1);
+		resetCamera();
 		mDefaultProgram = new Basic3DProgram();
 		mTranslator.addProgram(mDefaultProgram);
+	}
+	
+	public void resetCamera() {
+		setCameraLookAt(0,0,0, 0,0,-1);
+	}
+	
+	public void resetProjection() {
+		setOrthogonalProjection();
 	}
 
 	public void setOrthogonalProjection(float width,float height,float near,float far) {

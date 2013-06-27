@@ -14,7 +14,7 @@ public class SampleStateSystem extends YangProgramStateSystem {
 	
 	public SampleStateSystem() {
 		super(true, true);
-		super.setUpdateMode(UpdateMode.ASYNCHRONOUS);
+		super.setUpdateMode(UpdateMode.SYNCHRONOUS);
 	}
 	
 	public void postInitGraphics() {

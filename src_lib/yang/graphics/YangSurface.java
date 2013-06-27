@@ -347,7 +347,7 @@ public abstract class YangSurface {
 	public void handleArgs(String[] args,int startIndex) {
 		if(args==null)
 			return;
-		if(args.length>=0)
+		if(args.length>=1)
 			setMacroFilename(args[0]);
 	}
 	

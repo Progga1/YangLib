@@ -41,7 +41,6 @@ public class IcyTerrainState extends SampleState {
 	private static boolean ENVIRONMENT_MAPPING = true;
 	private static TextureSettings TEXTURE_SETTINGS = new TextureSettings(TextureFilter.LINEAR_MIP_LINEAR);
 	
-	public float time;
 	private Texture grass;
 	private Texture ice;
 	private Texture sky;
@@ -136,7 +135,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.bindTexture(mCubeTex);
 		mGraphics3D.setColor(1, 1, 1, 0.65f);
 		float r = 0.5f;
-		float t = STATIC_SHADOWS?0:time;
+		double t = STATIC_SHADOWS?0:mStateTimer;
 		mGraphics3D.drawCubeCentered((float)Math.sin(t)*r, 1, (float)Math.sin(2*t)*r, 0.5f);
 		mGraphics3D.fillNormals(0);
 	}
@@ -145,7 +144,7 @@ public class IcyTerrainState extends SampleState {
 		mShadowHelper.beginDepthRendering();
 		mGraphics.switchZBuffer(true);
 		mGraphics3D.setOrthogonalProjection(0, 7, 3.5f);
-		mShadowHelper.setLightSource(-1.5f*(float)Math.sin(time*0.1f),2.0f-(float)Math.sin(time*0.1f),1.5f*(float)Math.cos(time*0.1f), 0,0.5f,0, true);
+		mShadowHelper.setLightSource(-1.5f*(float)Math.sin(mStateTimer*0.1f),2.0f-(float)Math.sin(mStateTimer*0.1f),1.5f*(float)Math.cos(mStateTimer*0.1f), 0,0.5f,0, true);
 		mTerrainBatchLowPoly.draw();
 		drawShadCube();
 		mShadowHelper.endDepthRendering();
@@ -224,10 +223,8 @@ public class IcyTerrainState extends SampleState {
 	
 	@Override
 	public void draw() {
-		mWeather.step(0.01f);
 		
 		mGraphics3D.activate();
-		mGraphics3D.setTime(this.time);
 
 		mGraphics.switchZBuffer(true);
 		mGraphics.switchCulling(true);
@@ -284,9 +281,9 @@ public class IcyTerrainState extends SampleState {
 		
 		float fac = 0.2f;
 		float rad = 1.6f;
-		float pX = -(float)Math.sin(time*fac)*rad;
-		float pY = 1.5f+(float)Math.sin(time*fac*6) + GLOBAL_SHIFT;
-		float pZ = (float)Math.cos(time*fac)*rad;
+		float pX = -(float)Math.sin(mStateTimer*fac)*rad;
+		float pY = 1.5f+(float)Math.sin(mStateTimer*fac*6) + GLOBAL_SHIFT;
+		float pZ = (float)Math.cos(mStateTimer*fac)*rad;
 		
 		mGraphics3D.setPerspectiveProjection(0.6f,0.1f,100.5f);
 			
@@ -317,7 +314,6 @@ public class IcyTerrainState extends SampleState {
 		}
 		
 		//Begin real drawing
-		time+=0.01f;
 		mGraphics.clear(0,0,0.25f,1,GLMasks.DEPTH_BUFFER_BIT);
 		
 		mCamera.set(pX,pY,pZ, 0,0,0, 0,1,0);
@@ -364,7 +360,14 @@ public class IcyTerrainState extends SampleState {
 
 	@Override
 	protected void step(float deltaTime) {
-		
+		mWeather.step(deltaTime);
+	}
+	
+	@Override
+	public void stop() {
+		mGraphics3D.resetGlobalTransform();
+		mGraphics3D.resetCamera();
+		mGraphics3D.resetProjection();
 	}
 
 }
