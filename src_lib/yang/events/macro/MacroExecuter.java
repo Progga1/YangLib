@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.model.DebugYang;
 
 public class MacroExecuter {
@@ -33,13 +34,15 @@ public class MacroExecuter {
 		try {
 			if(mNextStep<0)
 				mNextStep = mStream.readLong();
-			if(mStepCount>=mNextStep) {
+			while(mStepCount>=mNextStep) {
 				YangEvent event = mMacroIO.readEvent(mStream);
-
+//				if(event instanceof YangPointerEvent && ((YangPointerEvent)event).mAction==YangPointerEvent.ACTION_POINTERDOWN)
+//					System.out.println(mNextStep+" "+mStepCount+" ");
 				mMacroIO.mEventQueue.putEvent(event);
 				if(mStream.available()<=0) {
 					mStream.close();
 					mFinished = true;
+					break;
 				}else
 					mNextStep = mStream.readLong();
 			}
@@ -51,9 +54,10 @@ public class MacroExecuter {
 
 	public void close() {
 		try {
-			if(!mFinished)
+			if(!mFinished) {
+				mFinished = true;
 				mStream.close();
-			mFinished = true;
+			}
 		} catch (IOException e) {
 			DebugYang.exception(e);
 		}

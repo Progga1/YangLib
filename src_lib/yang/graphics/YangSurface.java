@@ -208,7 +208,12 @@ public abstract class YangSurface {
 		mDebug = new GFXDebug(this,graphics,font);
 	}
 	
-	protected void catchUp() {
+	protected void catchUp() {		
+//		if(alt) {
+//		alt = false;
+//		return;
+//	}
+//	alt = true;
 		if(!mInitialized || mRuntimeState>0)
 			return;
 		if(mCatchUpTime==0)
@@ -220,20 +225,29 @@ public abstract class YangSurface {
 			mCatchUpTime = 0;
 			return;
 		}
-		while(mCatchUpTime<System.nanoTime()) {
+		if(true) {
+			while(mCatchUpTime<System.nanoTime()) {
+				mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
+				proceed();
+			}
+		}else{
+			mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
+			proceed();
 			mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
 			proceed();
 		}
 	}
-	
+	boolean alt = false;
 	public void proceed() {
+
 		if(!mPaused) {
 			if(mMacro!=null)
 				mMacro.step();
 			if(mEventListener!=null)
 				mEventQueue.handleEvents(mEventListener);
-			mProgramTime += deltaTimeSeconds;
 			mStepCount ++;
+			mProgramTime += deltaTimeSeconds;
+
 			step(deltaTimeSeconds);
 		}
 	}
@@ -284,6 +298,7 @@ public abstract class YangSurface {
 				mDebug.printGFXDebugValues();
 		}
 		mGraphics.beginFrame();
+		//if(mProgramTime<2 || mProgramTime>20)
 		draw();
 		if(mDebug!=null) {
 			mDebug.draw();

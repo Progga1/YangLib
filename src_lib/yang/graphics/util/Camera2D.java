@@ -60,10 +60,6 @@ public class Camera2D {
 		mTarRotation = rotation;
 	}
 	
-	public void render(Default2DGraphics g){
-		g.setCamera(mPos.x, mPos.y, mZoom);
-	}
-	
 	public void update(){		
 		mPos.interpolate(mTarPos, mAdaption);
 		mZoom = (1-mAdaption) * mZoom + (mAdaption)*mTarZoom;

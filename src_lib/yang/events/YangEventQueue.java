@@ -75,11 +75,6 @@ public class YangEventQueue {
 		mQueue[mQueueId++] = event;
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
-		if(mMacroWriters!=null) {
-			for(MacroWriter writer:mMacroWriters) {
-				writer.writeEvent(event);
-			}
-		}
 	}
 	
 	public synchronized void putEvent(YangEvent event) {
@@ -164,7 +159,7 @@ public class YangEventQueue {
 		putRuntimeEvent(newEvent);
 	}
 	
-	public YangEvent peekEvent() {
+	public synchronized YangEvent peekEvent() {
 		if(mQueueFirst==mQueueId)
 			return null;
 		else
@@ -210,9 +205,14 @@ public class YangEventQueue {
 		return mMetaEventQueueFirst!=mMetaEventQueueId;
 	}
 	
-	public void handleEvents(YangEventListener eventInterface) {
+	public synchronized void handleEvents(YangEventListener eventInterface) {
 		YangEvent event;
 		while((event = pollEvent())!=null) {
+			if(mMacroWriters!=null) {
+				for(MacroWriter writer:mMacroWriters) {
+					writer.writeEvent(event);
+				}
+			}
 			event.handle(eventInterface);
 		}
 	}

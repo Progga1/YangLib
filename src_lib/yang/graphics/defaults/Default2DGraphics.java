@@ -221,7 +221,8 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	public void setCamera(float x, float y, float zoom, float rotation) {
-		flush();
+		if(Thread.currentThread().getId()==mTranslator.mThreadId)
+			mTranslator.flush();
 		mCamX = x;
 		mCamY = y;
 		mZoom = zoom;
