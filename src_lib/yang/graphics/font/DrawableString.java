@@ -98,6 +98,12 @@ public class DrawableString extends FixedString {
 		return this;
 	}
 	
+	public DrawableString setKerningEnabled(boolean enabled) {
+		cloneProperties(false);
+		mProperties.mKerningEnabled = enabled;
+		return this;
+	}
+	
 	public DrawableString setProperties(StringProperties settings) {
 		mProperties = settings;
 		return this;

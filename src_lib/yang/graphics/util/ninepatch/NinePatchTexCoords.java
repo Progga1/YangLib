@@ -6,19 +6,25 @@ public class NinePatchTexCoords {
 	private float mLeft,mTop,mRight,mBottom;
 	private float mBorderLeft,mBorderTop,mBorderRight,mBorderBottom;
 	private float mTexWidth,mTexHeight;
+	private float mBias;
 	
 	public NinePatchTexCoords() {
 		
 	}
 	
-	public NinePatchTexCoords init(float left,float top,float right,float bottom) {
-		mLeft = left;
-		mTop = top;
-		mRight = right;
-		mBottom = bottom;
+	public NinePatchTexCoords init(float left,float top,float right,float bottom, float bias) {
+		mBias = bias;
+		mLeft = left+bias;
+		mTop = top-bias;
+		mRight = right-bias;
+		mBottom = bottom+bias;
 		mTexWidth = 1;
 		mTexHeight = 1;
 		return this;
+	}
+	
+	public NinePatchTexCoords init(float left,float top,float right,float bottom) {
+		return init(left,top,right,bottom, 0.005f);
 	}
 	
 	public void refreshTexCoords() {
@@ -80,7 +86,7 @@ public class NinePatchTexCoords {
 
 	public NinePatchTexCoords cloneWithOffset(float offsetX, float offsetY) {
 		NinePatchTexCoords result = new NinePatchTexCoords();
-		result.init(mLeft+offsetX, mTop+offsetY, mRight+offsetX, mBottom+offsetY);
+		result.init(mLeft+offsetX, mTop+offsetY, mRight+offsetX, mBottom+offsetY, mBias);
 		result.setBorder(mBorderLeft, mBorderTop, mBorderRight, mBorderBottom);
 		return result;
 	}

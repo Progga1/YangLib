@@ -64,7 +64,7 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		
 		//Nine patch buttons
 		Texture ninePatchTex = mGFXLoader.getImage("button");
-		NinePatchTexCoords ninePatchTexCoords = new NinePatchTexCoords().init(0, 0, 0.5f, 0.5f).setBorder(3f/ninePatchTex.mWidth);
+		NinePatchTexCoords ninePatchTexCoords = new NinePatchTexCoords().init(0, 0, 0.5f, 0.5f, 0.005f).setBorder(3f/ninePatchTex.mWidth);
 		NinePatchGrid ninePatch = new NinePatchGrid().setBorderSize(0.01f).setTextureBorder(ninePatchTexCoords);
 		NinePatchGrid ninePatchPressed = ninePatch.cloneWithTextureOffset(0.5f, 0);
 		
