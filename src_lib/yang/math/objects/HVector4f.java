@@ -1,13 +1,13 @@
 package yang.math.objects;
 
-public class HVector4 extends Quadruple {
+public class HVector4f extends Quadruple {
 	
 	public static int X = 0;
 	public static int Y = 1;
 	public static int Z = 2;
 	public static int W = 3;
 	
-	public HVector4(float v1,float v2,float v3,float v4) {
+	public HVector4f(float v1,float v2,float v3,float v4) {
 		set(v1,v2,v3,v4);
 	}
 	
@@ -46,7 +46,7 @@ public class HVector4 extends Quadruple {
 		mValues[Z] -= values.mValues[Z];
 	}
 	
-	public float dot(HVector4 vector) {
+	public float dot(HVector4f vector) {
 		return mValues[X]*vector.mValues[X] + mValues[Y]*vector.mValues[Y] + mValues[Z]*vector.mValues[Z] + mValues[W]*vector.mValues[W];
 	}
 	
