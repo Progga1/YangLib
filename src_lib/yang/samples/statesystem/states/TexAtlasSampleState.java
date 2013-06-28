@@ -17,6 +17,7 @@ public class TexAtlasSampleState extends SampleState {
 		atlasData.createBiasBorder(4, 4, 120, 120, 4, TextureWrap.REPEAT, TextureWrap.REPEAT);
 		atlasData.createBiasBorder(132, 4, 120, 120, 4, TextureWrap.CLAMP, TextureWrap.CLAMP);
 		atlasData.createBiasBorder(4, 132, 120, 120, 4, TextureWrap.MIRROR, TextureWrap.MIRROR);
+		atlasData.copyWithMargin(128,128, 128,128, mGFXLoader.loadImageData("sky_small"), 2, TextureWrap.REPEAT, TextureWrap.CLAMP);
 		atlasData.createBiasBorder(132, 132, 120, 120, 4, TextureWrap.REPEAT, TextureWrap.CLAMP);
 		mAtlasTex = mGraphics.createTexture(atlasData, new TextureSettings(TextureFilter.LINEAR_MIP_LINEAR));
 	}
@@ -32,6 +33,9 @@ public class TexAtlasSampleState extends SampleState {
 		mGraphics2D.activate();
 		mGraphics.bindTexture(mAtlasTex);
 		mGraphics2D.setWhite();
+		
+		
+		
 		mGraphics2D.drawRect(mGraphics2D.getScreenRight()-0.7f,mGraphics2D.getScreenTop()-0.7f,mGraphics2D.getScreenRight(),mGraphics2D.getScreenTop());
 	}
 

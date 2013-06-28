@@ -84,68 +84,6 @@ public class TextureData {
 		mTemp.limit(mTemp.capacity());
 	}
 	
-	private static byte[] tempArray = new byte[4];
-	
-	public void createBiasBorder(int left,int top,int width,int height, int border, TextureWrap wrapX,TextureWrap wrapY) {
-		int right = left+width-1;
-		int bottom = top+height-1;
-		if(wrapX==TextureWrap.MIRROR)
-			wrapX = TextureWrap.CLAMP;
-		if(wrapY==TextureWrap.MIRROR)
-			wrapY = TextureWrap.CLAMP;
-		for(int i=0;i<border;i++) {
-			//TOP
-			mData.position(getIndex(left,top-i-1));
-			if(wrapY==TextureWrap.CLAMP)
-				mTemp.position(getIndex(left,top));
-			if(wrapY==TextureWrap.REPEAT)
-				mTemp.position(getIndex(left,bottom-i));
-			if(wrapY==TextureWrap.MIRROR)
-				mTemp.position(getIndex(left,top+i+1));
-			copyFromWorkingBuffer(width);
-			//BOTTOM
-			mData.position(getIndex(left,bottom+i+1));
-			if(wrapY==TextureWrap.CLAMP)
-				mTemp.position(getIndex(left,bottom));
-			if(wrapY==TextureWrap.REPEAT)
-				mTemp.position(getIndex(left,top+i));
-			if(wrapY==TextureWrap.MIRROR)
-				mTemp.position(getIndex(left,bottom-i-1));
-			copyFromWorkingBuffer(width);
-		}
-		
-		//LEFT
-		for(int i=-border;i<height+border;i++) {
-			int y = top+i;
-			if(wrapX==TextureWrap.REPEAT) {
-				//left
-				mData.position(getIndex(left-border,y));
-				mTemp.position(getIndex(right-border,y));
-				copyFromWorkingBuffer(border);
-				//right
-				mData.position(getIndex(right+1,y));
-				mTemp.position(getIndex(left,y));
-				copyFromWorkingBuffer(border);
-			}
-			if(wrapX==TextureWrap.CLAMP) {
-				//left
-				mData.position(getIndex(left-border,y));
-				mTemp.position(getIndex(left,y));
-				for(int c=0;c<mChannels;c++)
-					tempArray[c] = mTemp.get();
-				for(int j=0;j<border;j++)
-					mData.put(tempArray,0,mChannels);
-				//right
-				mData.position(getIndex(right+1,y));
-				mTemp.position(getIndex(right,y));
-				for(int c=0;c<mChannels;c++)
-					tempArray[c] = mTemp.get();
-				for(int j=0;j<border;j++)
-					mData.put(tempArray,0,mChannels);
-			}
-		}
-	}
-	
 	public void copyRect(int left,int top, TextureData source, int downScale) {
 		copyRect(left,top,source.mWidth,source.mHeight,source.mData,source.mChannels,0,0,source.mWidth,downScale);
 	}
@@ -180,6 +118,91 @@ public class TextureData {
 		}
 		mData.rewind();
 		return this;
+	}
+	
+	private static byte[] tempArray = new byte[4];
+	
+	public TextureCoordinatesQuad createBiasBorder(int left,int top,int width,int height, int borderX, int borderY, TextureWrap wrapX,TextureWrap wrapY) {
+		int right = left+width-1;
+		int bottom = top+height-1;
+		if(wrapX==TextureWrap.MIRROR)
+			wrapX = TextureWrap.CLAMP;
+		if(wrapY==TextureWrap.MIRROR)
+			wrapY = TextureWrap.CLAMP;
+		for(int i=0;i<borderY;i++) {
+			//TOP
+			mData.position(getIndex(left,top-i-1));
+			if(wrapY==TextureWrap.CLAMP)
+				mTemp.position(getIndex(left,top));
+			if(wrapY==TextureWrap.REPEAT)
+				mTemp.position(getIndex(left,bottom-i));
+			if(wrapY==TextureWrap.MIRROR)
+				mTemp.position(getIndex(left,top+i+1));
+			copyFromWorkingBuffer(width);
+			//BOTTOM
+			mData.position(getIndex(left,bottom+i+1));
+			if(wrapY==TextureWrap.CLAMP)
+				mTemp.position(getIndex(left,bottom));
+			if(wrapY==TextureWrap.REPEAT)
+				mTemp.position(getIndex(left,top+i));
+			if(wrapY==TextureWrap.MIRROR)
+				mTemp.position(getIndex(left,bottom-i-1));
+			copyFromWorkingBuffer(width);
+		}
+		
+		//LEFT
+		for(int i=-borderY;i<height+borderY;i++) {
+			int y = top+i;
+			if(wrapX==TextureWrap.REPEAT) {
+				//left
+				mData.position(getIndex(left-borderX,y));
+				mTemp.position(getIndex(right-borderX,y));
+				copyFromWorkingBuffer(borderX);
+				//right
+				mData.position(getIndex(right+1,y));
+				mTemp.position(getIndex(left,y));
+				copyFromWorkingBuffer(borderX);
+			}
+			if(wrapX==TextureWrap.CLAMP) {
+				//left
+				mData.position(getIndex(left-borderX,y));
+				mTemp.position(getIndex(left,y));
+				for(int c=0;c<mChannels;c++)
+					tempArray[c] = mTemp.get();
+				for(int j=0;j<borderX;j++)
+					mData.put(tempArray,0,mChannels);
+				//right
+				mData.position(getIndex(right+1,y));
+				mTemp.position(getIndex(right,y));
+				for(int c=0;c<mChannels;c++)
+					tempArray[c] = mTemp.get();
+				for(int j=0;j<borderX;j++)
+					mData.put(tempArray,0,mChannels);
+			}
+		}
+		
+		return new TextureCoordinatesQuad().initBiased(left, top, right, bottom, mWidth, mHeight, 0,0);
+	}
+	
+	public TextureCoordinatesQuad createBiasBorder(int left,int top,int width,int height, int border, TextureWrap wrapX,TextureWrap wrapY) {
+		return createBiasBorder(left,top,width,height,border,border,wrapX,wrapY);
+	}
+	
+	public TextureCoordinatesQuad createBiasRepeatBorder(int left,int top,int width,int height, int border) {
+		return createBiasBorder(left,top,width,height,border,TextureWrap.REPEAT,TextureWrap.REPEAT);
+	}
+	
+	public TextureCoordinatesQuad copyWithMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale,TextureWrap wrapX,TextureWrap wrapY) {
+		int sourceW = source.mWidth/downScale;
+		int sourceH = source.mHeight/downScale;
+		int borderX = (destWidth-sourceW)/2;
+		int borderY = (destHeight-sourceH)/2;
+		copyRect(left+borderX,top+borderY,source,downScale);
+		return createBiasBorder(left+borderX,top+borderY,sourceW,sourceH,borderX,borderY,wrapX,wrapY);
+	}
+	
+	public TextureCoordinatesQuad copyWithRepeatMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale) {
+		return copyWithMargin(left,top,destWidth,destHeight,source,downScale,TextureWrap.REPEAT,TextureWrap.REPEAT);
 	}
 	
 }
