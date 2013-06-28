@@ -17,6 +17,9 @@ public class OrthoStrokeProperties {
 	public TextureCoordinatesQuad[] mLineTexCoords;
 	protected float mPatchSize = 0.25f;
 	protected Rect mTexRect = new Rect(0,0,1,1);
+	public float mFieldWidth;
+
+	public int[] mOffsets = {0,1,0,1,3,3,1,0};
 	
 	public OrthoStrokeProperties() {
 		mTexCoordTable = new TextureCoordinatesQuad[16];
@@ -34,6 +37,7 @@ public class OrthoStrokeProperties {
 		mLineTexCoords[1] = texCoords;
 		mLineTexCoords[2] = texCoords;
 		mLineTexCoords[3] = texCoords;
+		mFieldWidth = texCoords.getWidth()/mOffsets.length;
 	}
 	
 	public void putPatch(int mask,int texPatchX,int texPatchY,int rotation) {

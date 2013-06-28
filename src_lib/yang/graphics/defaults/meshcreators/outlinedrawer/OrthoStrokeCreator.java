@@ -1,9 +1,11 @@
 package yang.graphics.defaults.meshcreators.outlinedrawer;
 
+import yang.graphics.buffers.AbstractVertexBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
 import yang.graphics.model.FloatColor;
+import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.MathFunc;
 
 public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
@@ -147,21 +149,17 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 				if(!oldLine.mDeleted && oldLine!=line) {
 					float deltaX = line.mPosX-oldLine.mPosX;
 					float deltaY = line.mPosY-oldLine.mPosY;
-					float prevDeltaX = line.mDeltaX;
-					float prevDeltaY = line.mDeltaY;
-					float oldPrevDeltaX = oldLine.mDeltaX;
-					float oldPrevDeltaY = oldLine.mDeltaY;
 					if(line.mDeltaX!=0) {
 						if(oldLine.mDeltaY!=0 && deltaY*oldLine.mDeltaY>=0 && Math.abs(deltaY)<Math.abs(oldLine.mDeltaY)) {
 							if((line.mPosX<oldLine.mPosX && line.mPosX+line.mDeltaX>oldLine.mPosX) || (line.mPosX>oldLine.mPosX && line.mPosX+line.mDeltaX<oldLine.mPosX)) {
-								OrthoStrokePatch newPatch = pickOrAddPatch(line.mPosX-deltaX,line.mPosY,SNAP_TOLERANCE);
+								pickOrAddPatch(line.mPosX-deltaX,line.mPosY,SNAP_TOLERANCE);
 							}
 						}
 					}
 					if(line.mDeltaY!=0) {
 						if(oldLine.mDeltaX!=0 && deltaX*oldLine.mDeltaX>=0 && Math.abs(deltaX)<Math.abs(oldLine.mDeltaX)) {
 							if((line.mPosY<oldLine.mPosY && line.mPosY+line.mDeltaY>oldLine.mPosY) || (line.mPosY>oldLine.mPosY && line.mPosY+line.mDeltaY<oldLine.mPosY)) {
-								OrthoStrokePatch newPatch = pickOrAddPatch(line.mPosX,line.mPosY-deltaY,SNAP_TOLERANCE);
+								pickOrAddPatch(line.mPosX,line.mPosY-deltaY,SNAP_TOLERANCE);
 							}
 						}
 					}
@@ -216,6 +214,27 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	public int getVertexCount() {
 		return mLineCount*4+mPatchCount*4;
 	}
+	
+	public void putTexRect(float distance, TextureCoordinatesQuad texCoords) {
+		
+		final float BIAS_X = 0.001f;
+		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);
+		float offset = mProperties.mOffsets[fieldCount%mProperties.mOffsets.length];
+		float x1 = texCoords.x1+offset+BIAS_X;
+		float x2 = x1+(mProperties.mFieldWidth*fieldCount*(texCoords.x2-texCoords.x1))-BIAS_X;
+		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
+				x1,texCoords.y1+mProperties.mTexBias,
+				x2,texCoords.y1+mProperties.mTexBias,
+				x1,texCoords.y2-mProperties.mTexBias,
+				x2,texCoords.y2-mProperties.mTexBias
+				);
+//		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
+//				texCoords.x1,texCoords.y1,
+//				texCoords.x2,texCoords.y1,
+//				texCoords.x1,texCoords.y2,
+//				texCoords.x2,texCoords.y2
+//				);
+	}
 
 	public void putPositions() {
 		float w = mProperties.mWidth*0.5f;
@@ -230,28 +249,27 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY-w);
 						mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
 						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+w);
-						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[1].mAppliedCoordinates);
-						
+						putTexRect(line.mDeltaX, mProperties.mLineTexCoords[1]);
 					}else{
 						mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
 						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+w);
 						mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
 						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY-w);
-						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[3].mAppliedCoordinates);
+						putTexRect(line.mDeltaX, mProperties.mLineTexCoords[3]);
 					}
-				}else{
+				}else {
 					if(line.mDeltaY>0) {
 						mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
 						mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY-w);
 						mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
 						mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY-w);
-						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[0].mAppliedCoordinates);
-					}else{
+						putTexRect(line.mDeltaY, mProperties.mLineTexCoords[0]);
+					}else if(line.mDeltaY<0) {
 						mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
 						mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY+w);
 						mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
 						mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY+w);
-						vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mLineTexCoords[2].mAppliedCoordinates);
+						putTexRect(line.mDeltaY, mProperties.mLineTexCoords[2]);
 					}
 				}
 			}

@@ -10,7 +10,7 @@ public class OrthoStrokeDefaultProperties extends OrthoStrokeProperties {
 	}
 	
 	public OrthoStrokeDefaultProperties init() {
-		super.setLineTexCoords(new TextureCoordinatesQuad().initBiased(0, 0.5f, 1, 0.75f,mTexBias));
+		super.setLineTexCoords(new TextureCoordinatesQuad().initBiased(0, 0.5f, 1, 0.75f, 0));
 		super.putPatch(0, 0, 0);
 		super.putPatch(LEFT | RIGHT, 1,0);
 		super.putPatch(UP | DOWN, 1,0, TextureCoordinatesQuad.ROTATE_CW_90);
