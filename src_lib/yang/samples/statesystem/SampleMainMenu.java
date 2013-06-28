@@ -12,6 +12,7 @@ import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.StrokeDrawerState;
 import yang.samples.statesystem.states.TailSampleState;
+import yang.samples.statesystem.states.TexAtlasSampleState;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
@@ -49,15 +50,30 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 		addMenuItem("Particles", new ParticleSampleState());
+		addMenuItem("Texture Atlas", new TexAtlasSampleState());
 		refreshLayout();
 	}
 	
 	private void refreshLayout() {
 		//mGUI.refreshCoordinateSystem();
-		float y = mGUI.getGUICenterY()-0.24f*(mButtons.size()-1)*0.5f;
-		for(DefaultRectButton button:mButtons) {
-			button.setPosCentered(mGUI.getGUICenterX(), y);
-			y += 0.2f*SCALE;
+		final float topY = mGUI.getGUITop()+0.13f*SCALE;
+		if(mGraphics.getSurfaceHeight()>mGraphics.getSurfaceWidth()) {
+			float y = topY;
+			for(DefaultRectButton button:mButtons) {
+				button.setPosCentered(mGUI.getGUICenterX(), y);
+				y += 0.2f*SCALE;
+			}
+		}else{
+			float x = mGUI.getGUICenterX()-0.5f;
+			float y = topY;
+			for(DefaultRectButton button:mButtons) {
+				button.setPosCentered(x, y);
+				y += 0.2f*SCALE;
+				if(y>=1.7f) {
+					y = topY;
+					x = mGUI.getGUICenterX()+0.5f;
+				}
+			}
 		}
 	}
 	
@@ -67,7 +83,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		newButton.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 		//In normalized coordinates: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		mGUI.addComponent(newButton);
-		newButton.setExtents(SCALE, 0.15f*SCALE);
+		newButton.setExtents(SCALE*0.8f, 0.15f*SCALE);
 		mButtons.add(newButton);
 		mProgramStates.put(newButton, state);
 	}
@@ -105,4 +121,9 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 			mStateSystem.exit();
 	}
 
+	@Override
+	public void surfaceSizeChanged(int width,int height) {
+		refreshLayout();
+	}
+	
 }

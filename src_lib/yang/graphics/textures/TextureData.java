@@ -2,11 +2,14 @@ package yang.graphics.textures;
 
 import java.nio.ByteBuffer;
 
+import yang.graphics.textures.enums.TextureWrap;
+
 public class TextureData {
 
 	public static boolean USE_PREMULTIPLICATION = true;
 	
 	public ByteBuffer mData;
+	private ByteBuffer mTemp;
 	public int mWidth;
 	public int mHeight;
 	public int mChannels;
@@ -14,6 +17,7 @@ public class TextureData {
 	
 	public TextureData(ByteBuffer data,int width,int height,int channels) {
 		mData = data;
+		mTemp = data.duplicate();
 		mWidth = width;
 		mHeight = height;
 		mChannels = channels;
@@ -62,6 +66,82 @@ public class TextureData {
 						mData.put(mInterColors[c]);
 					}
 				}
+			}
+		}
+	}
+	
+	public int getIndex(int x,int y) {
+		return ((y*mWidth+x)*mChannels);
+	}
+	
+	public void setPosition(int x,int y) {
+		mData.position(getIndex(x,y));
+	}
+	
+	private void copyFromWorkingBuffer(int pixels) {
+		mTemp.limit(mTemp.position()+pixels*mChannels);
+		mData.put(mTemp);
+		mTemp.limit(mTemp.capacity());
+	}
+	
+	private static byte[] tempArray = new byte[4];
+	
+	public void createBiasBorder(int left,int top,int width,int height, int border, TextureWrap wrapX,TextureWrap wrapY) {
+		int right = left+width-1;
+		int bottom = top+height-1;
+		if(wrapX==TextureWrap.MIRROR)
+			wrapX = TextureWrap.CLAMP;
+		if(wrapY==TextureWrap.MIRROR)
+			wrapY = TextureWrap.CLAMP;
+		for(int i=0;i<border;i++) {
+			//TOP
+			mData.position(getIndex(left,top-i-1));
+			if(wrapY==TextureWrap.CLAMP)
+				mTemp.position(getIndex(left,top));
+			if(wrapY==TextureWrap.REPEAT)
+				mTemp.position(getIndex(left,bottom-i));
+			if(wrapY==TextureWrap.MIRROR)
+				mTemp.position(getIndex(left,top+i+1));
+			copyFromWorkingBuffer(width);
+			//BOTTOM
+			mData.position(getIndex(left,bottom+i+1));
+			if(wrapY==TextureWrap.CLAMP)
+				mTemp.position(getIndex(left,bottom));
+			if(wrapY==TextureWrap.REPEAT)
+				mTemp.position(getIndex(left,top+i));
+			if(wrapY==TextureWrap.MIRROR)
+				mTemp.position(getIndex(left,bottom-i-1));
+			copyFromWorkingBuffer(width);
+		}
+		
+		//LEFT
+		for(int i=-border;i<height+border;i++) {
+			int y = top+i;
+			if(wrapX==TextureWrap.REPEAT) {
+				//left
+				mData.position(getIndex(left-border,y));
+				mTemp.position(getIndex(right-border,y));
+				copyFromWorkingBuffer(border);
+				//right
+				mData.position(getIndex(right+1,y));
+				mTemp.position(getIndex(left,y));
+				copyFromWorkingBuffer(border);
+			}
+			if(wrapX==TextureWrap.CLAMP) {
+				//left
+				mData.position(getIndex(left-border,y));
+				mTemp.position(getIndex(left,y));
+				for(int c=0;c<mChannels;c++)
+					tempArray[c] = mTemp.get();
+				for(int j=0;j<border;j++)
+					mData.put(tempArray,0,mChannels);
+				//right
+				mData.position(getIndex(right+1,y));
+				mTemp.position(getIndex(right,y));
+				for(int c=0;c<mChannels;c++)
+					tempArray[c] = mTemp.get();
+				for(int j=0;j<border;j++)
+					mData.put(tempArray,0,mChannels);
 			}
 		}
 	}
