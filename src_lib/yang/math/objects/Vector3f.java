@@ -18,6 +18,14 @@ public class Vector3f {
 		set(x,y,z);
 	}
 	
+	public float magn() {
+		return (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ);
+	}
+	
+	public float sqrMagn() {
+		return mX*mX + mY*mY + mZ*mZ;
+	}
+	
 	public void set(float x,float y,float z) {
 		mX = x;
 		mY = y;
@@ -48,7 +56,7 @@ public class Vector3f {
 		mZ -= vector.mZ;
 	}
 	
-	public void mult(float scalar) {
+	public void scale(float scalar) {
 		mX *= scalar;
 		mY *= scalar;
 		mZ *= scalar;

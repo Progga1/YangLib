@@ -1,6 +1,7 @@
 package yang.math.objects.matrix;
 
-import javax.vecmath.Vector3f;
+import yang.math.objects.Vector3f;
+
 
 public class YangMatrixCameraOps extends YangMatrix {
 
@@ -22,16 +23,16 @@ public class YangMatrixCameraOps extends YangMatrix {
 		mVec3.set(eyeX-lookAtX,eyeY-lookAtY,eyeZ-lookAtZ);
 		mVec4.set(upX,upY,upZ);
 
-		float dist = mVec3.length();
+		float dist = mVec3.magn();
 		if(dist==0) {
-			mVec3.z = 1;
+			mVec3.mZ = 1;
 			dist = 1;
 		}
 		mVec3.scale(1/dist);
 		mVec1.cross(mVec3, mVec4);
-		float rightDist = mVec1.length();
+		float rightDist = mVec1.magn();
 		if(rightDist == 0) {
-			mVec1.x = 1;
+			mVec1.mX = 1;
 			rightDist = 1;
 		}
 		mVec1.scale(1/rightDist);

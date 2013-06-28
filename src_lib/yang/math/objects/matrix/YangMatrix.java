@@ -1,8 +1,7 @@
 package yang.math.objects.matrix;
 
-import javax.vecmath.Vector3f;
-
 import yang.math.MatrixOps;
+import yang.math.objects.Vector3f;
 
 
 public class YangMatrix {
@@ -310,11 +309,11 @@ public class YangMatrix {
 	}
 	
 	protected void setColumn(int col, Vector3f values) {
-		setColumn(col,values.x,values.y,values.z);
+		setColumn(col,values.mX,values.mY,values.mZ);
 	}
 	
 	protected void setRow(int row, Vector3f values) {
-		setRow(row,values.x,values.y,values.z);
+		setRow(row,values.mX,values.mY,values.mZ);
 	}
 
 	public void scaleX(float value) {
