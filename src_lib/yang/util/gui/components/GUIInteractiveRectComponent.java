@@ -54,11 +54,11 @@ public abstract class GUIInteractiveRectComponent extends GUIInteractiveComponen
 		return setBounds(centerX-mWidth*0.5f,centerY-mHeight*0.5f,centerX+mWidth*0.5f,centerY+mHeight*0.5f);
 	}
 	
-	public GUIInteractiveRectComponent setPosAndExtendsCentered(float centerX, float centerY, float width, float height) {
+	public GUIInteractiveRectComponent setPosAndExtentsCentered(float centerX, float centerY, float width, float height) {
 		return setBounds(centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f);
 	}
 	
-	public GUIInteractiveRectComponent setPosAndExtends(float left, float top, float width, float height) {
+	public GUIInteractiveRectComponent setPosAndExtents(float left, float top, float width, float height) {
 		mPosX = left;
 		mPosY = top;
 		mWidth = width;
@@ -66,7 +66,7 @@ public abstract class GUIInteractiveRectComponent extends GUIInteractiveComponen
 		return this;
 	}
 	
-	public GUIInteractiveRectComponent setExtends(float width,float height) {
+	public GUIInteractiveRectComponent setExtents(float width,float height) {
 		mWidth = width;
 		mHeight = height;
 		return this;

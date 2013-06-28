@@ -67,7 +67,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		newButton.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 		//In normalized coordinates: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
 		mGUI.addComponent(newButton);
-		newButton.setExtends(SCALE, 0.15f*SCALE);
+		newButton.setExtents(SCALE, 0.15f*SCALE);
 		mButtons.add(newButton);
 		mProgramStates.put(newButton, state);
 	}

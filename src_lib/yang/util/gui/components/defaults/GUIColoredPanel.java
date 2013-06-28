@@ -7,7 +7,7 @@ public class GUIColoredPanel extends GUIContainer2D{
 	
 	public GUIColoredPanel() {
 		super();
-		setExtends(1,1);
+		setExtents(1,1);
 		super.setPasses(new GUIRectDrawer());
 	}
 	

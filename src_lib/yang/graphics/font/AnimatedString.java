@@ -19,7 +19,7 @@ public abstract class AnimatedString extends DrawableAnchoredLines {
 	
 	@Override
 	protected void offsetsToPositions(float[] offsets,float[] positionTarget) {
-		float charY = -mSettings.mLineHeight;
+		float charY = -mProperties.mLineHeight;
 		int o = 0;
 		int c = 0;
 		int lineCount = 0;
@@ -32,14 +32,14 @@ public abstract class AnimatedString extends DrawableAnchoredLines {
 //				TextureCoordinatesQuad coords = mTexCoords[o];
 //				putLetter(positionTarget,c,charX,charY,charX+(coords.x2-coords.x1)*mFont.mCharNormalizeFactorY,charY+(coords.y2-coords.y1)*mFont.mCharNormalizeFactorY,i);
 				int val = mLetters[o];
-				putLetter(positionTarget,c,val,o,charX+mSettings.mFont.mWidths[val]*0.5f,charY+mSettings.mFont.mHeights[val]*0.5f);
-				if(mSettings.mHasZComponent)
+				putLetter(positionTarget,c,val,o,charX+mProperties.mFont.mWidths[val]*0.5f,charY+mProperties.mFont.mHeights[val]*0.5f);
+				if(mProperties.mHasZComponent)
 					c+=12;
 				else
 					c+=8;
 				o++;
 			}else{
-				charY -= mSettings.mLineHeight;
+				charY -= mProperties.mLineHeight;
 				newLine(++lineCount);
 			}
 		}
