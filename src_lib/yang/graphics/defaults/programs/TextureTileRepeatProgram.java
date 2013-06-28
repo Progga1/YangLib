@@ -18,7 +18,7 @@ public class TextureTileRepeatProgram extends BasicProgram{
 			"\n" +
 			"void main() {\n" +
 			"	gl_Position = projTransform * vPosition;\n" +
-			"	texCoord = vTexture;\n" +
+			"	texCoord = vec2(vTexture.x,vTexture.y);\n" +
 			"	color = vColor;\n" +
 			"	texBounds = vTexBounds;\n" +
 			"}\n";
@@ -32,7 +32,9 @@ public class TextureTileRepeatProgram extends BasicProgram{
 			"varying vec4 texBounds;\n" +
 			"\n" +
 			"void main() {\n" +
-			"	gl_FragColor = (texture2D(texSampler, vec2(texCoord.x%texBounds[2]+texBounds.x,texCoord.y%texBounds[3]+texBounds.y)) * color) * ambientColor;\n" +
+			"	gl_FragColor = (texture2D(texSampler, vec2(mod(texCoord.x,texBounds[2])+texBounds[0],mod(texCoord.y,texBounds[3])+texBounds[1])) * color) * ambientColor;\n" +
+			//"	gl_FragColor = (vec4(mod(texCoord.x,texBounds[2])+texBounds[0],mod(texCoord.y,texBounds[3])+texBounds[1],0,1) * color) * ambientColor;\n" +
+			//"	gl_FragColor = (texture2D(texSampler, vec2(mod(texCoord.x,texBounds[2])+texBounds[0],mod(texCoord.y,texBounds[3])+texBounds[1])) * color) * ambientColor * vec4(mod(texCoord.x,texBounds[2]),mod(texCoord.y,texBounds[3]),1,1);\n" +
 			"}\n";
 	
 	@Override

@@ -377,11 +377,23 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurDrawListener = drawListener;
 	}
 	
-	public void addProgram(BasicProgram program) {
+	public <ShaderType extends BasicProgram> ShaderType addProgram(ShaderType program) {
 		assert preCheck("Add program");
 		program.init(this);
 		mPrograms.add(program);
 		assert checkErrorInst("Add program");
+		return program;
+	}
+	
+	public <ShaderType extends BasicProgram> ShaderType addProgram(Class<ShaderType> program) {
+		
+		try {
+			return addProgram(program.newInstance());
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public void flush() {

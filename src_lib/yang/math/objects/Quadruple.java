@@ -5,10 +5,10 @@ import java.nio.ByteBuffer;
 
 public class Quadruple {
 
-	public Quadruple ZERO = new Quadruple(0,0,0,0);
-	public Quadruple ONE = new Quadruple(1,1,1,1);
-	public Quadruple Q0011 = new Quadruple(0,0,1,1);
-	public Quadruple Q0101 = new Quadruple(0,1,0,1);
+	public static final Quadruple ZERO = new Quadruple(0,0,0,0);
+	public static final Quadruple ONE = new Quadruple(1,1,1,1);
+	public static final Quadruple Q0011 = new Quadruple(0,0,1,1);
+	public static final Quadruple Q0101 = new Quadruple(0,1,0,1);
 	
 	public float[] mValues;
 	

@@ -35,6 +35,7 @@ public class TextureData {
 	}
 	
 	public void copyRect(int left,int top,int width,int height, ByteBuffer source, int sourceChannels,int sourceLeft,int sourceTop,int sourceBufferWidth, int downScale) {
+		
 		if(downScale==1 && sourceChannels==mChannels) {
 			//Fast version for matching formats
 			for(int i=0;i<height;i++) {
@@ -54,6 +55,7 @@ public class TextureData {
 			mInterColors[3] = 0;
 			width/=downScale;
 			height/=downScale;
+			
 			for(int i=0;i<height;i++) {
 				mData.position(((top+i)*mWidth+left)*mChannels);
 				source.position((sourceTop+i*downScale)*sourceBufferWidth*sourceChannels);
@@ -122,7 +124,11 @@ public class TextureData {
 	
 	private static byte[] tempArray = new byte[4];
 	
-	public TextureCoordinatesQuad createBiasBorder(int left,int top,int width,int height, int borderX, int borderY, TextureWrap wrapX,TextureWrap wrapY) {
+	public TextureCoordBounds createBiasBorder(int left,int top,int width,int height, int borderX, int borderY, TextureWrap wrapX,TextureWrap wrapY) {
+		left += borderX;
+		top += borderY;
+		width -= borderX*2;
+		height -= borderY*2;
 		int right = left+width-1;
 		int bottom = top+height-1;
 		if(wrapX==TextureWrap.MIRROR)
@@ -180,28 +186,28 @@ public class TextureData {
 					mData.put(tempArray,0,mChannels);
 			}
 		}
-		
-		return new TextureCoordinatesQuad().initBiased(left, top, right, bottom, mWidth, mHeight, 0,0);
+
+		return new TextureCoordBounds().initBiased(left, top, width, height, mWidth, mHeight, 0);
 	}
 	
-	public TextureCoordinatesQuad createBiasBorder(int left,int top,int width,int height, int border, TextureWrap wrapX,TextureWrap wrapY) {
+	public TextureCoordBounds createBiasBorder(int left,int top,int width,int height, int border, TextureWrap wrapX,TextureWrap wrapY) {
 		return createBiasBorder(left,top,width,height,border,border,wrapX,wrapY);
 	}
 	
-	public TextureCoordinatesQuad createBiasRepeatBorder(int left,int top,int width,int height, int border) {
+	public TextureCoordBounds createBiasRepeatBorder(int left,int top,int width,int height, int border) {
 		return createBiasBorder(left,top,width,height,border,TextureWrap.REPEAT,TextureWrap.REPEAT);
 	}
 	
-	public TextureCoordinatesQuad copyWithMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale,TextureWrap wrapX,TextureWrap wrapY) {
+	public TextureCoordBounds copyWithMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale,TextureWrap wrapX,TextureWrap wrapY) {
 		int sourceW = source.mWidth/downScale;
 		int sourceH = source.mHeight/downScale;
 		int borderX = (destWidth-sourceW)/2;
 		int borderY = (destHeight-sourceH)/2;
 		copyRect(left+borderX,top+borderY,source,downScale);
-		return createBiasBorder(left+borderX,top+borderY,sourceW,sourceH,borderX,borderY,wrapX,wrapY);
+		return createBiasBorder(left,top,destWidth,destHeight,borderX,borderY,wrapX,wrapY);
 	}
 	
-	public TextureCoordinatesQuad copyWithRepeatMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale) {
+	public TextureCoordBounds copyWithRepeatMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale) {
 		return copyWithMargin(left,top,destWidth,destHeight,source,downScale,TextureWrap.REPEAT,TextureWrap.REPEAT);
 	}
 	

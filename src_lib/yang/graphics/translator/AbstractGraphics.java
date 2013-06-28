@@ -11,6 +11,7 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
+import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.math.objects.matrix.YangMatrixRectOps;
@@ -268,6 +269,13 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mCurColor[3] = color.mValues[3];
 	}
 	
+	public void setColor(Quadruple color) {
+		mCurColor[0] = color.mValues[0];
+		mCurColor[1] = color.mValues[1];
+		mCurColor[2] = color.mValues[2];
+		mCurColor[3] = color.mValues[3];
+	}
+	
 	/**
 	 * weight=0 => color1
 	 * weight=1 => color2
@@ -295,11 +303,18 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mCurSuppData[3] = a;
 	}
 	
-	public void setSuppData(float[] color) {
-		mCurSuppData[0] = color[0];
-		mCurSuppData[1] = color[1];
-		mCurSuppData[2] = color[2];
-		mCurSuppData[3] = color[3];
+	public void setSuppData(float[] data) {
+		mCurSuppData[0] = data[0];
+		mCurSuppData[1] = data[1];
+		mCurSuppData[2] = data[2];
+		mCurSuppData[3] = data[3];
+	}
+	
+	public void setSuppData(Quadruple data) {
+		mCurSuppData[0] = data.mValues[0];
+		mCurSuppData[1] = data.mValues[1];
+		mCurSuppData[2] = data.mValues[2];
+		mCurSuppData[3] = data.mValues[3];
 	}
 	
 	public float[] getCurrentSuppData(){
