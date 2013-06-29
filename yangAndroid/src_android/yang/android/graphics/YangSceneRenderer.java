@@ -10,7 +10,7 @@ import android.opengl.GLSurfaceView;
 
 public class YangSceneRenderer implements GLSurfaceView.Renderer {
 
-	public YangSurface mSurfaceInterface;
+	public YangSurface mSurface;
 	public GraphicsTranslator mGraphicsTranslator;
 	
 	public YangSceneRenderer(Context context) {
@@ -18,20 +18,20 @@ public class YangSceneRenderer implements GLSurfaceView.Renderer {
 	}
 	
 	public void setSurface(YangSurface surface) {
-		mSurfaceInterface = surface;
-		mSurfaceInterface.setGraphics(mGraphicsTranslator);
+		mSurface = surface;
+		mSurface.setGraphics(mGraphicsTranslator);
 	}
 	
 	public void onDrawFrame(GL10 ignore) {
-		mSurfaceInterface.drawFrame();
+		mSurface.drawFrame();
 	}
 
 	public void onSurfaceCreated(GL10 ignore, EGLConfig config) {
-		mSurfaceInterface.onSurfaceCreated();
+		mSurface.onSurfaceCreated();
 	}
 	
 	public void onSurfaceChanged(GL10 ignore, int width, int height) {
-		mSurfaceInterface.onSurfaceChanged(width,height);
+		mSurface.onSurfaceChanged(width,height);
 	}
 
 	public GraphicsTranslator getGraphics() {

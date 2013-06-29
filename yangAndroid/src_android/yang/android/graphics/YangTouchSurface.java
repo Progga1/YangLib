@@ -2,7 +2,6 @@ package yang.android.graphics;
 
 import yang.android.io.AndroidDataStorage;
 import yang.android.io.AndroidResourceManager;
-import yang.android.io.AndroidSoundLoader;
 import yang.android.sound.AndroidSoundManager;
 import yang.events.EventQueueHolder;
 import yang.events.Keys;
@@ -35,7 +34,7 @@ public class YangTouchSurface extends GLSurfaceView{
 		super.setEGLContextClientVersion(2);
 		super.setEGLConfigChooser(8,8,8,0, 16,0);
 		//HTC working: RGBA_8888
-		super.getHolder().setFormat(PixelFormat.RGBA_8888);	//TODO try out formats
+		super.getHolder().setFormat(PixelFormat.RGBA_8888);
 		DebugYang.println("INITIALIZE OPENGL");
 		
 		mSceneRenderer = new YangSceneRenderer(context);
@@ -44,10 +43,8 @@ public class YangTouchSurface extends GLSurfaceView{
 		if(App.soundManager==null) {
 			App.soundManager = new AndroidSoundManager(context);
 			App.storage = new AndroidDataStorage(context);
-			App.soundLoader = new AndroidSoundLoader(context);
 			App.gfxLoader = mSceneRenderer.mGraphicsTranslator.mGFXLoader;
 			App.resourceManager = new AndroidResourceManager(context);
-			((AndroidSoundManager)App.soundManager).init(App.soundLoader);
 		}else{
 			DebugYang.println("App references already set");
 		}
@@ -55,6 +52,7 @@ public class YangTouchSurface extends GLSurfaceView{
 	
 	public void setSurface(YangSurface surface) {
 		mSceneRenderer.setSurface(surface);
+		surface.mSounds = new AndroidSoundManager(mContext);
 		
 		if (surface instanceof EventQueueHolder)
 			setEventListener((EventQueueHolder)surface);
@@ -109,14 +107,14 @@ public class YangTouchSurface extends GLSurfaceView{
 	@Override
 	public void onPause() {
 		super.onPause();
-		mSceneRenderer.mSurfaceInterface.pause();
+		mSceneRenderer.mSurface.pause();
 	}
 
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		mSceneRenderer.mSurfaceInterface.resume();
+		mSceneRenderer.mSurface.resume();
 	}
 	
 	public View getView() {

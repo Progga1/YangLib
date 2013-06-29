@@ -59,7 +59,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		mGLView.mSceneRenderer.mSurfaceInterface.stop();
+		mGLView.mSceneRenderer.mSurface.stop();
 		activityOut("STOP");
 	}
 

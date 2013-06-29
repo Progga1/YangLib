@@ -16,22 +16,24 @@ import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
+import yang.sound.SoundManager;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
 public abstract class YangSurface {
 	
 	public GraphicsTranslator mGraphics;
+	public StringsXML mStrings;
+	public AbstractResourceManager mResources;
+	public AbstractGFXLoader mGFXLoader;
+	public SoundManager mSounds;
+	public GFXDebug mDebug;
 	
 	private UpdateMode mUpdateMode;
 	protected boolean mAutoReloadTexturesOnResume = true;
 	protected boolean mInitialized;
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
-	public StringsXML mStrings;
-	public AbstractResourceManager mResources;
-	public AbstractGFXLoader mGFXLoader;
-	public GFXDebug mDebug;
 	
 	protected long mCatchUpTime;
 	public double mProgramTime;

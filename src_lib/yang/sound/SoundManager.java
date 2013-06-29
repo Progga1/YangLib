@@ -1,5 +1,8 @@
 package yang.sound;
 
+import java.io.File;
+import java.util.HashMap;
+
 import yang.model.DebugYang;
 
 /**
@@ -13,13 +16,35 @@ import yang.model.DebugYang;
  * if the sound is not loaded and <code>AbstractSound.mute</code>.
  */
 
-public class SoundManager {
+public abstract class SoundManager {
 
 	protected boolean mute;
 	protected boolean music;
+	
+	protected static final String SOUND_EXT 	= ".wav";
+	protected String SOUND_PATH 				= "sounds" + File.separatorChar;
+	
+	protected HashMap<String, AbstractSound> mSounds;
+	
+	protected abstract AbstractSound loadSound(String name);
+
+	public AbstractSound getSound(String name,float volume) {
+		AbstractSound sound = mSounds.get(name);
+		if (sound != null)
+			return sound;
+		sound = loadSound(name);
+		sound.init(volume);
+		mSounds.put(name, sound);
+		return sound;
+	}
+	
+	public AbstractSound getSound(String name) {
+		return getSound(name,1.0f);
+	}
 
 	public SoundManager() {
 		if (DebugYang.showStart) DebugYang.showStackTrace("1", 1);
+		mSounds = new HashMap<String, AbstractSound>();
 		mute = false;
 		music = false;
 	}

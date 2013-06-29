@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import yang.graphics.YangSurface;
+import yang.pc.fileio.PCSoundManager;
 
 public class PCFrame extends JFrame implements WindowListener {
 	
@@ -19,6 +20,7 @@ public class PCFrame extends JFrame implements WindowListener {
 	}
 	
 	public void present() {
+		mSurface.mSounds = new PCSoundManager();
 		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

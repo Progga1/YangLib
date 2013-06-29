@@ -6,11 +6,12 @@ import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
-import yang.samples.statesystem.states.MatrixStackState;
+import yang.samples.statesystem.states.MatrixStackSampleState;
 import yang.samples.statesystem.states.ParticleSampleState;
 import yang.samples.statesystem.states.PolygonSampleState;
+import yang.samples.statesystem.states.SoundSampleState;
 import yang.samples.statesystem.states.StringSampleState;
-import yang.samples.statesystem.states.StrokeDrawerState;
+import yang.samples.statesystem.states.StrokeDrawerSampleState;
 import yang.samples.statesystem.states.TailSampleState;
 import yang.samples.statesystem.states.TexAtlasSampleState;
 import yang.util.NonConcurrentList;
@@ -45,12 +46,13 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Strings", new StringSampleState());
 		addMenuItem("GUI", new GUISampleState());
 		addMenuItem("Tails", new TailSampleState());
-		addMenuItem("Matrix stack", new MatrixStackState());
-		addMenuItem("Stroke", new StrokeDrawerState());
+		addMenuItem("Matrix stack", new MatrixStackSampleState());
+		addMenuItem("Stroke", new StrokeDrawerSampleState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 		addMenuItem("Particles", new ParticleSampleState());
 		addMenuItem("Texture Atlas", new TexAtlasSampleState());
+		addMenuItem("Sounds", new SoundSampleState());
 		refreshLayout();
 	}
 	
@@ -123,6 +125,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 
 	@Override
 	public void surfaceSizeChanged(int width,int height) {
+		mGUI.refreshCoordinateSystem();
 		refreshLayout();
 	}
 	
