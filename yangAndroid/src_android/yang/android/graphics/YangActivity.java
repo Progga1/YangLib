@@ -12,10 +12,13 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	
 	public static boolean PRINT_ACTIVITY_DEBUG = true;
 	
+	public YangActivity() {
+		DebugYang.AUTO_RECORD_MACRO = false;
+	}
+	
 	protected static YangTouchSurface mGLView;
 	
 	public void defaultInit(YangTouchSurface androidSurface) {
-		DebugYang.AUTO_RECORD_MACRO = false;
 		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); 
 		
 		activityOut("INIT");

@@ -22,8 +22,8 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 	
 	@Override
 	public void draw() {
-		catchUp();
-		mAnimator.draw();
+		if(mAnimator!=null)
+			mAnimator.draw();
 	}
 	
 	@Override

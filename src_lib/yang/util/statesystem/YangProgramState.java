@@ -17,7 +17,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected boolean mFirstFrame = true;
 	protected int mRecentSurfaceWidth = 0,mRecentSurfaceHeight = 0;
 	protected StateSystemType mStateSystem;
-	protected double mStateTimer = 0;
+	public double mStateTimer = 0;
 	protected GraphicsTranslator mGraphics;
 	protected Default2DGraphics mGraphics2D;
 	protected Default3DGraphics mGraphics3D;

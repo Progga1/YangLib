@@ -127,9 +127,6 @@ public abstract class YangSurface {
 			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
 		initGraphics();
 		
-		if(mInitCallback!=null)
-			mInitCallback.initializationFinished();
-		
 		mDefaultMacroIO = new DefaultMacroIO(this);
 		if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
 			mMacro = new MacroExecuter(mResources.getFileSystemInputStream(mMacroFilename), mDefaultMacroIO);
@@ -143,6 +140,11 @@ public abstract class YangSurface {
 				DebugYang.printerr("Could not create '"+filename+"'");
 			}
 		}
+		
+		postInitGraphics();
+		
+		if(mInitCallback!=null)
+			mInitCallback.initializationFinished();
 		mInitialized = true;
 		synchronized(mInitializedNotifier) {
 			mInitializedNotifier.notifyAll();
@@ -151,7 +153,7 @@ public abstract class YangSurface {
 		if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
 			mUpdateThread.start();
 		
-		postInitGraphics();
+		
 	}
 	
 	public void waitUntilInitialized() {

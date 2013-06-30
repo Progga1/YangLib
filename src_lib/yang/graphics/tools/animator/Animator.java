@@ -168,6 +168,7 @@ public class Animator implements YangEventListener {
 	
 	public void selectAnimation(int index) {
 		mCurAnimation = mCurAnimationSystem.mAnimations.get(index);
+		mCurAnimationPlayer.mLockedAnimation = false;
 		mCurAnimationPlayer.setAnimation(mCurAnimation);
 		mAnimationIndex = index;
 		selectKeyFrame(0,true);
