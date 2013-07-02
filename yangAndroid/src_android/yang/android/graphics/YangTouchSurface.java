@@ -51,6 +51,7 @@ public class YangTouchSurface extends GLSurfaceView{
 	}
 	
 	public void setSurface(YangSurface surface) {
+		surface.mPlatformKey = "ANDROID";
 		mSceneRenderer.setSurface(surface);
 		surface.mSounds = new AndroidSoundManager(mContext);
 		

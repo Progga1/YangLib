@@ -1,6 +1,5 @@
 package yang.graphics;
 
-import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 
 import yang.events.YangEventQueue;
@@ -29,6 +28,7 @@ public abstract class YangSurface {
 	public AbstractGFXLoader mGFXLoader;
 	public SoundManager mSounds;
 	public GFXDebug mDebug;
+	public String mPlatformKey = "";
 	
 	private UpdateMode mUpdateMode;
 	protected boolean mAutoReloadTexturesOnResume = true;

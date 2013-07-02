@@ -14,6 +14,8 @@ public class DebugYang {
 	public static boolean drawTails = true;
 	public static boolean DRAW_GFX_VALUES = false;
 	
+	public static String stateString = null;
+	
 	public static void showStackTrace() {
 		try{
 			throw new RuntimeException();
@@ -78,6 +80,44 @@ public class DebugYang {
 		if(debugLevel>=1) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void stateString(Object object) {
+		stateString = object.toString();
+	}
+	
+	public static void stateString(int i) {
+		stateString = ""+i;
+	}
+	
+	public static void stateString(float f) {
+		stateString = ""+f;
+	}
+	
+	public static void stateString(boolean b) {
+		stateString = ""+b;
+	}
+	
+	public static void appendState(Object object) {
+		if(stateString==null)
+			stateString = "";
+		stateString += object;
+	}
+	
+	public static void appendState(int i) {
+		appendState(""+i);
+	}
+	
+	public static void appendState(float f) {
+		appendState(""+f);
+	}
+	
+	public static void appendState(boolean b) {
+		appendState(""+b);
+	}
+	
+	public static void clearState() {
+		stateString = null;
 	}
 	
 }

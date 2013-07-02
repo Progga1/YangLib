@@ -65,7 +65,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	
 	public PCGL2ES2Graphics(int resolutionX,int resolutionY,boolean useGLPanel) {
 		super();
-		
+		mDriverKey = "PC_GLES20";
 		mGFXLoader = new PCGFXLoader(this);
 		
 		GLProfile glProfile = GLProfile.getDefault();
@@ -146,6 +146,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	
 	public void setSurface(YangSurface surface) {
 		mSurface = surface;
+		mSurface.mPlatformKey = "PC";
 	}
 
 	@Override
