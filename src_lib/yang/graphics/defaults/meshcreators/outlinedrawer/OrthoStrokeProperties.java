@@ -17,10 +17,12 @@ public class OrthoStrokeProperties {
 	public float mLineTexWidthFactor = 4;
 	protected float mPatchSize = 0.25f;
 	public float mFieldWidth;
+	public TextureCoordBounds mTexBounds;
 
 	public int[] mOffsets = {0,1,0,1,3,3,1,0};
 	
-	public OrthoStrokeProperties() {
+	public OrthoStrokeProperties(TextureCoordBounds texBounds) {
+		mTexBounds = texBounds;
 		mTexCoordTable = new TextureCoordinatesQuad[16];
 		mLineTexCoords = new TextureCoordinatesQuad[4];
 		
@@ -30,15 +32,12 @@ public class OrthoStrokeProperties {
 			mLineTexCoords[i] = new TextureCoordinatesQuad().initBiased(0,0.5f,1,0.75f,mTexBias);
 	}
 	
-	public OrthoStrokeProperties finish(TextureCoordBounds texBounds) {
-		for(TextureCoordinatesQuad texCoords:mTexCoordTable)
-			texCoords.intoRect(texBounds);
-		for(TextureCoordinatesQuad texCoords:mLineTexCoords)
-			texCoords.intoRect(texBounds);
-		return this;
+	public OrthoStrokeProperties() {
+		this(new TextureCoordBounds());
 	}
 	
 	public void setLineTexCoords(TextureCoordinatesQuad texCoords) {
+		texCoords.intoRect(mTexBounds);
 		mLineTexCoords[0] = texCoords;
 		mLineTexCoords[1] = texCoords;
 		mLineTexCoords[2] = texCoords;
@@ -48,6 +47,7 @@ public class OrthoStrokeProperties {
 	
 	public void putPatch(int mask,int texPatchX,int texPatchY,int rotation) {
 		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(texPatchX*mPatchSize, texPatchY*mPatchSize, mPatchSize, mTexBias);
+		texCoords.intoRect(mTexBounds);
 		texCoords.rotateCoords(rotation);
 		mTexCoordTable[mask] = texCoords;
 	}

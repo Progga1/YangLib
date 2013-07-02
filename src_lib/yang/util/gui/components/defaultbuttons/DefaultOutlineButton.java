@@ -9,9 +9,8 @@ public class DefaultOutlineButton extends DefaultIconButton {
 
 	public DefaultOutlineButton() {
 		GUIOutlineDrawer outlineDrawer = new GUIOutlineDrawer();
-		outlineDrawer.mStroke.mProperties.mWidth = 0.02f;
+		outlineDrawer.mStroke.mProperties.mWidth = 0.03f;
 		super.setPasses(new GUIRectDrawer(),null,new GUIIconDrawer(),new GUICaptionDrawer(),outlineDrawer);
-		
 	}
 	
 }

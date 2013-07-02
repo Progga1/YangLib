@@ -217,8 +217,8 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	public void putTexRect(float distance, TextureCoordinatesQuad texCoords) {
 		
 		final float BIAS_X = 0.001f;
-		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);
-		float offset = mProperties.mOffsets[fieldCount%mProperties.mOffsets.length];
+		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);//System.out.println(mProperties.mFieldWidth);
+		float offset = mProperties.mOffsets[(fieldCount+mProperties.mOffsets.length-1)%mProperties.mOffsets.length]*mProperties.mFieldWidth;
 		float x1 = texCoords.x1+offset+BIAS_X;
 		float x2 = x1+(mProperties.mFieldWidth*fieldCount*(texCoords.x2-texCoords.x1))-BIAS_X;
 		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,

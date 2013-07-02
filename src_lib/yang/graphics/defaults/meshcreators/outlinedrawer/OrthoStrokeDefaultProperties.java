@@ -6,7 +6,7 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 public class OrthoStrokeDefaultProperties extends OrthoStrokeProperties {
 
 	public OrthoStrokeDefaultProperties(TextureCoordBounds texBounds) {
-		super();
+		super(texBounds);
 		
 		super.setLineTexCoords(new TextureCoordinatesQuad().initBiased(0, 0.5f, 1, 0.75f, 0));
 		super.putPatch(0, 0, 0);
@@ -16,8 +16,7 @@ public class OrthoStrokeDefaultProperties extends OrthoStrokeProperties {
 		super.putEndings(0,1);
 		super.putMerging(1,1);
 		super.putPatch(UP | RIGHT | DOWN | LEFT, 2, 1);
-		
-		super.finish(texBounds);
+
 	}
 	
 	public OrthoStrokeDefaultProperties() {

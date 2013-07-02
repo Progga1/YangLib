@@ -23,7 +23,7 @@ public class GUIOutlineDrawer extends GUIComponentDrawPass<GUIInteractiveRectCom
 	}
 	
 	public GUIOutlineDrawer() {
-		this(new OrthoStrokeProperties());
+		this(new OrthoStrokeDefaultProperties());
 	}
 	
 	@Override

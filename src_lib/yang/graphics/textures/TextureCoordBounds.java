@@ -5,7 +5,7 @@ import yang.math.objects.Quadruple;
 public class TextureCoordBounds extends Quadruple{
 
 	public TextureCoordBounds() {
-		super();
+		super(0,0,1,1);
 	}
 	
 	public TextureCoordBounds(float left,float top,float width,float height) {
