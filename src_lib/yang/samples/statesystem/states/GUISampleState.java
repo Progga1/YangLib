@@ -19,6 +19,7 @@ import yang.util.gui.components.defaultbuttons.DefaultOutlineButton;
 import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.components.defaultdrawers.GUIIconDrawer;
 import yang.util.gui.components.defaultdrawers.GUINinePatchDrawer;
+import yang.util.gui.components.defaultdrawers.GUIOutlineDrawer;
 import yang.util.gui.components.defaultdrawers.GUIRectDrawer;
 import yang.util.gui.components.defaults.GUIColoredPanel;
 import yang.util.gui.components.defaults.GUILabel;
@@ -83,8 +84,9 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		mIconButton.getPass(GUIIconDrawer.class).setIcon(new TextureCoordinatesQuad().initBiased(0.5f,0.5f,1,1,0.02f), 0.16f);
 		mIconButton.createCaption("Button with icon").setPosAndExtentsCentered(2, 1.2f, 1.0f, 0.2f);
 		
-		Texture outlineTex = mGFXLoader.getImage("stroke");
+		Texture outlineTex = mGFXLoader.getImage("cartoon_stroke");
 		mOutlineButton = mGUI.addComponent(DefaultOutlineButton.class);
+		mOutlineButton.getPass(GUIOutlineDrawer.class).mStroke.mColor.set(0.8f,0.6f,0.1f);
 		mOutlineButton.createCaption("Outline button").setPosAndExtentsCentered(2, 1.5f, 1.0f, 0.2f);
 		
 		mGUI.setPassTexture(1, ninePatchTex);

@@ -218,6 +218,8 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 		
 		final float BIAS_X = 0.001f;
 		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);//System.out.println(mProperties.mFieldWidth);
+		if(fieldCount>1)
+			fieldCount *= mProperties.mStretch;
 		float offset = mProperties.mOffsets[(fieldCount+mProperties.mOffsets.length-1)%mProperties.mOffsets.length]*mProperties.mFieldWidth;
 		float x1 = texCoords.x1+offset+BIAS_X;
 		float x2 = x1+(mProperties.mFieldWidth*fieldCount*(texCoords.x2-texCoords.x1))-BIAS_X;
