@@ -51,7 +51,7 @@ public class GFXDebug implements PrintInterface {
 		mSpeedString = new DrawableString(32).setProperties(properties).setRightTopJustified();
 		mExecMacroString = new DrawableString("Macro...").setProperties(properties).setRightTopJustified().setConstant();
 		
-		mStateString = new DrawableString(1024);
+		mStateString = new DrawableString(1600);
 		mStateString.setLeftBottomJustified();
 		reset();
 	}
@@ -128,8 +128,7 @@ public class GFXDebug implements PrintInterface {
 	}
 	
 	public void draw() {
-		
-		if(DebugYang.debugLevel<=0)
+		if(DebugYang.DEBUG_LEVEL<=0)
 			return;
 		
 		float playSpeed = mSurface.mPlaySpeed;
@@ -184,7 +183,13 @@ public class GFXDebug implements PrintInterface {
 		
 		if(DebugYang.stateString!=null && DebugYang.stateString!="") {
 			mGraphics.setColor(mStateColor);
-			mStateString.setString(DebugYang.stateString);
+			String uString = DebugYang.stateString;
+			int c = mStateString.mCapacity;
+			if(uString.endsWith("\n"))
+				uString = uString.substring(0,uString.length()-1);
+			if(uString.length()>=c)
+				uString = uString.substring(uString.length()-c, uString.length());
+			mStateString.setString(uString);
 			mStateString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenBottom()+mDebugOffsetY, mFontSize);
 		}
 	}

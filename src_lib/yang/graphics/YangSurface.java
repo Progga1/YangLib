@@ -308,15 +308,14 @@ public abstract class YangSurface {
 		if(mUpdateMode==UpdateMode.SYNCHRONOUS)
 			catchUp();
 
-		if(mDebug!=null) {
+		if(DebugYang.DEBUG_LEVEL>0 && mDebug!=null) {
 			mDebug.reset();
 			if(DebugYang.DRAW_GFX_VALUES)
 				mDebug.printGFXDebugValues();
 		}
 		mGraphics.beginFrame();
-		//if(mProgramTime<2 || mProgramTime>20)
 		draw();
-		if(mDebug!=null) {
+		if(DebugYang.DEBUG_LEVEL>0 && mDebug!=null) {
 			mDebug.draw();
 		}
 		mGraphics.endFrame();

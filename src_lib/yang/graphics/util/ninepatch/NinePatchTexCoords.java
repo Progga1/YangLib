@@ -16,16 +16,16 @@ public class NinePatchTexCoords {
 		mBiasX = biasY;
 		mBiasY = biasY;
 		mLeft = left+biasX;
-		mTop = top-biasY;
+		mTop = top+biasY;
 		mRight = right-biasX;
-		mBottom = bottom+biasY;
+		mBottom = bottom-biasY;
 		mTexWidth = 1;
 		mTexHeight = 1;
 		return this;
 	}
 	
 	public NinePatchTexCoords init(float left,float top,float right,float bottom) {
-		return init(left,top,right,bottom, 0.0001f,0.0001f);
+		return init(left,top,right,bottom, (right-left)*0.003f,(top-bottom)*0.003f);
 	}
 	
 	public void refreshTexCoords() {

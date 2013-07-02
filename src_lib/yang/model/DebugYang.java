@@ -8,13 +8,18 @@ public class DebugYang {
 
 	public static boolean FORCE_FULLSCREEN = false;
 	
-	public static int debugLevel = 1;
-	public static boolean drawKerning = false;
+	public static int DEBUG_LEVEL = 1;
+	public static int curStateStringDebugLevel = 1;
 	public static boolean showStart = false;
 	public static boolean drawTails = true;
 	public static boolean DRAW_GFX_VALUES = false;
 	
 	public static String stateString = null;
+	
+	public static void setRelease() {
+		DEBUG_LEVEL = 0;
+		DRAW_GFX_VALUES = false;
+	}
 	
 	public static void showStackTrace() {
 		try{
@@ -59,7 +64,7 @@ public class DebugYang {
     }
 
 	public static void println(Object message,int level) {
-		if(debugLevel>=level)
+		if(DEBUG_LEVEL>=level)
 			System.out.println(message);
 	}
 	
@@ -68,7 +73,7 @@ public class DebugYang {
 	}
 	
 	public static void printerr(Object message,int level) {
-		if(debugLevel>=level)
+		if(DEBUG_LEVEL>=level)
 			System.err.println(message);
 	}
 	
@@ -77,43 +82,60 @@ public class DebugYang {
 	}
 
 	public static void exception(IOException e) {
-		if(debugLevel>=1) {
+		if(DEBUG_LEVEL>=1) {
 			e.printStackTrace();
 		}
 	}
 	
 	public static void stateString(Object object) {
-		stateString = object.toString();
+		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+			stateString = object.toString();
 	}
 	
 	public static void stateString(int i) {
-		stateString = ""+i;
+		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+			stateString = ""+i;
 	}
 	
 	public static void stateString(float f) {
-		stateString = ""+f;
+		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+			stateString = ""+f;
 	}
 	
 	public static void stateString(boolean b) {
-		stateString = ""+b;
+		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+			stateString = ""+b;
 	}
 	
 	public static void appendState(Object object) {
-		if(stateString==null)
-			stateString = "";
-		stateString += object;
+		if(DEBUG_LEVEL>=curStateStringDebugLevel) {
+			if(stateString==null)
+				stateString = "";
+			stateString += object;
+		}
+	}
+	
+	public static void appendStateLn(Object object) {
+		if(DEBUG_LEVEL>=curStateStringDebugLevel) {
+			if(stateString==null)
+				stateString = "";
+			stateString += object +"\n";
+		}
 	}
 	
 	public static void appendState(int i) {
-		appendState(""+i);
+		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+			appendState(""+i);
 	}
 	
 	public static void appendState(float f) {
-		appendState(""+f);
+		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+			appendState(""+f);
 	}
 	
 	public static void appendState(boolean b) {
-		appendState(""+b);
+		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+			appendState(""+b);
 	}
 	
 	public static void clearState() {

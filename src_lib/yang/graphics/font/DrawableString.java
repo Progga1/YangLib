@@ -12,6 +12,7 @@ public class DrawableString extends FixedString {
 	protected static YangMatrix interMatrix;
 	protected static YangMatrix interMatrix2;
 	
+	public static int MAX_DYNAMIC_CHARS = 2048;
 	public static int CHAR_MACRO = 1024;
 	public static int CHAR_WORD_SPLITTER = '~';
 	protected static float LINEBREAK_FLOAT = Float.MIN_VALUE;
@@ -30,8 +31,8 @@ public class DrawableString extends FixedString {
 	public static float DEFAULT_HORIZONTAL_ANCHOR = ANCHOR_LEFT;
 	public static float DEFAULT_VERTICAL_ANCHOR = ANCHOR_TOP;
 	
-	protected static float[] staticOffsets = new float[2048];
-	protected static float[] staticPositions = new float[2048];
+	protected static float[] staticOffsets = new float[MAX_DYNAMIC_CHARS];
+	protected static float[] staticPositions = new float[MAX_DYNAMIC_CHARS*4*3];
 	
 	//public NonConcurrentList<Pair<FloatColor,Integer>> mColors;
 	
@@ -478,23 +479,6 @@ public class DrawableString extends FixedString {
 	
 	@Override
 	protected int handleMacro(String macro, int pos,int lstMacro) {
-//		if(lstMacro==0) {
-//			mColors = new NonConcurrentList<Pair<FloatColor,Integer>>();
-//			mColors.add(new Pair<FloatColor,Integer>(mSettings.mStyle.mPalette[0],0));
-//		}
-//		FloatColor color = mSettings.getColorByKey(macro);
-//		mColors.add(new Pair<FloatColor,Integer>(color,pos));
-//		if(lstMacro==-1) {
-//			mLetterColors = new FloatColor[mCapacity];
-//			mLetterColors[0] = mSettings.getColor(0);
-//			lstMacro = 0;
-//		}
-//		FloatColor lstColor = mLetterColors[lstMacro];	
-//		for(int i=lstMacro;i<=pos;i++)
-//			mLetterColors[i] = lstColor;
-//		FloatColor color = mSettings.getColorByKey(macro);
-//		mLetterColors[pos] = color;
-		
 		mChars[pos] = CHAR_MACRO;
 		if(macro.equals("\\"))
 			mChars[pos+1] = 0;
@@ -507,13 +491,7 @@ public class DrawableString extends FixedString {
 	
 	@Override
 	protected void endFormatStringParse(int pos,int lstMacro) {
-//		if(mLetterColors==null)
-//			return;
-//		FloatColor lstColor = mLetterColors[lstMacro];	
-//		for(int i=lstMacro;i<mCapacity;i++)
-//			mLetterColors[i] = lstColor;
-//		mWorkingColors = new FloatColor[mCapacity];
-		//System.out.println(mColors);
+
 	}
 
 	public DrawableString setLeftTopJustified() {
