@@ -8,12 +8,12 @@ public class TextureCoordBounds extends Quadruple{
 		super();
 	}
 	
-	public TextureCoordBounds(float x1,float y1,float width,float height) {
-		super(x1,y1,width,height);
+	public TextureCoordBounds(float left,float top,float width,float height) {
+		super(left,top,width,height);
 	}
 	
-	public TextureCoordBounds initBiased(int x1,int y1,int width,int height,int texWidth,int texHeight, float bias) {
-		set((float)(x1+bias)/texWidth,(float)(y1+bias)/texHeight,(float)(width-bias*2)/texWidth,(float)(height-bias*2)/texHeight);
+	public TextureCoordBounds initBiased(int left,int top,int width,int height,int texWidth,int texHeight, float bias) {
+		set((float)(left+bias)/texWidth,(float)(top+bias)/texHeight,(float)(width-bias*2)/texWidth,(float)(height-bias*2)/texHeight);
 		return this;
 	}
 

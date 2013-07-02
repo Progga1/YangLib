@@ -89,7 +89,7 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 				interComponent.setPointerListener(mPointerListener);
 		}
 		mAllComponents.add(component);
-		component.setGUI(mGUI);
+		component.init(mGUI);
 		return component;
 	}
 	

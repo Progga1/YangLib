@@ -1,6 +1,5 @@
 package yang.graphics.defaults.meshcreators.outlinedrawer;
 
-import yang.graphics.buffers.AbstractVertexBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
@@ -21,12 +20,12 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	public boolean mHandleLineIntersections = true;
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	
-	public OrthoStrokeCreator(DefaultGraphics<?> graphics,int capacity,OrthoStrokeProperties properties) {
+	public OrthoStrokeCreator(DefaultGraphics<?> graphics,int maxPatchesAndLines,OrthoStrokeProperties properties) {
 		super(graphics);
 		mProperties = properties;
-		mPatches = new OrthoStrokePatch[capacity];
-		mLines = new OrthoStrokeLine[capacity];
-		for(int i=0;i<capacity;i++) {
+		mPatches = new OrthoStrokePatch[maxPatchesAndLines];
+		mLines = new OrthoStrokeLine[maxPatchesAndLines];
+		for(int i=0;i<maxPatchesAndLines;i++) {
 			mPatches[i] = new OrthoStrokePatch();
 			mLines[i] = new OrthoStrokeLine();
 		}

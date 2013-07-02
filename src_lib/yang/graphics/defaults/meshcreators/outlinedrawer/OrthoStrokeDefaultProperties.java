@@ -1,15 +1,13 @@
 package yang.graphics.defaults.meshcreators.outlinedrawer;
 
+import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureCoordinatesQuad;
 
 public class OrthoStrokeDefaultProperties extends OrthoStrokeProperties {
 
-	
-	public OrthoStrokeDefaultProperties() {
+	public OrthoStrokeDefaultProperties(TextureCoordBounds texBounds) {
+		super();
 		
-	}
-	
-	public OrthoStrokeDefaultProperties init() {
 		super.setLineTexCoords(new TextureCoordinatesQuad().initBiased(0, 0.5f, 1, 0.75f, 0));
 		super.putPatch(0, 0, 0);
 		super.putPatch(LEFT | RIGHT, 1,0);
@@ -18,7 +16,12 @@ public class OrthoStrokeDefaultProperties extends OrthoStrokeProperties {
 		super.putEndings(0,1);
 		super.putMerging(1,1);
 		super.putPatch(UP | RIGHT | DOWN | LEFT, 2, 1);
-		return this;
+		
+		super.finish(texBounds);
+	}
+	
+	public OrthoStrokeDefaultProperties() {
+		this(new TextureCoordBounds(0,0,1,1));
 	}
 	
 }

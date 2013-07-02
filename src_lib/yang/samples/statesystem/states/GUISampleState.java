@@ -15,6 +15,7 @@ import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.defaultbuttons.DefaultIconButton;
 import yang.util.gui.components.defaultbuttons.DefaultNinePatchButton;
+import yang.util.gui.components.defaultbuttons.DefaultOutlineButton;
 import yang.util.gui.components.defaultbuttons.DefaultRectButton;
 import yang.util.gui.components.defaultdrawers.GUIIconDrawer;
 import yang.util.gui.components.defaultdrawers.GUINinePatchDrawer;
@@ -33,6 +34,7 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 	private DefaultNinePatchButton mNinePatchButton1;
 	private DefaultNinePatchButton mNinePatchButton2;
 	private DefaultIconButton mIconButton;
+	private DefaultOutlineButton mOutlineButton;
 	
 	@Override
 	protected void initGraphics() {
@@ -68,22 +70,27 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		NinePatchGrid ninePatch = new NinePatchGrid().setBorderSize(0.01f).setTextureBorder(ninePatchTexCoords);
 		NinePatchGrid ninePatchPressed = ninePatch.cloneWithTextureOffset(0.5f, 0);
 		
-		mGUI.setPassTexture(1, ninePatchTex);
-		mGUI.setPassTexture(2, ninePatchTex);
-		mGUI.setPassTexture(3, null);
-		
 		mNinePatchButton1 = mGUI.addComponent(DefaultNinePatchButton.class);
 		mNinePatchButton1.getPass(GUINinePatchDrawer.class).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
-		mNinePatchButton1.createCaption("Nine patch button").setPosAndExtentsCentered(2, 1.2f, 0.9f, 0.2f);
+		mNinePatchButton1.createCaption("Nine patch button").setPosAndExtentsCentered(2, 0.6f, 0.9f, 0.2f);
 		
 		mNinePatchButton2 = mGUI.addComponent(DefaultNinePatchButton.class);
 		mNinePatchButton2.getPass(GUINinePatchDrawer.class).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
-		mNinePatchButton2.createCaption("Wider nine patch button").setPosAndExtentsCentered(2, 1.5f, 1.2f, 0.2f);
+		mNinePatchButton2.createCaption("Wider nine patch button").setPosAndExtentsCentered(2, 0.9f, 1.2f, 0.2f);
 		
 		mIconButton = mGUI.addComponent(DefaultIconButton.class);
 		mIconButton.getPass(GUINinePatchDrawer.class).setNinePatch(ninePatch).setNinePatchPressed(ninePatchPressed);
 		mIconButton.getPass(GUIIconDrawer.class).setIcon(new TextureCoordinatesQuad().initBiased(0.5f,0.5f,1,1,0.02f), 0.16f);
-		mIconButton.createCaption("Button with icon").setPosAndExtentsCentered(2, 1.8f, 1.0f, 0.2f);
+		mIconButton.createCaption("Button with icon").setPosAndExtentsCentered(2, 1.2f, 1.0f, 0.2f);
+		
+		Texture outlineTex = mGFXLoader.getImage("stroke");
+		mOutlineButton = mGUI.addComponent(DefaultOutlineButton.class);
+		mOutlineButton.createCaption("Outline button").setPosAndExtentsCentered(2, 1.5f, 1.0f, 0.2f);
+		
+		mGUI.setPassTexture(1, ninePatchTex);
+		mGUI.setPassTexture(2, ninePatchTex);
+		mGUI.setPassTexture(3, null);
+		mGUI.setPassTexture(4, outlineTex);
 	}
 	
 	@Override
