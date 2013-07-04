@@ -8,8 +8,8 @@ public class GUIContainer2D extends GUIContainer {
 	public DefaultGraphics<?> mGraphics;
 
 	@Override
-	public void setGUI(BasicGUI gui) {
-		super.setGUI(gui);
+	public void init(BasicGUI gui) {
+		super.init(gui);
 		mGraphics = gui.mGraphics2D;
 	}
 	

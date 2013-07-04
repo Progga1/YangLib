@@ -5,7 +5,6 @@ import yang.math.objects.Point2f;
 
 public class OrthoStrokeLine extends Point2f {
 
-	public int mTexCoordFactor = 1;
 	public float mDeltaX;
 	public float mDeltaY;
 	public boolean mDeleted;
@@ -31,15 +30,6 @@ public class OrthoStrokeLine extends Point2f {
 			return mDeltaX;
 		else
 			return mDeltaY;
-	}
-	
-	public void setTexCoordFactor(OrthoStrokeProperties strokeProperties) {
-		if(mDeleted)
-			return;
-		float delta = getDistance()-strokeProperties.mWidth*2;
-		float texFac = strokeProperties.mWidth*strokeProperties.mLineTexWidthFactor;
-		float fac = delta/texFac;
-		mTexCoordFactor = (int)(fac+0.2f);
 	}
 	
 	public int getDirX() {

@@ -50,7 +50,7 @@ public class GUIComponent {
 		return -screenY+mGUI.mProjShiftY;
 	}
 	
-	public void setGUI(BasicGUI gui) {
+	public void init(BasicGUI gui) {
 		mGUI = gui;
 	}
 	

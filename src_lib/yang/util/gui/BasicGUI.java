@@ -49,7 +49,7 @@ public class BasicGUI {
 		mGraphics2D = graphics2D;
 		mGraphics = graphics2D.mTranslator;
 		mMainContainer = new GUIContainer2D();
-		mMainContainer.setGUI(this);
+		mMainContainer.init(this);
 		mAutoUpdateProjections = autoUpdateProjections;
 		setCoordinatesMode(coordinatesMode);
 		mPassTextures = new NonConcurrentList<Texture>();
@@ -62,7 +62,7 @@ public class BasicGUI {
 	}
 	
 	public BasicGUI(Default2DGraphics graphics2D) {
-		this(graphics2D,4);
+		this(graphics2D,5);
 	}
 	
 	public void setPassTexture(int pass,Texture texture) {

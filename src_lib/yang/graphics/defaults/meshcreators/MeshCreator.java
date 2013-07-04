@@ -12,6 +12,11 @@ public class MeshCreator<GraphicsType extends AbstractGraphics<?>> {
 	protected GraphicsTranslator mTranslator;
 	
 	public MeshCreator(GraphicsType graphics) {
+		if(graphics!=null)
+			setGraphics(graphics);
+	}
+	
+	public void setGraphics(GraphicsType graphics) {
 		mGraphics = graphics;
 		mTranslator = graphics.mTranslator;
 	}

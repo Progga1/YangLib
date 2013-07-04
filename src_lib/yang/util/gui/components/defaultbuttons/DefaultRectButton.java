@@ -9,7 +9,7 @@ public class DefaultRectButton extends GUIButton {
 
 	public DefaultRectButton() {
 		super();
-		super.setPasses(new GUIRectDrawer(),null,null,new GUICaptionDrawer());
+		super.setPasses(new GUIRectDrawer(),null,null,new GUICaptionDrawer(),null);
 	}
 
 	public DefaultRectButton setCaption(DrawableString caption) {

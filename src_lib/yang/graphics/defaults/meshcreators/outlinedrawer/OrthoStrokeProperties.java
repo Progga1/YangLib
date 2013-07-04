@@ -1,7 +1,7 @@
 package yang.graphics.defaults.meshcreators.outlinedrawer;
 
+import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.model.Rect;
 
 public class OrthoStrokeProperties {
 
@@ -10,18 +10,21 @@ public class OrthoStrokeProperties {
 	public final static int DOWN = 1 << 2;
 	public final static int LEFT = 1 << 3;
 	
+	//Properties
 	public float mTexBias = 0.005f;
-	public TextureCoordinatesQuad[] mTexCoordTable;
 	public float mWidth = 0.1f;
-	public float mLineTexWidthFactor = 4;
+	public float mStretch = 1;
+	
+	public TextureCoordinatesQuad[] mTexCoordTable;
 	public TextureCoordinatesQuad[] mLineTexCoords;
 	protected float mPatchSize = 0.25f;
-	protected Rect mTexRect = new Rect(0,0,1,1);
 	public float mFieldWidth;
+	public TextureCoordBounds mTexBounds;
 
 	public int[] mOffsets = {0,1,0,1,3,3,1,0};
 	
-	public OrthoStrokeProperties() {
+	public OrthoStrokeProperties(TextureCoordBounds texBounds) {
+		mTexBounds = texBounds;
 		mTexCoordTable = new TextureCoordinatesQuad[16];
 		mLineTexCoords = new TextureCoordinatesQuad[4];
 		
@@ -31,8 +34,12 @@ public class OrthoStrokeProperties {
 			mLineTexCoords[i] = new TextureCoordinatesQuad().initBiased(0,0.5f,1,0.75f,mTexBias);
 	}
 	
+	public OrthoStrokeProperties() {
+		this(new TextureCoordBounds());
+	}
+	
 	public void setLineTexCoords(TextureCoordinatesQuad texCoords) {
-		texCoords.intoRect(mTexRect);
+		texCoords.intoRect(mTexBounds);
 		mLineTexCoords[0] = texCoords;
 		mLineTexCoords[1] = texCoords;
 		mLineTexCoords[2] = texCoords;
@@ -42,7 +49,7 @@ public class OrthoStrokeProperties {
 	
 	public void putPatch(int mask,int texPatchX,int texPatchY,int rotation) {
 		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(texPatchX*mPatchSize, texPatchY*mPatchSize, mPatchSize, mTexBias);
-		texCoords.intoRect(mTexRect);
+		texCoords.intoRect(mTexBounds);
 		texCoords.rotateCoords(rotation);
 		mTexCoordTable[mask] = texCoords;
 	}

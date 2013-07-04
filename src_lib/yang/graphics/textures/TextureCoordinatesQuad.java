@@ -151,15 +151,23 @@ public class TextureCoordinatesQuad {
 		return "("+x1+","+y1+","+x2+","+y2+")";
 	}
 
-	public TextureCoordinatesQuad intoRect(float left,float top,float right,float bottom) {
-		float deltaX = right-left;
-		float deltaY = bottom-top;
-		x1 = x1*deltaX+left;
-		y1 = y1*deltaY+top;
-		x2 = x2*deltaX+left;
-		y2 = y2*deltaY+top;
+	public TextureCoordinatesQuad intoRect(float left,float top,float width,float height) {
+//		float deltaX = width-left;
+//		float deltaY = height-top;
+		x1 = x1*width+left;
+		y1 = y1*height+top;
+		x2 = x2*width+left;
+		y2 = y2*height+top;
 		refreshCoordArray();
 		return this;
+	}
+	
+	public TextureCoordinatesQuad intoRect(float[] values) {
+		return intoRect(values[0],values[1],values[2],values[3]);
+	}
+	
+	public TextureCoordinatesQuad intoRect(TextureCoordBounds bounds) {
+		return intoRect(bounds.mValues);
 	}
 	
 	public TextureCoordinatesQuad intoRect(Rect rect) {

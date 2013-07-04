@@ -1,6 +1,5 @@
 package yang.graphics.defaults.meshcreators.outlinedrawer;
 
-import yang.graphics.buffers.AbstractVertexBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
@@ -21,12 +20,12 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	public boolean mHandleLineIntersections = true;
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	
-	public OrthoStrokeCreator(DefaultGraphics<?> graphics,int capacity,OrthoStrokeProperties properties) {
+	public OrthoStrokeCreator(DefaultGraphics<?> graphics,int maxPatchesAndLines,OrthoStrokeProperties properties) {
 		super(graphics);
 		mProperties = properties;
-		mPatches = new OrthoStrokePatch[capacity];
-		mLines = new OrthoStrokeLine[capacity];
-		for(int i=0;i<capacity;i++) {
+		mPatches = new OrthoStrokePatch[maxPatchesAndLines];
+		mLines = new OrthoStrokeLine[maxPatchesAndLines];
+		for(int i=0;i<maxPatchesAndLines;i++) {
 			mPatches[i] = new OrthoStrokePatch();
 			mLines[i] = new OrthoStrokeLine();
 		}
@@ -218,8 +217,10 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	public void putTexRect(float distance, TextureCoordinatesQuad texCoords) {
 		
 		final float BIAS_X = 0.001f;
-		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);
-		float offset = mProperties.mOffsets[fieldCount%mProperties.mOffsets.length];
+		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);//System.out.println(mProperties.mFieldWidth);
+		if(fieldCount>1)
+			fieldCount *= mProperties.mStretch;
+		float offset = mProperties.mOffsets[(fieldCount+mProperties.mOffsets.length-1)%mProperties.mOffsets.length]*mProperties.mFieldWidth;
 		float x1 = texCoords.x1+offset+BIAS_X;
 		float x2 = x1+(mProperties.mFieldWidth*fieldCount*(texCoords.x2-texCoords.x1))-BIAS_X;
 		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
