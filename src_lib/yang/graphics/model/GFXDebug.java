@@ -6,6 +6,7 @@ import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.model.DebugYang;
 import yang.model.PrintInterface;
 
 public class GFXDebug implements PrintInterface {
@@ -22,11 +23,13 @@ public class GFXDebug implements PrintInterface {
 	public static int SHADERSWITCH_COUNT = 1<<9;
 	
 	public YangSurface mSurface;
-	public DrawableString mString;
+	public DrawableString mTempPrintString;
+	public DrawableString mStateString;
 	public int mDebugValuesMask = Integer.MAX_VALUE;
 	public float mDebugOffsetX=0.025f,mDebugOffsetY=0.025f;
 	public float mDebugColumnWidth=0.1f,mDebugLineHeight=0.05f;
 	public FloatColor mFontColor = FloatColor.WHITE;
+	public FloatColor mStateColor = new FloatColor(1,0.8f,0);
 	public float mFontSize = 0.1f;
 	public int mMinKeyChars = 10;
 	public int mRefreshEvery = 2;
@@ -44,14 +47,17 @@ public class GFXDebug implements PrintInterface {
 		
 		StringProperties properties = new StringProperties(graphics,font);
 		properties.mKerningEnabled = true;
-		mString = new DrawableString(1024).setProperties(properties).setLeftTopJustified();
+		mTempPrintString = new DrawableString(1024).setProperties(properties).setLeftTopJustified();
 		mSpeedString = new DrawableString(32).setProperties(properties).setRightTopJustified();
 		mExecMacroString = new DrawableString("Macro...").setProperties(properties).setRightTopJustified().setConstant();
+		
+		mStateString = new DrawableString(1600);
+		mStateString.setLeftBottomJustified();
 		reset();
 	}
 	
 	public void reset() {
-		mString.reset();
+		mTempPrintString.reset();
 	}
 	
 	public boolean isActive(int maskVal) {
@@ -73,22 +79,22 @@ public class GFXDebug implements PrintInterface {
 		printDebugValue(FPS,"FPS",mTranslator.mFPS,1,true);
 		printDebugValue(DRAW_COUNT,"Draw calls",mDrawCount,0,false);
 		if(isActive(DRAW_DYNAMIC_STATIC_COUNT)) {
-			mString.appendString(" (");
-			mString.appendInt(mFlushCount);
-			mString.appendString("+");
-			mString.appendInt(mBatchCount);
-			mString.appendString(")");
+			mTempPrintString.appendString(" (");
+			mTempPrintString.appendInt(mFlushCount);
+			mTempPrintString.appendString("+");
+			mTempPrintString.appendInt(mBatchCount);
+			mTempPrintString.appendString(")");
 		}
-		mString.appendLineBreak();
+		mTempPrintString.appendLineBreak();
 		printDebugValue(POLYGON_COUNT,"Polygons",mPolygonCount,0,false);
 		if(isActive(POLYGON_DYNAMIC_STATIC_COUNT)) {
-			mString.appendString(" (");
-			mString.appendInt(mDynamicPolygonCount);
-			mString.appendString("+");
-			mString.appendInt(mBatchPolygonCount);
-			mString.appendString(")");
+			mTempPrintString.appendString(" (");
+			mTempPrintString.appendInt(mDynamicPolygonCount);
+			mTempPrintString.appendString("+");
+			mTempPrintString.appendInt(mBatchPolygonCount);
+			mTempPrintString.appendString(")");
 		}
-		mString.appendLineBreak();
+		mTempPrintString.appendLineBreak();
 		printDebugValue(TEXBIND_COUNT,"Texture binds",mTexBindCount,0,true);
 		printDebugValue(SHADERSWITCH_COUNT,"Shader activations",mShaderSwitchCount,0,true);
 	}
@@ -100,32 +106,34 @@ public class GFXDebug implements PrintInterface {
 	
 	public void printKeyValue(String key,float value,int fracDigits,boolean lineBreak) {
 		//mString.appendStringRightJustified(key,mMinKeyChars);
-		mString.appendString(key);
-		mString.appendString(": ");
-		mString.appendFloat(value,fracDigits);
+		mTempPrintString.appendString(key);
+		mTempPrintString.appendString(": ");
+		mTempPrintString.appendFloat(value,fracDigits);
 		if(lineBreak)
-			mString.appendLineBreak();
+			mTempPrintString.appendLineBreak();
 	}
 	
 	public void print(Object s) {
-		mString.appendString(s.toString());
+		mTempPrintString.appendString(s.toString());
 	}
 	
 	public void println(Object s) {
-		mString.appendString(s.toString());
-		mString.appendLineBreak();
+		mTempPrintString.appendString(s.toString());
+		mTempPrintString.appendLineBreak();
 	}
 	
 	public void println(boolean value) {
-		mString.appendString(value?"true":"false");
-		mString.appendLineBreak();
+		mTempPrintString.appendString(value?"true":"false");
+		mTempPrintString.appendLineBreak();
 	}
 	
 	public void draw() {
+		if(DebugYang.DEBUG_LEVEL<=0)
+			return;
 		
 		float playSpeed = mSurface.mPlaySpeed;
 		
-		if(playSpeed==1 && mString.mMarker==0 && (mSurface.mMacro==null || mSurface.mMacro.mFinished))
+		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString=="") && (mSurface.mMacro==null || mSurface.mMacro.mFinished))
 			return;
 		
 		float right = mGraphics.getScreenRight()-mDebugOffsetX;
@@ -158,7 +166,7 @@ public class GFXDebug implements PrintInterface {
 			mSpeedString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*2f);
 		}
 		
-		if(mString.mMarker!=0) {
+		if(mTempPrintString.mMarker!=0) {
 			if(mRefreshCount%mRefreshEvery==0) {
 				mPolygonCount = mTranslator.mPolygonCount;
 				mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
@@ -170,7 +178,19 @@ public class GFXDebug implements PrintInterface {
 				mShaderSwitchCount = mTranslator.mShaderSwitchCount;
 			}
 			mRefreshCount++;
-			mString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+			mTempPrintString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+		}
+		
+		if(DebugYang.stateString!=null && DebugYang.stateString!="") {
+			mGraphics.setColor(mStateColor);
+			String uString = DebugYang.stateString;
+			int c = mStateString.mCapacity;
+			if(uString.endsWith("\n"))
+				uString = uString.substring(0,uString.length()-1);
+			if(uString.length()>=c)
+				uString = uString.substring(uString.length()-c, uString.length());
+			mStateString.setString(uString);
+			mStateString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenBottom()+mDebugOffsetY, mFontSize);
 		}
 	}
 

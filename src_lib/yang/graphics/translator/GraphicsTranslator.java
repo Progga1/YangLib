@@ -35,6 +35,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public static int FPS_REFRESH_FRAMES = 20;
 	
 	//Properties
+	public String mDriverKey;
 	public int mScreenWidth;
 	public int mScreenHeight;
 	public float mRatioX;

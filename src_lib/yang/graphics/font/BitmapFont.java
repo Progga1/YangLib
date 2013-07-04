@@ -13,6 +13,8 @@ import yang.systemdependent.AbstractResourceManager;
 
 public class BitmapFont {
 	
+	public static boolean LOAD_DEBUG_FONTS = false;
+	
 	public static String[] ASCII = createASCIIArray();
 	
 	public static TextureFilter TEXTURE_FILTER = TextureFilter.LINEAR_MIP_LINEAR;
@@ -144,7 +146,7 @@ public class BitmapFont {
 	
 	public BitmapFont init(String filename,AbstractGFXLoader gfxLoader) {
 		Texture tex = null;
-		if(DebugYang.drawKerning)
+		if(LOAD_DEBUG_FONTS && gfxLoader.mResources.fileExists(filename+"Debug"))
 			tex = gfxLoader.getImage(filename+"Debug", TEXTURE_FILTER);
 		if(tex==null)
 			tex = gfxLoader.getImage(filename, TEXTURE_FILTER);

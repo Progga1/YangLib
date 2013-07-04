@@ -1,10 +1,10 @@
 package yang.graphics;
 
-import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 
 import yang.events.YangEventQueue;
 import yang.events.listeners.YangEventListener;
+import yang.events.macro.AbstractMacroIO;
 import yang.events.macro.DefaultMacroIO;
 import yang.events.macro.MacroExecuter;
 import yang.events.macro.MacroWriter;
@@ -28,6 +28,7 @@ public abstract class YangSurface {
 	public AbstractGFXLoader mGFXLoader;
 	public SoundManager mSounds;
 	public GFXDebug mDebug;
+	public String mPlatformKey = "";
 	
 	private UpdateMode mUpdateMode;
 	protected boolean mAutoReloadTexturesOnResume = true;
@@ -107,8 +108,21 @@ public abstract class YangSurface {
 		return true;
 	}
 	
-	public void setMacro(BufferedInputStream stream) {
-		
+	public void recordMacro(String filename,AbstractMacroIO macroIO) throws FileNotFoundException {
+		MacroWriter writer = new MacroWriter(mResources.getFileSystemOutputStream(filename), mDefaultMacroIO);
+		mEventQueue.registerEventWriter(writer);
+	}
+	
+	public void recordMacro(String filename) throws FileNotFoundException {
+		recordMacro(filename,mDefaultMacroIO);
+	}
+	
+	public void playMacro(String filename,AbstractMacroIO macroIO) {
+		mMacro = new MacroExecuter(mResources.getFileSystemInputStream(filename), macroIO);
+	}
+	
+	public void playMacro(String filename) {
+		playMacro(filename,mDefaultMacroIO);
 	}
 	
 	public void onSurfaceCreated() {
@@ -129,13 +143,11 @@ public abstract class YangSurface {
 		
 		mDefaultMacroIO = new DefaultMacroIO(this);
 		if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
-			mMacro = new MacroExecuter(mResources.getFileSystemInputStream(mMacroFilename), mDefaultMacroIO);
+			playMacro(mMacroFilename);
 		if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
-			MacroWriter writer;
 			String filename = "run.ym";
 			try {
-				writer = new MacroWriter(mResources.getFileSystemOutputStream(filename), mDefaultMacroIO);
-				mEventQueue.registerEventWriter(writer);
+				recordMacro(filename);
 			} catch (FileNotFoundException e) {
 				DebugYang.printerr("Could not create '"+filename+"'");
 			}
@@ -296,15 +308,14 @@ public abstract class YangSurface {
 		if(mUpdateMode==UpdateMode.SYNCHRONOUS)
 			catchUp();
 
-		if(mDebug!=null) {
+		if(DebugYang.DEBUG_LEVEL>0 && mDebug!=null) {
 			mDebug.reset();
 			if(DebugYang.DRAW_GFX_VALUES)
 				mDebug.printGFXDebugValues();
 		}
 		mGraphics.beginFrame();
-		//if(mProgramTime<2 || mProgramTime>20)
 		draw();
-		if(mDebug!=null) {
+		if(DebugYang.DEBUG_LEVEL>0 && mDebug!=null) {
 			mDebug.draw();
 		}
 		mGraphics.endFrame();

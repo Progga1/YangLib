@@ -1,6 +1,8 @@
 package yang.graphics.defaults;
 
 
+import java.io.FileNotFoundException;
+
 import yang.events.Keys;
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.YangEvent;
@@ -12,6 +14,7 @@ import yang.model.DebugYang;
 public class DefaultMetaEventListener implements YangEventListener {
 
 	public YangSurface mSurface;
+	private boolean mRecording = false;
 	
 	public DefaultMetaEventListener(YangSurface surface) {
 		mSurface = surface;
@@ -75,6 +78,19 @@ public class DefaultMetaEventListener implements YangEventListener {
 		if(code==Keys.F7) {
 			mSurface.proceed();
 		}
+		if(code==Keys.F11) {
+			if(!mRecording) {
+				mRecording = true;
+				try {
+					mSurface.recordMacro("macro.ym");
+				} catch (FileNotFoundException e) {
+					DebugYang.exception(e);
+				}
+			}
+		}
+
+		if(code==Keys.F12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
+			mSurface.playMacro("macro.ym");
 	}
 
 	@Override

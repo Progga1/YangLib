@@ -19,6 +19,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	
 	public AndroidGraphics(Context context) {
 		super();
+		mDriverKey = "ANDROID_GLES20";
 		mContext = context;
 		
 		mGFXLoader = new AndroidGFXLoader(this,mContext);
