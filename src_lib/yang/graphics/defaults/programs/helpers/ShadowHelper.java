@@ -6,7 +6,7 @@ import yang.graphics.defaults.programs.LightInterface;
 import yang.graphics.defaults.programs.ShadowInterface;
 import yang.graphics.defaults.programs.ShadowProgram;
 import yang.graphics.textures.TextureRenderTarget;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
@@ -19,7 +19,7 @@ public class ShadowHelper {
 
 	private DepthProgram depthProgram = new DepthProgram();
 	private static YangMatrix depthTrafoCorrection;
-	public static TextureSettings defaultTextureSettings = createTextureSettings();
+	public static TextureProperties defaultTextureSettings = createTextureSettings();
 	
 	private GraphicsTranslator mGraphics;
 	public Default3DGraphics mGraphics3D;
@@ -33,8 +33,8 @@ public class ShadowHelper {
 	public float mLightFactor = 1f;
 	public boolean mRenderToScreen = false;
 	
-	private static TextureSettings createTextureSettings() {
-		TextureSettings result = new TextureSettings(TextureWrap.CLAMP,TextureWrap.CLAMP,TextureFilter.LINEAR);
+	private static TextureProperties createTextureSettings() {
+		TextureProperties result = new TextureProperties(TextureWrap.CLAMP,TextureWrap.CLAMP,TextureFilter.LINEAR);
 		result.mChannels = 4;
 		return result;
 	}

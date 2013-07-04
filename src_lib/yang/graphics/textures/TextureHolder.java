@@ -8,15 +8,15 @@ public class TextureHolder {
 
 	private Texture mTexture;
 	private String mFilename;
-	private TextureSettings mSettings;
+	private TextureProperties mSettings;
 	
-	public TextureHolder(String filename,TextureSettings settings) {
+	public TextureHolder(String filename,TextureProperties settings) {
 		mFilename = filename;
 		mSettings = settings;
 	}
 	
 	public TextureHolder(String filename,TextureFilter filter) {
-		this(filename,new TextureSettings(filter));
+		this(filename,new TextureProperties(filter));
 	}
 	
 	public Texture getTexture(AbstractGFXLoader gfxLoader) {

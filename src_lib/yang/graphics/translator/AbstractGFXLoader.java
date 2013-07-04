@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import yang.graphics.font.BitmapFont;
 import yang.graphics.textures.TextureData;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.systemdependent.AbstractResourceManager;
@@ -40,7 +40,7 @@ public abstract class AbstractGFXLoader {
 		mResources = resources;
 	}
 	
-	protected Texture loadImage(String name,TextureSettings textureSettings,boolean redToAlpha) {
+	protected Texture loadImage(String name,TextureProperties textureSettings,boolean redToAlpha) {
 		TextureData data = loadImageData(name,redToAlpha);
 		if(redToAlpha)
 			data.redToAlpha();
@@ -49,13 +49,13 @@ public abstract class AbstractGFXLoader {
 		return result;
 	}
 	
-	protected synchronized Texture getImage(String name,TextureSettings textureSettings, boolean redToAlpha) {
+	protected synchronized Texture getImage(String name,TextureProperties textureSettings, boolean redToAlpha) {
 		Texture texture = mTextures.get(name);
 		
 		if (texture != null && texture.mSettings.equals(textureSettings))
 			return texture;
 		if(textureSettings==null)
-			textureSettings = new TextureSettings();
+			textureSettings = new TextureProperties();
 		texture = loadImage(name, textureSettings, redToAlpha);
 		mTextures.put(name, texture);
 		mGraphics.rebindTexture(0);
@@ -63,16 +63,16 @@ public abstract class AbstractGFXLoader {
 		return texture;
 	}
 	
-	public Texture getImage(String name,TextureSettings textureSettings){
+	public Texture getImage(String name,TextureProperties textureSettings){
 		return getImage(name,textureSettings,false);
 	}
 	
 	public Texture getImage(String name, TextureWrap wrapX, TextureWrap wrapY) {
-		return getImage(name,new TextureSettings(wrapX,wrapY));
+		return getImage(name,new TextureProperties(wrapX,wrapY));
 	}
 	
 	public Texture getImage(String name, TextureFilter textureFilter) {
-		return getImage(name,new TextureSettings(textureFilter));
+		return getImage(name,new TextureProperties(textureFilter));
 	}
 	
 	public Texture getImage(String name) {
@@ -80,23 +80,23 @@ public abstract class AbstractGFXLoader {
 		if (texture != null)
 			return texture;
 		else
-			return getImage(name,new TextureSettings());
+			return getImage(name,new TextureProperties());
 	}
 	
-	public Texture getAlphaMap(String name,TextureSettings textureSettings) {
+	public Texture getAlphaMap(String name,TextureProperties textureSettings) {
 		return getImage(name,textureSettings,true);
 	}
 	
 	public Texture getAlphaMap(String name) {
-		return getImage(name,new TextureSettings(),true);
+		return getImage(name,new TextureProperties(),true);
 	}
 	
 	public Texture getAlphaMap(String name, TextureWrap wrapX, TextureWrap wrapY) {
-		return getAlphaMap(name,new TextureSettings(wrapX,wrapY));
+		return getAlphaMap(name,new TextureProperties(wrapX,wrapY));
 	}
 	
 	public Texture getAlphaMap(String name, TextureWrap wrapX, TextureWrap wrapY, TextureFilter textureFilter) {
-		return getAlphaMap(name,new TextureSettings(wrapX,wrapY,textureFilter));
+		return getAlphaMap(name,new TextureProperties(wrapX,wrapY,textureFilter));
 	}
 
 	public String getShader(String name) {

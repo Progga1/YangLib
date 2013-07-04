@@ -4,7 +4,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 
 
-public class TextureSettings {
+public class TextureProperties {
 
 	public final static TextureWrap DEFAULT_WRAP = TextureWrap.REPEAT;
 	public final static TextureFilter DEFAULT_FILTER = TextureFilter.NEAREST;
@@ -14,45 +14,45 @@ public class TextureSettings {
 	public TextureFilter mFilter;
 	public int mChannels;
 	
-	public TextureSettings(TextureWrap wrapX,TextureWrap wrapY,TextureFilter filter,int channels) {
+	public TextureProperties(TextureWrap wrapX,TextureWrap wrapY,TextureFilter filter,int channels) {
 		mWrapX = wrapX;
 		mWrapY = wrapY;
 		mFilter = filter;
 		mChannels = channels;
 	}
 	
-	public TextureSettings(TextureWrap wrapX,TextureWrap wrapY,TextureFilter filter) {
+	public TextureProperties(TextureWrap wrapX,TextureWrap wrapY,TextureFilter filter) {
 		this(wrapX,wrapY,filter,4);
 	}
 	
-	public TextureSettings(TextureWrap wrap,TextureFilter filter) {
+	public TextureProperties(TextureWrap wrap,TextureFilter filter) {
 		this(wrap,wrap,filter);
 	}
 	
-	public TextureSettings(TextureWrap wrapX,TextureWrap wrapY) {
+	public TextureProperties(TextureWrap wrapX,TextureWrap wrapY) {
 		this(wrapX,wrapY,DEFAULT_FILTER);
 	}
 	
-	public TextureSettings(TextureFilter filter) {
+	public TextureProperties(TextureFilter filter) {
 		this(DEFAULT_WRAP,DEFAULT_WRAP,filter);
 	}
 	
-	public TextureSettings() {
+	public TextureProperties() {
 		this(DEFAULT_WRAP,DEFAULT_WRAP);
 	}
 	
-	public TextureSettings(TextureFilter filter,int channels) {
+	public TextureProperties(TextureFilter filter,int channels) {
 		this(DEFAULT_WRAP,DEFAULT_WRAP,filter,channels);
 	}
 	
-	public TextureSettings(int channels) {
+	public TextureProperties(int channels) {
 		this(DEFAULT_WRAP,DEFAULT_WRAP,DEFAULT_FILTER,channels);
 	}
 	
 	public boolean equals(Object object) {
-		if(!(object instanceof TextureSettings))
+		if(!(object instanceof TextureProperties))
 			return false;
-		TextureSettings settings = (TextureSettings)object;
+		TextureProperties settings = (TextureProperties)object;
 		return settings.mWrapX==mWrapX && settings.mWrapY==mWrapY && settings.mFilter==mFilter;
 		
 	}

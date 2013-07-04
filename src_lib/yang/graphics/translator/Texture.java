@@ -2,7 +2,7 @@ package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
 
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 
 
@@ -13,7 +13,7 @@ public class Texture {
 	public int mWidth;
 	public int mHeight;
 	public int mId;
-	public TextureSettings mSettings;
+	public TextureProperties mSettings;
 	public boolean mIsAlphaMap;
 	public boolean mFreed = false;
 	
@@ -22,17 +22,17 @@ public class Texture {
 		mIsAlphaMap = false;
 	}
 	
-	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureSettings settings) {
+	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties settings) {
 		this(graphics);
 		set(source, width, height, settings);
 	}
 
-	public void set(ByteBuffer source, int width, int height, TextureSettings settings) {
+	public void set(ByteBuffer source, int width, int height, TextureProperties settings) {
 		mWidth = width;
 		mHeight = height;
 		mSettings = settings;
 		if(settings==null)
-			settings = new TextureSettings();
+			settings = new TextureProperties();
 		mGraphics.initTexture(this, source);
 	}
 	

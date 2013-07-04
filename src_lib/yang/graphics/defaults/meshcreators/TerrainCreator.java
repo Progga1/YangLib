@@ -2,7 +2,7 @@ package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.interfaces.KernelFunction;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.TextureCreator;
 import yang.math.objects.matrix.YangMatrix;
@@ -88,7 +88,7 @@ public class TerrainCreator extends Grid3DCreator {
 		return result;
 	}
 	
-	public Texture createCoastTexture(float[][] heightValues, float waterLevel, KernelFunction kernel, TextureSettings textureSettings,float zeroWeight,float factor) {
+	public Texture createCoastTexture(float[][] heightValues, float waterLevel, KernelFunction kernel, TextureProperties textureSettings,float zeroWeight,float factor) {
 		float[][] coast = createCoastArray(heightValues,waterLevel,kernel,zeroWeight,factor);
 		return mTranslator.createTexture(TextureCreator.createGrayScaleTexture(coast,4), textureSettings);
 	}

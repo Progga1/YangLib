@@ -3,7 +3,7 @@ package yang.graphics.defaults.programs.helpers;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.programs.LightmapCreatorProgram;
 import yang.graphics.textures.TextureRenderTarget;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
@@ -19,18 +19,18 @@ public class PlanarLightmapHelper {
 	public GraphicsTranslator mGraphics;
 	public LightmapCreatorProgram mLightmapCreatorProgram = new LightmapCreatorProgram();
 	public TextureRenderTarget mLightMap;
-	public static TextureSettings defaultTextureSettings = createTextureSettings(false);
-	public static TextureSettings defaultTextureSettingsMipMap = createTextureSettings(true);
+	public static TextureProperties defaultTextureSettings = createTextureSettings(false);
+	public static TextureProperties defaultTextureSettingsMipMap = createTextureSettings(true);
 	public boolean mRenderToScreen = false;
 	public ShadowHelper mShadowHelper;
 	public YangMatrixCameraOps mOrthoProjection,mCameraTransform;
 	public float[] mInvOrthoProjection = new float[16];
-	private TextureSettings mTextureSettings;
+	private TextureProperties mTextureSettings;
 	private boolean mMipMapping;
 	private boolean mFinished = false;
 	
-	private static TextureSettings createTextureSettings(boolean mipMapping) {
-		TextureSettings result = new TextureSettings(TextureWrap.CLAMP,TextureWrap.CLAMP,mipMapping?TextureFilter.LINEAR_MIP_LINEAR:TextureFilter.LINEAR);
+	private static TextureProperties createTextureSettings(boolean mipMapping) {
+		TextureProperties result = new TextureProperties(TextureWrap.CLAMP,TextureWrap.CLAMP,mipMapping?TextureFilter.LINEAR_MIP_LINEAR:TextureFilter.LINEAR);
 		result.mChannels = 4;
 		return result;
 	}

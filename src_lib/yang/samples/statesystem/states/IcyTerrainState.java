@@ -17,7 +17,7 @@ import yang.graphics.defaults.programs.helpers.ShadowHelper;
 import yang.graphics.particles.EffectParticleProperties;
 import yang.graphics.particles.Weather3D;
 import yang.graphics.textures.TextureRenderTarget;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
@@ -39,7 +39,7 @@ public class IcyTerrainState extends SampleState {
 	private static boolean STATIC_SHADOWS = false;
 	private static boolean USE_LIGHTMAPS = true;
 	private static boolean ENVIRONMENT_MAPPING = true;
-	private static TextureSettings TEXTURE_SETTINGS = new TextureSettings(TextureFilter.LINEAR_MIP_LINEAR);
+	private static TextureProperties TEXTURE_SETTINGS = new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR);
 	
 	private Texture grass;
 	private Texture ice;
@@ -264,8 +264,8 @@ public class IcyTerrainState extends SampleState {
 		if(mFirstFrame) {
 			mShadowHelper.init(mGraphics3D,1024);
 			mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
-			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureSettings(TextureWrap.CLAMP,TextureFilter.LINEAR));
-			mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureSettings(TextureFilter.LINEAR_MIP_LINEAR,4),1,1.5f);
+			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR));
+			mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR,4),1,1.5f);
 		}
 
 		if(mFirstFrame || !STATIC_SHADOWS) {
@@ -355,7 +355,7 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	protected void restartGraphics() {
-		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureSettings(TextureFilter.LINEAR_MIP_LINEAR,4),1,1.5f);
+		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR,4),1,1.5f);
 	}
 
 	@Override

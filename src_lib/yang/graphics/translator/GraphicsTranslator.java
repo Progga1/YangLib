@@ -14,7 +14,7 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureRenderTarget;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.glconsts.GLBlendFuncs;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
@@ -94,7 +94,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
 	protected abstract void genTextures(int[] target,int count);
-	protected abstract void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureSettings textureSettings);
+	protected abstract void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings);
 	public abstract void deleteTextures(int[] ids);
 	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, IndexedVertexBuffer vertexBuffer);
 	public abstract void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer);
@@ -195,7 +195,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(int i=0;i<BYTES;i++)
 			buf.put((byte)255);
 		if(mWhiteTexture==null)
-			mWhiteTexture = createTexture(buf, DIM,DIM, new TextureSettings());
+			mWhiteTexture = createTexture(buf, DIM,DIM, new TextureProperties());
 		else
 			mWhiteTexture.update(buf);
 		buf = ByteBuffer.allocateDirect(BYTES);
@@ -205,7 +205,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			else
 				buf.put((byte)0);
 		if(mBlackTexture==null)
-			mBlackTexture = createTexture(buf, DIM,DIM, new TextureSettings());
+			mBlackTexture = createTexture(buf, DIM,DIM, new TextureProperties());
 		else
 			mBlackTexture.update(buf);
 		assert checkErrorInst("Create def textures");
@@ -352,7 +352,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return createTexCoords().init(x1,y1,widthAndHeight);
 	}
 	
-	public Texture createEmptyTexture(int width,int height,TextureSettings settings) {
+	public Texture createEmptyTexture(int width,int height,TextureProperties settings) {
 		Texture texture = new Texture(this);
 		texture.set(null, width, height, settings);
 		return texture;
@@ -362,13 +362,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return new Texture(this);
 	}
 	
-	public Texture createTexture(ByteBuffer source, int width, int height, TextureSettings settings) {
+	public Texture createTexture(ByteBuffer source, int width, int height, TextureProperties settings) {
 		source.rewind();
 		Texture result = new Texture(this,source,width,height,settings);
 		return result;
 	}
 	
-	public Texture createTexture(TextureData textureData, TextureSettings settings) {
+	public Texture createTexture(TextureData textureData, TextureProperties settings) {
 		settings.mChannels = textureData.mChannels;
 		return createTexture(textureData.mData,textureData.mWidth,textureData.mHeight,settings);
 	}
@@ -528,7 +528,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		deleteTextures(mTempInt);
 	}
 	
-	public TextureRenderTarget createRenderTarget(int width,int height,TextureSettings textureSettings) {
+	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {
 		Texture texture = createEmptyTexture(width,height,textureSettings);
 		TextureRenderTarget result = derivedCreateRenderTarget(texture);
 		mRenderTargets.add(result);

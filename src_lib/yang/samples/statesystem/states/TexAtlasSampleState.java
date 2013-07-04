@@ -3,7 +3,7 @@ package yang.samples.statesystem.states;
 import yang.graphics.defaults.programs.TextureTileRepeatProgram;
 import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureData;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
@@ -27,7 +27,7 @@ public class TexAtlasSampleState extends SampleState {
 		atlasData.createBiasBorder(128, 0, 128, 128, 4, TextureWrap.CLAMP, TextureWrap.CLAMP);
 		atlasData.createBiasBorder(0, 128, 128, 128, 8, TextureWrap.MIRROR, TextureWrap.MIRROR);
 		mSkyBounds = atlasData.copyWithMargin(128,128, 128,128, mGFXLoader.loadImageData("sky_small"), 2, TextureWrap.REPEAT, TextureWrap.CLAMP);
-		mAtlasTex = mGraphics.createTexture(atlasData, new TextureSettings(TextureFilter.LINEAR));
+		mAtlasTex = mGraphics.createTexture(atlasData, new TextureProperties(TextureFilter.LINEAR));
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ import yang.graphics.YangSurface;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureRenderTarget;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.Texture;
 import yang.model.enums.ByteFormat;
 import yang.pc.PCEventHandler;
@@ -167,7 +167,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
-	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureSettings textureSettings) {
+	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings) {
 		assert preCheck("Init texture");
 		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
 		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);

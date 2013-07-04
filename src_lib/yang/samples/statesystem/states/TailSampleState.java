@@ -2,7 +2,7 @@ package yang.samples.statesystem.states;
 
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.tail.Tail;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
@@ -19,7 +19,7 @@ public class TailSampleState extends SampleState {
 	protected void initGraphics() {
 		mTail = new Tail(mGraphics2D,100,true);
 		mTail.setColor(0.7f, 0.7f, 0.99f);
-		mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureSettings(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
+		mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureProperties(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
 		mTail.setWidth(0.085f);
 		mTail.createNodeEveryNthStep(1);
 		mTail.mMinDist = 0.06f;

@@ -12,7 +12,7 @@ import yang.graphics.skeletons.elements.Bone;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.skeletons.pose.Pose;
 import yang.graphics.textures.TextureHolder;
-import yang.graphics.textures.TextureSettings;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
@@ -160,12 +160,12 @@ public abstract class Skeleton {
 		mContourTextureHolder = texture;
 	}
 	
-	public void setTexture(String filename,TextureSettings settings) {
+	public void setTexture(String filename,TextureProperties settings) {
 		setTexture(new TextureHolder(filename,settings));
 	}
 	
 	public void setTexture(String filename,TextureFilter filter) {
-		setTexture(filename,new TextureSettings(TextureWrap.CLAMP,filter));
+		setTexture(filename,new TextureProperties(TextureWrap.CLAMP,filter));
 	}
 	
 	public void refreshBoundariesRect() {

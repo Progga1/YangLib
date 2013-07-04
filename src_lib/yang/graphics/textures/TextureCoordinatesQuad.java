@@ -8,6 +8,7 @@ public class TextureCoordinatesQuad {
 	public static float BIASPIXELS = 0.5f;
 
 	public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinatesQuad().init(0,0,1,1);
+	public static final int ROTATE_NONE = 0;
 	public static final int ROTATE_CW_90 = 1;
 	public static final int ROTATE_180 = 2;
 	public static final int ROTATE_CCW_90 = 3;
@@ -21,31 +22,18 @@ public class TextureCoordinatesQuad {
 	public float mHeight;
 	public float mRatio;
 	public float[] mAppliedCoordinates;
+	public int mRotation;
 	
 	public TextureCoordinatesQuad() {
 		
 	}
 	
 	public void rotateCoords(int rotation) {
-		while(rotation>0) {
-			float cx = mAppliedCoordinates[0];
-			float cy = mAppliedCoordinates[1];
-			mAppliedCoordinates[0] = mAppliedCoordinates[4];
-			mAppliedCoordinates[1] = mAppliedCoordinates[5];
-			mAppliedCoordinates[4] = mAppliedCoordinates[6];
-			mAppliedCoordinates[5] = mAppliedCoordinates[7];
-			mAppliedCoordinates[6] = mAppliedCoordinates[2];
-			mAppliedCoordinates[7] = mAppliedCoordinates[3];
-			mAppliedCoordinates[2] = cx;
-			mAppliedCoordinates[3] = cy;
-			float h = mWidth;
-			mWidth = mHeight;
-			mHeight = h;
-			rotation--;
-		}
+		mRotation = rotation;
+		refreshCoordArray();
 	}
 	
-	public void refreshCoordArray(int rotation) {
+	public void refreshCoordArray() {
 		mAppliedCoordinates = new float[8];
 		mAppliedCoordinates[0] = x1;
 		mAppliedCoordinates[1] = y2;
@@ -55,12 +43,23 @@ public class TextureCoordinatesQuad {
 		mAppliedCoordinates[5] = y1;
 		mAppliedCoordinates[6] = x2;
 		mAppliedCoordinates[7] = y1;
-		if(rotation!=0)
-			rotateCoords(rotation);
-	}
-	
-	public void refreshCoordArray() {
-		refreshCoordArray(0);
+		if(mRotation!=0) {
+			for(int i=0;i<mRotation;i++) {
+				float cx = mAppliedCoordinates[0];
+				float cy = mAppliedCoordinates[1];
+				mAppliedCoordinates[0] = mAppliedCoordinates[4];
+				mAppliedCoordinates[1] = mAppliedCoordinates[5];
+				mAppliedCoordinates[4] = mAppliedCoordinates[6];
+				mAppliedCoordinates[5] = mAppliedCoordinates[7];
+				mAppliedCoordinates[6] = mAppliedCoordinates[2];
+				mAppliedCoordinates[7] = mAppliedCoordinates[3];
+				mAppliedCoordinates[2] = cx;
+				mAppliedCoordinates[3] = cy;
+				float h = mWidth;
+				mWidth = mHeight;
+				mHeight = h;
+			}
+		}
 	}
 	
 	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float biasX, float biasY, int rotation) {
@@ -70,7 +69,8 @@ public class TextureCoordinatesQuad {
 		this.y2 = y2-biasY;
 		this.mWidth = x2-x1;
 		this.mHeight = y2-y1;
-		refreshCoordArray(rotation);
+		rotateCoords(rotation);
+		refreshCoordArray();
 		mRatio = 1;
 		mRatioWidth = mWidth/mHeight;
 		return this;
