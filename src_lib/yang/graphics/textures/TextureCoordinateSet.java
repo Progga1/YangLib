@@ -51,15 +51,31 @@ public abstract class TextureCoordinateSet {
 		this(graphics,1,1,1/8f,0);
 	}
 	
+	public TextureCoordinateSet(GraphicsTranslator graphics,float texWidth,float texHeight) {
+		this(graphics,texWidth,texHeight,1,0.5f);
+	}
+	
+	public TextureCoordinateSet(GraphicsTranslator graphics,float texSize) {
+		this(graphics,texSize,texSize);
+	}
+	
 	public TextureCoordinatesQuad addTexCoords(TextureCoordinatesQuad texCoords) {
 		mTexCoords.add(texCoords);
 		return texCoords;
 	}
 	
-	public TextureCoordinatesQuad createTexCoordsBiased(float left,float top,float width,float height, float biasX, float biasY) {
-		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(left,top,left+width,top+height,mTexWidth,mTexHeight,biasX,biasY);
+	public TextureCoordinatesQuad createTexCoordsAbsBiased(float left,float top,float right,float bottom, float biasX, float biasY) {
+		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(left,top,right,bottom,mTexWidth,mTexHeight,biasX,biasY);
 		mTexCoords.add(texCoords);
 		return texCoords;
+	}
+	
+	public TextureCoordinatesQuad createTexCoordsAbs(float left,float top,float right,float bottom) {
+		return createTexCoordsAbsBiased(left,top,right,bottom,mDefaultBiasX,mDefaultBiasY);
+	}
+	
+	public TextureCoordinatesQuad createTexCoordsBiased(float left,float top,float width,float height, float biasX, float biasY) {
+		return createTexCoordsAbsBiased(left,top,left+width,top+height,biasX,biasY);
 	}
 	
 	public TextureCoordinatesQuad createTexCoords(float left,float top,float width,float height) {
@@ -77,8 +93,7 @@ public abstract class TextureCoordinateSet {
 	public TextureCoordinatesQuad[] createTexCoordSequenceBias(float startX,float startY,float width,float height,int count,float biasX,float biasY) {
 		TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
 		for(int i=0;i<count;i++) {
-			result[i] = new TextureCoordinatesQuad().initBiased(startX+i*width,startY,startX+i*width+width,startY+height, mTexWidth,mTexHeight, biasX,biasY);
-			mTexCoords.add(result[i]);
+			result[i] = createTexCoordsAbsBiased(startX+i*width,startY,startX+i*width+width,startY+height, biasX,biasY);
 		}
 		return result;
 	}
@@ -89,6 +104,16 @@ public abstract class TextureCoordinateSet {
 	
 	public TextureCoordinatesQuad[] createTexCoordSequence(float startX,float startY,float size,int count) {
 		return createTexCoordSequence(startX,startY,size,size,count);
+	}
+
+	public TextureCoordinatesQuad createTexCoordsNormalized(float left, float top, float width,float height) {
+		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(left,top,left+width,top+height, mDefaultBiasX/mTexWidth,mDefaultBiasY/mTexHeight);
+		mTexCoords.add(texCoords);
+		return texCoords;
+	}
+	
+	public TextureCoordinatesQuad createTexCoordsNormalized(float left, float top, float size) {
+		return createTexCoordsNormalized(left,top,size,size);
 	}
 	
 }
