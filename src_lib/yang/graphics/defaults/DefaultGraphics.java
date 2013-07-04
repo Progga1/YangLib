@@ -411,7 +411,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 	
 	public void putTextureRect(TextureCoordinatesQuad texCoords) {
-		mCurrentVertexBuffer.putRect2D(ID_TEXTURES,texCoords.x1,texCoords.y1,texCoords.x2,texCoords.y2);
+		mCurrentVertexBuffer.putArray(ID_TEXTURES, texCoords.mAppliedCoordinates);
 	}
 
 	public void putTransformedTextureRect(YangMatrix transform) {

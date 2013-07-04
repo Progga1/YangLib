@@ -217,17 +217,18 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	public void putTexRect(float distance, TextureCoordinatesQuad texCoords) {
 		
 		final float BIAS_X = 0.001f;
-		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);//System.out.println(mProperties.mFieldWidth);
+		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);
 		if(fieldCount>1)
 			fieldCount *= mProperties.mStretch;
 		float offset = mProperties.mOffsets[(fieldCount+mProperties.mOffsets.length-1)%mProperties.mOffsets.length]*mProperties.mFieldWidth;
-		float x1 = texCoords.x1+offset+BIAS_X;
-		float x2 = x1+(mProperties.mFieldWidth*fieldCount*(texCoords.x2-texCoords.x1))-BIAS_X;
+		float x1 = texCoords.mLeft+offset+BIAS_X;
+		float x2 = x1+(mProperties.mFieldWidth*fieldCount*texCoords.mWidth)-BIAS_X;
+		float y2 = texCoords.mTop+texCoords.mHeight;
 		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
-				x1,texCoords.y1+mProperties.mTexBias,
-				x2,texCoords.y1+mProperties.mTexBias,
-				x1,texCoords.y2-mProperties.mTexBias,
-				x2,texCoords.y2-mProperties.mTexBias
+				x1,texCoords.mTop+mProperties.mTexBias,
+				x2,texCoords.mTop+mProperties.mTexBias,
+				x1,y2-mProperties.mTexBias,
+				x2,y2-mProperties.mTexBias
 				);
 //		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
 //				texCoords.x1,texCoords.y1,

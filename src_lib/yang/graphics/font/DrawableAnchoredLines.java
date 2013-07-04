@@ -25,8 +25,8 @@ public class DrawableAnchoredLines extends DrawableString{
 			float charX = offsets[i];
 			if(charX!=LINEBREAK_FLOAT) {
 				TextureCoordinatesQuad coords = mTexCoords[o];
-				float x2 = charX+(coords.x2-coords.x1)*mProperties.mFont.mCharNormalizeFactorX;
-				float y2 = charY+(coords.y2-coords.y1)*mProperties.mFont.mCharNormalizeFactorY;
+				float x2 = charX+(coords.mWidth)*mProperties.mFont.mCharNormalizeFactorX;
+				float y2 = charY+(coords.mHeight)*mProperties.mFont.mCharNormalizeFactorY;
 				positionTarget[c++] = charX;
 				positionTarget[c++] = charY;
 				if(mProperties.mHasZComponent)

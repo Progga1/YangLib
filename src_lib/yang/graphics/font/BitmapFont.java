@@ -82,14 +82,14 @@ public class BitmapFont {
 			String[] valuesSplit = values.split(" ");
 			TextureCoordinatesQuad newCoordinates = new TextureCoordinatesQuad();
 			if(valuesSplit.length>=2) {
-				newCoordinates.x1 = Float.parseFloat(valuesSplit[0])*dWidth;
-				newCoordinates.y1 = Float.parseFloat(valuesSplit[1])*dHeight;
+				newCoordinates.mLeft = Float.parseFloat(valuesSplit[0])*dWidth;
+				newCoordinates.mTop = Float.parseFloat(valuesSplit[1])*dHeight;
 				if(valuesSplit.length<4) {
-					newCoordinates.x2 = newCoordinates.x1+defaultCharWidth*dWidth;
-					newCoordinates.y2 = newCoordinates.y1+charHeight*dHeight;
+					newCoordinates.mWidth = defaultCharWidth*dWidth;
+					newCoordinates.mHeight = charHeight*dHeight;
 				}else{
-					newCoordinates.x2 = Float.parseFloat(valuesSplit[2])*dWidth;
-					newCoordinates.y2 = Float.parseFloat(valuesSplit[3])*dHeight;
+					newCoordinates.setRight(Float.parseFloat(valuesSplit[2])*dWidth);
+					newCoordinates.setBottom(Float.parseFloat(valuesSplit[3])*dHeight);
 					int count = Math.min(valuesSplit.length-4, mKernBoxes*2);
 					float[] kerningArray = mKerningValues[i];
 					for(int k=0;k<count;k++) {
@@ -113,8 +113,8 @@ public class BitmapFont {
 			}
 			newCoordinates.refreshCoordArray();
 			mCoordinates[i] = newCoordinates;
-			float w = (newCoordinates.x2-newCoordinates.x1)*mCharNormalizeFactorX;
-			float h = (newCoordinates.y2-newCoordinates.y1)*mCharNormalizeFactorY;
+			float w = (newCoordinates.mWidth)*mCharNormalizeFactorX;
+			float h = (newCoordinates.mHeight)*mCharNormalizeFactorY;
 			mWidths[i] = w;
 			mHeights[i] = h;
 			float[] positions = mPositions2D[i];

@@ -10,6 +10,7 @@ public abstract class TextureCoordinateSet {
 	public NonConcurrentList<TextureCoordinatesQuad> mTexCoords;
 	protected float mTexWidth,mTexHeight;
 	protected float mDefaultBiasX=0,mDefaultBiasY=0;
+	protected float mPatchSizeX,mPatchSizeY;
 	
 	public static TextureCoordinatesQuad[] createTexCoordSequence(float startX,float startY,float width,float height,float texWidth,float texHeight,int count,float biasX,float biasY) {
 		TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
@@ -35,17 +36,19 @@ public abstract class TextureCoordinateSet {
 		return createTexCoordSequencePixelsBias(texture,startX,startY,size,size,count,0,0);
 	}
 	
-	public TextureCoordinateSet(GraphicsTranslator graphics,float texWidth,float texHeight,float defaultBias) {
+	public TextureCoordinateSet(GraphicsTranslator graphics,float texWidth,float texHeight,float patchSize,float defaultBias) {
 		mGraphics = graphics;
 		mTexWidth = texWidth;
 		mTexHeight = texHeight;
+		mPatchSizeX = patchSize;
+		mPatchSizeY = patchSize;
 		mDefaultBiasX = defaultBias;
 		mDefaultBiasY = defaultBias;
 		mTexCoords = new NonConcurrentList<TextureCoordinatesQuad>();
 	}
 	
 	public TextureCoordinateSet(GraphicsTranslator graphics) {
-		this(graphics,1,1,0);
+		this(graphics,1,1,1/8f,0);
 	}
 	
 	public TextureCoordinatesQuad addTexCoords(TextureCoordinatesQuad texCoords) {
@@ -61,6 +64,14 @@ public abstract class TextureCoordinateSet {
 	
 	public TextureCoordinatesQuad createTexCoords(float left,float top,float width,float height) {
 		return createTexCoordsBiased(left,top,width,height,mDefaultBiasX,mDefaultBiasY);
+	}
+	
+	public TextureCoordinatesQuad createTexCoordsPatched(int patchX,int patchY,int patchWidth,int patchHeight) {
+		return createTexCoords(patchX*mPatchSizeX,patchY*mPatchSizeY,(patchX+patchWidth)*mPatchSizeX,(patchX+patchHeight)*mPatchSizeY);
+	}
+	
+	public TextureCoordinatesQuad createTexCoordsPatched(int patchX,int patchY,int patchSize) {
+		return createTexCoordsPatched(patchX,patchY,patchSize,patchSize);
 	}
 	
 	public TextureCoordinatesQuad[] createTexCoordSequenceBias(float startX,float startY,float width,float height,int count,float biasX,float biasY) {

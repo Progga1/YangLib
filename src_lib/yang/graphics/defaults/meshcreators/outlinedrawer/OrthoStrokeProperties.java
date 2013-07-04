@@ -50,7 +50,7 @@ public class OrthoStrokeProperties {
 	public void putPatch(int mask,int texPatchX,int texPatchY,int rotation) {
 		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(texPatchX*mPatchSize, texPatchY*mPatchSize, mPatchSize, mTexBias);
 		texCoords.intoRect(mTexBounds);
-		texCoords.rotateCoords(rotation);
+		texCoords.setRotation(rotation);
 		mTexCoordTable[mask] = texCoords;
 	}
 	
