@@ -97,11 +97,12 @@ public class TextureCoordinatesQuad {
 	}
 	
 	public TextureCoordinatesQuad init(float x1, float y1, float x2, float y2, float textureWidth, float textureHeight) {
+		float uBias = textureWidth*textureHeight>=64?BIASPIXELS:0;
 		initBiased((x1) / (float)textureWidth, 
 			  (y1) / (float)textureHeight,
 			 (x2) / (float)textureWidth, 
 			 (y2) / (float)textureHeight, 
-			 BIASPIXELS/(float)textureWidth, BIASPIXELS/(float)textureHeight);
+			 uBias/(float)textureWidth, uBias/(float)textureHeight);
 		mRatio = (float)textureWidth / textureHeight;
 		mRatioWidth = mWidth*mRatio/mHeight;
 		return this;
