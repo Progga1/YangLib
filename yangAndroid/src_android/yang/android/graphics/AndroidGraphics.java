@@ -5,8 +5,8 @@ import java.nio.ByteBuffer;
 import yang.android.io.AndroidGFXLoader;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
-import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.enums.ByteFormat;
@@ -97,7 +97,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 	
 	@Override
-	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureSettings textureSettings) {
+	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings) {
 		assert preCheck("Set texture data");
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
