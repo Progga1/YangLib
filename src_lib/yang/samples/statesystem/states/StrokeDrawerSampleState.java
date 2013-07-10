@@ -85,4 +85,9 @@ public class StrokeDrawerSampleState extends SampleState {
 		}
 	}
 	
+	@Override
+	public void stop() {
+		mGraphics.switchCulling(false);
+	}
+	
 }
