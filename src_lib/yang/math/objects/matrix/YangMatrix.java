@@ -45,6 +45,7 @@ public class YangMatrix {
 		mInverted = null;
 		mStack = null;
 		mStackPointer = -1;
+		loadIdentity();
 	}
 	
 	public void initStack(int capacity) {

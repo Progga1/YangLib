@@ -129,6 +129,22 @@ public class Util {
 		return result;
 	}
 	
+	public static String arrayToString(short[] array,String separator,int spaceEvery) {
+		//String result = "length="+array.length;
+		int c = 0;
+		String result="";
+		for(short t:array) {
+			if(result!="") {
+				result += separator;
+				if(spaceEvery>0 && (c%spaceEvery==0))
+					result += " ";
+			}
+			c++;
+			result += t;
+		}
+		return result;
+	}
+	
 	public static String arrayToString(float[][] array,String separator,int spaceEvery) {
 		//String result = "length="+array.length;
 		String result="";

@@ -7,6 +7,7 @@ import yang.events.eventtypes.YangEvent;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.MatrixStackSampleState;
+import yang.samples.statesystem.states.OBJSampleState;
 import yang.samples.statesystem.states.ParticleSampleState;
 import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.SoundSampleState;
@@ -53,6 +54,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Particles", new ParticleSampleState());
 		addMenuItem("Texture Atlas", new TexAtlasSampleState());
 		addMenuItem("Sounds", new SoundSampleState());
+		addMenuItem("Obj loader", new OBJSampleState());
 		refreshLayout();
 	}
 	

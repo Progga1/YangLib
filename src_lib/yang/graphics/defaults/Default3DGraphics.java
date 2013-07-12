@@ -188,6 +188,15 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		setCameraLookAt(camera.mEyeX,camera.mEyeY,camera.mEyeZ, camera.mLookAtX,camera.mLookAtY,camera.mLookAtZ, camera.mUpX,camera.mUpY,camera.mUpZ);
 	}
 	
+	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
+		mTranslator.flush();
+		mCameraMatrix.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
+	}
+	
+	public void setCameraAlphaBeta(float alpha, float beta, float distance) {
+		setCameraAlphaBeta(0,0,0, alpha,beta, distance);
+	}
+	
 	@Override
 	public void refreshResultTransform() {
 		if(mBillboardMode) {

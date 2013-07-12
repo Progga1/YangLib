@@ -1,0 +1,29 @@
+newmtl red
+Ka  0.06  0.15 0.01 
+Kd  0.06  0.15 0.01
+Ks  0.1 0.1 0.1
+
+newmtl yellow
+Ka  0.8  0.8  0.05
+Kd  0.8  0.8  0.05
+Ks  0.2 0.2 0.2
+
+newmtl black
+Ka  0.01  0.01  0.01
+Kd  0.01  0.01  0.01
+Ks  0.1 0.1 0.1
+
+newmtl glass
+Ka  0.01  0.01  0.01
+Kd  0.02  0.02  0.02
+Ks  1 1 1
+
+newmtl white
+Ka  0.04 0.1 0
+Kd  0.04 0.1 0
+Ks  0.1 0.1 0.1
+
+newmtl dkgrey
+Ka  0.2  0.2  0.2
+Kd  0.3  0.3  0.3
+Ks  0.5 0.5 0.5

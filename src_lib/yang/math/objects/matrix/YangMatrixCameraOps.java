@@ -75,5 +75,12 @@ public class YangMatrixCameraOps extends YangMatrix {
 	public void setPerspectiveProjectionFovy(float fovy,float ratioX,float near, float far) {
 		setPerspectiveProjectionFovy(fovy,ratioX,1,near,far);
 	}
+
+	public void setLookAtAlphaBeta(float focusX, float focusY, float focusZ, float alpha, float beta,float distance) {
+		setLookAt(focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance,
+				focusY+(float)Math.sin(beta)*distance,
+				focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance,
+				focusX,focusY,focusZ, 0,1,0);
+	}
 	
 }
