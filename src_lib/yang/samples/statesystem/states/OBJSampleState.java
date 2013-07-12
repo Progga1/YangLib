@@ -50,6 +50,10 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.fillNormals(0);
 	}
 
-	
+	@Override
+	public void stop() {
+		mGraphics3D.resetGlobalTransform();
+		mGraphics3D.setGlobalTransformEnabled(false);
+	}
 	
 }
