@@ -9,6 +9,7 @@ public class LightProgram extends Basic3DProgram implements LightInterface {
 	
 	public static String VERTEX_SHADER = 
 			"uniform mat4 projTransform;\n"
+			+"uniform mat4 worldTransform;\n"
 			+"\n"
 			+"uniform float time;\n"
 			+"uniform vec4 lightDir;\n"
@@ -24,10 +25,10 @@ public class LightProgram extends Basic3DProgram implements LightInterface {
 			+"varying vec2 screenPos;\n"
 			+"\n"
 			+"void main() {\n"
-			+"	gl_Position = projTransform * vPosition;\n"
+			+"	gl_Position = projTransform * worldTransform * vPosition;\n"
 			+"	screenPos = vec2(gl_Position.x*0.5+0.5,gl_Position.y*0.5+0.5);\n"
 			+"	texCoord = vTexture;\n"
-			+"  float lgt = dot(vNormal,lightDir);\n"
+			+"  float lgt = dot(worldTransform*vNormal,lightDir);\n"
 			+"	lgt = "+LIGHT_COMPUTATION+"\n"
 			+"	color = vec4(vColor.r*lgt,vColor.g*lgt,vColor.b*lgt,vColor.a);\n"
 			+"}";

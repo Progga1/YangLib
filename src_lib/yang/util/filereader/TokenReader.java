@@ -63,6 +63,8 @@ public class TokenReader {
 	
 	public void skipLine() throws IOException {
 		int avail = mInputStream.available();
+		if(avail<=0 || mFstSpaceChar=='\n')
+			return;
 		char c = '\0';
 		while(avail-->0) {
 			c = (char) mInputStream.read();
@@ -169,6 +171,25 @@ public class TokenReader {
 	public float readFloat() throws IOException {
 		nextWord();
 		return wordToFloat();
+	}
+
+	public int pickWord(String[] words) {
+		int i = 0;
+		for(String word:words) {
+			if(word.length()!=mWordLength)
+				continue;
+			boolean eq = true;
+			for(int j=0;j<mWordLength;j++) {
+				if(mCharBuffer[j]!=word.charAt(j)) {
+					eq = false;
+					break;
+				}
+			}
+			if(eq)
+				return i;
+			i++;
+		}
+		return -1;
 	}
 	
 }

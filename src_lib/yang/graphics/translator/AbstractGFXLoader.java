@@ -1,10 +1,13 @@
 package yang.graphics.translator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import yang.graphics.font.BitmapFont;
+import yang.graphics.model.material.YangMaterial;
+import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
@@ -20,9 +23,11 @@ public abstract class AbstractGFXLoader {
 
 	protected String SHADER_PATH	= "shaders" + File.separatorChar;
 	protected String IMAGE_PATH		= "textures" + File.separatorChar;
+	protected String MATERIAL_PATH  = "materials" + File.separatorChar;
 	
 	protected HashMap<String, Texture> mTextures;
 	protected HashMap<String, String> mShaders;
+	protected HashMap<String, YangMaterialSet> mMaterials;
 	protected GraphicsTranslator mGraphics;
 	
 	public AbstractResourceManager mResources;
@@ -36,8 +41,25 @@ public abstract class AbstractGFXLoader {
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
 		mTextures = new HashMap<String, Texture>();
 		mShaders = new HashMap<String, String>();
+		mMaterials = new HashMap<String, YangMaterialSet>();
 		mGraphics = graphics;
 		mResources = resources;
+	}
+	
+	public YangMaterialSet getMaterial(String name) {
+		YangMaterialSet result = mMaterials.get(name);
+		if(result!=null)
+			return result;
+		result = new YangMaterialSet();
+
+		try {
+			result.loadFromStream(mResources.getInputStream(MATERIAL_PATH+name));
+		} catch (IOException e) {
+			return null;
+		}
+		mMaterials.put(name, result);
+		return result;
+		
 	}
 	
 	protected Texture loadImage(String name,TextureProperties textureSettings,boolean redToAlpha) {

@@ -18,9 +18,12 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private static String[] keyWords = {"mtllib","usemtl"};
 	private static float[] workingPositions;
 	private static short[] workingIndices;
+	private static int[] redirectIndices;
+	private static int[] texCoordIndices;
+	private static int[] normalIndices;
+	private static int[] smoothIndices;
+	private static int redirectId;
 	
-	private TokenReader mModelReader;
-	private TokenReader mMatReader;
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
 	public float[] mPositions;
@@ -29,20 +32,34 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
 	
+	private TokenReader mModelReader;
+	private TokenReader mMatReader;
+	private int mIndexId = 0;
+	
 	public OBJLoader(DefaultGraphics<?> graphics) {
 		super(graphics);
 		if(workingPositions==null) {
 			workingPositions = new float[MAX_VERTICES*3];
 			workingIndices = new short[MAX_VERTICES];
+			redirectIndices = new int[MAX_VERTICES];
+			texCoordIndices = new int[MAX_VERTICES];
+			normalIndices = new int[MAX_VERTICES];
+			smoothIndices = new int[MAX_VERTICES];
 		}
+	}
+	
+	private void addIndex(int index) {
+		workingIndices[mIndexId++] = (short)(index-1);
 	}
 
 	public void loadOBJ(InputStream modelStream,InputStream materialStream,YangMatrix transform) throws IOException {
 		mModelReader = new TokenReader(modelStream);
 		mMatReader = new TokenReader(materialStream);
 		
+		redirectId = 0;
+		int curSmoothGroup = -1;
 		int workingId = 0;
-		int indexId = 0;
+		
 		boolean lineBeginning = true;
 		
 		char[] chars = mModelReader.mCharBuffer;
@@ -71,6 +88,11 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 									workingPositions[workingId++] = posY;
 									workingPositions[workingId++] = posZ;
 								}
+								redirectIndices[redirectId] = -1;
+								texCoordIndices[redirectId] = 0;
+								normalIndices[redirectId] = 0;
+								smoothIndices[redirectId] = curSmoothGroup;
+								redirectId++;
 							}
 							
 							if(chars[0]=='f') {
@@ -80,9 +102,9 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 //								workingIndices[indexId++] = prevInd;
 								int curInd = mModelReader.readInt();
 								while(curInd!=TokenReader.ERROR_INT) {
-									workingIndices[indexId++] = (short)(baseInd-1);
-									workingIndices[indexId++] = (short)(prevInd-1);
-									workingIndices[indexId++] = (short)(curInd-1);
+									addIndex(baseInd);
+									addIndex(prevInd);
+									addIndex(curInd);
 									
 									//baseInd = prevInd;
 									prevInd = curInd;
@@ -98,14 +120,14 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		}
 		
 		mPositions = new float[workingId];
-		mIndices = new short[indexId];
+		mIndices = new short[mIndexId];
 		System.arraycopy(workingPositions, 0, mPositions, 0, workingId);
-		System.arraycopy(workingIndices, 0, mIndices, 0, indexId);
+		System.arraycopy(workingIndices, 0, mIndices, 0, mIndexId);
 //		short[] ar = new short[5000];
 //		System.arraycopy(workingIndices, 0, ar, 0, 5000);
 //		System.out.println(Util.arrayToString(ar, ",", 3));
 		mVertexCount = workingId/3;
-		mIndexCount = indexId;
+		mIndexCount = mIndexId;
 	}
 	
 	public void draw() {

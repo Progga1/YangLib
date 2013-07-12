@@ -180,7 +180,7 @@ public class GFXDebug implements PrintInterface {
 			mRefreshCount++;
 			mTempPrintString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
 		}
-		
+	
 		if(DebugYang.stateString!=null && DebugYang.stateString!="") {
 			mGraphics.setColor(mStateColor);
 			String uString = DebugYang.stateString;
@@ -192,6 +192,8 @@ public class GFXDebug implements PrintInterface {
 			mStateString.setString(uString);
 			mStateString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenBottom()+mDebugOffsetY, mFontSize);
 		}
+		
+		mGraphics.bindTexture(null);
 	}
 
 }
