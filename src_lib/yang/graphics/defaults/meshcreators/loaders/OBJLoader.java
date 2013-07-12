@@ -7,15 +7,17 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
 import yang.graphics.model.FloatColor;
+import yang.graphics.model.material.YangMaterialProvider;
+import yang.graphics.model.material.YangMaterialSet;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
-import yang.util.Util;
+import yang.util.NonConcurrentList;
 import yang.util.filereader.TokenReader;
 
 public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 
 	public static int MAX_VERTICES = 100000;
-	private static String[] keyWords = {"mtllib","usemtl"};
+	private static final String[] KEYWORDS = {"mtllib","usemtl"};
 	private static float[] workingPositions;
 	private static short[] workingIndices;
 	private static int[] redirectIndices;
@@ -31,9 +33,9 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public float[] mNormals;
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
-	
+	public NonConcurrentList<YangMaterialSet> mMaterialSets;
+	public NonConcurrentList<OBJMaterialSection> mMaterialSections;
 	private TokenReader mModelReader;
-	private TokenReader mMatReader;
 	private int mIndexId = 0;
 	
 	public OBJLoader(DefaultGraphics<?> graphics) {
@@ -46,15 +48,17 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			normalIndices = new int[MAX_VERTICES];
 			smoothIndices = new int[MAX_VERTICES];
 		}
+
+		mMaterialSets = new NonConcurrentList<YangMaterialSet>();
+		mMaterialSections = new NonConcurrentList<OBJMaterialSection>();
 	}
 	
 	private void addIndex(int index) {
 		workingIndices[mIndexId++] = (short)(index-1);
 	}
 
-	public void loadOBJ(InputStream modelStream,InputStream materialStream,YangMatrix transform) throws IOException {
+	public void loadOBJ(InputStream modelStream,YangMaterialProvider materialProvider,YangMatrix transform) throws IOException {
 		mModelReader = new TokenReader(modelStream);
-		mMatReader = new TokenReader(materialStream);
 		
 		redirectId = 0;
 		int curSmoothGroup = -1;
@@ -64,57 +68,65 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		
 		char[] chars = mModelReader.mCharBuffer;
 		while(!mModelReader.eof()) {
-			mModelReader.nextWord();
+			mModelReader.nextWord(true);
 			
 			if(chars[0]=='#')
-				mModelReader.skipLine();
+				mModelReader.toLineEnd();
 			else{
 				if(chars[0]=='\n') {
 					lineBeginning = true;
 				}else{
-					if(lineBeginning) {
-						lineBeginning = false;
-						if(mModelReader.mWordLength==1) {
-							if(chars[0]=='v') {
-								//Add vertex position
-								float posX = mModelReader.readFloat();
-								float posY = mModelReader.readFloat();
-								float posZ = mModelReader.readFloat();
-								if(transform!=null) {
-									transform.apply3D(posX, posY, posZ, workingPositions, workingId);
-									workingId += 3;
-								}else{
-									workingPositions[workingId++] = posX;
-									workingPositions[workingId++] = posY;
-									workingPositions[workingId++] = posZ;
-								}
-								redirectIndices[redirectId] = -1;
-								texCoordIndices[redirectId] = 0;
-								normalIndices[redirectId] = 0;
-								smoothIndices[redirectId] = curSmoothGroup;
-								redirectId++;
+					if(mModelReader.mWordLength==1) {
+						//Single characters
+						if(chars[0]=='v') {
+							//Add vertex position
+							float posX = mModelReader.readFloat(false);
+							float posY = mModelReader.readFloat(false);
+							float posZ = mModelReader.readFloat(false);
+							if(transform!=null) {
+								transform.apply3D(posX, posY, posZ, workingPositions, workingId);
+								workingId += 3;
+							}else{
+								workingPositions[workingId++] = posX;
+								workingPositions[workingId++] = posY;
+								workingPositions[workingId++] = posZ;
 							}
-							
-							if(chars[0]=='f') {
-								int baseInd = mModelReader.readInt();
-								int prevInd = mModelReader.readInt();
-//								workingIndices[indexId++] = baseInd;
-//								workingIndices[indexId++] = prevInd;
-								int curInd = mModelReader.readInt();
-								while(curInd!=TokenReader.ERROR_INT) {
-									addIndex(baseInd);
-									addIndex(prevInd);
-									addIndex(curInd);
-									
-									//baseInd = prevInd;
-									prevInd = curInd;
-									curInd = mModelReader.readInt();
-								}
-								lineBeginning = true;
-							}
+							redirectIndices[redirectId] = -1;
+							texCoordIndices[redirectId] = 0;
+							normalIndices[redirectId] = 0;
+							smoothIndices[redirectId] = curSmoothGroup;
+							redirectId++;
 						}
 						
+						if(chars[0]=='f') {
+							int baseInd = mModelReader.readInt(false);
+							int prevInd = mModelReader.readInt(false);
+//								workingIndices[indexId++] = baseInd;
+//								workingIndices[indexId++] = prevInd;
+							int curInd = mModelReader.readInt(false);
+							while(curInd!=TokenReader.ERROR_INT) {
+								addIndex(baseInd);
+								addIndex(prevInd);
+								addIndex(curInd);
+								
+								//baseInd = prevInd;
+								prevInd = curInd;
+								curInd = mModelReader.readInt(false);
+							}
+
+						}
+					}else{
+						//Keywords
+						switch(mModelReader.pickWord(KEYWORDS)) {
+						case 0:
+							//mtllib
+							String filename = mModelReader.readString(false);
+							YangMaterialSet newMatSet = materialProvider.getMaterialSet(filename);
+							mMaterialSets.add(newMatSet);
+							break;
+						}
 					}
+					mModelReader.toLineEnd();
 				}
 			}
 		}

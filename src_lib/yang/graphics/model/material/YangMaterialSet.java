@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import yang.graphics.model.FloatColor;
+import yang.model.DebugYang;
 import yang.util.NonConcurrentList;
 import yang.util.filereader.TokenReader;
 
@@ -20,14 +21,13 @@ public class YangMaterialSet {
 	}
 	
 	private void readColor(FloatColor targetColor) throws IOException {
-		targetColor.mValues[0] = reader.readFloat();
-		targetColor.mValues[1] = reader.readFloat();
-		targetColor.mValues[2] = reader.readFloat();
-		float alpha = reader.readFloat();
+		targetColor.mValues[0] = reader.readFloat(false);
+		targetColor.mValues[1] = reader.readFloat(false);
+		targetColor.mValues[2] = reader.readFloat(false);
+		float alpha = reader.readFloat(false);
 		if(alpha!=TokenReader.ERROR_FLOAT) {
 			targetColor.mValues[3] = alpha;
 		}
-		reader.skipLine();
 	}
 	
 	public void loadFromStream(InputStream inputStream) throws IOException {
@@ -35,17 +35,24 @@ public class YangMaterialSet {
 		YangMaterial curMat = null;
 		
 		while(!reader.eof()) {
-			reader.nextWord();
+			reader.nextWord(true);
 			switch(reader.pickWord(KEYWORDS)) {
 			case 0:
+				String name = reader.readString(false);
 				curMat = new YangMaterial();
+				curMat.mName = name;
 				mMaterials.add(curMat);
 				break;
 			case 1:
 				readColor(curMat.mAmbientColor);
 				break;
+			case 2:
+				readColor(curMat.mDiffuseColor);
+				break;
 			}
+			reader.toLineEnd();
 		}
+		System.out.println(this);
 	}
 	
 	@Override

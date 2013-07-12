@@ -20,10 +20,11 @@ public class OBJSampleState extends SampleState {
 		YangMatrix transform = new YangMatrix();
 		transform.scale(0.1f);
 		try {
-			mObj.loadOBJ(mResources.getInputStream("models/cessna.obj"),mResources.getInputStream("models/vp.mtl"),transform);
+			mObj.loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 	
 	@Override

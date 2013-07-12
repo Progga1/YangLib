@@ -14,7 +14,7 @@ public class YangMaterial {
 	
 	@Override
 	public String toString() {
-		String result = "Diffuse: "+mDiffuseColor+"\n"+"Ambient: "+mDiffuseColor+"\n"+"Specular: "+mDiffuseColor+"\n"+"Emissive: "+mDiffuseColor+"\n";
+		String result = "Diffuse: "+mDiffuseColor+"\n"+"Ambient: "+mDiffuseColor+"\n"+"Specular: "+mSpecularColor+"\n"+"Emissive: "+mEmissiveColor+"\n";
 		if(mTexture!=null)
 			result = "Texture: "+mTexture+"\n"+result;
 		if(mName!=null)

@@ -3,6 +3,8 @@ package yang.util.filereader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import yang.model.DebugYang;
+
 public class TokenReader {
 
 	public static final int ERROR_INT = Integer.MIN_VALUE;
@@ -20,12 +22,11 @@ public class TokenReader {
 		mInputStream = stream;
 	}
 	
-	public void skipSpace() throws IOException {
+	public void skipSpace(boolean ignoreLineBreak) throws IOException {
 		int avail = mInputStream.available();
 		if(avail<=0)
 			return;
-	//	mLineBroken = mFstSpaceChar=='\n';
-		if(mFstSpaceChar=='\n') {
+		if(!ignoreLineBreak && mFstSpaceChar=='\n') {
 			mCharBuffer[0] = '\n';
 			return;
 		}
@@ -33,9 +34,9 @@ public class TokenReader {
 		char c = '\0';
 		while(avail-->0) {
 			c = (char) mInputStream.read();
-			if(c=='\n') {
+			if(!ignoreLineBreak && c=='\n') {
 				break;
-			}else if(c!=' ' && c!='\t') {
+			}else if(c!=' ' && c!='\t' && c!='\r') {
 				mCharBuffer[0] = c;
 				return;
 			}
@@ -43,28 +44,12 @@ public class TokenReader {
 		mCharBuffer[0] = c;
 	}
 	
-//	public void skipLine() throws IOException {
-//		int avail = mInputStream.available();
-//		mLineBroken = mFstSpaceChar=='\n';
-//		boolean lineBroken = false;
-//		char c = '\0';
-//		while(avail-->0) {
-//			c = (char) mInputStream.read();
-//			if(c=='\n') {
-//				lineBroken = true;
-//			}else if(lineBroken && c!=' ' && c!='\t') {
-//				mCharBuffer[0] = c;
-//				return;
-//			}
-//		}
-//		mLineBroken = lineBroken;
-//		mCharBuffer[0] = c;
-//	}
-	
-	public void skipLine() throws IOException {
+	public void toLineEnd() throws IOException {
 		int avail = mInputStream.available();
-		if(avail<=0 || mFstSpaceChar=='\n')
+		if(avail<=0 || mFstSpaceChar=='\n' || mCharBuffer[0]=='\n') {
+			mCharBuffer[0] = '\n';
 			return;
+		}
 		char c = '\0';
 		while(avail-->0) {
 			c = (char) mInputStream.read();
@@ -75,8 +60,8 @@ public class TokenReader {
 		}
 	}
 	
-	public boolean nextWord() throws IOException {
-		skipSpace();
+	public boolean nextWord(boolean ignoreLineEnd) throws IOException {
+		skipSpace(ignoreLineEnd);
 		int avail = mInputStream.available();
 		if(avail<=0) {
 			mWordLength = 0;
@@ -92,15 +77,17 @@ public class TokenReader {
 		int i=(mCharBuffer[0]=='\0')?0:1;
 		while(avail-->0 && i<maxWordLength) {
 			c = (char) mInputStream.read();
-			if(c==' ' || c=='\t' || c=='\n') {
-				mFstSpaceChar = c;
-				break;
-			}else{
-				mCharBuffer[i++] = c;
+			if(c!='\r') {
+				if(c==' ' || c=='\t' || c=='\n') {
+					mFstSpaceChar = c;
+					break;
+				}else{
+					mCharBuffer[i++] = c;
+				}
 			}
 		}
 		mWordLength = i;
-		return i>1;
+		return i>=1;
 	}
 	
 	public String wordToString() {
@@ -163,19 +150,25 @@ public class TokenReader {
 		return mInputStream.available()<=0;
 	}
 
-	public int readInt() throws IOException {
-		nextWord();
+	public int readInt(boolean ignoreLineBreak) throws IOException {
+		nextWord(ignoreLineBreak);
 		return wordToInt();
 	}
 	
-	public float readFloat() throws IOException {
-		nextWord();
+	public float readFloat(boolean ignoreLineBreak) throws IOException {
+		nextWord(ignoreLineBreak);
 		return wordToFloat();
 	}
 
+	public String readString(boolean ignoreLineBreak) throws IOException {
+		nextWord(ignoreLineBreak);
+		return wordToString();
+	}
+	
 	public int pickWord(String[] words) {
-		int i = 0;
+		int i = -1;
 		for(String word:words) {
+			i++;
 			if(word.length()!=mWordLength)
 				continue;
 			boolean eq = true;
@@ -187,9 +180,7 @@ public class TokenReader {
 			}
 			if(eq)
 				return i;
-			i++;
 		}
 		return -1;
 	}
-	
 }

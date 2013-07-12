@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import yang.graphics.font.BitmapFont;
-import yang.graphics.model.material.YangMaterial;
+import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
@@ -16,14 +16,14 @@ import yang.systemdependent.AbstractResourceManager;
 
 
 
-public abstract class AbstractGFXLoader {
+public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public static final String IMAGE_EXT	= ".png";
 	public static final String SHADER_EXT	= ".txt";
 
 	protected String SHADER_PATH	= "shaders" + File.separatorChar;
 	protected String IMAGE_PATH		= "textures" + File.separatorChar;
-	protected String MATERIAL_PATH  = "materials" + File.separatorChar;
+	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 	
 	protected HashMap<String, Texture> mTextures;
 	protected HashMap<String, String> mShaders;
@@ -46,14 +46,16 @@ public abstract class AbstractGFXLoader {
 		mResources = resources;
 	}
 	
-	public YangMaterialSet getMaterial(String name) {
+	public YangMaterialSet getMaterialSet(String name) {
 		YangMaterialSet result = mMaterials.get(name);
 		if(result!=null)
 			return result;
 		result = new YangMaterialSet();
-
+		String filename = MATERIAL_PATH+name;
+		if(!mResources.fileExists(filename))
+			return null;
 		try {
-			result.loadFromStream(mResources.getInputStream(MATERIAL_PATH+name));
+			result.loadFromStream(mResources.getInputStream(filename));
 		} catch (IOException e) {
 			return null;
 		}
