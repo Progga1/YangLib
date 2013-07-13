@@ -95,17 +95,17 @@ public class TokenReader {
 		return String.copyValueOf(mCharBuffer, 0, mWordLength);
 	}
 	
-	public int wordToInt(int startAt) {
+	public int wordToInt(int startAt,int defaultVal) {
 		mNumberPos = -1;
 		if(mWordLength-startAt<=0)
-			return ERROR_INT;
+			return defaultVal;
 		int result = 0;
 		int i = startAt+(mCharBuffer[0]=='-'?1:0);
 		while(i<mWordLength) {
 			int v = mCharBuffer[i]-'0';
 			if(v<0 || v>9) {
 				if(i==startAt)
-					return ERROR_INT;
+					return defaultVal;
 				else
 					break;
 			}
@@ -119,7 +119,7 @@ public class TokenReader {
 			return result;
 	}
 	
-	public float wordToFloat(int startAt) {
+	public float wordToFloat(int startAt,float defaultVal) {
 		mNumberPos = -1;
 		if(mWordLength-startAt<=0)
 			return ERROR_FLOAT;
@@ -134,7 +134,7 @@ public class TokenReader {
 				break;
 			if(v<0 || v>9) {
 				if(i==startAt)
-					return ERROR_FLOAT;
+					return defaultVal;
 				else
 					break;
 			}
@@ -166,12 +166,12 @@ public class TokenReader {
 
 	public int readInt(boolean ignoreLineBreak) throws IOException {
 		nextWord(ignoreLineBreak);
-		return wordToInt(0);
+		return wordToInt(0,ERROR_INT);
 	}
 	
 	public float readFloat(boolean ignoreLineBreak) throws IOException {
 		nextWord(ignoreLineBreak);
-		return wordToFloat(0);
+		return wordToFloat(0,ERROR_FLOAT);
 	}
 
 	public String readString(boolean ignoreLineBreak) throws IOException {

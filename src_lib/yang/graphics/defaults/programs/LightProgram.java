@@ -77,6 +77,12 @@ public class LightProgram extends Basic3DProgram implements LightInterface {
 			mProgram.setUniform4f(mLightHandle, -x,-y,-z,0);
 	}
 	
+	public void setLightDirectionNormalized(float x,float y,float z) {
+		float dist = (float)Math.sqrt(x*x+y*y+z*z);
+		if(mLightHandle>=0)
+			mProgram.setUniform4f(mLightHandle, -x/dist,-y/dist,-z/dist,0);
+	}
+	
 	public void setLightProperties(float minLight,float maxLight,float addLight,float lightFactor) {
 		if(mLightPropertiesHandle>=0)
 			mProgram.setUniform4f(mLightPropertiesHandle, minLight, maxLight, addLight, lightFactor);

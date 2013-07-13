@@ -45,16 +45,16 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
-		mGraphics3D.setCameraAlphaBeta((float)(mStateTimer*0.1f),0.5f,2);
+		mGraphics3D.setCameraAlphaBeta((float)(mStateTimer*0.05f),0.5f,2);
 		mGraphics3D.setShaderProgram(mLightProgram);
 		mGraphics.switchCulling(true);
 		mGraphics.switchZBuffer(true);
-		mLightProgram.setLightDirection(0.707f, -0.707f, 0.707f);
+		mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);
 		mLightProgram.setLightProperties(0.1f, 1, 0, 1);
 		mGraphics3D.resetGlobalTransform();
 		mGraphics3D.setGlobalTransformEnabled(true);
 		mGraphics3D.mWorldTransform.rotateX(-(float)mStateTimer*0.004f);
-		mGraphics3D.mWorldTransform.rotateY(-(float)mStateTimer*1.2f);
+		mGraphics3D.mWorldTransform.rotateY(-(float)mStateTimer*1.0f);
 		mObj.draw();
 	}
 

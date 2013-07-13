@@ -24,6 +24,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public static int MAX_VERTICES = 100000;
 	private static final String[] KEYWORDS = {"mtllib","usemtl"};
 	private static float[] workingPositions;
+	private static float[] workingNormals;
 	private static float[] workingTexCoords;
 	private static short[] workingIndices;
 	private static int[] redirectIndices;
@@ -37,10 +38,11 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public int mIndexCount = 0;
 	public float[] mPositions;
 	public float[] mTexCoords;
+	public float[] mNormals;
 	public int[] mPosIndices;
 	public int[] mTexCoordIndices;
+	public int[] mNormIndices;
 	public short[] mIndices;
-	public float[] mNormals;
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
 	public NonConcurrentList<YangMaterialSet> mMaterialSets;
@@ -51,12 +53,14 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private int curSmoothGroup;
 	private int posId;
 	private int texId;
+	private int normId;
 	
 	public OBJLoader(DefaultGraphics<?> graphics) {
 		super(graphics);
 		if(workingPositions==null) {
 			workingPositions = new float[MAX_VERTICES*3];
 			workingTexCoords = new float[MAX_VERTICES*2];
+			workingNormals = new float[MAX_VERTICES*3];
 			workingIndices = new short[MAX_VERTICES*2];
 			redirectIndices = new int[MAX_VERTICES];
 			positionIndices = new int[MAX_VERTICES];
@@ -70,22 +74,15 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	}
 	
 	private void copyVertex(int index,int posIndex,int texIndex) {
-//		workingPositions[posId++] = workingPositions[index*3];
-//		workingPositions[posId++] = workingPositions[index*3+1];
-//		workingPositions[posId++] = workingPositions[index*3+2];
 		redirectIndices[index] = curVertexCount;
-		
+
 		redirectIndices[curVertexCount] = -1;
-		positionIndices[curVertexCount] = posIndex;
-		texCoordIndices[curVertexCount] = texIndex;
-		normalIndices[curVertexCount] = -1;
 		smoothIndices[curVertexCount] = curSmoothGroup;
-		workingIndices[mIndexId++] = (short)curVertexCount;
-		
+
 		curVertexCount++;
 	}
 	
-	private void addIndex(int posIndex,int texIndex) {
+	private void addIndex(int posIndex,int texIndex,int normIndex) {
 		int index = posIndex;
 		while((smoothIndices[index]!=Integer.MIN_VALUE && (curSmoothGroup==-1 || curSmoothGroup!=smoothIndices[index])) || (texCoordIndices[index]>=0 && texCoordIndices[index]!=texIndex)) {
 			int redirect = redirectIndices[index];
@@ -96,7 +93,10 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			}
 			index = redirect;			
 		}
-		//texCoordIndices[index] = texIndex;
+		positionIndices[index] = posIndex;
+		texCoordIndices[index] = texIndex;
+		normalIndices[index] = normIndex;
+		smoothIndices[index] = curSmoothGroup;
 		workingIndices[mIndexId++] = (short)(index);
 	}
 	
@@ -146,7 +146,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 								workingPositions[posId++] = posZ;
 							}
 							redirectIndices[curVertexCount] = -1;
-							positionIndices[curVertexCount] = curVertexCount;
+							positionIndices[curVertexCount] = -1;
 							texCoordIndices[curVertexCount] = -1;
 							normalIndices[curVertexCount] = -1;
 							smoothIndices[curVertexCount] = Integer.MIN_VALUE;
@@ -155,25 +155,30 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 						
 						if(fstC=='f') {
 							mModelReader.nextWord(false);
-							int baseInd = mModelReader.wordToInt(0);
-							int baseTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1);
+							int baseInd = mModelReader.wordToInt(0,1)-1;
+							int baseTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
+							int baseNormInd = mModelReader.wordToInt(mModelReader.mNumberPos+1, 1)-1;
 							mModelReader.nextWord(false);
-							int prevInd = mModelReader.wordToInt(0);
-							int prevTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1);
+							int prevInd = mModelReader.wordToInt(0,1)-1;
+							int prevTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
+							int prevNormInd = mModelReader.wordToInt(mModelReader.mNumberPos+1, 1)-1;
 							mModelReader.nextWord(false);
-							int curInd = mModelReader.wordToInt(0);
-							int curTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1);
+							int curInd = mModelReader.wordToInt(0,TokenReader.ERROR_INT);
+							int curTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
+							int curNormInd = mModelReader.wordToInt(mModelReader.mNumberPos+1, 1)-1;
 							while(curInd!=TokenReader.ERROR_INT) {
-								addIndex(baseInd-1,baseTexInd);
-								addIndex(prevInd-1,prevTexInd);
-								addIndex(curInd-1,curTexInd);
+								curInd--;
+								addIndex(baseInd,baseTexInd,baseNormInd);
+								addIndex(prevInd,prevTexInd,prevNormInd);
+								addIndex(curInd,curTexInd,curNormInd);
 								
 								//baseInd = prevInd;
 								prevInd = curInd;
 								prevTexInd = curTexInd;
 								mModelReader.nextWord(false);
-								curInd = mModelReader.wordToInt(0);
-								curTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1);
+								curInd = mModelReader.wordToInt(0,TokenReader.ERROR_INT);
+								curTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
+								curNormInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
 							}
 
 						}
@@ -191,7 +196,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 							float texV = mModelReader.readFloat(false);
 							float texW = mModelReader.readFloat(false);
 							workingTexCoords[texId++] = texU;
-							workingTexCoords[texId++] = texV;
+							workingTexCoords[texId++] = -texV;
 						}
 					}else{
 						//Keywords
@@ -225,13 +230,17 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		
 		mPositions = new float[posId];
 		mTexCoords = new float[texId];
+		mNormals = new float[normId];
 		mPosIndices = new int[curVertexCount];
 		mTexCoordIndices = new int[curVertexCount];
+		mNormIndices = new int[curVertexCount];
 		mIndices = new short[mIndexId];
 		System.arraycopy(workingPositions, 0, mPositions, 0, posId);
 		System.arraycopy(workingTexCoords, 0, mTexCoords, 0, texId);
+		System.arraycopy(workingNormals, 0, mNormals, 0, normId);
 		System.arraycopy(positionIndices, 0, mPosIndices, 0, curVertexCount);
 		System.arraycopy(texCoordIndices, 0, mTexCoordIndices, 0, curVertexCount);
+		System.arraycopy(normalIndices, 0, mNormIndices, 0, curVertexCount);
 		System.arraycopy(workingIndices, 0, mIndices, 0, mIndexId);
 		mVertexCount = curVertexCount;
 		mIndexCount = mIndexId;
@@ -243,12 +252,13 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			int i = posInd*3;
 			vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, mPositions[i], mPositions[i+1], mPositions[i+2]);
 		}
-		//vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
-//		for(int texInd:mTexCoordIndices) {
-//			int i = texInd*3;
-//			vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
-//		}
-		vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
+//		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
+		if(mTexCoords.length>0)
+			for(int texInd:mTexCoordIndices) {
+				int i = texInd*2;
+				vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
+			}
+//		vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, mVertexCount);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues, mVertexCount);
 		vertexBuffer.putIndexArray(mIndices);
