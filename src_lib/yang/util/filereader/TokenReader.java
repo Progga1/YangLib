@@ -63,6 +63,7 @@ public class TokenReader {
 	}
 	
 	public boolean nextWord(boolean ignoreLineEnd) throws IOException {
+		mNumberPos = -1;
 		skipSpace(ignoreLineEnd);
 		if(mLstRead<0) {
 			mWordLength = 0;
@@ -96,7 +97,6 @@ public class TokenReader {
 	}
 	
 	public int wordToInt(int startAt,int defaultVal) {
-		mNumberPos = -1;
 		if(mWordLength-startAt<=0)
 			return defaultVal;
 		int result = 0;
@@ -104,9 +104,10 @@ public class TokenReader {
 		while(i<mWordLength) {
 			int v = mCharBuffer[i]-'0';
 			if(v<0 || v>9) {
-				if(i==startAt)
+				if(i==startAt) {
+					mNumberPos = i;
 					return defaultVal;
-				else
+				}else
 					break;
 			}
 			result = result*10 + v;
@@ -120,7 +121,6 @@ public class TokenReader {
 	}
 	
 	public float wordToFloat(int startAt,float defaultVal) {
-		mNumberPos = -1;
 		if(mWordLength-startAt<=0)
 			return ERROR_FLOAT;
 		float result = 0;
@@ -133,9 +133,10 @@ public class TokenReader {
 			if(c=='.')
 				break;
 			if(v<0 || v>9) {
-				if(i==startAt)
+				if(i==startAt) {
+					mNumberPos = i;
 					return defaultVal;
-				else
+				}else
 					break;
 			}
 			result = result*10 + v;

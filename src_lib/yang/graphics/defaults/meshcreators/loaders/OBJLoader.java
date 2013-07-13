@@ -151,9 +151,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 							normalIndices[curVertexCount] = -1;
 							smoothIndices[curVertexCount] = Integer.MIN_VALUE;
 							curVertexCount++;
-						}
-						
-						if(fstC=='f') {
+						}else if(fstC=='f') {
 							mModelReader.nextWord(false);
 							int baseInd = mModelReader.wordToInt(0,1)-1;
 							int baseTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
@@ -181,9 +179,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 								curNormInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
 							}
 
-						}
-						
-						if(fstC=='s') {
+						}else if(fstC=='s') {
 							int group = mModelReader.readInt(false);
 							if(group==TokenReader.ERROR_INT)
 								curSmoothGroup = -1;
@@ -197,6 +193,13 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 							float texW = mModelReader.readFloat(false);
 							workingTexCoords[texId++] = texU;
 							workingTexCoords[texId++] = -texV;
+						}else if(fstC=='v' && chars[1]=='n') {
+							float normX = mModelReader.readFloat(false);
+							float normY = mModelReader.readFloat(false);
+							float normZ = mModelReader.readFloat(false);
+							workingNormals[normId++] = normX;
+							workingNormals[normId++] = normY;
+							workingNormals[normId++] = normZ;
 						}
 					}else{
 						//Keywords
@@ -229,41 +232,67 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		currentMatSec.mEndIndex = mIndexId;
 		
 		mPositions = new float[posId];
-		mTexCoords = new float[texId];
-		mNormals = new float[normId];
 		mPosIndices = new int[curVertexCount];
-		mTexCoordIndices = new int[curVertexCount];
-		mNormIndices = new int[curVertexCount];
-		mIndices = new short[mIndexId];
 		System.arraycopy(workingPositions, 0, mPositions, 0, posId);
-		System.arraycopy(workingTexCoords, 0, mTexCoords, 0, texId);
-		System.arraycopy(workingNormals, 0, mNormals, 0, normId);
 		System.arraycopy(positionIndices, 0, mPosIndices, 0, curVertexCount);
-		System.arraycopy(texCoordIndices, 0, mTexCoordIndices, 0, curVertexCount);
-		System.arraycopy(normalIndices, 0, mNormIndices, 0, curVertexCount);
+		if(texId>0) {
+			mTexCoords = new float[texId];
+			mTexCoordIndices = new int[curVertexCount];
+			System.arraycopy(workingTexCoords, 0, mTexCoords, 0, texId);
+			System.arraycopy(texCoordIndices, 0, mTexCoordIndices, 0, curVertexCount);
+		}
+		if(normId>0) {
+			mNormals = new float[normId];
+			mNormIndices = new int[curVertexCount];
+			System.arraycopy(workingNormals, 0, mNormals, 0, normId);
+			System.arraycopy(normalIndices, 0, mNormIndices, 0, curVertexCount);
+		}
+		
+		mIndices = new short[mIndexId];
 		System.arraycopy(workingIndices, 0, mIndices, 0, mIndexId);
+		
 		mVertexCount = curVertexCount;
 		mIndexCount = mIndexId;
 	}
 	
 	public void draw() {
 		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
+		
+		vertexBuffer.putIndexArray(mIndices);
+		
 		for(int posInd:mPosIndices) {
 			int i = posInd*3;
-			vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, mPositions[i], mPositions[i+1], mPositions[i+2]);
+			if(i<0)
+				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, 0,0,0);
+			else
+				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, mPositions[i],mPositions[i+1],mPositions[i+2]);
 		}
 //		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
-		if(mTexCoords.length>0)
+		if(mTexCoords!=null && mTexCoords.length>0)
 			for(int texInd:mTexCoordIndices) {
 				int i = texInd*2;
-				vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
+				if(i<0)
+					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, 0,0);
+				else
+					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
 			}
 //		vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, mVertexCount);
-		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues, mVertexCount);
-		vertexBuffer.putIndexArray(mIndices);
+		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues,mVertexCount);
+		
+		
 		if(mGraphics instanceof Default3DGraphics) {
-			((Default3DGraphics)mGraphics).fillNormals(0);
+			if(mNormals!=null && mNormals.length>0) {
+				for(int normInd:mNormIndices) {
+					int i = normInd*3;
+					if(i<0)
+						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
+					else
+						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
+				}
+			}else{
+				((Default3DGraphics)mGraphics).fillNormals(0);
+			}
 		}
 		
 		mTranslator.prepareDraw();
@@ -272,6 +301,10 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}
+	}
+	
+	public boolean hasStaticNormals() {
+		return mNormals!=null;
 	}
 	
 }
