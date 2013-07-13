@@ -283,13 +283,16 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		
 		if(mGraphics instanceof Default3DGraphics) {
 			if(mNormals!=null && mNormals.length>0) {
-				for(int normInd:mNormIndices) {
-					int i = normInd*3;
-					if(i<0)
-						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
-					else
-						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
-				}
+				if(mNormIndices==null)
+					vertexBuffer.putArray(DefaultGraphics.ID_NORMALS, mNormals);
+				else	
+					for(int normInd:mNormIndices) {
+						int i = normInd*3;
+						if(i<0)
+							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
+						else
+							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
+					}
 			}else{
 				((Default3DGraphics)mGraphics).fillNormals(0);
 			}
@@ -300,6 +303,59 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			mTranslator.bindTexture(matSec.mMaterial.mDiffuseTexture);
 			mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
+		}
+	}
+	
+	public void computeStaticNormals() {
+		if(mNormals==null || mNormals.length<mVertexCount*3) {
+			mNormals = new float[mVertexCount*3];
+		}else{
+			for(int i=0;i<mNormals.length;i++)
+				mNormals[i] = 0;
+		}
+		int polyCount = mIndices.length/3;
+		for(int i=0;i<polyCount;i++) {
+			int i1 = mPosIndices[mIndices[i*3]]*3;
+			int i2 = mPosIndices[mIndices[i*3+1]]*3;
+			int i3 = mPosIndices[mIndices[i*3+2]]*3;
+			float dx1 = mPositions[i2]-mPositions[i1];
+			float dy1 = mPositions[i2+1]-mPositions[i1+1];
+			float dz1 = mPositions[i2+2]-mPositions[i1+2];
+			float dx2 = mPositions[i3]-mPositions[i1];
+			float dy2 = mPositions[i3+1]-mPositions[i1+1];
+			float dz2 = mPositions[i3+2]-mPositions[i1+2];
+			float crossX = dy1*dz2 - dz1*dy2;
+			float crossY = dz1*dx2 - dx1*dz2;
+			float crossZ = dx1*dy2 - dy1*dx2;
+			float crossMagn = (float)Math.sqrt(crossX*crossX+crossY*crossY+crossZ*crossZ);
+			if(crossMagn==0)
+				continue;
+			crossMagn = 1/crossMagn;
+			crossX *= crossMagn;
+			crossY *= crossMagn;
+			crossZ *= crossMagn;
+			i1 = mIndices[i*3]*3;
+			i2 = mIndices[i*3+1]*3;
+			i3 = mIndices[i*3+2]*3;
+			mNormals[i1] += crossX;
+			mNormals[i1+1] += crossY;
+			mNormals[i1+2] += crossZ;
+			mNormals[i2] += crossX;
+			mNormals[i2+1] += crossY;
+			mNormals[i2+2] += crossZ;			
+			mNormals[i3] += crossX;
+			mNormals[i3+1] += crossY;
+			mNormals[i3+2] += crossZ;
+		}
+
+		for(int n=0;n<mNormals.length;n+=3) {
+			float normMagn = (float)Math.sqrt(mNormals[n]*mNormals[n] + mNormals[n+1]*mNormals[n+1] + mNormals[n+2]*mNormals[n+2]);
+			if(normMagn==0)
+				continue;
+			normMagn = 1/normMagn;
+			mNormals[n] *= normMagn;
+			mNormals[n+1] *= normMagn;
+			mNormals[n+2] *= normMagn;
 		}
 	}
 	

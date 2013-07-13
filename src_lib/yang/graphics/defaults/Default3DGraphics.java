@@ -291,6 +291,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			vec1.set(mPositions.get(v2)-mPositions.get(v1), mPositions.get(v2+1)-mPositions.get(v1+1),mPositions.get(v2+2)-mPositions.get(v1+2));
 			vec2.set(mPositions.get(v3)-mPositions.get(v1), mPositions.get(v3+1)-mPositions.get(v1+1),mPositions.get(v3+2)-mPositions.get(v1+2));
 			vec3.cross(vec1, vec2);
+			vec3.normalize();
 			mNormals.put(v1, mNormals.get(v1)+vec3.x);
 			mNormals.put(v1+1, mNormals.get(v1+1)+vec3.y);
 			mNormals.put(v1+2, mNormals.get(v1+2)+vec3.z);

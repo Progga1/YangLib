@@ -28,9 +28,10 @@ public class OBJSampleState extends SampleState {
 		try {
 			YangMatrix transform = new YangMatrix();
 			//transform.translate(0, 0.5f);
-			transform.scale(0.2f);
+			transform.scale(0.5f);
 			mObj = new OBJLoader(mGraphics3D);
-			mObj.loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
+			mObj.loadOBJ(mResources.getInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform);
+			mObj.computeStaticNormals();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
