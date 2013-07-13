@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
+import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
 import yang.graphics.model.FloatColor;
+import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
+import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
 import yang.util.NonConcurrentList;
@@ -16,6 +19,8 @@ import yang.util.filereader.TokenReader;
 
 public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 
+	public static YangMaterial DEFAULT_MATERIAL = new YangMaterial();
+	
 	public static int MAX_VERTICES = 100000;
 	private static final String[] KEYWORDS = {"mtllib","usemtl"};
 	private static float[] workingPositions;
@@ -56,9 +61,21 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private void addIndex(int index) {
 		workingIndices[mIndexId++] = (short)(index-1);
 	}
+	
+	public YangMaterial findMaterial(String materialName) {
+		for(YangMaterialSet matSet:mMaterialSets) {
+			YangMaterial mat = matSet.getMaterial(materialName);
+			if(mat!=null)
+				return mat;
+		}
+		return null;
+	}
 
 	public void loadOBJ(InputStream modelStream,YangMaterialProvider materialProvider,YangMatrix transform) throws IOException {
 		mModelReader = new TokenReader(modelStream);
+		OBJMaterialSection currentMatSec = new OBJMaterialSection(0,DEFAULT_MATERIAL);
+		mMaterialSections.clear();
+		mMaterialSections.add(currentMatSec);
 		
 		redirectId = 0;
 		int curSmoothGroup = -1;
@@ -92,8 +109,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 								workingPositions[workingId++] = posZ;
 							}
 							redirectIndices[redirectId] = -1;
-							texCoordIndices[redirectId] = 0;
-							normalIndices[redirectId] = 0;
+							texCoordIndices[redirectId] = -1;
+							normalIndices[redirectId] = -1;
 							smoothIndices[redirectId] = curSmoothGroup;
 							redirectId++;
 						}
@@ -124,6 +141,18 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 							YangMaterialSet newMatSet = materialProvider.getMaterialSet(filename);
 							mMaterialSets.add(newMatSet);
 							break;
+						case 1:
+							//usemtl
+							String mtlKey = mModelReader.readString(false);
+							YangMaterial mat = findMaterial(mtlKey);
+							if(currentMatSec.mStartIndex==mIndexId) {
+								currentMatSec.mMaterial = mat;
+							}else{
+								currentMatSec.mEndIndex = mIndexId;
+								currentMatSec = new OBJMaterialSection(mIndexId,mat);
+								mMaterialSections.add(currentMatSec);
+							}
+							break;
 						}
 					}
 					mModelReader.toLineEnd();
@@ -131,23 +160,31 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			}
 		}
 		
+		currentMatSec.mEndIndex = mIndexId;
+		
 		mPositions = new float[workingId];
 		mIndices = new short[mIndexId];
 		System.arraycopy(workingPositions, 0, mPositions, 0, workingId);
 		System.arraycopy(workingIndices, 0, mIndices, 0, mIndexId);
-//		short[] ar = new short[5000];
-//		System.arraycopy(workingIndices, 0, ar, 0, 5000);
-//		System.out.println(Util.arrayToString(ar, ",", 3));
 		mVertexCount = workingId/3;
 		mIndexCount = mIndexId;
 	}
 	
 	public void draw() {
 		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
-		vertexBuffer.putIndexArray(mIndices);
 		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, mVertexCount);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues, mVertexCount);
+		vertexBuffer.putIndexArray(mIndices);
+		if(mGraphics instanceof Default3DGraphics) {
+			((Default3DGraphics)mGraphics).fillNormals(0);
+		}
+		
+		mTranslator.prepareDraw();
+		for(OBJMaterialSection matSec:mMaterialSections) {
+			mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
+			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
+		}
 	}
 	
 }

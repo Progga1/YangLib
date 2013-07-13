@@ -68,8 +68,8 @@ public class GFXDebug implements PrintInterface {
 	private int mDynamicPolygonCount;
 	private int mBatchPolygonCount;
 	private int mDrawCount;
-	private int mFlushCount;
-	private int mBatchCount;
+	private int mDynamicDrawCount;
+	private int mStaticDrawCount;
 	private int mTexBindCount;
 	private int mShaderSwitchCount;
 	
@@ -80,9 +80,9 @@ public class GFXDebug implements PrintInterface {
 		printDebugValue(DRAW_COUNT,"Draw calls",mDrawCount,0,false);
 		if(isActive(DRAW_DYNAMIC_STATIC_COUNT)) {
 			mTempPrintString.appendString(" (");
-			mTempPrintString.appendInt(mFlushCount);
+			mTempPrintString.appendInt(mDrawCount-mStaticDrawCount);
 			mTempPrintString.appendString("+");
-			mTempPrintString.appendInt(mBatchCount);
+			mTempPrintString.appendInt(mStaticDrawCount);
 			mTempPrintString.appendString(")");
 		}
 		mTempPrintString.appendLineBreak();
@@ -172,8 +172,8 @@ public class GFXDebug implements PrintInterface {
 				mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
 				mBatchPolygonCount = mTranslator.mBatchPolygonCount;
 				mDrawCount = mTranslator.mDrawCount;
-				mFlushCount = mTranslator.mFlushCount;
-				mBatchCount = mTranslator.mBatchCount;
+				mDynamicDrawCount = mTranslator.mFlushCount;
+				mStaticDrawCount = mTranslator.mBatchCount;
 				mTexBindCount = mTranslator.mTexBindCount;
 				mShaderSwitchCount = mTranslator.mShaderSwitchCount;
 			}

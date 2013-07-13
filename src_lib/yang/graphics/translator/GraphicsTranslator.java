@@ -403,18 +403,22 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			return;
 		int vertexCount = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		if(vertexCount>0) {
-			assert preCheck("Prepare draw vertices");
-			mCurDrawListener.onPreDraw();
-			assert preCheck("Draw vertices listener");
-			mCurrentVertexBuffer.finishUpdate();
-			assert preCheck("Draw vertices finish update");
-			mCurrentVertexBuffer.reset();
+			prepareDraw();
 			assert preCheck("Draw vertices reset");
 			drawVertices(0,vertexCount,mDrawMode);
 			mFlushCount++;
 			mDynamicPolygonCount += vertexCount/3;
 		}
 		assert checkErrorInst("Flush");
+	}
+	
+	public void prepareDraw() {
+		assert preCheck("Prepare draw vertices");
+		mCurDrawListener.onPreDraw();
+		assert preCheck("Draw vertices listener");
+		mCurrentVertexBuffer.finishUpdate();
+		assert preCheck("Draw vertices finish update");
+		mCurrentVertexBuffer.reset();
 	}
 	
 	public final void measureTime() {
@@ -486,6 +490,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurDrawListener.bindBuffers();
 		mPolygonCount += vertexCount/3;
 		mDrawCount++;
+		mCurrentVertexBuffer.mIndexBuffer.position(bufferStart);
 		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
 			drawDefaultVertices(bufferStart,vertexCount,mWireFrames,mCurrentVertexBuffer);
 		}

@@ -48,7 +48,6 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.mWorldTransform.rotateX(-(float)mStateTimer*0.004f);
 		mGraphics3D.mWorldTransform.rotateY(-(float)mStateTimer*1.2f);
 		mObj.draw();
-		mGraphics3D.fillNormals(0);
 	}
 
 	@Override

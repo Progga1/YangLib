@@ -52,12 +52,21 @@ public class YangMaterialSet {
 			}
 			reader.toLineEnd();
 		}
-		System.out.println(this);
+
 	}
 	
 	@Override
 	public String toString() {
 		return mMaterials.toString();
+	}
+
+	public YangMaterial getMaterial(String materialName) {
+		for(YangMaterial mat:mMaterials) {
+			if(materialName.equals(mat.mName)) {
+				return mat;
+			}
+		}
+		return null;
 	}
 	
 }
