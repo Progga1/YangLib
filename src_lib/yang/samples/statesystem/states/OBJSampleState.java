@@ -15,18 +15,25 @@ public class OBJSampleState extends SampleState {
 	
 	@Override
 	protected void initGraphics() {
-		mObj = new OBJLoader(mGraphics3D);
+		
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
-		YangMatrix transform = new YangMatrix();
-		transform.scale(0.1f);
+		
+		
+
+	}
+	
+	
+	@Override
+	public void start() {
 		try {
+			YangMatrix transform = new YangMatrix();
+			transform.scale(0.1f);
+			mObj = new OBJLoader(mGraphics3D);
 			mObj.loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-	
 	@Override
 	protected void step(float deltaTime) {
 		

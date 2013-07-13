@@ -29,7 +29,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private static int[] texCoordIndices;
 	private static int[] normalIndices;
 	private static int[] smoothIndices;
-	private static int redirectId;
+	private static int curVertexCount;
 	
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
@@ -40,8 +40,11 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public Quadruple mSuppData = Quadruple.ZERO;
 	public NonConcurrentList<YangMaterialSet> mMaterialSets;
 	public NonConcurrentList<OBJMaterialSection> mMaterialSections;
+	
 	private TokenReader mModelReader;
 	private int mIndexId = 0;
+	private int curSmoothGroup;
+	private int workingId;
 	
 	public OBJLoader(DefaultGraphics<?> graphics) {
 		super(graphics);
@@ -58,8 +61,44 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		mMaterialSections = new NonConcurrentList<OBJMaterialSection>();
 	}
 	
+	private void copyVertex(int index) {
+		workingPositions[workingId++] = workingPositions[index*3];
+		workingPositions[workingId++] = workingPositions[index*3+1];
+		workingPositions[workingId++] = workingPositions[index*3+2];
+		redirectIndices[index] = curVertexCount;
+		
+		redirectIndices[curVertexCount] = -1;
+		texCoordIndices[curVertexCount] = -1;
+		normalIndices[curVertexCount] = -1;
+		smoothIndices[curVertexCount] = curSmoothGroup;
+		workingIndices[mIndexId++] = (short)curVertexCount;
+		
+		curVertexCount++;
+	}
+	
 	private void addIndex(int index) {
-		workingIndices[mIndexId++] = (short)(index-1);
+//		if(smoothIndices[index]!=Integer.MIN_VALUE && (curSmoothGroup==-1 || curSmoothGroup!=smoothIndices[index])) {
+//			int redirect = redirectIndices[index];
+//			while(redirect>=0) {
+//				index = redirect;
+//				redirect = redirectIndices[redirect];
+//			}
+//			copyVertex(index);
+//		}else{
+//			workingIndices[mIndexId++] = (short)(index);
+//		}
+		
+		while(smoothIndices[index]!=Integer.MIN_VALUE && (curSmoothGroup==-1 || curSmoothGroup!=smoothIndices[index])) {
+			int redirect = redirectIndices[index];
+			if(redirect<0) {
+				copyVertex(index);
+				index = curVertexCount-1;
+				break;
+			}
+			index = redirect;			
+		}
+		
+		workingIndices[mIndexId++] = (short)(index);
 	}
 	
 	public YangMaterial findMaterial(String materialName) {
@@ -77,9 +116,9 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		mMaterialSections.clear();
 		mMaterialSections.add(currentMatSec);
 		
-		redirectId = 0;
-		int curSmoothGroup = -1;
-		int workingId = 0;
+		curVertexCount = 0;
+		curSmoothGroup = -1;
+		workingId = 0;
 		
 		boolean lineBeginning = true;
 		
@@ -108,11 +147,11 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 								workingPositions[workingId++] = posY;
 								workingPositions[workingId++] = posZ;
 							}
-							redirectIndices[redirectId] = -1;
-							texCoordIndices[redirectId] = -1;
-							normalIndices[redirectId] = -1;
-							smoothIndices[redirectId] = curSmoothGroup;
-							redirectId++;
+							redirectIndices[curVertexCount] = -1;
+							texCoordIndices[curVertexCount] = -1;
+							normalIndices[curVertexCount] = -1;
+							smoothIndices[curVertexCount] = Integer.MIN_VALUE;
+							curVertexCount++;
 						}
 						
 						if(chars[0]=='f') {
@@ -122,15 +161,23 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 //								workingIndices[indexId++] = prevInd;
 							int curInd = mModelReader.readInt(false);
 							while(curInd!=TokenReader.ERROR_INT) {
-								addIndex(baseInd);
-								addIndex(prevInd);
-								addIndex(curInd);
+								addIndex(baseInd-1);
+								addIndex(prevInd-1);
+								addIndex(curInd-1);
 								
 								//baseInd = prevInd;
 								prevInd = curInd;
 								curInd = mModelReader.readInt(false);
 							}
 
+						}
+						
+						if(chars[0]=='s') {
+							int group = mModelReader.readInt(false);
+							if(group==TokenReader.ERROR_INT)
+								curSmoothGroup = -1;
+							else
+								curSmoothGroup = group;
 						}
 					}else{
 						//Keywords
