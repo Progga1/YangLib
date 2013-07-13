@@ -4,19 +4,21 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import yang.graphics.model.FloatColor;
-import yang.model.DebugYang;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.util.NonConcurrentList;
 import yang.util.filereader.TokenReader;
 
 public class YangMaterialSet {
 
-	private static String[] KEYWORDS = {"newmtl","Ka","Kd","Ks","Ns","illum"};
+	private static String[] KEYWORDS = {"newmtl","Ka","Kd","Ks","Ns","illum","map_Kd"};
 	
 	public NonConcurrentList<YangMaterial> mMaterials;
 	
 	private TokenReader reader;
+	private AbstractGFXLoader mGFXLoader;
 	
-	public YangMaterialSet() {
+	public YangMaterialSet(AbstractGFXLoader gfxLoader) {
+		mGFXLoader = gfxLoader;
 		mMaterials = new NonConcurrentList<YangMaterial>();
 	}
 	
@@ -48,6 +50,18 @@ public class YangMaterialSet {
 				break;
 			case 2:
 				readColor(curMat.mDiffuseColor);
+				break;
+			case 3:
+				readColor(curMat.mSpecularColor);
+				break;
+			case 4:
+				curMat.mSpecularCoefficient = reader.readFloat(false);
+				break;
+			case 6:
+				String filename = reader.readString(false);
+				if(filename.length()>4 && filename.charAt(filename.length()-4)=='.')
+					filename = filename.substring(0,filename.length()-4);
+				curMat.mDiffuseTexture = mGFXLoader.getImage(filename);
 				break;
 			}
 			reader.toLineEnd();

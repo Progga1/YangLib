@@ -27,9 +27,9 @@ public class OBJSampleState extends SampleState {
 	public void start() {
 		try {
 			YangMatrix transform = new YangMatrix();
-			transform.scale(0.1f);
+			transform.scale(0.5f);
 			mObj = new OBJLoader(mGraphics3D);
-			mObj.loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
+			mObj.loadOBJ(mResources.getInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,6 +47,7 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
 		mGraphics3D.setCameraAlphaBeta((float)(mStateTimer*0.1f),0.5f,2);
 		mGraphics3D.setShaderProgram(mLightProgram);
+		mGraphics.switchCulling(true);
 		mGraphics.switchZBuffer(true);
 		mLightProgram.setLightDirection(0.707f, -0.707f, 0.707f);
 		mLightProgram.setLightProperties(0.1f, 1, 0, 1);

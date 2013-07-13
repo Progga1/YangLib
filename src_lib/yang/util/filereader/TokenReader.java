@@ -18,6 +18,7 @@ public class TokenReader {
 	//public boolean mLineBroken = false;
 	public int mWordLength = 0;
 	public int mLstRead;
+	public int mNumberPos = -1;
 	
 	public TokenReader(InputStream stream) {
 		mInputStream = new BufferedReader(new InputStreamReader(stream));
@@ -94,52 +95,65 @@ public class TokenReader {
 		return String.copyValueOf(mCharBuffer, 0, mWordLength);
 	}
 	
-	public int wordToInt() {
-		if(mWordLength<=0)
+	public int wordToInt(int startAt) {
+		mNumberPos = -1;
+		if(mWordLength-startAt<=0)
 			return ERROR_INT;
 		int result = 0;
-		int i = mCharBuffer[0]=='-'?1:0;
+		int i = startAt+(mCharBuffer[0]=='-'?1:0);
 		while(i<mWordLength) {
 			int v = mCharBuffer[i]-'0';
-			if(v<0 || v>9)
-				return ERROR_INT;
+			if(v<0 || v>9) {
+				if(i==startAt)
+					return ERROR_INT;
+				else
+					break;
+			}
 			result = result*10 + v;
 			i++;
 		}
+		mNumberPos = i;
 		if(mCharBuffer[0]=='-')
 			return -result;
 		else
 			return result;
 	}
 	
-	public float wordToFloat() {
-		if(mWordLength<=0)
+	public float wordToFloat(int startAt) {
+		mNumberPos = -1;
+		if(mWordLength-startAt<=0)
 			return ERROR_FLOAT;
 		float result = 0;
 		int v = 0;
-		int i = mCharBuffer[0]=='-'?1:0;
+		int i = startAt+(mCharBuffer[0]=='-'?1:0);
 		char c = '\0';
 		while(i<mWordLength) {
 			c = mCharBuffer[i];
 			v = c-'0';
-			i++;
 			if(c=='.')
 				break;
-			if(v<0 || v>9)
-				return ERROR_FLOAT;
+			if(v<0 || v>9) {
+				if(i==startAt)
+					return ERROR_FLOAT;
+				else
+					break;
+			}
 			result = result*10 + v;
+			i++;
 		}
 		if(c=='.') {
+			i++;
 			float fac = 0.1f;
 			while(i<mWordLength) {
 				v = mCharBuffer[i]-'0';
 				if(v<0 || v>9)
-					return ERROR_FLOAT;
+					break;
 				result += v*fac;
 				fac *= 0.1f;
 				i++;
 			}
 		}
+		mNumberPos = i;
 		if(mCharBuffer[0]=='-')
 			return -result;
 		else
@@ -152,12 +166,12 @@ public class TokenReader {
 
 	public int readInt(boolean ignoreLineBreak) throws IOException {
 		nextWord(ignoreLineBreak);
-		return wordToInt();
+		return wordToInt(0);
 	}
 	
 	public float readFloat(boolean ignoreLineBreak) throws IOException {
 		nextWord(ignoreLineBreak);
-		return wordToFloat();
+		return wordToFloat(0);
 	}
 
 	public String readString(boolean ignoreLineBreak) throws IOException {

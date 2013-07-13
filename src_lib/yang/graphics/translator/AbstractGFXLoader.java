@@ -50,7 +50,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		YangMaterialSet result = mMaterials.get(name);
 		if(result!=null)
 			return result;
-		result = new YangMaterialSet();
+		result = new YangMaterialSet(this);
 		String filename = MATERIAL_PATH+name;
 		if(!mResources.fileExists(filename))
 			return null;
