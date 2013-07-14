@@ -2,6 +2,7 @@ package yang.samples.statesystem.states;
 
 import java.io.IOException;
 
+import yang.events.Keys;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.translator.glconsts.GLMasks;
@@ -10,8 +11,9 @@ import yang.samples.statesystem.SampleState;
 
 public class OBJSampleState extends SampleState {
 
-	private OBJLoader mObj;
+	private OBJLoader[] mObj = new OBJLoader[4];
 	private LightProgram mLightProgram;
+	private int mCurObjIndex = 0;
 	
 	@Override
 	protected void initGraphics() {
@@ -23,11 +25,29 @@ public class OBJSampleState extends SampleState {
 	public void start() {
 		try {
 			YangMatrix transform = new YangMatrix();
-			//transform.translate(0, 0.5f);
+			
+			transform.loadIdentity();
+			transform.scale(0.1f);
+			mObj[0] = new OBJLoader(mGraphics3D);
+			mObj[0].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
+			
+			transform.loadIdentity();
 			transform.scale(0.5f);
-			mObj = new OBJLoader(mGraphics3D);
-			mObj.loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform);
-			mObj.computeStaticNormals();
+			mObj[1] = new OBJLoader(mGraphics3D);
+			mObj[1].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform);
+			
+			transform.loadIdentity();
+			transform.translate(0, 0.55f);
+			transform.scale(0.2f);
+			mObj[2] = new OBJLoader(mGraphics3D);
+			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform);
+			
+			mObj[3] = new OBJLoader(mGraphics3D);
+			mObj[3].loadOBJ(mResources.getInputStream("models/cube.obj"),mGFXLoader,null);
+			
+			for(OBJLoader obj:mObj) {
+				obj.computeStaticNormals();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -43,7 +63,7 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
-		mGraphics3D.setCameraAlphaBeta((float)(mStateTimer*0.05f),0.5f,2);
+		mGraphics3D.setCameraAlphaBeta((float)(mStateTimer*0.05f),0.45f,2);
 //		if(false) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);
@@ -57,9 +77,19 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.setGlobalTransformEnabled(true);
 		mGraphics3D.mWorldTransform.rotateX(-(float)mStateTimer*0.004f);
 		mGraphics3D.mWorldTransform.rotateY(-(float)mStateTimer*1.0f);
-		mObj.draw();
+		mObj[mCurObjIndex].draw();
 	}
 
+	@Override
+	public void keyUp(int code) {
+		if(code==Keys.LEFT)
+			mCurObjIndex--;
+		if(code==Keys.RIGHT)
+			mCurObjIndex = (mCurObjIndex+1)%mObj.length;
+		if(mCurObjIndex<0)
+			mCurObjIndex = mObj.length-1;
+	}
+	
 	@Override
 	public void stop() {
 		mGraphics3D.resetGlobalTransform();
