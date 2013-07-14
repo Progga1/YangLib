@@ -179,6 +179,16 @@ public class Bone {
 	public void setWidthByJoints() {
 		setWidth(mJoint1.mRadius,mJoint2.mRadius);
 	}
+	
+	public void addWidth(float w) {
+		mWidth1 += w;
+		mWidth2 += w;
+	}
+	
+	public void multWidth(float factor) {
+		mWidth1 *= factor;
+		mWidth2 *= factor;
+	}
 
 	public void setShift(float shiftX1, float shiftY1, float shiftX2, float shiftY2) {
 		mShiftX1 = shiftX1;
@@ -204,6 +214,11 @@ public class Bone {
 		mShiftY2 = shift;
 	}
 	
+	public void setShiftY(float upperShift,float lowerShift) {
+		mShiftY1 = upperShift;
+		mShiftY2 = lowerShift;
+	}
+	
 	public void addShiftY(float shift) {
 		mShiftY1 += shift;
 		mShiftY2 += shift;
@@ -225,11 +240,6 @@ public class Bone {
 		mContourY3 += y1;
 		mContourX4 += x2;
 		mContourY4 += y2;
-	}
-
-	public void addWidth(float w) {
-		mWidth1 += w;
-		mWidth2 += w;
 	}
 
 	public void scale(float f) {
