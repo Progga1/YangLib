@@ -34,7 +34,7 @@ public abstract class AbstractVertexBuffer {
 	public abstract float readData(int bufId);
 	public abstract int readIndex();
 	public abstract void putRelativeIndex(int index);
-	public abstract void putIndexArray(short[] array);
+	public abstract void putIndexArray(short[] indices,int offset,int count);
 	public abstract int getBufferPosition(int bufId);
 	
 	public AbstractVertexBuffer(boolean dynamicVertices,int maxVertices) {
@@ -48,6 +48,10 @@ public abstract class AbstractVertexBuffer {
 		mNeutralElements = neutralElements;
 		initBuffers();
 		reset();
+	}
+	
+	public void putIndexArray(short[] indices) {
+		putIndexArray(indices,0,indices.length);
 	}
 	
 	public void fillBuffers() {

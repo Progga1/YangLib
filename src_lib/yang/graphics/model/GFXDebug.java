@@ -5,6 +5,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
+import yang.graphics.listeners.DrawListener;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.DebugYang;
 import yang.model.PrintInterface;
@@ -68,8 +69,8 @@ public class GFXDebug implements PrintInterface {
 	private int mDynamicPolygonCount;
 	private int mBatchPolygonCount;
 	private int mDrawCount;
-	private int mFlushCount;
-	private int mBatchCount;
+	private int mDynamicDrawCount;
+	private int mStaticDrawCount;
 	private int mTexBindCount;
 	private int mShaderSwitchCount;
 	
@@ -80,9 +81,9 @@ public class GFXDebug implements PrintInterface {
 		printDebugValue(DRAW_COUNT,"Draw calls",mDrawCount,0,false);
 		if(isActive(DRAW_DYNAMIC_STATIC_COUNT)) {
 			mTempPrintString.appendString(" (");
-			mTempPrintString.appendInt(mFlushCount);
+			mTempPrintString.appendInt(mDrawCount-mStaticDrawCount);
 			mTempPrintString.appendString("+");
-			mTempPrintString.appendInt(mBatchCount);
+			mTempPrintString.appendInt(mStaticDrawCount);
 			mTempPrintString.appendString(")");
 		}
 		mTempPrintString.appendLineBreak();
@@ -139,6 +140,7 @@ public class GFXDebug implements PrintInterface {
 		float right = mGraphics.getScreenRight()-mDebugOffsetX;
 		
 		mTranslator.flush();
+		DrawListener prevDrawer = mTranslator.mCurDrawListener;
 		mGraphics.activate();
 		mTranslator.switchZBuffer(false);
 		mGraphics.setDefaultProgram();
@@ -172,15 +174,15 @@ public class GFXDebug implements PrintInterface {
 				mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
 				mBatchPolygonCount = mTranslator.mBatchPolygonCount;
 				mDrawCount = mTranslator.mDrawCount;
-				mFlushCount = mTranslator.mFlushCount;
-				mBatchCount = mTranslator.mBatchCount;
+				mDynamicDrawCount = mTranslator.mFlushCount;
+				mStaticDrawCount = mTranslator.mBatchCount;
 				mTexBindCount = mTranslator.mTexBindCount;
 				mShaderSwitchCount = mTranslator.mShaderSwitchCount;
 			}
 			mRefreshCount++;
 			mTempPrintString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
 		}
-		
+	
 		if(DebugYang.stateString!=null && DebugYang.stateString!="") {
 			mGraphics.setColor(mStateColor);
 			String uString = DebugYang.stateString;
@@ -192,6 +194,9 @@ public class GFXDebug implements PrintInterface {
 			mStateString.setString(uString);
 			mStateString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenBottom()+mDebugOffsetY, mFontSize);
 		}
+		
+		prevDrawer.activate();
+		mGraphics.bindTexture(null);
 	}
 
 }

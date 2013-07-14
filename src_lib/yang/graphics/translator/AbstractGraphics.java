@@ -117,6 +117,8 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	
 	public final void activate() {
 		assert mTranslator.preCheck("activate");
+		if(mTranslator.mCurDrawListener==this)
+			return;
 		mTranslator.flush();
 		mTranslator.setDrawListener(this);
 		if(mCurrentProgram!=null) {

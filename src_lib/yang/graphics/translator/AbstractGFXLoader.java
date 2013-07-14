@@ -1,10 +1,13 @@
 package yang.graphics.translator;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import yang.graphics.font.BitmapFont;
+import yang.graphics.model.material.YangMaterialProvider;
+import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
@@ -13,16 +16,18 @@ import yang.systemdependent.AbstractResourceManager;
 
 
 
-public abstract class AbstractGFXLoader {
+public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public static final String IMAGE_EXT	= ".png";
 	public static final String SHADER_EXT	= ".txt";
 
 	protected String SHADER_PATH	= "shaders" + File.separatorChar;
 	protected String IMAGE_PATH		= "textures" + File.separatorChar;
+	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 	
 	protected HashMap<String, Texture> mTextures;
 	protected HashMap<String, String> mShaders;
+	protected HashMap<String, YangMaterialSet> mMaterials;
 	protected GraphicsTranslator mGraphics;
 	
 	public AbstractResourceManager mResources;
@@ -36,8 +41,29 @@ public abstract class AbstractGFXLoader {
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
 		mTextures = new HashMap<String, Texture>();
 		mShaders = new HashMap<String, String>();
+		mMaterials = new HashMap<String, YangMaterialSet>();
 		mGraphics = graphics;
 		mResources = resources;
+	}
+	
+	public YangMaterialSet getMaterialSet(String name) {
+		if(name.startsWith("./"))
+			name = name.substring(2);
+		YangMaterialSet result = mMaterials.get(name);
+		if(result!=null)
+			return result;
+		result = new YangMaterialSet(this);
+		String filename = MATERIAL_PATH+name;
+		if(!mResources.fileExists(filename))
+			return null;
+		try {
+			result.loadFromStream(mResources.getInputStream(filename));
+		} catch (IOException e) {
+			return null;
+		}
+		mMaterials.put(name, result);
+		return result;
+		
 	}
 	
 	protected Texture loadImage(String name,TextureProperties textureSettings,boolean redToAlpha) {

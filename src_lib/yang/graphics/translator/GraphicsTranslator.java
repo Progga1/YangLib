@@ -2,6 +2,7 @@ package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
@@ -13,8 +14,8 @@ import yang.graphics.programs.GLProgramFactory;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
-import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureProperties;
+import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.glconsts.GLBlendFuncs;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
@@ -23,6 +24,7 @@ import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.model.ScreenInfo;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
+import yang.model.state.GraphicsState;
 import yang.util.NonConcurrentList;
 
 public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,ScreenInfo {
@@ -50,7 +52,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	//State
 	protected Texture[] mCurrentTextures;
 	public IndexedVertexBuffer mCurrentVertexBuffer;
-	protected boolean mFlushDisabled;
+	public boolean mFlushDisabled;
 	public int mDrawMode;
 	public boolean mWireFrames;
 	public DrawListener mCurDrawListener;
@@ -62,6 +64,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mFPS = 0;
 	private long mFPSStartTime = 0;
 	public long mFrameCount = 0;
+	public boolean mForceWireFrames = false;
+	private GraphicsState mSavedState;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
@@ -85,6 +89,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public AbstractGFXLoader mGFXLoader;
 	private NonConcurrentList<TextureRenderTarget> mRenderTargets;
 	private NonConcurrentList<BasicProgram> mPrograms;
+	private ShortBuffer mWireFrameIndexBuffer;
 	
 	//Helpers
 	protected final int[] mTempInt = new int[1];
@@ -97,7 +102,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void genTextures(int[] target,int count);
 	protected abstract void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings);
 	public abstract void deleteTextures(int[] ids);
-	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, IndexedVertexBuffer vertexBuffer);
+	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, ShortBuffer indexBuffer);
 	public abstract void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer);
 	public abstract void enableAttributePointer(int handle);
 	public abstract void disableAttributePointer(int handle);
@@ -403,18 +408,22 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			return;
 		int vertexCount = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		if(vertexCount>0) {
-			assert preCheck("Prepare draw vertices");
-			mCurDrawListener.onPreDraw();
-			assert preCheck("Draw vertices listener");
-			mCurrentVertexBuffer.finishUpdate();
-			assert preCheck("Draw vertices finish update");
-			mCurrentVertexBuffer.reset();
+			prepareDraw();
 			assert preCheck("Draw vertices reset");
 			drawVertices(0,vertexCount,mDrawMode);
 			mFlushCount++;
 			mDynamicPolygonCount += vertexCount/3;
 		}
 		assert checkErrorInst("Flush");
+	}
+	
+	public void prepareDraw() {
+		assert preCheck("Prepare draw vertices");
+		mCurDrawListener.onPreDraw();
+		assert preCheck("Draw vertices listener");
+		mCurrentVertexBuffer.finishUpdate();
+		assert preCheck("Draw vertices finish update");
+		mCurrentVertexBuffer.reset();
 	}
 	
 	public final void measureTime() {
@@ -486,9 +495,35 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurDrawListener.bindBuffers();
 		mPolygonCount += vertexCount/3;
 		mDrawCount++;
-		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
-			drawDefaultVertices(bufferStart,vertexCount,mWireFrames,mCurrentVertexBuffer);
+		ShortBuffer indexBuffer = mCurrentVertexBuffer.mIndexBuffer;
+		indexBuffer.position(bufferStart);	
+
+		if(mForceWireFrames) {
+			int cap = indexBuffer.capacity();
+			if(mWireFrameIndexBuffer==null || mWireFrameIndexBuffer.capacity()<cap*2)
+				mWireFrameIndexBuffer = ByteBuffer.allocateDirect(cap*2*2).order(ByteOrder.nativeOrder()).asShortBuffer();
+			mWireFrameIndexBuffer.position(0);
+			for(int i=0;i<vertexCount;i+=3) {
+				short first = indexBuffer.get();
+				mWireFrameIndexBuffer.put(first);
+				short to =  indexBuffer.get();
+				mWireFrameIndexBuffer.put(to);
+				mWireFrameIndexBuffer.put(to);
+				to = indexBuffer.get();
+				mWireFrameIndexBuffer.put(to);
+				mWireFrameIndexBuffer.put(to);
+				mWireFrameIndexBuffer.put(first);
+			}
+			indexBuffer.position(0);
+			indexBuffer = mWireFrameIndexBuffer;
+			indexBuffer.position(0);
+			bufferStart = 0;
+			vertexCount = vertexCount*2;
 		}
+		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
+			drawDefaultVertices(bufferStart,vertexCount,mForceWireFrames,indexBuffer);
+		}
+
 	}
 	
 	public void setVertexBuffer(IndexedVertexBuffer vertexBuffer) {

@@ -52,6 +52,11 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 	}
 	
 	@Override
+	public void putIndexArray(short[] indices,int offset,int count) {
+		mIndexBuffer.put(indices,offset,count);
+	}
+	
+	@Override
 	public int readIndex() {
 		return mIndexBuffer.get();
 	}

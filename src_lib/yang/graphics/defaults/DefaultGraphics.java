@@ -481,6 +481,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		if (mCurrentProgram != null && mCurrentProgram.mHasAmbientColor)
 			mCurrentProgram.setAmbientColor(brightness, brightness, brightness, 1);
 	}
+	
+	public void setAmbientColor(FloatColor color) {
+		setAmbientColor(color.mValues[0],color.mValues[1],color.mValues[2],color.mValues[3]);
+	}
 
 	// ---PUT-SUPPLEMENTARY-DATA---
 

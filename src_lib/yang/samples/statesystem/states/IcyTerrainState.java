@@ -202,6 +202,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.bindTexture(waterNormal, WaterProgram.NORMAL_TEXTURE_LEVEL);
 		mGraphics.bindTexture(mShadowHelper.getDepthMap(),WaterProgram.DEPTH_TEXTURE_LEVEL);
 		mGraphics.bindTexture(mHeightTexture, WaterProgram.HEIGHT_TEXTURE_LEVEL);
+		mWaterProgram.setTime(mGraphics.mShaderTimer);
 		mGraphics.checkErrorInst("Set water textures");
 		mWaterProgram.setDepthMapProjection(mShadowHelper.mDepthTransformation.mMatrix);
 		mGraphics.checkErrorInst("Set depth map projection");

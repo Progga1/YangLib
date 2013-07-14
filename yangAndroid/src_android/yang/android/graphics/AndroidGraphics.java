@@ -1,12 +1,13 @@
 package yang.android.graphics;
 
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 
 import yang.android.io.AndroidGFXLoader;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
-import yang.graphics.textures.TextureSettings;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.enums.ByteFormat;
@@ -97,7 +98,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 	
 	@Override
-	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureSettings textureSettings) {
+	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings) {
 		assert preCheck("Set texture data");
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
@@ -157,11 +158,16 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 
 	@Override
-	protected void drawDefaultVertices(int bufferStart, int drawVertexCount,boolean wireFrames,IndexedVertexBuffer vertexBuffer) {
+	protected void drawDefaultVertices(int bufferStart, int drawVertexCount,boolean wireFrames,ShortBuffer indexBuffer) {
 		if(wireFrames)
 			GLES20.glDrawArrays(GLES20.GL_LINES, bufferStart, drawVertexCount);
-		else
-			GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawVertexCount, GLES20.GL_UNSIGNED_SHORT, vertexBuffer.mIndexBuffer);
+		else{
+			int lim = indexBuffer.capacity();
+			indexBuffer.position(bufferStart);
+			indexBuffer.limit(bufferStart+drawVertexCount);
+			GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawVertexCount, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+			indexBuffer.limit(lim);
+		}
 	}
 	
 	@Override
