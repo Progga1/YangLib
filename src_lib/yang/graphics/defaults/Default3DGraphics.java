@@ -153,7 +153,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		setPerspectiveProjection(fovy,near,far,1);
 	}
 	
-
+	public void setPerspectiveProjection(float range) {
+		setPerspectiveProjection(0.6f,0.02f,range);
+	}
 	
 //	public void drawRectZ(float worldX1, float worldY1, float worldX2, float worldY2, float z, TransformationMatrix textureTransform) {
 //		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
