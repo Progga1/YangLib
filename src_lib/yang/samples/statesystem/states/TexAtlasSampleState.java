@@ -55,5 +55,10 @@ public class TexAtlasSampleState extends SampleState {
 		mGraphics2D.setSuppData(Quadruple.Q0011);
 		mGraphics2D.drawRect(mGraphics2D.getScreenRight()-0.7f,mGraphics2D.getScreenTop()-0.7f,mGraphics2D.getScreenRight()-0.03f,mGraphics2D.getScreenTop()-0.03f);
 	}
+	
+	@Override
+	public void stop() {
+		mGraphics2D.setDefaultProgram();
+	}
 
 }

@@ -14,6 +14,7 @@ import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
+import yang.model.DebugYang;
 import yang.util.NonConcurrentList;
 import yang.util.filereader.TokenReader;
 
@@ -102,6 +103,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	
 	public YangMaterial findMaterial(String materialName) {
 		for(YangMaterialSet matSet:mMaterialSets) {
+			if(matSet==null)
+				continue;
 			YangMaterial mat = matSet.getMaterial(materialName);
 			if(mat!=null)
 				return mat;
@@ -297,13 +300,16 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 				((Default3DGraphics)mGraphics).fillNormals(0);
 			}
 		}
-		
+
 		mTranslator.prepareDraw();
+		mTranslator.mFlushDisabled = true;
 		for(OBJMaterialSection matSec:mMaterialSections) {
 			mTranslator.bindTexture(matSec.mMaterial.mDiffuseTexture);
 			mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}
+		mTranslator.mFlushDisabled = false;
+		vertexBuffer.reset();
 	}
 	
 	public void computeStaticNormals() {

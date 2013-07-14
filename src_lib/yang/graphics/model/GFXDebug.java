@@ -5,6 +5,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
+import yang.graphics.listeners.DrawListener;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.DebugYang;
 import yang.model.PrintInterface;
@@ -139,6 +140,7 @@ public class GFXDebug implements PrintInterface {
 		float right = mGraphics.getScreenRight()-mDebugOffsetX;
 		
 		mTranslator.flush();
+		DrawListener prevDrawer = mTranslator.mCurDrawListener;
 		mGraphics.activate();
 		mTranslator.switchZBuffer(false);
 		mGraphics.setDefaultProgram();
@@ -193,6 +195,7 @@ public class GFXDebug implements PrintInterface {
 			mStateString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenBottom()+mDebugOffsetY, mFontSize);
 		}
 		
+		prevDrawer.activate();
 		mGraphics.bindTexture(null);
 	}
 

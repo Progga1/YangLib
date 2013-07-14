@@ -1,6 +1,6 @@
 # Blender v2.57 (sub 0) OBJ File: 'SuperMario.blend'
 # www.blender.org
-mtllib SuperMario.mtl
+mtllib supermario.mtl
 o Plane_Plane.001
 v 0.436716 -2.258726 2.224537
 v 0.567465 -2.219817 2.299103

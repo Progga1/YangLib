@@ -1,6 +1,6 @@
 # Blender3D v242 OBJ File: PeaPodBoat.blend
 # www.blender3d.org
-mtllib PeaPodBoat.mtl
+mtllib peapodboat.mtl
 o Circle.001_Circle.001
 v -0.323506 0.198983 0.305113
 v -0.313849 0.170978 0.280802

@@ -24,6 +24,7 @@ import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.model.ScreenInfo;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
+import yang.model.state.GraphicsState;
 import yang.util.NonConcurrentList;
 
 public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,ScreenInfo {
@@ -51,7 +52,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	//State
 	protected Texture[] mCurrentTextures;
 	public IndexedVertexBuffer mCurrentVertexBuffer;
-	protected boolean mFlushDisabled;
+	public boolean mFlushDisabled;
 	public int mDrawMode;
 	public boolean mWireFrames;
 	public DrawListener mCurDrawListener;
@@ -64,6 +65,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private long mFPSStartTime = 0;
 	public long mFrameCount = 0;
 	public boolean mForceWireFrames = false;
+	private GraphicsState mSavedState;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;

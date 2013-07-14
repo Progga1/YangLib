@@ -15,11 +15,7 @@ public class OBJSampleState extends SampleState {
 	
 	@Override
 	protected void initGraphics() {
-		
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
-		
-		
-
 	}
 	
 	
@@ -30,7 +26,7 @@ public class OBJSampleState extends SampleState {
 			//transform.translate(0, 0.5f);
 			transform.scale(0.5f);
 			mObj = new OBJLoader(mGraphics3D);
-			mObj.loadOBJ(mResources.getInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform);
+			mObj.loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform);
 			mObj.computeStaticNormals();
 		} catch (IOException e) {
 			e.printStackTrace();

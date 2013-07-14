@@ -47,6 +47,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	public YangMaterialSet getMaterialSet(String name) {
+		if(name.startsWith("./"))
+			name = name.substring(2);
 		YangMaterialSet result = mMaterials.get(name);
 		if(result!=null)
 			return result;
