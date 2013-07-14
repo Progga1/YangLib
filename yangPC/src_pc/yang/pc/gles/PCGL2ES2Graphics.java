@@ -3,6 +3,7 @@ package yang.pc.gles;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES2;
@@ -17,8 +18,8 @@ import yang.events.EventQueueHolder;
 import yang.graphics.YangSurface;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
-import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureProperties;
+import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.Texture;
 import yang.model.enums.ByteFormat;
 import yang.pc.PCEventHandler;
@@ -212,8 +213,11 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
-	public void drawDefaultVertices(int bufferStart, int drawVertexCount, boolean wireFrames, IndexedVertexBuffer vertexBuffer) {
-		gles2.glDrawElements(GL2ES2.GL_TRIANGLES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, vertexBuffer.mIndexBuffer);
+	public void drawDefaultVertices(int bufferStart, int drawVertexCount, boolean wireFrames, ShortBuffer indexBuffer) {
+		if(wireFrames)
+			gles2.glDrawElements(GL2ES2.GL_LINES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
+		else
+			gles2.glDrawElements(GL2ES2.GL_TRIANGLES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 	
 	@Override
