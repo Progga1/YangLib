@@ -5,7 +5,7 @@ import yang.graphics.translator.AbstractGFXLoader;
 
 public class ShaderPermutations extends Basic3DProgram {
 
-	private static final String LINE_END = ";\r\n";
+	static final String LINE_END = ";\r\n";
 	
 	public SubShader[] mSubShaders;
 	public String mVSSource,mFSSource;
@@ -19,6 +19,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		}
 		
 		StringBuilder result = new StringBuilder(512);
+		result.append("#ANDROID precision mediump float;\r\n");
 		for(String declaration:parser.mVSDeclarations) {
 			result.append(declaration);
 			result.append(LINE_END);
@@ -30,7 +31,8 @@ public class ShaderPermutations extends Basic3DProgram {
 		mVSSource = result.toString();
 		
 		result = new StringBuilder(512);
-		for(String declaration:parser.mVSDeclarations) {
+		result.append("#ANDROID precision mediump float;\r\n");
+		for(String declaration:parser.mFSDeclarations) {
 			result.append(declaration);
 			result.append(LINE_END);
 		}
@@ -38,7 +40,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append("void main() {\r\n");
 		result.append(parser.getVariable("FS_MAIN"));
 		result.append("\r\ngl_FragColor=");
-		result.append(parser.getVariable("COLOR"));
+		result.append(parser.getVariable("COLOR","vec4(1.0,1.0,1.0,1.0)"));
 		result.append(LINE_END);
 		result.append("}\r\n");
 		mFSSource = result.toString();

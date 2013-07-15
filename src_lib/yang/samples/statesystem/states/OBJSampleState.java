@@ -3,6 +3,7 @@ package yang.samples.statesystem.states;
 import java.io.IOException;
 
 import yang.events.Keys;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.translator.glconsts.GLMasks;
@@ -81,7 +82,13 @@ public class OBJSampleState extends SampleState {
 	}
 
 	@Override
+	public void pointerUp(float x,float y,YangPointerEvent event) {
+		mCurObjIndex = (mCurObjIndex+1)%mObj.length;
+	}
+	
+	@Override
 	public void keyUp(int code) {
+		super.keyUp(code);
 		if(code==Keys.LEFT)
 			mCurObjIndex--;
 		if(code==Keys.RIGHT)

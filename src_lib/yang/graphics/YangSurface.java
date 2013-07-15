@@ -10,6 +10,7 @@ import yang.events.macro.MacroExecuter;
 import yang.events.macro.MacroWriter;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
+import yang.graphics.font.DrawableString;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.translator.AbstractGFXLoader;
@@ -19,6 +20,7 @@ import yang.model.enums.UpdateMode;
 import yang.sound.SoundManager;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
+import yang.util.Util;
 
 public abstract class YangSurface {
 	
@@ -27,7 +29,7 @@ public abstract class YangSurface {
 	public AbstractResourceManager mResources;
 	public AbstractGFXLoader mGFXLoader;
 	public SoundManager mSounds;
-	public GFXDebug mDebug;
+	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 	
 	private UpdateMode mUpdateMode;
@@ -52,6 +54,7 @@ public abstract class YangSurface {
 	public boolean mPaused = false;
 	public float mPlaySpeed = 1;
 	public String mMacroFilename;
+	public boolean mException = false;
 	
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
@@ -180,7 +183,8 @@ public abstract class YangSurface {
 	
 	public void onSurfaceChanged(int width,int height) {
 		mGraphics.setSurfaceSize(width, height);
-		
+		if(mGFXDebug!=null)
+			mGFXDebug.surfaceChanged();
 	}
 	
 	public boolean isInitialized() {
@@ -221,7 +225,16 @@ public abstract class YangSurface {
 	}
 	
 	protected void initDebugOutput(DefaultGraphics<?> graphics, BitmapFont font) {
-		mDebug = new GFXDebug(this,graphics,font);
+		mGFXDebug = new GFXDebug(this,graphics,font);
+		mGFXDebug.surfaceChanged();
+	}
+	
+	protected void exceptionOccurred(Exception ex) {
+		mException = true;
+		mPaused = true;
+		if(mGFXDebug!=null)
+			mGFXDebug.setErrorString(ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
+		ex.printStackTrace();
 	}
 	
 	protected void catchUp() {		
@@ -256,15 +269,19 @@ public abstract class YangSurface {
 	boolean alt = false;
 	public void proceed() {
 
-		if(!mPaused) {
-			if(mMacro!=null)
-				mMacro.step();
-			if(mEventListener!=null)
-				mEventQueue.handleEvents(mEventListener);
-			mStepCount ++;
-			mProgramTime += deltaTimeSeconds;
-
-			step(deltaTimeSeconds);
+		if(!mPaused && !mException) {
+			try{
+				if(mMacro!=null)
+					mMacro.step();
+				if(mEventListener!=null)
+					mEventQueue.handleEvents(mEventListener);
+				mStepCount ++;
+				mProgramTime += deltaTimeSeconds;
+	
+				step(deltaTimeSeconds);
+			}catch(Exception ex){
+				exceptionOccurred(ex);
+			}
 		}
 	}
 	
@@ -274,51 +291,64 @@ public abstract class YangSurface {
 	
 	public final void drawFrame() {
 		
-		if(mMetaEventListener!=null)
-			mEventQueue.handleMetaEvents(mMetaEventListener);
-		
-		if(mRuntimeState>0 && mLoadingProgress<0) {
-			mGraphics.restart();
-			mLoadingProgress = 0;
-			initGraphicsForResume();
+		if(mException) {
+			mGraphics.beginFrame();
+			mGraphics.clear(0.1f,0,0);
+			if(mGFXDebug!=null)
+				mGFXDebug.draw();
+			mGraphics.endFrame();
+			return;
+		}
+		try{
+			if(mMetaEventListener!=null)
+				mEventQueue.handleMetaEvents(mMetaEventListener);
 			
-			if(mAutoReloadTexturesOnResume) {
-				mGraphics.beginFrame();
-				drawResume();
-				mGraphics.endFrame();
-				return;
+			if(mRuntimeState>0 && mLoadingProgress<0) {
+				mGraphics.restart();
+				mLoadingProgress = 0;
+				initGraphicsForResume();
+				
+				if(mAutoReloadTexturesOnResume) {
+					mGraphics.beginFrame();
+					drawResume();
+					mGraphics.endFrame();
+					return;
+				}
 			}
-		}
-		
-		if(mRuntimeState>0) {
-			if(mAutoReloadTexturesOnResume) {
-				mGraphics.mGFXLoader.reloadTextures();
-			}
-			mGraphics.unbindTextures();
 			
-			if(mRuntimeState==1)
-				resumedFromPause();
-			if(mRuntimeState==2)
-				resumedFromStop();
-			mRuntimeState = 0;
-			if(mGraphics.mCurDrawListener!=null)
-				mGraphics.mCurDrawListener.onRestartGraphics();
-		}
+			if(mRuntimeState>0) {
+				if(mAutoReloadTexturesOnResume) {
+					mGraphics.mGFXLoader.reloadTextures();
+				}
+				mGraphics.unbindTextures();
+				
+				if(mRuntimeState==1)
+					resumedFromPause();
+				if(mRuntimeState==2)
+					resumedFromStop();
+				mRuntimeState = 0;
+				if(mGraphics.mCurDrawListener!=null)
+					mGraphics.mCurDrawListener.onRestartGraphics();
+			}
+			
+			if(mUpdateMode==UpdateMode.SYNCHRONOUS)
+				catchUp();
+	
+			if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+				mGFXDebug.reset();
+				if(DebugYang.DRAW_GFX_VALUES)
+					mGFXDebug.printGFXDebugValues();
+			}
+			mGraphics.beginFrame();
+			draw();
+			if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+				mGFXDebug.draw();
+			}
+			mGraphics.endFrame();
 		
-		if(mUpdateMode==UpdateMode.SYNCHRONOUS)
-			catchUp();
-
-		if(DebugYang.DEBUG_LEVEL>0 && mDebug!=null) {
-			mDebug.reset();
-			if(DebugYang.DRAW_GFX_VALUES)
-				mDebug.printGFXDebugValues();
+		}catch(Exception ex){
+			exceptionOccurred(ex);
 		}
-		mGraphics.beginFrame();
-		draw();
-		if(DebugYang.DEBUG_LEVEL>0 && mDebug!=null) {
-			mDebug.draw();
-		}
-		mGraphics.endFrame();
 		
 	}
 	

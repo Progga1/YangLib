@@ -31,12 +31,13 @@ public class GFXDebug implements PrintInterface {
 	public float mDebugColumnWidth=0.1f,mDebugLineHeight=0.05f;
 	public FloatColor mFontColor = FloatColor.WHITE;
 	public FloatColor mStateColor = new FloatColor(1,0.8f,0);
-	public float mFontSize = 0.1f;
+	public float mFontSize = 0.08f;
 	public int mMinKeyChars = 10;
 	public int mRefreshEvery = 2;
 	public long mRefreshCount = 0;
 	public DrawableString mSpeedString;
 	public DrawableString mExecMacroString;
+	private DrawableString mExceptionString;
 	
 	protected GraphicsTranslator mTranslator;
 	protected DefaultGraphics<?> mGraphics;
@@ -129,12 +130,12 @@ public class GFXDebug implements PrintInterface {
 	}
 	
 	public void draw() {
-		if(DebugYang.DEBUG_LEVEL<=0)
+		if(DebugYang.DEBUG_LEVEL<=0 && mExceptionString==null)
 			return;
 		
 		float playSpeed = mSurface.mPlaySpeed;
 		
-		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString=="") && (mSurface.mMacro==null || mSurface.mMacro.mFinished))
+		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString=="") && (mSurface.mMacro==null || mSurface.mMacro.mFinished) && mExceptionString==null)
 			return;
 		
 		float right = mGraphics.getScreenRight()-mDebugOffsetX;
@@ -168,21 +169,6 @@ public class GFXDebug implements PrintInterface {
 			mSpeedString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*2f);
 		}
 		
-		if(mTempPrintString.mMarker!=0) {
-			if(mRefreshCount%mRefreshEvery==0) {
-				mPolygonCount = mTranslator.mPolygonCount;
-				mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
-				mBatchPolygonCount = mTranslator.mBatchPolygonCount;
-				mDrawCount = mTranslator.mDrawCount;
-				mDynamicDrawCount = mTranslator.mFlushCount;
-				mStaticDrawCount = mTranslator.mBatchCount;
-				mTexBindCount = mTranslator.mTexBindCount;
-				mShaderSwitchCount = mTranslator.mShaderSwitchCount;
-			}
-			mRefreshCount++;
-			mTempPrintString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
-		}
-	
 		if(DebugYang.stateString!=null && DebugYang.stateString!="") {
 			mGraphics.setColor(mStateColor);
 			String uString = DebugYang.stateString;
@@ -195,8 +181,39 @@ public class GFXDebug implements PrintInterface {
 			mStateString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenBottom()+mDebugOffsetY, mFontSize);
 		}
 		
+		if(mExceptionString==null) {
+			if(mTempPrintString.mMarker!=0) {
+				if(mRefreshCount%mRefreshEvery==0) {
+					mPolygonCount = mTranslator.mPolygonCount;
+					mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
+					mBatchPolygonCount = mTranslator.mBatchPolygonCount;
+					mDrawCount = mTranslator.mDrawCount;
+					mDynamicDrawCount = mTranslator.mFlushCount;
+					mStaticDrawCount = mTranslator.mBatchCount;
+					mTexBindCount = mTranslator.mTexBindCount;
+					mShaderSwitchCount = mTranslator.mShaderSwitchCount;
+				}
+				mRefreshCount++;
+				mGraphics.setColor(mFontColor);
+				mTempPrintString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+			}
+		}else{
+			mGraphics.setColor(FloatColor.RED);
+			mExceptionString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+		}
+		
 		prevDrawer.activate();
 		mGraphics.bindTexture(null);
+	}
+	
+	public void setErrorString(String error) {
+		mExceptionString = new DrawableString(error);
+		surfaceChanged();
+	}
+
+	public void surfaceChanged() {
+		if(mExceptionString!=null)
+			mExceptionString.setMaxLineWidth((mGraphics.mTranslator.mRatioX*2-2*mDebugOffsetX)/mFontSize);
 	}
 
 }

@@ -22,12 +22,20 @@ public class ShaderPermutationsParser {
 		mVariables.put(key,value);
 	}
 	
-	public void appendVariable(String key,String value) {
+	public void appendLn(String key,String value) {
+		String var = mVariables.get(key);
+		if(var==null)
+			mVariables.put(key, value+ShaderPermutations.LINE_END);
+		else
+			mVariables.put(key, var+value+ShaderPermutations.LINE_END);
+	}
+	
+	public void appendOp(String key,String value,String op) {
 		String var = mVariables.get(key);
 		if(var==null)
 			mVariables.put(key, value);
 		else
-			mVariables.put(key, var+value);
+			mVariables.put(key, var+op+value);
 	}
 	
 	public void incVariable(String key,int value) {
@@ -41,12 +49,16 @@ public class ShaderPermutationsParser {
 			
 	}
 	
-	public String getVariable(String key) {
+	public String getVariable(String key,String defaultVal) {
 		String var = mVariables.get(key);
 		if(var==null)
-			return "";
+			return defaultVal;
 		else
 			return var;
+	}
+	
+	public String getVariable(String key) {
+		return getVariable(key,"");
 	}
 
 	public boolean hasVSDeclaration(String declaration) {

@@ -16,25 +16,32 @@ public class BasicSubShader extends SubShader {
 	
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser) {
-		shaderParser.setVariable("COLOR", "vec4(1.0,1.0,1.0,1.0)");
+
 		shaderParser.vsDeclaration("uniform mat4 projTransform");
 		shaderParser.vsDeclaration("attribute vec4 vPosition");
 		if(mUseTexture) {
 			shaderParser.vsDeclaration("attribute vec2 vTexture");
-			shaderParser.vsDeclaration("varying vec2 texCoords");
-			shaderParser.fsDeclaration("uniform sampler texSampler");
-			shaderParser.fsDeclaration("varying vec2 texCoords");
+			shaderParser.vsDeclaration("varying vec2 texCoord");
+			shaderParser.fsDeclaration("uniform sampler2D texSampler");
+			shaderParser.fsDeclaration("varying vec2 texCoord");
+			shaderParser.appendLn("FS_MAIN","vec4 texCl=texture2D(texSampler, texCoord)");
+			shaderParser.appendOp("COLOR", "texCl","*");
+			shaderParser.appendLn("VS_MAIN", "texCoord=vTexture");
 		}
 		if(mUseColor) {
 			shaderParser.vsDeclaration("attribute vec4 vColor");
 			shaderParser.vsDeclaration("varying vec4 color");
 			shaderParser.fsDeclaration("varying vec4 color");
+			shaderParser.appendOp("COLOR", "color","*");
+			shaderParser.appendLn("VS_MAIN", "color=vColor");
 		}
 		if(mWorldTransform) {
 			shaderParser.vsDeclaration("uniform mat4 worldTransform");
-			shaderParser.appendVariable("VS_MAIN", "gl_Position = projTransform * worldTransform * vPosition;");
+			shaderParser.appendLn("VS_MAIN", "gl_Position = projTransform * worldTransform * vPosition;");
 		}else
-			shaderParser.appendVariable("VS_MAIN", "gl_Position = projTransform * vPosition");
+			shaderParser.appendLn("VS_MAIN", "gl_Position = projTransform * vPosition");
+		
+		
 	}
 
 	@Override
