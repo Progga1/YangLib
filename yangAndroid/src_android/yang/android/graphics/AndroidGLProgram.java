@@ -3,6 +3,7 @@ package yang.android.graphics;
 import java.nio.IntBuffer;
 
 import yang.graphics.programs.GLProgram;
+import yang.math.objects.Vector3f;
 import yang.util.Util;
 import android.opengl.GLES20;
 
@@ -117,6 +118,11 @@ public class AndroidGLProgram extends GLProgram {
 	@Override
 	public void setUniform3f(int handle, float[] values) {
 		GLES20.glUniform3f(handle, values[0],values[1],values[2]);
+	}
+	
+	@Override
+	public void setUniform3f(int handle, Vector3f vector) {
+		GLES20.glUniform3f(handle, vector.mX,vector.mY,vector.mZ);
 	}
 
 	@Override

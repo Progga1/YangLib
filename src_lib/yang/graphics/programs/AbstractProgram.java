@@ -5,7 +5,7 @@ import yang.graphics.translator.GraphicsTranslator;
 
 public abstract class AbstractProgram {
 
-	protected GLProgram mProgram;
+	public GLProgram mProgram;
 	public boolean mInitialized = false;
 	
 	protected GraphicsTranslator mGraphics;

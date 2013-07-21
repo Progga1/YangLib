@@ -104,5 +104,15 @@ public class Vector3f {
 	public Vector3f clone() {
 		return new Vector3f(mX,mY,mZ);
 	}
+
+	public void setAlphaBeta(float alpha, float beta, float distance) {
+		mX = (float)(Math.sin(alpha)*Math.cos(beta)) * distance;
+		mY = (float)(Math.sin(beta)) * distance;
+		mZ = (float)(Math.cos(alpha)*Math.cos(beta)) * distance;
+	}
+	
+	public void setAlphaBeta(float alpha, float beta) {
+		setAlphaBeta(alpha,beta,1);
+	}
 	
 }

@@ -1,6 +1,7 @@
 package yang.graphics.programs;
 
 import yang.graphics.textures.TextureData;
+import yang.math.objects.Vector3f;
 
 
 public abstract class GLProgram {
@@ -12,6 +13,7 @@ public abstract class GLProgram {
 	public abstract void setUniform2f(int handle, float v1, float v2);
 	public abstract void setUniform3f(int handle, float v1, float v2, float v3);
 	public abstract void setUniform3f(int handle, float[] values);
+	public abstract void setUniform3f(int handle, Vector3f vector);
 	public abstract void setUniform4f(int handle,float v1, float v2, float v3, float v4);
 	public abstract void setUniform4f(int handle,float[] values);
 	public abstract void setUniformMatrix(int handle,float[] matrix);

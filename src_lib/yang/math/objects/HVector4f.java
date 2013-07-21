@@ -65,9 +65,9 @@ public class HVector4f extends Quadruple {
 	}
 
 	public void setAlphaBeta(float alpha, float beta, float distance) {
-		mValues[0] = (float)(Math.sin(alpha)*Math.cos(beta));
-		mValues[1] = (float)(Math.cos(beta));
-		mValues[2] = (float)(Math.cos(alpha)*Math.cos(beta));
+		mValues[0] = (float)(Math.sin(alpha)*Math.cos(beta)) * distance;
+		mValues[1] = (float)(Math.sin(beta)) * distance;
+		mValues[2] = (float)(Math.cos(alpha)*Math.cos(beta)) * distance;
 	}
 	
 	public void setAlphaBeta(float alpha, float beta) {

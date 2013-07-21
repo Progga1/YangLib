@@ -1,8 +1,14 @@
 package yang.samples.statesystem.states;
 
-import yang.graphics.defaults.programs.subshaders.LightProperties;
+import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
+import yang.graphics.defaults.programs.subshaders.CameraVectorSubShader;
+import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
 import yang.graphics.defaults.programs.subshaders.LightSubShader;
 import yang.graphics.defaults.programs.subshaders.NormalSubShader;
+import yang.graphics.defaults.programs.subshaders.SpecularLightSubShader;
+import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
+import yang.graphics.defaults.programs.subshaders.properties.SpecularMatProperties;
+import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
@@ -14,12 +20,21 @@ public class ShaderPermutationsSampleState extends SampleState {
 
 	private ShaderPermutations mShader1;
 	private LightProperties mLightProperties;
+	private SpecularMatProperties mSpecularProperties;
+	private FloatColor mAmbientColor;
 	private Texture mGrassTex,mCubeTex;
 	
 	@Override
 	public void initGraphics() {
 		mLightProperties = new LightProperties();
-		SubShader[] subShaders = new SubShader[]{new BasicSubShader(true,true,true),new NormalSubShader(true),new LightSubShader(mLightProperties)};
+		mSpecularProperties = new SpecularMatProperties();
+		mAmbientColor = new FloatColor(0.1f,0.1f,0.12f);
+		SubShader[] subShaders = new SubShader[]{
+				new BasicSubShader(true,true,true),new NormalSubShader(true,false),
+				new LightSubShader(mLightProperties),new DiffuseLightSubShader(),
+				new CameraVectorSubShader(mGraphics3D.mCameraMatrix.mMatrix),new SpecularLightSubShader(mSpecularProperties),
+				new AmbientSubShader(mAmbientColor)
+				};
 
 		mShader1 = mGraphics.addProgram(new ShaderPermutations(subShaders));
 		mCubeTex = mGFXLoader.getImage("cube");

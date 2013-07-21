@@ -10,7 +10,15 @@ public class ShaderPermutations extends Basic3DProgram {
 	public SubShader[] mSubShaders;
 	public String mVSSource,mFSSource;
 	
+	public ShaderPermutations() {
+		
+	}
+	
 	public ShaderPermutations(SubShader[] subShaders) {
+		initPermutations(subShaders);
+	}
+	
+	public ShaderPermutations initPermutations(SubShader[] subShaders) {
 		mSubShaders = subShaders;
 		
 		ShaderPermutationsParser parser = new ShaderPermutationsParser(this);
@@ -51,7 +59,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append("}\r\n");
 		mFSSource = result.toString();
 		
-		System.out.println(this);
+		return this;
 	}
 	
 	@Override

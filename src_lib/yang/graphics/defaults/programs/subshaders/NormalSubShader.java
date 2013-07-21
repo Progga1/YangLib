@@ -8,9 +8,11 @@ import yang.graphics.programs.permutations.SubShader;
 public class NormalSubShader extends SubShader {
 	
 	public boolean mPhongShading;
+	public boolean mNormalize;
 	
-	public NormalSubShader(boolean phongShading) {
+	public NormalSubShader(boolean phongShading,boolean normalize) {
 		mPhongShading = phongShading;
+		mNormalize = normalize;
 	}
 	
 	@Override
@@ -19,9 +21,13 @@ public class NormalSubShader extends SubShader {
 		if(mPhongShading) {
 			shaderParser.addVarying("vec3","normal");
 			shaderParser.appendVertexMain("normal = vNormal");
-			//shaderParser.appendFragmentMain("normal = normalize(normal)");
+			if(mNormalize)
+				shaderParser.appendFragmentMain("normal = normalize(normal)");
 		}else{
-			
+			if(mNormalize)
+				shaderParser.appendVertexMain("vec3 normal = normalize(vNormal)");
+			else
+				shaderParser.appendVertexMain("vec3 normal = vNormal"); //TODO better solution
 		}
 	}
 

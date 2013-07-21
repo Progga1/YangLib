@@ -35,6 +35,10 @@ public class FloatColor extends Quadruple {
 		this(brightness,brightness,brightness,1);
 	}
 	
+	public FloatColor(float[] values) {
+		set(values);
+	}
+	
 	public FloatColor(FloatColor preface) {
 		set(preface);
 	}

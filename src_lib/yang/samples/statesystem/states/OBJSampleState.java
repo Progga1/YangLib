@@ -5,6 +5,7 @@ import java.io.IOException;
 import yang.events.Keys;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
+import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.math.objects.matrix.YangMatrix;
@@ -14,11 +15,13 @@ public class OBJSampleState extends SampleState {
 
 	private OBJLoader[] mObj = new OBJLoader[4];
 	private LightProgram mLightProgram;
+	private DefaultObjShader mObjProgram;
 	private int mCurObjIndex = 0;
 	
 	@Override
 	protected void initGraphics() {
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
+		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D));
 	}
 	
 	
@@ -65,13 +68,13 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.setWhite();
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
 		mGraphics3D.setCameraAlphaBeta((float)(mStateTimer*0.05f),0.45f,2);
-//		if(false) {
+		if(true) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);
 			mLightProgram.setLightProperties(0.1f, 1, 0, 1);
-//		}else{
-//			
-//		}
+		}else{
+			mGraphics3D.setShaderProgram(mObjProgram);
+		}
 		mGraphics.switchCulling(false);
 		mGraphics.switchZBuffer(true);
 		mGraphics3D.resetGlobalTransform();

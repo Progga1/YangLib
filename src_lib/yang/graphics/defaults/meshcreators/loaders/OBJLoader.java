@@ -11,10 +11,10 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
+import yang.graphics.programs.GLProgram;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
-import yang.model.DebugYang;
 import yang.util.NonConcurrentList;
 import yang.util.filereader.TokenReader;
 
@@ -303,6 +303,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 
 		mTranslator.prepareDraw();
 		mTranslator.mFlushDisabled = true;
+		GLProgram program = mGraphics.mCurrentProgram.mProgram;
 		for(OBJMaterialSection matSec:mMaterialSections) {
 			mTranslator.bindTexture(matSec.mMaterial.mDiffuseTexture);
 			mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);

@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 import javax.media.opengl.GL2ES2;
 
 import yang.graphics.defaults.DefaultPCGLProgram;
+import yang.math.objects.Vector3f;
 import yang.util.Util;
 
 import com.jogamp.common.nio.Buffers;
@@ -133,6 +134,11 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	@Override
 	public void setUniform3f(int handle, float[] values) {
 		gl2.glUniform3f(handle, values[0],values[1],values[2]);
+	}
+	
+	@Override
+	public void setUniform3f(int handle, Vector3f vector) {
+		gl2.glUniform3f(handle, vector.mX,vector.mY,vector.mZ);
 	}
 
 	@Override

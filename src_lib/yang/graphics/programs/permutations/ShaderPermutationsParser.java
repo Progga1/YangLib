@@ -42,6 +42,13 @@ public class ShaderPermutationsParser {
 		}
 	}
 	
+	public void circumOp(String key, String prefix, String postfix) {
+		String var = mVariables.get(key);
+		if(mVariables==null)
+			throw new RuntimeException("Operation variable empty: "+key);
+		mVariables.put(key, prefix+var+postfix);
+	}
+	
 	public void incVariable(String key,int value) {
 		String var = mVariables.get(key);
 		if(var==null || var.trim().equals(""))
