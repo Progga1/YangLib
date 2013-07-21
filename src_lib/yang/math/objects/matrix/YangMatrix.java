@@ -184,6 +184,29 @@ public class YangMatrix {
 		return MatrixOps.invert(target,mMatrix,mTempMat1,mTempMat2);
 	}
 	
+	//TODO very inefficient!
+	public boolean asNormalTransform(float[] target) {
+		if(!refreshInverted())
+			return false;
+		target[0] = mInverted[0];
+		target[1] = mInverted[4];
+		target[2] = mInverted[8];
+		target[3] = 0;
+		target[4] = mInverted[1];
+		target[5] = mInverted[5];
+		target[6] = mInverted[9];
+		target[7] = 0;
+		target[8] = mInverted[2];
+		target[9] = mInverted[6];
+		target[10] = mInverted[10];
+		target[11] = 0;
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
+		return true;
+	}
+	
 	public boolean refreshInverted() {
 		if(mInverted==null)
 			mInverted = new float[16];
@@ -362,6 +385,25 @@ public class YangMatrix {
 	@Override
 	public String toString() {
 		return MatrixOps.matToString(mMatrix);
+	}
+
+	public static void identity(float[] matrix) {
+		matrix[0] = 1;
+		matrix[1] = 0;
+		matrix[2] = 0;
+		matrix[3] = 0;
+		matrix[4] = 0;
+		matrix[5] = 1;
+		matrix[6] = 0;
+		matrix[7] = 0;
+		matrix[8] = 0;
+		matrix[9] = 0;
+		matrix[10] = 1;
+		matrix[11] = 0;
+		matrix[12] = 0;
+		matrix[13] = 0;
+		matrix[14] = 0;
+		matrix[15] = 1;
 	}
 	
 }

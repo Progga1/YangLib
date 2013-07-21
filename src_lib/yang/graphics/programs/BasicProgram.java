@@ -53,8 +53,9 @@ public class BasicProgram extends AbstractProgram {
 			"	gl_FragColor = texture2D(texSampler, vec2(texCoord.x,texCoord.y)) * color;\r\n" +
 			"}\r\n";
 	
-	public int mWorldTransformHandle = -1;
 	public int mProjHandle = -1;
+	public int mWorldTransformHandle = -1;
+	public int mNormalTransformHandle = -1;
 	public int mPositionHandle = -1;
 	public int mTextureHandle = -1;
 	public int mColorHandle = -1;
@@ -76,6 +77,7 @@ public class BasicProgram extends AbstractProgram {
 	protected void initHandles() {
 		mPositionHandle = mProgram.getAttributeLocation("vPosition");
 		mWorldTransformHandle = mProgram.getUniformLocation("worldTransform");
+		mNormalTransformHandle = mProgram.getUniformLocation("normalTransform");
 		mProjHandle = mProgram.getUniformLocation("projTransform");
 		mTextureHandle = mProgram.getAttributeLocation("vTexture");
 		mColorHandle = mProgram.getAttributeLocation("vColor");
@@ -102,6 +104,11 @@ public class BasicProgram extends AbstractProgram {
 	public void setWorldTransform(float[] worldMatrix) {
 		if(mHasWorldTransform)
 			mProgram.setUniformMatrix(mWorldTransformHandle, worldMatrix);
+	}
+	
+	public void setNormalTransform(float[] normalMatrix) {
+		if(mNormalTransformHandle>=0)
+			mProgram.setUniformMatrix(mNormalTransformHandle, normalMatrix);
 	}
 	
 	public void setAmbientColor(float[] color) {

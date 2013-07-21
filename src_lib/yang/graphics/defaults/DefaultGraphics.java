@@ -150,6 +150,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 				if (program.mHasWorldTransform)
 					program.setWorldTransform(MatrixOps.IDENTITY);
 			}
+			if(program.mNormalTransformHandle>=0) {
+				refreshNormalTransform();
+				program.setNormalTransform(mNormalTransform);
+			}
 		}
 	}
 

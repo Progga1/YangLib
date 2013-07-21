@@ -36,6 +36,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public YangMatrix mCameraProjectionMatrix;
 	protected YangMatrix mResultTransformationMatrix;
 	public YangMatrix mCurProjTransform;
+	public float[] mNormalTransform;
 	protected float[] invGameProjection;
 	
 	//State
@@ -80,6 +81,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mWorldTransform.loadIdentity();
 		mCameraProjectionMatrix = new YangMatrix();
 		mResultTransformationMatrix = new YangMatrix();
+		mNormalTransform = new float[16];
 		mInterTexTransf = new YangMatrixRectOps();
 		mIdentity = new YangMatrix();
 		mIdentity.loadIdentity();
@@ -141,6 +143,16 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	
 	public void bindTextureInHolder(TextureHolder textureHolder) {
 		mTranslator.bindTextureInHolder(textureHolder);
+	}
+	
+	public boolean refreshNormalTransform() {
+		if(mWorldTransformEnabled) {
+			if(!mWorldTransform.asNormalTransform(mNormalTransform))
+				return false;
+		}else{
+			YangMatrix.identity(mNormalTransform);
+		}
+		return true;
 	}
 	
 	public boolean setShaderProgram(ShaderType program) {
