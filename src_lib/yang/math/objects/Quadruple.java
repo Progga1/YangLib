@@ -47,6 +47,13 @@ public class Quadruple {
 		mValues[3] = preface.mValues[3];
 	}
 	
+	public void set(float[] prefaceValues) {
+		mValues[0] = prefaceValues[0];
+		mValues[1] = prefaceValues[1];
+		mValues[2] = prefaceValues[2];
+		mValues[3] = prefaceValues[3];
+	}
+	
 	public void add(float v1,float v2,float v3,float v4) {
 		mValues[0] += v1;
 		mValues[1] += v2;

@@ -34,8 +34,12 @@ public class ShaderPermutationsParser {
 		String var = mVariables.get(key);
 		if(var==null)
 			mVariables.put(key, value);
-		else
+		else{
+			if(op!="+" && op!="-") {
+				var = "("+var+")";
+			}
 			mVariables.put(key, var+op+value);
+		}
 	}
 	
 	public void incVariable(String key,int value) {
@@ -67,6 +71,11 @@ public class ShaderPermutationsParser {
 	
 	public void fsDeclaration(String declaration) {
 		mFSDeclarations.add(declaration);
+	}
+
+	public void addVarying(String type, String name) {
+		mVSDeclarations.addVarying(type, name);
+		mFSDeclarations.addVarying(type, name);
 	}
 	
 }

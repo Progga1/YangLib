@@ -18,7 +18,6 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MatrixOps;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
-import yang.model.PrintInterface;
 import yang.util.Util;
 
 public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> {
@@ -28,7 +27,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public static final float[] RECT_TEXTURECOORDS = { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
 	public static final TextureCoordinatesQuad RECT_TEXQUAD = new TextureCoordinatesQuad().init(0, 0, 1, 1);
 
-	public static final float[] RECT_COLORS = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+	public static final float[] RECT_WHITE = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
 	
 	public static final int ID_POSITIONS = 0;
 	public static final int ID_TEXTURES = 1;

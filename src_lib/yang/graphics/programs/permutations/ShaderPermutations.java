@@ -15,7 +15,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		
 		ShaderPermutationsParser parser = new ShaderPermutationsParser(this);
 		for(int i=0;i<subShaders.length;i++) {
-			subShaders[i].setVariables(parser);
+			subShaders[i].setVariables(parser,parser.mVSDeclarations,parser.mFSDeclarations);
 		}
 		
 		StringBuilder result = new StringBuilder(512);
@@ -45,8 +45,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append("}\r\n");
 		mFSSource = result.toString();
 		
-		System.out.println(mVSSource);
-		System.out.println("###\n"+mFSSource);
+		System.out.println(this);
 	}
 	
 	public void passData() {
@@ -63,6 +62,11 @@ public class ShaderPermutations extends Basic3DProgram {
 	@Override
 	public String getFragmentShader(AbstractGFXLoader gfxLoader) {
 		return mFSSource;
+	}
+	
+	@Override
+	public String toString() {
+		return "--------VERTEX-SHADER--------\n\n"+mVSSource+"\n\n--------FRAGMENT-SHADER--------\n\n"+mFSSource+"\n";
 	}
 	
 }
