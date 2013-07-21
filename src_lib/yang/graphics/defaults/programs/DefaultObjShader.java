@@ -5,6 +5,7 @@ import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
 import yang.graphics.defaults.programs.subshaders.CameraVectorSubShader;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
 import yang.graphics.defaults.programs.subshaders.LightSubShader;
+import yang.graphics.defaults.programs.subshaders.MtDiffuseSubShader;
 import yang.graphics.defaults.programs.subshaders.NormalSubShader;
 import yang.graphics.defaults.programs.subshaders.SpecularLightSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
@@ -19,20 +20,21 @@ public class DefaultObjShader extends ShaderPermutations {
 	public LightProperties mLightProperties;
 	public SpecularMatProperties mSpecMatProperties;
 	
-	public DefaultObjShader(Default3DGraphics graphics3D,LightProperties lightProperties) {
+	public DefaultObjShader(Default3DGraphics graphics3D,FloatColor ambientColor,LightProperties lightProperties) {
 		super();
-		mLightProperties = new LightProperties();
+		mLightProperties = lightProperties;
 		SubShader[] subShaders = new SubShader[]{
-				new BasicSubShader(true,true,true),new NormalSubShader(true,false),
-				new LightSubShader(mLightProperties),new DiffuseLightSubShader(),
+				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
+				new MtDiffuseSubShader(null),
+				new LightSubShader(lightProperties),new DiffuseLightSubShader(),
 				new CameraVectorSubShader(graphics3D.mCameraMatrix.mMatrix),new SpecularLightSubShader(null),
-				new AmbientSubShader(new FloatColor(graphics3D.mAmbientColor))
+				new AmbientSubShader(ambientColor)
 				};
-		super.initPermutations(subShaders);
+		super.initPermutations(subShaders);System.out.println(this);
 	}
 	
 	public DefaultObjShader(Default3DGraphics graphics3D) {
-		this(graphics3D,new LightProperties());
+		this(graphics3D,new FloatColor(0.1f,0.1f,0.1f),new LightProperties());
 	}
 	
 }

@@ -17,7 +17,7 @@ public class MtDiffuseSubShader extends SubShader{
 	
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
-		fsDecl.addUniform("vec4", "diffuseColor");
+		vsDecl.addUniform("vec4", "diffuseColor");
 		shaderParser.appendOp(VAR_VS_COLOR, "diffuseColor", "*");
 	}
 
@@ -28,7 +28,8 @@ public class MtDiffuseSubShader extends SubShader{
 
 	@Override
 	public void passData(GLProgram program) {
-		program.setUniform4f(mDiffuseColorHandle, mColor.mValues);
+		if(mColor!=null)
+			program.setUniform4f(mDiffuseColorHandle, mColor.mValues);
 	}
 	
 }

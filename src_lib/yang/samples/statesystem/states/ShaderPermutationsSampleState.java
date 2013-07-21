@@ -30,7 +30,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 		mSpecularProperties = new SpecularMatProperties();
 		mAmbientColor = new FloatColor(0.1f,0.1f,0.12f);
 		SubShader[] subShaders = new SubShader[]{
-				new BasicSubShader(true,true,true),new NormalSubShader(true,false),
+				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
 				new LightSubShader(mLightProperties),new DiffuseLightSubShader(),
 				new CameraVectorSubShader(mGraphics3D.mCameraMatrix.mMatrix),new SpecularLightSubShader(mSpecularProperties),
 				new AmbientSubShader(mAmbientColor)
@@ -52,6 +52,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 		mGraphics.switchZBuffer(true);
+		mGraphics.switchCulling(true);
 		mGraphics3D.setCameraAlphaBeta((float)mStateTimer*0.3f, 0.4f, 2);
 		mGraphics3D.setPerspectiveProjection(100);
 		mGraphics3D.setShaderProgram(mShader1);

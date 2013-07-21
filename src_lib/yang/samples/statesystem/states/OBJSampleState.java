@@ -5,8 +5,11 @@ import java.io.IOException;
 import yang.events.Keys;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
+import yang.graphics.defaults.meshcreators.loaders.ObjHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
+import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
+import yang.graphics.model.FloatColor;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.math.objects.matrix.YangMatrix;
 import yang.samples.statesystem.SampleState;
@@ -16,37 +19,41 @@ public class OBJSampleState extends SampleState {
 	private OBJLoader[] mObj = new OBJLoader[4];
 	private LightProgram mLightProgram;
 	private DefaultObjShader mObjProgram;
+	private LightProperties mLightProperties;
+	private FloatColor mAmbientColor;
 	private int mCurObjIndex = 0;
 	
 	@Override
 	protected void initGraphics() {
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
-		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D));
-	}
-	
-	
-	@Override
-	public void start() {
+		
+		
+		mAmbientColor = new FloatColor(0.1f,0.1f,0.1f);
+		mLightProperties = new LightProperties();
+		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties));
+		
 		try {
 			YangMatrix transform = new YangMatrix();
 			
 			transform.loadIdentity();
 			transform.scale(0.1f);
-			mObj[0] = new OBJLoader(mGraphics3D);
+			ObjHandles handles = new ObjHandles(mObjProgram);
+			mObj[0] = new OBJLoader(mGraphics3D,handles);
 			mObj[0].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
 			
 			transform.loadIdentity();
 			transform.scale(0.5f);
-			mObj[1] = new OBJLoader(mGraphics3D);
+			mObj[1] = new OBJLoader(mGraphics3D,handles);
 			mObj[1].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform);
 			
 			transform.loadIdentity();
-			transform.translate(0, 0.55f);
+			transform.translate(0, 0.35f);
+			transform.rotateY((float)Math.PI/2);
 			transform.scale(0.2f);
-			mObj[2] = new OBJLoader(mGraphics3D);
+			mObj[2] = new OBJLoader(mGraphics3D,handles);
 			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform);
 			
-			mObj[3] = new OBJLoader(mGraphics3D);
+			mObj[3] = new OBJLoader(mGraphics3D,handles);
 			mObj[3].loadOBJ(mResources.getInputStream("models/cube.obj"),mGFXLoader,null);
 			
 			for(OBJLoader obj:mObj) {
@@ -55,6 +62,12 @@ public class OBJSampleState extends SampleState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	@Override
+	public void start() {
+		
 	}
 	@Override
 	protected void step(float deltaTime) {
@@ -67,12 +80,13 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
-		mGraphics3D.setCameraAlphaBeta((float)(mStateTimer*0.05f),0.45f,2);
-		if(true) {
+		mGraphics3D.setCameraAlphaBeta((float)(0*0.05f),0.45f,2);
+		if(false) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);
 			mLightProgram.setLightProperties(0.1f, 1, 0, 1);
 		}else{
+			mLightProperties.mDirection.setAlphaBeta((float)mStateTimer, 0.5f);
 			mGraphics3D.setShaderProgram(mObjProgram);
 		}
 		mGraphics.switchCulling(false);

@@ -11,6 +11,8 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
+import yang.graphics.programs.AbstractProgram;
+import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
@@ -34,6 +36,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private static int[] normalIndices;
 	private static int[] smoothIndices;
 	private static int curVertexCount;
+
+	private ObjHandles mHandles;
 	
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
@@ -56,8 +60,9 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private int texId;
 	private int normId;
 	
-	public OBJLoader(DefaultGraphics<?> graphics) {
+	public OBJLoader(DefaultGraphics<?> graphics,ObjHandles handles) {
 		super(graphics);
+		mHandles = handles;
 		if(workingPositions==null) {
 			workingPositions = new float[MAX_VERTICES*3];
 			workingTexCoords = new float[MAX_VERTICES*2];
@@ -306,12 +311,24 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		GLProgram program = mGraphics.mCurrentProgram.mProgram;
 		for(OBJMaterialSection matSec:mMaterialSections) {
 			mTranslator.bindTexture(matSec.mMaterial.mDiffuseTexture);
-			mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
+			//mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
+			program.setUniform4f(mHandles.mDiffuseColorHandle, matSec.mMaterial.mDiffuseColor.mValues);
+			program.setUniform4f(mHandles.mSpecColorHandle, matSec.mMaterial.mSpecularColor.mValues);
+			program.setUniformFloat(mHandles.mSpecExponentHandle, matSec.mMaterial.mSpecularCoefficient);
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}
 		mTranslator.mFlushDisabled = false;
 		vertexBuffer.reset();
 	}
+	
+//	public void setShader(Basic3DProgram shader) {
+//		if(mShader==shader)
+//			return;
+//		mShader = shader;
+//		if(mHandles==null)
+//			mHandles = new ObjHandles();
+//		mHandles.setHandles(shader);
+//	}
 	
 	public void computeStaticNormals() {
 		if(mNormals==null || mNormals.length<mVertexCount*3) {

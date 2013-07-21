@@ -21,7 +21,7 @@ public class SpecularLightSubShader extends SubShader {
 		fsDecl.addUniform("vec4", "mtSpecColor");
 		fsDecl.addUniform("float", "mtSpecExponent");
 		shaderParser.appendLn(VAR_FS_MAIN,"vec3 specVector = reflect(camDir,normal)");
-		shaderParser.appendOp(VAR_FRAGCOLOR, "max(0.0,pow(-dot(specVector,lightDir),mtSpecExponent))*mtSpecColor", "+");
+		shaderParser.appendOp(VAR_FRAGCOLOR, "pow(max(0.0,-dot(specVector,lightDir)),mtSpecExponent)*mtSpecColor", "+");
 		//shaderParser.appendOp(VAR_FRAGCOLOR, "vec4(camDir,1.0)", "*");
 	}
 
