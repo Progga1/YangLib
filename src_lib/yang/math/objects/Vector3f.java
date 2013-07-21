@@ -4,14 +4,17 @@ public class Vector3f {
 
 	public final static Vector3f ZERO = new Vector3f(0,0,0);
 	public final static Vector3f RIGHT = new Vector3f(1,0,0);
+	public final static Vector3f LEFT = new Vector3f(-1,0,0);
 	public final static Vector3f UP = new Vector3f(0,1,0);
+	public final static Vector3f DOWN = new Vector3f(0,-1,0);
 	public final static Vector3f FORWARD = new Vector3f(0,0,1);
+	public final static Vector3f BACKWARD = new Vector3f(0,0,-1);
 	public final static Vector3f ONE = new Vector3f(1,1,1);
 	
 	public float mX,mY,mZ;
 	
 	public Vector3f() {
-		
+		set(0,0,0);
 	}
 	
 	public Vector3f(float x,float y,float z) {
@@ -30,6 +33,12 @@ public class Vector3f {
 		mX = x;
 		mY = y;
 		mZ = z;
+	}
+	
+	public void set(float[] array) {
+		mX = array[0];
+		mY = array[1];
+		mZ = array[2];
 	}
 	
 	public void add(float x,float y,float z) {
@@ -60,6 +69,15 @@ public class Vector3f {
 		mX *= scalar;
 		mY *= scalar;
 		mZ *= scalar;
+	}
+	
+	public void normalize() {
+		float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
+		if(d!=0) {
+			mX /= d;
+			mY /= d;
+			mZ /= d;
+		}
 	}
 	
 	public float dot(Vector3f vector) {

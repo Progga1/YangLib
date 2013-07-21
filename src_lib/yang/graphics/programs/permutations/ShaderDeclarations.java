@@ -11,14 +11,16 @@ public class ShaderDeclarations {
 	}
 
 	public ShaderDeclaration add(ShaderDeclaration declaration) {
-		mDeclarations.add(declaration);
-		return declaration;
+		ShaderDeclaration prev = getDeclaration(declaration.mDeclarationString);
+		if(prev==null) {
+			mDeclarations.add(declaration);
+			return declaration;
+		}else
+			return prev;
 	}
 	
 	public ShaderDeclaration add(int variableType,String type,String name) {
-		ShaderDeclaration decl = new ShaderDeclaration(variableType,type,name);
-		mDeclarations.add(decl);
-		return decl;
+		return add(new ShaderDeclaration(variableType,type,name));
 	}
 	
 	public ShaderDeclaration addUniform(String type,String name) {
@@ -33,12 +35,16 @@ public class ShaderDeclarations {
 		return add(ShaderDeclaration.T_VARYING,type,name);
 	}
 	
-	public boolean hasDeclaration(String declarationString) {
+	public ShaderDeclaration getDeclaration(String declarationString) {
 		for(ShaderDeclaration shaderDecl:mDeclarations) {
 			if(shaderDecl.mDeclarationString.equals(declarationString))
-				return true;
+				return shaderDecl;
 		}
-		return false;
+		return null;
+	}
+	
+	public boolean hasDeclaration(String declarationString) {
+		return getDeclaration(declarationString)!=null;
 	}
 	
 	public boolean hasDeclaration(int varType,String type,String name) {

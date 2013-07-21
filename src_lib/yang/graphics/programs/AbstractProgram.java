@@ -51,4 +51,8 @@ public abstract class AbstractProgram {
 		mProgram.activate();
 	}
 	
+	public void prepareDraw() {
+		
+	}
+	
 }

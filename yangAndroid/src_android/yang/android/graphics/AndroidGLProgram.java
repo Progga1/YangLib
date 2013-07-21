@@ -113,6 +113,11 @@ public class AndroidGLProgram extends GLProgram {
 	public void setUniform3f(int handle,float v1, float v2, float v3) {
 		GLES20.glUniform3f(handle, v1,v2,v3);
 	}
+	
+	@Override
+	public void setUniform3f(int handle, float[] values) {
+		GLES20.glUniform3f(handle, values[0],values[1],values[2]);
+	}
 
 	@Override
 	public void setUniform4f(int handle,float v1, float v2, float v3, float v4) {

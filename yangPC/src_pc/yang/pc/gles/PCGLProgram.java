@@ -129,6 +129,11 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	public void setUniform3f(int handle, float v1, float v2, float v3) {
 		gl2.glUniform3f(handle, v1,v2,v3);
 	}
+	
+	@Override
+	public void setUniform3f(int handle, float[] values) {
+		gl2.glUniform3f(handle, values[0],values[1],values[2]);
+	}
 
 	@Override
 	public void setUniform4f(int handle, float v1, float v2, float v3, float v4) {

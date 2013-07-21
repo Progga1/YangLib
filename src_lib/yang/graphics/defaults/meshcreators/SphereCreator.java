@@ -1,6 +1,7 @@
 package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.defaults.Default3DGraphics;
+import yang.math.Geometry;
 import yang.math.objects.matrix.YangMatrix;
 
 public class SphereCreator extends Grid3DCreator {
@@ -31,11 +32,17 @@ public class SphereCreator extends Grid3DCreator {
 					mGraphics.putPosition(x,y,z,transform);
 				else
 					mGraphics.putPosition(x,y,z);
+				float d = Geometry.getDistance(x, y, z);
+				if(d>0) {
+					d = 1/d;
+					mGraphics.putNormal(x*d,y*d,z*d);
+				}else
+					mGraphics.putNormal(0,1,0);
 			}
 		}
-		mGraphics.fillNormals(0);
-		if(loopNormals)
-			super.mergeNormals();
+		//mGraphics.fillNormals(0);
+//		if(loopNormals)
+//			super.mergeNormals();
 	}
 	
 	public void putPositions(float[][] radiusValues,boolean loopNormals) {

@@ -386,7 +386,11 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public void putPositionRect(float x1, float y1, float x2, float y2) {
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,x1,y1,x2,y2,mCurrentZ);
 	}
-
+	
+	public void putNormal(float nx,float ny,float nz) {
+		mCurrentVertexBuffer.putVec3(ID_NORMALS, nx, ny, nz);
+	}
+	
 	// ---PUT-TEXTURES---
 
 	public void putTextureArray(float[] texCoords) {
@@ -573,6 +577,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public void onPreDraw() {
 		updateProgramProjection();
+		mCurrentProgram.prepareDraw();
 	}
 
 	public void setTime(float time) {

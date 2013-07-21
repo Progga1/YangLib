@@ -1,6 +1,6 @@
 package yang.graphics.defaults;
 
-import javax.vecmath.Vector3f;
+
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.meshcreators.SphereCreator;
@@ -9,6 +9,7 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera3D;
+import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
 
@@ -209,7 +210,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			mCameraProjectionMatrix.multiply(mProjectionTransform,mCameraMatrix);
 	}
 	
-	public void putCubePart(float[] array,YangMatrix transform) {
+	public void putCubePart(float[] array,Vector3f norm,YangMatrix transform) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		if(transform==null)
 			mCurrentVertexBuffer.putArray(ID_POSITIONS,array);
@@ -218,15 +219,19 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		putTextureArray(RECT_TEXTURECOORDS);
 		putColorRect(mCurColor);
 		putSuppDataRect(mCurSuppData);
+		putNormal(norm.mX,norm.mY,norm.mZ);
+		putNormal(norm.mX,norm.mY,norm.mZ);
+		putNormal(norm.mX,norm.mY,norm.mZ);
+		putNormal(norm.mX,norm.mY,norm.mZ);
 	}
 	
 	public void drawCubeCentered(YangMatrix transform) {
-		putCubePart(CUBE_FRONT,transform);
-		putCubePart(CUBE_BACK,transform);
-		putCubePart(CUBE_LEFT,transform);
-		putCubePart(CUBE_RIGHT,transform);
-		putCubePart(CUBE_TOP,transform);
-		putCubePart(CUBE_BOTTOM,transform);
+		putCubePart(CUBE_FRONT,Vector3f.FORWARD, transform);
+		putCubePart(CUBE_BACK,Vector3f.BACKWARD,transform);
+		putCubePart(CUBE_LEFT,Vector3f.LEFT,transform);
+		putCubePart(CUBE_RIGHT,Vector3f.RIGHT,transform);
+		putCubePart(CUBE_TOP,Vector3f.UP,transform);
+		putCubePart(CUBE_BOTTOM,Vector3f.DOWN,transform);
 	}
 
 	public void drawCubeCentered(float x,float y,float z,float size) {
@@ -294,15 +299,15 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			vec2.set(mPositions.get(v3)-mPositions.get(v1), mPositions.get(v3+1)-mPositions.get(v1+1),mPositions.get(v3+2)-mPositions.get(v1+2));
 			vec3.cross(vec1, vec2);
 			vec3.normalize();
-			mNormals.put(v1, mNormals.get(v1)+vec3.x);
-			mNormals.put(v1+1, mNormals.get(v1+1)+vec3.y);
-			mNormals.put(v1+2, mNormals.get(v1+2)+vec3.z);
-			mNormals.put(v2, mNormals.get(v2)+vec3.x);
-			mNormals.put(v2+1, mNormals.get(v2+1)+vec3.y);
-			mNormals.put(v2+2, mNormals.get(v2+2)+vec3.z);
-			mNormals.put(v3, mNormals.get(v3)+vec3.x);
-			mNormals.put(v3+1, mNormals.get(v3+1)+vec3.y);
-			mNormals.put(v3+2, mNormals.get(v3+2)+vec3.z);
+			mNormals.put(v1, mNormals.get(v1)+vec3.mX);
+			mNormals.put(v1+1, mNormals.get(v1+1)+vec3.mY);
+			mNormals.put(v1+2, mNormals.get(v1+2)+vec3.mZ);
+			mNormals.put(v2, mNormals.get(v2)+vec3.mX);
+			mNormals.put(v2+1, mNormals.get(v2+1)+vec3.mY);
+			mNormals.put(v2+2, mNormals.get(v2+2)+vec3.mZ);
+			mNormals.put(v3, mNormals.get(v3)+vec3.mX);
+			mNormals.put(v3+1, mNormals.get(v3+1)+vec3.mY);
+			mNormals.put(v3+2, mNormals.get(v3+2)+vec3.mZ);
 			i++;
 		}
 		
@@ -313,9 +318,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			vec1.set(arr1);
 			vec1.normalize();
 			mNormals.position(mNormals.position()-3);
-			mNormals.put(vec1.x);
-			mNormals.put(vec1.y);
-			mNormals.put(vec1.z);
+			mNormals.put(vec1.mX);
+			mNormals.put(vec1.mY);
+			mNormals.put(vec1.mZ);
 		}
 	}
 
@@ -329,13 +334,13 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		vec1.add(vec1);
 		vec1.normalize();
 		mNormals.position(vertex1Id*POSITION_ELEM_SIZE);
-		mNormals.put(vec1.x);
-		mNormals.put(vec1.y);
-		mNormals.put(vec1.z);
+		mNormals.put(vec1.mX);
+		mNormals.put(vec1.mY);
+		mNormals.put(vec1.mZ);
 		mNormals.position(vertex2Id*POSITION_ELEM_SIZE);
-		mNormals.put(vec1.x);
-		mNormals.put(vec1.y);
-		mNormals.put(vec1.z);
+		mNormals.put(vec1.mX);
+		mNormals.put(vec1.mY);
+		mNormals.put(vec1.mZ);
 	}
 
 	@Override

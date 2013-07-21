@@ -1,5 +1,6 @@
 package yang.samples.statesystem.states;
 
+import yang.graphics.defaults.programs.subshaders.LightProperties;
 import yang.graphics.defaults.programs.subshaders.LightSubShader;
 import yang.graphics.defaults.programs.subshaders.NormalSubShader;
 import yang.graphics.programs.permutations.BasicSubShader;
@@ -12,11 +13,13 @@ import yang.samples.statesystem.SampleState;
 public class ShaderPermutationsSampleState extends SampleState {
 
 	private ShaderPermutations mShader1;
+	private LightProperties mLightProperties;
 	private Texture mGrassTex,mCubeTex;
 	
 	@Override
 	public void initGraphics() {
-		SubShader[] subShaders = new SubShader[]{new BasicSubShader(true,true,true),new NormalSubShader(true),new LightSubShader()};
+		mLightProperties = new LightProperties();
+		SubShader[] subShaders = new SubShader[]{new BasicSubShader(true,true,true),new NormalSubShader(true),new LightSubShader(mLightProperties)};
 
 		mShader1 = mGraphics.addProgram(new ShaderPermutations(subShaders));
 		mCubeTex = mGFXLoader.getImage("cube");
@@ -38,12 +41,11 @@ public class ShaderPermutationsSampleState extends SampleState {
 		mGraphics3D.setPerspectiveProjection(100);
 		mGraphics3D.setShaderProgram(mShader1);
 		
+		mLightProperties.mDirection.setAlphaBeta((float)mStateTimer,0.5f);
 		mGraphics.bindTexture(mGrassTex);
 		mGraphics3D.drawSphere(32, 16, -0.5f, 0, 0, 0.65f, 2, 1);
 		mGraphics.bindTexture(mCubeTex);
 		mGraphics3D.drawCubeCentered(0.5f, 0, 0.5f, 0.5f);
-		
-		
 	}
 
 	

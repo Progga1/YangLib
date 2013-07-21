@@ -65,6 +65,10 @@ public class ShaderPermutationsParser {
 		return getVariable(key,"");
 	}
 	
+	public boolean hasVariable(String key) {
+		return mVariables.containsKey(key);
+	}
+	
 	public void vsDeclaration(String declaration) {
 		mVSDeclarations.add(declaration);
 	}
@@ -76,6 +80,14 @@ public class ShaderPermutationsParser {
 	public void addVarying(String type, String name) {
 		mVSDeclarations.addVarying(type, name);
 		mFSDeclarations.addVarying(type, name);
+	}
+
+	public void appendVertexMain(String string) {
+		appendLn(SubShader.VAR_VS_MAIN,string);
+	}
+	
+	public void appendFragmentMain(String string) {
+		appendLn(SubShader.VAR_FS_MAIN,string);
 	}
 	
 }

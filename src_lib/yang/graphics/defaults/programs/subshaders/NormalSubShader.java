@@ -15,17 +15,18 @@ public class NormalSubShader extends SubShader {
 	
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
-		vsDecl.addAttribute("vec4", "vNormal");
+		vsDecl.addAttribute("vec3", "vNormal");
 		if(mPhongShading) {
-			shaderParser.addVarying("vec4","normal");
-			shaderParser.appendLn("VS_MAIN", "normal = vNormal");
+			shaderParser.addVarying("vec3","normal");
+			shaderParser.appendVertexMain("normal = vNormal");
+			//shaderParser.appendFragmentMain("normal = normalize(normal)");
 		}else{
 			
 		}
 	}
 
 	@Override
-	public void initHandles() {
+	public void initHandles(GLProgram program) {
 		
 	}
 	

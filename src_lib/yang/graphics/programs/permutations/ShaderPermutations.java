@@ -18,6 +18,12 @@ public class ShaderPermutations extends Basic3DProgram {
 			subShaders[i].setVariables(parser,parser.mVSDeclarations,parser.mFSDeclarations);
 		}
 		
+		boolean hasVertexColor = parser.hasVariable(SubShader.VAR_VS_COLOR);
+		if(hasVertexColor) {
+			parser.addVarying("vec4", "color");
+			parser.appendLn(SubShader.VAR_VS_MAIN, "color = "+parser.getVariable(SubShader.VAR_VS_COLOR));
+		}
+		
 		StringBuilder result = new StringBuilder(512);
 		result.append("#ANDROID precision mediump float;\r\n");
 		for(ShaderDeclaration declaration:parser.mVSDeclarations.mDeclarations) {
@@ -26,7 +32,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		}
 		result.append("\r\n");
 		result.append("void main() {\r\n");
-		result.append(parser.getVariable("VS_MAIN"));
+		result.append(parser.getVariable(SubShader.VAR_VS_MAIN));
 		result.append("\r\n}\r\n");
 		mVSSource = result.toString();
 		
@@ -38,9 +44,9 @@ public class ShaderPermutations extends Basic3DProgram {
 		}
 		result.append("\r\n");
 		result.append("void main() {\r\n");
-		result.append(parser.getVariable("FS_MAIN"));
-		result.append("\r\ngl_FragColor=");
-		result.append(parser.getVariable("COLOR","vec4(1.0,1.0,1.0,1.0)"));
+		result.append(parser.getVariable(SubShader.VAR_FS_MAIN));
+		result.append("\r\ngl_FragColor = ");
+		result.append(parser.getVariable(SubShader.VAR_FRAGCOLOR,"vec4(1.0,1.0,1.0,1.0)"));
 		result.append(LINE_END);
 		result.append("}\r\n");
 		mFSSource = result.toString();
@@ -48,7 +54,15 @@ public class ShaderPermutations extends Basic3DProgram {
 		System.out.println(this);
 	}
 	
-	public void passData() {
+	@Override
+	public void initHandles() {
+		super.initHandles();
+		for(SubShader subShader:mSubShaders) {
+			subShader.initHandles(mProgram);
+		}
+	}
+	
+	public void prepareDraw() {
 		for(SubShader subShader:mSubShaders) {
 			subShader.passData(mProgram);
 		}
