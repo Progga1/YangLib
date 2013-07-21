@@ -1,5 +1,6 @@
 package yang.samples.statesystem.states;
 
+import yang.graphics.defaults.programs.subshaders.LightSubShader;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
@@ -14,7 +15,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 	
 	@Override
 	public void initGraphics() {
-		SubShader[] subShaders = new SubShader[]{new BasicSubShader(true,true,true)};
+		SubShader[] subShaders = new SubShader[]{new BasicSubShader(true,true,true),new LightSubShader()};
 
 		mShader1 = mGraphics.addProgram(new ShaderPermutations(subShaders));
 		mCubeTex = mGFXLoader.getImage("cube");

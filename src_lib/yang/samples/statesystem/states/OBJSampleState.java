@@ -101,6 +101,7 @@ public class OBJSampleState extends SampleState {
 	public void stop() {
 		mGraphics3D.resetGlobalTransform();
 		mGraphics3D.setGlobalTransformEnabled(false);
+		mGraphics3D.setAmbientColor(1);
 	}
 	
 }

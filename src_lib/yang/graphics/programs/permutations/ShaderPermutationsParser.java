@@ -8,14 +8,14 @@ public class ShaderPermutationsParser {
 
 	private ShaderPermutations mPermutations;
 	public HashMap<String,String> mVariables;
-	public NonConcurrentList<String> mVSDeclarations;
-	public NonConcurrentList<String> mFSDeclarations;
+	public ShaderDeclarations mVSDeclarations;
+	public ShaderDeclarations mFSDeclarations;
 	
 	public ShaderPermutationsParser(ShaderPermutations permutations) {
 		mPermutations = permutations;
 		mVariables = new HashMap<String,String>(32);
-		mVSDeclarations = new NonConcurrentList<String>();
-		mFSDeclarations = new NonConcurrentList<String>();
+		mVSDeclarations = new ShaderDeclarations();
+		mFSDeclarations = new ShaderDeclarations();
 	}
 	
 	public void setVariable(String key,String value) {
@@ -60,31 +60,13 @@ public class ShaderPermutationsParser {
 	public String getVariable(String key) {
 		return getVariable(key,"");
 	}
-
-	public boolean hasVSDeclaration(String declaration) {
-		for(String vsDec:mVSDeclarations) {
-			if(vsDec.equals(declaration))
-				return true;
-		}
-		return false;
-	}
-	
-	public boolean hasFSDeclaration(String declaration) {
-		for(String fsDec:mFSDeclarations) {
-			if(fsDec.equals(declaration))
-				return true;
-		}
-		return false;
-	}
 	
 	public void vsDeclaration(String declaration) {
-		if(!hasVSDeclaration(declaration))
-			mVSDeclarations.add(declaration);
+		mVSDeclarations.add(declaration);
 	}
 	
 	public void fsDeclaration(String declaration) {
-		if(!hasFSDeclaration(declaration))
-			mFSDeclarations.add(declaration);
+		mFSDeclarations.add(declaration);
 	}
 	
 }

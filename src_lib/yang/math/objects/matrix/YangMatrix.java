@@ -3,6 +3,7 @@ package yang.math.objects.matrix;
 import yang.math.MatrixOps;
 import yang.math.objects.Vector3f;
 
+//TODO normal inversion only 3x3, autocreate inversed mat, save orthogonal etc information
 
 public class YangMatrix {
 

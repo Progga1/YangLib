@@ -208,6 +208,7 @@ public class GFXDebug implements PrintInterface {
 	
 	public void setErrorString(String error) {
 		mExceptionString = new DrawableString(error);
+		mExceptionString.setLeftTopJustified();
 		surfaceChanged();
 	}
 

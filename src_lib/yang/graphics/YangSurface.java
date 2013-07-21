@@ -90,6 +90,14 @@ public abstract class YangSurface {
 		mMacroFilename = null;
 	}
 	
+	protected void exceptionOccurred(Exception ex) {
+		mException = true;
+		mPaused = true;
+		if(mGFXDebug!=null)
+			mGFXDebug.setErrorString(ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
+		ex.printStackTrace();
+	}
+	
 	public void setMacroFilename(String filename) {
 		mMacroFilename = filename;
 	}
@@ -142,32 +150,35 @@ public abstract class YangSurface {
 		mEventQueue.setGraphics(mGraphics);
 		if(mResources.fileExists("strings/strings.xml"))
 			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
-		initGraphics();
-		
-		mDefaultMacroIO = new DefaultMacroIO(this);
-		if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
-			playMacro(mMacroFilename);
-		if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
-			String filename = "run.ym";
-			try {
-				recordMacro(filename);
-			} catch (FileNotFoundException e) {
-				DebugYang.printerr("Could not create '"+filename+"'");
+		try{
+			initGraphics();
+			
+			mDefaultMacroIO = new DefaultMacroIO(this);
+			if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
+				playMacro(mMacroFilename);
+			if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
+				String filename = "run.ym";
+				try {
+					recordMacro(filename);
+				} catch (FileNotFoundException e) {
+					DebugYang.printerr("Could not create '"+filename+"'");
+				}
 			}
+			
+			postInitGraphics();
+			
+			if(mInitCallback!=null)
+				mInitCallback.initializationFinished();
+			mInitialized = true;
+			synchronized(mInitializedNotifier) {
+				mInitializedNotifier.notifyAll();
+			}
+			
+			if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
+				mUpdateThread.start();
+		}catch(Exception ex) {
+			exceptionOccurred(ex);
 		}
-		
-		postInitGraphics();
-		
-		if(mInitCallback!=null)
-			mInitCallback.initializationFinished();
-		mInitialized = true;
-		synchronized(mInitializedNotifier) {
-			mInitializedNotifier.notifyAll();
-		}
-		
-		if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
-			mUpdateThread.start();
-		
 		
 	}
 	
@@ -182,9 +193,13 @@ public abstract class YangSurface {
 	}
 	
 	public void onSurfaceChanged(int width,int height) {
-		mGraphics.setSurfaceSize(width, height);
-		if(mGFXDebug!=null)
-			mGFXDebug.surfaceChanged();
+		try{
+			mGraphics.setSurfaceSize(width, height);
+			if(mGFXDebug!=null)
+				mGFXDebug.surfaceChanged();
+		}catch(Exception ex) {
+			exceptionOccurred(ex);
+		}
 	}
 	
 	public boolean isInitialized() {
@@ -227,14 +242,6 @@ public abstract class YangSurface {
 	protected void initDebugOutput(DefaultGraphics<?> graphics, BitmapFont font) {
 		mGFXDebug = new GFXDebug(this,graphics,font);
 		mGFXDebug.surfaceChanged();
-	}
-	
-	protected void exceptionOccurred(Exception ex) {
-		mException = true;
-		mPaused = true;
-		if(mGFXDebug!=null)
-			mGFXDebug.setErrorString(ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
-		ex.printStackTrace();
 	}
 	
 	protected void catchUp() {		

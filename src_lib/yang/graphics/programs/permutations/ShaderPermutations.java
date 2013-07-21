@@ -20,8 +20,8 @@ public class ShaderPermutations extends Basic3DProgram {
 		
 		StringBuilder result = new StringBuilder(512);
 		result.append("#ANDROID precision mediump float;\r\n");
-		for(String declaration:parser.mVSDeclarations) {
-			result.append(declaration);
+		for(ShaderDeclaration declaration:parser.mVSDeclarations.mDeclarations) {
+			result.append(declaration.mDeclarationString);
 			result.append(LINE_END);
 		}
 		result.append("\r\n");
@@ -32,8 +32,8 @@ public class ShaderPermutations extends Basic3DProgram {
 		
 		result = new StringBuilder(512);
 		result.append("#ANDROID precision mediump float;\r\n");
-		for(String declaration:parser.mFSDeclarations) {
-			result.append(declaration);
+		for(ShaderDeclaration declaration:parser.mFSDeclarations.mDeclarations) {
+			result.append(declaration.mDeclarationString);
 			result.append(LINE_END);
 		}
 		result.append("\r\n");

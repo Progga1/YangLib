@@ -75,7 +75,8 @@ public class TerrainCreator extends Grid3DCreator {
 							}
 						}
 					}
-					targetLine[x] = value/weightSum*2;
+					float sum = value/weightSum*2;
+					targetLine[x] = sum;
 					//targetLine[x] = max / middleWeight;
 				}
 			}
