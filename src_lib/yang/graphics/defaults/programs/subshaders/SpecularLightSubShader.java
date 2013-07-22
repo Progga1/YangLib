@@ -33,10 +33,13 @@ public class SpecularLightSubShader extends SubShader {
 
 	@Override
 	public final void passData(GLProgram program) {
-		if(mProperties!=null) {
-			program.setUniform4f(mSpecColorHandle, mProperties.mColor.mValues);
-			program.setUniformFloat(mSpecExponentHandle, mProperties.mExponent);
-		}
+		program.setUniform4f(mSpecColorHandle, mProperties.mColor.mValues);
+		program.setUniformFloat(mSpecExponentHandle, mProperties.mExponent);
+	}
+	
+	@Override
+	public boolean passesData() {
+		return mProperties!=null;
 	}
 
 }

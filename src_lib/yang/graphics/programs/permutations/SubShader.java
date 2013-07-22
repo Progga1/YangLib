@@ -10,7 +10,17 @@ public abstract class SubShader {
 	public static final String VAR_FS_MAIN = "FS_MAIN";
 	
 	public abstract void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl);
-	public abstract void initHandles(GLProgram program);
-	public abstract void passData(GLProgram program);
+	
+	public void initHandles(GLProgram program) {
+		
+	}
+	
+	public void passData(GLProgram program) {
+		
+	}
+	
+	public boolean passesData() {
+		return false;
+	}
 	
 }

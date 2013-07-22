@@ -28,8 +28,12 @@ public class MtDiffuseSubShader extends SubShader{
 
 	@Override
 	public void passData(GLProgram program) {
-		if(mColor!=null)
-			program.setUniform4f(mDiffuseColorHandle, mColor.mValues);
+		program.setUniform4f(mDiffuseColorHandle, mColor.mValues);
+	}
+	
+	@Override
+	public boolean passesData() {
+		return mColor!=null;
 	}
 	
 }

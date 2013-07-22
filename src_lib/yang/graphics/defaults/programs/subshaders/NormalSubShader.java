@@ -1,6 +1,5 @@
 package yang.graphics.defaults.programs.subshaders;
 
-import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
 import yang.graphics.programs.permutations.SubShader;
@@ -32,15 +31,5 @@ public class NormalSubShader extends SubShader {
 			else
 				shaderParser.appendVertexMain("vec3 normal = vNormal"); //TODO better solution
 		}
-	}
-
-	@Override
-	public void initHandles(GLProgram program) {
-		
-	}
-	
-	@Override
-	public void passData(GLProgram program) {
-		
 	}
 }

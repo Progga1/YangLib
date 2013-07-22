@@ -35,5 +35,10 @@ public class ToonSubShader extends SubShader {
 		program.setUniformInt(mRampSamplerHandle,1);
 		mGraphics.bindTextureNoFlush(mRampTex,1);
 	}
+	
+	@Override
+	public boolean passesData() {
+		return mRampTex!=null;
+	}
 
 }

@@ -13,13 +13,4 @@ public class DiffuseLightSubShader extends SubShader {
 		shaderParser.appendOp(VAR_FRAGCOLOR, "lgt", "*");
 	}
 
-	@Override
-	public void initHandles(GLProgram program) {
-
-	}
-
-	@Override
-	public void passData(GLProgram program) {
-		
-	}
 }

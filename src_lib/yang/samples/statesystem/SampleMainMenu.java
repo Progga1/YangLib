@@ -55,8 +55,8 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Particles", new ParticleSampleState());
 		addMenuItem("Texture Atlas", new TexAtlasSampleState());
 		addMenuItem("Sounds", new SoundSampleState());
-		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("Shader permutations", new ShaderPermutationsSampleState());
+		addMenuItem("Obj loader", new OBJSampleState());
 		refreshLayout();
 	}
 	

@@ -9,6 +9,7 @@ public class ShaderPermutations extends Basic3DProgram {
 	static final String LINE_END = ";\r\n";
 	
 	public SubShader[] mSubShaders;
+	public SubShader[] mDataPassingShaders;
 	public String mVSSource,mFSSource;
 	
 	public ShaderPermutations() {
@@ -59,20 +60,30 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append(LINE_END);
 		result.append("}\r\n");
 		mFSSource = result.toString();
-		System.out.println(this);
+		
 		return this;
 	}
 	
 	@Override
 	public void initHandles() {
 		super.initHandles();
+		int passingDataCount = 0;
 		for(SubShader subShader:mSubShaders) {
 			subShader.initHandles(mProgram);
+			if(subShader.passesData())
+				passingDataCount++;
+		}
+		mDataPassingShaders = new SubShader[passingDataCount];
+		int c=0;
+		for(SubShader subShader:mSubShaders) {
+			if(subShader.passesData()) {
+				mDataPassingShaders[c++] = subShader;
+			}
 		}
 	}
 	
 	public void prepareDraw() {
-		for(SubShader subShader:mSubShaders) {
+		for(SubShader subShader:mDataPassingShaders) {
 			subShader.passData(mProgram);
 		}
 	}

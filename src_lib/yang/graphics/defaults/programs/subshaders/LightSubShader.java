@@ -37,4 +37,9 @@ public class LightSubShader extends SubShader {
 		program.setUniform3f(mLightDiffuseHandle, mLightProperties.mDiffuse.mValues);
 	}
 	
+	@Override
+	public boolean passesData() {
+		return mLightProperties!=null;
+	}
+	
 }

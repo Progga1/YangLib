@@ -41,11 +41,6 @@ public class BasicSubShader extends SubShader {
 	}
 
 	@Override
-	public void passData(GLProgram program) {
-		
-	}
-
-	@Override
 	public void initHandles(GLProgram program) {
 		
 	}

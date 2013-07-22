@@ -32,4 +32,9 @@ public class AmbientSubShader extends SubShader {
 		program.setUniform4f(mAmbientColorHandle, mColor.mValues);
 	}
 
+	@Override
+	public boolean passesData() {
+		return mColor!=null;
+	}
+	
 }
