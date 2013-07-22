@@ -24,7 +24,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 
 	public static YangMaterial DEFAULT_MATERIAL = new YangMaterial();
 	
-	public static int MAX_VERTICES = 100000;
+	public static int MAX_VERTICES = 200000;
 	private static final String[] KEYWORDS = {"mtllib","usemtl"};
 	private static float[] workingPositions;
 	private static float[] workingNormals;

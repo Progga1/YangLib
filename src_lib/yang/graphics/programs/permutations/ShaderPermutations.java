@@ -2,6 +2,7 @@ package yang.graphics.programs.permutations;
 
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.translator.AbstractGFXLoader;
+import yang.util.Util;
 
 public class ShaderPermutations extends Basic3DProgram {
 
@@ -58,7 +59,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append(LINE_END);
 		result.append("}\r\n");
 		mFSSource = result.toString();
-		
+		System.out.println(this);
 		return this;
 	}
 	
@@ -88,7 +89,7 @@ public class ShaderPermutations extends Basic3DProgram {
 	
 	@Override
 	public String toString() {
-		return "--------VERTEX-SHADER--------\n\n"+mVSSource+"\n\n--------FRAGMENT-SHADER--------\n\n"+mFSSource+"\n";
+		return "--------VERTEX-SHADER--------\n\n"+Util.stringToLineNumbersString(mVSSource)+"\n\n--------FRAGMENT-SHADER--------\n\n"+Util.stringToLineNumbersString(mFSSource)+"\n";
 	}
 	
 }

@@ -19,10 +19,13 @@ public class NormalSubShader extends SubShader {
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
 		vsDecl.addAttribute("vec3", "vNormal");
 		if(mPhongShading) {
-			shaderParser.addVarying("vec3","normal");
-			shaderParser.appendVertexMain("normal = vNormal");
+			shaderParser.addVarying("vec3","varNormal");
+			shaderParser.appendVertexMain("varNormal = vNormal");
 			if(mNormalize)
-				shaderParser.appendFragmentMain("normal = normalize(normal)");
+				shaderParser.appendFragmentMain("vec3 normal = normalize(varNormal)");
+			else
+				shaderParser.appendFragmentMain("vec3 normal = varNormal");
+
 		}else{
 			if(mNormalize)
 				shaderParser.appendVertexMain("vec3 normal = normalize(vNormal)");

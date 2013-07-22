@@ -209,4 +209,25 @@ public class Util {
 		return name.substring(start,end);
 	}
 	
+	public static String minLengthString(String string,int minChars,char fillChar) {
+		while(string.length()<minChars)
+			string = fillChar+string;
+		return string;
+	}
+
+	public static String stringToLineNumbersString(String[] lines) {
+		StringBuilder result = new StringBuilder();
+		for(int i=0;i<lines.length;i++) {
+			result.append(minLengthString(""+i,3,' '));
+			result.append(": ");
+			result.append(lines[i]);
+			result.append("\n");
+		}
+		return result.toString();
+	}
+	
+	public static String stringToLineNumbersString(String string) {
+		return stringToLineNumbersString(string.split("\n"));
+	}
+	
 }
