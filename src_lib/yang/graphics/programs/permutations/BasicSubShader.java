@@ -22,7 +22,7 @@ public class BasicSubShader extends SubShader {
 		if(mUseTexture) {
 			shaderParser.vsDeclaration("attribute vec2 vTexture");
 			shaderParser.addVarying("vec2","texCoord");
-			shaderParser.fsDeclaration("uniform sampler2D texSampler");
+			fsDecl.addUniform("sampler2D","texSampler");
 			shaderParser.appendLn(VAR_FS_MAIN,"vec4 texCl=texture2D(texSampler, texCoord)");
 			shaderParser.appendOp(VAR_FRAGCOLOR, "texCl","*");
 			shaderParser.appendLn(VAR_VS_MAIN, "texCoord = vTexture");

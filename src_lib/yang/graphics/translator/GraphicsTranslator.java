@@ -274,6 +274,18 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		assert checkErrorInst("bind texture");
 	}
 	
+	public final void bindTextureNoFlush(Texture texture,int level) {
+		assert checkErrorInst("PRE bind texture");
+		if(texture!=mCurrentTextures[level] && (texture!=null || mCurrentTextures[level]!=mWhiteTexture)) {
+			if(texture==null)
+				texture = mWhiteTexture;
+			mCurrentTextures[level] = texture;
+			mTexBindCount++;
+			bindTexture(texture.getId(),level);
+		}
+		assert checkErrorInst("bind texture");
+	}
+	
 	public final void bindTexture(Texture texture) {
 		bindTexture(texture,0);
 	}

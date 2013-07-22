@@ -8,8 +8,14 @@ import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
 import yang.graphics.defaults.meshcreators.loaders.ObjHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
+import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
+import yang.graphics.defaults.programs.subshaders.ToonSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.model.FloatColor;
+import yang.graphics.programs.permutations.SubShader;
+import yang.graphics.textures.TextureProperties;
+import yang.graphics.textures.enums.TextureFilter;
+import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.math.objects.matrix.YangMatrix;
 import yang.samples.statesystem.SampleState;
@@ -18,7 +24,9 @@ public class OBJSampleState extends SampleState {
 
 	private OBJLoader[] mObj = new OBJLoader[4];
 	private LightProgram mLightProgram;
+	private DefaultObjShader mActiveShader;
 	private DefaultObjShader mObjProgram;
+	private DefaultObjShader mToonObjProgram;
 	private LightProperties mLightProperties;
 	private FloatColor mAmbientColor;
 	private int mCurObjIndex = 0;
@@ -27,10 +35,12 @@ public class OBJSampleState extends SampleState {
 	protected void initGraphics() {
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
 		
-		
-		mAmbientColor = new FloatColor(0.1f,0.1f,0.1f);
+		mAmbientColor = new FloatColor(0.2f,0.2f,0.2f);
 		mLightProperties = new LightProperties();
-		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties));
+		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties,new DiffuseLightSubShader()));
+		SubShader toonShader = new ToonSubShader(mGraphics,mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
+		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties,toonShader));
+		mActiveShader = mObjProgram;
 		
 		try {
 			YangMatrix transform = new YangMatrix();
@@ -47,8 +57,9 @@ public class OBJSampleState extends SampleState {
 			mObj[1].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform);
 			
 			transform.loadIdentity();
-			transform.translate(0, 0.35f);
+			transform.translate(0, 0.3f);
 			transform.rotateY((float)Math.PI/2);
+			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
 			mObj[2] = new OBJLoader(mGraphics3D,handles);
 			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform);
@@ -87,7 +98,7 @@ public class OBJSampleState extends SampleState {
 			mLightProgram.setLightProperties(0.1f, 1, 0, 1);
 		}else{
 			mLightProperties.mDirection.setAlphaBeta((float)mStateTimer, 0.5f);
-			mGraphics3D.setShaderProgram(mObjProgram);
+			mGraphics3D.setShaderProgram(mActiveShader);
 		}
 		mGraphics.switchCulling(false);
 		mGraphics.switchZBuffer(true);
@@ -112,6 +123,12 @@ public class OBJSampleState extends SampleState {
 			mCurObjIndex = (mCurObjIndex+1)%mObj.length;
 		if(mCurObjIndex<0)
 			mCurObjIndex = mObj.length-1;
+		if(code=='s') {
+			if(mActiveShader==mObjProgram)
+				mActiveShader = mToonObjProgram;
+			else
+				mActiveShader = mObjProgram;
+		}
 	}
 	
 	@Override
