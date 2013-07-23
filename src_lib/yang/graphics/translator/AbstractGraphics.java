@@ -81,7 +81,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mWorldTransform.loadIdentity();
 		mCameraProjectionMatrix = new YangMatrix();
 		mResultTransformationMatrix = new YangMatrix();
-		mNormalTransform = new float[16];
+		mNormalTransform = new float[9];
 		mInterTexTransf = new YangMatrixRectOps();
 		mIdentity = new YangMatrix();
 		mIdentity.loadIdentity();
@@ -147,10 +147,10 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	
 	public boolean refreshNormalTransform() {
 		if(mWorldTransformEnabled) {
-			if(!mWorldTransform.asNormalTransform(mNormalTransform))
+			if(!mWorldTransform.asNormalTransform3f(mNormalTransform))
 				return false;
 		}else{
-			YangMatrix.identity(mNormalTransform);
+			YangMatrix.identity3f(mNormalTransform);
 		}
 		return true;
 	}

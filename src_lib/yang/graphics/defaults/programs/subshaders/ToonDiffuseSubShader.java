@@ -7,13 +7,13 @@ import yang.graphics.programs.permutations.SubShader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 
-public class ToonSubShader extends SubShader {
+public class ToonDiffuseSubShader extends SubShader {
 
 	public Texture mRampTex;
 	public int mRampSamplerHandle;
 	private GraphicsTranslator mGraphics;
 	
-	public ToonSubShader(GraphicsTranslator graphics,Texture ramp) {
+	public ToonDiffuseSubShader(GraphicsTranslator graphics,Texture ramp) {
 		mRampTex = ramp;
 		mGraphics = graphics;
 	}

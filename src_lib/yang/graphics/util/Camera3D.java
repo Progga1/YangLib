@@ -59,5 +59,20 @@ public class Camera3D {
 		mLookDirection[2] = mLookVector[2]*dDist;
 		return mLookDirection;
 	}
+
+	public Camera3D setAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {
+		return set(focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance,
+				focusY+(float)Math.sin(beta)*distance,
+				focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance,
+				focusX,focusY,focusZ, 0,1,0);
+	}
+	
+	public Camera3D setAlphaBeta(float alpha, float beta, float distance) {
+		return setAlphaBeta(alpha,beta,distance,0,0,0);
+	}
+	
+	public Camera3D setAlphaBeta(float alpha, float beta) {
+		return setAlphaBeta(alpha,beta,1,0,0,0);
+	}
 	
 }

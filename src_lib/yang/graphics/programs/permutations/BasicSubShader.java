@@ -23,7 +23,7 @@ public class BasicSubShader extends SubShader {
 			shaderParser.vsDeclaration("attribute vec2 vTexture");
 			shaderParser.addVarying("vec2","texCoord");
 			fsDecl.addUniform("sampler2D","texSampler");
-			shaderParser.appendLn(VAR_FS_MAIN,"vec4 texCl=texture2D(texSampler, texCoord)");
+			shaderParser.appendLn(VAR_FS_MAIN,"vec4 texCl = texture2D(texSampler, texCoord)");
 			shaderParser.appendOp(VAR_FRAGCOLOR, "texCl","*");
 			shaderParser.appendLn(VAR_VS_MAIN, "texCoord = vTexture");
 		}
@@ -33,11 +33,15 @@ public class BasicSubShader extends SubShader {
 			shaderParser.addVarying("vec4","color");
 			shaderParser.appendOp(VAR_FRAGCOLOR, "color","*");
 		}
+		shaderParser.addVarying("vec4","worldPosition");
 		if(mWorldTransform) {
-			shaderParser.vsDeclaration("uniform mat4 worldTransform");
-			shaderParser.appendLn(VAR_VS_MAIN, "gl_Position = projTransform * worldTransform * vPosition;");
-		}else
-			shaderParser.appendLn(VAR_VS_MAIN, "gl_Position = projTransform * vPosition");
+			vsDecl.addUniform("mat4","worldTransform");
+			shaderParser.appendVertexMain("worldPosition = worldTransform * vPosition;");
+			shaderParser.appendVertexMain("gl_Position = projTransform * worldPosition;");
+		}else{
+			shaderParser.appendVertexMain("worldPosition = vPosition");
+			shaderParser.appendVertexMain("gl_Position = projTransform * vPosition");
+		}
 	}
 
 	@Override

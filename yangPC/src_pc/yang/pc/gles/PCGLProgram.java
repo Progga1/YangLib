@@ -117,8 +117,13 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	}
 
 	@Override
-	public void setUniformMatrix(int handle, float[] matrix) {
+	public void setUniformMatrix4f(int handle, float[] matrix) {
 		gl2.glUniformMatrix4fv(handle, 1, false, matrix, 0);
+	}
+	
+	@Override
+	public void setUniformMatrix3f(int handle, float[] matrix) {
+		gl2.glUniformMatrix3fv(handle, 1, false, matrix, 0);
 	}
 	
 	@Override

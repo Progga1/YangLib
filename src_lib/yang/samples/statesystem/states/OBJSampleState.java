@@ -9,7 +9,7 @@ import yang.graphics.defaults.meshcreators.loaders.ObjHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
-import yang.graphics.defaults.programs.subshaders.ToonSubShader;
+import yang.graphics.defaults.programs.subshaders.ToonDiffuseSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.SubShader;
@@ -17,6 +17,7 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.glconsts.GLMasks;
+import yang.graphics.util.Camera3D;
 import yang.math.objects.matrix.YangMatrix;
 import yang.samples.statesystem.SampleState;
 
@@ -30,6 +31,7 @@ public class OBJSampleState extends SampleState {
 	private LightProperties mLightProperties;
 	private FloatColor mAmbientColor;
 	private int mCurObjIndex = 0;
+	private Camera3D mCamera = new Camera3D();
 	
 	@Override
 	protected void initGraphics() {
@@ -37,9 +39,9 @@ public class OBJSampleState extends SampleState {
 		
 		mAmbientColor = new FloatColor(0.2f,0.2f,0.2f);
 		mLightProperties = new LightProperties();
-		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties,new DiffuseLightSubShader()));
-		SubShader toonShader = new ToonSubShader(mGraphics,mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
-		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties,toonShader));
+		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties,new DiffuseLightSubShader()));
+		SubShader toonShader = new ToonDiffuseSubShader(mGraphics,mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
+		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties,toonShader));
 		mActiveShader = mObjProgram;
 		
 		try {
@@ -88,16 +90,17 @@ public class OBJSampleState extends SampleState {
 	@Override
 	protected void draw() {
 		mGraphics.clear(0,0,0.1f,GLMasks.DEPTH_BUFFER_BIT);
+		//mGraphics.clear(0.4f,0.4f,0.9f,GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
-		mGraphics3D.setCameraAlphaBeta((float)(0*0.05f),0.45f,2);
+		mGraphics3D.setCamera(mCamera.setAlphaBeta((float)(0*0.05f),0.45f,2));
 		if(false) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);
 			mLightProgram.setLightProperties(0.1f, 1, 0, 1);
 		}else{
-			mLightProperties.mDirection.setAlphaBeta((float)mStateTimer, 0.5f);
+			mLightProperties.mDirection.setAlphaBeta((float)mStateTimer*2.6f, 0.5f);
 			mGraphics3D.setShaderProgram(mActiveShader);
 		}
 		mGraphics.switchCulling(false);
@@ -105,7 +108,7 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.resetGlobalTransform();
 		mGraphics3D.setGlobalTransformEnabled(true);
 		mGraphics3D.mWorldTransform.rotateX(-(float)mStateTimer*0.004f);
-		mGraphics3D.mWorldTransform.rotateY(-(float)mStateTimer*1.0f);
+		mGraphics3D.mWorldTransform.rotateY(-(float)mStateTimer*0.6f);
 		mObj[mCurObjIndex].draw();
 	}
 

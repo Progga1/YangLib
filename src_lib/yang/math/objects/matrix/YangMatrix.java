@@ -185,7 +185,7 @@ public class YangMatrix {
 	}
 	
 	//TODO very inefficient!
-	public boolean asNormalTransform(float[] target) {
+	public boolean asNormalTransform4f(float[] target) {
 		if(!refreshInverted())
 			return false;
 		target[0] = mInverted[0];
@@ -204,6 +204,21 @@ public class YangMatrix {
 		target[13] = 0;
 		target[14] = 0;
 		target[15] = 1;
+		return true;
+	}
+	
+	public boolean asNormalTransform3f(float[] target) {
+		if(!refreshInverted())
+			return false;
+		target[0] = mInverted[0];
+		target[1] = mInverted[4];
+		target[2] = mInverted[8];
+		target[3] = mInverted[1];
+		target[4] = mInverted[5];
+		target[5] = mInverted[9];
+		target[6] = mInverted[2];
+		target[7] = mInverted[6];
+		target[8] = mInverted[10];
 		return true;
 	}
 	
@@ -387,7 +402,7 @@ public class YangMatrix {
 		return MatrixOps.matToString(mMatrix);
 	}
 
-	public static void identity(float[] matrix) {
+	public static void identity4f(float[] matrix) {
 		matrix[0] = 1;
 		matrix[1] = 0;
 		matrix[2] = 0;
@@ -404,6 +419,18 @@ public class YangMatrix {
 		matrix[13] = 0;
 		matrix[14] = 0;
 		matrix[15] = 1;
+	}
+
+	public static void identity3f(float[] matrix) {
+		matrix[0] = 1;
+		matrix[1] = 0;
+		matrix[2] = 0;
+		matrix[3] = 0;
+		matrix[4] = 1;
+		matrix[5] = 0;
+		matrix[6] = 0;
+		matrix[7] = 0;
+		matrix[8] = 1;
 	}
 	
 }

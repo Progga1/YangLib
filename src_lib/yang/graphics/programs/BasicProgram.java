@@ -97,18 +97,18 @@ public class BasicProgram extends AbstractProgram {
 
 	public void setProjection(float[] mvpMatrix) {
 		assert mGraphics.preCheck("Set projection");
-		mProgram.setUniformMatrix(mProjHandle, mvpMatrix);
+		mProgram.setUniformMatrix4f(mProjHandle, mvpMatrix);
 		assert mGraphics.checkErrorInst("Set projection");
 	}
 	
 	public void setWorldTransform(float[] worldMatrix) {
 		if(mHasWorldTransform)
-			mProgram.setUniformMatrix(mWorldTransformHandle, worldMatrix);
+			mProgram.setUniformMatrix4f(mWorldTransformHandle, worldMatrix);
 	}
 	
 	public void setNormalTransform(float[] normalMatrix) {
 		if(mNormalTransformHandle>=0)
-			mProgram.setUniformMatrix(mNormalTransformHandle, normalMatrix);
+			mProgram.setUniformMatrix3f(mNormalTransformHandle, normalMatrix);
 	}
 	
 	public void setAmbientColor(float[] color) {

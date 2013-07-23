@@ -31,7 +31,7 @@ public class ShadowProgram extends LightProgram implements ShadowInterface{
 	}
 	
 	public void setDepthMapProjection(float[] depthTransformMatrix) {
-		mProgram.setUniformMatrix(mDepthMapTransformHandle, depthTransformMatrix);
+		mProgram.setUniformMatrix4f(mDepthMapTransformHandle, depthTransformMatrix);
 	}
 	
 }
