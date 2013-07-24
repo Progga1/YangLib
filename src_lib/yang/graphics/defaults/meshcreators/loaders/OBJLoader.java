@@ -3,6 +3,7 @@ package yang.graphics.defaults.meshcreators.loaders;
 import java.io.IOException;
 import java.io.InputStream;
 
+import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
@@ -11,8 +12,6 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
-import yang.graphics.programs.AbstractProgram;
-import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
@@ -35,7 +34,6 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private static int[] texCoordIndices;
 	private static int[] normalIndices;
 	private static int[] smoothIndices;
-	private static int curVertexCount;
 
 	private ObjHandles mHandles;
 	
@@ -47,11 +45,15 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public int[] mPosIndices;
 	public int[] mTexCoordIndices;
 	public int[] mNormIndices;
+	public int[] mSmoothIndices;
+	public int[] mRedirectIndices;
 	public short[] mIndices;
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
 	public NonConcurrentList<YangMaterialSet> mMaterialSets;
 	public NonConcurrentList<OBJMaterialSection> mMaterialSections;
+	
+	public DrawBatch mDrawBatch;
 	
 	private TokenReader mModelReader;
 	private int mIndexId = 0;
@@ -80,12 +82,12 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	}
 	
 	private void copyVertex(int index,int posIndex,int texIndex) {
-		redirectIndices[index] = curVertexCount;
+		redirectIndices[index] = mVertexCount;
 
-		redirectIndices[curVertexCount] = -1;
-		smoothIndices[curVertexCount] = curSmoothGroup;
+		redirectIndices[mVertexCount] = -1;
+		smoothIndices[mVertexCount] = curSmoothGroup;
 
-		curVertexCount++;
+		mVertexCount++;
 	}
 	
 	private void addIndex(int posIndex,int texIndex,int normIndex) {
@@ -94,7 +96,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			int redirect = redirectIndices[index];
 			if(redirect<0) {
 				copyVertex(index,posIndex,texIndex);
-				index = curVertexCount-1;
+				index = mVertexCount-1;
 				break;
 			}
 			index = redirect;			
@@ -123,7 +125,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		mMaterialSections.clear();
 		mMaterialSections.add(currentMatSec);
 		
-		curVertexCount = 0;
+		mVertexCount = 0;
 		curSmoothGroup = -1;
 		posId = 0;
 		texId = 0;
@@ -153,12 +155,12 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 								workingPositions[posId++] = posY;
 								workingPositions[posId++] = posZ;
 							}
-							redirectIndices[curVertexCount] = -1;
-							positionIndices[curVertexCount] = -1;
-							texCoordIndices[curVertexCount] = -1;
-							normalIndices[curVertexCount] = -1;
-							smoothIndices[curVertexCount] = Integer.MIN_VALUE;
-							curVertexCount++;
+							redirectIndices[mVertexCount] = -1;
+							positionIndices[mVertexCount] = -1;
+							texCoordIndices[mVertexCount] = -1;
+							normalIndices[mVertexCount] = -1;
+							smoothIndices[mVertexCount] = Integer.MIN_VALUE;
+							mVertexCount++;
 						}else if(fstC=='f') {
 							mModelReader.nextWord(false);
 							int baseInd = mModelReader.wordToInt(0,1)-1;
@@ -240,27 +242,47 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		currentMatSec.mEndIndex = mIndexId;
 		
 		mPositions = new float[posId];
-		mPosIndices = new int[curVertexCount];
+		mPosIndices = new int[mVertexCount];
 		System.arraycopy(workingPositions, 0, mPositions, 0, posId);
-		System.arraycopy(positionIndices, 0, mPosIndices, 0, curVertexCount);
+		System.arraycopy(positionIndices, 0, mPosIndices, 0, mVertexCount);
+
 		if(texId>0) {
 			mTexCoords = new float[texId];
-			mTexCoordIndices = new int[curVertexCount];
+			mTexCoordIndices = new int[mVertexCount];
 			System.arraycopy(workingTexCoords, 0, mTexCoords, 0, texId);
-			System.arraycopy(texCoordIndices, 0, mTexCoordIndices, 0, curVertexCount);
+			System.arraycopy(texCoordIndices, 0, mTexCoordIndices, 0, mVertexCount);
 		}
 		if(normId>0) {
 			mNormals = new float[normId];
-			mNormIndices = new int[curVertexCount];
+			mNormIndices = new int[mVertexCount];
 			System.arraycopy(workingNormals, 0, mNormals, 0, normId);
-			System.arraycopy(normalIndices, 0, mNormIndices, 0, curVertexCount);
+			System.arraycopy(normalIndices, 0, mNormIndices, 0, mVertexCount);
 		}
 		
 		mIndices = new short[mIndexId];
 		System.arraycopy(workingIndices, 0, mIndices, 0, mIndexId);
+		mSmoothIndices = new int[mIndices.length];
+		System.arraycopy(smoothIndices, 0, mSmoothIndices, 0, mSmoothIndices.length);
+		mRedirectIndices = new int[mIndices.length];
+		System.arraycopy(redirectIndices, 0, mRedirectIndices, 0, mRedirectIndices.length);
 		
-		mVertexCount = curVertexCount;
 		mIndexCount = mIndexId;
+	}
+	
+	private void drawBuffer(IndexedVertexBuffer vertexBuffer) {
+		mTranslator.prepareDraw();
+		mTranslator.mFlushDisabled = true;
+		GLProgram program = mGraphics.mCurrentProgram.mProgram;
+		for(OBJMaterialSection matSec:mMaterialSections) {
+			mTranslator.bindTexture(matSec.mMaterial.mDiffuseTexture);
+			//mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
+			program.setUniform4f(mHandles.mDiffuseColorHandle, matSec.mMaterial.mDiffuseColor.mValues);
+			program.setUniform4f(mHandles.mSpecColorHandle, matSec.mMaterial.mSpecularColor.mValues);
+			program.setUniformFloat(mHandles.mSpecExponentHandle, matSec.mMaterial.mSpecularCoefficient);
+			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
+		}
+		mTranslator.mFlushDisabled = false;
+		vertexBuffer.reset();
 	}
 	
 	public void draw() {
@@ -306,19 +328,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			}
 		}
 
-		mTranslator.prepareDraw();
-		mTranslator.mFlushDisabled = true;
-		GLProgram program = mGraphics.mCurrentProgram.mProgram;
-		for(OBJMaterialSection matSec:mMaterialSections) {
-			mTranslator.bindTexture(matSec.mMaterial.mDiffuseTexture);
-			//mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
-			program.setUniform4f(mHandles.mDiffuseColorHandle, matSec.mMaterial.mDiffuseColor.mValues);
-			program.setUniform4f(mHandles.mSpecColorHandle, matSec.mMaterial.mSpecularColor.mValues);
-			program.setUniformFloat(mHandles.mSpecExponentHandle, matSec.mMaterial.mSpecularCoefficient);
-			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
-		}
-		mTranslator.mFlushDisabled = false;
-		vertexBuffer.reset();
+		drawBuffer(vertexBuffer);
 	}
 	
 //	public void setShader(Basic3DProgram shader) {
@@ -330,13 +340,48 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 //		mHandles.setHandles(shader);
 //	}
 	
+	public void createNormIndices() {
+		mNormIndices = new int[mVertexCount];
+		for(int i=0;i<mVertexCount;i++) {
+			mNormIndices[i] = -1;
+		}
+		int c = 0;
+		for(int i=0;i<mVertexCount;i++) {
+			if(mNormIndices[i]!=-1)
+				continue;
+			int smoothGroup = mSmoothIndices[i];
+			if(smoothGroup>=0) {
+				int redirect = mRedirectIndices[i];
+				while(redirect>=0) {
+					if(mSmoothIndices[redirect]==smoothGroup) {
+						mNormIndices[redirect] = c;
+					}
+					redirect = mRedirectIndices[redirect];
+				}
+			}
+			mNormIndices[i] = c;
+			c++;
+		}
+		if(mNormals==null || mNormals.length<c*3) {
+			mNormals = new float[c*3];
+		}
+	}
+	
+	protected void addToNormal(int i,float normX,float normY,float normZ) {
+		mNormals[i] += normX;
+		mNormals[i+1] += normY;
+		mNormals[i+2] += normZ;
+	}
+	
 	public void computeStaticNormals() {
-		if(mNormals==null || mNormals.length<mVertexCount*3) {
-			mNormals = new float[mVertexCount*3];
-		}else{
+		if(mNormIndices==null)
+			createNormIndices();
+//		if(mNormals==null || mNormals.length<mVertexCount*3) {
+//			mNormals = new float[mVertexCount*3];
+//		}else{
 			for(int i=0;i<mNormals.length;i++)
 				mNormals[i] = 0;
-		}
+//		}
 		int polyCount = mIndices.length/3;
 		for(int i=0;i<polyCount;i++) {
 			int i1 = mPosIndices[mIndices[i*3]]*3;
@@ -358,18 +403,12 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			crossX *= crossMagn;
 			crossY *= crossMagn;
 			crossZ *= crossMagn;
-			i1 = mIndices[i*3]*3;
-			i2 = mIndices[i*3+1]*3;
-			i3 = mIndices[i*3+2]*3;
-			mNormals[i1] += crossX;
-			mNormals[i1+1] += crossY;
-			mNormals[i1+2] += crossZ;
-			mNormals[i2] += crossX;
-			mNormals[i2+1] += crossY;
-			mNormals[i2+2] += crossZ;			
-			mNormals[i3] += crossX;
-			mNormals[i3+1] += crossY;
-			mNormals[i3+2] += crossZ;
+			i1 = mNormIndices[mIndices[i*3]]*3;
+			i2 = mNormIndices[mIndices[i*3+1]]*3;
+			i3 = mNormIndices[mIndices[i*3+2]]*3;
+			addToNormal(i1,crossX,crossY,crossZ);
+			addToNormal(i2,crossX,crossY,crossZ);
+			addToNormal(i3,crossX,crossY,crossZ);
 		}
 
 		for(int n=0;n<mNormals.length;n+=3) {

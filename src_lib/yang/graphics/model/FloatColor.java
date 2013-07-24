@@ -39,7 +39,7 @@ public class FloatColor extends Quadruple {
 		set(values);
 	}
 	
-	public FloatColor(FloatColor preface) {
+	public FloatColor(Quadruple preface) {
 		set(preface);
 	}
 	

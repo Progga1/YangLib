@@ -21,6 +21,11 @@ public class Quadruple {
 		set(v1,v2,v3,v4);
 	}
 	
+	public Quadruple(float[] values) {
+		this();
+		set(values);
+	}
+	
 	@Override
 	public String toString()
 	{
@@ -99,6 +104,11 @@ public class Quadruple {
 		mValues[1] = quad1.mValues[1]*dWeight+quad2.mValues[1]*weight;
 		mValues[2] = quad1.mValues[2]*dWeight+quad2.mValues[2]*weight;
 		mValues[3] = quad1.mValues[3]*dWeight+quad2.mValues[3]*weight;
+	}
+	
+	@Override
+	public Quadruple clone() {
+		return new Quadruple(mValues);
 	}
 	
 }

@@ -8,7 +8,7 @@ public class YangMaterial {
 	public String mName;
 	public Texture mDiffuseTexture = null;
 	public FloatColor mDiffuseColor = FloatColor.WHITE.clone();
-	public FloatColor mSpecularColor = FloatColor.BLACK.clone();
+	public FloatColor mSpecularColor = new FloatColor(FloatColor.ZERO);
 	public FloatColor mAmbientColor = FloatColor.GRAY.clone();
 	public FloatColor mEmissiveColor = FloatColor.BLACK.clone();
 	public float mSpecularCoefficient = 10;

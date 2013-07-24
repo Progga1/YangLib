@@ -47,9 +47,10 @@ public class OBJSampleState extends SampleState {
 		try {
 			YangMatrix transform = new YangMatrix();
 			
+			ObjHandles handles = new ObjHandles(mObjProgram);
+			
 			transform.loadIdentity();
 			transform.scale(0.1f);
-			ObjHandles handles = new ObjHandles(mObjProgram);
 			mObj[0] = new OBJLoader(mGraphics3D,handles);
 			mObj[0].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
 			
@@ -67,13 +68,20 @@ public class OBJSampleState extends SampleState {
 			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform);
 			
 			transform.loadIdentity();
-			transform.scale(0.4f);	
-			transform.translate(0, -0.7f);
+			transform.scale(0.42f);	
+			transform.translate(0, -0.85f);
 			mObj[3] = new OBJLoader(mGraphics3D,handles);
 			mObj[3].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform);
 			
+//			transform.loadIdentity();
+//			transform.scale(0.5f);
+//			transform.translate(-0.5f, -0.5f);
+//			mObj[0] = new OBJLoader(mGraphics3D,handles);
+//			mObj[0].loadOBJ(mResources.getInputStream("models/cubetest.obj"),mGFXLoader,transform);
+			
 			for(OBJLoader obj:mObj) {
-				obj.computeStaticNormals();
+				if(obj!=null)
+					obj.computeStaticNormals();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
