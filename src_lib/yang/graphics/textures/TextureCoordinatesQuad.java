@@ -12,6 +12,10 @@ public class TextureCoordinatesQuad {
 	public static final int ROTATE_CW_90 = 1;
 	public static final int ROTATE_180 = 2;
 	public static final int ROTATE_CCW_90 = 3;
+	public static final int ID_X1 = 4;
+	public static final int ID_Y1 = 5;
+	public static final int ID_X2 = 2;
+	public static final int ID_Y2 = 3;
 	
 	public float mLeft;
 	public float mTop;
@@ -72,9 +76,9 @@ public class TextureCoordinatesQuad {
 		this.mHeight = y2-y1;
 		mBiasX = biasX;
 		mBiasY = biasY;
-		setRotation(rotation);
 		mRatio = 1;
 		mRatioWidth = mWidth/mHeight;
+		setRotation(rotation);
 		return this;
 	}
 	
@@ -163,6 +167,17 @@ public class TextureCoordinatesQuad {
 	
 	public float getBottom() {
 		return mTop+mHeight;
+	}
+	
+	public TextureCoordinatesQuad setBias(float biasX,float biasY) {
+		mBiasX = biasX;
+		mBiasY = biasY;
+		refreshCoordArray();
+		return this;
+	}
+	
+	public TextureCoordinatesQuad setBias(float bias) {
+		return setBias(bias,bias);
 	}
 	
 	@Override

@@ -66,8 +66,11 @@ public class OBJSampleState extends SampleState {
 			mObj[2] = new OBJLoader(mGraphics3D,handles);
 			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform);
 			
+			transform.loadIdentity();
+			transform.scale(0.4f);	
+			transform.translate(0, -0.7f);
 			mObj[3] = new OBJLoader(mGraphics3D,handles);
-			mObj[3].loadOBJ(mResources.getInputStream("models/cube.obj"),mGFXLoader,null);
+			mObj[3].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform);
 			
 			for(OBJLoader obj:mObj) {
 				obj.computeStaticNormals();

@@ -90,6 +90,14 @@ public abstract class TextureCoordinateSet {
 		return createTexCoordsPatched(patchX,patchY,patchSize,patchSize);
 	}
 	
+	public TextureCoordinatesQuad setBias(TextureCoordinatesQuad texCoords,float biasX,float biasY) {
+		return texCoords.setBias(biasX/mTexWidth,biasY/mTexHeight);
+	}
+	
+	public TextureCoordinatesQuad setBias(TextureCoordinatesQuad texCoords,float bias) {
+		return setBias(texCoords,bias,bias);
+	}
+	
 	public TextureCoordinatesQuad[] createTexCoordSequenceBias(float startX,float startY,float width,float height,int count,float biasX,float biasY) {
 		TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
 		for(int i=0;i<count;i++) {
