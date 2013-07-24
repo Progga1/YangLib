@@ -16,6 +16,8 @@ import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
+import yang.graphics.textures.enums.TextureFilter;
+import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.glconsts.GLBlendFuncs;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
@@ -201,7 +203,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(int i=0;i<BYTES;i++)
 			buf.put((byte)255);
 		if(mWhiteTexture==null)
-			mWhiteTexture = createTexture(buf, DIM,DIM, new TextureProperties());
+			mWhiteTexture = createTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
 		else
 			mWhiteTexture.update(buf);
 		buf = ByteBuffer.allocateDirect(BYTES);
@@ -211,7 +213,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			else
 				buf.put((byte)0);
 		if(mBlackTexture==null)
-			mBlackTexture = createTexture(buf, DIM,DIM, new TextureProperties());
+			mBlackTexture = createTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
 		else
 			mBlackTexture.update(buf);
 		assert checkErrorInst("Create def textures");

@@ -29,6 +29,10 @@ public class TextureProperties {
 		this(wrap,wrap,filter);
 	}
 	
+	public TextureProperties(TextureWrap wrap) {
+		this(wrap,DEFAULT_FILTER);
+	}
+	
 	public TextureProperties(TextureWrap wrapX,TextureWrap wrapY) {
 		this(wrapX,wrapY,DEFAULT_FILTER);
 	}

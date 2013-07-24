@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import yang.graphics.model.FloatColor;
+import yang.graphics.textures.TextureProperties;
+import yang.graphics.textures.enums.TextureFilter;
+import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.util.NonConcurrentList;
 import yang.util.filereader.TokenReader;
@@ -13,6 +16,8 @@ public class YangMaterialSet {
 	private static String[] KEYWORDS = {"newmtl","Ka","Kd","Ks","Ns","illum","map_Kd"};
 	
 	public NonConcurrentList<YangMaterial> mMaterials;
+	
+	public static TextureProperties diffuseTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
 	
 	private TokenReader reader;
 	private AbstractGFXLoader mGFXLoader;
@@ -61,7 +66,7 @@ public class YangMaterialSet {
 				String filename = reader.readString(false);
 				if(filename.length()>4 && filename.charAt(filename.length()-4)=='.')
 					filename = filename.substring(0,filename.length()-4);
-				curMat.mDiffuseTexture = mGFXLoader.getImage(filename);
+				curMat.mDiffuseTexture = mGFXLoader.getImage(filename,diffuseTextureProperties);
 				break;
 			}
 			reader.toLineEnd();

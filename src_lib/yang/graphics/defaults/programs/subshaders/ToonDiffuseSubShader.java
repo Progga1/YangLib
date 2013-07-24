@@ -21,7 +21,9 @@ public class ToonDiffuseSubShader extends SubShader {
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("sampler2D", "toonRamp");
-		shaderParser.appendFragmentMain("vec4 lgt = texture2D(toonRamp,vec2(lightIntens,0))*vec4(lightDiffuse,1.0)");
+		shaderParser.appendFragmentMain("vec4 lgt = texture2D(toonRamp,vec2(lightIntens,0.0))*vec4(lightDiffuse,1.0)");
+		//shaderParser.appendFragmentMain("vec4 lgt = texture2D(toonRamp,vec2(0.5,0.5))*vec4(lightDiffuse,1.0)");
+		
 		shaderParser.appendOp(VAR_FRAGCOLOR, "lgt", "*");
 	}
 

@@ -13,11 +13,11 @@ import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.programs.GLProgram;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
 import yang.util.NonConcurrentList;
-import yang.util.Util;
 import yang.util.filereader.TokenReader;
 
 public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
@@ -53,6 +53,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public Quadruple mSuppData = Quadruple.ZERO;
 	public NonConcurrentList<YangMaterialSet> mMaterialSets;
 	public NonConcurrentList<OBJMaterialSection> mMaterialSections;
+	public TextureProperties mTextureProperties;
 	
 	public DrawBatch mDrawBatch;
 	
@@ -63,9 +64,10 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private int texId;
 	private int normId;
 	
-	public OBJLoader(DefaultGraphics<?> graphics,ObjHandles handles) {
+	public OBJLoader(DefaultGraphics<?> graphics,ObjHandles handles,TextureProperties textureProperties) {
 		super(graphics);
 		mHandles = handles;
+		mTextureProperties = textureProperties;
 		if(workingPositions==null) {
 			workingPositions = new float[MAX_VERTICES*3];
 			workingTexCoords = new float[MAX_VERTICES*2];
@@ -80,6 +82,10 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 
 		mMaterialSets = new NonConcurrentList<YangMaterialSet>();
 		mMaterialSections = new NonConcurrentList<OBJMaterialSection>();
+	}
+	
+	public OBJLoader(DefaultGraphics<?> graphics,ObjHandles handles) {
+		this(graphics,handles,null);
 	}
 	
 	private void copyVertex(int index,int posIndex,int texIndex) {
@@ -121,6 +127,9 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	}
 
 	public void loadOBJ(InputStream modelStream,YangMaterialProvider materialProvider,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {
+		TextureProperties prevTexProps = YangMaterialSet.diffuseTextureProperties;
+		if(mTextureProperties!=null)
+			YangMaterialSet.diffuseTextureProperties = mTextureProperties;
 		mDrawBatch = null;
 		mModelReader = new TokenReader(modelStream);
 		OBJMaterialSection currentMatSec = new OBJMaterialSection(0,DEFAULT_MATERIAL);
@@ -276,6 +285,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		if(staticMesh) {
 			createDrawBatch(true);
 		}
+		
+		YangMaterialSet.diffuseTextureProperties = prevTexProps;
 	}
 	
 	private void drawBuffer(IndexedVertexBuffer vertexBuffer) {
@@ -369,8 +380,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public void createDrawBatch(boolean completelyStatic) {
 		mDrawBatch = new DrawBatch(mGraphics,mGraphics.createVertexBuffer(!completelyStatic, false, mIndexCount, mVertexCount));
 		updateDrawBatch();
-//		if(completelyStatic)
-//			freeDynamicData();
+		if(completelyStatic)
+			freeDynamicData();
 	}
 	
 	public void drawStatic() {

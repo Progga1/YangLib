@@ -56,7 +56,7 @@ public class OBJSampleState extends SampleState {
 			
 			transform.loadIdentity();
 			transform.scale(0.5f);
-			mObj[1] = new OBJLoader(mGraphics3D,handles);
+			mObj[1] = new OBJLoader(mGraphics3D,handles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
 			mObj[1].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
