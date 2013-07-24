@@ -52,12 +52,12 @@ public class OBJSampleState extends SampleState {
 			transform.loadIdentity();
 			transform.scale(0.1f);
 			mObj[0] = new OBJLoader(mGraphics3D,handles);
-			mObj[0].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform);
+			mObj[0].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.5f);
 			mObj[1] = new OBJLoader(mGraphics3D,handles);
-			mObj[1].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform);
+			mObj[1].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.translate(0, 0.3f);
@@ -65,24 +65,20 @@ public class OBJSampleState extends SampleState {
 			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
 			mObj[2] = new OBJLoader(mGraphics3D,handles);
-			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform);
+			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.42f);	
 			transform.translate(0, -0.85f);
 			mObj[3] = new OBJLoader(mGraphics3D,handles);
-			mObj[3].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform);
+			mObj[3].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
 			
 //			transform.loadIdentity();
 //			transform.scale(0.5f);
 //			transform.translate(-0.5f, -0.5f);
 //			mObj[0] = new OBJLoader(mGraphics3D,handles);
 //			mObj[0].loadOBJ(mResources.getInputStream("models/cubetest.obj"),mGFXLoader,transform);
-			
-			for(OBJLoader obj:mObj) {
-				if(obj!=null)
-					obj.computeStaticNormals();
-			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

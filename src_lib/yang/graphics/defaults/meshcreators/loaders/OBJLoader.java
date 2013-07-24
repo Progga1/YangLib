@@ -17,6 +17,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
 import yang.util.NonConcurrentList;
+import yang.util.Util;
 import yang.util.filereader.TokenReader;
 
 public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
@@ -119,7 +120,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		return null;
 	}
 
-	public void loadOBJ(InputStream modelStream,YangMaterialProvider materialProvider,YangMatrix transform) throws IOException {
+	public void loadOBJ(InputStream modelStream,YangMaterialProvider materialProvider,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {
+		mDrawBatch = null;
 		mModelReader = new TokenReader(modelStream);
 		OBJMaterialSection currentMatSec = new OBJMaterialSection(0,DEFAULT_MATERIAL);
 		mMaterialSections.clear();
@@ -267,9 +269,17 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		System.arraycopy(redirectIndices, 0, mRedirectIndices, 0, mRedirectIndices.length);
 		
 		mIndexCount = mIndexId;
+		
+		if(useNormals)
+			calculateNormals();
+		
+		if(staticMesh) {
+			createDrawBatch(true);
+		}
 	}
 	
 	private void drawBuffer(IndexedVertexBuffer vertexBuffer) {
+		mTranslator.setVertexBuffer(vertexBuffer);
 		mTranslator.prepareDraw();
 		mTranslator.mFlushDisabled = true;
 		GLProgram program = mGraphics.mCurrentProgram.mProgram;
@@ -283,13 +293,12 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		}
 		mTranslator.mFlushDisabled = false;
 		vertexBuffer.reset();
+		mGraphics.resetVertexBuffer();
 	}
 	
-	public void draw() {
-		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
-		
+	public void putBuffers(IndexedVertexBuffer vertexBuffer) {
 		vertexBuffer.putIndexArray(mIndices);
-		
+
 		for(int posInd:mPosIndices) {
 			int i = posInd*3;
 			if(i<0)
@@ -307,9 +316,9 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
 			}
 //		vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
+		
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, mVertexCount);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues,mVertexCount);
-		
 		
 		if(mGraphics instanceof Default3DGraphics) {
 			if(mNormals!=null && mNormals.length>0) {
@@ -324,11 +333,59 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
 					}
 			}else{
-				((Default3DGraphics)mGraphics).fillNormals(0);
+				Default3DGraphics.fillNormals(vertexBuffer,0);
 			}
 		}
+	}
+	
+	public void drawDynamic() {
+		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
+		
+		putBuffers(vertexBuffer);
 
 		drawBuffer(vertexBuffer);
+	}
+	
+	public void updateDrawBatch() {
+		if(mDrawBatch==null)
+			mDrawBatch = new DrawBatch(mGraphics,mGraphics.createVertexBuffer(false, false, mIndexCount, mVertexCount));
+		putBuffers(mDrawBatch.mVertexBuffer);
+		mDrawBatch.mVertexBuffer.finishUpdate();
+		mDrawBatch.mVertexBuffer.reset();
+	}
+	
+	public void freeDynamicData() {
+		mPositions = null;
+		mNormals = null;
+		mIndices = null;
+		mTexCoords = null;
+		mRedirectIndices = null;
+		mSmoothIndices = null;
+		mPosIndices = null;
+		mNormIndices = null;
+		mTexCoordIndices = null;
+	}
+	
+	public void createDrawBatch(boolean completelyStatic) {
+		mDrawBatch = new DrawBatch(mGraphics,mGraphics.createVertexBuffer(!completelyStatic, false, mIndexCount, mVertexCount));
+		updateDrawBatch();
+//		if(completelyStatic)
+//			freeDynamicData();
+	}
+	
+	public void drawStatic() {
+		if(mDrawBatch==null)
+			createDrawBatch(true);
+		mDrawBatch.mVertexBuffer.reset();
+
+		drawBuffer(mDrawBatch.mVertexBuffer);
+	}
+	
+	public void draw() {
+		if(mDrawBatch==null)
+			drawDynamic();
+		else
+			drawStatic();
 	}
 	
 //	public void setShader(Basic3DProgram shader) {
@@ -373,7 +430,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		mNormals[i+2] += normZ;
 	}
 	
-	public void computeStaticNormals() {
+	public void calculateNormals() {
 		if(mNormIndices==null)
 			createNormIndices();
 //		if(mNormals==null || mNormals.length<mVertexCount*3) {

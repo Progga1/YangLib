@@ -2,6 +2,9 @@ package yang.graphics.defaults;
 
 
 
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.meshcreators.SphereCreator;
 import yang.graphics.defaults.meshcreators.TerrainCreator;
@@ -97,7 +100,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
 	@Override
 	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices,int maxVertices) {
-		IndexedVertexBuffer vertexBuffer = mTranslator.createVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
+		IndexedVertexBuffer vertexBuffer = mTranslator.createUninitializedVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
 		vertexBuffer.init(new int[]{POSITION_ELEM_SIZE,2,4,4,NORMAL_ELEM_SIZE},NEUTRAL_ELEMENTS);
 		return vertexBuffer;
 	}
@@ -273,55 +276,63 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawSphere(verticesAlpha,verticesBeta,mInterMatrix,textureCoordFactorX,textureCoordFactorY);
 	}
 
-	private Vector3f vec1 = new Vector3f();
-	private Vector3f vec2 = new Vector3f();
-	private Vector3f vec3 = new Vector3f();
-	private float[] arr1 = new float[3];
-	private float[] arr2 = new float[3];
+	private static Vector3f vec1 = new Vector3f();
+	private static Vector3f vec2 = new Vector3f();
+	private static Vector3f vec3 = new Vector3f();
+	private static float[] arr1 = new float[3];
+	private static float[] arr2 = new float[3];
 	
-	public void fillNormals(int firstNormalId) {
+	public static void fillNormals(ShortBuffer indexBuffer,FloatBuffer positions,FloatBuffer normalsTarget,int firstNormalId) {
 		//Set zero
-		int endNormal = mPositions.position();
-		mNormals.position(firstNormalId*POSITION_ELEM_SIZE);
-		while(mNormals.position()<endNormal) {
-			mNormals.put(ZERO_FLOAT_3);
+		int endNormal = positions.position();
+		normalsTarget.position(firstNormalId*POSITION_ELEM_SIZE);
+		while(normalsTarget.position()<endNormal) {
+			normalsTarget.put(ZERO_FLOAT_3);
 		}
 		
 		//Compute cross products
-		int endIndex = mIndexBuffer.position()/3;
-		mIndexBuffer.rewind();
+		int endIndex = indexBuffer.position()/3;
+		indexBuffer.rewind();
 		int i=0;
 		while(i<endIndex) {
-			int v1 = mIndexBuffer.get()*POSITION_ELEM_SIZE;
-			int v2 = mIndexBuffer.get()*POSITION_ELEM_SIZE;
-			int v3 = mIndexBuffer.get()*POSITION_ELEM_SIZE;
-			vec1.set(mPositions.get(v2)-mPositions.get(v1), mPositions.get(v2+1)-mPositions.get(v1+1),mPositions.get(v2+2)-mPositions.get(v1+2));
-			vec2.set(mPositions.get(v3)-mPositions.get(v1), mPositions.get(v3+1)-mPositions.get(v1+1),mPositions.get(v3+2)-mPositions.get(v1+2));
+			int v1 = indexBuffer.get()*POSITION_ELEM_SIZE;
+			int v2 = indexBuffer.get()*POSITION_ELEM_SIZE;
+			int v3 = indexBuffer.get()*POSITION_ELEM_SIZE;
+			vec1.set(positions.get(v2)-positions.get(v1), positions.get(v2+1)-positions.get(v1+1),positions.get(v2+2)-positions.get(v1+2));
+			vec2.set(positions.get(v3)-positions.get(v1), positions.get(v3+1)-positions.get(v1+1),positions.get(v3+2)-positions.get(v1+2));
 			vec3.cross(vec1, vec2);
 			vec3.normalize();
-			mNormals.put(v1, mNormals.get(v1)+vec3.mX);
-			mNormals.put(v1+1, mNormals.get(v1+1)+vec3.mY);
-			mNormals.put(v1+2, mNormals.get(v1+2)+vec3.mZ);
-			mNormals.put(v2, mNormals.get(v2)+vec3.mX);
-			mNormals.put(v2+1, mNormals.get(v2+1)+vec3.mY);
-			mNormals.put(v2+2, mNormals.get(v2+2)+vec3.mZ);
-			mNormals.put(v3, mNormals.get(v3)+vec3.mX);
-			mNormals.put(v3+1, mNormals.get(v3+1)+vec3.mY);
-			mNormals.put(v3+2, mNormals.get(v3+2)+vec3.mZ);
+			normalsTarget.put(v1, normalsTarget.get(v1)+vec3.mX);
+			normalsTarget.put(v1+1, normalsTarget.get(v1+1)+vec3.mY);
+			normalsTarget.put(v1+2, normalsTarget.get(v1+2)+vec3.mZ);
+			normalsTarget.put(v2, normalsTarget.get(v2)+vec3.mX);
+			normalsTarget.put(v2+1, normalsTarget.get(v2+1)+vec3.mY);
+			normalsTarget.put(v2+2, normalsTarget.get(v2+2)+vec3.mZ);
+			normalsTarget.put(v3, normalsTarget.get(v3)+vec3.mX);
+			normalsTarget.put(v3+1, normalsTarget.get(v3+1)+vec3.mY);
+			normalsTarget.put(v3+2, normalsTarget.get(v3+2)+vec3.mZ);
 			i++;
 		}
 		
 		//Normalize
-		mNormals.position(firstNormalId*POSITION_ELEM_SIZE);
-		while(mNormals.position()<endNormal) {
-			mNormals.get(arr1);
+		normalsTarget.position(firstNormalId*POSITION_ELEM_SIZE);
+		while(normalsTarget.position()<endNormal) {
+			normalsTarget.get(arr1);
 			vec1.set(arr1);
 			vec1.normalize();
-			mNormals.position(mNormals.position()-3);
-			mNormals.put(vec1.mX);
-			mNormals.put(vec1.mY);
-			mNormals.put(vec1.mZ);
+			normalsTarget.position(normalsTarget.position()-3);
+			normalsTarget.put(vec1.mX);
+			normalsTarget.put(vec1.mY);
+			normalsTarget.put(vec1.mZ);
 		}
+	}
+	
+	public static void fillNormals(IndexedVertexBuffer vertexBuffer,int firstNormalId) {
+		fillNormals(vertexBuffer.mIndexBuffer,vertexBuffer.getFloatBuffer(ID_POSITIONS),vertexBuffer.getFloatBuffer(ID_NORMALS),firstNormalId);
+	}
+	
+	public void fillNormals(int firstNormalId) {
+		fillNormals(mIndexBuffer,mPositions,mNormals,firstNormalId);
 	}
 
 	public void mergeNormals(int vertex1Id, int vertex2Id) {

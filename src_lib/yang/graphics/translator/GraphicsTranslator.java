@@ -350,7 +350,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return -(y - mScreenHeight / 2) / mScreenHeight * 2 * mRatioY;
 	}
 	
-	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices,boolean dynamicIndices,int maxIndices,int maxVertices) {
+	public IndexedVertexBuffer createUninitializedVertexBuffer(boolean dynamicVertices,boolean dynamicIndices,int maxIndices,int maxVertices) {
 		return new UniversalVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
 	}
 	
@@ -421,7 +421,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		int vertexCount = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		if(vertexCount>0) {
 			prepareDraw();
-			assert preCheck("Draw vertices reset");
+			assert preCheck("Prepare draw");
+			mCurrentVertexBuffer.finishUpdate();
+			assert preCheck("Finish update");
 			drawVertices(0,vertexCount,mDrawMode);
 			mFlushCount++;
 			mDynamicPolygonCount += vertexCount/3;
@@ -432,10 +434,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public void prepareDraw() {
 		assert preCheck("Prepare draw vertices");
 		mCurDrawListener.onPreDraw();
-		assert preCheck("Draw vertices listener");
-		mCurrentVertexBuffer.finishUpdate();
 		assert preCheck("Draw vertices finish update");
 		mCurrentVertexBuffer.reset();
+		mCurDrawListener.bindBuffers();
 	}
 	
 	public final void measureTime() {
@@ -503,8 +504,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public void drawVertices(int bufferStart, int vertexCount,int mode) {
 		assert preCheck("Draw vertices");
-		mCurDrawListener.onPreDraw();
-		mCurDrawListener.bindBuffers();
 		mPolygonCount += vertexCount/3;
 		mDrawCount++;
 		ShortBuffer indexBuffer = mCurrentVertexBuffer.mIndexBuffer;
@@ -535,7 +534,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
 			drawDefaultVertices(bufferStart,vertexCount,mForceWireFrames,indexBuffer);
 		}
-
 	}
 	
 	public void setVertexBuffer(IndexedVertexBuffer vertexBuffer) {

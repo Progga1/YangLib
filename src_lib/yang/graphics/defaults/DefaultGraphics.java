@@ -87,7 +87,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	@Override
 	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices, int maxVertices) {
 		assert mTranslator.preCheck("create vertex buffer");
-		IndexedVertexBuffer vertexBuffer = mTranslator.createVertexBuffer(dynamicVertices, dynamicIndices, maxIndices, maxVertices);
+		IndexedVertexBuffer vertexBuffer = mTranslator.createUninitializedVertexBuffer(dynamicVertices, dynamicIndices, maxIndices, maxVertices);
 		vertexBuffer.init(new int[] { mPositionDimension, 2, 4, 4 }, DEFAULT_NEUTRAL_ELEMENTS);
 		assert mTranslator.checkErrorInst("Create vertex buffer");
 		return vertexBuffer;
