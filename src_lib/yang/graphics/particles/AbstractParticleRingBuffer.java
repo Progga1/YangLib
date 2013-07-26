@@ -74,7 +74,8 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		ParticleType particle = mParticles.get(mCurParticleIndex);
 		particle.spawn(posX, posY, posZ);
 		particle.mTextureCoordinates = texCoords;
-		particle.mScale = mDefaultScale;
+		particle.mScaleX = mDefaultScale;
+		particle.mScaleY = mDefaultScale;
 		mCurParticleIndex++;
 		if(mCurParticleIndex>=mMaxParticleCount)
 			mCurParticleIndex = 0;

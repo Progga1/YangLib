@@ -18,15 +18,15 @@ public class Particle {
 	public float[] mColor;
 
 	public float mRotation;
-	public float mScale;
-	
+	public float mScaleX,mScaleY;
 	
 	public Particle() {
 		mExists = false;
 		mColor = new float[4];
 		setColor(1,1,1,1);
 		mRotation = 0;
-		mScale = 1;
+		mScaleX = 1;
+		mScaleY = 1;
 		mScaleLifeTimeFactor = 1;
 		mTextureCoordinates = TextureCoordinatesQuad.FULL_TEXTURE;
 		mLifeTimeNormFactor = 0;
@@ -72,7 +72,16 @@ public class Particle {
 	}
 	
 	public void setScale(float minScale, float maxScale) {
-		mScale = MathFunc.random(minScale, maxScale);
+		mScaleX = MathFunc.random(minScale, maxScale);
+		mScaleY = mScaleX;
+	}
+	
+	public void setScaleX(float minScale, float maxScale) {
+		mScaleX = MathFunc.random(minScale, maxScale);
+	}
+	
+	public void setScaleY(float minScale, float maxScale) {
+		mScaleY = MathFunc.random(minScale, maxScale);
 	}
 	
 	public void setLifeTime(float lifeTime) {

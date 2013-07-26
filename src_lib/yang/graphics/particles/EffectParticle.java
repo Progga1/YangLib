@@ -19,7 +19,7 @@ public class EffectParticle extends PhysicalParticle {
 		mColor[3] += mAlphaV;
 		mRotation += mRotV;
 
-		if(mScale<=0 || mColor[3]<0)
+		if(mScaleX<=0 || mScaleY<=0 || mColor[3]<0)
 			mExists = false;
 	}
 	

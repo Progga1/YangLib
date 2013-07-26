@@ -25,11 +25,12 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 			for(ParticleType particle:mParticles) {
 				if(particle.mExists) {
 					float uScale;
-					if(mScaleLookUp!=null)
-						uScale = mScaleLookUp.get(particle.mNormLifeTime) * particle.mScale;
-					else
-						uScale = (1-particle.mNormLifeTime)*particle.mScale;
-					mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*mCelShading, particle.mRotation, particle.mTextureCoordinates);
+					if(mScaleLookUp!=null) {
+						uScale = mScaleLookUp.get(particle.mNormLifeTime);
+					}else{
+						uScale = (1-particle.mNormLifeTime);
+					}
+					mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*mCelShading*particle.mScaleX, uScale*mCelShading*particle.mScaleY, particle.mRotation, particle.mTextureCoordinates);
 				}
 			}
 		}
@@ -41,10 +42,10 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 				mGraphics.setColor(particle.mColor);
 				float uScale;
 				if(mScaleLookUp!=null)
-					uScale = mScaleLookUp.get(particle.mNormLifeTime) * particle.mScale;
+					uScale = mScaleLookUp.get(particle.mNormLifeTime);
 				else
-					uScale = (1-particle.mNormLifeTime)*particle.mScale;
-				mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale, particle.mRotation, particle.mTextureCoordinates);
+					uScale = (1-particle.mNormLifeTime);
+				mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*particle.mScaleX, uScale*particle.mScaleY, particle.mRotation, particle.mTextureCoordinates);
 			}
 		}
 	}

@@ -49,6 +49,7 @@ public class BillboardsCreator extends MeshCreator<Default3DGraphics>{
 		
 	}
 	
+	//TODO also for rotation
 	public void putBillboardPositionsXYScale(float x,float y,float z,float scaleX,float scaleY) {
 		mVertexBuffer.beginQuad(false);
 		scaleX *= 0.5f;
