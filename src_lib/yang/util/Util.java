@@ -230,4 +230,16 @@ public class Util {
 		return stringToLineNumbersString(string.split("\n"));
 	}
 	
+	public static int hexCharToInt(char hexChar) {
+		if(hexChar>='0' && hexChar<='9')
+			return hexChar-'0';
+		else if(hexChar>='A' && hexChar<='F')
+			return hexChar-'A'+10;
+		else if(hexChar>='a' && hexChar<='f')
+			return hexChar-'a'+10;
+		else
+			return -1;
+			
+	}
+	
 }

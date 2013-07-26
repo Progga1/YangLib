@@ -1,8 +1,10 @@
 package yang.android.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 import yang.systemdependent.AbstractResourceManager;
@@ -45,5 +47,10 @@ public class AndroidResourceManager extends AbstractResourceManager {
 			directory = directory.substring(0,directory.length()-1);
 		return mContext.getAssets().list(directory);
 	}
+	
+//	@Override
+//	public OutputStream getFileSystemOutputStream(String filename) throws FileNotFoundException {
+//		
+//	}
 
 }

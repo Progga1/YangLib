@@ -71,5 +71,9 @@ public class MathFunc {
 	public static boolean equals(float x, float y,float tolerance) {
 		return (Math.abs(x-y)<tolerance);
 	}
+
+	public static float randomAngle() {
+		return (float)(Math.random()*MathConst.PI2);
+	}
 	
 }

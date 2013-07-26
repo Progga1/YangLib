@@ -3,6 +3,7 @@ package yang.graphics.model;
 import java.nio.ByteBuffer;
 
 import yang.math.objects.Quadruple;
+import yang.util.Util;
 
 
 public class FloatColor extends Quadruple {
@@ -127,6 +128,20 @@ public class FloatColor extends Quadruple {
 
 	public void setAlpha(float alpha) {
 		mValues[3] = alpha;
+	}
+
+	public static FloatColor fromHex(String hexString) {
+		float[] values = new float[4];
+		values[3] = 1;
+		for(int i=0;i<hexString.length()/2 && i<4;i++) {
+			int c1 = Util.hexCharToInt(hexString.charAt(i*2));
+			int c2 = Util.hexCharToInt(hexString.charAt(i*2+1));
+			if(c1<0 || c2<0)
+				values[i] = 0;
+			else
+				values[i] = (c1*16+c2)/255f;
+		}
+		return new FloatColor(values);
 	}
 	
 }
