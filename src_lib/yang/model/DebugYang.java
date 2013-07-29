@@ -78,7 +78,7 @@ public class DebugYang {
 	}
 	
 	public static void printerr(Object message) {
-		printerr(1);
+		printerr(message,1);
 	}
 
 	public static void exception(IOException e) {

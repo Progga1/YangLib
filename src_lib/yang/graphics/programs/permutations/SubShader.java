@@ -1,6 +1,7 @@
 package yang.graphics.programs.permutations;
 
 import yang.graphics.programs.GLProgram;
+import yang.graphics.translator.GraphicsTranslator;
 
 public abstract class SubShader {
 
@@ -9,7 +10,13 @@ public abstract class SubShader {
 	public static final String VAR_VS_MAIN = "VS_MAIN";
 	public static final String VAR_FS_MAIN = "FS_MAIN";
 	
+	protected GraphicsTranslator mGraphics;
+	
 	public abstract void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl);
+	
+	public void setGraphics(GraphicsTranslator graphics) {
+		mGraphics = graphics;
+	}
 	
 	public void initHandles(GLProgram program) {
 		

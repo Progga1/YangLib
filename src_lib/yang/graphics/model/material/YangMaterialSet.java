@@ -13,11 +13,12 @@ import yang.util.filereader.TokenReader;
 
 public class YangMaterialSet {
 
-	private static String[] KEYWORDS = {"newmtl","Ka","Kd","Ks","Ns","illum","map_Kd"};
+	private static String[] KEYWORDS = {"newmtl","Ka","Kd","Ks","Ns","illum","map_Kd","map_Ks"};
 	
 	public NonConcurrentList<YangMaterial> mMaterials;
 	
 	public static TextureProperties diffuseTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
+	public static TextureProperties specularTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
 	
 	private TokenReader reader;
 	private AbstractGFXLoader mGFXLoader;
@@ -43,6 +44,7 @@ public class YangMaterialSet {
 		
 		while(!reader.eof()) {
 			reader.nextWord(true);
+			String filename;
 			switch(reader.pickWord(KEYWORDS)) {
 			case 0:
 				String name = reader.readString(false);
@@ -63,10 +65,12 @@ public class YangMaterialSet {
 				curMat.mSpecularCoefficient = reader.readFloat(false);
 				break;
 			case 6:
-				String filename = reader.readString(false);
-				if(filename.length()>4 && filename.charAt(filename.length()-4)=='.')
-					filename = filename.substring(0,filename.length()-4);
+				filename = reader.readString(false);
 				curMat.mDiffuseTexture = mGFXLoader.getImage(filename,diffuseTextureProperties);
+				break;
+			case 7:
+				filename = reader.readString(false);
+				curMat.mSpecularTexture = mGFXLoader.getImage(filename,specularTextureProperties);
 				break;
 			}
 			reader.toLineEnd();

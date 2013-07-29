@@ -76,6 +76,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	protected synchronized Texture getImage(String name,TextureProperties textureSettings, boolean redToAlpha) {
+		if(name.length()>4 && name.charAt(name.length()-4)=='.')
+			name = name.substring(0,name.length()-4);
 		Texture texture = mTextures.get(name);
 		
 		if (texture != null && texture.mSettings.equals(textureSettings))

@@ -40,7 +40,7 @@ public class OBJSampleState extends SampleState {
 		mAmbientColor = new FloatColor(0.2f,0.2f,0.2f);
 		mLightProperties = new LightProperties();
 		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties,new DiffuseLightSubShader()));
-		SubShader toonShader = new ToonDiffuseSubShader(mGraphics,mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
+		SubShader toonShader = new ToonDiffuseSubShader(mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
 		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties,toonShader));
 		mActiveShader = mObjProgram;
 		
@@ -48,30 +48,37 @@ public class OBJSampleState extends SampleState {
 			YangMatrix transform = new YangMatrix();
 			
 			ObjHandles handles = new ObjHandles(mObjProgram);
+			int o=-1;
 			
 			transform.loadIdentity();
 			transform.scale(0.1f);
-			mObj[0] = new OBJLoader(mGraphics3D,handles);
-			mObj[0].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
+			mObj[++o] = new OBJLoader(mGraphics3D,handles);
+			mObj[o].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
 			
-			transform.loadIdentity();
-			transform.scale(0.5f);
-			mObj[1] = new OBJLoader(mGraphics3D,handles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
-			mObj[1].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
+//			transform.loadIdentity();
+//			transform.scale(0.5f);
+//			mObj[++o] = new OBJLoader(mGraphics3D,handles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
+//			mObj[o].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.translate(0, 0.3f);
 			transform.rotateY((float)Math.PI/2);
 			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
-			mObj[2] = new OBJLoader(mGraphics3D,handles);
-			mObj[2].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform,true,true);
+			mObj[++o] = new OBJLoader(mGraphics3D,handles);
+			mObj[o].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.42f);	
 			transform.translate(0, -0.85f);
-			mObj[3] = new OBJLoader(mGraphics3D,handles);
-			mObj[3].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
+			mObj[++o] = new OBJLoader(mGraphics3D,handles);
+			mObj[o].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
+			
+			transform.loadIdentity();
+			transform.scale(1.2f);
+			transform.translate(0, -0.0f);
+			mObj[++o] = new OBJLoader(mGraphics3D,handles);
+			mObj[o].loadOBJ(mResources.getInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
 			
 //			transform.loadIdentity();
 //			transform.scale(0.5f);
@@ -101,7 +108,7 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
-		mGraphics3D.setCamera(mCamera.setAlphaBeta((float)(0*0.05f),0.45f,2));
+		mGraphics3D.setCamera(mCamera.setAlphaBeta((float)(0*0.05f),0.4f,2));
 		if(false) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);

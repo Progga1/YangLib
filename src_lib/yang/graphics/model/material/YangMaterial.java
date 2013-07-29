@@ -6,12 +6,14 @@ import yang.graphics.translator.Texture;
 public class YangMaterial {
 
 	public String mName;
-	public Texture mDiffuseTexture = null;
 	public FloatColor mDiffuseColor = FloatColor.WHITE.clone();
 	public FloatColor mSpecularColor = new FloatColor(FloatColor.ZERO);
 	public FloatColor mAmbientColor = FloatColor.GRAY.clone();
 	public FloatColor mEmissiveColor = FloatColor.BLACK.clone();
+	public Texture mDiffuseTexture = null;
+	public Texture mSpecularTexture = null;
 	public float mSpecularCoefficient = 10;
+
 	
 	@Override
 	public String toString() {

@@ -7,6 +7,8 @@ public class ObjHandles {
 
 	public int mDiffuseColorHandle;
 	public int mSpecColorHandle;
+	public int mSpecUseTexHandle;
+	public int mSpecTexSampler;
 	public int mSpecExponentHandle;
 	
 	public ObjHandles() {
@@ -22,6 +24,8 @@ public class ObjHandles {
 		mDiffuseColorHandle = program.getUniformLocation("diffuseColor");
 		mSpecColorHandle = program.getUniformLocation("mtSpecColor");
 		mSpecExponentHandle = program.getUniformLocation("mtSpecExponent");
+		mSpecUseTexHandle = program.getUniformLocation("mtSpecUseTex");
+		mSpecTexSampler = program.getUniformLocation("mtSpecSampler");
 		return this;
 	}
 	

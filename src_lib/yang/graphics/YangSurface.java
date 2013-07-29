@@ -24,6 +24,8 @@ import yang.util.Util;
 
 public abstract class YangSurface {
 	
+	public static boolean CATCH_EXCEPTIONS = true;
+	
 	public GraphicsTranslator mGraphics;
 	public StringsXML mStrings;
 	public AbstractResourceManager mResources;
@@ -91,6 +93,12 @@ public abstract class YangSurface {
 	}
 	
 	protected void exceptionOccurred(Exception ex) {
+		if(!CATCH_EXCEPTIONS) {
+			if(ex instanceof RuntimeException)
+				throw (RuntimeException)ex;
+			else
+				throw new RuntimeException(ex);
+		}
 		mException = true;
 		mPaused = true;
 		if(mGFXDebug!=null)

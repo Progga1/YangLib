@@ -2,6 +2,7 @@ package yang.graphics.programs.permutations;
 
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.translator.AbstractGFXLoader;
+import yang.graphics.translator.GraphicsTranslator;
 import yang.util.Util;
 
 public class ShaderPermutations extends Basic3DProgram {
@@ -12,8 +13,8 @@ public class ShaderPermutations extends Basic3DProgram {
 	public SubShader[] mDataPassingShaders;
 	public String mVSSource,mFSSource;
 	
-	public ShaderPermutations() {
-		
+	public ShaderPermutations(GraphicsTranslator graphics) {
+		mGraphics = graphics;
 	}
 	
 	public ShaderPermutations(SubShader[] subShaders) {
@@ -26,6 +27,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		ShaderPermutationsParser parser = new ShaderPermutationsParser(this);
 		for(int i=0;i<subShaders.length;i++) {
 			subShaders[i].setVariables(parser,parser.mVSDeclarations,parser.mFSDeclarations);
+			subShaders[i].setGraphics(mGraphics);
 		}
 		
 		boolean hasVertexColor = parser.hasVariable(SubShader.VAR_VS_COLOR);

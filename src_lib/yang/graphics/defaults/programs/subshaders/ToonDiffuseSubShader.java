@@ -11,11 +11,9 @@ public class ToonDiffuseSubShader extends SubShader {
 
 	public Texture mRampTex;
 	public int mRampSamplerHandle;
-	private GraphicsTranslator mGraphics;
 	
-	public ToonDiffuseSubShader(GraphicsTranslator graphics,Texture ramp) {
+	public ToonDiffuseSubShader(Texture ramp) {
 		mRampTex = ramp;
-		mGraphics = graphics;
 	}
 	
 	@Override

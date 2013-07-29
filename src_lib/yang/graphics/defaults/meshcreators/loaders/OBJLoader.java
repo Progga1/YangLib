@@ -295,11 +295,20 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		mTranslator.mFlushDisabled = true;
 		GLProgram program = mGraphics.mCurrentProgram.mProgram;
 		for(OBJMaterialSection matSec:mMaterialSections) {
-			mTranslator.bindTexture(matSec.mMaterial.mDiffuseTexture);
+			YangMaterial mat = matSec.mMaterial;
+			mTranslator.bindTexture(mat.mDiffuseTexture);
 			//mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
-			program.setUniform4f(mHandles.mDiffuseColorHandle, matSec.mMaterial.mDiffuseColor.mValues);
-			program.setUniform4f(mHandles.mSpecColorHandle, matSec.mMaterial.mSpecularColor.mValues);
-			program.setUniformFloat(mHandles.mSpecExponentHandle, matSec.mMaterial.mSpecularCoefficient);
+			if(mat.mSpecularTexture!=null) {
+				program.setUniformInt(mHandles.mSpecTexSampler, 2);
+				program.setUniformInt(mHandles.mSpecUseTexHandle, 1);
+				mGraphics.bindTexture(mat.mSpecularTexture,2);
+			}else{
+				program.setUniform4f(mHandles.mSpecColorHandle, mat.mSpecularColor.mValues);
+				program.setUniformInt(mHandles.mSpecUseTexHandle, 0);
+			}
+			program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
+			
+			program.setUniformFloat(mHandles.mSpecExponentHandle, mat.mSpecularCoefficient);
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}
 		mTranslator.mFlushDisabled = false;
