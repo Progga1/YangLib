@@ -3,6 +3,7 @@ package yang.graphics.programs.permutations;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.util.NonConcurrentList;
 import yang.util.Util;
 
 public class ShaderPermutations extends Basic3DProgram {
@@ -10,11 +11,14 @@ public class ShaderPermutations extends Basic3DProgram {
 	static final String LINE_END = ";\r\n";
 	
 	public SubShader[] mSubShaders;
+	public NonConcurrentList<SubShader> mLinearSubShaderList;
 	public SubShader[] mDataPassingShaders;
+	public int mPassingDataCount = 0;
 	public String mVSSource,mFSSource;
 	
 	public ShaderPermutations(GraphicsTranslator graphics) {
 		mGraphics = graphics;
+		mLinearSubShaderList = new NonConcurrentList<SubShader>();
 	}
 	
 	public ShaderPermutations(SubShader[] subShaders) {
@@ -66,6 +70,24 @@ public class ShaderPermutations extends Basic3DProgram {
 		return this;
 	}
 	
+	private void initHandles(SubShader[] subShaders) {
+		for(SubShader subShader:mSubShaders) {
+			subShader.initHandles(mProgram);
+			if(subShader.passesData())
+				mPassingDataCount++;
+			SubShader[] innerShaders = subShader.getInnerShaders();
+			do{
+				innerShaders = subShader.getInnerShaders();
+				
+			}while(innerShaders!=null);
+		}
+	}
+	
+	public void refreshLinearization() {
+		mPassingDataCount = 0;
+		
+	}
+	
 	@Override
 	public void initHandles() {
 		super.initHandles();
@@ -79,6 +101,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		int c=0;
 		for(SubShader subShader:mSubShaders) {
 			if(subShader.passesData()) {
+				passingDataCount++;
 				mDataPassingShaders[c++] = subShader;
 			}
 		}

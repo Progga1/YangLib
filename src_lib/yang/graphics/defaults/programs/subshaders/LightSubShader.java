@@ -12,6 +12,7 @@ public class LightSubShader extends SubShader {
 	public int mLightDiffuseHandle;
 	public int mLightSpecularHandle;
 	public LightProperties mLightProperties;
+	public float mAddValue = 0.4f;
 	
 	public LightSubShader(LightProperties lightProperties) {
 		mLightProperties = lightProperties;
@@ -21,7 +22,7 @@ public class LightSubShader extends SubShader {
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("vec3","lightDir");
 		fsDecl.addUniform("vec3","lightDiffuse");
-		shaderParser.appendLn(VAR_FS_MAIN, "float lightIntens = dot(lightDir,normal)");
+		shaderParser.appendLn(VAR_FS_MAIN, "float lightIntens = dot(lightDir,normal)+"+mAddValue);
 	}
 
 	@Override

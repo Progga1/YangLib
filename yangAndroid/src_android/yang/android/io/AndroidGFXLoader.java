@@ -23,12 +23,12 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 	}
 	
 	@Override
-	public TextureData loadImageData(String name,boolean forceRGBA) {
+	protected TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
 		AssetManager mgr = mContext.getAssets();
 		InputStream is = null;
 
 		try {
-			is = mgr.open(IMAGE_PATH+name+IMAGE_EXT);
+			is = mgr.open(filename);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

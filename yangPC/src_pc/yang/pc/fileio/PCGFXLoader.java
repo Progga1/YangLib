@@ -20,13 +20,13 @@ public class PCGFXLoader extends AbstractGFXLoader {
 	}
 
 	@Override
-	public TextureData loadImageData(String filename,boolean forceRGBA) {
+	public TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
 		ByteBuffer buffer = null;
 		int width = 0;
 		int height = 0;
 		BufferedImage image = null;
 
-		String path = PathSpecs.ASSET_PATH + IMAGE_PATH + filename + IMAGE_EXT;
+		String path = PathSpecs.ASSET_PATH + filename;
 		try {
 			image = ImageIO.read(new File(path));
 		} catch (IOException e) {

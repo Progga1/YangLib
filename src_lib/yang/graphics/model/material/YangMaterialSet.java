@@ -59,10 +59,10 @@ public class YangMaterialSet {
 				readColor(curMat.mDiffuseColor);
 				break;
 			case 3:
-				readColor(curMat.mSpecularColor);
+				readColor(curMat.mSpecularProps.mColor);
 				break;
 			case 4:
-				curMat.mSpecularCoefficient = reader.readFloat(false);
+				curMat.mSpecularProps.mExponent = reader.readFloat(false);
 				break;
 			case 6:
 				filename = reader.readString(false);
@@ -70,7 +70,7 @@ public class YangMaterialSet {
 				break;
 			case 7:
 				filename = reader.readString(false);
-				curMat.mSpecularTexture = mGFXLoader.getImage(filename,specularTextureProperties);
+				curMat.mSpecularProps.mTexture = mGFXLoader.getImage(filename,specularTextureProperties);
 				break;
 			}
 			reader.toLineEnd();

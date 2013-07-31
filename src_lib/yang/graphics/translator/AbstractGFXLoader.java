@@ -18,11 +18,11 @@ import yang.systemdependent.AbstractResourceManager;
 
 public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
-	public static final String IMAGE_EXT	= ".png";
+	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg"};
 	public static final String SHADER_EXT	= ".txt";
 
 	protected String SHADER_PATH	= "shaders" + File.separatorChar;
-	protected String IMAGE_PATH		= "textures" + File.separatorChar;
+	protected String[] IMAGE_PATH		= new String[]{"","textures"+File.separatorChar,"models"+File.separatorChar};
 	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 	
 	protected HashMap<String, Texture> mTextures;
@@ -32,11 +32,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public AbstractResourceManager mResources;
 
-	public abstract TextureData loadImageData(String filename,boolean forceRGBA);
-	
-	public TextureData loadImageData(String filename) {
-		return loadImageData(filename,false);
-	}
+	protected abstract TextureData derivedLoadImageData(String filename,boolean forceRGBA);
 	
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
 		mTextures = new HashMap<String, Texture>();
@@ -63,11 +59,51 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		}
 		mMaterials.put(name, result);
 		return result;
-		
 	}
 	
-	protected Texture loadImage(String name,TextureProperties textureSettings,boolean redToAlpha) {
-		TextureData data = loadImageData(name,redToAlpha);
+	public TextureData loadImageData(String path,String name,String ext,boolean forceRGBA) {
+		String filename = path + File.separatorChar+name+"."+ext;
+		if(!mResources.fileExists(filename))
+			return null;
+		else
+			return derivedLoadImageData(filename,forceRGBA);
+	}
+	
+	public String createExistingFilename(String name) {
+		String filename = null;
+		boolean hasExt = false;
+		for(int i=0;i<IMAGE_EXT.length;i++) {
+			if(name.endsWith(IMAGE_EXT[i])) {
+				hasExt = true;
+				break;
+			}
+		}
+		
+		for(String path:IMAGE_PATH) {
+			if(mResources.fileExists(path+name))
+				return path+name;
+			for(String ext:IMAGE_EXT) {
+				if(mResources.fileExists(path+name+ext))
+					return path+name+ext;
+			}
+		}
+
+		return filename;
+	}
+	
+	protected TextureData loadImageData(String name,boolean forceRGBA) {
+		String filename = createExistingFilename(name);
+		if(filename==null)
+			return null;
+		return derivedLoadImageData(filename,forceRGBA);
+	}
+	
+	public TextureData loadImageData(String name) {
+		return loadImageData(name,false);
+	}
+	
+	private Texture loadTexture(String filename,TextureProperties textureSettings,boolean redToAlpha) {
+		TextureData data = derivedLoadImageData(filename,redToAlpha);
 		if(redToAlpha)
 			data.redToAlpha();
 		Texture result = mGraphics.createTexture(data,textureSettings).finish();
@@ -76,16 +112,19 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	protected synchronized Texture getImage(String name,TextureProperties textureSettings, boolean redToAlpha) {
-		if(name.length()>4 && name.charAt(name.length()-4)=='.')
-			name = name.substring(0,name.length()-4);
-		Texture texture = mTextures.get(name);
+//		if(name.length()>4 && name.charAt(name.length()-4)=='.')
+//			name = name.substring(0,name.length()-4);
+		String filename = createExistingFilename(name);
+		if(filename==null)
+			throw new RuntimeException("Image not found: "+name);
+		Texture texture = mTextures.get(filename);
 		
 		if (texture != null && texture.mSettings.equals(textureSettings))
 			return texture;
 		if(textureSettings==null)
 			textureSettings = new TextureProperties();
-		texture = loadImage(name, textureSettings, redToAlpha);
-		mTextures.put(name, texture);
+		texture = loadTexture(filename, textureSettings, redToAlpha);
+		mTextures.put(filename, texture);
 		mGraphics.rebindTexture(0);
 		
 		return texture;

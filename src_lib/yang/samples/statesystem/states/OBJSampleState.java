@@ -23,7 +23,7 @@ import yang.samples.statesystem.SampleState;
 
 public class OBJSampleState extends SampleState {
 
-	private OBJLoader[] mObj = new OBJLoader[4];
+	private OBJLoader[] mObj = new OBJLoader[8];
 	private LightProgram mLightProgram;
 	private DefaultObjShader mActiveShader;
 	private DefaultObjShader mObjProgram;
@@ -32,12 +32,13 @@ public class OBJSampleState extends SampleState {
 	private FloatColor mAmbientColor;
 	private int mCurObjIndex = 0;
 	private Camera3D mCamera = new Camera3D();
+	private int mObjCount = 0;
 	
 	@Override
 	protected void initGraphics() {
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
 		
-		mAmbientColor = new FloatColor(0.2f,0.2f,0.2f);
+		mAmbientColor = new FloatColor(0.3f,0.3f,0.3f);
 		mLightProperties = new LightProperties();
 		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties,new DiffuseLightSubShader()));
 		SubShader toonShader = new ToonDiffuseSubShader(mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
@@ -48,37 +49,37 @@ public class OBJSampleState extends SampleState {
 			YangMatrix transform = new YangMatrix();
 			
 			ObjHandles handles = new ObjHandles(mObjProgram);
-			int o=-1;
+			mObjCount = -1;
 			
 			transform.loadIdentity();
 			transform.scale(0.1f);
-			mObj[++o] = new OBJLoader(mGraphics3D,handles);
-			mObj[o].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
 			
-//			transform.loadIdentity();
-//			transform.scale(0.5f);
-//			mObj[++o] = new OBJLoader(mGraphics3D,handles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
-//			mObj[o].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
+			transform.loadIdentity();
+			transform.scale(0.5f);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
+			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.translate(0, 0.3f);
 			transform.rotateY((float)Math.PI/2);
 			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
-			mObj[++o] = new OBJLoader(mGraphics3D,handles);
-			mObj[o].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform,true,true);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.42f);	
 			transform.translate(0, -0.85f);
-			mObj[++o] = new OBJLoader(mGraphics3D,handles);
-			mObj[o].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
 			
 			transform.loadIdentity();
 			transform.scale(1.2f);
 			transform.translate(0, -0.0f);
-			mObj[++o] = new OBJLoader(mGraphics3D,handles);
-			mObj[o].loadOBJ(mResources.getInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
 			
 //			transform.loadIdentity();
 //			transform.scale(0.5f);
@@ -86,6 +87,7 @@ public class OBJSampleState extends SampleState {
 //			mObj[0] = new OBJLoader(mGraphics3D,handles);
 //			mObj[0].loadOBJ(mResources.getInputStream("models/cubetest.obj"),mGFXLoader,transform);
 
+			mObjCount++;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -128,7 +130,7 @@ public class OBJSampleState extends SampleState {
 
 	@Override
 	public void pointerUp(float x,float y,YangPointerEvent event) {
-		mCurObjIndex = (mCurObjIndex+1)%mObj.length;
+		mCurObjIndex = (mCurObjIndex+1)%mObjCount;
 	}
 	
 	@Override
@@ -137,9 +139,9 @@ public class OBJSampleState extends SampleState {
 		if(code==Keys.LEFT)
 			mCurObjIndex--;
 		if(code==Keys.RIGHT)
-			mCurObjIndex = (mCurObjIndex+1)%mObj.length;
+			mCurObjIndex = (mCurObjIndex+1)%mObjCount;
 		if(mCurObjIndex<0)
-			mCurObjIndex = mObj.length-1;
+			mCurObjIndex = mObjCount-1;
 		if(code=='s') {
 			if(mActiveShader==mObjProgram)
 				mActiveShader = mToonObjProgram;

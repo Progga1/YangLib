@@ -30,4 +30,8 @@ public abstract class SubShader {
 		return false;
 	}
 	
+	public SubShader[] getInnerShaders() {
+		return null;
+	}
+	
 }

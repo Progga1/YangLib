@@ -5,8 +5,8 @@ import yang.graphics.translator.Texture;
 
 public class SpecularMatProperties {
 
-	public FloatColor mColor;
-	public Texture mTexture;
+	public FloatColor mColor = new FloatColor(FloatColor.ZERO);
+	public Texture mTexture = null;
 	public float mExponent = 16;
 	
 	public SpecularMatProperties(FloatColor color,float exponent) {

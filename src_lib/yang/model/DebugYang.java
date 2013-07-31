@@ -123,20 +123,20 @@ public class DebugYang {
 		}
 	}
 	
-	public static void appendState(int i) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			appendState(""+i);
-	}
-	
-	public static void appendState(float f) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			appendState(""+f);
-	}
-	
-	public static void appendState(boolean b) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			appendState(""+b);
-	}
+//	public static void appendState(int i) {
+//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+//			appendState(""+i);
+//	}
+//	
+//	public static void appendState(float f) {
+//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+//			appendState(""+f);
+//	}
+//	
+//	public static void appendState(boolean b) {
+//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+//			appendState(""+b);
+//	}
 	
 	public static void clearState() {
 		stateString = null;

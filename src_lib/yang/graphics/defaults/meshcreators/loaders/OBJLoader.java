@@ -298,17 +298,17 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			YangMaterial mat = matSec.mMaterial;
 			mTranslator.bindTexture(mat.mDiffuseTexture);
 			//mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
-			if(mat.mSpecularTexture!=null) {
+			if(mat.mSpecularProps.mTexture!=null) {
 				program.setUniformInt(mHandles.mSpecTexSampler, 2);
 				program.setUniformInt(mHandles.mSpecUseTexHandle, 1);
-				mGraphics.bindTexture(mat.mSpecularTexture,2);
+				mGraphics.bindTexture(mat.mSpecularProps.mTexture,2);
 			}else{
-				program.setUniform4f(mHandles.mSpecColorHandle, mat.mSpecularColor.mValues);
+				program.setUniform4f(mHandles.mSpecColorHandle, mat.mSpecularProps.mColor.mValues);
 				program.setUniformInt(mHandles.mSpecUseTexHandle, 0);
 			}
 			program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
 			
-			program.setUniformFloat(mHandles.mSpecExponentHandle, mat.mSpecularCoefficient);
+			program.setUniformFloat(mHandles.mSpecExponentHandle, mat.mSpecularProps.mExponent);
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}
 		mTranslator.mFlushDisabled = false;
