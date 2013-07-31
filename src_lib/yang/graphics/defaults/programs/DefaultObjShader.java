@@ -21,22 +21,27 @@ public class DefaultObjShader extends ShaderPermutations {
 	public LightProperties mLightProperties;
 	public SpecularMatProperties mSpecMatProperties;
 	
-	public DefaultObjShader(Default3DGraphics graphics3D,Camera3D camera,FloatColor ambientColor,LightProperties lightProperties,SubShader diffuseShader) {
+	public DefaultObjShader(Default3DGraphics graphics3D,FloatColor ambientColor,LightProperties lightProperties,SubShader[] additionalShaders) {
 		super(graphics3D.mTranslator);
 		mLightProperties = lightProperties;
 		SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
 				new MtDiffuseSubShader(null),
-				new LightSubShader(lightProperties),diffuseShader,
-				new CameraPerVertexVectorSubShader(camera),new SpecularLightSubShader(null),
+				new LightSubShader(lightProperties),
 				//new ToonOutlineSubShader(new FloatWrapper(0.3f)),
-				new AmbientSubShader(ambientColor)
 				};
-		super.initPermutations(subShaders);System.out.println(this);
+		super.addSubShaders(subShaders);
+		super.addSubShaders(additionalShaders);
+		super.addSubShader(new AmbientSubShader(ambientColor));
+		super.initPermutations();
+	}
+	
+	public DefaultObjShader(Default3DGraphics graphics3D,Camera3D camera,FloatColor ambientColor,LightProperties lightProperties) {
+		this(graphics3D,ambientColor,lightProperties,new SubShader[]{new DiffuseLightSubShader(),new CameraPerVertexVectorSubShader(camera),new SpecularLightSubShader(null)});
 	}
 	
 	public DefaultObjShader(Default3DGraphics graphics3D,Camera3D camera) {
-		this(graphics3D,camera,new FloatColor(0.1f,0.1f,0.1f),new LightProperties(),new DiffuseLightSubShader());
+		this(graphics3D,camera,new FloatColor(0.1f,0.1f,0.1f),new LightProperties());
 	}
 	
 }

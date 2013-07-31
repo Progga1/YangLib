@@ -36,7 +36,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 				new AmbientSubShader(mAmbientColor)
 				};
 
-		mShader1 = mGraphics.addProgram(new ShaderPermutations(subShaders));
+		mShader1 = mGraphics.addProgram(new ShaderPermutations(mGraphics,subShaders));
 		mCubeTex = mGFXLoader.getImage("cube");
 		mGrassTex = mGFXLoader.getImage("grass");
 	}

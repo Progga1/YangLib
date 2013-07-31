@@ -8,8 +8,10 @@ import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
 import yang.graphics.defaults.meshcreators.loaders.ObjHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
-import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
+import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
+import yang.graphics.defaults.programs.subshaders.SpecularLightSubShader;
 import yang.graphics.defaults.programs.subshaders.ToonDiffuseSubShader;
+import yang.graphics.defaults.programs.subshaders.ToonOutlineSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.SubShader;
@@ -19,6 +21,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
 import yang.math.objects.matrix.YangMatrix;
+import yang.model.wrappers.FloatWrapper;
 import yang.samples.statesystem.SampleState;
 
 public class OBJSampleState extends SampleState {
@@ -40,9 +43,10 @@ public class OBJSampleState extends SampleState {
 		
 		mAmbientColor = new FloatColor(0.3f,0.3f,0.3f);
 		mLightProperties = new LightProperties();
-		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties,new DiffuseLightSubShader()));
+		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties));
 		SubShader toonShader = new ToonDiffuseSubShader(mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
-		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties,toonShader));
+		SubShader[] additionalShaders = new SubShader[]{toonShader,new CameraPerVertexVectorSubShader(mCamera),new SpecularLightSubShader(null),new ToonOutlineSubShader(new FloatWrapper(0.3f))};
+		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties,additionalShaders));
 		mActiveShader = mObjProgram;
 		
 		try {
