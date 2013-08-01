@@ -35,6 +35,20 @@ public class Vector3f {
 		mZ = z;
 	}
 	
+	public void setNormalized(float x,float y,float z) {
+		float dist = (float)Math.sqrt(x*x+y*y+z*z);
+		if(dist==0) {
+			mX = 0;
+			mY = 0;
+			mZ = 0;
+		}else{
+			dist = 1/dist;
+			mX = x*dist;
+			mY = y*dist;
+			mZ = z*dist;
+		}
+	}
+	
 	public void set(float[] array) {
 		mX = array[0];
 		mY = array[1];
@@ -113,6 +127,21 @@ public class Vector3f {
 	
 	public void setAlphaBeta(float alpha, float beta) {
 		setAlphaBeta(alpha,beta,1);
+	}
+
+	public void createOrthoVec(Vector3f ortho) {
+		if(ortho.mX<ortho.mY && ortho.mX>ortho.mZ) {
+			setNormalized(0,-ortho.mZ,ortho.mY);
+		}else if(ortho.mY<ortho.mX && ortho.mY>ortho.mZ) {
+			setNormalized(-ortho.mZ,0,ortho.mX);
+		}else{
+			setNormalized(-ortho.mY,ortho.mX,0);
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return "("+mX+","+mY+","+mZ+")";
 	}
 	
 }

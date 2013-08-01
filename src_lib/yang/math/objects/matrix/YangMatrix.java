@@ -40,6 +40,37 @@ public class YangMatrix {
 	public static float TO_RAD_FACTOR = (float) Math.PI / 180;
 	public static float TO_DEG_FACTOR = 180 / (float) Math.PI;
 	
+	public static void identity4f(float[] matrix) {
+		matrix[0] = 1;
+		matrix[1] = 0;
+		matrix[2] = 0;
+		matrix[3] = 0;
+		matrix[4] = 0;
+		matrix[5] = 1;
+		matrix[6] = 0;
+		matrix[7] = 0;
+		matrix[8] = 0;
+		matrix[9] = 0;
+		matrix[10] = 1;
+		matrix[11] = 0;
+		matrix[12] = 0;
+		matrix[13] = 0;
+		matrix[14] = 0;
+		matrix[15] = 1;
+	}
+
+	public static void identity3f(float[] matrix) {
+		matrix[0] = 1;
+		matrix[1] = 0;
+		matrix[2] = 0;
+		matrix[3] = 0;
+		matrix[4] = 1;
+		matrix[5] = 0;
+		matrix[6] = 0;
+		matrix[7] = 0;
+		matrix[8] = 1;
+	}
+	
 	public YangMatrix() {
 		mMatrix = new float[16];
 		mMatrixBack = new float[16];
@@ -404,35 +435,37 @@ public class YangMatrix {
 		return MatrixOps.matToString(mMatrix);
 	}
 
-	public static void identity4f(float[] matrix) {
-		matrix[0] = 1;
-		matrix[1] = 0;
-		matrix[2] = 0;
-		matrix[3] = 0;
-		matrix[4] = 0;
-		matrix[5] = 1;
-		matrix[6] = 0;
-		matrix[7] = 0;
-		matrix[8] = 0;
-		matrix[9] = 0;
-		matrix[10] = 1;
-		matrix[11] = 0;
-		matrix[12] = 0;
-		matrix[13] = 0;
-		matrix[14] = 0;
-		matrix[15] = 1;
+	public static void setBase4f(float[] target,Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+		target[0] = vec1.mX;
+		target[1] = vec1.mY;
+		target[2] = vec1.mZ;
+		target[3] = 0;
+		target[4] = vec2.mX;
+		target[5] = vec2.mY;
+		target[6] = vec2.mZ;
+		target[7] = 0;
+		target[8] = vec3.mX;
+		target[9] = vec3.mY;
+		target[10] = vec3.mZ;
+		target[11] = 0;
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
 	}
-
-	public static void identity3f(float[] matrix) {
-		matrix[0] = 1;
-		matrix[1] = 0;
-		matrix[2] = 0;
-		matrix[3] = 0;
-		matrix[4] = 1;
-		matrix[5] = 0;
-		matrix[6] = 0;
-		matrix[7] = 0;
-		matrix[8] = 1;
+	
+	public void setBase(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+		setBase4f(mMatrix,vec1,vec2,vec3);
+	}
+	
+	public void multiplyBaseVectorsRight(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+		setBase4f(mTempMat1,vec1,vec2,vec3);
+		multiplyRight(mTempMat1);
+	}
+	
+	public void multiplyBaseVectorsLeft(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+		setBase4f(mTempMat1,vec1,vec2,vec3);
+		multiplyLeft(mTempMat1);
 	}
 	
 }

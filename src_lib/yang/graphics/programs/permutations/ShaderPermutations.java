@@ -102,7 +102,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		int c=0;
 		for(SubShader subShader:mLinearSubShaderList) {
 			subShader.initHandles(mProgram);
-			if(subShader.handlesOK() && subShader.passesData()) {
+			if(subShader.passesData()) {
 				mDataPassingShaders[c++] = subShader;
 			}
 		}

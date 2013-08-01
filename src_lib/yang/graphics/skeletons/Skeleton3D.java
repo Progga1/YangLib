@@ -14,7 +14,7 @@ public class Skeleton3D {
 	
 	public Skeleton3D initLines(int cylinderSamples,float lineWidth) {
 		mLineDrawer = new LineDrawer3D(mGraphics3D);
-		mLineDrawer.mCylinderSamples = cylinderSamples;
+		mLineDrawer.setSamples(cylinderSamples);
 		mLineDrawer.mLineWidth = lineWidth;
 		return this;
 	}

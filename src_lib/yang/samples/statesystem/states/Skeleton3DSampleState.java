@@ -5,10 +5,10 @@ import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
 import yang.graphics.defaults.programs.subshaders.MtDiffuseSubShader;
 import yang.graphics.defaults.programs.subshaders.NormalSubShader;
-import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.defaults.programs.subshaders.properties.SpecularMatProperties;
 import yang.graphics.defaults.programs.subshaders.realistic.LightSubShader;
+import yang.graphics.defaults.programs.subshaders.realistic.SpecularLightSubShader;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
@@ -27,14 +27,14 @@ public class Skeleton3DSampleState extends SampleState {
 	
 	@Override
 	public void initGraphics() {
-		mSkeleton = new Skeleton3D(mGraphics3D).initLines();
+		mSkeleton = new Skeleton3D(mGraphics3D).initLines(16,0.05f);
 		mCamera = new Camera3D();
 		mLight = new LightProperties();
 		SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
 				new MtDiffuseSubShader(FloatColor.WHITE),
 				new LightSubShader(mLight),new DiffuseLightSubShader(),
-				new CameraPerVertexVectorSubShader(mCamera),new SpecularLightBasicSubShader(new SpecularMatProperties()),
+				new CameraPerVertexVectorSubShader(mCamera),new SpecularLightSubShader(new SpecularMatProperties()),
 				new AmbientSubShader(new FloatColor(0.3f))
 				};
 		//mShader = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLight,new FloatColor(0.3f)));
