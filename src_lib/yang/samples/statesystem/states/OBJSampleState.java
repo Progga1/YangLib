@@ -9,6 +9,7 @@ import yang.graphics.defaults.meshcreators.loaders.ObjMaterialHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
+import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.defaults.programs.subshaders.toon.ToonDiffuseSubShader;
 import yang.graphics.defaults.programs.subshaders.toon.ToonOutlineSubShader;
@@ -36,6 +37,7 @@ public class OBJSampleState extends SampleState {
 	private int mCurObjIndex = 0;
 	private Camera3D mCamera = new Camera3D();
 	private int mObjCount = 0;
+	private ObjMaterialHandles mMatHandles;
 	
 	@Override
 	protected void initGraphics() {
@@ -45,24 +47,25 @@ public class OBJSampleState extends SampleState {
 		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLightProperties,new FloatColor(0.3f)));
 		SubShader toonRamp = new ToonRampSubShader(mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
 		SubShader toonShader = new ToonDiffuseSubShader();
-		SubShader[] additionalShaders = new SubShader[]{toonRamp,toonShader,new CameraPerVertexVectorSubShader(mCamera),new ToonSpecularLightSubShader(null),new ToonOutlineSubShader(new FloatWrapper(0.3f))};
+		SubShader emisShader = new EmissiveSubShader(null);
+		SubShader[] additionalShaders = new SubShader[]{toonRamp,toonShader,new CameraPerVertexVectorSubShader(mCamera),new ToonSpecularLightSubShader(null),emisShader,new ToonOutlineSubShader(new FloatWrapper(0.3f))};
 		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mLightProperties,new FloatColor(0.4f),additionalShaders));
 		mActiveShader = mObjProgram;
 		
 		try {
 			YangMatrix transform = new YangMatrix();
 			
-			ObjMaterialHandles handles = new ObjMaterialHandles(mObjProgram);
+			mMatHandles = new ObjMaterialHandles(mObjProgram);
 			mObjCount = -1;
 			
 			transform.loadIdentity();
 			transform.scale(0.1f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.5f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
 			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
@@ -70,19 +73,19 @@ public class OBJSampleState extends SampleState {
 			transform.rotateY((float)Math.PI/2);
 			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.42f);	
 			transform.translate(0, -0.85f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
 			
 			transform.loadIdentity();
 			transform.scale(1.2f);
 			transform.translate(0, -0.0f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,handles);
+			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
 			
 //			transform.loadIdentity();
@@ -151,6 +154,7 @@ public class OBJSampleState extends SampleState {
 				mActiveShader = mToonObjProgram;
 			else
 				mActiveShader = mObjProgram;
+			mMatHandles.refreshHandles(mActiveShader);
 		}
 	}
 	

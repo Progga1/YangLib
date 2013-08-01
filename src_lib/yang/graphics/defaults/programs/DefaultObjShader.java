@@ -37,7 +37,7 @@ public class DefaultObjShader extends ShaderPermutations {
 	}
 	
 	public DefaultObjShader(Default3DGraphics graphics3D,Camera3D camera,LightProperties lightProperties,FloatColor ambientColor) {
-		this(graphics3D,lightProperties,ambientColor,new SubShader[]{new DiffuseLightSubShader(),new CameraPerVertexVectorSubShader(camera),new SpecularLightSubShader(null)});
+		this(graphics3D,lightProperties,ambientColor,new SubShader[]{new DiffuseLightSubShader(),new CameraPerVertexVectorSubShader(camera),new SpecularLightSubShader(null), new EmissiveSubShader(null)});
 	}
 	
 	public DefaultObjShader(Default3DGraphics graphics3D,Camera3D camera) {

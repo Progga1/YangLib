@@ -21,10 +21,10 @@ public class ObjMaterialHandles {
 	
 	public ObjMaterialHandles(AbstractProgram shader) {
 		this();
-		createHandles(shader);
+		refreshHandles(shader);
 	}
 	
-	public ObjMaterialHandles createHandles(AbstractProgram shader) {
+	public ObjMaterialHandles refreshHandles(AbstractProgram shader) {
 		GLProgram program = shader.getProgram();
 		
 		mDiffuseColorHandle = program.getUniformLocation("diffuseColor");

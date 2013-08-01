@@ -25,16 +25,15 @@ public class EmissiveSubShader extends SubShader {
 		fsDecl.addUniform("bool", "mtEmisUseTex");
 		shaderParser.appendFragmentMain("vec4 emisColor");
 		shaderParser.appendFragmentMain("if(mtEmisUseTex) {");
-		shaderParser.appendFragmentMain("emisColor = texture2D(mtEmisSampler,texCoord)*mtEmisColor");
+		shaderParser.appendFragmentMain("    lgt += texture2D(mtEmisSampler,texCoord)");
 		shaderParser.appendFragmentMain("}else{");
-		shaderParser.appendFragmentMain("emisColor = mtEmisColor");
+		shaderParser.appendFragmentMain("    lgt += mtEmisColor");
 		shaderParser.appendFragmentMain("}");
-		//shaderParser.appendFragmentMain("emisColor = vec4(0.0,0.4,0.0,0.0)");
-		shaderParser.appendOp(VAR_FRAGCOLOR, "emisColor", OP_ADD);
 	}
 	
 	@Override
 	public void initHandles(GLProgram program) {
+		mTextureLevel = program.nextTextureLevel();
 		mEmisColorHandle = program.getUniformLocation("mtEmisColor");
 		mEmisTexSampler = program.getUniformLocation("mtEmisSampler");
 		mEmisUseTexHandle = program.getUniformLocation("mtEmisUseTex");

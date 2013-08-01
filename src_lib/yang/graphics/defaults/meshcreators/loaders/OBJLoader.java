@@ -302,8 +302,6 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			YangMaterial mat = matSec.mMaterial;
 			mTranslator.bindTexture(mat.mDiffuseTexture);
 			if(specShader!=null) {
-//				System.out.println(specShader.mSpecTexSampler+" "+specShader.mSpecExponentHandle+" "+specShader.mSpecUseTexHandle+" "+specShader.mSpecColorHandle);
-//				System.out.println(emisShader.mEmisColorHandle+" "+emisShader.mEmisTexSampler+" "+emisShader.mEmisUseTexHandle);
 				if(mat.mSpecularProps.mTexture!=null) {
 					program.setUniformInt(specShader.mSpecTexSampler,specShader.mTextureLevel);
 					mTranslator.bindTextureNoFlush(mat.mSpecularProps.mTexture,specShader.mTextureLevel);
@@ -315,22 +313,19 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 				program.setUniformFloat(specShader.mSpecExponentHandle, mat.mSpecularProps.mExponent);
 			}
 			
-//			if(mat.mEmissiveProps.mTexture!=null) {
-//				program.setUniformInt(emisShader.mEmisTexSampler, 2);
-//				program.setUniformInt(emisShader.mEmisUseTexHandle, 1);
-//				mGraphics.bindTexture(mat.mSpecularProps.mTexture,2);
-//			}else{
-//				program.setUniform4f(mHandles.mSpecColorHandle, mat.mSpecularProps.mColor.mValues);
-//				program.setUniformInt(mHandles.mSpecUseTexHandle, 0);
-//			}
-			
 			if(emisShader!=null) {
 				program.setUniform4f(emisShader.mEmisColorHandle, mat.mEmissiveProps.mColor.mValues);
-				program.setUniformInt(emisShader.mEmisUseTexHandle, 0);
+				if(mat.mEmissiveProps.mTexture!=null) {
+					program.setUniformInt(emisShader.mEmisTexSampler,emisShader.mTextureLevel);
+					mTranslator.bindTextureNoFlush(mat.mEmissiveProps.mTexture,emisShader.mTextureLevel);
+					program.setUniformInt(emisShader.mEmisUseTexHandle, 1);
+				}else{
+					program.setUniformInt(emisShader.mEmisUseTexHandle, 0);
+				}
 			}
-			
+
 			program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
-			
+
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}
 		mTranslator.mFlushDisabled = false;
