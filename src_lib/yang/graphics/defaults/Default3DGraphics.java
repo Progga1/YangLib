@@ -7,7 +7,7 @@ import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.meshcreators.SphereCreator;
-import yang.graphics.defaults.meshcreators.TerrainCreator;
+import yang.graphics.defaults.meshcreators.grids.TerrainCreator;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;

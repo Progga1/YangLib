@@ -132,15 +132,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mTranslator.rebindTexture(0);
 		assert mTranslator.checkErrorInst("Activate");
 	}
-	
-	public final void bindTexture(Texture texture,int level) {
-		mTranslator.bindTexture(texture, level);
-	}
-	
-	public final void bindTexture(Texture texture) {
-		mTranslator.bindTexture(texture, 0);
-	}
-	
+
 	public void bindTextureInHolder(TextureHolder textureHolder) {
 		mTranslator.bindTextureInHolder(textureHolder);
 	}

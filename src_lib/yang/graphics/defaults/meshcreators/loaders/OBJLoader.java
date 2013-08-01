@@ -8,6 +8,8 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
+import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
+import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.model.FloatColor;
 import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialProvider;
@@ -36,7 +38,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private static int[] normalIndices;
 	private static int[] smoothIndices;
 
-	private ObjHandles mHandles;
+	private ObjMaterialHandles mHandles;
 	
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
@@ -64,7 +66,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	private int texId;
 	private int normId;
 	
-	public OBJLoader(DefaultGraphics<?> graphics,ObjHandles handles,TextureProperties textureProperties) {
+	public OBJLoader(DefaultGraphics<?> graphics,ObjMaterialHandles handles,TextureProperties textureProperties) {
 		super(graphics);
 		mHandles = handles;
 		mTextureProperties = textureProperties;
@@ -84,7 +86,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		mMaterialSections = new NonConcurrentList<OBJMaterialSection>();
 	}
 	
-	public OBJLoader(DefaultGraphics<?> graphics,ObjHandles handles) {
+	public OBJLoader(DefaultGraphics<?> graphics,ObjMaterialHandles handles) {
 		this(graphics,handles,null);
 	}
 	
@@ -294,21 +296,41 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		mTranslator.prepareDraw();
 		mTranslator.mFlushDisabled = true;
 		GLProgram program = mGraphics.mCurrentProgram.mProgram;
+		EmissiveSubShader emisShader = mHandles.mEmisShader;
+		SpecularLightBasicSubShader specShader = mHandles.mSpecShader;
 		for(OBJMaterialSection matSec:mMaterialSections) {
 			YangMaterial mat = matSec.mMaterial;
 			mTranslator.bindTexture(mat.mDiffuseTexture);
-			//mGraphics.setAmbientColor(matSec.mMaterial.mDiffuseColor);
-			if(mat.mSpecularProps.mTexture!=null) {
-				program.setUniformInt(mHandles.mSpecTexSampler, 2);
-				program.setUniformInt(mHandles.mSpecUseTexHandle, 1);
-				mGraphics.bindTexture(mat.mSpecularProps.mTexture,2);
-			}else{
-				program.setUniform4f(mHandles.mSpecColorHandle, mat.mSpecularProps.mColor.mValues);
-				program.setUniformInt(mHandles.mSpecUseTexHandle, 0);
+			if(specShader!=null) {
+//				System.out.println(specShader.mSpecTexSampler+" "+specShader.mSpecExponentHandle+" "+specShader.mSpecUseTexHandle+" "+specShader.mSpecColorHandle);
+//				System.out.println(emisShader.mEmisColorHandle+" "+emisShader.mEmisTexSampler+" "+emisShader.mEmisUseTexHandle);
+				if(mat.mSpecularProps.mTexture!=null) {
+					program.setUniformInt(specShader.mSpecTexSampler,specShader.mTextureLevel);
+					mTranslator.bindTextureNoFlush(mat.mSpecularProps.mTexture,specShader.mTextureLevel);
+					program.setUniformInt(specShader.mSpecUseTexHandle, 1);
+				}else{
+					program.setUniform4f(specShader.mSpecColorHandle, mat.mSpecularProps.mColor.mValues);
+					program.setUniformInt(specShader.mSpecUseTexHandle, 0);
+				}
+				program.setUniformFloat(specShader.mSpecExponentHandle, mat.mSpecularProps.mExponent);
 			}
+			
+//			if(mat.mEmissiveProps.mTexture!=null) {
+//				program.setUniformInt(emisShader.mEmisTexSampler, 2);
+//				program.setUniformInt(emisShader.mEmisUseTexHandle, 1);
+//				mGraphics.bindTexture(mat.mSpecularProps.mTexture,2);
+//			}else{
+//				program.setUniform4f(mHandles.mSpecColorHandle, mat.mSpecularProps.mColor.mValues);
+//				program.setUniformInt(mHandles.mSpecUseTexHandle, 0);
+//			}
+			
+			if(emisShader!=null) {
+				program.setUniform4f(emisShader.mEmisColorHandle, mat.mEmissiveProps.mColor.mValues);
+				program.setUniformInt(emisShader.mEmisUseTexHandle, 0);
+			}
+			
 			program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
 			
-			program.setUniformFloat(mHandles.mSpecExponentHandle, mat.mSpecularProps.mExponent);
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}
 		mTranslator.mFlushDisabled = false;

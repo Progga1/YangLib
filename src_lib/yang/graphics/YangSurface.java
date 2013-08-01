@@ -102,7 +102,7 @@ public abstract class YangSurface {
 		mException = true;
 		mPaused = true;
 		if(mGFXDebug!=null)
-			mGFXDebug.setErrorString(ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
+			mGFXDebug.setErrorString(ex.getClass()+": "+ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
 		ex.printStackTrace();
 	}
 	

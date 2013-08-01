@@ -101,7 +101,7 @@ public class PlanarLightmapHelper {
 	
 	public void generateMipMaps() {
 		if(mFinished && mMipMapping) {
-			mGraphics3D.bindTexture(mLightMap.mTargetTexture);
+			mGraphics.bindTexture(mLightMap.mTargetTexture);
 			mGraphics.generateMipMap();
 		}
 	}

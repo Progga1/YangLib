@@ -16,7 +16,6 @@ public class BasicSubShader extends SubShader {
 	
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
-
 		vsDecl.addUniform("mat4","projTransform");
 		vsDecl.addAttribute("vec4","vPosition");
 		if(mUseTexture) {
@@ -46,7 +45,7 @@ public class BasicSubShader extends SubShader {
 
 	@Override
 	public void initHandles(GLProgram program) {
-		
+		program.nextTextureLevel();
 	}
 
 	

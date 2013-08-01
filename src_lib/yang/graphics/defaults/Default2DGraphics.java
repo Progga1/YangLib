@@ -95,7 +95,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			mInterTransf1.rotateZ(angle);
 		mInterTransf1.translate((-(anchorX + 1) * 0.5f) * stringWidth(lineHeight, charDistance, s), (-(anchorY + 1) * 0.5f) * lineHeight);
 		
-		bindTexture(mCurrentLegacyFont.getTexture(),0);
+		mTranslator.bindTexture(mCurrentLegacyFont.getTexture(),0);
 		
 		float x = 0;
 		for (int i = 0; i < sLength; ++i) {

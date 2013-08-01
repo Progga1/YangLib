@@ -7,6 +7,8 @@ import yang.math.objects.Vector3f;
 
 public class YangMatrix {
 
+	public static final YangMatrix IDENTITY = new YangMatrix();
+	
 	public static float DEFAULT_NEAR = 1;
 	public static float DEFAULT_FAR = -1;
 	

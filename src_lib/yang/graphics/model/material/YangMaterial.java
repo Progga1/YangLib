@@ -1,5 +1,6 @@
 package yang.graphics.model.material;
 
+import yang.graphics.defaults.programs.subshaders.properties.EmissiveMatProperties;
 import yang.graphics.defaults.programs.subshaders.properties.SpecularMatProperties;
 import yang.graphics.model.FloatColor;
 import yang.graphics.translator.Texture;
@@ -12,9 +13,11 @@ public class YangMaterial {
 	public FloatColor mEmissiveColor = FloatColor.BLACK.clone();
 	public Texture mDiffuseTexture = null;
 	public SpecularMatProperties mSpecularProps;
+	public EmissiveMatProperties mEmissiveProps;
 
 	public YangMaterial() {
 		mSpecularProps = new SpecularMatProperties();
+		mEmissiveProps = new EmissiveMatProperties();
 	}
 	
 	@Override

@@ -104,6 +104,14 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		}
 	}
 	
+	public void putRectIndices(int bottomLeft,int bottomRight,int topLeft,int topRight) {
+		mIndexBuffer.put((short)bottomLeft);
+		mIndexBuffer.put((short)bottomRight);
+		mIndexBuffer.put((short)topLeft);
+		mIndexBuffer.put((short)topRight);
+		mIndexBuffer.put((short)topLeft);
+		mIndexBuffer.put((short)bottomRight);
+	}
 	
 	public int getMaxVertexCount() {
 		return mMaxVertexCount;

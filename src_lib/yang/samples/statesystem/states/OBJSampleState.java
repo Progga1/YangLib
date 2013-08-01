@@ -5,14 +5,15 @@ import java.io.IOException;
 import yang.events.Keys;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
-import yang.graphics.defaults.meshcreators.loaders.ObjHandles;
+import yang.graphics.defaults.meshcreators.loaders.ObjMaterialHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
-import yang.graphics.defaults.programs.subshaders.SpecularLightSubShader;
-import yang.graphics.defaults.programs.subshaders.ToonDiffuseSubShader;
-import yang.graphics.defaults.programs.subshaders.ToonOutlineSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
+import yang.graphics.defaults.programs.subshaders.toon.ToonDiffuseSubShader;
+import yang.graphics.defaults.programs.subshaders.toon.ToonOutlineSubShader;
+import yang.graphics.defaults.programs.subshaders.toon.ToonRampSubShader;
+import yang.graphics.defaults.programs.subshaders.toon.ToonSpecularLightSubShader;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.SubShader;
 import yang.graphics.textures.TextureProperties;
@@ -32,7 +33,6 @@ public class OBJSampleState extends SampleState {
 	private DefaultObjShader mObjProgram;
 	private DefaultObjShader mToonObjProgram;
 	private LightProperties mLightProperties;
-	private FloatColor mAmbientColor;
 	private int mCurObjIndex = 0;
 	private Camera3D mCamera = new Camera3D();
 	private int mObjCount = 0;
@@ -41,18 +41,18 @@ public class OBJSampleState extends SampleState {
 	protected void initGraphics() {
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
 		
-		mAmbientColor = new FloatColor(0.3f,0.3f,0.3f);
 		mLightProperties = new LightProperties();
-		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mAmbientColor,mLightProperties));
-		SubShader toonShader = new ToonDiffuseSubShader(mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
-		SubShader[] additionalShaders = new SubShader[]{toonShader,new CameraPerVertexVectorSubShader(mCamera),new SpecularLightSubShader(null),new ToonOutlineSubShader(new FloatWrapper(0.3f))};
-		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mAmbientColor,mLightProperties,additionalShaders));
+		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLightProperties,new FloatColor(0.3f)));
+		SubShader toonRamp = new ToonRampSubShader(mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
+		SubShader toonShader = new ToonDiffuseSubShader();
+		SubShader[] additionalShaders = new SubShader[]{toonRamp,toonShader,new CameraPerVertexVectorSubShader(mCamera),new ToonSpecularLightSubShader(null),new ToonOutlineSubShader(new FloatWrapper(0.3f))};
+		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mLightProperties,new FloatColor(0.4f),additionalShaders));
 		mActiveShader = mObjProgram;
 		
 		try {
 			YangMatrix transform = new YangMatrix();
 			
-			ObjHandles handles = new ObjHandles(mObjProgram);
+			ObjMaterialHandles handles = new ObjMaterialHandles(mObjProgram);
 			mObjCount = -1;
 			
 			transform.loadIdentity();

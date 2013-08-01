@@ -77,7 +77,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append(LINE_END);
 		result.append("}\r\n");
 		mFSSource = result.toString();
-		
+
 		return this;
 	}
 	
@@ -102,7 +102,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		int c=0;
 		for(SubShader subShader:mLinearSubShaderList) {
 			subShader.initHandles(mProgram);
-			if(subShader.passesData()) {
+			if(subShader.handlesOK() && subShader.passesData()) {
 				mDataPassingShaders[c++] = subShader;
 			}
 		}

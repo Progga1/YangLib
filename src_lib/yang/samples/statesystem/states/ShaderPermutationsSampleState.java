@@ -3,11 +3,11 @@ package yang.samples.statesystem.states;
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
 import yang.graphics.defaults.programs.subshaders.CameraVectorSubShader;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
-import yang.graphics.defaults.programs.subshaders.LightSubShader;
 import yang.graphics.defaults.programs.subshaders.NormalSubShader;
-import yang.graphics.defaults.programs.subshaders.SpecularLightSubShader;
+import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.defaults.programs.subshaders.properties.SpecularMatProperties;
+import yang.graphics.defaults.programs.subshaders.realistic.LightSubShader;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
@@ -32,7 +32,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 		SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
 				new LightSubShader(mLightProperties),new DiffuseLightSubShader(),
-				new CameraVectorSubShader(mGraphics3D.mCameraMatrix.mMatrix),new SpecularLightSubShader(mSpecularProperties),
+				new CameraVectorSubShader(mGraphics3D.mCameraMatrix.mMatrix),new SpecularLightBasicSubShader(mSpecularProperties),
 				new AmbientSubShader(mAmbientColor)
 				};
 
