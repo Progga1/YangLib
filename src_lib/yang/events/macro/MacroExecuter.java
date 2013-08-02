@@ -32,6 +32,11 @@ public class MacroExecuter {
 		if(mFinished)
 			return;
 		try {
+			if(mStream.available()<=0) {
+				mStream.close();
+				mFinished = true;
+				return;
+			}
 			if(mNextStep<0)
 				mNextStep = mStream.readLong();
 			while(mStepCount>=mNextStep) {
@@ -48,7 +53,7 @@ public class MacroExecuter {
 			}
 			mStepCount++;
 		} catch (IOException e) {
-			DebugYang.exception(e);
+			throw new RuntimeException(e);
 		}
 	}
 

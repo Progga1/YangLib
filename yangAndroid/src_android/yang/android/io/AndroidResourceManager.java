@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import yang.model.DebugYang;
 import yang.systemdependent.AbstractResourceManager;
 import android.content.Context;
 
@@ -46,6 +47,27 @@ public class AndroidResourceManager extends AbstractResourceManager {
 		if(directory.endsWith(File.separator)) 
 			directory = directory.substring(0,directory.length()-1);
 		return mContext.getAssets().list(directory);
+	}
+	
+	@Override
+	public InputStream getFileSystemInputStream(String filename) throws FileNotFoundException {
+		return mContext.openFileInput(filename);
+	}
+	
+	@Override
+	public OutputStream getFileSystemOutputStream(String filename) throws FileNotFoundException {
+		return mContext.openFileOutput(filename, Context.MODE_PRIVATE);
+	}
+	
+	@Override
+	public boolean fileExistsInFileSystem(String filename) {
+		//return new File(mContext.getFilesDir()+""+File.pathSeparatorChar+filename).exists();
+		try{
+			getFileSystemInputStream(filename);
+			return true;
+		}catch(Exception ex) {
+			return false;
+		}
 	}
 	
 //	@Override

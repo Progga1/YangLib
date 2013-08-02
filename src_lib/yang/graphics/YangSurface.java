@@ -97,6 +97,13 @@ public abstract class YangSurface {
 	}
 	
 	protected void exceptionOccurred(Exception ex) {
+		try{
+			mEventQueue.close();
+			if(mMacro!=null)
+				mMacro.close();
+		}catch(Exception ex2) {
+			
+		}
 		onException(ex);
 		if(!CATCH_EXCEPTIONS) {
 			if(ex instanceof RuntimeException)
@@ -142,7 +149,11 @@ public abstract class YangSurface {
 	}
 	
 	public void playMacro(String filename,AbstractMacroIO macroIO) {
-		mMacro = new MacroExecuter(mResources.getFileSystemInputStream(filename), macroIO);
+		try {
+			mMacro = new MacroExecuter(mResources.getFileSystemInputStream(filename), macroIO);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public void playMacro(String filename) {
@@ -166,7 +177,7 @@ public abstract class YangSurface {
 		try{
 			initGraphics();
 			
-			mDefaultMacroIO = new DefaultMacroIO(this);
+			mDefaultMacroIO = new DefaultMacroIO(this);System.out.println(mMacroFilename+" "+mResources.fileExistsInFileSystem(mMacroFilename)+"uuuuuuuuuuuuuuuuuuuuuuuu");
 			if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
 				playMacro(mMacroFilename);
 			if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
