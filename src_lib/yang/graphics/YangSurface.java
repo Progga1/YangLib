@@ -75,6 +75,10 @@ public abstract class YangSurface {
 	protected void resumedFromPause(){};
 	protected abstract void draw();
 	
+	protected void onException(Exception ex) {
+		
+	}
+	
 	//Optional methods
 	protected void postInitGraphics() { }
 	protected void initGraphicsForResume() { }
@@ -93,6 +97,7 @@ public abstract class YangSurface {
 	}
 	
 	protected void exceptionOccurred(Exception ex) {
+		onException(ex);
 		if(!CATCH_EXCEPTIONS) {
 			if(ex instanceof RuntimeException)
 				throw (RuntimeException)ex;
