@@ -6,16 +6,17 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.elements.Joint;
 import yang.math.Geometry;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.util.NonConcurrentList;
 
 public class Skeleton3D {
 
+	public static int MAX_JOINTS = 256;
 	public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
 	public static FloatColor hoverColor = new FloatColor(1,0.3f,0.04f);
 	public static FloatColor selectedColor = new FloatColor(1,0,0);
 	
-	public JointEditData[] mJointData = new JointEditData[256];
+	public JointEditData[] mJointData = new JointEditData[MAX_JOINTS];
 	public Default3DGraphics mGraphics3D;
 	public Skeleton mSkeleton;
 	public LineDrawer3D mLineDrawer;
@@ -27,6 +28,10 @@ public class Skeleton3D {
 	public Skeleton3D(Default3DGraphics graphics3D,Skeleton skeleton) {
 		mGraphics3D = graphics3D;
 		mSkeleton = skeleton;
+		for(int i=0;i<MAX_JOINTS;i++) {
+			mJointData[i] = new JointEditData();
+		}
+		refreshSkeletonData();
 	}
 	
 	public Skeleton3D initLines(int cylinderSamples,float lineWidth) {
@@ -34,6 +39,13 @@ public class Skeleton3D {
 		mLineDrawer.setSamples(cylinderSamples);
 		mLineDrawer.mLineWidth = lineWidth;
 		return this;
+	}
+	
+	public void refreshSkeletonData() {
+		int i=0;
+		for(Joint joint:mSkeleton.mJoints) {
+			mJointData[i].set(joint);
+		}
 	}
 	
 	public void draw() {
@@ -52,11 +64,14 @@ public class Skeleton3D {
 		mGraphics3D.fillBuffers();
 		
 		for(Joint joint:mSkeleton.mJoints) {
-			if(joint==mHoverJoint) {
+			JointEditData data = mJointData[joint.mId];
+			
+			if(data.mSelected)
+				mGraphics3D.setColor(selectedColor);
+			else if(joint==mHoverJoint)
 				mGraphics3D.setColor(hoverColor);
-			}else{
+			else
 				mGraphics3D.setColor(jointColor);
-			}
 			mGraphics3D.drawSphere(24,16, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius(), 2,1);
 		}
 		
@@ -82,6 +97,25 @@ public class Skeleton3D {
 			}
 		}
 		return result;
+	}
+	
+	public JointEditData getJointEditData(Joint joint) {
+		return mJointData[joint.mId];
+	}
+
+	public void setJointSelected(Joint joint,boolean selected) {
+		mJointData[joint.mId].mSelected = selected;
+	}
+
+	public void unselectAllJoints() {
+		for(Joint joint:mSkeleton.mJoints) {
+			mJointData[joint.mId].mSelected = false;
+			joint.endDrag();
+		}
+	}
+
+	public NonConcurrentList<Joint> getJoints() {
+		return mSkeleton.mJoints;
 	}
 	
 }

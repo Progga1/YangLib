@@ -544,7 +544,7 @@ public abstract class Skeleton {
 	}
 
 	public int getNextJointId() {
-		return mCurJointId;
+		return mCurJointId++;
 	}
 	
 }
