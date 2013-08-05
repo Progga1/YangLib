@@ -46,5 +46,9 @@ public class CylinderCreator extends MeshCreator<Default3DGraphics> {
 	public void putColor(float[] color) {
 		mGraphics.mCurrentVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, color, mSamples*2+2);
 	}
+
+	public int getVertexCount() {
+		return mSamples*2;
+	}
 	
 }

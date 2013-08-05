@@ -20,6 +20,7 @@ import yang.graphics.programs.permutations.SubShader;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
+import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
 import yang.math.objects.matrix.YangMatrix;
@@ -38,6 +39,9 @@ public class OBJSampleState extends SampleState {
 	private Camera3D mCamera = new Camera3D();
 	private int mObjCount = 0;
 	private ObjMaterialHandles mMatHandles;
+	private Texture mToonRamp1;
+	private Texture mToonRamp2;
+	private ToonRampSubShader mToonRampShader;
 	
 	@Override
 	protected void initGraphics() {
@@ -45,10 +49,12 @@ public class OBJSampleState extends SampleState {
 		
 		mLightProperties = new LightProperties();
 		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLightProperties,new FloatColor(0.3f)));
-		SubShader toonRamp = new ToonRampSubShader(mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR)));
+		mToonRamp1 = mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR));
+		mToonRamp2 = mGFXLoader.getImage("toon_ramp2",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR));
+		mToonRampShader = new ToonRampSubShader(mToonRamp1);
 		SubShader toonShader = new ToonDiffuseSubShader();
 		SubShader emisShader = new EmissiveSubShader(null);
-		SubShader[] additionalShaders = new SubShader[]{toonRamp,toonShader,new CameraPerVertexVectorSubShader(mCamera),new ToonSpecularLightSubShader(null),emisShader,new ToonOutlineSubShader(new FloatWrapper(0.3f))};
+		SubShader[] additionalShaders = new SubShader[]{mToonRampShader,toonShader,new CameraPerVertexVectorSubShader(mCamera),new ToonSpecularLightSubShader(null),emisShader,new ToonOutlineSubShader(new FloatWrapper(0.3f))};
 		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mLightProperties,new FloatColor(0.4f),additionalShaders));
 		mActiveShader = mObjProgram;
 		
@@ -155,6 +161,12 @@ public class OBJSampleState extends SampleState {
 			else
 				mActiveShader = mObjProgram;
 			mMatHandles.refreshHandles(mActiveShader);
+		}
+		if(code=='r') {
+			if(mToonRampShader.mRampTex==mToonRamp1)
+				mToonRampShader.mRampTex = mToonRamp2;
+			else
+				mToonRampShader.mRampTex = mToonRamp1;
 		}
 	}
 	

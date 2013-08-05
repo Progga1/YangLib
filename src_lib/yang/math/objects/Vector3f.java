@@ -130,9 +130,9 @@ public class Vector3f {
 	}
 
 	public void createOrthoVec(Vector3f ortho) {
-		if(ortho.mX<ortho.mY && ortho.mX>ortho.mZ) {
+		if(ortho.mX<=ortho.mY && ortho.mX<=ortho.mZ) {
 			setNormalized(0,-ortho.mZ,ortho.mY);
-		}else if(ortho.mY<ortho.mX && ortho.mY>ortho.mZ) {
+		}else if(ortho.mY<=ortho.mX && ortho.mY<=ortho.mZ) {
 			setNormalized(-ortho.mZ,0,ortho.mX);
 		}else{
 			setNormalized(-ortho.mY,ortho.mX,0);

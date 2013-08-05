@@ -44,4 +44,8 @@ public class LineDrawer3D extends MeshCreator<Default3DGraphics> {
 		drawLine(startX,startY,startZ, endX,endY,endZ, mLineWidth, mLineWidth);
 	}
 	
+	public int getLineVertexCount() {
+		return mCylinder.getVertexCount();
+	}
+	
 }

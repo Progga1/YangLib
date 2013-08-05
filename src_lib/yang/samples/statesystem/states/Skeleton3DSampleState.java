@@ -17,6 +17,7 @@ import yang.graphics.programs.permutations.SubShader;
 import yang.graphics.skeletons.Skeleton3D;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
+import yang.math.objects.Vector3f;
 import yang.samples.SampleSkeleton;
 import yang.samples.statesystem.SampleState;
 
@@ -29,6 +30,9 @@ public class Skeleton3DSampleState extends SampleState {
 	private LightProperties mLight;
 	private float mViewAlpha,mViewBeta;
 	private float mPntX,mPntY;
+	
+	private Vector3f mCamRight;
+	private Vector3f mCamUp;
 	
 	@Override
 	public void initGraphics() {
@@ -45,6 +49,7 @@ public class Skeleton3DSampleState extends SampleState {
 				};
 		//mShader = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLight,new FloatColor(0.3f)));
 		mShader = mGraphics.addProgram(new ShaderPermutations(mGraphics,subShaders));
+		mLight.mDirection.setAlphaBeta(0.4f, 0.4f);
 	}
 	
 	@Override
@@ -56,6 +61,8 @@ public class Skeleton3DSampleState extends SampleState {
 
 	@Override
 	protected void draw() {
+		mSkeleton.refreshVisualVars();
+		
 		mGraphics3D.activate();
 		mGraphics3D.setPerspectiveProjection(10);
 		mGraphics.clear(0f,0f,0.3f, GLMasks.DEPTH_BUFFER_BIT);
@@ -66,25 +73,34 @@ public class Skeleton3DSampleState extends SampleState {
 		mGraphics.bindTexture(null);
 		mGraphics3D.setShaderProgram(mShader);
 		mLight.mDiffuse.set(0.5f);
-		mLight.mDirection.setAlphaBeta((float)mStateTimer*0.1f, 0.4f);
 		mCamera.setAlphaBeta(mViewAlpha,mViewBeta,2, 0,1,0);
 		mGraphics3D.setCamera(mCamera);
 		mSkeleton3D.draw();
+		
+//		mGraphics3D.setDefaultProgram();
+//		mGraphics3D.drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1);
 
-		if(false) {
-			mGraphics2D.activate();
-			mGraphics.switchZBuffer(false);
-			mGraphics2D.setCamera(0, 0.5f, 2);
-			mSkeleton.refreshVisualVars();
-			mSkeleton.draw();
-		}
+		mGraphics2D.activate();
+		mGraphics.switchZBuffer(false);
+		
+//		mGraphics2D.setCamera(0, 0.5f, 2);
+//		mSkeleton.draw();
+		
+		mGraphics2D.switchGameCoordinates(false);
+		
+		mGraphics2D.activate();
+		mGraphics.switchZBuffer(false);
+		
 		
 	}
 	
 	@Override
 	public void keyDown(int code) {
 		if(code=='p') {
-			mSkeleton.mConstantForceY = -0.01f;
+			mSkeleton.mConstantForceY = -0.025f;
+		}
+		if(code=='l') {
+			mLight.mDirection.setAlphaBeta(mViewAlpha,mViewBeta);
 		}
 	}
 	
@@ -106,7 +122,10 @@ public class Skeleton3DSampleState extends SampleState {
 				mViewBeta = -MAX_BETA;
 			if(mViewBeta>MAX_BETA)
 				mViewBeta = MAX_BETA;
-			
+		}
+		if(event.mButton == YangPointerEvent.BUTTON_LEFT) {
+			mGraphics3D.getCameraRightVector(mCamRight);
+			mGraphics3D.getCameraUpVector(mCamUp);
 		}
 		mPntX = x;
 		mPntY = y;
