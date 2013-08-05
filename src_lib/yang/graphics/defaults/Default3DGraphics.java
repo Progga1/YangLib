@@ -430,4 +430,25 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.BLUE,1);
 	}
 	
+	private Vector3f tempVec1 = new Vector3f();
+	private Vector3f tempVec2 = new Vector3f();
+	private YangMatrixCameraOps mProjectionMatrix = new YangMatrixCameraOps();
+	
+	public void prepareProjection() {
+		this.getToScreenTransform(mProjectionMatrix);
+	}
+	
+	public float getProjectedPositionAndRadius(Vector3f target, float x, float y, float z, float radius) {
+		mProjectionMatrix.apply3D(x,y,z,target);
+		getCameraRightVector(tempVec1);
+		tempVec1.scale(radius);
+		tempVec1.add(x,y,z);
+		mProjectionMatrix.apply3D(tempVec1.mX,tempVec1.mY,tempVec1.mZ,tempVec2);
+		return target.getDistance(tempVec2);
+	}
+	
+	public void getProjectedPosition(Vector3f target, float x,float y,float z) {
+		mProjectionMatrix.apply3D(x,y,z,target);
+	}
+	
 }

@@ -155,7 +155,7 @@ public class Skeleton3DSampleState extends SampleState {
 			for(Joint joint:mSkeleton3D.getJoints()) {
 				JointEditData data = mSkeleton3D.getJointEditData(joint);
 				if(data.mSelected)
-					joint.drag(dragX*mCamRight.mX, dragY*mCamUp.mY);
+					joint.drag(dragX*mCamRight.mX,dragY*mCamUp.mY);
 			}
 		}
 		mPntX = x;

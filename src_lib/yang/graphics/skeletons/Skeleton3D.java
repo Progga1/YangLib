@@ -20,7 +20,6 @@ public class Skeleton3D {
 	public Default3DGraphics mGraphics3D;
 	public Skeleton mSkeleton;
 	public LineDrawer3D mLineDrawer;
-	private YangMatrixCameraOps mProjectMatrix = new YangMatrixCameraOps();
 	
 	private Vector3f tempVec1 = new Vector3f();
 	public Joint mHoverJoint = null;
@@ -82,16 +81,15 @@ public class Skeleton3D {
 	}
 
 	public Joint pickJoint(float x,float y,float zoom) {
-		mGraphics3D.getToScreenTransform(mProjectMatrix);
+		mGraphics3D.prepareProjection();
 		float minDist = Float.MAX_VALUE;
 		
 		Joint result = null;
 		float radFac = 1f/zoom;
 		for(Joint joint:mSkeleton.mJoints) {
-			mProjectMatrix.apply3D(joint.mPosX,joint.mPosY,joint.mPosZ,tempVec1);
-			//mGraphics2D.drawRectCentered(mReprojectPos.mX, mReprojectPos.mY, joint.getOutputRadius()*2/mZoom);
+			float rad = mGraphics3D.getProjectedPositionAndRadius(tempVec1, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius());
 			float dist = Geometry.getDistance(x-tempVec1.mX, y-tempVec1.mY);
-			float rad = joint.getOutputRadius()*radFac;
+			//float rad = joint.getOutputRadius()*radFac;
 			if(dist<=rad && dist<=minDist) {
 				result = joint;
 			}
