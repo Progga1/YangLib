@@ -145,6 +145,12 @@ public class YangMatrix {
 		}
 	}
 	
+	public void postScale(float x, float y, float z) {
+		mMatrix[0] *= x;
+		mMatrix[5] *= y;
+		mMatrix[10] *= z;
+	}
+	
 	public void scale(float x, float y) {
 		scale(x, y, 1);
 	}
@@ -375,6 +381,10 @@ public class YangMatrix {
 	
 	public void apply3D(float x, float y, float z, float[] target, int targetOffset) {
 		MatrixOps.applyFloatMatrix3D(mMatrix,x,y,z,target,targetOffset);
+	}
+	
+	public void apply3D(float x, float y, float z,Vector3f target) {
+		MatrixOps.applyFloatMatrix3D(mMatrix, x, y, z, target);
 	}
 	
 	public void apply3DNormalized(float x, float y, float z, float[] target, int targetOffset) {

@@ -11,10 +11,11 @@ public class Joint {
 	public static float AWAY_FACTOR = 160;
 	
 	//Properties
+	public int mId;
 	public String mName;
 	public float mRadius;
 	public boolean mFixed;
-	public float mass;
+	public float mMass;
 	public Skeleton mSkeleton;
 	public Joint mAngleParent;
 	public float mParentDistance;
@@ -43,10 +44,11 @@ public class Joint {
 		mPosZ = 0;
 		mRadius = radius;
 		mFixed = false;
-		mass = 1;
+		mMass = 1;
 		mDragging = false;
 		mAnimate = true;
 		mSkeleton = skeleton;
+		mId = mSkeleton.getNextJointId();
 		mSavePose = true;
 		mChildren = new NonConcurrentList<Joint>();
 		mFriction = DEFAULT_FRICTION;
@@ -160,8 +162,8 @@ public class Joint {
 				addPositionForce(mTargetPosX,mTargetPosY,1);
 			}
 			
-			mVelX += mForceX/mass * mForceFactor * deltaTime;
-			mVelY += mForceY/mass * mForceFactor * deltaTime;
+			mVelX += mForceX/mMass * mForceFactor * deltaTime;
+			mVelY += mForceY/mMass * mForceFactor * deltaTime;
 			
 			mVelX *= mFriction;
 			mVelY *= mFriction;

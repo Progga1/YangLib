@@ -66,6 +66,7 @@ public abstract class Skeleton {
 	public boolean mDrawFill;
 	public float mScale = 1;
 	public float mPosZ = 0;
+	private int mCurJointId = 0;
 	
 	public DrawBatch mMesh;
 	protected IndexedVertexBuffer mVertexBuffer;
@@ -124,6 +125,7 @@ public abstract class Skeleton {
 		
 		mDrawFill = true;
 		
+		mCurJointId = 0;
 		build();
 		
 		mBoundariesRect = new Rect();
@@ -539,6 +541,10 @@ public abstract class Skeleton {
 
 	public void updatedTextureCoords() {
 		this.mUpdateTexCoords = true;
+	}
+
+	public int getNextJointId() {
+		return mCurJointId;
 	}
 	
 }

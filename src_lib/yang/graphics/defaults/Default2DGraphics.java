@@ -312,7 +312,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 	
 	@Override
-	public void refreshResultTransform() {
+	public void refreshViewTransform() {
 		mCameraProjectionMatrix.set(mCurProjTransform);
 	}
 

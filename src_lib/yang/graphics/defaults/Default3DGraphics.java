@@ -51,6 +51,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private TerrainCreator mDefaultTerrainCreator;
 	private SphereCreator mSphereCreator;
 	private LineDrawer3D mLineDrawer;
+	private YangMatrix mTempMatrix = new YangMatrix();
 	
 	protected boolean mCurIsPerspective;
 	protected float mCurNear,mCurFar,mCurFovy,mCurZoom;
@@ -209,7 +210,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 	
 	@Override
-	public void refreshResultTransform() {
+	public void refreshViewTransform() {
 		if(mBillboardMode) {
 			mCameraProjectionMatrix.set(mCameraMatrix);
 			mCameraProjectionMatrix.setTranslationOnly();

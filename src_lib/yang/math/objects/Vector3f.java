@@ -143,5 +143,19 @@ public class Vector3f {
 	public String toString() {
 		return "("+mX+","+mY+","+mZ+")";
 	}
+
+	public float getDistance(float[] coordinates) {
+		float dX = mX-coordinates[0];
+		float dY = mY-coordinates[1];
+		float dZ = mZ-coordinates[2];
+		return (float)Math.sqrt(dX*dX+dY*dY+dZ*dZ);
+	}
+
+	public float getDistance(Vector3f vector) {
+		float dX = mX-vector.mX;
+		float dY = mY-vector.mY;
+		float dZ = mZ-vector.mZ;
+		return (float)Math.sqrt(dX*dX+dY*dY+dZ*dZ);
+	}
 	
 }

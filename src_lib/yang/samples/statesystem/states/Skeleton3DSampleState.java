@@ -15,9 +15,11 @@ import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
 import yang.graphics.skeletons.Skeleton3D;
+import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
 import yang.math.objects.Vector3f;
+import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.samples.SampleSkeleton;
 import yang.samples.statesystem.SampleState;
 
@@ -30,9 +32,12 @@ public class Skeleton3DSampleState extends SampleState {
 	private LightProperties mLight;
 	private float mViewAlpha,mViewBeta;
 	private float mPntX,mPntY;
+	private float mZoom = 1.5f;
 	
-	private Vector3f mCamRight;
-	private Vector3f mCamUp;
+	private Vector3f mCamRight = new Vector3f();
+	private Vector3f mCamUp = new Vector3f();
+	private Vector3f mReprojectPos = new Vector3f();
+	private YangMatrixCameraOps mProjectMatrix = new YangMatrixCameraOps();
 	
 	@Override
 	public void initGraphics() {
@@ -64,7 +69,8 @@ public class Skeleton3DSampleState extends SampleState {
 		mSkeleton.refreshVisualVars();
 		
 		mGraphics3D.activate();
-		mGraphics3D.setPerspectiveProjection(10);
+		//mGraphics3D.setPerspectiveProjection(10);
+		mGraphics3D.setOrthogonalProjection(-1,10,mZoom);
 		mGraphics.clear(0f,0f,0.3f, GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics.switchZBuffer(true);
 		
@@ -80,6 +86,8 @@ public class Skeleton3DSampleState extends SampleState {
 //		mGraphics3D.setDefaultProgram();
 //		mGraphics3D.drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1);
 
+		
+		
 		mGraphics2D.activate();
 		mGraphics.switchZBuffer(false);
 		
@@ -88,10 +96,12 @@ public class Skeleton3DSampleState extends SampleState {
 		
 		mGraphics2D.switchGameCoordinates(false);
 		
-		mGraphics2D.activate();
-		mGraphics.switchZBuffer(false);
-		
-		
+//		mGraphics2D.setColor(1,1,1,0.8f);
+//		mGraphics3D.getToScreenTransform(mProjectMatrix);
+//		for(Joint joint:mSkeleton.mJoints) {
+//			mProjectMatrix.apply3D(joint.mPosX,joint.mPosY,joint.mPosZ,mReprojectPos);
+//			mGraphics2D.drawRectCentered(mReprojectPos.mX, mReprojectPos.mY, joint.getOutputRadius()*2/mZoom);
+//		}
 	}
 	
 	@Override
@@ -106,12 +116,20 @@ public class Skeleton3DSampleState extends SampleState {
 	
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
+		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
 		mPntX = x;
 		mPntY = y;
 	}
 
 	@Override
+	public void pointerMoved(float x,float y,YangPointerEvent event) {
+		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
+		mSkeleton3D.mHoverJoint = pJoint;
+	}
+	
+	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
+		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
 		float deltaX = x-mPntX;
 		float deltaY = y-mPntY;
 		if(event.mButton == YangPointerEvent.BUTTON_MIDDLE) {
