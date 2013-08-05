@@ -12,7 +12,7 @@ public class DrawableString extends FixedString {
 	protected static YangMatrix interMatrix;
 	protected static YangMatrix interMatrix2;
 	
-	public static int MAX_DYNAMIC_CHARS = 2048;
+	public static int MAX_DYNAMIC_CHARS = 10000;
 	public static int CHAR_MACRO = 1024;
 	public static int CHAR_WORD_SPLITTER = '~';
 	protected static float LINEBREAK_FLOAT = Float.MIN_VALUE;

@@ -29,7 +29,7 @@ public class Joint {
 	//State
 	public float mForceX,mForceY;
 	public float mVelX,mVelY;
-	public float mPosX, mPosY;
+	public float mPosX, mPosY, mPosZ;
 	public float mDragToX,mDragToY;
 	public float mTargetPosX,mTargetPosY;
 	public boolean mDragging;
@@ -40,6 +40,7 @@ public class Joint {
 		mFixed = false;
 		mPosX = posX;
 		mPosY = posY;
+		mPosZ = 0;
 		mRadius = radius;
 		mFixed = false;
 		mass = 1;

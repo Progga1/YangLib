@@ -28,14 +28,20 @@ public class LineDrawer3D extends MeshCreator<Default3DGraphics> {
 	private Vector3f vec2 = new Vector3f();
 	private Vector3f vec3 = new Vector3f();
 	
-	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ) {
+	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ, float startWidth,float endWidth) {
 		transform.loadIdentity();
 		vec1.set(endX-startX, endY-startY, endZ-startZ);
 		vec2.createOrthoVec(vec1);
-		vec3.cross(vec1, vec2);
-		transform.multiplyBaseVectorsRight(vec1,vec2,vec3);
-		transform.scale(mLineWidth, 1, mLineWidth);
-		mCylinder.drawCylinder(transform, true);
+		vec3.cross(vec2, vec1);
+		vec3.normalize();
+		transform.translate(startX, startY, startZ);
+		transform.multiplyBaseVectorsRight(vec2,vec1,vec3);
+		//transform.scale(width, 1, width);
+		mCylinder.drawCylinder(transform, startWidth, endWidth);
+	}
+	
+	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ) {
+		drawLine(startX,startY,startZ, endX,endY,endZ, mLineWidth, mLineWidth);
 	}
 	
 }

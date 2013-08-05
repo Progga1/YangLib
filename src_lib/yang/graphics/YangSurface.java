@@ -177,7 +177,7 @@ public abstract class YangSurface {
 		try{
 			initGraphics();
 			
-			mDefaultMacroIO = new DefaultMacroIO(this);System.out.println(mMacroFilename+" "+mResources.fileExistsInFileSystem(mMacroFilename)+"uuuuuuuuuuuuuuuuuuuuuuuu");
+			mDefaultMacroIO = new DefaultMacroIO(this);
 			if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
 				playMacro(mMacroFilename);
 			if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {

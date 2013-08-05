@@ -20,7 +20,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	};
 	
 	private BasicProgram mDefaultProgram;
-	public BasicProgram mAdditiveModulateProgram;
 	
 	//State
 	protected LegacyAbstractFont mCurrentLegacyFont;
@@ -45,9 +44,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	protected void derivedInit() {
 		super.derivedInit();
 		mDefaultProgram = new BasicProgram();
-		mAdditiveModulateProgram = new AdditiveModulateProgram();
 		mTranslator.addProgram(mDefaultProgram);
-		mTranslator.addProgram(mAdditiveModulateProgram);
 		mCamX = 0;
 		mCamY = 0;
 		mZoom = 1;

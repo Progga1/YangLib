@@ -14,32 +14,33 @@ public class CylinderCreator extends MeshCreator<Default3DGraphics> {
 		mSamples = 8;
 	}
 
-	public void drawCylinder(YangMatrix transform,boolean calcNormals,float bottomRadius,float topRadius) {
+	public void drawCylinder(YangMatrix transform,float bottomRadius,float topRadius) {
 		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
 		if(transform==null)
 			transform = YangMatrix.IDENTITY;
 		float alpha = 0;
 		float omega = 2*PI/mSamples;
 		int startIndex = vertexBuffer.getCurrentIndexWriteCount();
+		int startVertex = vertexBuffer.getCurrentVertexWriteCount();
 		for(int i=0;i<mSamples;i++) {
 			float x = (float)Math.sin(alpha);
 			float z = (float)Math.cos(alpha);
 			vertexBuffer.putTransformed3D(DefaultGraphics.ID_POSITIONS, x*bottomRadius, 0, z*bottomRadius, transform.mMatrix);
 			vertexBuffer.putTransformed3D(DefaultGraphics.ID_POSITIONS, x*topRadius, 1, z*topRadius, transform.mMatrix);
 			if(i>0) {
-				int i2 = 2*i;
+				int i2 = startVertex+2*i;
 				//vertexBuffer.putRectIndices(2*i-2,(i2%mSamples),i2-1,(i2+1)%mSamples);
 				vertexBuffer.putRectIndices(i2-2,i2,i2-1,i2+1);
 			}
 			alpha += omega;
 		}
-		vertexBuffer.putRectIndices(mSamples*2-2,0,mSamples*2-1,1);
-		if(calcNormals)
-			mGraphics.fillNormals(startIndex);
+		vertexBuffer.putRectIndices(startVertex+mSamples*2-2,startVertex,startVertex+mSamples*2-1,startVertex+1);
+//		if(calcNormals)
+//			mGraphics.fillNormals(0);
 	}
 	
-	public void drawCylinder(YangMatrix transform,boolean calcNormals) {
-		drawCylinder(transform,calcNormals,1,1);
+	public void drawCylinder(YangMatrix transform) {
+		drawCylinder(transform,1,1);
 	}
 	
 	public void putColor(float[] color) {
