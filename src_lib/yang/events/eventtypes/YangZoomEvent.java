@@ -7,7 +7,9 @@ public class YangZoomEvent extends YangEvent {
 
 	public float mValue;
 	
-	public void handleZoomEvent(RawEventListener listener) {
+	@Override
+	public void handle(RawEventListener listener) {
+		super.handle(listener);
 		if(listener.rawEvent(this))
 			return;
 		if(!(listener instanceof ZoomEventListener))

@@ -21,6 +21,7 @@ public class ShaderPermutationsParser {
 	public void setVariable(String key,String value) {
 		mVariables.put(key,value);
 	}
+
 	
 	public void appendLn(String key,String value) {
 		String var = mVariables.get(key);

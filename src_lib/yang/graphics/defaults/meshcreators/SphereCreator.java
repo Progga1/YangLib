@@ -1,6 +1,7 @@
 package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.defaults.Default3DGraphics;
+import yang.graphics.defaults.meshcreators.grids.Grid3DCreator;
 import yang.math.Geometry;
 import yang.math.objects.matrix.YangMatrix;
 

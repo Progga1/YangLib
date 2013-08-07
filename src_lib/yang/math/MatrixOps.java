@@ -2,6 +2,8 @@ package yang.math;
 
 import java.util.Arrays;
 
+import yang.math.objects.Vector3f;
+
 public class MatrixOps {
 
 	//Indices: Row-Column
@@ -235,6 +237,19 @@ public class MatrixOps {
 		targetVector[targetOffset+2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
 		if(targetVector.length>3) {
 			targetVector[targetOffset+3] = applyFloatMatrixW3D(matrix,x,y,z);
+		}
+	}
+	
+	public static final void applyFloatMatrix3D(float[] matrix, float x, float y, float z, Vector3f targetVector) {
+		targetVector.mX = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
+		targetVector.mY = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
+		targetVector.mZ = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
+		float w = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
+		if(w!=1 && w!=0) {
+			w = 1/w;
+			targetVector.mX *= w;
+			targetVector.mY *= w;
+			targetVector.mZ *= w;
 		}
 	}
 	

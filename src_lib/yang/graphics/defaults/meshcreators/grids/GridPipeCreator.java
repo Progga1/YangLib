@@ -1,13 +1,13 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.meshcreators.grids;
 
 import yang.graphics.defaults.Default3DGraphics;
 import yang.math.objects.matrix.YangMatrix;
 
-public class PipeCreator extends Grid3DCreator {
+public class GridPipeCreator extends Grid3DCreator {
 
 	public float mRadiusOffset;
 	
-	public PipeCreator(Default3DGraphics graphics) {
+	public GridPipeCreator(Default3DGraphics graphics) {
 		super(graphics);
 		mRadiusOffset = 0;
 	}

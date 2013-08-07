@@ -2,6 +2,7 @@ package yang.graphics.skeletons.elements;
 
 import yang.graphics.skeletons.Skeleton;
 import yang.math.Geometry;
+import yang.math.objects.Point3f;
 import yang.util.NonConcurrentList;
 
 public class Joint {
@@ -11,10 +12,11 @@ public class Joint {
 	public static float AWAY_FACTOR = 160;
 	
 	//Properties
+	public int mId;
 	public String mName;
 	public float mRadius;
 	public boolean mFixed;
-	public float mass;
+	public float mMass;
 	public Skeleton mSkeleton;
 	public Joint mAngleParent;
 	public float mParentDistance;
@@ -27,11 +29,11 @@ public class Joint {
 	public boolean mEnabled;
 	
 	//State
-	public float mForceX,mForceY;
-	public float mVelX,mVelY;
-	public float mPosX, mPosY;
-	public float mDragToX,mDragToY;
-	public float mTargetPosX,mTargetPosY;
+	public float mForceX,mForceY,mForceZ;
+	public float mVelX,mVelY,mVelZ;
+	public float mPosX, mPosY, mPosZ;
+	public Point3f mDragDelay = new Point3f();
+	public Point3f mDragTo = new Point3f();
 	public boolean mDragging;
 	public float mParentCurAngle;
 	
@@ -40,12 +42,14 @@ public class Joint {
 		mFixed = false;
 		mPosX = posX;
 		mPosY = posY;
+		mPosZ = 0;
 		mRadius = radius;
 		mFixed = false;
-		mass = 1;
+		mMass = 1;
 		mDragging = false;
 		mAnimate = true;
 		mSkeleton = skeleton;
+		mId = mSkeleton.getNextJointId();
 		mSavePose = true;
 		mChildren = new NonConcurrentList<Joint>();
 		mFriction = DEFAULT_FRICTION;
@@ -102,18 +106,25 @@ public class Joint {
 		mVelY = preface.mVelY;
 	}
 	
-	public void addPositionForce(float posX,float posY,float factor) {
+	public void addPositionForce(float posX,float posY,float posZ,float factor) {
 		float dX = posX - mPosX;
 		float dY = posY - mPosY;
-		float dist = (float)Math.sqrt(dX*dX + dY*dY);
+		float dZ = posZ - mPosZ;
+		float dist = (float)Math.sqrt(dX*dX + dY*dY + dZ*dZ);
 		if(dist>0) {
 			float nX = dX/dist;
 			float nY = dY/dist;
+			float nZ = dZ/dist;
 			float fac;
-			fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR;
-			mForceX += fac * dist*nX * mPositionForceFactor * factor;
-			mForceY += fac * dist*nY * mPositionForceFactor * factor;
+			fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR * mPositionForceFactor * factor;//TODO 3D
+			mForceX += fac * dist*nX;
+			mForceY += fac * dist*nY;
+			mForceZ += fac * dist*nZ;
 		}
+	}
+	
+	public void addPositionForce(float posX,float posY,float factor) {
+		addPositionForce(posX,posY,0,factor);
 	}
 	
 	/**
@@ -150,37 +161,41 @@ public class Joint {
 			if(mFixed) {
 				mForceX = 0;
 				mForceY = 0;
+				mForceZ = 0;
 			}
 			
 			if(mDragging) {
-				mTargetPosX += (mDragToX-mTargetPosX)*0.1f;
-				mTargetPosY += (mDragToY-mTargetPosY)*0.1f;
-				//addPositionForce(mPosX+(mTargetPosX-mPosX)*0.1f,mPosY+(mTargetPosY-mPosY)*0.1f);
-				addPositionForce(mTargetPosX,mTargetPosY,1);
+				mDragDelay.lerp(mDragTo,0.02f);
+				addPositionForce(mDragDelay.mX,mDragDelay.mY,mDragDelay.mZ,1);
 			}
 			
-			mVelX += mForceX/mass * mForceFactor * deltaTime;
-			mVelY += mForceY/mass * mForceFactor * deltaTime;
+			mVelX += mForceX/mMass * mForceFactor * deltaTime;
+			mVelY += mForceY/mMass * mForceFactor * deltaTime;
+			mVelZ += mForceZ/mMass * mForceFactor * deltaTime;
 			
 			mVelX *= mFriction;
 			mVelY *= mFriction;
+			mVelZ *= mFriction;
 			
 			mPosX += mVelX * deltaTime;
 			mPosY += mVelY * deltaTime;
+			mPosZ += mVelZ * deltaTime;
 		}
 	}
 	
 	public void startDrag() {
-		mDragToX = mPosX;
-		mDragToY = mPosY;
-		mTargetPosX = mPosX;
-		mTargetPosY = mPosY;
+		mDragDelay.set(mPosX,mPosY,mPosZ);
+		mDragTo.set(mDragDelay);
 		mDragging = true;
 	}
 	
+	public void drag(float deltaX,float deltaY,float deltaZ) {
+		float fac = 1f/mSkeleton.mCarrier.getScale();
+		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
+	}
+	
 	public void drag(float deltaX,float deltaY) {
-		mDragToX += deltaX/mSkeleton.mCarrier.getScale();
-		mDragToY += deltaY/mSkeleton.mCarrier.getScale();
+		drag(deltaX,deltaY,0);
 	}
 	
 	public void endDrag() {

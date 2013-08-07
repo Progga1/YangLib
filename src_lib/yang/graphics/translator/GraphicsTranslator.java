@@ -255,8 +255,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	protected void initTexture(Texture targetTexture, ByteBuffer buffer) {
-		if(buffer!=null)
+		if(buffer!=null) {
 			buffer.order(ByteOrder.nativeOrder());
+			buffer.rewind();
+		}
 		targetTexture.setId(genTexture());
 		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),buffer,targetTexture.mSettings);
 		if(buffer!=null)
@@ -372,10 +374,30 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return createTexCoords().init(x1,y1,widthAndHeight);
 	}
 	
-	public Texture createEmptyTexture(int width,int height,TextureProperties settings) {
+	public Texture createEmptyTexture(int width,int height,TextureProperties texProperties,FloatColor fillColor) {
 		Texture texture = new Texture(this);
-		texture.set(null, width, height, settings);
+		if(fillColor==null) {
+			texture.set(null, width, height, texProperties);
+		}else{
+			int channels = texProperties.mChannels;
+			int bytes = width*height;
+			ByteBuffer buf = ByteBuffer.allocateDirect(bytes*channels).order(ByteOrder.nativeOrder());
+			for(int i=0;i<bytes;i++) {
+				for(int j=0;j<channels;j++)
+					buf.put((byte)(fillColor.mValues[j]*255));
+			}
+			texture.set(buf, width, height, texProperties);
+		}
+
 		return texture;
+	}
+	
+	public Texture createEmptyTexture(int width,int height,TextureProperties texProperties) {
+		return createEmptyTexture(width,height,texProperties,null);
+	}
+	
+	public Texture createSingleColorTexture(FloatColor color) {
+		return createEmptyTexture(2,2,new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST),color);
 	}
 	
 	public Texture createTexture() {

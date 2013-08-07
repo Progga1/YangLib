@@ -24,6 +24,8 @@ import yang.util.Util;
 
 public abstract class YangSurface {
 	
+	public static boolean CATCH_EXCEPTIONS = true;
+	
 	public GraphicsTranslator mGraphics;
 	public StringsXML mStrings;
 	public AbstractResourceManager mResources;
@@ -73,6 +75,10 @@ public abstract class YangSurface {
 	protected void resumedFromPause(){};
 	protected abstract void draw();
 	
+	protected void onException(Exception ex) {
+		
+	}
+	
 	//Optional methods
 	protected void postInitGraphics() { }
 	protected void initGraphicsForResume() { }
@@ -91,10 +97,24 @@ public abstract class YangSurface {
 	}
 	
 	protected void exceptionOccurred(Exception ex) {
+		try{
+			mEventQueue.close();
+			if(mMacro!=null)
+				mMacro.close();
+		}catch(Exception ex2) {
+			
+		}
+		onException(ex);
+		if(!CATCH_EXCEPTIONS) {
+			if(ex instanceof RuntimeException)
+				throw (RuntimeException)ex;
+			else
+				throw new RuntimeException(ex);
+		}
 		mException = true;
 		mPaused = true;
 		if(mGFXDebug!=null)
-			mGFXDebug.setErrorString(ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
+			mGFXDebug.setErrorString(ex.getClass()+": "+ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
 		ex.printStackTrace();
 	}
 	
@@ -129,7 +149,11 @@ public abstract class YangSurface {
 	}
 	
 	public void playMacro(String filename,AbstractMacroIO macroIO) {
-		mMacro = new MacroExecuter(mResources.getFileSystemInputStream(filename), macroIO);
+		try {
+			mMacro = new MacroExecuter(mResources.getFileSystemInputStream(filename), macroIO);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public void playMacro(String filename) {

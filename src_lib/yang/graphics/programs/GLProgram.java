@@ -6,6 +6,8 @@ import yang.math.objects.Vector3f;
 
 public abstract class GLProgram {
 
+	public int mTextureLevelCount = 0;
+	
 	protected abstract void derivedCompile(String vertexShaderCode, String fragmentShaderCode,Object sender);
 	public abstract void activate();
 	public abstract int getAttributeLocation(String attribute);
@@ -51,6 +53,9 @@ public abstract class GLProgram {
 		String vertexPreProc = preProcessCode(vertexShaderCode);
 		String fragmentPreProc = preProcessCode(fragmentShaderCode);
 		derivedCompile(vertexPreProc,fragmentPreProc,sender);
+	}
+	public int nextTextureLevel() {
+		return mTextureLevelCount++;
 	}
 	
 }

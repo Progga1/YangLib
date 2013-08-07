@@ -203,7 +203,7 @@ public class GFXDebug implements PrintInterface {
 		}
 		
 		prevDrawer.activate();
-		mGraphics.bindTexture(null);
+		mGraphics.mTranslator.bindTexture(null);
 	}
 	
 	public void setErrorString(String error) {

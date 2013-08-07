@@ -13,7 +13,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	public static boolean PRINT_ACTIVITY_DEBUG = true;
 	
 	public YangActivity() {
-		DebugYang.AUTO_RECORD_MACRO = false;
+		
 	}
 	
 	protected static YangTouchSurface mGLView;
@@ -35,6 +35,8 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	}
 	
 	protected void setSurface(YangSurface yangSurface) {
+		if(DebugYang.PLAY_MACRO_FILENAME!=null)
+			yangSurface.setMacroFilename(DebugYang.PLAY_MACRO_FILENAME);
 		mGLView.setSurface(yangSurface);
 	}
 	

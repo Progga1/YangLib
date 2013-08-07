@@ -1,7 +1,7 @@
 package yang.graphics.skeletons.defaults;
 
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultAnimationPlayer;
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.Skeleton;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.AnimationPlayer;
@@ -10,14 +10,12 @@ public class DefaultSkeletonCarrier implements SkeletonCarrier {
 
 	private Skeleton mSkeleton;
 	public DefaultAnimationPlayer mAnimationPlayer;
-	public Default2DGraphics mGraphics2D;
 	public float mPosX;
 	public float mPosY;
 	public int mLookDirection;
 	public float mScale;
 	
-	public DefaultSkeletonCarrier(Default2DGraphics graphics2D) {
-		mGraphics2D = graphics2D;
+	public DefaultSkeletonCarrier() {
 		mPosX = 0;
 		mPosY = 0;
 		mScale = 1;
@@ -50,10 +48,6 @@ public class DefaultSkeletonCarrier implements SkeletonCarrier {
 			mSkeleton.refreshVisualVars();
 			mSkeleton.draw();
 		}
-	}
-
-	public Default2DGraphics getGraphics() {
-		return mGraphics2D;
 	}
 
 	public void setSkeleton(Skeleton skeleton) {

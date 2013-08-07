@@ -20,7 +20,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	};
 	
 	private BasicProgram mDefaultProgram;
-	public BasicProgram mAdditiveModulateProgram;
 	
 	//State
 	protected LegacyAbstractFont mCurrentLegacyFont;
@@ -45,9 +44,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	protected void derivedInit() {
 		super.derivedInit();
 		mDefaultProgram = new BasicProgram();
-		mAdditiveModulateProgram = new AdditiveModulateProgram();
 		mTranslator.addProgram(mDefaultProgram);
-		mTranslator.addProgram(mAdditiveModulateProgram);
 		mCamX = 0;
 		mCamY = 0;
 		mZoom = 1;
@@ -95,7 +92,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			mInterTransf1.rotateZ(angle);
 		mInterTransf1.translate((-(anchorX + 1) * 0.5f) * stringWidth(lineHeight, charDistance, s), (-(anchorY + 1) * 0.5f) * lineHeight);
 		
-		bindTexture(mCurrentLegacyFont.getTexture(),0);
+		mTranslator.bindTexture(mCurrentLegacyFont.getTexture(),0);
 		
 		float x = 0;
 		for (int i = 0; i < sLength; ++i) {
@@ -315,7 +312,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 	
 	@Override
-	public void refreshResultTransform() {
+	public void refreshViewTransform() {
 		mCameraProjectionMatrix.set(mCurProjTransform);
 	}
 

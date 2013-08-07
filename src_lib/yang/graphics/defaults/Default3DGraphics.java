@@ -6,12 +6,15 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
+import yang.graphics.defaults.meshcreators.LineDrawer3D;
 import yang.graphics.defaults.meshcreators.SphereCreator;
-import yang.graphics.defaults.meshcreators.TerrainCreator;
+import yang.graphics.defaults.meshcreators.grids.TerrainCreator;
+import yang.graphics.model.FloatColor;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera3D;
+import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
@@ -47,6 +50,8 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private Basic3DProgram mDefaultProgram;
 	private TerrainCreator mDefaultTerrainCreator;
 	private SphereCreator mSphereCreator;
+	private LineDrawer3D mLineDrawer;
+	private YangMatrix mTempMatrix = new YangMatrix();
 	
 	protected boolean mCurIsPerspective;
 	protected float mCurNear,mCurFar,mCurFovy,mCurZoom;
@@ -71,6 +76,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mDefaultTerrainCreator = new TerrainCreator(this);
 		mSphereCreator = new SphereCreator(this);
 		mBillboardMode = false;
+		mLineDrawer = new LineDrawer3D(this);
 	}
 	
 	@Override
@@ -204,7 +210,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 	
 	@Override
-	public void refreshResultTransform() {
+	public void refreshViewTransform() {
 		if(mBillboardMode) {
 			mCameraProjectionMatrix.set(mCameraMatrix);
 			mCameraProjectionMatrix.setTranslationOnly();
@@ -391,6 +397,58 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		}else{
 			setOrthogonalProjection(mCurNear,mCurFar,mCurZoom);
 		}
+	}
+
+	public void getCameraRightVector(Vector3f target) {
+		float[] mat = this.mCameraMatrix.mMatrix;
+		target.mX = mat[0];
+		target.mY = mat[4];
+		target.mZ = mat[8];
+	}
+	
+	public void getCameraUpVector(Vector3f target) {
+		float[] mat = this.mCameraMatrix.mMatrix;
+		target.mX = mat[1];
+		target.mY = mat[5];
+		target.mZ = mat[9];
+	}
+	
+	public void drawCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale) {
+		final float AXIS_WIDTH = 0.03f;
+		int vertexCount = mLineDrawer.getLineVertexCount();
+		mLineDrawer.drawLine(0,0,0, scale,0,0, AXIS_WIDTH,0);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, xColor.mValues, vertexCount);
+		mLineDrawer.drawLine(0,0,0, 0,scale,0, AXIS_WIDTH,0);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, yColor.mValues, vertexCount);
+		mLineDrawer.drawLine(0,0,0, 0,0,scale, AXIS_WIDTH,0);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, zColor.mValues, vertexCount);
+		
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount*3);
+	}
+	
+	public void drawCoordinateAxes() {
+		drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.BLUE,1);
+	}
+	
+	private Vector3f tempVec1 = new Vector3f();
+	private Vector3f tempVec2 = new Vector3f();
+	private YangMatrixCameraOps mProjectionMatrix = new YangMatrixCameraOps();
+	
+	public void prepareProjection() {
+		this.getToScreenTransform(mProjectionMatrix);
+	}
+	
+	public float getProjectedPositionAndRadius(Vector3f target, float x, float y, float z, float radius) {
+		mProjectionMatrix.apply3D(x,y,z,target);
+		getCameraRightVector(tempVec1);
+		tempVec1.scale(radius);
+		tempVec1.add(x,y,z);
+		mProjectionMatrix.apply3D(tempVec1.mX,tempVec1.mY,tempVec1.mZ,tempVec2);
+		return target.getDistance(tempVec2);
+	}
+	
+	public void getProjectedPosition(Vector3f target, float x,float y,float z) {
+		mProjectionMatrix.apply3D(x,y,z,target);
 	}
 	
 }

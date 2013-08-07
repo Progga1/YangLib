@@ -2,13 +2,12 @@ package yang.graphics.defaults.programs.subshaders.properties;
 
 import yang.graphics.model.FloatColor;
 
-public class SpecularMatProperties {
+public class SpecularMatProperties extends ColorMatProperties {
 
-	public FloatColor mColor;
 	public float mExponent = 16;
 	
 	public SpecularMatProperties(FloatColor color,float exponent) {
-		mColor = color;
+		super(color);
 		mExponent = exponent;
 	}
 	

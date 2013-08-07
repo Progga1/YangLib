@@ -1,7 +1,8 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.meshcreators.grids;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.defaults.meshcreators.MeshCreator;
 import yang.graphics.model.FloatColor;
 import yang.math.Interpolation;
 

@@ -40,6 +40,10 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	protected void printCompileMessage(boolean error,int shaderType,ByteBuffer message,int length,Object sender) {
 		byte[] errorBytes = new byte[length];
 		message.get(errorBytes);
+		String errorString = new String(errorBytes);
+		String upString = errorString.toUpperCase();
+		if(upString.startsWith("NO ERRORS") || upString.startsWith("SUCCESS"))
+			return;
 		String shaderName;
 		switch (shaderType) {
 		case GL2ES2.GL_VERTEX_SHADER:
@@ -52,10 +56,10 @@ public class PCGLProgram extends DefaultPCGLProgram {
 			shaderName = "SHADER";
 		}
 		if(error) {
-			System.err.println("---!" + shaderName + " COMPILE ERROR in "+Util.getClassName(sender)+"!---\n" + new String(errorBytes) + "\n");
+			System.err.println("---!" + shaderName + " COMPILE ERROR in "+Util.getClassName(sender)+"!---\n" + errorString + "\n");
 			System.exit(0);
 		}else{
-			System.out.println("----" + shaderName + " COMPILE WARNING in "+Util.getClassName(sender)+"----\n" + new String(errorBytes) + "\n");
+			System.out.println("----" + shaderName + " COMPILE WARNING in "+Util.getClassName(sender)+"----\n" + errorString + "\n");
 		}
 	}
 	

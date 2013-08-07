@@ -14,7 +14,7 @@ public abstract class ContourSkeleton extends HumanSkeleton{
 	
 	public void draw() {	
 
-		mGraphics.switchZBuffer(true);
+		mTranslator.switchZBuffer(true);
 		
 		if(mMesh==null) {
 			
@@ -29,14 +29,14 @@ public abstract class ContourSkeleton extends HumanSkeleton{
 				}
 			}
 			int indexCount = mBones.size()*6*2;
-			mVertexBuffer = mGraphics2D.createVertexBuffer(true, false, indexCount, mVertexCount);
+			mVertexBuffer = mGraphics.createVertexBuffer(true, false, indexCount, mVertexCount);
 			mVertexBuffer.setIndexPosition(0);
 			for(short i=0;i<mVertexCount;i+=4)
 				mVertexBuffer.beginQuad(false,i);
 			mVertexBuffer.mFinishedIndexCount = indexCount;
 			mVertexBuffer.mFinishedVertexCount = mVertexCount;
 			mVertexBuffer.reset();
-			mMesh = new DrawBatch(mGraphics2D,mVertexBuffer);
+			mMesh = new DrawBatch(mGraphics,mVertexBuffer);
 			mUpdateColor = true;
 			mUpdateTexCoords = true;
 		}
@@ -141,11 +141,10 @@ public abstract class ContourSkeleton extends HumanSkeleton{
 			}
 		}
 		
-		mGraphics2D.setShaderProgram(mShader);
-		mGraphics2D.bindTextureInHolder(mTextureHolder);
+		mGraphics.bindTextureInHolder(mTextureHolder);
 		
 		mMesh.draw();
 		
-		mGraphics.switchZBuffer(false);
+		mTranslator.switchZBuffer(false);
 	}
 }

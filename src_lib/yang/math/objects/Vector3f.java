@@ -1,17 +1,13 @@
 package yang.math.objects;
 
-public class Vector3f {
+public class Vector3f extends Point3f{
 
-	public final static Vector3f ZERO = new Vector3f(0,0,0);
 	public final static Vector3f RIGHT = new Vector3f(1,0,0);
 	public final static Vector3f LEFT = new Vector3f(-1,0,0);
 	public final static Vector3f UP = new Vector3f(0,1,0);
 	public final static Vector3f DOWN = new Vector3f(0,-1,0);
 	public final static Vector3f FORWARD = new Vector3f(0,0,1);
 	public final static Vector3f BACKWARD = new Vector3f(0,0,-1);
-	public final static Vector3f ONE = new Vector3f(1,1,1);
-	
-	public float mX,mY,mZ;
 	
 	public Vector3f() {
 		set(0,0,0);
@@ -35,34 +31,18 @@ public class Vector3f {
 		mZ = z;
 	}
 	
-	public void set(float[] array) {
-		mX = array[0];
-		mY = array[1];
-		mZ = array[2];
-	}
-	
-	public void add(float x,float y,float z) {
-		mX += x;
-		mY += y;
-		mZ += z;
-	}
-	
-	public void add(Vector3f vector) {
-		mX += vector.mX;
-		mY += vector.mY;
-		mZ += vector.mZ;
-	}
-	
-	public void sub(float x,float y,float z) {
-		mX -= x;
-		mY -= y;
-		mZ -= z;
-	}
-	
-	public void sub(Vector3f vector) {
-		mX -= vector.mX;
-		mY -= vector.mY;
-		mZ -= vector.mZ;
+	public void setNormalized(float x,float y,float z) {
+		float dist = (float)Math.sqrt(x*x+y*y+z*z);
+		if(dist==0) {
+			mX = 0;
+			mY = 0;
+			mZ = 0;
+		}else{
+			dist = 1/dist;
+			mX = x*dist;
+			mY = y*dist;
+			mZ = z*dist;
+		}
 	}
 	
 	public void scale(float scalar) {
@@ -105,14 +85,21 @@ public class Vector3f {
 		return new Vector3f(mX,mY,mZ);
 	}
 
+	@Override
 	public void setAlphaBeta(float alpha, float beta, float distance) {
 		mX = (float)(Math.sin(alpha)*Math.cos(beta)) * distance;
 		mY = (float)(Math.sin(beta)) * distance;
 		mZ = (float)(Math.cos(alpha)*Math.cos(beta)) * distance;
 	}
-	
-	public void setAlphaBeta(float alpha, float beta) {
-		setAlphaBeta(alpha,beta,1);
+
+	public void createOrthoVec(Vector3f ortho) {
+		if(ortho.mX<=ortho.mY && ortho.mX<=ortho.mZ) {
+			setNormalized(0,-ortho.mZ,ortho.mY);
+		}else if(ortho.mY<=ortho.mX && ortho.mY<=ortho.mZ) {
+			setNormalized(-ortho.mZ,0,ortho.mX);
+		}else{
+			setNormalized(-ortho.mY,ortho.mX,0);
+		}
 	}
 	
 }

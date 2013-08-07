@@ -43,7 +43,6 @@ public abstract class LegacySkeleton {
 	protected float[] mContourColor;
 	protected float[] mSuppData;
 	public SkeletonCarrier mCarrier;
-	public BasicProgram mShader;
 	public NonConcurrentList<Constraint> mConstraints;
 	public float mSkeletonOffsetX;
 	public float mSkeletonOffsetY;
@@ -80,7 +79,6 @@ public abstract class LegacySkeleton {
 		mContourColor = new float[]{0,0,0,0};
 		mSuppData = new float[]{0,0,0,0};
 		setModColor(1,1,1);
-		mShader = null;
 		mSkeletonOffsetX = 0;
 		mSkeletonOffsetY = 0;
 		mRotation = 0;
@@ -110,12 +108,10 @@ public abstract class LegacySkeleton {
 		}
 	}
 	
-	public void init(SkeletonCarrier carrier) {
+	public void init(SkeletonCarrier carrier,Default2DGraphics graphics2D) {
 		mCarrier = carrier;
 		//carrier.setSkeleton(this);
-		mGraphics2D = carrier.getGraphics();
-		if(mShader==null)
-			mShader = mGraphics2D.mAdditiveModulateProgram;
+		mGraphics2D = graphics2D;
 		mGraphics = mGraphics2D.mTranslator;
 		
 		mDrawFill = true;
@@ -155,7 +151,7 @@ public abstract class LegacySkeleton {
 	}
 	
 	public void init(Default2DGraphics graphics2D) {
-		init(new DefaultSkeletonCarrier(graphics2D));
+		init(new DefaultSkeletonCarrier(),graphics2D);
 	}
 	
 	public void addJoint(Joint bone) {
@@ -317,7 +313,6 @@ public abstract class LegacySkeleton {
 			}
 		}
 		
-		mGraphics2D.setShaderProgram(mShader);
 		mGraphics2D.bindTextureInHolder(mTextureHolder);
 		
 		mMesh.draw();

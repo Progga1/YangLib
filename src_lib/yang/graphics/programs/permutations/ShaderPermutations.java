@@ -2,30 +2,47 @@ package yang.graphics.programs.permutations;
 
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.translator.AbstractGFXLoader;
+import yang.graphics.translator.GraphicsTranslator;
+import yang.util.NonConcurrentList;
 import yang.util.Util;
 
 public class ShaderPermutations extends Basic3DProgram {
 
 	static final String LINE_END = ";\r\n";
 	
-	public SubShader[] mSubShaders;
+	public NonConcurrentList<SubShader> mLinearSubShaderList;
 	public SubShader[] mDataPassingShaders;
+	public int mPassingDataCount = 0;
 	public String mVSSource,mFSSource;
 	
-	public ShaderPermutations() {
-		
+	public ShaderPermutations(GraphicsTranslator graphics) {
+		mGraphics = graphics;
+		mLinearSubShaderList = new NonConcurrentList<SubShader>();
+		mPassingDataCount = 0;
 	}
 	
-	public ShaderPermutations(SubShader[] subShaders) {
-		initPermutations(subShaders);
+	public ShaderPermutations(GraphicsTranslator graphics,SubShader[] subShaders) {
+		this(graphics);
+		addSubShaders(subShaders);
+		initPermutations();
 	}
 	
-	public ShaderPermutations initPermutations(SubShader[] subShaders) {
-		mSubShaders = subShaders;
+	public void addSubShaders(SubShader[] subShaders) {
+		if(subShaders!=null)
+			linearize(subShaders);
+	}
+	
+	public void addSubShader(SubShader subShader) {
+		if(subShader!=null)
+			linearize(new SubShader[]{subShader});
+	}
+	
+	public ShaderPermutations initPermutations() {
 		
 		ShaderPermutationsParser parser = new ShaderPermutationsParser(this);
-		for(int i=0;i<subShaders.length;i++) {
-			subShaders[i].setVariables(parser,parser.mVSDeclarations,parser.mFSDeclarations);
+		for(SubShader subShader:mLinearSubShaderList) {
+			subShader.setGraphics(mGraphics);
+			subShader.setVariables(parser,parser.mVSDeclarations,parser.mFSDeclarations);
 		}
 		
 		boolean hasVertexColor = parser.hasVariable(SubShader.VAR_VS_COLOR);
@@ -60,22 +77,31 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append(LINE_END);
 		result.append("}\r\n");
 		mFSSource = result.toString();
-		
+
 		return this;
+	}
+	
+	private void linearize(SubShader[] subShaders) {
+		for(SubShader subShader:subShaders) {
+			if(subShader==null)
+				continue;
+			mLinearSubShaderList.add(subShader);
+			if(subShader.passesData())
+				mPassingDataCount++;
+			SubShader[] innerShaders = subShader.getInnerShaders();
+			if(innerShaders!=null)
+				linearize(innerShaders);
+		}
 	}
 	
 	@Override
 	public void initHandles() {
 		super.initHandles();
-		int passingDataCount = 0;
-		for(SubShader subShader:mSubShaders) {
-			subShader.initHandles(mProgram);
-			if(subShader.passesData())
-				passingDataCount++;
-		}
-		mDataPassingShaders = new SubShader[passingDataCount];
+		
+		mDataPassingShaders = new SubShader[mPassingDataCount];
 		int c=0;
-		for(SubShader subShader:mSubShaders) {
+		for(SubShader subShader:mLinearSubShaderList) {
+			subShader.initHandles(mProgram);
 			if(subShader.passesData()) {
 				mDataPassingShaders[c++] = subShader;
 			}

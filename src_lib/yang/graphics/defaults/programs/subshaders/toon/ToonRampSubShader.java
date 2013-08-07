@@ -1,46 +1,41 @@
-package yang.graphics.defaults.programs.subshaders;
+package yang.graphics.defaults.programs.subshaders.toon;
 
 import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
 import yang.graphics.programs.permutations.SubShader;
-import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 
-public class ToonDiffuseSubShader extends SubShader {
+public class ToonRampSubShader extends SubShader {
 
 	public Texture mRampTex;
 	public int mRampSamplerHandle;
-	private GraphicsTranslator mGraphics;
+	public int mTextureLevel;
 	
-	public ToonDiffuseSubShader(GraphicsTranslator graphics,Texture ramp) {
+	public ToonRampSubShader(Texture ramp) {
 		mRampTex = ramp;
-		mGraphics = graphics;
 	}
 	
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("sampler2D", "toonRamp");
-		shaderParser.appendFragmentMain("vec4 lgt = texture2D(toonRamp,vec2(lightIntens,0.0))*vec4(lightDiffuse,1.0)");
-		//shaderParser.appendFragmentMain("vec4 lgt = texture2D(toonRamp,vec2(0.5,0.5))*vec4(lightDiffuse,1.0)");
-		
-		shaderParser.appendOp(VAR_FRAGCOLOR, "lgt", "*");
 	}
 
 	@Override
 	public void initHandles(GLProgram program) {
+		mTextureLevel = program.nextTextureLevel();
 		mRampSamplerHandle = program.getUniformLocation("toonRamp");
 	}
 
 	@Override
 	public void passData(GLProgram program) {
-		program.setUniformInt(mRampSamplerHandle,1);
-		mGraphics.bindTextureNoFlush(mRampTex,1);
+		program.setUniformInt(mRampSamplerHandle,mTextureLevel);
+		mGraphics.bindTextureNoFlush(mRampTex,mTextureLevel);
 	}
 	
 	@Override
 	public boolean passesData() {
 		return mRampTex!=null;
 	}
-
+	
 }

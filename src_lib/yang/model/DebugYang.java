@@ -13,6 +13,7 @@ public class DebugYang {
 	public static boolean showStart = false;
 	public static boolean drawTails = true;
 	public static boolean DRAW_GFX_VALUES = false;
+	public static String PLAY_MACRO_FILENAME = null;
 	
 	public static String stateString = null;
 	
@@ -78,7 +79,7 @@ public class DebugYang {
 	}
 	
 	public static void printerr(Object message) {
-		printerr(1);
+		printerr(message,1);
 	}
 
 	public static void exception(IOException e) {
@@ -123,20 +124,20 @@ public class DebugYang {
 		}
 	}
 	
-	public static void appendState(int i) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			appendState(""+i);
-	}
-	
-	public static void appendState(float f) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			appendState(""+f);
-	}
-	
-	public static void appendState(boolean b) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			appendState(""+b);
-	}
+//	public static void appendState(int i) {
+//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+//			appendState(""+i);
+//	}
+//	
+//	public static void appendState(float f) {
+//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+//			appendState(""+f);
+//	}
+//	
+//	public static void appendState(boolean b) {
+//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
+//			appendState(""+b);
+//	}
 	
 	public static void clearState() {
 		stateString = null;

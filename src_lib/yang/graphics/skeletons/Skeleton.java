@@ -2,9 +2,8 @@ package yang.graphics.skeletons;
 
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.programs.BasicProgram;
+import yang.graphics.programs.AbstractProgram;
 import yang.graphics.skeletons.constraints.Constraint;
 import yang.graphics.skeletons.constraints.DistanceConstraint;
 import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;
@@ -19,6 +18,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.Rect;
 import yang.util.NonConcurrentList;
+import yang.util.Util;
 
 //TODO: bone-arrays
 
@@ -36,8 +36,8 @@ public abstract class Skeleton {
 	public TextureHolder mTextureHolder;
 	public TextureHolder mContourTextureHolder;
 	public boolean mConstraintsActivated;
-	protected Default2DGraphics mGraphics2D;
-	protected GraphicsTranslator mGraphics;
+	protected DefaultGraphics<?> mGraphics;
+	protected GraphicsTranslator mTranslator;
 	public NonConcurrentList<Joint> mJoints;
 	public NonConcurrentList<NonConcurrentList<Bone>> mLayersList;
 	public Bone[][] mLayers;
@@ -47,7 +47,6 @@ public abstract class Skeleton {
 	protected float[] mContourColor;
 	protected float[] mSuppData;
 	public SkeletonCarrier mCarrier;
-	public BasicProgram mShader;
 	public NonConcurrentList<Constraint> mConstraints;
 	public float mSkeletonOffsetX;
 	public float mSkeletonOffsetY;
@@ -67,6 +66,7 @@ public abstract class Skeleton {
 	public boolean mDrawFill;
 	public float mScale = 1;
 	public float mPosZ = 0;
+	private int mCurJointId = 0;
 	
 	public DrawBatch mMesh;
 	protected IndexedVertexBuffer mVertexBuffer;
@@ -88,7 +88,6 @@ public abstract class Skeleton {
 		mContourColor = new float[]{0,0,0,0};
 		mSuppData = new float[]{0,0,0,0};
 		setModColor(1,1,1);
-		mShader = null;
 		mSkeletonOffsetX = 0;
 		mSkeletonOffsetY = 0;
 		mRotation = 0;
@@ -118,16 +117,15 @@ public abstract class Skeleton {
 		}
 	}
 	
-	public void init(SkeletonCarrier carrier) {
+	public void init(DefaultGraphics<?> graphics,SkeletonCarrier carrier) {
 		mCarrier = carrier;
 		carrier.setSkeleton(this);
-		mGraphics2D = carrier.getGraphics();
-		if(mShader==null)
-			mShader = mGraphics2D.mAdditiveModulateProgram;
-		mGraphics = mGraphics2D.mTranslator;
+		mGraphics = graphics;
+		mTranslator = mGraphics.mTranslator;
 		
 		mDrawFill = true;
 		
+		mCurJointId = 0;
 		build();
 		
 		mBoundariesRect = new Rect();
@@ -182,8 +180,8 @@ public abstract class Skeleton {
 		}
 	}
 	
-	public void init(Default2DGraphics graphics2D) {
-		init(new DefaultSkeletonCarrier(graphics2D));
+	public void init(DefaultGraphics<?> graphics) {
+		init(graphics,new DefaultSkeletonCarrier());
 	}
 	
 	public void addJoint(Joint bone) {
@@ -227,7 +225,7 @@ public abstract class Skeleton {
 	}
 	
 	public void loadTexture() {
-		mContourTextureHolder.getTexture(mGraphics.mGFXLoader);
+		mContourTextureHolder.getTexture(mTranslator.mGFXLoader);
 	}
 	
 	public void draw() {	
@@ -244,14 +242,14 @@ public abstract class Skeleton {
 				}
 			}
 			int indexCount = mBones.size()*6*2;
-			mVertexBuffer = mGraphics2D.createVertexBuffer(true, false, indexCount, mVertexCount);
+			mVertexBuffer = mGraphics.createVertexBuffer(true, false, indexCount, mVertexCount);
 			mVertexBuffer.setIndexPosition(0);
 			for(short i=0;i<mVertexCount;i+=4)
 				mVertexBuffer.beginQuad(false,i);
 			mVertexBuffer.mFinishedIndexCount = indexCount;
 			mVertexBuffer.mFinishedVertexCount = mVertexCount;
 			mVertexBuffer.reset();
-			mMesh = new DrawBatch(mGraphics2D,mVertexBuffer);
+			mMesh = new DrawBatch(mGraphics,mVertexBuffer);
 			mUpdateColor = true;
 			mUpdateTexCoords = true;
 		}
@@ -275,7 +273,7 @@ public abstract class Skeleton {
 						}
 					}
 				//Fill
-				for(Bone bone:layer) {
+				for(Bone _:layer) {
 					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4);
 					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4);
 					//mInterColor[3] += zInc;
@@ -311,7 +309,6 @@ public abstract class Skeleton {
 		float worldPosY = mCarrier.getWorldY() + mSkeletonOffsetY;
 		float scale = mCarrier.getScale()*mScale;
 		int mirrorFac = mCarrier.getLookDirection();
-
 		
 		for(Bone[] layer:mLayers) {
 			//Contour
@@ -323,12 +320,10 @@ public abstract class Skeleton {
 							float contourOrthoY = bone.mOrthNormY * mContourFactor;
 							float contourNormX = bone.mNormDirX * mContourFactor;
 							float contourNormY = bone.mNormDirY * mContourFactor;
-							
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX4*scale + contourOrthoX*bone.mContourX3 + contourNormX*bone.mContourY4) * mirrorFac, worldPosY + bone.mVertY4*scale + contourOrthoY*bone.mContourX3 + contourNormY*bone.mContourY4, mPosZ);
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX3*scale - contourOrthoX*bone.mContourX4 + contourNormX*bone.mContourY3) * mirrorFac, worldPosY + bone.mVertY3*scale - contourOrthoY*bone.mContourX4 + contourNormY*bone.mContourY3, mPosZ);
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX2*scale + contourOrthoX*bone.mContourX1 - contourNormX*bone.mContourY1) * mirrorFac, worldPosY + bone.mVertY2*scale + contourOrthoY*bone.mContourX1 - contourNormY*bone.mContourY1, mPosZ);
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX1*scale - contourOrthoX*bone.mContourX2 - contourNormX*bone.mContourY2) * mirrorFac, worldPosY + bone.mVertY1*scale - contourOrthoY*bone.mContourX2 - contourNormY*bone.mContourY2, mPosZ);
-					
 						}else{
 							mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_12);
 						}
@@ -348,9 +343,8 @@ public abstract class Skeleton {
 				}
 			}
 		}
-		
-		mGraphics2D.setShaderProgram(mShader);
-		mGraphics2D.bindTextureInHolder(mTextureHolder);
+
+		mGraphics.bindTextureInHolder(mTextureHolder);
 		
 		mMesh.draw();
 		
@@ -367,24 +361,24 @@ public abstract class Skeleton {
 		float scale = mCarrier.getScale()*mScale;
 		int mirrorFac = mCarrier.getLookDirection();
 
-		mGraphics2D.setDefaultProgram();
-		mGraphics.bindTexture(CURSOR_TEXTURE);
+		mGraphics.setDefaultProgram();
+		mTranslator.bindTexture(CURSOR_TEXTURE);
 		
 		for(Joint joint:mJoints) 
 			if(joint.mEnabled){
 				float alpha = (markedJoint==joint)?1:0.6f;
 				if(joint.mFixed)
-					mGraphics2D.setColor(1, 0, 0, alpha);
+					mGraphics.setColor(1, 0, 0, alpha);
 				else
-					mGraphics2D.setColor(0.8f,0.8f,0.8f,alpha);
-				mGraphics2D.drawRectCentered(worldPosX + joint.mPosX*scale * mirrorFac, worldPosY + joint.mPosY*scale, joint.getOutputRadius()*2);
+					mGraphics.setColor(0.8f,0.8f,0.8f,alpha);
+				mGraphics.drawRectCentered(worldPosX + joint.mPosX*scale * mirrorFac, worldPosY + joint.mPosY*scale, joint.getOutputRadius()*2);
 			}
 		
-		mGraphics.bindTexture(null);
-		mGraphics2D.setColor(0.8f, 0.1f, 0,0.8f);
+		mTranslator.bindTexture(null);
+		mGraphics.setColor(0.8f, 0.1f, 0,0.8f);
 		for(Joint joint:mJoints)
 			if(joint.mEnabled && joint.mAngleParent!=null){
-				mGraphics2D.drawLine(
+				mGraphics.drawLine(
 						worldPosX + joint.mPosX*scale * mirrorFac, worldPosY + joint.mPosY*scale, 
 						worldPosX + joint.mAngleParent.mPosX*scale * mirrorFac, worldPosY + joint.mAngleParent.mPosY*scale,
 						0.015f
@@ -547,6 +541,10 @@ public abstract class Skeleton {
 
 	public void updatedTextureCoords() {
 		this.mUpdateTexCoords = true;
+	}
+
+	public int getNextJointId() {
+		return mCurJointId++;
 	}
 	
 }

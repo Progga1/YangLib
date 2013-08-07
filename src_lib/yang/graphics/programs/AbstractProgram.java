@@ -6,6 +6,7 @@ import yang.graphics.translator.GraphicsTranslator;
 public abstract class AbstractProgram {
 
 	public GLProgram mProgram;
+	public int mTextureLevelCount;
 	public boolean mInitialized = false;
 	
 	protected GraphicsTranslator mGraphics;
@@ -20,6 +21,7 @@ public abstract class AbstractProgram {
 	}
 	
 	public final AbstractProgram init(GraphicsTranslator graphics,String vertexShaderCode,String fragmentShaderCode) {
+		mTextureLevelCount = 0;
 		mGraphics = graphics;
 		mGFXLoader = graphics.mGFXLoader;
 		mProgram = graphics.createProgram();

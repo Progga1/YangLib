@@ -82,7 +82,7 @@ public abstract class HumanSkeleton extends Skeleton{
 		}
 		
 		//Body
-		mBodyBone = new Bone(mGraphics,"Body",mBreastJoint,mHipJoint);
+		mBodyBone = new Bone(mTranslator,"Body",mBreastJoint,mHipJoint);
 		mBodyBone.putTextureCoords(texShiftX, 0.5f, texShiftX+0.25f, 0.875f);
 		mBodyBone.setWidth(0.23f*locScaleWidth);
 		mBodyBone.setShift(-0.01f,0.06f,-0.01f,-0.1f);
@@ -121,46 +121,46 @@ public abstract class HumanSkeleton extends Skeleton{
 		}
 		
 		//head
-		mHeadBone = new Bone(mGraphics,"Head",mHeadJoint,mBreastJoint);
+		mHeadBone = new Bone(mTranslator,"Head",mHeadJoint,mBreastJoint);
 		mHeadBone.putTextureCoords(texShiftX, 0, texShiftX+0.25f, 0.25f);
 		mHeadBone.putTextureCoords(texShiftX, 0.25f, texShiftX+0.25f, 0.5f);
 		mHeadBone.setWidth(0.35f);
 		mHeadBone.setShift(-0.06f,HEADTOPSHIFT,-0.015f,HEADBOTTOMSHIFT);
 		
 		//arms
-		mLeftUpperArmBone = new Bone(mGraphics,"LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint);
+		mLeftUpperArmBone = new Bone(mTranslator,"LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint);
 		mLeftUpperArmBone.putTextureCoords(texShiftX+0.25f, 0, texShiftX+0.375f, 0.25f);
 		mLeftUpperArmBone.setWidth(0.115f*locScaleWidth);
 		mLeftUpperArmBone.setShift(-0.015f,0.07f,0,-0.06f);
-		mLeftLowerArmBone = new Bone(mGraphics,"LeftLowerLeg",mLeftElbowJoint,mLeftHandJoint);
+		mLeftLowerArmBone = new Bone(mTranslator,"LeftLowerLeg",mLeftElbowJoint,mLeftHandJoint);
 		mLeftLowerArmBone.putTextureCoords(texShiftX+0.25f, 0.25f, texShiftX+0.375f, 0.5f);
 		mLeftLowerArmBone.setWidth(0.1f*locScaleWidth);
 		mLeftLowerArmBone.setShift(0,0.08f,0,-0.05f);
 		
-		mRightUpperArmBone = new Bone(mGraphics,"LeftUpperArm",mRightShoulderJoint,mRightElbowJoint);
+		mRightUpperArmBone = new Bone(mTranslator,"LeftUpperArm",mRightShoulderJoint,mRightElbowJoint);
 		mRightUpperArmBone.putTextureCoords(texShiftX+0.375f, 0, texShiftX+0.5f, 0.25f);
 		mRightUpperArmBone.setWidth(0.115f*locScaleWidth);
 		mRightUpperArmBone.setShift(0,0.06f,0,-0.06f); 
-		mRightLowerArmBone = new Bone(mGraphics,"LeftLowerArm",mRightElbowJoint,mRightHandJoint);
+		mRightLowerArmBone = new Bone(mTranslator,"LeftLowerArm",mRightElbowJoint,mRightHandJoint);
 		mRightLowerArmBone.putTextureCoords(texShiftX+0.375f, 0.25f, texShiftX+0.5f, 0.5f);
 		mRightLowerArmBone.setWidth(0.09f*locScaleWidth);
 		mRightLowerArmBone.setShift(0,0.08f,0,-0.05f);
 		
 		//legs
-		mLeftUpperLegBone = new Bone(mGraphics,"LeftUpperLeg",mLeftLegJoint,mLeftKneeJoint);
+		mLeftUpperLegBone = new Bone(mTranslator,"LeftUpperLeg",mLeftLegJoint,mLeftKneeJoint);
 		mLeftUpperLegBone.putTextureCoords(texShiftX+0.25f, 0.5f, texShiftX+0.375f, 0.75f);
 		mLeftUpperLegBone.setWidth(0.12f*locScaleWidth);
 		mLeftUpperLegBone.setShift(0.008f,0.08f,0.008f,-0.07f);
-		mRightUpperLegBone = new Bone(mGraphics,"RightUpperLeg",mRightLegJoint,mRightKneeJoint);
+		mRightUpperLegBone = new Bone(mTranslator,"RightUpperLeg",mRightLegJoint,mRightKneeJoint);
 		mRightUpperLegBone.putTextureCoords(texShiftX+0.375f, 0.5f, texShiftX+0.5f, 0.75f);
 		mRightUpperLegBone.setWidth(0.112f*locScaleWidth);
 		mRightUpperLegBone.setShift(0,0.08f,0,-0.07f);
 		
-		mLeftLowerLegBone = new Bone(mGraphics,"LeftLowerLeg",mLeftKneeJoint,mLeftFootJoint);
+		mLeftLowerLegBone = new Bone(mTranslator,"LeftLowerLeg",mLeftKneeJoint,mLeftFootJoint);
 		mLeftLowerLegBone.putTextureCoords(texShiftX+0.25f, 0.75f, texShiftX+0.375f, 1);
 		mLeftLowerLegBone.setWidth(0.115f*locScaleWidth);
 		mLeftLowerLegBone.setShift(-0.005f,0.08f,0,-0.05f);
-		mRightLowerLegBone = new Bone(mGraphics,"RightLowerLeg",mRightKneeJoint,mRightFootJoint);
+		mRightLowerLegBone = new Bone(mTranslator,"RightLowerLeg",mRightKneeJoint,mRightFootJoint);
 		mRightLowerLegBone.putTextureCoords(texShiftX+0.375f, 0.75f, texShiftX+0.5f, 1);
 		mRightLowerLegBone.setWidth(0.11f*locScaleWidth);
 		mRightLowerLegBone.setShift(-0.005f,0.08f,0,-0.05f);
@@ -168,12 +168,12 @@ public abstract class HumanSkeleton extends Skeleton{
 		//feet
 		if(addFeet) {
 			float footShift = -0.03f;
-			mLeftFootBone = new Bone(mGraphics,"LeftFoot",mLeftFootJoint,mLeftToesJoint);
+			mLeftFootBone = new Bone(mTranslator,"LeftFoot",mLeftFootJoint,mLeftToesJoint);
 			mLeftFootBone.putTextureCoords(texShiftX, 7/8f, texShiftX+1/16f, 1);
 			mLeftFootBone.putTextureCoords(texShiftX+3/16f, 7/8f, texShiftX+4/16f, 1);
 			mLeftFootBone.setWidth(0.052f*locScaleWidth);
 			mLeftFootBone.setShift(footShift,0.09f,footShift,-0.07f);
-			mRightFootBone = new Bone(mGraphics,"RightFoot",mRightFootJoint,mRightToesJoint);
+			mRightFootBone = new Bone(mTranslator,"RightFoot",mRightFootJoint,mRightToesJoint);
 			mRightFootBone.putTextureCoords(texShiftX+1/16f, 7/8f, texShiftX+2/16f, 1);
 			mRightFootBone.putTextureCoords(texShiftX+5/16f, 7/8f, texShiftX+6/16f, 1);
 			mRightFootBone.setWidth(0.052f*locScaleWidth);

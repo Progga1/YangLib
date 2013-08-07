@@ -3,11 +3,11 @@ package yang.samples.statesystem.states;
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
 import yang.graphics.defaults.programs.subshaders.CameraVectorSubShader;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
-import yang.graphics.defaults.programs.subshaders.LightSubShader;
 import yang.graphics.defaults.programs.subshaders.NormalSubShader;
-import yang.graphics.defaults.programs.subshaders.SpecularLightSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.defaults.programs.subshaders.properties.SpecularMatProperties;
+import yang.graphics.defaults.programs.subshaders.realistic.LightSubShader;
+import yang.graphics.defaults.programs.subshaders.realistic.SpecularLightSubShader;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
@@ -36,7 +36,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 				new AmbientSubShader(mAmbientColor)
 				};
 
-		mShader1 = mGraphics.addProgram(new ShaderPermutations(subShaders));
+		mShader1 = mGraphics.addProgram(new ShaderPermutations(mGraphics,subShaders));
 		mCubeTex = mGFXLoader.getImage("cube");
 		mGrassTex = mGFXLoader.getImage("grass");
 	}

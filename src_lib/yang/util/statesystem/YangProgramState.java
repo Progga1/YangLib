@@ -13,6 +13,8 @@ import yang.util.StringsXML;
 
 public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener {
 
+	public static final float PI = 3.1415926535f;
+	
 	private boolean mInitialized = false;
 	protected boolean mFirstFrame = true;
 	protected int mRecentSurfaceWidth = 0,mRecentSurfaceHeight = 0;

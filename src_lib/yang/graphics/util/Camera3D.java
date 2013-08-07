@@ -1,6 +1,7 @@
 package yang.graphics.util;
 
 import yang.math.Geometry;
+import yang.math.objects.Vector3f;
 
 public class Camera3D {
 
@@ -73,6 +74,19 @@ public class Camera3D {
 	
 	public Camera3D setAlphaBeta(float alpha, float beta) {
 		return setAlphaBeta(alpha,beta,1,0,0,0);
+	}
+
+	public void getEyeToPointVector(float x, float y, float z, Vector3f target) {
+		target.mX = x-mEyeX;
+		target.mY = y-mEyeY;
+		target.mZ = z-mEyeZ;
+	}
+
+	public void getEyeToPointDirection(float x, float y, float z, Vector3f target) {
+		target.mX = x-mEyeX;
+		target.mY = y-mEyeY;
+		target.mZ = z-mEyeZ;
+		target.normalize();
 	}
 	
 }

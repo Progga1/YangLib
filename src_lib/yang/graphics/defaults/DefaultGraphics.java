@@ -64,7 +64,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public FloatBuffer mSuppData;
 	public FloatBuffer mNormals;
 	
-	protected abstract void refreshResultTransform();
+	protected abstract void refreshViewTransform();
 
 	public DefaultGraphics(GraphicsTranslator translator, int positionBytes) {
 		super(translator);
@@ -130,12 +130,20 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			mTranslator.disableAttributePointer(mCurrentProgram.mSuppDataHandle);
 		assert mTranslator.checkErrorInst("Disable buffers 2D");
 	}
+	
+	public void getToScreenTransform(YangMatrix target) {
+		refreshViewTransform();
+		target.set(mCameraProjectionMatrix);
+		if (mWorldTransformEnabled)
+			target.multiplyRight(mWorldTransform);
+		target.postScale(mTranslator.mRatioX, 1, 1);
+	}
 
 	protected void updateProgramProjection() {
 		assert mTranslator.preCheck("Set program projection");
 		BasicProgram program = mCurrentProgram;
 		if (program != null) {
-			refreshResultTransform();
+			refreshViewTransform();
 			if (mWorldTransformEnabled) {
 				if (program.mHasWorldTransform) {
 					program.setWorldTransform(mWorldTransform.mMatrix);
