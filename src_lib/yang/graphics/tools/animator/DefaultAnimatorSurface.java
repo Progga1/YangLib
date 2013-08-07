@@ -35,7 +35,7 @@ public class DefaultAnimatorSurface extends DefaultSurface {
 	@Override
 	protected void postInitGraphics() {
 		super.postInitGraphics();
-		DrawableString.DEFAULT_PROPERTIES = new StringProperties(mGraphics2D,mGFXLoader.loadFont("belligerent"));
+		//DrawableString.DEFAULT_PROPERTIES = new StringProperties(mGraphics2D,mGFXLoader.loadFont("belligerent"));
 		mAnimator = new Animator(mGraphics2D);
 		mAnimator.mSound = mSound;
 		if(mInitCallback!=null)

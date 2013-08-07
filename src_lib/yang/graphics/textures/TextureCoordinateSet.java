@@ -82,11 +82,11 @@ public abstract class TextureCoordinateSet {
 		return createTexCoordsBiased(left,top,width,height,mDefaultBiasX,mDefaultBiasY);
 	}
 	
-	public TextureCoordinatesQuad createTexCoordsPatched(int patchX,int patchY,int patchWidth,int patchHeight) {
-		return createTexCoords(patchX*mPatchSizeX,patchY*mPatchSizeY,(patchX+patchWidth)*mPatchSizeX,(patchX+patchHeight)*mPatchSizeY);
+	public TextureCoordinatesQuad createTexCoordsPatched(float patchX,float patchY,float patchWidth,float patchHeight) {
+		return createTexCoords(patchX*mPatchSizeX,patchY*mPatchSizeY,(patchWidth)*mPatchSizeX,(patchHeight)*mPatchSizeY);
 	}
 	
-	public TextureCoordinatesQuad createTexCoordsPatched(int patchX,int patchY,int patchSize) {
+	public TextureCoordinatesQuad createTexCoordsPatched(float patchX,float patchY,float patchSize) {
 		return createTexCoordsPatched(patchX,patchY,patchSize,patchSize);
 	}
 	
