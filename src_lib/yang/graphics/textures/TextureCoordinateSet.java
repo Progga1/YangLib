@@ -2,6 +2,7 @@ package yang.graphics.textures;
 
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
+import yang.model.DebugYang;
 import yang.util.NonConcurrentList;
 
 public abstract class TextureCoordinateSet {
@@ -98,16 +99,24 @@ public abstract class TextureCoordinateSet {
 		return setBias(texCoords,bias,bias);
 	}
 	
+	public TextureCoordinatesQuad[] createTexCoordSequenceBias(float startX,float startY,float width,float height,int countX,int countY,float biasX,float biasY) {
+		//TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
+//		for(int i=0;i<count;i++) {
+//			result[i] = createTexCoordsAbsBiased(startX+i*width,startY,startX+i*width+width,startY+height, biasX,biasY);
+//		}
+		return createSequence(createTexCoordsBiased(startX,startY,width,height,biasX,biasY), countX,countY);
+	}
+	
 	public TextureCoordinatesQuad[] createTexCoordSequenceBias(float startX,float startY,float width,float height,int count,float biasX,float biasY) {
-		TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
-		for(int i=0;i<count;i++) {
-			result[i] = createTexCoordsAbsBiased(startX+i*width,startY,startX+i*width+width,startY+height, biasX,biasY);
-		}
-		return result;
+		return createTexCoordSequenceBias(startX,startY,width,height,count,1,biasX,biasY);
 	}
 	
 	public TextureCoordinatesQuad[] createTexCoordSequence(float startX,float startY,float width,float height,int count) {
 		return createTexCoordSequenceBias(startX,startY,width,height,count,mDefaultBiasX,mDefaultBiasY);
+	}
+	
+	public TextureCoordinatesQuad[] createTexCoordPatchSequence(float patchX,float patchY,float patchWidth,float patchHeight,int countX,int countY) {
+		return createTexCoordSequenceBias(patchX*mPatchSizeX,patchY*mPatchSizeY,(patchWidth)*mPatchSizeX,(patchHeight)*mPatchSizeY,countX,countY,mDefaultBiasX,mDefaultBiasY);
 	}
 	
 	public TextureCoordinatesQuad[] createTexCoordSequence(float startX,float startY,float size,int count) {
@@ -122,6 +131,28 @@ public abstract class TextureCoordinateSet {
 	
 	public TextureCoordinatesQuad createTexCoordsNormalized(float left, float top, float size) {
 		return createTexCoordsNormalized(left,top,size,size);
+	}
+	
+	public TextureCoordinatesQuad register(TextureCoordinatesQuad texCoords) {
+		if(texCoords!=null && !mTexCoords.contains(texCoords))
+			mTexCoords.add(texCoords);
+		return texCoords;
+	}
+	
+	public TextureCoordinatesQuad[] register(TextureCoordinatesQuad[] texCoords) {
+		for(TextureCoordinatesQuad coords:texCoords) 
+			register(coords);
+		return texCoords;
+	}
+	
+	public TextureCoordinatesQuad[] createSequence(TextureCoordinatesQuad texCoords,int countX,int countY) {
+		TextureCoordinatesQuad[] result = TextureCoordinatesQuad.createSequence(texCoords, countX,countY);
+		register(result);
+		return result;
+	}
+	
+	public TextureCoordinatesQuad[] createSequence(TextureCoordinatesQuad texCoords,int count) {
+		return createSequence(texCoords,count,1);
 	}
 	
 }

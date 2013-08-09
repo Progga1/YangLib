@@ -1,15 +1,14 @@
 package yang.util.gui.components;
 
+import yang.graphics.model.FloatColor;
+
 
 @SuppressWarnings("rawtypes")
 public class GUIMultipassComponent extends GUIComponent {
 
 	protected GUIComponentDrawPass[] mPasses;
+	public FloatColor[] mColors = null;
 	
-//	public GUIMultipassComponent setPasses(GUIComponentDrawPass[] passes) {
-//		mPasses = passes;
-//		return this;
-//	}
 	
 	public GUIMultipassComponent setPasses(GUIComponentDrawPass... passes) {
 		mPasses = passes;
@@ -22,6 +21,15 @@ public class GUIMultipassComponent extends GUIComponent {
 		if(mPasses==null || passId>=mPasses.length || mPasses[passId]==null)
 			return;
 		mPasses[passId].draw(mGUI.mGraphics2D, this);
+	}
+	
+	protected void initColors(int count) {
+		if(mColors!=null && mColors.length>=count)
+			return;
+		mColors = new FloatColor[count];
+		for(int i=0;i<count;i++) {
+			mColors[i] = FloatColor.WHITE.clone();
+		}
 	}
 
 	public float getProjCenterX() {

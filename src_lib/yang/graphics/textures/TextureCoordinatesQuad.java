@@ -27,6 +27,28 @@ public class TextureCoordinatesQuad {
 	public float[] mAppliedCoordinates;
 	public int mRotation;
 	
+	public static TextureCoordinatesQuad[] createSequence(TextureCoordinatesQuad texCoords,int countX,int countY) {
+		int count = countX*countY;
+		TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
+		float w = texCoords.getWidth();
+		float h = texCoords.getHeight();
+		
+		int c = 0;
+		result[0] = texCoords;
+		for(int j=0;j<countY;j++) {
+			for(int i=0;i<countX;i++) {
+				if(c>0)
+					result[c] = texCoords.cloneShifted(w*i,h*j);
+				c++;
+			}
+		}
+		return result;
+	}
+	
+	public static TextureCoordinatesQuad[] createSequence(TextureCoordinatesQuad texCoords,int countX) {
+		return createSequence(texCoords,countX,1);
+	}
+	
 	public TextureCoordinatesQuad() {
 		
 	}
@@ -180,10 +202,16 @@ public class TextureCoordinatesQuad {
 		return setBias(bias,bias);
 	}
 	
+	public TextureCoordinatesQuad cloneShifted(float shiftX,float shiftY) {
+		return new TextureCoordinatesQuad().initBiased(mLeft+shiftX, mTop+shiftY, getRight()+shiftX, getBottom()+shiftY, mBiasX,mBiasY);
+	}
+	
 	@Override
 	public TextureCoordinatesQuad clone() {
-		return new TextureCoordinatesQuad().initBiased(mLeft, mTop, getRight(), getBottom(), mBiasX,mBiasY);
+		return cloneShifted(0,0);
 	}
+	
+	
 
 	public void setRight(float right) {
 		mWidth = right-mLeft;

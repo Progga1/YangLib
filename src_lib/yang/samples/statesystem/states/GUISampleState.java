@@ -3,20 +3,26 @@ package yang.samples.statesystem.states;
 import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.DrawableString;
 import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.Texture;
+import yang.graphics.util.clippedrect.ClippedDrawerCallback;
 import yang.graphics.util.ninepatch.NinePatchGrid;
 import yang.graphics.util.ninepatch.NinePatchTexCoords;
+import yang.math.objects.Bounds;
 import yang.samples.statesystem.SampleState;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.components.GUIComponent;
+import yang.util.gui.components.GUIInteractiveRectComponent;
+import yang.util.gui.components.GUIMultipassComponent;
 import yang.util.gui.components.defaultbuttons.DefaultIconButton;
 import yang.util.gui.components.defaultbuttons.DefaultNinePatchButton;
 import yang.util.gui.components.defaultbuttons.DefaultOutlineButton;
 import yang.util.gui.components.defaultbuttons.DefaultRectButton;
+import yang.util.gui.components.defaultdrawers.GUIClippedDrawer;
 import yang.util.gui.components.defaultdrawers.GUIIconDrawer;
 import yang.util.gui.components.defaultdrawers.GUINinePatchDrawer;
 import yang.util.gui.components.defaultdrawers.GUIOutlineDrawer;
@@ -36,6 +42,23 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 	private DefaultNinePatchButton mNinePatchButton2;
 	private DefaultIconButton mIconButton;
 	private DefaultOutlineButton mOutlineButton;
+	
+	private class RectDrawer implements ClippedDrawerCallback {
+
+		DefaultGraphics<?> mGraphics;
+		
+		public RectDrawer(DefaultGraphics<?> graphics) {
+			mGraphics = graphics;
+		}
+		
+		@Override
+		public void draw(Bounds bounds, float shiftX, float shiftY) {
+			mGraphics.mTranslator.bindTexture(null);
+			mGraphics.setColor(1,0.2f,0);
+			mGraphics.drawRectWH(bounds.getLeft()+shiftX+0.02f,bounds.getBottom()+shiftY+0.02f,0.5f,0.6f,null);
+		}
+		
+	}
 	
 	@Override
 	protected void initGraphics() {
@@ -89,6 +112,11 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		mOutlineButton.getPass(GUIOutlineDrawer.class).mStroke.mColor.set(0.8f,0.6f,0.1f);
 		mOutlineButton.createCaption("Outline button").setPosAndExtentsCentered(2, 1.5f, 1.0f, 0.2f);
 		
+		GUIInteractiveRectComponent scrollPanel = mGUI.addComponent(GUIInteractiveRectComponent.class);
+		scrollPanel.setPasses(null,new GUINinePatchDrawer().setNinePatch(ninePatch),null,new GUIClippedDrawer(new RectDrawer(mGraphics2D)),new GUIOutlineDrawer());
+		scrollPanel.setPosAndExtents(2.5f, 0.8f, 1.0f, 1.1f);
+		
+		mGUI.setPassTexture(0, mGraphics.mWhiteTexture);
 		mGUI.setPassTexture(1, ninePatchTex);
 		mGUI.setPassTexture(2, ninePatchTex);
 		mGUI.setPassTexture(3, null);

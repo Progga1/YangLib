@@ -240,37 +240,39 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 
 	public void putPositions() {
 		float w = mProperties.mWidth*0.5f;
+		float lineW = w*mProperties.mStraightLineWidthFactor;
 		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
 		for(int i=0;i<mLineCount;i++) {
 			OrthoStrokeLine line = mLines[i];
 			if(!line.mDeleted) {
+				//straight line
 				vertexBuffer.beginQuad(false);
 				if(line.mDeltaX!=0) {
 					if(line.mDeltaX>0) {
-						mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY-w);
-						mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX+w, line.mPosY-lineW);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY-lineW);
+						mGraphics.putPosition(line.mPosX+w, line.mPosY+lineW);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+lineW);
 						putTexRect(line.mDeltaX, mProperties.mLineTexCoords[1]);
 					}else{
-						mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+w);
-						mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX-w, line.mPosY+lineW);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+lineW);
+						mGraphics.putPosition(line.mPosX-w, line.mPosY-lineW);
+						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY-lineW);
 						putTexRect(line.mDeltaX, mProperties.mLineTexCoords[3]);
 					}
 				}else {
 					if(line.mDeltaY>0) {
-						mGraphics.putPosition(line.mPosX+w, line.mPosY+w);
-						mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY-w);
-						mGraphics.putPosition(line.mPosX-w, line.mPosY+w);
-						mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY-w);
+						mGraphics.putPosition(line.mPosX+lineW, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX+lineW, line.mPosY+line.mDeltaY-w);
+						mGraphics.putPosition(line.mPosX-lineW, line.mPosY+w);
+						mGraphics.putPosition(line.mPosX-lineW, line.mPosY+line.mDeltaY-w);
 						putTexRect(line.mDeltaY, mProperties.mLineTexCoords[0]);
 					}else if(line.mDeltaY<0) {
-						mGraphics.putPosition(line.mPosX-w, line.mPosY-w);
-						mGraphics.putPosition(line.mPosX-w, line.mPosY+line.mDeltaY+w);
-						mGraphics.putPosition(line.mPosX+w, line.mPosY-w);
-						mGraphics.putPosition(line.mPosX+w, line.mPosY+line.mDeltaY+w);
+						mGraphics.putPosition(line.mPosX-lineW, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX-lineW, line.mPosY+line.mDeltaY+w);
+						mGraphics.putPosition(line.mPosX+lineW, line.mPosY-w);
+						mGraphics.putPosition(line.mPosX+lineW, line.mPosY+line.mDeltaY+w);
 						putTexRect(line.mDeltaY, mProperties.mLineTexCoords[2]);
 					}
 				}

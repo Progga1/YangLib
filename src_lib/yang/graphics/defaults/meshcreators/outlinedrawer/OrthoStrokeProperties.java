@@ -14,6 +14,7 @@ public class OrthoStrokeProperties {
 	public float mTexBias = 0.005f;
 	public float mWidth = 0.1f;
 	public float mStretch = 1;
+	public float mStraightLineWidthFactor = 1;
 	
 	public TextureCoordinatesQuad[] mTexCoordTable;
 	public TextureCoordinatesQuad[] mLineTexCoords;
@@ -38,45 +39,50 @@ public class OrthoStrokeProperties {
 		this(new TextureCoordBounds());
 	}
 	
-	public void setLineTexCoords(TextureCoordinatesQuad texCoords) {
+	public void setLineTexCoords(TextureCoordinatesQuad texCoords,float widthFactor) {
 		texCoords.intoRect(mTexBounds);
 		mLineTexCoords[0] = texCoords;
 		mLineTexCoords[1] = texCoords;
 		mLineTexCoords[2] = texCoords;
 		mLineTexCoords[3] = texCoords;
 		mFieldWidth = texCoords.getWidth()/mOffsets.length;
+		mStraightLineWidthFactor = widthFactor;
 	}
 	
-	public void putPatch(int mask,int texPatchX,int texPatchY,int rotation) {
+	public void setLineTexCoords(TextureCoordinatesQuad texCoords) {
+		setLineTexCoords(texCoords,1);
+	}
+	
+	public void putPatch(int mask,float texPatchX,float texPatchY,int rotation) {
 		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(texPatchX*mPatchSize, texPatchY*mPatchSize, mPatchSize, mTexBias);
 		texCoords.intoRect(mTexBounds);
 		texCoords.setRotation(rotation);
 		mTexCoordTable[mask] = texCoords;
 	}
 	
-	public void putTurns(int texPatchX,int texPatchY) {
+	public void putPatch(int mask,float texPatchX,float texPatchY) {
+		putPatch(mask,texPatchX,texPatchY,0);
+	}
+	
+	public void putTurns(float texPatchX,float texPatchY) {
 		putPatch(LEFT | DOWN, texPatchX, texPatchY);
 		putPatch(UP | LEFT, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_CCW_90);
 		putPatch(RIGHT | UP, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_180);
 		putPatch(DOWN | RIGHT, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_CW_90);
 	}
 	
-	public void putEndings(int texPatchX,int texPatchY) {
+	public void putEndings(float texPatchX,float texPatchY) {
 		putPatch(UP, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_CW_90);
 		putPatch(RIGHT, texPatchX, texPatchY);
 		putPatch(DOWN, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_CCW_90);
 		putPatch(LEFT, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_180);
 	}
 	
-	public void putMerging(int texPatchX,int texPatchY) {
+	public void putMerging(float texPatchX,float texPatchY) {
 		putPatch(RIGHT | DOWN | LEFT, texPatchX, texPatchY);
 		putPatch(RIGHT | DOWN | UP, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_CW_90);
 		putPatch(LEFT | DOWN | UP, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_CCW_90);
 		putPatch(RIGHT | LEFT | UP, texPatchX, texPatchY, TextureCoordinatesQuad.ROTATE_180);
-	}
-	
-	public void putPatch(int mask,int texPatchX,int texPatchY) {
-		putPatch(mask,texPatchX,texPatchY,0);
 	}
 	
 }

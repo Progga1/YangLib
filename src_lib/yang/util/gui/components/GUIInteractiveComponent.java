@@ -1,6 +1,7 @@
 package yang.util.gui.components;
 
 import yang.events.eventtypes.YangEvent;
+import yang.util.NonConcurrentList;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
@@ -9,7 +10,7 @@ public abstract class GUIInteractiveComponent extends GUIMultipassComponent impl
 
 	public float mPressedTime;
 	public GUIActionListener mActionListener;
-	public GUIPointerListener mPointerListener;
+	public NonConcurrentList<GUIPointerListener> mPointerListeners = new NonConcurrentList<GUIPointerListener>();
 	
 	public abstract boolean inArea(float x,float y);
 	
@@ -18,15 +19,34 @@ public abstract class GUIInteractiveComponent extends GUIMultipassComponent impl
 		return this;
 	}
 	
-	public GUIInteractiveComponent setPointerListener(GUIPointerListener pointerListener) {
-		mPointerListener = pointerListener;
+	public GUIInteractiveComponent addPointerListener(GUIPointerListener pointerListener) {
+		if(!mPointerListeners.contains(pointerListener))
+			mPointerListeners.add(pointerListener);
+		return this;
+	}
+	
+	public GUIInteractiveComponent setPointerListener(NonConcurrentList<GUIPointerListener> pointerListeners) {
+		for(GUIPointerListener listener:pointerListeners)
+			mPointerListeners.add(listener);
+		return this;		
+	}
+	
+	@Override
+	@SuppressWarnings("rawtypes")
+	public GUIMultipassComponent setPasses(GUIComponentDrawPass... passes) {
+		super.setPasses(passes);
+		for(GUIComponentDrawPass pass:passes) {
+			if(pass instanceof GUIPointerListener)
+				addPointerListener((GUIPointerListener)pass);
+		}
 		return this;
 	}
 	
 	public GUIComponent rawPointerEvent(GUIPointerEvent pointerEvent) {
 		pointerEvent.handle(this);
-		if(mPointerListener!=null) {
-			pointerEvent.handle(mPointerListener);
+		if(mPointerListeners!=null) {
+			for(GUIPointerListener listener:mPointerListeners)
+				pointerEvent.handle(listener);
 			return this;
 		}else
 			return null;

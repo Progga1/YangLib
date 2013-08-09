@@ -21,6 +21,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.glconsts.GLBlendFuncs;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
+import yang.math.objects.Bounds;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.model.ScreenInfo;
@@ -656,13 +657,22 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		x = x*0.5f*mInvRatioX+0.5f;
 		y = y*0.5f*mInvRatioY+0.5f;
 		setScissorRectI((int)(x*mScreenWidth),(int)(y*mScreenHeight),(int)(width*0.5f*mInvRatioX*mScreenWidth),(int)(height*0.5f*mInvRatioY*mScreenHeight));
+		enable(GLOps.SCISSOR_TEST);
+	}
+	
+	public void setScissorRectNormalized(Bounds mBounds) {
+		assert preCheck("Set scissor");
+		setScissorRectNormalized(mBounds.mValues[0],mBounds.mValues[1],mBounds.mValues[2]-mBounds.mValues[0],mBounds.mValues[3]-mBounds.mValues[1]);
+		assert checkErrorInst("Set scissor");
 	}
 	
 	public void switchScissor(boolean enabled) {
+		assert preCheck("Switch scissor");
 		if(enabled)
 			enable(GLOps.SCISSOR_TEST);
 		else
 			disable(GLOps.SCISSOR_TEST);
+		assert checkErrorInst("Switch scissor");
 	}
 	
 	public void switchZBuffer(boolean enabled) {

@@ -85,8 +85,8 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 			mInteractiveComponents.add(interComponent);
 			if(mActionListener!=null)
 				interComponent.setActionListener(mActionListener);
-			if(mPointerListener!=null)
-				interComponent.setPointerListener(mPointerListener);
+			if(mPointerListeners!=null)
+				interComponent.setPointerListener(mPointerListeners);
 		}
 		mAllComponents.add(component);
 		component.init(mGUI);
@@ -99,11 +99,9 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 			ComponentType instance = componentClass.newInstance();
 			return addComponent(instance);
 		} catch (InstantiationException e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			return null;
+			throw new RuntimeException(e);
 		}
 		
 	}

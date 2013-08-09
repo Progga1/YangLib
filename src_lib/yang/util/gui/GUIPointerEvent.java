@@ -1,18 +1,20 @@
 package yang.util.gui;
 
 import yang.events.eventtypes.AbstractPointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.RawEventListener;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.interfaces.GUIPointerListener;
 
-public class GUIPointerEvent extends AbstractPointerEvent {
+public class GUIPointerEvent extends YangPointerEvent {
 
 	public final static int ACTION_CLICK = 4;
 	public GUIComponent mSender;
 	
 	@Override
 	public void handle(RawEventListener eventInterface) {
-		eventInterface.rawEvent(this);
+//		if(eventInterface.rawEvent(this))
+//			return;
 		if(!(eventInterface instanceof GUIPointerListener))
 			return;
 		GUIPointerListener pointerListener = (GUIPointerListener)eventInterface;

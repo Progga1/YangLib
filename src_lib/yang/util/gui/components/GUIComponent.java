@@ -1,9 +1,10 @@
 package yang.util.gui.components;
 
+import yang.graphics.model.FloatColor;
 import yang.util.gui.BasicGUI;
 
 public class GUIComponent {
-
+	
 	public boolean mVisible = true;
 	public boolean mEnabled = true;
 	public float mPosX;

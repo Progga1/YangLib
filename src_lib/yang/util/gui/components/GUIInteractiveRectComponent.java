@@ -3,7 +3,7 @@ package yang.util.gui.components;
 import yang.graphics.model.FloatColor;
 
 
-public abstract class GUIInteractiveRectComponent extends GUIInteractiveComponent {
+public class GUIInteractiveRectComponent extends GUIInteractiveComponent {
 
 	public float mWidth,mHeight;
 	public float mProjWidth,mProjHeight;

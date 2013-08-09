@@ -53,7 +53,7 @@ public class BasicGUI {
 		mAutoUpdateProjections = autoUpdateProjections;
 		setCoordinatesMode(coordinatesMode);
 		mPassTextures = new NonConcurrentList<Texture>();
-		setPassTexture(0,null);
+		setPassTexture(0,mGraphics.mWhiteTexture);
 		setPassTexture(maxPasses,null);
 	}
 	
@@ -120,7 +120,7 @@ public class BasicGUI {
 	}
 	
 	public void setDefaultPointerListener(GUIPointerListener pointerListener) {
-		mMainContainer.mPointerListener = pointerListener;
+		mMainContainer.addPointerListener(pointerListener);
 	}
 	
 	public void draw() {
@@ -132,7 +132,8 @@ public class BasicGUI {
 		mGraphics2D.mTranslator.switchZBuffer(false);
 		int pass=0;
 		for(Texture texture:mPassTextures) {
-			mGraphics.bindTexture(texture);
+			if(texture!=null)
+				mGraphics.bindTexture(texture);
 			mMainContainer.draw(pass);
 			pass++;
 		}
@@ -240,7 +241,10 @@ public class BasicGUI {
 
 	public void setPressedComponent(GUIInteractiveComponent component) {
 		mPressedComponent = component;
-		mPressedComponent.mPressedTime = mCurrentTime;
+		if(mCurrentTime!=0)
+			mPressedComponent.mPressedTime = mCurrentTime;
+		else
+			mPressedComponent.mPressedTime = 1;
 	}
 	
 	public void refreshCoordinateSystem() {
