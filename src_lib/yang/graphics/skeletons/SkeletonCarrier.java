@@ -1,6 +1,5 @@
 package yang.graphics.skeletons;
 
-import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.animations.AnimationPlayer;
 
 public interface SkeletonCarrier {

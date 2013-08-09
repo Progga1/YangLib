@@ -2,8 +2,6 @@ package yang.graphics.programs.permutations;
 
 import java.util.HashMap;
 
-import yang.util.NonConcurrentList;
-
 public class ShaderPermutationsParser {
 
 	private ShaderPermutations mPermutations;

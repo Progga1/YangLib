@@ -1,7 +1,5 @@
 package yang.math.objects.matrix;
 
-import yang.graphics.util.Camera3D;
-import yang.math.MatrixOps;
 import yang.math.objects.Vector3f;
 
 

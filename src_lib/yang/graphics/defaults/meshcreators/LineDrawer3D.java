@@ -1,7 +1,6 @@
 package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.defaults.Default3DGraphics;
-import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 

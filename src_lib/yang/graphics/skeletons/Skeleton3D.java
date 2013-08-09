@@ -6,7 +6,6 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.elements.Joint;
 import yang.math.Geometry;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.util.NonConcurrentList;
 
 public class Skeleton3D {

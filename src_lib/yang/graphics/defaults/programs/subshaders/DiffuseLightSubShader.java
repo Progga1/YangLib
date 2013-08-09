@@ -1,6 +1,5 @@
 package yang.graphics.defaults.programs.subshaders;
 
-import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
 import yang.graphics.programs.permutations.SubShader;

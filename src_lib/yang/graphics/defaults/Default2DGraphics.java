@@ -1,6 +1,5 @@
 package yang.graphics.defaults;
 
-import yang.graphics.defaults.programs.AdditiveModulateProgram;
 import yang.graphics.font.LegacyAbstractFont;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.translator.GraphicsTranslator;

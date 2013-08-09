@@ -2,8 +2,6 @@ package yang.graphics.tools.animator;
 
 import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultSurface;
-import yang.graphics.font.DrawableString;
-import yang.graphics.font.StringProperties;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.sound.SoundManager;
 
