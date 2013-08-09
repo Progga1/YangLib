@@ -1,19 +1,11 @@
 package yang.graphics.defaults;
 
 import yang.events.EventQueueHolder;
-import yang.events.YangEventQueue;
-import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.YangSurface;
 import yang.graphics.font.BitmapFont;
-import yang.graphics.font.StringProperties;
-import yang.graphics.model.GFXDebug;
-import yang.graphics.translator.AbstractGFXLoader;
-import yang.model.DebugYang;
-import yang.systemdependent.AbstractResourceManager;
-import yang.util.StringsXML;
 
 public abstract class DefaultSurface extends YangSurface implements YangEventListener,EventQueueHolder{
 

@@ -9,8 +9,6 @@ import java.io.InputStreamReader;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import yang.util.Util;
-
 public class FontCreator {
     
 		static final int DEFAULT_KERN_BOXES = 8;

@@ -1,7 +1,6 @@
 package yang.graphics.skeletons.defaults;
 
 import yang.graphics.defaults.DefaultAnimationPlayer;
-import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.Skeleton;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.AnimationPlayer;

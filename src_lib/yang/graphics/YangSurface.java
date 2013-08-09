@@ -10,7 +10,6 @@ import yang.events.macro.MacroExecuter;
 import yang.events.macro.MacroWriter;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
-import yang.graphics.font.DrawableString;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.translator.AbstractGFXLoader;

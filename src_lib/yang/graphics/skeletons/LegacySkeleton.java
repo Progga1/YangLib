@@ -4,7 +4,6 @@ import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.programs.BasicProgram;
 import yang.graphics.skeletons.constraints.Constraint;
 import yang.graphics.skeletons.constraints.DistanceConstraint;
 import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;

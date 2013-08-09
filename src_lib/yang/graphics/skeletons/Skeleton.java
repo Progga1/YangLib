@@ -3,7 +3,6 @@ package yang.graphics.skeletons;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.programs.AbstractProgram;
 import yang.graphics.skeletons.constraints.Constraint;
 import yang.graphics.skeletons.constraints.DistanceConstraint;
 import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;
@@ -18,7 +17,6 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.Rect;
 import yang.util.NonConcurrentList;
-import yang.util.Util;
 
 //TODO: bone-arrays
 

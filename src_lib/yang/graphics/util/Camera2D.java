@@ -2,8 +2,6 @@ package yang.graphics.util;
 
 import javax.vecmath.Point2f;
 
-import yang.graphics.defaults.Default2DGraphics;
-
 
 /**
  * @author Xider

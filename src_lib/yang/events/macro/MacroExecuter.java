@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import yang.events.eventtypes.YangEvent;
-import yang.events.eventtypes.YangPointerEvent;
 import yang.model.DebugYang;
 
 public class MacroExecuter {
