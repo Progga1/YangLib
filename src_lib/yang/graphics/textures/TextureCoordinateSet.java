@@ -119,6 +119,10 @@ public abstract class TextureCoordinateSet {
 		return createTexCoordSequenceBias(patchX*mPatchSizeX,patchY*mPatchSizeY,(patchWidth)*mPatchSizeX,(patchHeight)*mPatchSizeY,countX,countY,mDefaultBiasX,mDefaultBiasY);
 	}
 	
+	public TextureCoordinatesQuad[] createTexCoordPatchSequence(float patchX,float patchY,float patchWidthAndHeight,int countX) {
+		return createTexCoordPatchSequence(patchX,patchY,patchWidthAndHeight,patchWidthAndHeight,countX,1);
+	}
+	
 	public TextureCoordinatesQuad[] createTexCoordSequence(float startX,float startY,float size,int count) {
 		return createTexCoordSequence(startX,startY,size,size,count);
 	}

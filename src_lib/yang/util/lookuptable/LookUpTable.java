@@ -18,6 +18,10 @@ public class LookUpTable {
 		create();
 	}
 	
+	public LookUpTable(float stepSize, Function function) {
+		this(0,1,stepSize,function);
+	}
+	
 	private void create() {
 		for(int i=0;i<mValues.length;i++) {
 			float x = mStartX + i*mStepSize;

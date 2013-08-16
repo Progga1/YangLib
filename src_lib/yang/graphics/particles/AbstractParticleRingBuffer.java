@@ -16,7 +16,10 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	protected int mCurParticleIndex;
 	protected int mMaxParticleCount;
 	public float mDefaultScale;
+	public float mScaleSpeed;
+	public float mAlphaSpeed;
 	public LookUpTable mScaleLookUp;
+	public LookUpTable mAlphaLookUp;
 	public int mParticleCount;
 	public NonConcurrentList<ParticleType> mParticles;
 	public float mDefaultFriction = 0.9995f;
@@ -27,7 +30,10 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	public AbstractParticleRingBuffer() {
 		mTexture = null;
 		mDefaultScale = 1;
+		mScaleSpeed = 1;
+		mAlphaSpeed = 0;
 		mScaleLookUp = null;
+		mAlphaLookUp = null;
 		mParticleCount = 0;
 	}
 	
@@ -102,12 +108,20 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		mCurParticleIndex = 0;
 	}
 	
-	public void setFunction(Function function,float stepSize) {
+	public void setScaleFunction(Function function,float stepSize) {
 		mScaleLookUp = new LookUpTable(0,1,stepSize,function);
 	}
 	
 	public void setScaleFunction(Function function) {
-		setFunction(function,0.001f);
+		setScaleFunction(function,0.001f);
+	}
+	
+	public void setAlphaFunction(Function function,float stepSize) {
+		mAlphaLookUp = new LookUpTable(0,1,stepSize,function);
+	}
+	
+	public void setAlphaFunction(Function function) {
+		setAlphaFunction(function,0.001f);
 	}
 	
 }
