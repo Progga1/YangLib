@@ -146,9 +146,14 @@ public class YangMatrix {
 	}
 	
 	public void postScale(float x, float y, float z) {
-		mMatrix[0] *= x;
-		mMatrix[5] *= y;
-		mMatrix[10] *= z;
+//		mMatrix[0] *= x;
+//		mMatrix[5] *= y;
+//		mMatrix[10] *= z;
+		for(int i=0;i<4;i++) {
+			mMatrix[i*4] *= x;
+			mMatrix[i*4+1] *= y;
+			mMatrix[i*4+2] *= z;
+		}
 	}
 	
 	public void scale(float x, float y) {

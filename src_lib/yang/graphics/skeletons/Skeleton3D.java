@@ -13,7 +13,7 @@ public class Skeleton3D {
 	public static int MAX_JOINTS = 256;
 	public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
 	public static FloatColor hoverColor = new FloatColor(1,0.3f,0.04f);
-	public static FloatColor selectedColor = new FloatColor(1,0,0);
+	public static FloatColor selectedColor = new FloatColor(1,0.5f,0);
 	
 	public JointEditData[] mJointData = new JointEditData[MAX_JOINTS];
 	public Default3DGraphics mGraphics3D;

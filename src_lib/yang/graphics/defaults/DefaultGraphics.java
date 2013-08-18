@@ -137,6 +137,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		if (mWorldTransformEnabled)
 			target.multiplyRight(mWorldTransform);
 		target.postScale(mTranslator.mRatioX, 1, 1);
+		//target.scale(mTranslator.mRatioX, 1);
 	}
 
 	protected void updateProgramProjection() {
