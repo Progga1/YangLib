@@ -74,6 +74,7 @@ public class Skeleton3DSampleState extends SampleState {
 		mGraphics3D.setOrthogonalProjection(-1,10,mZoom);
 		mGraphics.clear(0f,0f,0.3f, GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics.switchZBuffer(true);
+		mGraphics.switchCulling(true);
 		
 		mGraphics3D.setWhite();
 		mGraphics3D.setAmbientColor(1);
@@ -84,8 +85,8 @@ public class Skeleton3DSampleState extends SampleState {
 		mGraphics3D.setCamera(mCamera);
 		mSkeleton3D.draw();
 		
-//		mGraphics3D.setDefaultProgram();
-//		mGraphics3D.drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1);
+		mGraphics3D.setDefaultProgram();
+		mGraphics3D.drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1,0.3f);
 
 		
 		

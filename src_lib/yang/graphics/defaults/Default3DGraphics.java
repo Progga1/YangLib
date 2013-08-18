@@ -52,6 +52,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private SphereCreator mSphereCreator;
 	private LineDrawer3D mLineDrawer;
 	private YangMatrix mTempMatrix = new YangMatrix();
+	private float[] mTemp4f = new float[4];
 	
 	protected boolean mCurIsPerspective;
 	protected float mCurNear,mCurFar,mCurFovy,mCurZoom;
@@ -413,21 +414,27 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		target.mZ = mat[9];
 	}
 	
-	public void drawCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale) {
+	public void drawCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
 		final float AXIS_WIDTH = 0.03f;
+		xColor.copyToArray(mTemp4f);
+		mTemp4f[3] = alpha;
 		int vertexCount = mLineDrawer.getLineVertexCount();
 		mLineDrawer.drawLine(0,0,0, scale,0,0, AXIS_WIDTH,0);
-		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, xColor.mValues, vertexCount);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
+		yColor.copyToArray(mTemp4f);
+		mTemp4f[3] = alpha;
 		mLineDrawer.drawLine(0,0,0, 0,scale,0, AXIS_WIDTH,0);
-		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, yColor.mValues, vertexCount);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
+		zColor.copyToArray(mTemp4f);
+		mTemp4f[3] = alpha;
 		mLineDrawer.drawLine(0,0,0, 0,0,scale, AXIS_WIDTH,0);
-		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, zColor.mValues, vertexCount);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
 		
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount*3);
 	}
 	
 	public void drawCoordinateAxes() {
-		drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.BLUE,1);
+		drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.BLUE,1,1);
 	}
 	
 	private Vector3f tempVec1 = new Vector3f();
