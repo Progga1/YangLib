@@ -56,12 +56,13 @@ public class Skeleton3DSampleState extends SampleState {
 		//mShader = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLight,new FloatColor(0.3f)));
 		mShader = mGraphics.addProgram(new ShaderPermutations(mGraphics,subShaders));
 		mLight.mDirection.setAlphaBeta(0.4f, 0.4f);
+		mSkeleton.mBreastJoint.mFixed = false;
+		mSkeleton.setFriction(0.98f);
 	}
 	
 	@Override
 	protected void step(float deltaTime) {
-		mSkeleton.mBreastJoint.mFixed = false;
-		mSkeleton.recalculateConstraints();
+		
 		mSkeleton.applyConstraints(deltaTime);
 	}
 
@@ -156,7 +157,7 @@ public class Skeleton3DSampleState extends SampleState {
 			for(Joint joint:mSkeleton3D.getJoints()) {
 				JointEditData data = mSkeleton3D.getJointEditData(joint);
 				if(data.mSelected)
-					joint.drag(dragX*mCamRight.mX,dragY*mCamUp.mY);
+					joint.drag(dragX*mCamRight.mX+dragY*mCamUp.mX,dragX*mCamRight.mY+dragY*mCamUp.mY,dragX*mCamRight.mZ+dragY*mCamUp.mZ);
 			}
 		}
 		mPntX = x;

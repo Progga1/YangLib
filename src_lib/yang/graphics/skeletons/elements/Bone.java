@@ -24,9 +24,9 @@ public class Bone {
 	public boolean mCelShading;
 	
 	//State
-	public float mDistX, mDistY;
+	public float mDistX, mDistY, mDistZ;
 	public float mDistance;
-	public float mNormDirX,mNormDirY,mPrevNormDirX,mPrevNormDirY;
+	public float mNormDirX,mNormDirY,mNormDirZ,mPrevNormDirX,mPrevNormDirY,mPrevNormDirZ;
 	public float mOrthNormX;
 	public float mOrthNormY;
 	public float mBoneDirX1,mBoneDirY1,mBoneDirX2,mBoneDirY2;
@@ -34,6 +34,7 @@ public class Bone {
 	public float mVertX1,mVertY1,mVertX2,mVertY2,mVertX3,mVertY3,mVertX4,mVertY4;
 	public float mWidthFac;
 	public boolean mVisible;
+	
 	
 	public Bone(GraphicsTranslator graphics,String name,Joint bone1,Joint bone2) {
 		mName = name;
@@ -131,14 +132,18 @@ public class Bone {
 	public void refreshDistance() {
 		mPrevNormDirX = mNormDirX;
 		mPrevNormDirY = mNormDirY;
+		mPrevNormDirZ = mNormDirZ;
 		
 		mDistX = mJoint2.mPosX - mJoint1.mPosX;
 		mDistY = mJoint2.mPosY - mJoint1.mPosY;
-		mDistance = (float)Math.sqrt(mDistX*mDistX + mDistY*mDistY);
+		mDistZ = mJoint2.mPosZ - mJoint1.mPosZ;
+		mDistance = (float)Math.sqrt(mDistX*mDistX + mDistY*mDistY + mDistZ*mDistZ);
 		
 		if(mDistance!=0) {
-			mNormDirX = mDistX / mDistance;
-			mNormDirY = mDistY / mDistance;
+			float d = 1 / mDistance;
+			mNormDirX = mDistX * d;
+			mNormDirY = mDistY * d;
+			mNormDirZ = mDistZ * d;
 			mOrthNormX = mNormDirY;
 			mOrthNormY = -mNormDirX;
 		}

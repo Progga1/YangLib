@@ -56,6 +56,7 @@ public abstract class Skeleton {
 	private boolean mInitialized;
 	public float mConstantForceX;
 	public float mConstantForceY;
+	public float mConstantForceZ;
 	public float mLowerLimit;
 	public float mLimitForceInwards;
 	public float mLimitForceOutwards;
@@ -65,6 +66,7 @@ public abstract class Skeleton {
 	public float mScale = 1;
 	public float mPosZ = 0;
 	private int mCurJointId = 0;
+	public boolean m3D = true;
 	
 	public DrawBatch mMesh;
 	protected IndexedVertexBuffer mVertexBuffer;
@@ -73,6 +75,7 @@ public abstract class Skeleton {
 	protected int mVertexCount;	
 	
 	protected float[] mInterColor = new float[4];
+	
 	
 	public Skeleton() {
 		mJoints = new NonConcurrentList<Joint>();
@@ -93,6 +96,7 @@ public abstract class Skeleton {
 		mAccuracy = DEFAULT_ACCURACY;
 		mConstantForceX = 0;
 		mConstantForceY = 0;
+		mConstantForceZ = 0;
 		mLimitForceInwards = 20f;
 		mLimitForceOutwards = 10f;
 		mLowerLimit = Float.MIN_VALUE;
@@ -420,14 +424,15 @@ public abstract class Skeleton {
 		for(int i=0;i<mAccuracy;i++) {
 			
 			//Init force
-			for(Joint Joint:mJoints) {
-				Joint.mForceX = mConstantForceX;
-				Joint.mForceY = mConstantForceY;
+			for(Joint joint:mJoints) {
+				joint.mForceX = mConstantForceX;
+				joint.mForceY = mConstantForceY;
+				joint.mForceZ = mConstantForceZ;
 				
-				if(Joint.mPosY+worldY<mLowerLimit) {
-					float uForce = (Joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
-					Joint.mForceY += (mLowerLimit-Joint.mPosY)*uForce;
-					Joint.mVelX *= mFloorFriction;
+				if(joint.mPosY+worldY<mLowerLimit) {
+					float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
+					joint.mForceY += (mLowerLimit-joint.mPosY)*uForce;
+					joint.mVelX *= mFloorFriction;
 				}
 			}
 			

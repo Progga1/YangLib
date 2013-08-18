@@ -112,14 +112,14 @@ public class Joint {
 		float dZ = posZ - mPosZ;
 		float dist = (float)Math.sqrt(dX*dX + dY*dY + dZ*dZ);
 		if(dist>0) {
-			float nX = dX/dist;
-			float nY = dY/dist;
-			float nZ = dZ/dist;
 			float fac;
-			fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR * mPositionForceFactor * factor;//TODO 3D
-			mForceX += fac * dist*nX;
-			mForceY += fac * dist*nY;
-			mForceZ += fac * dist*nZ;
+			if(mSkeleton.m3D)
+				fac = TOWARDS_FACTOR;//TODO 3D
+			else
+				fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR * mPositionForceFactor * factor;
+			mForceX += fac * dX;
+			mForceY += fac * dY;
+			mForceZ += fac * dZ;
 		}
 	}
 	
@@ -209,6 +209,12 @@ public class Joint {
 	public void addForce(float fX, float fY) {
 		this.mForceX += fX;
 		this.mForceY += fY;
+	}
+	
+	public void addForce(float fX,float fY,float fZ) {
+		this.mForceX += fX;
+		this.mForceY += fY;
+		this.mForceZ += fZ;
 	}
 	
 	public void applyConstraint() { }

@@ -26,6 +26,7 @@ public class Skeleton3D {
 	public Skeleton3D(Default3DGraphics graphics3D,Skeleton skeleton) {
 		mGraphics3D = graphics3D;
 		mSkeleton = skeleton;
+		mSkeleton.m3D = true;
 		for(int i=0;i<MAX_JOINTS;i++) {
 			mJointData[i] = new JointEditData();
 		}

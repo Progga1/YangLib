@@ -2,6 +2,7 @@ package yang.graphics.skeletons.defaults;
 
 import yang.graphics.skeletons.Skeleton;
 import yang.graphics.skeletons.constraints.AngleConstraint;
+import yang.graphics.skeletons.constraints.DistanceConstraint;
 import yang.graphics.skeletons.elements.Bone;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.skeletons.elements.JointNormalConstraint;
@@ -246,6 +247,13 @@ public abstract class HumanSkeleton extends Skeleton{
 				super.addConstraint(new AngleConstraint(mLeftLowerLegBone,mLeftFootBone, PI/8,10*PI/11));
 				super.addConstraint(new AngleConstraint(mRightLowerLegBone,mRightFootBone, PI/8,10*PI/11));
 			}
+		}
+		
+		if(m3D) {
+			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"LeftShoulderConstraint",mLeftShoulderJoint,mBreastJoint)));
+			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"RightShoulderConstraint",mRightShoulderJoint,mBreastJoint)));
+			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"LeftLegConstraint",mLeftLegJoint,mHipJoint)));
+			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"RightLegConstraint",mRightLegJoint,mHipJoint)));
 		}
 		
 		mBreastJoint.mFixed = true;

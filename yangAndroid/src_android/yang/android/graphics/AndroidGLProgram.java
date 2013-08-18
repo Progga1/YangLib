@@ -5,13 +5,18 @@ import java.nio.IntBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.math.objects.Vector3f;
 import yang.util.Util;
+import android.annotation.SuppressLint;
 import android.opengl.GLES20;
 
 public class AndroidGLProgram extends GLProgram {
 
 	private int mProgram;
 
+	@SuppressLint("DefaultLocale")
 	protected static void printCompileMessage(boolean error,int shaderType,String message,int length,Object sender) {
+		String upper = message.toUpperCase().trim();
+		if(upper.startsWith("SUCCESS") || upper.startsWith("NO ERROR"))
+			return;
 		String shaderName;
 		switch (shaderType) {
 		case GLES20.GL_VERTEX_SHADER:

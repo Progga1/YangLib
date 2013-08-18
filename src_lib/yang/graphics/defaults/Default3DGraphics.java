@@ -452,6 +452,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		tempVec1.add(x,y,z);
 		mProjectionMatrix.apply3D(tempVec1.mX,tempVec1.mY,tempVec1.mZ,tempVec2);
 		return target.getDistance(tempVec2);
+		//return 0.4f;
 	}
 	
 	public void getProjectedPosition(Vector3f target, float x,float y,float z) {
