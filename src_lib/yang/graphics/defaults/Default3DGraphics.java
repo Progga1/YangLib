@@ -414,23 +414,25 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		target.mZ = mat[9];
 	}
 	
-	public void drawCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
-		final float AXIS_WIDTH = 0.03f;
-		xColor.copyToArray(mTemp4f);
+	public static float DEBUG_AXIS_WIDTH = 0.03f;
+	
+	public void drawDebugVector(float baseX,float baseY,float baseZ, float vecX,float vecY,float vecZ,FloatColor color,float alpha) {
+		color.copyToArray(mTemp4f);
 		mTemp4f[3] = alpha;
 		int vertexCount = mLineDrawer.getLineVertexCount();
-		mLineDrawer.drawLine(0,0,0, scale,0,0, AXIS_WIDTH,0);
+		mLineDrawer.drawLine(0,0,0, vecX,vecY,vecZ, DEBUG_AXIS_WIDTH,0);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
-		yColor.copyToArray(mTemp4f);
-		mTemp4f[3] = alpha;
-		mLineDrawer.drawLine(0,0,0, 0,scale,0, AXIS_WIDTH,0);
-		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
-		zColor.copyToArray(mTemp4f);
-		mTemp4f[3] = alpha;
-		mLineDrawer.drawLine(0,0,0, 0,0,scale, AXIS_WIDTH,0);
-		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
-		
-		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount*3);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount);
+	}
+	
+	public void drawDebugVector(float baseX,float baseY,float baseZ, Vector3f vector,FloatColor color,float alpha) {
+		drawDebugVector(baseX,baseY,baseZ,vector.mX,vector.mY,vector.mZ,color,alpha);
+	}
+	
+	public void drawCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
+		drawDebugVector(0,0,0, 1,0,0, xColor,alpha);
+		drawDebugVector(0,0,0, 0,1,0, yColor,alpha);
+		drawDebugVector(0,0,0, 0,0,1, zColor,alpha);
 	}
 	
 	public void drawCoordinateAxes() {

@@ -19,26 +19,16 @@ import yang.graphics.skeletons.Skeleton3D;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
-import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.samples.SampleSkeleton;
-import yang.samples.statesystem.SampleState;
+import yang.samples.statesystem.SampleStateCameraControl;
 
-public class Skeleton3DSampleState extends SampleState {
+public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	public Skeleton3D mSkeleton3D;
 	public SampleSkeleton mSkeleton;
 	public Camera3D mCamera;
 	public ShaderPermutations mShader;
 	private LightProperties mLight;
-	private float mViewAlpha,mViewBeta;
-	private float mPntX,mPntY;
-	private float mZoom = 1.5f;
-	
-	private Vector3f mCamRight = new Vector3f();
-	private Vector3f mCamUp = new Vector3f();
-	private Vector3f mReprojectPos = new Vector3f();
-	private YangMatrixCameraOps mProjectMatrix = new YangMatrixCameraOps();
 	
 	@Override
 	public void initGraphics() {
@@ -58,6 +48,7 @@ public class Skeleton3DSampleState extends SampleState {
 		mLight.mDirection.setAlphaBeta(0.4f, 0.4f);
 		mSkeleton.mBreastJoint.mFixed = false;
 		mSkeleton.setFriction(0.98f);
+		mZoom = 1.5f;
 	}
 	
 	@Override
@@ -119,13 +110,14 @@ public class Skeleton3DSampleState extends SampleState {
 	
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
-		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
-		if(pJoint!=null) {
-			mSkeleton3D.setJointSelected(pJoint,true);
-			pJoint.startDrag();
+		if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
+			Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
+			if(pJoint!=null) {
+				mSkeleton3D.setJointSelected(pJoint,true);
+				pJoint.startDrag();
+			}
 		}
-		mPntX = x;
-		mPntY = y;
+		super.pointerDown(x, y, event);
 	}
 
 	@Override
@@ -136,22 +128,13 @@ public class Skeleton3DSampleState extends SampleState {
 	
 	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
-		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
-		float deltaX = x-mPntX;
-		float deltaY = y-mPntY;
-		
-		if(event.mButton == YangPointerEvent.BUTTON_MIDDLE) {
-			mViewAlpha -= deltaX*2;
-			mViewBeta -= deltaY;
-			final float MAX_BETA = PI/2-0.01f;
-			if(mViewBeta<-MAX_BETA)
-				mViewBeta = -MAX_BETA;
-			if(mViewBeta>MAX_BETA)
-				mViewBeta = MAX_BETA;
-		}
+		super.pointerDragged(x, y, event);
+		mSkeleton3D.mHoverJoint = null;
+		//Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
+
 		if(event.mButton == YangPointerEvent.BUTTON_LEFT) {
-			float dragX = deltaX*mZoom;
-			float dragY = deltaY*mZoom;
+			float dragX = mPntDeltaX*mZoom;
+			float dragY = mPntDeltaY*mZoom;
 			mGraphics3D.getCameraRightVector(mCamRight);
 			mGraphics3D.getCameraUpVector(mCamUp);
 			for(Joint joint:mSkeleton3D.getJoints()) {
@@ -160,12 +143,11 @@ public class Skeleton3DSampleState extends SampleState {
 					joint.drag(dragX*mCamRight.mX+dragY*mCamUp.mX,dragX*mCamRight.mY+dragY*mCamUp.mY,dragX*mCamRight.mZ+dragY*mCamUp.mZ);
 			}
 		}
-		mPntX = x;
-		mPntY = y;
 	}
 	
 	@Override
 	public void pointerUp(float x,float y,YangPointerEvent event) {
+		super.pointerUp(x,y,event);
 		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
 		if(pJoint!=null)
 			mSkeleton3D.setJointSelected(pJoint,false);
