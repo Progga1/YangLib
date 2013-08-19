@@ -93,6 +93,18 @@ public class MatrixOps {
 		}
 	}
 	
+	public static void multiplyRightTransposed(float[] target,float[] lhsMatrix,float[] rhsMatrix) {
+		for(int i=0;i<4;i++) {
+			for(int j=0;j<4;j++) {
+				target[i+j*4] = 
+						 lhsMatrix[i]*rhsMatrix[j]
+						+lhsMatrix[i+4]*rhsMatrix[j+4]
+						+lhsMatrix[i+8]*rhsMatrix[j+8]
+						+lhsMatrix[i+12]*rhsMatrix[j+12];
+			}
+		}
+	}
+	
 	public static void transpose(float[] target,float[] matrix) {
 		target[M00] = matrix[M00];
 		target[M01] = matrix[M10];
@@ -201,6 +213,48 @@ public class MatrixOps {
         return true;
 	}
 	
+	public static final void createDirectionTrafo(float[] target, float dirX,float dirY,float dirZ) {
+		float rX,rY,rZ;
+		float absX = dirX<0?-dirX:dirX;
+		float absY = dirY<0?-dirY:dirY;
+		float absZ = dirZ<0?-dirZ:dirZ;
+		if(absX<=absY && absX<=absZ) {
+			rX = 0;
+			rY = -dirZ;
+			rZ = dirY;
+		}else if(absY<=absX && absY<=absZ) {
+			rX = -dirZ;
+			rY = 0;
+			rZ = dirX;
+		}else{
+			rX = -dirY;
+			rY = dirX;
+			rZ = 0;
+		}
+		float rMagn = 1/(float)Math.sqrt(rX*rX + rY*rY + rZ*rZ);
+		rX *= rMagn;
+		rY *= rMagn;
+		rZ *= rMagn;
+		float crossX = dirY*rZ - dirZ*rY;
+		float crossY = dirZ*rX - dirX*rZ;
+		float crossZ = dirX*rY - dirY*rX;
+		target[0] = rX;
+		target[1] = rY;
+		target[2] = rZ;
+		target[3] = 0;
+		target[4] = dirX;
+		target[5] = dirY;
+		target[6] = dirZ;
+		target[7] = 0;
+		target[8] = crossX;
+		target[9] = crossY;
+		target[10] = crossZ;
+		target[11] = 0;
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
+	}
 	
 	public static final float applyFloatMatrixX2D(float[] matrix, float x, float y) {
 		return matrix[0] * x + matrix[4] * y + matrix[12];

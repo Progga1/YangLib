@@ -93,9 +93,12 @@ public class Vector3f extends Point3f{
 	}
 
 	public void createOrthoVec(Vector3f ortho) {
-		if(ortho.mX<=ortho.mY && ortho.mX<=ortho.mZ) {
+		float absX = Math.abs(ortho.mX);
+		float absY = Math.abs(ortho.mY);
+		float absZ = Math.abs(ortho.mZ);
+		if(absX<=absY && absX<=absZ) {
 			setNormalized(0,-ortho.mZ,ortho.mY);
-		}else if(ortho.mY<=ortho.mX && ortho.mY<=ortho.mZ) {
+		}else if(absY<=absX && absY<=absZ) {
 			setNormalized(-ortho.mZ,0,ortho.mX);
 		}else{
 			setNormalized(-ortho.mY,ortho.mX,0);

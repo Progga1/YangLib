@@ -420,7 +420,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		color.copyToArray(mTemp4f);
 		mTemp4f[3] = alpha;
 		int vertexCount = mLineDrawer.getLineVertexCount();
-		mLineDrawer.drawLine(0,0,0, vecX,vecY,vecZ, DEBUG_AXIS_WIDTH,0);
+		mLineDrawer.drawLine(baseX,baseY,baseZ, baseX+vecX,baseY+vecY,baseZ+vecZ, DEBUG_AXIS_WIDTH,0);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount);
 	}
@@ -429,14 +429,18 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawDebugVector(baseX,baseY,baseZ,vector.mX,vector.mY,vector.mZ,color,alpha);
 	}
 	
-	public void drawCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
+	public void drawDebugVector(Vector3f base, Vector3f vector,FloatColor color,float alpha) {
+		drawDebugVector(base.mX,base.mY,base.mZ,vector.mX,vector.mY,vector.mZ,color,alpha);
+	}
+	
+	public void drawDebugCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
 		drawDebugVector(0,0,0, 1,0,0, xColor,alpha);
 		drawDebugVector(0,0,0, 0,1,0, yColor,alpha);
 		drawDebugVector(0,0,0, 0,0,1, zColor,alpha);
 	}
 	
-	public void drawCoordinateAxes() {
-		drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.BLUE,1,1);
+	public void drawDebugCoordinateAxes() {
+		drawDebugCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.BLUE,1,1);
 	}
 	
 	private Vector3f tempVec1 = new Vector3f();

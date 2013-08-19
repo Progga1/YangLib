@@ -384,7 +384,12 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mWorldTransform.loadIdentity();
 	}
 	
+	public boolean isActivated() {
+		return mTranslator.mCurDrawListener == this;
+	}
+	
 	public IndexedVertexBuffer getCurrentVertexBuffer() {
+		assert isActivated() : "Graphics not activated";
 		return mCurrentVertexBuffer;
 	}
 	

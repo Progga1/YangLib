@@ -17,6 +17,7 @@ import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.StrokeDrawerSampleState;
 import yang.samples.statesystem.states.TailSampleState;
 import yang.samples.statesystem.states.TexAtlasSampleState;
+import yang.samples.statesystem.states.Rotations3DSampleState;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
@@ -50,6 +51,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("GUI", new GUISampleState());
 		addMenuItem("Tails", new TailSampleState());
 		addMenuItem("Matrix stack", new MatrixStackSampleState());
+		addMenuItem("Advanced rotations", new Rotations3DSampleState());
 		addMenuItem("Stroke", new StrokeDrawerSampleState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());

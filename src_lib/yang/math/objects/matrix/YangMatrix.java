@@ -32,8 +32,8 @@ public class YangMatrix {
 	
 	public float[] mMatrix;
 	public float[] mInverted;
-	protected float[] mMatrixBack;
-	protected float[] mTempMat1,mTempMat2;
+	protected float[] mBackMatrix;
+	protected float[] mTempMat1,mTempMat2,mTempMat3;
 	protected float[][] mStack;
 	public int mStackPointer;	//pre increment
 
@@ -73,7 +73,7 @@ public class YangMatrix {
 	
 	public YangMatrix() {
 		mMatrix = new float[16];
-		mMatrixBack = new float[16];
+		mBackMatrix = new float[16];
 		mTempMat1 = new float[16];
 		mTempMat2 = new float[16];
 		mInverted = null;
@@ -130,11 +130,19 @@ public class YangMatrix {
 		MatrixOps.setIdentity(mMatrix);
 	}
 
-	public void translate(float x, float y, float z) {
+	public final void translate(float x, float y, float z) {
 		mMatrix[12] += mMatrix[0]*x + mMatrix[4]*y + mMatrix[8]*z;
 		mMatrix[13] += mMatrix[1]*x + mMatrix[5]*y + mMatrix[9]*z;
 		mMatrix[14] += mMatrix[2]*x + mMatrix[6]*y + mMatrix[10]*z;
 		mMatrix[15] += mMatrix[3]*x + mMatrix[7]*y + mMatrix[11]*z;
+	}
+	
+	public final void translate(float x, float y) {
+		translate(x, y, 0);
+	}
+	
+	public final void translate(Vector3f translationVector) {
+		translate(translationVector.mX,translationVector.mY,translationVector.mZ);
 	}
 
 	public void scale(float x, float y, float z) {
@@ -166,26 +174,26 @@ public class YangMatrix {
 
 	public void rotateX(float angle) {
 		MatrixOps.setRotationX(mTempMat1,angle);
-		MatrixOps.multiply(mMatrixBack,mMatrix,mTempMat1);
+		MatrixOps.multiply(mBackMatrix,mMatrix,mTempMat1);
 		float[] swap = mMatrix;
-		mMatrix = mMatrixBack;
-		mMatrixBack = swap;
+		mMatrix = mBackMatrix;
+		mBackMatrix = swap;
 	}
 
 	public void rotateY(float angle) {
 		MatrixOps.setRotationY(mTempMat1,angle);
-		MatrixOps.multiply(mMatrixBack,mMatrix,mTempMat1);
+		MatrixOps.multiply(mBackMatrix,mMatrix,mTempMat1);
 		float[] swap = mMatrix;
-		mMatrix = mMatrixBack;
-		mMatrixBack = swap;
+		mMatrix = mBackMatrix;
+		mBackMatrix = swap;
 	}
 
 	public void rotateZ(float angle) {
 		MatrixOps.setRotationZ(mTempMat1,angle);
-		MatrixOps.multiply(mMatrixBack,mMatrix,mTempMat1);
+		MatrixOps.multiply(mBackMatrix,mMatrix,mTempMat1);
 		float[] swap = mMatrix;
-		mMatrix = mMatrixBack;
-		mMatrixBack = swap;
+		mMatrix = mBackMatrix;
+		mBackMatrix = swap;
 	}
 	
 	public void rotateZAround(float angle,float anchorX,float anchorY) {
@@ -193,23 +201,45 @@ public class YangMatrix {
 		rotateZ(angle);
 		translate(anchorX,anchorY);
 	}
+	
+	public void rotateAround(float rotVecX,float rotVecY,float rotVecZ, float angle) {
+		if(mTempMat3==null)
+			mTempMat3 = new float[16];
+		MatrixOps.createDirectionTrafo(mTempMat3, rotVecX,rotVecY,rotVecZ);
+		multiplyRightTransposed(mTempMat3);
+		rotateY(angle);
+//		MatrixOps.invert(mBackMatrix, mTempMat3, mTempMat1, mTempMat2);
+//		float[] swap = mBackMatrix;
+//		mBackMatrix = mTempMat3;
+//		mTempMat3 = swap;
+		multiplyRight(mTempMat3);
+	}
+	
+	public void rotateAround(Vector3f rotationVector, float angle) {
+		rotateAround(rotationVector.mX,rotationVector.mY,rotationVector.mZ,angle);
+	}
 
 	public void multiplyRight(float[] rhsMatrix) {
-		
-		MatrixOps.multiply(mMatrixBack,mMatrix,rhsMatrix);
-		
+		MatrixOps.multiply(mBackMatrix,mMatrix,rhsMatrix);
 		float[] swap = mMatrix;
-		mMatrix = mMatrixBack;
-		mMatrixBack = swap;
+		mMatrix = mBackMatrix;
+		mBackMatrix = swap;
+	}
+	
+	public void multiplyRightTransposed(float[] rhsMatrix) {
+		MatrixOps.multiplyRightTransposed(mBackMatrix,mMatrix,rhsMatrix);
+		float[] swap = mMatrix;
+		mMatrix = mBackMatrix;
+		mBackMatrix = swap;
 	}
 
 	public void multiplyLeft(float[] lhsMatrix) {
 
-		MatrixOps.multiply(mMatrixBack,lhsMatrix,mMatrix);
+		MatrixOps.multiply(mBackMatrix,lhsMatrix,mMatrix);
 		
 		float[] swap = mMatrix;
-		mMatrix = mMatrixBack;
-		mMatrixBack = swap;
+		mMatrix = mBackMatrix;
+		mBackMatrix = swap;
 	}
 
 	public void multiply(float[] lhsMatrix,float[] rhsMatrix) {
@@ -273,11 +303,11 @@ public class YangMatrix {
 	}
 	
 	public void invert() {
-		MatrixOps.invert(mMatrixBack,mMatrix,mTempMat1,mTempMat2);
+		MatrixOps.invert(mBackMatrix,mMatrix,mTempMat1,mTempMat2);
 		
 		float[] swap = mMatrix;
-		mMatrix = mMatrixBack;
-		mMatrixBack = swap;
+		mMatrix = mBackMatrix;
+		mBackMatrix = swap;
 	}
 
 	public float get(int index) {
@@ -362,10 +392,6 @@ public class YangMatrix {
 
 	public void multiplyLeft(YangMatrix lhsMatrix) {
 		multiplyLeft(lhsMatrix.mMatrix);
-	}
-
-	public void translate(float x, float y) {
-		translate(x, y, 0);
 	}
 
 	public float[] asFloatArrayDeep() {
@@ -467,6 +493,24 @@ public class YangMatrix {
 		target[13] = 0;
 		target[14] = 0;
 		target[15] = 1;
+	}
+	
+	public void setPointTo(Vector3f direction) {
+		MatrixOps.createDirectionTrafo(mMatrix, direction.mX,direction.mY,direction.mZ);
+	}
+	
+	public void setPointTo(float dirX,float dirY,float dirZ) {
+		MatrixOps.createDirectionTrafo(mMatrix, dirX,dirY,dirZ);
+	}
+	
+	public void pointTo(Vector3f direction) {
+		MatrixOps.createDirectionTrafo(mTempMat1, direction.mX,direction.mY,direction.mZ);
+		multiplyRight(mTempMat1);
+	}
+	
+	public void pointTo(float dirX,float dirY,float dirZ) {
+		MatrixOps.createDirectionTrafo(mTempMat1, dirX,dirY,dirZ);
+		multiplyRight(mTempMat1);
 	}
 	
 	public void setBase(Vector3f vec1, Vector3f vec2, Vector3f vec3) {

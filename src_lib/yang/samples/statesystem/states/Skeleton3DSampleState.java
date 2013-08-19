@@ -26,7 +26,6 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	public Skeleton3D mSkeleton3D;
 	public SampleSkeleton mSkeleton;
-	public Camera3D mCamera;
 	public ShaderPermutations mShader;
 	private LightProperties mLight;
 	
@@ -49,6 +48,8 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mSkeleton.mBreastJoint.mFixed = false;
 		mSkeleton.setFriction(0.98f);
 		mZoom = 1.5f;
+		mCamY = 1;
+		refreshCamera();
 	}
 	
 	@Override
@@ -73,12 +74,11 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mGraphics.bindTexture(null);
 		mGraphics3D.setShaderProgram(mShader);
 		mLight.mDiffuse.set(0.5f);
-		mCamera.setAlphaBeta(mViewAlpha,mViewBeta,2, 0,1,0);
 		mGraphics3D.setCamera(mCamera);
 		mSkeleton3D.draw();
 		
 		mGraphics3D.setDefaultProgram();
-		mGraphics3D.drawCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1,0.3f);
+		mGraphics3D.drawDebugCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1,0.3f);
 
 		
 		
