@@ -21,7 +21,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mRotVector1.setNormalized(1, 1, 0.5f);
 		mRotVector2.setNormalized(1, -1, 0.5f);
 
-		mZoom = 3;
+		mCamera.mZoom = 3;
 		mCubeTex = mGFXLoader.getImage("cube");
 		refreshCamera();
 	}
@@ -39,7 +39,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mGraphics.clear(0,0,0.1f,GLMasks.DEPTH_BUFFER_BIT);
 		
 		mGraphics.switchZBuffer(true);
-		mGraphics3D.setCamera(mCamera);
+		super.setCamera();
 
 		//mRotVector2.setNormalized((float)Math.sin(time*0.1f), (float)Math.cos(time*0.1f), 0);
 		

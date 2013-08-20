@@ -33,13 +33,12 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	public void initGraphics() {
 		mSkeleton = new SampleSkeleton(mGraphics2D);
 		mSkeleton3D = new Skeleton3D(mGraphics3D,mSkeleton).initLines();
-		mCamera = new Camera3D();
 		mLight = new LightProperties();
 		SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
 				new MtDiffuseSubShader(FloatColor.WHITE),
 				new LightSubShader(mLight),new DiffuseLightSubShader(),
-				new CameraPerVertexVectorSubShader(mCamera),new SpecularLightSubShader(new SpecularMatProperties()),
+				new CameraPerVertexVectorSubShader(mCamera.getCameraInstance()),new SpecularLightSubShader(new SpecularMatProperties()),
 				new AmbientSubShader(new FloatColor(0.3f))
 				};
 		//mShader = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLight,new FloatColor(0.3f)));
@@ -47,8 +46,8 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mLight.mDirection.setAlphaBeta(0.4f, 0.4f);
 		mSkeleton.mBreastJoint.mFixed = false;
 		mSkeleton.setFriction(0.98f);
-		mZoom = 1.5f;
-		mCamY = 1;
+		mCamera.mZoom = 1.5f;
+		mCamera.mFocusY = 1;
 		refreshCamera();
 	}
 	
@@ -63,8 +62,6 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mSkeleton.refreshVisualVars();
 		
 		mGraphics3D.activate();
-		//mGraphics3D.setPerspectiveProjection(10);
-		mGraphics3D.setOrthogonalProjection(-1,10,mZoom);
 		mGraphics.clear(0f,0f,0.3f, GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics.switchZBuffer(true);
 		mGraphics.switchCulling(true);
@@ -74,14 +71,12 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mGraphics.bindTexture(null);
 		mGraphics3D.setShaderProgram(mShader);
 		mLight.mDiffuse.set(0.5f);
-		mGraphics3D.setCamera(mCamera);
+		super.setCamera();
 		mSkeleton3D.draw();
 		
 		mGraphics3D.setDefaultProgram();
 		mGraphics3D.drawDebugCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1,0.3f);
 
-		
-		
 		mGraphics2D.activate();
 		mGraphics.switchZBuffer(false);
 		
@@ -104,14 +99,14 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 			mSkeleton.mConstantForceY = -0.025f;
 		}
 		if(code=='l') {
-			mLight.mDirection.setAlphaBeta(mViewAlpha,mViewBeta);
+			mLight.mDirection.setAlphaBeta(mCamera.mViewAlpha,mCamera.mViewBeta);
 		}
 	}
 	
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
 		if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
-			Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
+			Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom);
 			if(pJoint!=null) {
 				mSkeleton3D.setJointSelected(pJoint,true);
 				pJoint.startDrag();
@@ -122,7 +117,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	@Override
 	public void pointerMoved(float x,float y,YangPointerEvent event) {
-		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
+		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom);
 		mSkeleton3D.mHoverJoint = pJoint;
 	}
 	
@@ -133,8 +128,8 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		//Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
 
 		if(event.mButton == YangPointerEvent.BUTTON_LEFT) {
-			float dragX = mPntDeltaX*mZoom;
-			float dragY = mPntDeltaY*mZoom;
+			float dragX = mCamera.mPntDeltaX*mCamera.mZoom;
+			float dragY = mCamera.mPntDeltaY*mCamera.mZoom;
 			mGraphics3D.getCameraRightVector(mCamRight);
 			mGraphics3D.getCameraUpVector(mCamUp);
 			for(Joint joint:mSkeleton3D.getJoints()) {
@@ -148,7 +143,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	public void pointerUp(float x,float y,YangPointerEvent event) {
 		super.pointerUp(x,y,event);
-		Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
+		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom);
 		if(pJoint!=null)
 			mSkeleton3D.setJointSelected(pJoint,false);
 		mSkeleton3D.unselectAllJoints();

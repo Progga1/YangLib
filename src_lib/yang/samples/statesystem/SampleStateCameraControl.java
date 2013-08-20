@@ -2,49 +2,35 @@ package yang.samples.statesystem;
 
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.util.Camera3D;
+import yang.graphics.util.Camera3DControllable;
 import yang.math.objects.Vector3f;
 
 public abstract class SampleStateCameraControl extends SampleState {
 
 	protected boolean mOrthogonalProjection = true;
-	protected float mViewAlpha,mViewBeta;
-	protected float mZoom = 1.0f;
 	protected Vector3f mCamRight = new Vector3f();
 	protected Vector3f mCamUp = new Vector3f();
-	protected float mPntX,mPntY;
-	protected float mPntDeltaX,mPntDeltaY;
-	protected float mCamX,mCamY,mCamZ;
-	protected Camera3D mCamera = new Camera3D();
+	protected Camera3DControllable mCamera = new Camera3DControllable();
 	
 	protected void refreshCamera() {
 		if(mOrthogonalProjection)
-			mGraphics3D.setOrthogonalProjection(-1, 100, mZoom);
+			mGraphics3D.setOrthogonalProjection(-1, 100, mCamera.mZoom);
 		else
 			mGraphics3D.setPerspectiveProjection(100);
-		mCamera.setAlphaBeta(mViewAlpha,mViewBeta, mZoom, mCamX,mCamY,mCamZ);
+	}
+	
+	protected void setCamera() {
+		mGraphics3D.setCamera(mCamera.getUpdatedCamera());
 	}
 	
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
-		mPntX = x;
-		mPntY = y;
+		mCamera.pointerDown(event);
 	}
 	
 	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
-		mPntDeltaX = x-mPntX;
-		mPntDeltaY = y-mPntY;
-		mPntX = x;
-		mPntY = y;
-		if(event.mButton == YangPointerEvent.BUTTON_MIDDLE) {
-			mViewAlpha -= mPntDeltaX*2;
-			mViewBeta -= mPntDeltaY;
-			final float MAX_BETA = PI/2-0.01f;
-			if(mViewBeta<-MAX_BETA)
-				mViewBeta = -MAX_BETA;
-			if(mViewBeta>MAX_BETA)
-				mViewBeta = MAX_BETA;
-		}
+		mCamera.pointerDragged(event);
 		refreshCamera();
 	}
 	
@@ -55,11 +41,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 	
 	@Override
 	public void zoom(float value) {
-		mZoom += value;
-		if(mZoom<0.3f)
-			mZoom = 0.3f;
-		if(mZoom>10f)
-			mZoom = 10f;
+		mCamera.zoom(value);
 		refreshCamera();
 	}
 	
