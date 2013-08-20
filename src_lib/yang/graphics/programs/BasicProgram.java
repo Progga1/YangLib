@@ -111,7 +111,7 @@ public class BasicProgram extends AbstractProgram {
 			mProgram.setUniformMatrix3f(mNormalTransformHandle, normalMatrix);
 	}
 	
-	public void setAmbientColor(float[] color) {
+	public void setColorFactor(float[] color) {
 		mProgram.setUniform4f(mAmbientHandle, color[0], color[1], color[2], color[3]);
 	}
 	

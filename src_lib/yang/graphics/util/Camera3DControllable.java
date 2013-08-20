@@ -16,7 +16,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	//Settings
 	public float mMinZoom = 0.3f;
 	public float mMaxZoom = 10f;
-	public int mMoveCameraButton = YangPointerEvent.BUTTON_MIDDLE;
+	public int mMoveCameraButton = YangPointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;
 	
 	//Temp

@@ -1,7 +1,9 @@
 package yang.graphics.skeletons;
 
+import yang.graphics.buffers.DrawBatch;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.meshcreators.LineDrawer3D;
+import yang.graphics.defaults.meshcreators.SphereCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.elements.Joint;
 import yang.math.Geometry;
@@ -10,6 +12,9 @@ import yang.util.NonConcurrentList;
 
 public class Skeleton3D {
 
+	public static int SPHERE_VERTICES_X = 24;
+	public static int SPHERE_VERTICES_Y = 16;
+	
 	public static int MAX_JOINTS = 256;
 	public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
 	public static FloatColor hoverColor = new FloatColor(1,0.3f,0.04f);
@@ -22,6 +27,7 @@ public class Skeleton3D {
 	
 	private Vector3f tempVec1 = new Vector3f();
 	public Joint mHoverJoint = null;
+	private DrawBatch mSphereBatch;
 	
 	public Skeleton3D(Default3DGraphics graphics3D,Skeleton skeleton) {
 		mGraphics3D = graphics3D;
@@ -48,6 +54,14 @@ public class Skeleton3D {
 	}
 	
 	public void draw() {
+		
+		if(mSphereBatch==null) {
+			SphereCreator sphere = new SphereCreator(mGraphics3D);
+			sphere.beginBatch(SPHERE_VERTICES_X,SPHERE_VERTICES_Y, 1,1);
+			sphere.putPositions();
+			mSphereBatch = sphere.finishBatch();
+		}
+		
 //		for(Bone bone:mSkeleton.mBones) {
 //			Joint joint1 = bone.mJoint1;
 //			Joint joint2 = bone.mJoint2;
@@ -62,6 +76,7 @@ public class Skeleton3D {
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.fillBuffers();
 		
+		mGraphics3D.setGlobalTransformEnabled(true);
 		for(Joint joint:mSkeleton.mJoints) {
 			JointEditData data = mJointData[joint.mId];
 			
@@ -71,8 +86,14 @@ public class Skeleton3D {
 				mGraphics3D.setColor(hoverColor);
 			else
 				mGraphics3D.setColor(jointColor);
-			mGraphics3D.drawSphere(24,16, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius(), 2,1);
+			//mGraphics3D.setAmbientColor(mGraphics3D.mCurColor);
+			//mGraphics3D.drawSphere(24,16, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius(), 2,1);
+			mGraphics3D.mWorldTransform.loadIdentity();
+			mGraphics3D.mWorldTransform.translate(joint.mPosX,joint.mPosY,joint.mPosZ);
+			mGraphics3D.mWorldTransform.scale(joint.getOutputRadius());
+			mSphereBatch.draw();
 		}
+		mGraphics3D.setGlobalTransformEnabled(false);
 		
 	}
 	

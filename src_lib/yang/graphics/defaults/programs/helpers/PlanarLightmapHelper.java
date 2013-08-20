@@ -74,7 +74,7 @@ public class PlanarLightmapHelper {
 		if(!mRenderToScreen)
 			mGraphics.setTextureRenderTarget(mLightMap);
 		mFinished = false;
-		mGraphics3D.setAmbientColor(1);
+		mGraphics3D.setColorFactor(1);
 		mGraphics.clear(0, 0, 0, 1, GLMasks.DEPTH_BUFFER_BIT);
 		//mGraphics3D.setCameraProjection(mCameraTransform,mOrthoProjection,mInvOrthoProjection);
 		mGraphics3D.setCameraLookAt(0,0,0, 0,-1,0, 0,0,-1);

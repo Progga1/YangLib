@@ -161,7 +161,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.switchZBuffer(false);
 		mGraphics.switchCulling(false);
 		mGraphics3D.setDefaultProgram();
-		mGraphics3D.setAmbientColor(1);
+		mGraphics3D.setColorFactor(1);
 		mGraphics.bindTexture(sky);
 		mSkyBoxBatch.draw();
 		mGraphics.switchZBuffer(true);
@@ -172,7 +172,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics3D.setShaderProgram(mShadowProgram);
 		mShadowHelper.setShadowShaderProperties(mShadowProgram);
 		mGraphics.bindTexture(grass,ShadowProgram.COLOR_TEXTURE_LEVEL);
-		mGraphics3D.setAmbientColor(1);
+		mGraphics3D.setColorFactor(1);
 		mTerrainBatch.draw();
 	}
 	
@@ -180,7 +180,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics3D.setShaderProgram(mLightmapProgram);
 		mGraphics.bindTexture(grass,LightmapProgram.COLOR_TEXTURE_LEVEL);
 		mGraphics.bindTexture(mLightmapHelper.mLightMap.mTargetTexture, LightmapProgram.LIGHT_TEXTURE_LEVEL);
-		mGraphics3D.setAmbientColor(1);
+		mGraphics3D.setColorFactor(1);
 		mTerrainBatch.draw();
 	}
 	
@@ -190,7 +190,7 @@ public class IcyTerrainState extends SampleState {
 		mShadowHelper.setLightShaderProperties(mSpecularProgram);
 		mGraphics.bindTexture(ice,LightmapProgram.COLOR_TEXTURE_LEVEL);
 		mGraphics.bindTexture(mLightmapHelper.mLightMap.mTargetTexture, LightmapProgram.LIGHT_TEXTURE_LEVEL);
-		mGraphics3D.setAmbientColor(1);
+		mGraphics3D.setColorFactor(1);
 		mTerrainBatch.draw();
 	}
 	

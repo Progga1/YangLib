@@ -66,7 +66,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mGraphics.switchCulling(true);
 		
 		mGraphics3D.setWhite();
-		mGraphics3D.setAmbientColor(1);
+		mGraphics3D.setColorFactor(1);
 		mGraphics.bindTexture(null);
 		mGraphics3D.setShaderProgram(mShader);
 		mLight.mDiffuse.set(0.5f);

@@ -98,7 +98,7 @@ public class ShadowHelper {
 			mGraphics.setTextureRenderTarget(mDepthMap);
 		mGraphics3D.setShaderProgram(depthProgram);
 		mGraphics.clear(0,0,0,1,GLMasks.DEPTH_BUFFER_BIT);
-		mGraphics3D.setAmbientColor(1);
+		mGraphics3D.setColorFactor(1);
 	}
 	
 	public void endDepthRendering() {

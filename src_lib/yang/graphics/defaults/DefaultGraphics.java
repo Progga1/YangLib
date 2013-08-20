@@ -52,7 +52,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	//State
 	public float mCurrentZ;
-	public float[] mAmbientColor;
+	public float[] mColorFactor;
 	
 	// Buffers
 	protected DrawableString mInterString = new DrawableString(2048);
@@ -70,18 +70,18 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		super(translator);
 		mPositionDimension = positionBytes;
 		mDefaultStripCreator = new StripCreator(this);
-		mAmbientColor = new float[4];
+		mColorFactor = new float[4];
 	}
 
 	@Override
 	public void restart() {
 		super.restart();
-		setAmbientColor(1);
+		setColorFactor(1);
 	}
 
 	@Override
 	protected void derivedInit() {
-		setAmbientColor(1);
+		setColorFactor(1);
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		assert mTranslator.preCheck("Set shader program");
 		if (super.setShaderProgram(program)) {
 			if(program.mHasAmbientColor)
-				program.setAmbientColor(mAmbientColor);
+				program.setColorFactor(mColorFactor);
 			program.setTime(mTime);
 			assert mTranslator.checkErrorInst("Set shader program");
 			return true;
@@ -467,41 +467,45 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,color, amount);
 	}
 
-	// ---AMBIENT-COLOR---
+	// ---COLOR-FACTOR---
 
-	public void setAmbientColor(float r, float g, float b) {
+	public void setColorFactor(float r, float g, float b) {
 		flush();
-		mAmbientColor[0] = r;
-		mAmbientColor[1] = g;
-		mAmbientColor[2] = b;
-		mAmbientColor[3] = 1;
+		mColorFactor[0] = r;
+		mColorFactor[1] = g;
+		mColorFactor[2] = b;
+		mColorFactor[3] = 1;
 		if (mCurrentProgram != null && mCurrentProgram.mHasAmbientColor)
 			mCurrentProgram.setAmbientColor(r, g, b);
 	}
 
-	public void setAmbientColor(float r, float g, float b, float a) {
+	public void setColorFactor(float r, float g, float b, float a) {
 		flush();
-		mAmbientColor[0] = r;
-		mAmbientColor[1] = g;
-		mAmbientColor[2] = b;
-		mAmbientColor[3] = a;
+		mColorFactor[0] = r;
+		mColorFactor[1] = g;
+		mColorFactor[2] = b;
+		mColorFactor[3] = a;
 		if (mCurrentProgram != null && mCurrentProgram.mHasAmbientColor)
 			mCurrentProgram.setAmbientColor(r, g, b, a);
 	}
 
-	public void setAmbientColor(float brightness) {
+	public void setColorFactor(float brightness) {
 		assert mTranslator.preCheck("Set ambient color");
 		flush();
-		mAmbientColor[0] = brightness;
-		mAmbientColor[1] = brightness;
-		mAmbientColor[2] = brightness;
-		mAmbientColor[3] = 1;
+		mColorFactor[0] = brightness;
+		mColorFactor[1] = brightness;
+		mColorFactor[2] = brightness;
+		mColorFactor[3] = 1;
 		if (mCurrentProgram != null && mCurrentProgram.mHasAmbientColor)
 			mCurrentProgram.setAmbientColor(brightness, brightness, brightness, 1);
 	}
 	
-	public void setAmbientColor(FloatColor color) {
-		setAmbientColor(color.mValues[0],color.mValues[1],color.mValues[2],color.mValues[3]);
+	public void setColorFactor(FloatColor color) {
+		setColorFactor(color.mValues[0],color.mValues[1],color.mValues[2],color.mValues[3]);
+	}
+	
+	public void setColorFactor(float[] color) {
+		setColorFactor(color[0],color[1],color[2],color[3]);
 	}
 
 	// ---PUT-SUPPLEMENTARY-DATA---

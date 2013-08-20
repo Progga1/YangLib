@@ -1,5 +1,6 @@
 package yang.graphics.defaults.meshcreators;
 
+import yang.graphics.buffers.DrawBatch;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.meshcreators.grids.Grid3DCreator;
 import yang.math.Geometry;
@@ -52,6 +53,10 @@ public class SphereCreator extends Grid3DCreator {
 	
 	public void putPositions(YangMatrix transform,boolean loopNormals) {
 		putPositions(null,transform,loopNormals);
+	}
+	
+	public void putPositions() {
+		putPositions(null,null,true);
 	}
 	
 }
