@@ -441,6 +441,12 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	// ---PUT-COLORS---
 
+	@Override
+	public void setWhite() {
+		setColor(1,1,1,1);
+		setColorFactor(1,1,1,1);
+	}
+	
 	public void putColor(float r, float g, float b, float a) {
 		mCurrentVertexBuffer.putVec4(ID_COLORS, r, g, b, a);
 	}

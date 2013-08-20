@@ -3,6 +3,7 @@ package yang.samples.statesystem.states;
 import yang.graphics.model.FloatColor;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
+import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.samples.statesystem.SampleStateCameraControl;
@@ -10,8 +11,10 @@ import yang.samples.statesystem.SampleStateCameraControl;
 public class Rotations3DSampleState extends SampleStateCameraControl {
 
 	private YangMatrix mTrafo = new YangMatrix();
+	private Quaternion mQuaternion1 = new Quaternion();
 	private Vector3f mPosVector1 = new Vector3f(1.5f,1.2f,1.3f);
 	private Vector3f mRotVector1 = new Vector3f();
+	private Vector3f mQuatVector1 = new Vector3f();
 	private Vector3f mPosVector2 = new Vector3f(-1.0f,1.0f,-0.9f);
 	private Vector3f mRotVector2 = new Vector3f();
 	private Texture mCubeTex;
@@ -20,6 +23,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 	public void initGraphics() {
 		mRotVector1.setNormalized(1, 1, 0.5f);
 		mRotVector2.setNormalized(1, -1, 0.5f);
+		mQuatVector1.set(mRotVector1);
 
 		mCamera.mZoom = 3;
 		mCubeTex = mGFXLoader.getImage("cube");
@@ -35,12 +39,15 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 	protected void draw() {
 		float time = (float)mStateTimer;
 		mGraphics.bindTexture(null);
+		mGraphics3D.setWhite();
 		mGraphics3D.activate();
 		mGraphics.clear(0,0,0.1f,GLMasks.DEPTH_BUFFER_BIT);
 		
 		mGraphics.switchZBuffer(true);
 		mGraphics.switchCulling(false);
 		super.setCamera();
+		
+		mQuaternion1.set(mQuatVector1, time*0.5f);
 
 		//mRotVector2.setNormalized((float)Math.sin(time*0.1f), (float)Math.cos(time*0.1f), 0);
 		

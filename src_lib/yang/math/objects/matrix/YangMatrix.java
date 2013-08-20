@@ -1,6 +1,7 @@
 package yang.math.objects.matrix;
 
 import yang.math.MatrixOps;
+import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 
 //TODO normal inversion only 3x3, autocreate inversed mat, save orthogonal etc information
@@ -385,6 +386,20 @@ public class YangMatrix {
 		mMatrix[14] = (float)matrix[3][2];
 		mMatrix[15] = (float)matrix[3][3];
 	}
+	
+	public void multiplyQuaternionRight(Quaternion quaternion) {
+		quaternion.toRotationMatrix(mTempMat1);
+		multiplyRight(mTempMat1);
+	}
+	
+	public void multiplyQuaternionLeft(Quaternion quaternion) {
+		quaternion.toRotationMatrix(mTempMat1);
+		multiplyLeft(mTempMat1);
+	}
+	
+	public void setFromQuaternion(Quaternion quaternion) {
+		quaternion.toRotationMatrix(mMatrix);
+	}
 
 	public void multiplyRight(YangMatrix rhsMatrix) {
 		multiplyRight(rhsMatrix.mMatrix);
@@ -469,7 +484,6 @@ public class YangMatrix {
 			}
 		}
 	}
-	
 	
 	@Override
 	public String toString() {
