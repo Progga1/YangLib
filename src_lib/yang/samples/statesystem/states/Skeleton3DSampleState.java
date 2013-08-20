@@ -3,6 +3,7 @@ package yang.samples.statesystem.states;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
 import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
+import yang.graphics.defaults.programs.subshaders.ColorFactorSubShader;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
 import yang.graphics.defaults.programs.subshaders.MtDiffuseSubShader;
 import yang.graphics.defaults.programs.subshaders.NormalSubShader;
@@ -38,7 +39,8 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 				new MtDiffuseSubShader(FloatColor.WHITE),
 				new LightSubShader(mLight),new DiffuseLightSubShader(),
 				new CameraPerVertexVectorSubShader(mCamera.getCameraInstance()),new SpecularLightSubShader(new SpecularMatProperties()),
-				new AmbientSubShader(new FloatColor(0.3f))
+				new AmbientSubShader(new FloatColor(0.3f)),
+				new ColorFactorSubShader(mGraphics3D)
 				};
 		//mShader = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLight,new FloatColor(0.3f)));
 		mShader = mGraphics.addProgram(new ShaderPermutations(mGraphics,subShaders));
@@ -110,7 +112,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
 		if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
-			Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom);
+			Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1.75f);
 			if(pJoint!=null) {
 				mSkeleton3D.setJointSelected(pJoint,true);
 				pJoint.startDrag();
@@ -121,7 +123,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	@Override
 	public void pointerMoved(float x,float y,YangPointerEvent event) {
-		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom);
+		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1);
 		mSkeleton3D.mHoverJoint = pJoint;
 	}
 	
@@ -147,9 +149,9 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	public void pointerUp(float x,float y,YangPointerEvent event) {
 		super.pointerUp(x,y,event);
-		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom);
-		if(pJoint!=null)
-			mSkeleton3D.setJointSelected(pJoint,false);
+//		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1.75f);
+//		if(pJoint!=null)
+//			mSkeleton3D.setJointSelected(pJoint,false);
 		mSkeleton3D.unselectAllJoints();
 	}
 	

@@ -183,22 +183,24 @@ public abstract class HumanSkeleton extends Skeleton{
 			mRightFootBone.setShift(footShift,0.09f,footShift,-0.07f);
 		}
 		
-		mLeftLegJoint.mPosZ = legZ*0.9f;
-		mRightLegJoint.mPosZ = -legZ*0.9f;
-		mLeftKneeJoint.mPosZ = legZ;
-		mRightKneeJoint.mPosZ = -legZ;
-		mLeftFootJoint.mPosZ = legZ;
-		mRightFootJoint.mPosZ = -legZ;
-		if(mLeftToesJoint!=null) {
-			mLeftToesJoint.mPosZ = legZ;
-			mRightToesJoint.mPosZ = -legZ;
+		if(m3D) {
+			mLeftLegJoint.mPosZ = legZ*0.9f;
+			mRightLegJoint.mPosZ = -legZ*0.9f;
+			mLeftKneeJoint.mPosZ = legZ;
+			mRightKneeJoint.mPosZ = -legZ;
+			mLeftFootJoint.mPosZ = legZ;
+			mRightFootJoint.mPosZ = -legZ;
+			if(mLeftToesJoint!=null) {
+				mLeftToesJoint.mPosZ = legZ;
+				mRightToesJoint.mPosZ = -legZ;
+			}
+			mLeftShoulderJoint.mPosZ = armZ*0.9f;
+			mRightShoulderJoint.mPosZ = -armZ*0.9f;
+			mLeftElbowJoint.mPosZ = armZ;
+			mRightElbowJoint.mPosZ = -armZ;
+			mLeftHandJoint.mPosZ = armZ;
+			mRightHandJoint.mPosZ = -armZ;
 		}
-		mLeftShoulderJoint.mPosZ = armZ*0.9f;
-		mRightShoulderJoint.mPosZ = -armZ*0.9f;
-		mLeftElbowJoint.mPosZ = armZ;
-		mRightElbowJoint.mPosZ = -armZ;
-		mLeftHandJoint.mPosZ = armZ;
-		mRightHandJoint.mPosZ = -armZ;
 
 		//--- Contours ---
 		mLeftUpperArmBone.setContour(1.1f,-0.2f,0.9f,0.2f);

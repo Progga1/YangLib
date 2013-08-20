@@ -3,6 +3,7 @@ package yang.graphics.defaults.programs;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
 import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
+import yang.graphics.defaults.programs.subshaders.ColorFactorSubShader;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
 import yang.graphics.defaults.programs.subshaders.MtDiffuseSubShader;
@@ -33,6 +34,7 @@ public class DefaultObjShader extends ShaderPermutations {
 		super.addSubShaders(subShaders);
 		super.addSubShaders(additionalShaders);
 		super.addSubShader(new AmbientSubShader(ambientColor));
+		super.addSubShader(new ColorFactorSubShader(graphics3D.mColorFactor));
 		super.initPermutations();
 	}
 	

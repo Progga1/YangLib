@@ -11,7 +11,7 @@ public class MaskProgram extends Basic3DProgram {
 	protected void initHandles() {
 		mPositionHandle = mProgram.getAttributeLocation("vPosition");
 		mProjHandle = mProgram.getUniformLocation("projTransform");
-		mAmbientHandle = mProgram.getUniformLocation("ambientColor");
+		mColorFactorHandle = mProgram.getUniformLocation("ambientColor");
 		mOffsetHandle = mProgram.getUniformLocation("offset");
 	}
 	

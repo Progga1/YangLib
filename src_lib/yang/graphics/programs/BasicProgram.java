@@ -10,7 +10,7 @@ public class BasicProgram extends AbstractProgram {
 	public final static String VERTEX_SHADER = 
 			"uniform mat4 projTransform;\r\n" +
 			"uniform float time;\r\n" +
-			"uniform vec4 ambientColor;\r\n" +
+			"uniform vec4 colorFactor;\r\n" +
 			"attribute vec4 vPosition;\r\n" +
 			"attribute vec2 vTexture;\r\n" +
 			"attribute vec4 vColor;\r\n" +
@@ -20,14 +20,14 @@ public class BasicProgram extends AbstractProgram {
 			"void main() {\r\n" +
 			"	gl_Position = projTransform * vPosition;\r\n" +
 			"	texCoord = vTexture;\r\n" +
-			"	color = vColor * ambientColor;\r\n" +
+			"	color = vColor * colorFactor;\r\n" +
 			"	#PREMULT color = vec4(color.r*color.a,color.g*color.a,color.b*color.a,color.a);\r\n" +
 			"}\r\n";
 	
 	public final static String VERTEX_SHADER_SCREENPOS = 
 			"uniform mat4 projTransform;\r\n" +
 			"uniform float time;\r\n" +
-			"uniform vec4 ambientColor;\r\n" +
+			"uniform vec4 colorFactor;\r\n" +
 			"attribute vec4 vPosition;\r\n" +
 			"attribute vec2 vTexture;\r\n" +
 			"attribute vec4 vColor;\r\n" +
@@ -39,7 +39,7 @@ public class BasicProgram extends AbstractProgram {
 			"	gl_Position = projTransform * vPosition;\r\n" +
 			"	texCoord = vTexture;\r\n" +
 			"	screenPos = gl_Position;\r\n" +
-			"	color = vColor * ambientColor;\r\n" +
+			"	color = vColor * colorFactor;\r\n" +
 			"	#PREMULT color = vec4(color.r*color.a,color.g*color.a,color.b*color.a,color.a);\r\n" +
 			"}\r\n";
 	
@@ -61,13 +61,13 @@ public class BasicProgram extends AbstractProgram {
 	public int mColorHandle = -1;
 	public int mSuppDataHandle = -1;
 	public int mTexSamplerHandle = -1;
-	public int mAmbientHandle = -1;
+	public int mColorFactorHandle = -1;
 	public int mTimeHandle = -1;
 	public boolean mHasTextureCoords = false;
 	public boolean mHasColor = false;
 	public boolean mHasSuppData = false;
 	public boolean mHasWorldTransform = false;
-	public boolean mHasAmbientColor = false;
+	public boolean mHasColorFactor = false;
 	
 	protected String getSuppDataIdentifier() {
 		return "vSuppData";
@@ -82,7 +82,7 @@ public class BasicProgram extends AbstractProgram {
 		mTextureHandle = mProgram.getAttributeLocation("vTexture");
 		mColorHandle = mProgram.getAttributeLocation("vColor");
 		mSuppDataHandle = mProgram.getAttributeLocation(getSuppDataIdentifier());
-		mAmbientHandle = mProgram.getUniformLocation("ambientColor");
+		mColorFactorHandle = mProgram.getUniformLocation("colorFactor");
 		mTimeHandle = mProgram.getUniformLocation("time");
 		mTexSamplerHandle = mProgram.getUniformLocation("texSampler");
 	}
@@ -92,7 +92,7 @@ public class BasicProgram extends AbstractProgram {
 		mHasWorldTransform = (mWorldTransformHandle>=0);
 		mHasColor = (mColorHandle>=0);
 		mHasSuppData = (mSuppDataHandle>=0);
-		mHasAmbientColor = (mAmbientHandle>=0);
+		mHasColorFactor = (mColorFactorHandle>=0);
 	}
 
 	public void setProjection(float[] mvpMatrix) {
@@ -112,19 +112,19 @@ public class BasicProgram extends AbstractProgram {
 	}
 	
 	public void setColorFactor(float[] color) {
-		mProgram.setUniform4f(mAmbientHandle, color[0], color[1], color[2], color[3]);
+		mProgram.setUniform4f(mColorFactorHandle, color[0], color[1], color[2], color[3]);
 	}
 	
-	public void setAmbientColor(float r,float g,float b) {
-		mProgram.setUniform4f(mAmbientHandle, r, g, b, 1);
+	public void setColorFactor(float r,float g,float b) {
+		mProgram.setUniform4f(mColorFactorHandle, r, g, b, 1);
 	}
 	
-	public void setAmbientColor(float r,float g,float b,float a) {
-		mProgram.setUniform4f(mAmbientHandle, r, g, b, a);
+	public void setColorFactor(float r,float g,float b,float a) {
+		mProgram.setUniform4f(mColorFactorHandle, r, g, b, a);
 	}
 	
-	public void setAmbientColor(FloatColor color) {
-		mProgram.setUniform4f(mAmbientHandle, color.mValues);
+	public void setColorFactor(FloatColor color) {
+		mProgram.setUniform4f(mColorFactorHandle, color.mValues);
 	}
 	
 	public void setTime(float time) {

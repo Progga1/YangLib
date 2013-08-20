@@ -168,7 +168,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public boolean setShaderProgram(ShaderType program) {
 		assert mTranslator.preCheck("Set shader program");
 		if (super.setShaderProgram(program)) {
-			if(program.mHasAmbientColor)
+			if(program.mHasColorFactor)
 				program.setColorFactor(mColorFactor);
 			program.setTime(mTime);
 			assert mTranslator.checkErrorInst("Set shader program");
@@ -475,8 +475,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mColorFactor[1] = g;
 		mColorFactor[2] = b;
 		mColorFactor[3] = 1;
-		if (mCurrentProgram != null && mCurrentProgram.mHasAmbientColor)
-			mCurrentProgram.setAmbientColor(r, g, b);
+		if (mCurrentProgram != null && mCurrentProgram.mHasColorFactor)
+			mCurrentProgram.setColorFactor(r, g, b);
 	}
 
 	public void setColorFactor(float r, float g, float b, float a) {
@@ -485,19 +485,19 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mColorFactor[1] = g;
 		mColorFactor[2] = b;
 		mColorFactor[3] = a;
-		if (mCurrentProgram != null && mCurrentProgram.mHasAmbientColor)
-			mCurrentProgram.setAmbientColor(r, g, b, a);
+		if (mCurrentProgram != null && mCurrentProgram.mHasColorFactor)
+			mCurrentProgram.setColorFactor(r, g, b, a);
 	}
 
 	public void setColorFactor(float brightness) {
-		assert mTranslator.preCheck("Set ambient color");
+		assert mTranslator.preCheck("Set color factor");
 		flush();
 		mColorFactor[0] = brightness;
 		mColorFactor[1] = brightness;
 		mColorFactor[2] = brightness;
 		mColorFactor[3] = 1;
-		if (mCurrentProgram != null && mCurrentProgram.mHasAmbientColor)
-			mCurrentProgram.setAmbientColor(brightness, brightness, brightness, 1);
+		if (mCurrentProgram != null && mCurrentProgram.mHasColorFactor)
+			mCurrentProgram.setColorFactor(brightness, brightness, brightness, 1);
 	}
 	
 	public void setColorFactor(FloatColor color) {

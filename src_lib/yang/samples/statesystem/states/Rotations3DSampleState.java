@@ -39,6 +39,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mGraphics.clear(0,0,0.1f,GLMasks.DEPTH_BUFFER_BIT);
 		
 		mGraphics.switchZBuffer(true);
+		mGraphics.switchCulling(false);
 		super.setCamera();
 
 		//mRotVector2.setNormalized((float)Math.sin(time*0.1f), (float)Math.cos(time*0.1f), 0);
@@ -63,6 +64,15 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mGraphics3D.drawCubeCentered(mTrafo);
 	}
 
-	
+	@Override
+	public void keyUp(int code) {
+		super.keyUp(code);
+		if(code=='1') {
+			mCamera.getCameraInstance().getForwardVector(mRotVector1);
+		}
+		if(code=='2') {
+			mCamera.getCameraInstance().getForwardVector(mRotVector2);
+		}
+	}
 	
 }

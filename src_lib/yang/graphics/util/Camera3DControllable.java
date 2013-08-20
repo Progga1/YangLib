@@ -16,7 +16,8 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	//Settings
 	public float mMinZoom = 0.3f;
 	public float mMaxZoom = 10f;
-	public int mMoveCameraButton = YangPointerEvent.BUTTON_RIGHT;
+	public int mMoveCameraButton = YangPointerEvent.BUTTON_MIDDLE;
+	public int mMoveCameraAlternativeButton = YangPointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;
 	
 	//Temp
@@ -33,7 +34,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 		mPntDeltaY = event.mY-mPntY;
 		mPntX = event.mX;
 		mPntY = event.mY;
-		if(event.mButton == mMoveCameraButton) {
+		if(event.mButton==mMoveCameraButton || event.mButton==mMoveCameraAlternativeButton) {
 			if(mShiftMode) {
 				mCamera.getRightVector(mCamRight);
 				mCamera.getUpVector(mCamUp);

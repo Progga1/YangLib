@@ -86,14 +86,14 @@ public class Skeleton3D {
 				mGraphics3D.setColor(hoverColor);
 			else
 				mGraphics3D.setColor(jointColor);
-			//mGraphics3D.setAmbientColor(mGraphics3D.mCurColor);
-			//mGraphics3D.drawSphere(24,16, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius(), 2,1);
+			mGraphics3D.setColorFactor(mGraphics3D.getCurrentColor());
 			mGraphics3D.mWorldTransform.loadIdentity();
 			mGraphics3D.mWorldTransform.translate(joint.mPosX,joint.mPosY,joint.mPosZ);
 			mGraphics3D.mWorldTransform.scale(joint.getOutputRadius());
 			mSphereBatch.draw();
 		}
 		mGraphics3D.setGlobalTransformEnabled(false);
+		mGraphics3D.setColorFactor(1);
 		
 	}
 	
@@ -101,14 +101,14 @@ public class Skeleton3D {
 		return initLines(16,0.03f);
 	}
 
-	public Joint pickJoint(float x,float y,float zoom) {
+	public Joint pickJoint(float x,float y,float zoom,float radiusFactor) {
 		mGraphics3D.prepareProjection();
 		float minDist = Float.MAX_VALUE;
 		
 		Joint result = null;
 		float radFac = 1f/zoom;
 		for(Joint joint:mSkeleton.mJoints) {
-			float rad = mGraphics3D.getProjectedPositionAndRadius(tempVec1, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius());
+			float rad = mGraphics3D.getProjectedPositionAndRadius(tempVec1, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius()*radiusFactor);
 			float dist = Geometry.getDistance(x-tempVec1.mX, y-tempVec1.mY);
 			//float rad = joint.getOutputRadius()*radFac;
 			if(dist<=rad && dist<=minDist) {

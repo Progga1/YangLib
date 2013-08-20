@@ -206,13 +206,13 @@ public class YangMatrix {
 		if(mTempMat3==null)
 			mTempMat3 = new float[16];
 		MatrixOps.createDirectionTrafo(mTempMat3, rotVecX,rotVecY,rotVecZ);
-		multiplyRightTransposed(mTempMat3);
+		multiplyRight(mTempMat3);
 		rotateY(angle);
 //		MatrixOps.invert(mBackMatrix, mTempMat3, mTempMat1, mTempMat2);
 //		float[] swap = mBackMatrix;
 //		mBackMatrix = mTempMat3;
 //		mTempMat3 = swap;
-		multiplyRight(mTempMat3);
+		multiplyRightTransposed(mTempMat3);
 	}
 	
 	public void rotateAround(Vector3f rotationVector, float angle) {
