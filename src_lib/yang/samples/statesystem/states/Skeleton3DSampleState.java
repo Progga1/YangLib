@@ -18,7 +18,6 @@ import yang.graphics.skeletons.JointEditData;
 import yang.graphics.skeletons.Skeleton3D;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.graphics.util.Camera3D;
 import yang.samples.SampleSkeleton;
 import yang.samples.statesystem.SampleStateCameraControl;
 
@@ -83,8 +82,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 //		mGraphics2D.setCamera(0, 0.5f, 2);
 //		mSkeleton.draw();
 		
-		mGraphics2D.switchGameCoordinates(false);
-		
+//		mGraphics2D.switchGameCoordinates(false);
 //		mGraphics2D.setColor(1,1,1,0.8f);
 //		mGraphics3D.getToScreenTransform(mProjectMatrix);
 //		for(Joint joint:mSkeleton.mJoints) {
@@ -95,12 +93,18 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	
 	@Override
 	public void keyDown(int code) {
+		super.keyDown(code);
 		if(code=='p') {
 			mSkeleton.mConstantForceY = -0.025f;
 		}
 		if(code=='l') {
 			mLight.mDirection.setAlphaBeta(mCamera.mViewAlpha,mCamera.mViewBeta);
 		}
+	}
+	
+	@Override
+	public void keyUp(int code) {
+		super.keyUp(code);
 	}
 	
 	@Override

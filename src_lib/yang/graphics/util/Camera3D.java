@@ -2,6 +2,8 @@ package yang.graphics.util;
 
 import yang.math.Geometry;
 import yang.math.objects.Vector3f;
+import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.matrix.YangMatrixCameraOps;
 
 public class Camera3D {
 
@@ -10,10 +12,12 @@ public class Camera3D {
 	public float mEyeX,mEyeY,mEyeZ;
 	public float mLookAtX,mLookAtY,mLookAtZ;
 	public float mUpX,mUpY,mUpZ;
+	public YangMatrixCameraOps mViewMatrix;
 	
 	public Camera3D() {
 		mLookVector[3] = 1;
 		mLookDirection[3] = 0;
+		mViewMatrix = new YangMatrixCameraOps();
 	}
 	
 	public Camera3D set(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
@@ -26,6 +30,7 @@ public class Camera3D {
 		mUpX = upX;
 		mUpY = upY;
 		mUpZ = upZ;
+		refreshMatrix();
 		return this;
 	}
 	
@@ -46,15 +51,44 @@ public class Camera3D {
 		return this;
 	}
 	
-	public float[] getLookVector() {
+	public void refreshMatrix() {
+		mViewMatrix.setLookAt(mEyeX,mEyeY,mEyeZ, mLookAtX,mLookAtY,mLookAtZ, mUpX,mUpY,mUpZ);
+	}
+	
+	public YangMatrix getMatrix() {
+		return mViewMatrix;
+	}
+	
+	public void getRightVector(Vector3f target) {
+		float[] mat = mViewMatrix.mMatrix;
+		target.mX = mat[0];
+		target.mY = mat[4];
+		target.mZ = mat[8];
+	}
+	
+	public void getUpVector(Vector3f target) {
+		float[] mat = mViewMatrix.mMatrix;
+		target.mX = mat[1];
+		target.mY = mat[5];
+		target.mZ = mat[9];
+	}
+	
+	public void getForwardVector(Vector3f target) {
+		float[] mat = mViewMatrix.mMatrix;
+		target.mX = mat[2];
+		target.mY = mat[6];
+		target.mZ = mat[10];
+	}
+	
+	public float[] getLookVectorSwallow() {
 		mLookVector[0] = mLookAtX-mEyeX;
 		mLookVector[1] = mLookAtY-mEyeY;
 		mLookVector[2] = mLookAtZ-mEyeZ;
 		return mLookVector;
 	}
 	
-	public float[] getLookDirection() {
-		float dDist = 1f/Geometry.getDistance(getLookVector());
+	public float[] getLookDirectionSwallow() {
+		float dDist = 1f/Geometry.getDistance(getLookVectorSwallow());
 		mLookDirection[0] = mLookVector[0]*dDist;
 		mLookDirection[1] = mLookVector[1]*dDist;
 		mLookDirection[2] = mLookVector[2]*dDist;

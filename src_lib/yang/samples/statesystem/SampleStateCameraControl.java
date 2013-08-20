@@ -14,7 +14,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 	
 	protected void refreshCamera() {
 		if(mOrthogonalProjection)
-			mGraphics3D.setOrthogonalProjection(-1, 100, mCamera.mZoom);
+			mGraphics3D.setOrthogonalProjection(-2, 100, mCamera.mZoom);
 		else
 			mGraphics3D.setPerspectiveProjection(100);
 	}
@@ -45,4 +45,13 @@ public abstract class SampleStateCameraControl extends SampleState {
 		refreshCamera();
 	}
 	
+	@Override
+	public void keyDown(int code) {
+		mCamera.keyDown(code);
+	}
+	
+	@Override
+	public void keyUp(int code) {
+		mCamera.keyUp(code);
+	}
 }

@@ -22,4 +22,16 @@ public class Camera3DAlphaBeta {
 		return mCamera;
 	}	
 	
+	public void setFocus(float x,float y,float z) {
+		mFocusX = x;
+		mFocusY = y;
+		mFocusZ = z;
+	}
+	
+	public void shiftFocus(float dx, float dy, float dz) {
+		mFocusX += dx;
+		mFocusY += dy;
+		mFocusZ += dz;
+	}
+	
 }

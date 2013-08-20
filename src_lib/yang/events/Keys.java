@@ -30,4 +30,6 @@ public class Keys {
 	public static final int BACKSPACE	= 21+OFFSET;
 	
 	public static final int ALT			= 22+OFFSET;
+
+	public static final int SHIFT       = 65535;
 }
