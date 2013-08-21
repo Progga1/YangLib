@@ -59,25 +59,28 @@ public class Camera3D {
 		return mViewMatrix;
 	}
 	
-	public void getRightVector(Vector3f target) {
+	public Vector3f getRightVector(Vector3f target) {
 		float[] mat = mViewMatrix.mMatrix;
 		target.mX = mat[0];
 		target.mY = mat[4];
 		target.mZ = mat[8];
+		return target;
 	}
 	
-	public void getUpVector(Vector3f target) {
+	public Vector3f getUpVector(Vector3f target) {
 		float[] mat = mViewMatrix.mMatrix;
 		target.mX = mat[1];
 		target.mY = mat[5];
 		target.mZ = mat[9];
+		return target;
 	}
 	
-	public void getForwardVector(Vector3f target) {
+	public Vector3f getForwardVector(Vector3f target) {
 		float[] mat = mViewMatrix.mMatrix;
 		target.mX = mat[2];
 		target.mY = mat[6];
 		target.mZ = mat[10];
+		return target;
 	}
 	
 	public float[] getLookVectorSwallow() {

@@ -104,5 +104,9 @@ public class Vector3f extends Point3f{
 			setNormalized(-ortho.mY,ortho.mX,0);
 		}
 	}
+
+	public void applyQuaternion(Quaternion quaternion, Vector3f vector) {
+		quaternion.applyToVector(this,vector);
+	}
 	
 }

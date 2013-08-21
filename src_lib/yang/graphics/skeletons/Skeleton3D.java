@@ -113,6 +113,7 @@ public class Skeleton3D {
 			//float rad = joint.getOutputRadius()*radFac;
 			if(dist<=rad && dist<=minDist) {
 				result = joint;
+				minDist = dist;
 			}
 		}
 		return result;

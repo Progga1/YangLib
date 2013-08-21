@@ -1,6 +1,7 @@
 package yang.math.objects.matrix;
 
 import yang.math.MatrixOps;
+import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 
@@ -128,7 +129,7 @@ public class YangMatrix {
 	}
 
 	public void loadIdentity() {
-		MatrixOps.setIdentity(mMatrix);
+		System.arraycopy(MatrixOps.IDENTITY, 0, mMatrix, 0, 16);
 	}
 
 	public final void translate(float x, float y, float z) {
@@ -142,10 +143,21 @@ public class YangMatrix {
 		translate(x, y, 0);
 	}
 	
-	public final void translate(Vector3f translationVector) {
+	public final void translate(Point3f translationVector) {
 		translate(translationVector.mX,translationVector.mY,translationVector.mZ);
 	}
 
+	public void setTranslation(float x,float y,float z) {
+		System.arraycopy(MatrixOps.IDENTITY, 0, mMatrix, 0, 16);
+		mMatrix[12] = x;
+		mMatrix[13] = y;
+		mMatrix[14] = z;
+	}
+	
+	public void setTranslation(Point3f translation) {
+		setTranslation(translation.mX,translation.mY,translation.mZ);
+	}
+	
 	public void scale(float x, float y, float z) {
 		for(int i=0;i<4;i++) {
 			mMatrix[i] *= x;
@@ -155,9 +167,6 @@ public class YangMatrix {
 	}
 	
 	public void postScale(float x, float y, float z) {
-//		mMatrix[0] *= x;
-//		mMatrix[5] *= y;
-//		mMatrix[10] *= z;
 		for(int i=0;i<4;i++) {
 			mMatrix[i*4] *= x;
 			mMatrix[i*4+1] *= y;
@@ -517,7 +526,7 @@ public class YangMatrix {
 		MatrixOps.createDirectionTrafo(mMatrix, dirX,dirY,dirZ);
 	}
 	
-	public void pointTo(Vector3f direction) {
+	public void pointToDirection(Vector3f direction) {
 		MatrixOps.createDirectionTrafo(mTempMat1, direction.mX,direction.mY,direction.mZ);
 		multiplyRight(mTempMat1);
 	}

@@ -5,17 +5,15 @@ public class Quaternion {
 	float mX,mY,mZ,mW;
 	
 	public Quaternion() {
-		
+		set(0,0,0,1);
 	}
 	
 	public Quaternion(float x,float y,float z,float w) {
-		this();
 		set(x,y,z,w);
 	}
 	
 	public Quaternion(Vector3f axis,float angle) {
-		this();
-		set(axis,angle);
+		setFromAxis(axis,angle);
 	}
 	
 	public void set(float x,float y,float z,float w) {
@@ -25,12 +23,28 @@ public class Quaternion {
 		mW = w;
 	}
 	
-	public void set(Vector3f axis,float angle) {
+	public void set(Quaternion quaternion) {
+		mX = quaternion.mX;
+		mY = quaternion.mY;
+		mZ = quaternion.mZ;
+		mW = quaternion.mW;
+	}
+	
+	public void setFromAxis(Vector3f axis,float angle) {
 		float sinA = (float)Math.sin(angle*0.5f);
 		float cosA = (float)Math.cos(angle*0.5f);
 		mX = axis.mX * sinA;
 		mY = axis.mY * sinA;
 		mZ = axis.mZ * sinA;
+		mW = cosA;
+	}
+	
+	public void setFromAxis(float x,float y,float z,float angle) {
+		float sinA = (float)Math.sin(angle*0.5f);
+		float cosA = (float)Math.cos(angle*0.5f);
+		mX = x * sinA;
+		mY = y * sinA;
+		mZ = z * sinA;
 		mW = cosA;
 	}
 	
@@ -68,12 +82,31 @@ public class Quaternion {
 		mW *= scalar;
 	}
 	
-	public void apply(Vector3f axis) {
-		
+	public void applyToVector(Vector3f target, Vector3f vector) {
+		float x = mW*vector.mX + mY*vector.mZ - mZ*vector.mY;
+		float y = mW*vector.mY - mX*vector.mZ + mZ*vector.mX;
+		float z = mW*vector.mZ + mX*vector.mY - mY*vector.mX;
+		float w = -mX*vector.mX - mY*vector.mY - mZ*vector.mZ;
+		target.mX = -w*mX + x*mW - y*mZ + z*mY;
+		target.mY = -w*mY + x*mZ + y*mW - z*mX;
+		target.mZ = -w*mZ - x*mY + y*mX + z*mW;
+
+//		Quaternion vQuat = new Quaternion(vector.mX,vector.mY,vector.mZ,0);
+//		Quaternion quat2 = new Quaternion();
+//		Quaternion quat3 = new Quaternion();
+//		//quat2.setConcat(this, vQuat);
+//		quat2.set(x,y,z,w);
+//		vQuat.set(this);
+//		vQuat.conjugate();
+//		quat3.setConcat(quat2, vQuat);
+//		target.set(quat3.mX,quat3.mY,quat3.mZ);
 	}
 	
-	public void multiplyRight(Quaternion lhq,Quaternion rhq) {
-		
+	public void setConcat(Quaternion lhq,Quaternion rhq) {
+		mX = lhq.mW*rhq.mX + lhq.mX*rhq.mW + lhq.mY*rhq.mZ - lhq.mZ*rhq.mY;
+		mY = lhq.mW*rhq.mY - lhq.mX*rhq.mZ + lhq.mY*rhq.mW + lhq.mZ*rhq.mX;
+		mZ = lhq.mW*rhq.mZ + lhq.mX*rhq.mY - lhq.mY*rhq.mX + lhq.mZ*rhq.mW;
+		mW = lhq.mW*rhq.mW - lhq.mX*rhq.mX - lhq.mY*rhq.mY - lhq.mZ*rhq.mZ;
 	}
 	
 	public void toRotationMatrix(float[] target) {
@@ -98,6 +131,11 @@ public class Quaternion {
 	@Override
 	public Quaternion clone() {
 		return new Quaternion(mX,mY,mZ,mW);
+	}
+	
+	@Override
+	public String toString() {
+		return "("+mX+","+mY+","+mZ+", "+mW+")";
 	}
 	
 }

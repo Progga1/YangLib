@@ -14,6 +14,7 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera3D;
+import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
@@ -127,6 +128,11 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
 	public void resetProjection() {
 		setOrthogonalProjection();
+	}
+	
+	public void setDefaultView() {
+		resetCamera();
+		resetProjection();
 	}
 
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
@@ -429,7 +435,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawDebugVector(baseX,baseY,baseZ,vector.mX,vector.mY,vector.mZ,color,alpha);
 	}
 	
-	public void drawDebugVector(Vector3f base, Vector3f vector,FloatColor color,float alpha) {
+	public void drawDebugVector(Point3f base, Vector3f vector,FloatColor color,float alpha) {
 		drawDebugVector(base.mX,base.mY,base.mZ,vector.mX,vector.mY,vector.mZ,color,alpha);
 	}
 	
