@@ -431,18 +431,18 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount);
 	}
 	
-	public void drawDebugVector(float baseX,float baseY,float baseZ, Vector3f vector,FloatColor color,float alpha) {
-		drawDebugVector(baseX,baseY,baseZ,vector.mX,vector.mY,vector.mZ,color,alpha);
+	public void drawDebugVector(float baseX,float baseY,float baseZ, Vector3f vector,FloatColor color,float scale,float alpha) {
+		drawDebugVector(baseX,baseY,baseZ,vector.mX*scale,vector.mY*scale,vector.mZ*scale,color,alpha);
 	}
 	
-	public void drawDebugVector(Point3f base, Vector3f vector,FloatColor color,float alpha) {
-		drawDebugVector(base.mX,base.mY,base.mZ,vector.mX,vector.mY,vector.mZ,color,alpha);
+	public void drawDebugVector(Point3f base, Vector3f vector,FloatColor color,float scale,float alpha) {
+		drawDebugVector(base.mX,base.mY,base.mZ,vector.mX*scale,vector.mY*scale,vector.mZ*scale,color,alpha);
 	}
 	
 	public void drawDebugCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
-		drawDebugVector(0,0,0, 1,0,0, xColor,alpha);
-		drawDebugVector(0,0,0, 0,1,0, yColor,alpha);
-		drawDebugVector(0,0,0, 0,0,1, zColor,alpha);
+		drawDebugVector(0,0,0, scale,0,0, xColor,alpha);
+		drawDebugVector(0,0,0, 0,scale,0, yColor,alpha);
+		drawDebugVector(0,0,0, 0,0,scale, zColor,alpha);
 	}
 	
 	public void drawDebugCoordinateAxes() {

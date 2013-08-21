@@ -136,7 +136,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		target.set(mCameraProjectionMatrix);
 		if (mWorldTransformEnabled)
 			target.multiplyRight(mWorldTransform);
-		target.postScale(mTranslator.mRatioX, 1, 1);
+		target.postScale(mTranslator.mRatioX, mTranslator.mRatioY, 1);
 	}
 
 	protected void updateProgramProjection() {

@@ -65,10 +65,10 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mTempQuaternion.setFromAxis(mRotVectorAround, time*0.6f);
 		mTempVec.applyQuaternion(mTempQuaternion,mRotVector2);
 		mGraphics3D.drawDebugCoordinateAxes();
-		mGraphics3D.drawDebugVector(mPosition1, mRotVector1, FloatColor.YELLOW, 0.9f);
-		mGraphics3D.drawDebugVector(mPosition2, mTempVec, FloatColor.YELLOW, 0.9f);
-		mGraphics3D.drawDebugVector(mPosition2, mRotVectorAround, FloatColor.GRAY, 1);
-		mGraphics3D.drawDebugVector(mPosition3, mRotVector3, FloatColor.YELLOW, 0.9f);
+		mGraphics3D.drawDebugVector(mPosition1, mRotVector1, FloatColor.YELLOW, 1, 0.9f);
+		mGraphics3D.drawDebugVector(mPosition2, mTempVec, FloatColor.YELLOW, 1.0f, 0.9f);
+		mGraphics3D.drawDebugVector(mPosition2, mRotVectorAround, FloatColor.GRAY, 1.25f, 1);
+		mGraphics3D.drawDebugVector(mPosition3, mRotVector3, FloatColor.YELLOW, 1, 0.9f);
 		
 		mGraphics.bindTexture(mCubeTex);
 		

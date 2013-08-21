@@ -1,5 +1,6 @@
 package yang.samples.statesystem.states;
 
+import yang.events.Keys;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
 import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
@@ -28,6 +29,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	public SampleSkeleton mSkeleton;
 	public ShaderPermutations mShader;
 	private LightProperties mLight;
+	private boolean mMultiSelect = false;
 	
 	@Override
 	public void initGraphics() {
@@ -76,7 +78,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mSkeleton3D.draw();
 		
 		mGraphics3D.setDefaultProgram();
-		mGraphics3D.drawDebugCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,1,0.3f);
+		mGraphics3D.drawDebugCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,0.5f,0.3f);
 
 		mGraphics2D.activate();
 		mGraphics.switchZBuffer(false);
@@ -102,11 +104,15 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		if(code=='l') {
 			mLight.mDirection.setAlphaBeta(mCamera.mViewAlpha,mCamera.mViewBeta);
 		}
+		if(code==Keys.CTRL)
+			mMultiSelect = true;
 	}
 	
 	@Override
 	public void keyUp(int code) {
 		super.keyUp(code);
+		if(code==Keys.CTRL)
+			mMultiSelect = false;
 	}
 	
 	@Override
@@ -114,7 +120,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
 			Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1.75f);
 			if(pJoint!=null) {
-				mSkeleton3D.setJointSelected(pJoint,true);
+				mSkeleton3D.setJointSelected(pJoint,event.mId);
 				pJoint.startDrag();
 			}
 		}
@@ -129,30 +135,38 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	
 	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
-		super.pointerDragged(x, y, event);
+		
 		mSkeleton3D.mHoverJoint = null;
 		//Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
 
-		if(event.mButton == YangPointerEvent.BUTTON_LEFT) {
-			float dragX = event.mDeltaX*mCamera.mZoom;
-			float dragY = event.mDeltaY*mCamera.mZoom;
-			mGraphics3D.getCameraRightVector(mCamRight);
-			mGraphics3D.getCameraUpVector(mCamUp);
-			for(Joint joint:mSkeleton3D.getJoints()) {
-				JointEditData data = mSkeleton3D.getJointEditData(joint);
-				if(data.mSelected)
-					joint.drag(dragX*mCamRight.mX+dragY*mCamUp.mX,dragX*mCamRight.mY+dragY*mCamUp.mY,dragX*mCamRight.mZ+dragY*mCamUp.mZ);
+		if(mSkeleton3D.getSelectionCount()>0) {
+			if(event.mButton == YangPointerEvent.BUTTON_LEFT) {
+				float dragX = event.mDeltaX*mCamera.mZoom;
+				float dragY = event.mDeltaY*mCamera.mZoom;
+				mGraphics3D.getCameraRightVector(mCamRight);
+				mGraphics3D.getCameraUpVector(mCamUp);
+				for(Joint joint:mSkeleton3D.getJoints()) {
+					JointEditData data = mSkeleton3D.getJointEditData(joint);
+					if(data.mSelectionIndex==event.mId)
+						joint.drag(dragX*mCamRight.mX+dragY*mCamUp.mX,dragX*mCamRight.mY+dragY*mCamUp.mY,dragX*mCamRight.mZ+dragY*mCamUp.mZ);
+				}
 			}
+		}else{
+			super.pointerDragged(x, y, event);
 		}
 	}
 	
 	@Override
 	public void pointerUp(float x,float y,YangPointerEvent event) {
 		super.pointerUp(x,y,event);
-//		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1.75f);
-//		if(pJoint!=null)
-//			mSkeleton3D.setJointSelected(pJoint,false);
-		mSkeleton3D.unselectAllJoints();
+		if(!mMultiSelect)
+			mSkeleton3D.unselectJoint(event.mId);
+	}
+	
+	@Override
+	public void zoom(float value) {
+		if(mSkeleton3D.getSelectionCount()<=0)
+			super.zoom(value);
 	}
 	
 }
