@@ -2,7 +2,9 @@ package yang.math.objects;
 
 public class Quaternion {
 
-	float mX,mY,mZ,mW;
+	public static final Quaternion IDENTITY = new Quaternion(0,0,0,1);
+	
+	public float mX,mY,mZ,mW;
 	
 	public Quaternion() {
 		set(0,0,0,1);
@@ -109,6 +111,16 @@ public class Quaternion {
 		mW = lhq.mW*rhq.mW - lhq.mX*rhq.mX - lhq.mY*rhq.mY - lhq.mZ*rhq.mZ;
 	}
 	
+	public void multRight(Quaternion rhq) {
+		float x = mX;
+		float y = mY;
+		float z = mZ;
+		mX = mW*rhq.mX + x*rhq.mW + y*rhq.mZ - z*rhq.mY;
+		mY = mW*rhq.mY - x*rhq.mZ + y*rhq.mW + z*rhq.mX;
+		mZ = mW*rhq.mZ + x*rhq.mY - y*rhq.mX + z*rhq.mW;
+		mW = mW*rhq.mW - x*rhq.mX - y*rhq.mY - z*rhq.mZ;
+	}
+	
 	public void toRotationMatrix(float[] target) {
 		target[0] = 1 - 2*mY*mY - 2*mZ*mZ;
 		target[1] = 2*mX*mY - 2*mZ*mW;
@@ -126,6 +138,44 @@ public class Quaternion {
 		target[13] = 0;
 		target[14] = 0;
 		target[15] = 1;
+	}
+	
+	public void setLerp(Quaternion quat1,Quaternion quat2,float alpha) {
+		mX = quat1.mX*(1-alpha) + quat2.mX*alpha;
+		mY = quat1.mY*(1-alpha) + quat2.mY*alpha;
+		mZ = quat1.mZ*(1-alpha) + quat2.mZ*alpha;
+		mW = quat1.mW*(1-alpha) + quat2.mW*alpha;
+		float magn = (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ + mW*mW);
+		if(magn>0) {
+			magn = 1/magn;
+			mX *= magn;
+			mY *= magn;
+			mZ *= magn;
+			mW *= magn;
+		}
+	}
+	
+	public void setLerp(Quaternion otherQuaternion,float alpha) {
+		setLerp(this,otherQuaternion,alpha);
+	}
+	
+	public void setFromToRotation(Vector3f fromVector,Vector3f toVector) {
+		float crossX = toVector.mY*fromVector.mZ - toVector.mZ*fromVector.mY;
+		float crossY = toVector.mZ*fromVector.mX - toVector.mX*fromVector.mZ;
+		float crossZ = toVector.mX*fromVector.mY - toVector.mY*fromVector.mX;
+		mX = crossX * 0.5f;
+		mY = crossY * 0.5f;
+		mZ = crossZ * 0.5f;
+		float dot = fromVector.mX*toVector.mX + fromVector.mY*toVector.mY + fromVector.mZ*toVector.mZ;
+		mW = dot * 0.5f + 0.5f;
+		float magn = (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ + mW*mW);
+		if(magn!=0) {
+			magn = 1/magn;
+			mX *= magn;
+			mY *= magn;
+			mZ *= magn;
+			mW *= magn;
+		}
 	}
 	
 	@Override
