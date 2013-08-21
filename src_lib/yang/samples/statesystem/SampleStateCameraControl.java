@@ -19,6 +19,11 @@ public abstract class SampleStateCameraControl extends SampleState {
 			mGraphics3D.setPerspectiveProjection(100);
 	}
 	
+	@Override
+	protected void step(float deltaTime) {
+		mCamera.step();
+	}
+	
 	protected void setCamera() {
 		mGraphics3D.setCamera(mCamera.getUpdatedCamera());
 	}
@@ -36,7 +41,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 	
 	@Override
 	public void pointerUp(float x,float y,YangPointerEvent event) {
-		
+		mCamera.pointerUp(event);
 	}
 	
 	@Override

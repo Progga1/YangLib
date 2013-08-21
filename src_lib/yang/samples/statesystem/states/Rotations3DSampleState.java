@@ -36,14 +36,14 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mRotVector3.setNormalized(0.5f, 0.5f, -1);
 		mQuatVector1.set(mRotVector1);
 
-		mCamera.mZoom = 3;
+		mCamera.setZoom(3);
 		mCubeTex = mGFXLoader.getImage("cube");
 		refreshCamera();
 	}
 	
 	@Override
 	protected void step(float deltaTime) {
-		
+		super.step(deltaTime);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package yang.events;
 
+import yang.events.eventtypes.PointerTracker;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangPointerEvent;
@@ -11,10 +12,14 @@ import yang.util.NonConcurrentList;
 
 public class YangEventQueue {
 
+	public static final int MAX_POINTERS = 10;
 	public static final int ID_POINTER_EVENT = 0;
 	public static final int ID_KEY_EVENT = 1;
 	public static final int ID_ZOOM_EVENT = 2;
 	
+	public PointerTracker mPointerTrackers[] = new PointerTracker[MAX_POINTERS];
+	public float mPointerDistance = -1;
+	public int mCurPointerDownCount = 0;
 	private int mMaxEvents;
 	private YangPointerEvent[] mPointerEventQueue;
 	private YangKeyEvent[] mKeyEventQueue;
@@ -50,12 +55,18 @@ public class YangEventQueue {
 		mZoomEventQueue = new YangZoomEvent[maxEvents];
 		for(int i=0;i<maxEvents;i++) {
 			mPointerEventQueue[i] = new YangPointerEvent();
+			mPointerEventQueue[i].mEventQueue = this;
 			mKeyEventQueue[i] = new YangKeyEvent();
+			mKeyEventQueue[i].mEventQueue = this;
 			mZoomEventQueue[i] = new YangZoomEvent();
+			mZoomEventQueue[i].mEventQueue = this;
 		}
 		mMetaKeys = new boolean[512];
 		for(int i=0;i<mMetaKeys.length;i++) {
 			mMetaKeys[i] = false;
+		}
+		for(int i=0;i<MAX_POINTERS;i++) {
+			mPointerTrackers[i] = new PointerTracker();
 		}
 		mQueuePools = new YangEvent[eventTypes][];
 		mQueuePools[ID_POINTER_EVENT] = mPointerEventQueue;
@@ -73,8 +84,10 @@ public class YangEventQueue {
 			return;
 		}
 		mQueue[mQueueId++] = event;
-		if(mQueueId>=mMaxEvents)
+		if(mQueueId>=mMaxEvents) 
 			mQueueId = 0;
+		event.onPut();
+		
 	}
 	
 	public synchronized void putEvent(YangEvent event) {
@@ -85,6 +98,7 @@ public class YangEventQueue {
 	
 	public synchronized void putMetaEvent(YangEvent event) {
 		mMetaEventQueue[mMetaEventQueueId++] = event;
+		event.onPut();
 		if(mMetaEventQueueId>=mMaxEvents)
 			mMetaEventQueueId = 0;
 	}

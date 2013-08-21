@@ -47,14 +47,14 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mLight.mDirection.setAlphaBeta(0.4f, 0.4f);
 		mSkeleton.mBreastJoint.mFixed = false;
 		mSkeleton.setFriction(0.98f);
-		mCamera.mZoom = 1.5f;
+		mCamera.setZoom(1.5f);
 		mCamera.mFocusY = 1;
 		refreshCamera();
 	}
 	
 	@Override
 	protected void step(float deltaTime) {
-		
+		super.step(deltaTime);
 		mSkeleton.applyConstraints(deltaTime);
 	}
 
@@ -134,8 +134,8 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		//Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
 
 		if(event.mButton == YangPointerEvent.BUTTON_LEFT) {
-			float dragX = mCamera.mPntDeltaX*mCamera.mZoom;
-			float dragY = mCamera.mPntDeltaY*mCamera.mZoom;
+			float dragX = event.mDeltaX*mCamera.mZoom;
+			float dragY = event.mDeltaY*mCamera.mZoom;
 			mGraphics3D.getCameraRightVector(mCamRight);
 			mGraphics3D.getCameraUpVector(mCamUp);
 			for(Joint joint:mSkeleton3D.getJoints()) {

@@ -1,5 +1,7 @@
 package yang.events.eventtypes;
 
+import yang.model.DebugYang;
+
 public abstract class AbstractPointerEvent extends YangEvent {
 
 	public int mAction;
@@ -16,6 +18,7 @@ public abstract class AbstractPointerEvent extends YangEvent {
 	public int mButton;
 	public float mX;
 	public float mY;
+	public float mDeltaX,mDeltaY;
 	public int mId;
 	
 	protected String actionToString() {
@@ -43,6 +46,49 @@ public abstract class AbstractPointerEvent extends YangEvent {
 	public boolean isRightButton() {
 		return mButton == BUTTON_RIGHT;
 	}
+	
+	@Override
+	public void onPut() {
+		PointerTracker pointer = mEventQueue.mPointerTrackers[mId];
+		mDeltaX = mX - pointer.mPosX;
+		mDeltaY = mY - pointer.mPosY;
+		pointer.mPosX = mX;
+		pointer.mPosY = mY;
+		if(mAction==ACTION_POINTERDOWN) {
+			mEventQueue.mPointerDistance = -1;
+			mEventQueue.mCurPointerDownCount++;
+		}
+		if(mAction==ACTION_POINTERUP)
+			mEventQueue.mCurPointerDownCount--;
+		if(mEventQueue.mCurPointerDownCount==2 && mAction==ACTION_POINTERDRAG) {//DebugYang.stateString(mEventQueue.mPointerTrackers[0]+"\n"+mEventQueue.mPointerTrackers[1]);
+			float dist = mEventQueue.mPointerTrackers[0].getDistance(mEventQueue.mPointerTrackers[1]);
+			if(mEventQueue.mPointerDistance>=0) {
+				float deltaDist = dist-mEventQueue.mPointerDistance;
+				mEventQueue.putZoomEvent(-deltaDist);
+			}
+			mEventQueue.mPointerDistance = dist;	
+		}
+	}
+	
+	public PointerTracker getTrackingData() {
+		return mEventQueue.mPointerTrackers[mId];
+	}
+	
+//	public float getDeltaX() {
+//		return mEventQueue.mPointerTrackers[mId].mDeltaX;
+//	}
+//	
+//	public float getDeltaY() {
+//		return mEventQueue.mPointerTrackers[mId].mDeltaY;
+//	}
+//	
+//	public float getCurrentX() {
+//		return mEventQueue.mPointerTrackers[mId].mX;
+//	}
+//	
+//	public float getCurrentY() {
+//		return mEventQueue.mPointerTrackers[mId].mY;
+//	}
 	
 	@Override
 	public String toString() {
