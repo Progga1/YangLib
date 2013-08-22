@@ -1,5 +1,7 @@
 package yang.math.objects;
 
+import yang.math.MathConst;
+
 public class Quaternion {
 
 	public static final Quaternion IDENTITY = new Quaternion(0,0,0,1);
@@ -155,26 +157,57 @@ public class Quaternion {
 		}
 	}
 	
-	public void setLerp(Quaternion otherQuaternion,float alpha) {
+	public void lerp(Quaternion otherQuaternion,float alpha) {
 		setLerp(this,otherQuaternion,alpha);
 	}
 	
+	public void setSlerp(Quaternion quat1,Quaternion quat2,float alpha) {
+		float dot = quat1.mX*quat2.mX + quat1.mY*quat2.mY + quat1.mZ*quat2.mZ + quat1.mW*quat2.mW;
+		if(dot>=0.9999999f)
+			return;
+		float theta = (float)Math.acos(dot);
+		if(theta>=MathConst.PI-0.00001f) {
+			theta = MathConst.PI-0.00001f;
+		}
+		float dSin = 1/(float)Math.sin(theta);
+		float w1 = (float)Math.sin((1-alpha)*theta)*dSin;
+		float w2 = (float)Math.sin(alpha*theta)*dSin;
+		mX = w1*quat1.mX + w2*quat2.mX;
+		mY = w1*quat1.mY + w2*quat2.mY;
+		mZ = w1*quat1.mZ + w2*quat2.mZ;
+		mW = w1*quat1.mW + w2*quat2.mW;
+	}
+	
+	public void slerp(Quaternion otherQuaternion,float alpha) {
+		setSlerp(this,otherQuaternion,alpha);
+	}
+	
+	/**
+	 * Vectors must be normalized
+	 */
 	public void setFromToRotation(Vector3f fromVector,Vector3f toVector) {
-		float crossX = toVector.mY*fromVector.mZ - toVector.mZ*fromVector.mY;
-		float crossY = toVector.mZ*fromVector.mX - toVector.mX*fromVector.mZ;
-		float crossZ = toVector.mX*fromVector.mY - toVector.mY*fromVector.mX;
-		mX = crossX * 0.5f;
-		mY = crossY * 0.5f;
-		mZ = crossZ * 0.5f;
 		float dot = fromVector.mX*toVector.mX + fromVector.mY*toVector.mY + fromVector.mZ*toVector.mZ;
-		mW = dot * 0.5f + 0.5f;
-		float magn = (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ + mW*mW);
-		if(magn!=0) {
-			magn = 1/magn;
-			mX *= magn;
-			mY *= magn;
-			mZ *= magn;
-			mW *= magn;
+		if(dot<=-0.99999) {
+			mX = 1;
+			mY = 0;
+			mZ = 0;
+			mW = 0;
+		}else{
+			float crossX = toVector.mY*fromVector.mZ - toVector.mZ*fromVector.mY;
+			float crossY = toVector.mZ*fromVector.mX - toVector.mX*fromVector.mZ;
+			float crossZ = toVector.mX*fromVector.mY - toVector.mY*fromVector.mX;
+			mX = crossX * 0.5f;
+			mY = crossY * 0.5f;
+			mZ = crossZ * 0.5f;
+			mW = dot * 0.5f + 0.5f;
+			float magn = (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ + mW*mW);
+			if(magn!=0) {
+				magn = 1/magn;
+				mX *= magn;
+				mY *= magn;
+				mZ *= magn;
+				mW *= magn;
+			}
 		}
 	}
 	

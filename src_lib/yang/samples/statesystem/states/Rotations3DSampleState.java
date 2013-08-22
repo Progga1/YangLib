@@ -22,12 +22,13 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 	private Vector3f mQuatVector1 = new Vector3f();
 	private Quaternion mQuaternion1 = new Quaternion();
 	private Quaternion mQuaternion2 = new Quaternion();
-	private Quaternion mTempQuaternion1 = new Quaternion();
-	private Vector3f mTempVec = new Vector3f();
-	
+
 	private Point3f mFromToPosition = new Point3f(-1,1,1.2f);
 	private Vector3f mToVector1 = new Vector3f();
 	private Vector3f mToVector2 = new Vector3f();
+	
+	private Vector3f mRotatingVec = new Vector3f();
+	private Quaternion mTempQuaternion1 = new Quaternion();
 	private Quaternion mTempQuaternion2 = new Quaternion();
 	
 	private float mQuatAngle = 0;
@@ -42,6 +43,8 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mRotVector3.setNormalized(0.5f, 0.5f, -1);
 		mToVector1.setNormalized(-1, -0.2f, 0.5f);
 		mToVector2.setNormalized(1, 1, 0);
+//		mToVector1.set(Vector3f.UP);
+//		mToVector2.set(Vector3f.DOWN);
 		mQuatVector1.set(mRotVector1);
 
 		mCamera.setZoom(3);
@@ -71,10 +74,10 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		//mRotVector2.setNormalized((float)Math.sin(time*0.1f), (float)Math.cos(time*0.1f), 0);
 		
 		mTempQuaternion1.setFromAxis(mRotVectorAround, time*0.6f);
-		mTempVec.applyQuaternion(mTempQuaternion1,mRotVector2);
+		mRotatingVec.applyQuaternion(mTempQuaternion1,mRotVector2);
 		mGraphics3D.drawDebugCoordinateAxes();
 		mGraphics3D.drawDebugVector(mPosition1, mRotVector1, FloatColor.YELLOW, 1, 0.9f);
-		mGraphics3D.drawDebugVector(mPosition2, mTempVec, FloatColor.YELLOW, 1.0f, 0.9f);
+		mGraphics3D.drawDebugVector(mPosition2, mRotatingVec, FloatColor.YELLOW, 1.0f, 0.9f);
 		mGraphics3D.drawDebugVector(mPosition2, mRotVectorAround, FloatColor.GRAY, 1.25f, 1);
 		mGraphics3D.drawDebugVector(mPosition3, mRotVector3, FloatColor.YELLOW, 1, 0.9f);
 		mGraphics3D.drawDebugVector(mFromToPosition, mToVector1, FloatColor.YELLOW, 1.0f, 0.9f);
@@ -91,7 +94,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		
 		mTrafo.setTranslation(mPosition2);
 		mTrafo.scale(0.8f);
-		mTrafo.rotateAround(mTempVec,(float)mStateTimer);
+		mTrafo.rotateAround(mRotatingVec,(float)mStateTimer);
 		
 		mGraphics3D.drawCubeCentered(mTrafo);
 		
@@ -106,7 +109,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mTrafo.setTranslation(mFromToPosition);
 		mTempQuaternion1.setFromToRotation(Vector3f.UP, mToVector1);
 		mTempQuaternion2.setFromToRotation(Vector3f.UP, mToVector2);
-		mTempQuaternion1.setLerp(mTempQuaternion2, (float)Math.sin(time*1.2f)*0.5f+0.5f);
+		mTempQuaternion1.slerp(mTempQuaternion2, (float)Math.sin(time*1.2f)*0.5f+0.5f);
 		mTrafo.multiplyQuaternionRight(mTempQuaternion1);
 		mTrafo.scale(0.2f,1,0.2f);
 		mTrafo.translate(0, 0.5f);
