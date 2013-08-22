@@ -11,6 +11,7 @@ import yang.samples.statesystem.SampleStateCameraControl;
 
 public class Rotations3DSampleState extends SampleStateCameraControl {
 
+	private YangMatrix mEulerMatrix = new YangMatrix();
 	private YangMatrix mTrafo = new YangMatrix();
 	private Point3f mPosition1 = new Point3f(1.5f,1.2f,1.3f);
 	private Vector3f mRotVector1 = new Vector3f();
@@ -85,6 +86,13 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		
 		mGraphics.bindTexture(mCubeTex);
 		
+		mEulerMatrix.loadIdentity();
+		mEulerMatrix.rotateY(time);
+		mTempQuaternion1.setFromMatrix(mEulerMatrix.mMatrix);
+		mTrafo.setTranslation(0, -1, 0);
+		mTrafo.multiplyQuaternionRight(mTempQuaternion1);
+		mTrafo.scale(0.5f, 0.8f, 0.6f);
+		mGraphics3D.drawCubeCentered(mTrafo);
 		
 		mTrafo.setTranslation(mPosition1);
 		mTrafo.pointToDirection(mRotVector1);
@@ -95,7 +103,6 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mTrafo.setTranslation(mPosition2);
 		mTrafo.scale(0.8f);
 		mTrafo.rotateAround(mRotatingVec,(float)mStateTimer);
-		
 		mGraphics3D.drawCubeCentered(mTrafo);
 		
 		mTrafo.setTranslation(mPosition3);
@@ -114,6 +121,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mTrafo.scale(0.2f,1,0.2f);
 		mTrafo.translate(0, 0.5f);
 		mGraphics3D.drawCubeCentered(mTrafo);
+		
 	}
 
 	@Override

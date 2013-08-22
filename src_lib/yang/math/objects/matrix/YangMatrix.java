@@ -35,7 +35,7 @@ public class YangMatrix {
 	public float[] mMatrix;
 	public float[] mInverted;
 	protected float[] mBackMatrix;
-	protected float[] mTempMat1,mTempMat2,mTempMat3;
+	protected float[] mTempMat1,mTempMat2;
 	protected float[][] mStack;
 	public int mStackPointer;	//pre increment
 
@@ -213,16 +213,31 @@ public class YangMatrix {
 	}
 	
 	public void rotateAround(float rotVecX,float rotVecY,float rotVecZ, float angle) {
-		if(mTempMat3==null)
-			mTempMat3 = new float[16];
-		MatrixOps.createDirectionTrafo(mTempMat3, rotVecX,rotVecY,rotVecZ);
-		multiplyRight(mTempMat3);
+		MatrixOps.createDirectionTrafo(mTempMat2, rotVecX,rotVecY,rotVecZ);
+		multiplyRight(mTempMat2);
 		rotateY(angle);
-//		MatrixOps.invert(mBackMatrix, mTempMat3, mTempMat1, mTempMat2);
-//		float[] swap = mBackMatrix;
-//		mBackMatrix = mTempMat3;
-//		mTempMat3 = swap;
-		multiplyRightTransposed(mTempMat3);
+		multiplyRightTransposed(mTempMat2);
+		
+		//Not working (Game physics engine development p. 169
+//		float c = (float)Math.cos(angle);
+//		float s = (float)Math.sin(angle);
+//		float t = 1.0f-c;
+//		mMatrix[0] = t*x*x + c;
+//		mMatrix[1] = t*x*y - s*z;
+//		mMatrix[2] = t*x*z + s*y;
+//		mMatrix[3] = 0;
+//		mMatrix[4] = t*x*y + s*z;
+//		mMatrix[5] = t*y*y + c;
+//		mMatrix[6] = t*y*z - s*x;
+//		mMatrix[7] = 0;
+//		mMatrix[8] = t*x*z - s*y;
+//		mMatrix[9] = t*y*z + s*x;
+//		mMatrix[10] = t*z*z + x;
+//		mMatrix[11] = 0;
+//		mMatrix[12] = 0;
+//		mMatrix[13] = 0;
+//		mMatrix[14] = 0;
+//		mMatrix[15] = 1;
 	}
 	
 	public void rotateAround(Vector3f rotationVector, float angle) {

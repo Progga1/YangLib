@@ -246,9 +246,9 @@ public class MatrixOps {
 		target[5] = dirY;
 		target[6] = dirZ;
 		target[7] = 0;
-		target[8] = crossX;
-		target[9] = crossY;
-		target[10] = crossZ;
+		target[8] = -crossX;
+		target[9] = -crossY;
+		target[10] = -crossZ;
 		target[11] = 0;
 		target[12] = 0;
 		target[13] = 0;

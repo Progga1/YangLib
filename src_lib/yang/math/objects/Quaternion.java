@@ -1,6 +1,7 @@
 package yang.math.objects;
 
 import yang.math.MathConst;
+import yang.math.objects.matrix.YangMatrix;
 
 public class Quaternion {
 
@@ -34,6 +35,13 @@ public class Quaternion {
 		mW = quaternion.mW;
 	}
 	
+	public void setIdentity() {
+		mX = 0;
+		mY = 0;
+		mZ = 0;
+		mW = 1;
+	}
+	
 	public void setFromAxis(Vector3f axis,float angle) {
 		float sinA = (float)Math.sin(angle*0.5f);
 		float cosA = (float)Math.cos(angle*0.5f);
@@ -50,6 +58,54 @@ public class Quaternion {
 		mY = y * sinA;
 		mZ = z * sinA;
 		mW = cosA;
+	}
+	
+	/**
+	 * Matrix must be orthogonal with no flipping
+	 */
+	public void setFromTransform(float m00,float m10,float m20, float m01,float m11,float m21, float m02,float m12,float m22) {
+		
+		float diag = m00 + m11 + m22;
+
+		if (diag > 0) {
+			mW = (float)Math.sqrt(1.0f + diag) * 0.5f;
+			float w4 = 1/(4.0f * mW);
+			mX = (m21 - m12) * w4;
+			mY = (m02 - m20) * w4;
+			mZ = (m10 - m01) * w4;
+		} else if ((m00 > m11)&(m00 > m22)) { 
+		  float S = (float)Math.sqrt(1.0 + m00 - m11 - m22) * 2; // S=4*qx 
+		  mW = (m21 - m12) / S;
+		  mX = 0.25f * S;
+		  mY = (m01 + m10) / S; 
+		  mZ = (m02 + m20) / S; 
+		} else if (m11 > m22) { 
+		  float S = (float)Math.sqrt(1.0 + m11 - m00 - m22) * 2; // S=4*qy
+		  mW = (m02 - m20) / S;
+		  mX = (m01 + m10) / S; 
+		  mY = 0.25f * S;
+		  mZ = (m12 + m21) / S; 
+		} else { 
+		  float S = (float)Math.sqrt(1.0 + m22 - m00 - m11) * 2; // S=4*qz
+		  mW = (m10 - m01) / S;
+		  mX = (m02 + m20) / S;
+		  mY = (m12 + m21) / S;
+		  mZ = 0.25f * S;
+		}
+	}
+	
+	/**
+	 * Axes must form orthogonal basis with no flipping
+	 */
+	public void setFromAxes(Vector3f right,Vector3f up,Vector3f forward) {
+		setFromTransform(right.mX,right.mY,right.mZ, up.mX,up.mY,up.mZ, forward.mX,forward.mY,forward.mZ);
+	}
+	
+	/**
+	 * Matrix must be orthogonal with no flipping
+	 */
+	public void setFromMatrix(float[] matrix) {
+		setFromTransform(matrix[YangMatrix.M00],matrix[YangMatrix.M10],matrix[YangMatrix.M20], matrix[YangMatrix.M01],matrix[YangMatrix.M11],matrix[YangMatrix.M21], matrix[YangMatrix.M02],matrix[YangMatrix.M12],matrix[YangMatrix.M22]);
 	}
 	
 	public void normalize() {

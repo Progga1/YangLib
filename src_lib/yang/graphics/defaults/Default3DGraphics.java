@@ -440,6 +440,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 	
 	public void drawDebugCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
+		mTranslator.switchCulling(true);
 		drawDebugVector(0,0,0, scale,0,0, xColor,alpha);
 		drawDebugVector(0,0,0, 0,scale,0, yColor,alpha);
 		drawDebugVector(0,0,0, 0,0,scale, zColor,alpha);
