@@ -69,24 +69,28 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	private void refreshLayout() {
 		//mGUI.refreshCoordinateSystem();
 		final float topY = mGUI.getGUITop()+0.13f*SCALE;
-		if(mGraphics.getSurfaceHeight()>mGraphics.getSurfaceWidth()) {
-			float y = topY;
-			for(DefaultRectButton button:mButtons) {
-				button.setPosCentered(mGUI.getGUICenterX(), y);
-				y += 0.2f*SCALE;
-			}
-		}else{
-			float x = mGUI.getGUICenterX()-0.5f;
+//		if(mGraphics.getSurfaceHeight()>mGraphics.getSurfaceWidth()) {
+//			float y = topY;
+//			for(DefaultRectButton button:mButtons) {
+//				button.setPosCentered(mGUI.getGUICenterX(), y);
+//				y += 0.2f*SCALE;
+//			}
+//		}else{
+		float x;
+		if(false && mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
+			x = mGUI.getGUICenterX()-1f;
+		else 
+			x = mGUI.getGUICenterX()-0.5f;
 			float y = topY;
 			for(DefaultRectButton button:mButtons) {
 				button.setPosCentered(x, y);
 				y += 0.2f*SCALE;
 				if(y>=1.85f) {
 					y = topY;
-					x = mGUI.getGUICenterX()+0.5f;
+					x += 1;
 				}
 			}
-		}
+//		}
 	}
 	
 	public void addMenuItem(String caption, YangProgramState<?> state) {
