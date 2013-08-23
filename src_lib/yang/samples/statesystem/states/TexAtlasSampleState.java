@@ -40,6 +40,7 @@ public class TexAtlasSampleState extends SampleState {
 		mGraphics.clear(0,0,0);
 		mGraphics2D.activate();
 		mGraphics2D.setShaderProgram(mTileProgram);
+		//mGraphics2D.setDefaultProgram();
 		mGraphics.bindTexture(mAtlasTex);
 		//mGraphics.bindTexture(mGraphics.createTexture(mGFXLoader.loadImageData("sky_small"), new TextureSettings()));
 		mGraphics2D.setWhite();
