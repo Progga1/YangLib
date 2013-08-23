@@ -33,13 +33,11 @@ public class MemorySampleState extends SampleState {
 		
 		mat2.setTranslation(0.2f,0.5f);
 		mat2.scale(0.2f);
-
 		YangMatrix mat3 = mMatrixPool.alloc();	//ALLOC 3
 		mat3.setTranslation(0.5f,-0.5f);
 		mat3.rotateZ((float)mStateTimer);
 		mat3.scale(0.3f, 0.2f);
 		mat3.translate(-0.5f,-0.5f);
-		
 		mGraphics2D.drawQuad(mat2);
 		mGraphics2D.drawQuad(mat3);
 		
