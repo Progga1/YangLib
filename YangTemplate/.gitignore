@@ -1,0 +1,20 @@
+# miscellaneous
+*~
+.DS_Store
+
+# Eclipse
+
+bin/
+gen/
+.settings/
+lib/
+libs/
+
+org.eclipse.jdt.ui.prefs
+org.eclipse.jdt.core.prefs
+
+# android lint
+lint.xml
+
+# project specific
+*.ym

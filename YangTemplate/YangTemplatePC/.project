@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>AnimationMasterPC</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>net.sourceforge.metrics.builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>net.sourceforge.metrics.nature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>assets</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/AnimationMasterAndroid/assets</locationURI>
+		</link>
+		<link>
+			<name>src</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/src</locationURI>
+		</link>
+		<link>
+			<name>src_yanglib</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/yanglib/src_lib</locationURI>
+		</link>
+		<link>
+			<name>src_yangpc</name>
+			<type>2</type>
+			<locationURI>PARENT-2-PROJECT_LOC/yanglib/yangPC/src_pc</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>
