@@ -1,6 +1,6 @@
 uniform mat4 projTransform;
 
-uniform vec4 ambientColor;
+uniform vec4 colorFactor;
 
 attribute vec4 vPosition;
 attribute vec2 vTexture;
@@ -13,5 +13,5 @@ varying vec4 color;
 void main() {
 	gl_Position = projTransform * vPosition;
 	texCoord = vTexture;
-	color = vColor;
+	color = vColor * colorFactor;
 }

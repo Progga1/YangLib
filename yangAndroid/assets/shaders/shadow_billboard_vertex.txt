@@ -1,7 +1,7 @@
 uniform mat4 projTransform;
 uniform mat4 worldTransform;
 uniform mat4 depthMapTransform;
-uniform vec4 ambientColor;
+uniform vec4 colorFactor;
 uniform float time;
 uniform vec4 eyePosition;
 uniform vec2 scale;
@@ -19,5 +19,5 @@ void main() {
 	texCoord = vTexture;
 	vec4 projPos = projTransform * worldPosition;
 	gl_Position = projPos + vec4(vTexture.x*scale.x,vTexture.y*scale.y,0.0,0.0) / projPos.w;
-	color = vColor * ambientColor;
+	color = vColor * colorFactor;
 }

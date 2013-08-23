@@ -85,7 +85,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 			for(DefaultRectButton button:mButtons) {
 				button.setPosCentered(x, y);
 				y += 0.2f*SCALE;
-				if(y>=1.85f) {
+				if(y>=mGUI.getGUIBottom()-0.2f) {
 					y = topY;
 					x += 1;
 				}

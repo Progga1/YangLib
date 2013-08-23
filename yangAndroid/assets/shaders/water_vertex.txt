@@ -1,6 +1,6 @@
 uniform mat4 projTransform;
 uniform mat4 depthMapTransform;
-uniform vec4 ambientColor;
+uniform vec4 colorFactor;
 uniform float time;
 
 attribute vec4 vPosition;
@@ -22,5 +22,5 @@ void main() {
 	gl_Position = projTransform * vPosition;
 	screenPos = gl_Position;
 	texCoord = vTexture;
-	color = vColor * ambientColor;
+	color = vColor * colorFactor;
 }

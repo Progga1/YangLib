@@ -130,12 +130,23 @@ public abstract class AbstractVertexBuffer {
 	public void putRotatedRect3D(int bufId, float width, float height, float offsetX, float offsetY, float z, float angle) {
 		float sinA = (float)Math.sin(angle);
 		float cosA = (float)Math.cos(angle);
-		width *= 0.5f;
+		float widthSin = width*0.5f*sinA;
+		float widthCos = width*0.5f*cosA;
+		float heightSin = height*0.5f*sinA;
+		float heightCos = height*0.5f*cosA;
 		height *= 0.5f;
-		putVec12(bufId,offsetX-width*cosA+height*sinA,offsetY-width*sinA-height*cosA,z,
-				offsetX+width*cosA+height*sinA,offsetY+width*sinA-height*cosA,z,
-				offsetX-width*cosA-height*sinA,offsetY-width*sinA+height*cosA,z,
-				offsetX+width*cosA-height*sinA,offsetY+width*sinA+height*cosA,z);
+		putVec12(bufId,
+				offsetX-widthCos+heightSin,offsetY-widthSin-heightCos,z,
+				offsetX+widthCos+heightSin,offsetY+widthSin-heightCos,z,
+				offsetX-widthCos-heightSin,offsetY-widthSin+heightCos,z,
+				offsetX+widthCos-heightSin,offsetY+widthSin+heightCos,z);
+//		width *= 0.5f;
+//		height *= 0.5f;
+//		putVec12(bufId,
+//				offsetX-width,offsetY-height,z,
+//				offsetX+width,offsetY-height,z,
+//				offsetX-width,offsetY+height,z,
+//				offsetX+width,offsetY+height,z);
 	}
 	
 	public void putTransformed3D(int bufId,float x,float y,float z,float[] matrix) {

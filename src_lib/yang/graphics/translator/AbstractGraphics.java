@@ -5,6 +5,7 @@ import javax.vecmath.Vector4f;
 
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
+import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.listeners.DrawListener;
 import yang.graphics.listeners.SurfaceListener;
 import yang.graphics.model.FloatColor;

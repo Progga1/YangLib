@@ -4,7 +4,7 @@ uniform sampler2D groundLayerSampler;
 uniform sampler2D highLayerSampler;
 uniform sampler2D topLayerSampler;
 uniform sampler2D lightSampler;
-uniform vec4 ambientColor;
+uniform vec4 colorFactor;
 uniform vec4 lightDir;
 
 varying vec4 texWeights;
@@ -23,5 +23,5 @@ void main()
 	float specular = min(pow(max(0.0,dot(halfVector,lightDir)),32.0) + pow(max(0.0,dot(halfVector,lightDir)),2.0)*0.5, 1.0);
 	vec4 specVec = vec4(specular,specular,specular,0.0);
 	/*texCl = vec4(camDir.x,camVector.y,camVector.z,1.0)*0.5+0.5;*/
-	gl_FragColor = (texCl * light + specular*light) * ambientColor;
+	gl_FragColor = (texCl * light + specular*light) * colorFactor;
 }
