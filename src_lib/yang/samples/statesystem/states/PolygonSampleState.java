@@ -14,6 +14,7 @@ public class PolygonSampleState extends SampleState {
 	private Texture mFillTexture;
 	private boolean mDrawTexture = true;
 	private boolean mDrawDebug = true;
+	private boolean mIntersects = false;
 	//private float grid = 0.1f;
 	
 	@Override
@@ -42,7 +43,10 @@ public class PolygonSampleState extends SampleState {
 		mGraphics2D.fillBuffers();
 		
 		if(mDrawDebug) {
-			mGraphics2D.setColor(0.3f,0.3f,0.9f);
+			if(mIntersects)
+				mGraphics2D.setColor(0.5f,0.5f,1f);
+			else
+				mGraphics2D.setColor(0.3f,0.3f,0.9f);
 			mPolygon.drawTriangleLines(mGraphics2D,0.01f);
 		}
 			
@@ -67,6 +71,11 @@ public class PolygonSampleState extends SampleState {
 				//mPolygon.addPoint((int)(x/grid)*grid, (int)(y/grid)*grid);
 			mPolygon.triangulate();
 		}
+	}
+	
+	@Override
+	public void pointerMoved(float x,float y,YangPointerEvent event) {
+		mIntersects = mPolygon.interpenetrates(x, y);
 	}
 	
 	@Override

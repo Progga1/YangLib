@@ -69,4 +69,40 @@ public class Geometry {
 		return y1*x2 - x1*y2;
 	}
 	
+	public static boolean interpenetratesTriangle(float pointX,float pointY, float x1,float y1, float x2,float y2, float x3,float y3) {
+		float aX = x2-x1;
+		float aY = y2-y1;
+		float bX = x3-x1;
+		float bY = y3-y1;
+		
+		float pX = pointX - x1;
+		float pY = pointY - y1;
+		
+		//LES: p = r*a + s*b
+		float s = -1;
+		float r = -1;
+		if(aX!=0) {
+			//Normalize row 1
+			float sbX = bX/aX;
+			pX /= aX;
+			
+			float sbY = bY - aY*sbX;
+			pY -= aY*pX;
+			if(sbY==0)
+				return false;
+			s = pY/sbY;
+			r = pX-s*sbX;
+		}else{
+			if(bX==0 || aY==0)
+				return false;
+			s = pX/bX;
+			r = (pY - s*bY)/aY;
+		}
+		if(s>=0 && s<=1 && r>=0 && r<=1 && r+s<=1) {
+			return true;
+		}
+	
+		return false;
+	}
+	
 }

@@ -1,6 +1,7 @@
 package yang.graphics.defaults;
 
 import yang.events.EventQueueHolder;
+import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
@@ -71,7 +72,8 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 	}
 
 	public void keyUp(int code) {
-
+		if(code==Keys.ESC)
+			exit();
 	}
 
 	public void zoom(float factor) {

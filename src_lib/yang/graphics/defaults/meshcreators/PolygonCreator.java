@@ -292,5 +292,21 @@ public class PolygonCreator {
 		}
 		return minDistIndex;
 	}
+	
+	public boolean interpenetrates(float x,float y) {
+
+		for(int i=0;i<mResultIndexCount;) {
+			float x1 = mPositions[mResultIndices[i]*mElemsPerPos];
+			float y1 = mPositions[mResultIndices[i++]*mElemsPerPos+1];
+			float x2 = mPositions[mResultIndices[i]*mElemsPerPos];
+			float y2 = mPositions[mResultIndices[i++]*mElemsPerPos+1];
+			float x3 = mPositions[mResultIndices[i]*mElemsPerPos];
+			float y3 = mPositions[mResultIndices[i++]*mElemsPerPos+1];
+			if(Geometry.interpenetratesTriangle(x,y, x1,y1, x2,y2, x3,y3))
+				return true;
+		}
+		return false;
+		
+	}
 
 }
