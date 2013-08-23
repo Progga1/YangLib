@@ -62,7 +62,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 						mGraphics.setColor(particle.mColor[0],particle.mColor[1],particle.mColor[2],particle.mColor[3]*(1-particle.mNormLifeTime*mAlphaSpeed));
 					}
 				}
-				DebugYang.DRAW_GFX_VALUES = true;
+
 				float uScale;
 				if(mScaleSpeed==0) {
 					uScale = 1;
