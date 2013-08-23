@@ -154,6 +154,12 @@ public class YangMatrix {
 		mMatrix[14] = z;
 	}
 	
+	public void setTranslation(float x,float y) {
+		System.arraycopy(MatrixOps.IDENTITY, 0, mMatrix, 0, 16);
+		mMatrix[12] = x;
+		mMatrix[13] = y;
+	}
+	
 	public void setTranslation(Point3f translation) {
 		setTranslation(translation.mX,translation.mY,translation.mZ);
 	}

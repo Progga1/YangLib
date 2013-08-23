@@ -22,6 +22,7 @@ import yang.util.Util;
 
 public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> {
 	
+	public static final float[] RECT_POSITIONS = {0,0,0, 1,0,0, 0,1,0, 1,1,0};
 	public static final float[][] DEFAULT_NEUTRAL_ELEMENTS = { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
 
 	public static final float[] RECT_TEXTURECOORDS = { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
@@ -586,6 +587,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			mNormals = buffers[ID_NORMALS];
 		else
 			mNormals = null;
+	}
+	
+	public void drawRect(YangMatrix transform,TextureCoordinatesQuad texCoords) {
+		
 	}
 
 	public void drawRect(Point4f rect, TextureCoordinatesQuad texCoords) {
