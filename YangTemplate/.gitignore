@@ -10,6 +10,15 @@ gen/
 lib/
 libs/
 
+#doc
+*.pdf
+*.tps
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+
 org.eclipse.jdt.ui.prefs
 org.eclipse.jdt.core.prefs
 
