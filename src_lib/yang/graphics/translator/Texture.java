@@ -13,7 +13,7 @@ public class Texture {
 	public int mWidth;
 	public int mHeight;
 	public int mId;
-	public TextureProperties mSettings;
+	public TextureProperties mProperties;
 	public boolean mIsAlphaMap;
 	public boolean mFreed = false;
 	
@@ -24,13 +24,13 @@ public class Texture {
 	
 	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties settings) {
 		this(graphics);
-		set(source, width, height, settings);
+		init(source, width, height, settings);
 	}
 
-	public void set(ByteBuffer source, int width, int height, TextureProperties settings) {
+	public void init(ByteBuffer source, int width, int height, TextureProperties settings) {
 		mWidth = width;
 		mHeight = height;
-		mSettings = settings;
+		mProperties = settings;
 		if(settings==null)
 			settings = new TextureProperties();
 		mGraphics.initTexture(this, source);
@@ -77,7 +77,7 @@ public class Texture {
 	}
 	
 	public Texture finish() {
-		if(mSettings.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mSettings.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
+		if(mProperties.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mProperties.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
 			mGraphics.generateMipMap();
 		}
 		return this;
@@ -85,6 +85,10 @@ public class Texture {
 	
 	public void finalize() {
 		assert mFreed;
+	}
+
+	public int getByteCount() {
+		return mWidth*mHeight*mProperties.mChannels;
 	}
 	
 }

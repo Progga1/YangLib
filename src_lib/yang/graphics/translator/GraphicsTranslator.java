@@ -252,7 +252,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	protected void setTextureData(Texture targetTexture,ByteBuffer data) {
-		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),data,targetTexture.mSettings);
+		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),data,targetTexture.mProperties);
 	}
 	
 	protected void initTexture(Texture targetTexture, ByteBuffer buffer) {
@@ -261,7 +261,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			buffer.rewind();
 		}
 		targetTexture.setId(genTexture());
-		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),buffer,targetTexture.mSettings);
+		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),buffer,targetTexture.mProperties);
 		if(buffer!=null)
 			targetTexture.finish();
 	}
@@ -375,10 +375,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return createTexCoords().init(x1,y1,widthAndHeight);
 	}
 	
-	public Texture createEmptyTexture(int width,int height,TextureProperties texProperties,FloatColor fillColor) {
+	public Texture createSingleColorTexture(int width,int height,TextureProperties texProperties,FloatColor fillColor) {
 		Texture texture = new Texture(this);
 		if(fillColor==null) {
-			texture.set(null, width, height, texProperties);
+			texture.init(null, width, height, texProperties);
 		}else{
 			int channels = texProperties.mChannels;
 			int bytes = width*height;
@@ -387,18 +387,20 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 				for(int j=0;j<channels;j++)
 					buf.put((byte)(fillColor.mValues[j]*255));
 			}
-			texture.set(buf, width, height, texProperties);
+			texture.init(buf, width, height, texProperties);
 		}
 
 		return texture;
 	}
 	
 	public Texture createEmptyTexture(int width,int height,TextureProperties texProperties) {
-		return createEmptyTexture(width,height,texProperties,null);
+		Texture texture = new Texture(this);
+		texture.init(null, width,height, texProperties);
+		return texture;
 	}
 	
 	public Texture createSingleColorTexture(FloatColor color) {
-		return createEmptyTexture(2,2,new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST),color);
+		return createSingleColorTexture(2,2,new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST),color);
 	}
 	
 	public Texture createTexture() {

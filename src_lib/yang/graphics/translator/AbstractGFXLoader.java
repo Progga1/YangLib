@@ -13,6 +13,7 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.systemdependent.AbstractResourceManager;
+import yang.util.NonConcurrentList;
 
 
 
@@ -29,6 +30,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	protected HashMap<String, String> mShaders;
 	protected HashMap<String, YangMaterialSet> mMaterials;
 	protected GraphicsTranslator mGraphics;
+	
+	public boolean mEnqueueMode = false;
+	protected int mTotalBytes = 0;
 	
 	public AbstractResourceManager mResources;
 
@@ -102,36 +106,38 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return loadImageData(name,false);
 	}
 	
-	private Texture loadTexture(String filename,TextureProperties textureSettings,boolean redToAlpha) {
-		TextureData data = derivedLoadImageData(filename,redToAlpha);
-		if(redToAlpha)
-			data.redToAlpha();
-		Texture result = mGraphics.createTexture(data,textureSettings).finish();
-		result.mIsAlphaMap = redToAlpha;
-		return result;
+	private Texture loadTexture(String filename,TextureProperties textureSettings) {
+		TextureData data = derivedLoadImageData(filename,false);
+		if(mEnqueueMode) {
+			Texture result = mGraphics.createEmptyTexture(512,512, textureSettings);
+			return result;
+		}else
+			return mGraphics.createTexture(data,textureSettings).finish();
+
 	}
 	
-	protected synchronized Texture getImage(String name,TextureProperties textureSettings, boolean redToAlpha) {
-//		if(name.length()>4 && name.charAt(name.length()-4)=='.')
-//			name = name.substring(0,name.length()-4);
+	public synchronized Texture getImage(String name,TextureProperties textureProperties) {
 		String filename = createExistingFilename(name);
 		if(filename==null)
 			throw new RuntimeException("Image not found: "+name);
 		Texture texture = mTextures.get(filename);
 		
-		if (texture != null && texture.mSettings.equals(textureSettings))
+		if (texture != null && texture.mProperties.equals(textureProperties))
 			return texture;
-		if(textureSettings==null)
-			textureSettings = new TextureProperties();
-		texture = loadTexture(filename, textureSettings, redToAlpha);
+		if(textureProperties==null)
+			textureProperties = new TextureProperties();
+
+		texture = loadTexture(filename, textureProperties);
 		mTextures.put(filename, texture);
 		mGraphics.rebindTexture(0);
 		
 		return texture;
 	}
 	
-	public Texture getImage(String name,TextureProperties textureSettings){
-		return getImage(name,textureSettings,false);
+	public void freeTexture(String name) {
+		String filename = createExistingFilename(name);
+		Texture tex = mTextures.remove(filename);
+		tex.free();
 	}
 	
 	public Texture getImage(String name, TextureWrap wrapX, TextureWrap wrapY) {
@@ -150,12 +156,16 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			return getImage(name,new TextureProperties());
 	}
 	
-	public Texture getAlphaMap(String name,TextureProperties textureSettings) {
-		return getImage(name,textureSettings,true);
+	public Texture getAlphaMap(String name,TextureProperties textureProperties) {
+		TextureData data = loadImageData(name,true);
+		data.redToAlpha();
+		Texture result = mGraphics.createTexture(data, textureProperties);
+		result.mIsAlphaMap = true;
+		return result;
 	}
 	
 	public Texture getAlphaMap(String name) {
-		return getImage(name,new TextureProperties(),true);
+		return getAlphaMap(name,new TextureProperties());
 	}
 	
 	public Texture getAlphaMap(String name, TextureWrap wrapX, TextureWrap wrapY) {
@@ -182,6 +192,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			entry.getValue().free();
 		}
 		mTextures.clear();
+		mTotalBytes = 0;
 	}
 
 	public BitmapFont loadFont(String texAndDatafilename) {
