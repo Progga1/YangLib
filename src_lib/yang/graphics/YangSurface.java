@@ -25,6 +25,10 @@ public abstract class YangSurface {
 	
 	public static boolean CATCH_EXCEPTIONS = true;
 	
+	public final static int RUNTIME_STATE_RUNNING = 0;
+	public final static int RUNTIME_STATE_PAUSED = 1;
+	public final static int RUNTIME_STATE_STOPPED = 2;
+	
 	public GraphicsTranslator mGraphics;
 	public StringsXML mStrings;
 	public AbstractResourceManager mResources;
@@ -56,8 +60,9 @@ public abstract class YangSurface {
 	public float mPlaySpeed = 1;
 	public String mMacroFilename;
 	public boolean mException = false;
-	private int mLoadingSteps = 0;
+	private int mLoadingSteps = 1;
 	private int mLoadingState = 0;
+	private boolean mResuming = false;
 	
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
@@ -66,14 +71,6 @@ public abstract class YangSurface {
 	 * GL-Thread
 	 */
 	protected abstract void initGraphics();
-	/**
-	 * GL-Thread
-	 */
-	protected void resumedFromStop(){};
-	/**
-	 * GL-Thread
-	 */
-	protected void resumedFromPause(){};
 	protected abstract void draw();
 	
 	protected void onException(Exception ex) {
@@ -99,6 +96,7 @@ public abstract class YangSurface {
 	
 	protected void setLoadingSteps(int steps) {
 		mLoadingSteps = steps;
+		mAutoReloadTexturesOnResume = false;
 	}
 	
 	protected void exceptionOccurred(Exception ex) {
@@ -330,11 +328,18 @@ public abstract class YangSurface {
 		
 	}
 	
-	protected void loadAndDrawSplash(int loadState) {
-		
+	protected void loadAssets(int loadState,boolean resuming) {
+		if(resuming) {
+			mGraphics.mGFXLoader.reloadTextures();
+			mGraphics.unbindTextures();
+		}
 	}
 	
-	protected void onLoadingFinished() {
+	protected void drawLoadingScreen(int loadState,boolean resuming) {
+		//mGraphics.clear(0, 0, 0.1f);
+	}
+	
+	protected void onLoadingFinished(boolean resuming) {
 		
 	}
 	
@@ -352,30 +357,13 @@ public abstract class YangSurface {
 			if(mMetaEventListener!=null)
 				mEventQueue.handleMetaEvents(mMetaEventListener);
 			
-			if(mRuntimeState>0 && mLoadingProgress<0) {
+			if(mRuntimeState>0 && !mResuming) {
 				mGraphics.restart();
 				mLoadingProgress = 0;
 				initGraphicsForResume();
 				
-				if(mAutoReloadTexturesOnResume) {
-					mGraphics.beginFrame();
-					drawResume();
-					mGraphics.endFrame();
-					return;
-				}
-			}
-			
-			if(mRuntimeState>0) {
-				if(mAutoReloadTexturesOnResume) {
-					mGraphics.mGFXLoader.reloadTextures();
-				}
-				mGraphics.unbindTextures();
+				mResuming = true;
 				
-				if(mRuntimeState==1)
-					resumedFromPause();
-				if(mRuntimeState==2)
-					resumedFromStop();
-				mRuntimeState = 0;
 				if(mGraphics.mCurDrawListener!=null)
 					mGraphics.mCurDrawListener.onRestartGraphics();
 			}
@@ -395,10 +383,21 @@ public abstract class YangSurface {
 					mGFXDebug.draw();
 				}
 			}else{
-				loadAndDrawSplash(mLoadingState);
+				loadAssets(mLoadingState,mResuming);
 				mLoadingState++;
-				if(mLoadingState==mLoadingSteps)
-					onLoadingFinished();
+				if(mLoadingState==mLoadingSteps) {
+					onLoadingFinished(mResuming);
+					if(mResuming) {
+//						if(mRuntimeState==1)
+//							resumedFromPause();
+//						if(mRuntimeState==2)
+//							resumedFromStop();
+						mRuntimeState = 0;
+						mResuming = false;
+					}
+					draw();
+				}else
+					drawLoadingScreen(mLoadingState,mResuming);
 			}
 			mGraphics.endFrame();
 		
@@ -411,6 +410,7 @@ public abstract class YangSurface {
 	public void stop() {
 		mRuntimeState = 2;
 		mLoadingProgress = -1;
+		mLoadingState = 0;
 	}
 	
 	/**
@@ -424,6 +424,7 @@ public abstract class YangSurface {
 		mRuntimeState = 1;
 		mCatchUpTime = 0;
 		mLoadingProgress = -1;
+		mLoadingState = 0;
 	}
 	
 	/**
@@ -442,6 +443,8 @@ public abstract class YangSurface {
 //				mUpdateThread.resume();
 //			}
 		mCatchUpTime = 0;
+		mResuming = false;
+		mLoadingState = 0;
 	}
 	
 	public void setPaused(boolean paused) {

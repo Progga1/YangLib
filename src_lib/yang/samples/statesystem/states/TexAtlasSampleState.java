@@ -1,6 +1,7 @@
 package yang.samples.statesystem.states;
 
 import yang.graphics.defaults.programs.TextureTileRepeatProgram;
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
@@ -22,6 +23,10 @@ public class TexAtlasSampleState extends SampleState {
 		
 		mTileProgram = mGraphics.addProgram(TextureTileRepeatProgram.class);
 		
+		createAtlas();
+	}
+	
+	private void createAtlas() {
 		TextureData atlasData = mGFXLoader.loadImageData("atlas");
 		mGrassBounds = atlasData.createBiasBorder(0, 0, 128, 128, 8, TextureWrap.REPEAT, TextureWrap.REPEAT);
 		atlasData.createBiasBorder(128, 0, 128, 128, 4, TextureWrap.CLAMP, TextureWrap.CLAMP);
@@ -60,6 +65,11 @@ public class TexAtlasSampleState extends SampleState {
 	@Override
 	public void stop() {
 		mGraphics2D.setDefaultProgram();
+	}
+	
+	@Override
+	protected void restartGraphics() {
+		createAtlas();
 	}
 
 }

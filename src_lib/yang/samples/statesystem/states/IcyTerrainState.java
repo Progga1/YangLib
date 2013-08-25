@@ -355,6 +355,7 @@ public class IcyTerrainState extends SampleState {
 		
 	}
 	
+	@Override
 	protected void restartGraphics() {
 		mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR,4),1,1.5f);
 	}
