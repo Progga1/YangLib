@@ -13,12 +13,12 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.systemdependent.AbstractResourceManager;
-import yang.util.NonConcurrentList;
 
 
 
 public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
+	public static int MAX_TEXTURES = 512;
 	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg"};
 	public static final String SHADER_EXT	= ".txt";
 
@@ -31,14 +31,19 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	protected HashMap<String, YangMaterialSet> mMaterials;
 	protected GraphicsTranslator mGraphics;
 	
+	protected String[] mTexQueue;
+	protected int mTexQueueId = 0;
 	public boolean mEnqueueMode = false;
-	protected int mTotalBytes = 0;
+	protected int mQueueBytes = 0;
+	public int mMaxQueueLoadingBytes = -1;
 	
 	public AbstractResourceManager mResources;
 
 	protected abstract TextureData derivedLoadImageData(String filename,boolean forceRGBA);
 	
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
+		mTexQueue = new String[MAX_TEXTURES];
+		mTexQueueId = 0;
 		mTextures = new HashMap<String, Texture>();
 		mShaders = new HashMap<String, String>();
 		mMaterials = new HashMap<String, YangMaterialSet>();
@@ -74,15 +79,6 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	public String createExistingFilename(String name) {
-		String filename = null;
-		boolean hasExt = false;
-		for(int i=0;i<IMAGE_EXT.length;i++) {
-			if(name.endsWith(IMAGE_EXT[i])) {
-				hasExt = true;
-				break;
-			}
-		}
-		
 		for(String path:IMAGE_PATH) {
 			if(mResources.fileExists(path+name))
 				return path+name;
@@ -92,7 +88,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			}
 		}
 
-		return filename;
+		throw new RuntimeException("Image not found: "+name);
 	}
 	
 	protected TextureData loadImageData(String name,boolean forceRGBA) {
@@ -101,37 +97,71 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			return null;
 		return derivedLoadImageData(filename,forceRGBA);
 	}
-	
+
 	public TextureData loadImageData(String name) {
 		return loadImageData(name,false);
 	}
-	
-	private Texture loadTexture(String filename,TextureProperties textureSettings) {
-		TextureData data = derivedLoadImageData(filename,false);
-		if(mEnqueueMode) {
-			Texture result = mGraphics.createEmptyTexture(512,512, textureSettings);
-			return result;
-		}else
-			return mGraphics.createTexture(data,textureSettings).finish();
 
+	private void enqueue(String key,Texture tex) {
+		mTexQueue[mTexQueueId++] = key;
+		mQueueBytes += tex.getByteCount();
 	}
 	
-	public synchronized Texture getImage(String name,TextureProperties textureProperties) {
+	private String pollQueue() {
+		if(mTexQueueId<=0)
+			return null;
+		String tex = mTexQueue[--mTexQueueId];
+		mQueueBytes -= mTextures.get(tex).getByteCount();
+		return tex;
+	}
+	
+	public void loadEnqueuedTextures() {
+		mEnqueueMode = false;
+		String texKey;
+		int minBytes = mMaxQueueLoadingBytes>0?mQueueBytes - mMaxQueueLoadingBytes:-1;
+		while(mQueueBytes>minBytes && (texKey=pollQueue())!=null) {
+			Texture tex = mTextures.get(texKey);
+			TextureData data = loadImageData(texKey,tex.mProperties.mChannels>3);
+			if(tex.mIsAlphaMap)
+				data.redToAlpha();
+			tex.update(data);
+		}
+	}
+	
+	private Texture loadTexture(String filename,TextureProperties textureProperties,int approxWidth,int approxHeight,boolean alphaMap) {
+		if(mEnqueueMode) {
+			Texture result = new Texture(mGraphics,textureProperties).generate();
+			if(alphaMap)
+				result.mIsAlphaMap = true;
+			enqueue(filename,result);
+			return result;
+		}else{
+			TextureData data = derivedLoadImageData(filename,false);
+			if(alphaMap)
+				data.redToAlpha();
+			return mGraphics.createTexture(data,textureProperties).finish();
+		}
+	}
+	
+	public synchronized Texture getImage(String name,TextureProperties textureProperties,boolean alphaMap) {
 		String filename = createExistingFilename(name);
-		if(filename==null)
-			throw new RuntimeException("Image not found: "+name);
 		Texture texture = mTextures.get(filename);
 		
-		if (texture != null && texture.mProperties.equals(textureProperties))
-			return texture;
 		if(textureProperties==null)
 			textureProperties = new TextureProperties();
+		if (texture != null && texture.mProperties.equals(textureProperties))
+			return texture;
+		
 
-		texture = loadTexture(filename, textureProperties);
+		texture = loadTexture(filename, textureProperties,1024,1024,alphaMap);
 		mTextures.put(filename, texture);
 		mGraphics.rebindTexture(0);
 		
 		return texture;
+	}
+	
+	public synchronized Texture getImage(String name,TextureProperties textureProperties) {
+		return getImage(name,textureProperties,false);
 	}
 	
 	public void freeTexture(String name) {
@@ -157,11 +187,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	public Texture getAlphaMap(String name,TextureProperties textureProperties) {
-		TextureData data = loadImageData(name,true);
-		data.redToAlpha();
-		Texture result = mGraphics.createTexture(data, textureProperties);
-		result.mIsAlphaMap = true;
-		return result;
+		return getImage(name,textureProperties,true);
 	}
 	
 	public Texture getAlphaMap(String name) {
@@ -192,7 +218,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			entry.getValue().free();
 		}
 		mTextures.clear();
-		mTotalBytes = 0;
+		mQueueBytes = 0;
 	}
 
 	public BitmapFont loadFont(String texAndDatafilename) {
@@ -213,6 +239,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			if(tex.mIsAlphaMap)
 				data.redToAlpha();
 			tex.update(data.mData);
+			data = null;
 		}
 	}
 	
@@ -220,6 +247,15 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
 			entry.getValue().free();
 		}
+	}
+
+	public void startEnqueuing() {
+		mEnqueueMode = true;
+	}
+
+	public void divideQueueLoading(int steps) {
+		if(mQueueBytes>0)
+			mMaxQueueLoadingBytes = mQueueBytes/steps;
 	}
 	
 }

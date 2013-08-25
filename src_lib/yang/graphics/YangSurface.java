@@ -330,11 +330,16 @@ public abstract class YangSurface {
 		
 	}
 	
+	protected void prepateLoading(boolean resuming) {
+		if(mLoadingSteps>0)
+			mGraphics.mGFXLoader.divideQueueLoading(mLoadingSteps);
+	}
+	
 	protected void loadAssets(int loadState,boolean resuming) {
 		if(resuming) {
 			mGraphics.mGFXLoader.reloadTextures();
-			mGraphics.unbindTextures();
 		}
+		mGraphics.unbindTextures();
 	}
 	
 	protected void drawLoadingScreen(int loadState,boolean resuming) {
@@ -362,7 +367,6 @@ public abstract class YangSurface {
 			if(mRuntimeState>0 && !mResuming) {
 				mResuming = true;
 				mGraphics.restart();
-				initGraphicsForResume();
 				if(mGraphics.mCurDrawListener!=null)
 					mGraphics.mCurDrawListener.onRestartGraphics();
 			}
@@ -382,6 +386,8 @@ public abstract class YangSurface {
 					mGFXDebug.draw();
 				}
 			}else{
+				if(mLoadingState==0)
+					prepateLoading(mResuming);
 				loadAssets(mLoadingState,mResuming);
 				if(mLoadingState==mLoadingSteps-1) {
 					onLoadingFinished(mResuming);

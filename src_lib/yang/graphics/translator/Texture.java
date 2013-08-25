@@ -1,7 +1,9 @@
 package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
+import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 
@@ -20,20 +22,38 @@ public class Texture {
 	public Texture(GraphicsTranslator graphics) {
 		mGraphics = graphics;
 		mIsAlphaMap = false;
+		
 	}
 	
-	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties settings) {
+	public Texture(GraphicsTranslator graphics,TextureProperties properties) {
 		this(graphics);
-		init(source, width, height, settings);
+		mProperties = properties;
+	}
+	
+	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties properties) {
+		this(graphics);
+		initCompletely(source, width, height, properties);
+	}
+	
+	public Texture generate() {
+		mId = mGraphics.genTexture();
+		return this;
 	}
 
-	public void init(ByteBuffer source, int width, int height, TextureProperties settings) {
+	public void initCompletely(ByteBuffer source, int width, int height, TextureProperties settings) {
 		mWidth = width;
 		mHeight = height;
 		mProperties = settings;
 		if(settings==null)
 			settings = new TextureProperties();
-		mGraphics.initTexture(this, source);
+		generate();
+		if(source!=null) {
+			source.order(ByteOrder.nativeOrder());
+			source.rewind();
+		}
+		mGraphics.setTextureData(mId, mWidth,mHeight, source,mProperties);
+		if(source!=null)
+			finish();
 	}
 	
 //	public void updateRegion(ByteBuffer source, int left,int top, int width,int height) {
@@ -68,12 +88,26 @@ public class Texture {
 //		mGraphics.initTexture(this, source, mSettings);
 //	}
 
-	public void update(ByteBuffer source) {
+	public void update(ByteBuffer source,int width,int height) {
 		if(source!=null)
 			source.rewind();
-		mGraphics.setTextureData(this, source);
+		mGraphics.setTextureData(mId, width,height, source, mProperties);
+		mWidth = width;
+		mHeight = height;
 		if(source!=null)
 			finish();
+	}
+	
+	public void update(ByteBuffer source) {
+		update(source,mWidth,mHeight);
+	}
+	
+	public void update(TextureData data) {
+		update(data.mData, data.mWidth,data.mHeight);
+	}
+	
+	public void setEmpty(Object object) {
+		update(null,mWidth,mHeight);
 	}
 	
 	public Texture finish() {

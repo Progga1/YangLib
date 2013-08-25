@@ -15,7 +15,7 @@ import android.graphics.BitmapFactory;
 public class AndroidGFXLoader extends AbstractGFXLoader {
 	
 	private Context mContext;
-	private ByteBuffer mTempBuf = ByteBuffer.allocateDirect(1024*1024*4);
+	private ByteBuffer mTempBuf = ByteBuffer.allocateDirect(2048*1024*4);
 	
 	public AndroidGFXLoader(AndroidGraphics graphics,Context context) {
 		super(graphics,new AndroidResourceManager(context));
@@ -33,7 +33,7 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 			e.printStackTrace();
 		}
 		
-		final Bitmap bmp = BitmapFactory.decodeStream(is);
+		Bitmap bmp = BitmapFactory.decodeStream(is);
 
 		try { 
 			is.close();
@@ -45,8 +45,8 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		int width = bmp.getWidth();
 		int height = bmp.getHeight();
 		
-		if(mTempBuf==null)
-			mTempBuf = ByteBuffer.allocateDirect(1600*1200*4);
+//		if(mTempBuf==null)
+//			mTempBuf = ByteBuffer.allocateDirect(1600*1200*4);
 //		if((width>1024 || height>1024) && mTempBuf.capacity()<(2048*2048*4))
 //			 mTempBuf = ByteBuffer.allocateDirect(2048*2048*4);
 		
@@ -55,6 +55,7 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		//mTempBuf = ByteBuffer.allocateDirect(width*height*channels);
 		bmp.copyPixelsToBuffer(mTempBuf);
 		bmp.recycle();
+		bmp = null;
 		mTempBuf.rewind();
 		return new TextureData(mTempBuf,width,height,channels);
 	}
