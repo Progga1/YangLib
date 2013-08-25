@@ -237,7 +237,15 @@ public class YangEventQueue {
 			event.handle(eventInterface);
 		}
 	}
+	
+	public void clearEvents() {
+		mQueueFirst = mQueueId;
+	}
 
+	public void clearMetaEvents() {
+		mMetaEventQueueFirst = mMetaEventQueueId;
+	}
+	
 	public void setGraphics(GraphicsTranslator graphics) {
 		mGraphics = graphics;
 	}

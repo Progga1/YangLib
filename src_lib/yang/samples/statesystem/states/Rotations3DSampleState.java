@@ -1,5 +1,6 @@
 package yang.samples.statesystem.states;
 
+import yang.events.eventtypes.YangPointerEvent;
 import yang.graphics.model.FloatColor;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
@@ -47,7 +48,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 //		mToVector1.set(Vector3f.UP);
 //		mToVector2.set(Vector3f.DOWN);
 		mQuatVector1.set(mRotVector1);
-
+		mCamera.mMoveCameraAlternativeButton = YangPointerEvent.BUTTON_LEFT;
 		mCamera.setZoom(3);
 		mCubeTex = mGFXLoader.getImage("cube");
 		refreshCamera();

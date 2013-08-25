@@ -56,6 +56,8 @@ public abstract class YangSurface {
 	public float mPlaySpeed = 1;
 	public String mMacroFilename;
 	public boolean mException = false;
+	private int mLoadingSteps = 0;
+	private int mLoadingState = 0;
 	
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
@@ -93,6 +95,10 @@ public abstract class YangSurface {
 		setUpdatesPerSecond(120);
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
 		mMacroFilename = null;
+	}
+	
+	protected void setLoadingSteps(int steps) {
+		mLoadingSteps = steps;
 	}
 	
 	protected void exceptionOccurred(Exception ex) {
@@ -267,6 +273,19 @@ public abstract class YangSurface {
 		mGFXDebug.surfaceChanged();
 	}
 	
+	protected boolean isLoadingFinished() {
+		return mLoadingState>=mLoadingSteps;
+	}
+	
+	private void handleEvents() {
+		if(mEventListener!=null) {
+			if(!mPaused && mLoadingState>=mLoadingSteps)
+				mEventQueue.handleEvents(mEventListener);
+			else
+				mEventQueue.clearEvents();
+		}
+	}
+	
 	protected void catchUp() {		
 //		if(alt) {
 //		alt = false;
@@ -279,21 +298,13 @@ public abstract class YangSurface {
 			mCatchUpTime = System.nanoTime()-1;
 		
 		if(mPlaySpeed==0) {
-			if(!mPaused && mEventListener!=null)
-				mEventQueue.handleEvents(mEventListener);
+			handleEvents();
 			mCatchUpTime = 0;
-			return;
-		}
-		if(true) {
+		}else{
 			while(mCatchUpTime<System.nanoTime()) {
 				mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
 				proceed();
 			}
-		}else{
-			mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
-			proceed();
-			mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
-			proceed();
 		}
 	}
 	boolean alt = false;
@@ -303,12 +314,12 @@ public abstract class YangSurface {
 			try{
 				if(mMacro!=null)
 					mMacro.step();
-				if(mEventListener!=null)
-					mEventQueue.handleEvents(mEventListener);
+				handleEvents();
 				mStepCount ++;
 				mProgramTime += deltaTimeSeconds;
 	
-				step(deltaTimeSeconds);
+				if(mLoadingState>=mLoadingSteps)
+					step(deltaTimeSeconds);
 			}catch(Exception ex){
 				exceptionOccurred(ex);
 			}
@@ -316,6 +327,14 @@ public abstract class YangSurface {
 	}
 	
 	protected void step(float deltaTime) {
+		
+	}
+	
+	protected void loadAndDrawSplash(int loadState) {
+		
+	}
+	
+	protected void onLoadingFinished() {
 		
 	}
 	
@@ -363,16 +382,23 @@ public abstract class YangSurface {
 			
 			if(mUpdateMode==UpdateMode.SYNCHRONOUS)
 				catchUp();
-	
-			if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+
+			if(mLoadingState>=mLoadingSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 				mGFXDebug.reset();
 				if(DebugYang.DRAW_GFX_VALUES)
 					mGFXDebug.printGFXDebugValues();
 			}
 			mGraphics.beginFrame();
-			draw();
-			if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
-				mGFXDebug.draw();
+			if(mLoadingState>=mLoadingSteps) {
+				draw();
+				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+					mGFXDebug.draw();
+				}
+			}else{
+				loadAndDrawSplash(mLoadingState);
+				mLoadingState++;
+				if(mLoadingState==mLoadingSteps)
+					onLoadingFinished();
 			}
 			mGraphics.endFrame();
 		
