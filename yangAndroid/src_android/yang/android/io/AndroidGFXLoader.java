@@ -45,12 +45,14 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		int width = bmp.getWidth();
 		int height = bmp.getHeight();
 		
+		if(mTempBuf==null)
+			mTempBuf = ByteBuffer.allocateDirect(1600*1200*4);
 //		if((width>1024 || height>1024) && mTempBuf.capacity()<(2048*2048*4))
 //			 mTempBuf = ByteBuffer.allocateDirect(2048*2048*4);
 		
 		
 		int channels = bmp.hasAlpha()?4:4;
-		mTempBuf = ByteBuffer.allocateDirect(width*height*channels);
+		//mTempBuf = ByteBuffer.allocateDirect(width*height*channels);
 		bmp.copyPixelsToBuffer(mTempBuf);
 		bmp.recycle();
 		mTempBuf.rewind();

@@ -178,6 +178,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 
 	public void clear() {
+		for(Entry<String,Texture> entry:mTextures.entrySet()) {
+			entry.getValue().free();
+		}
 		mTextures.clear();
 	}
 

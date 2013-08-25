@@ -50,7 +50,9 @@ public abstract class YangSurface {
 	protected static long deltaTimeNanos;
 	protected int mUpdateWaitMillis = 1000/70;
 	protected int mRuntimeState = 0;
-	private float mLoadingProgress = -1;
+
+
+	
 	private Thread mUpdateThread = null;
 	public YangEventListener mEventListener;
 	public YangEventListener mMetaEventListener;
@@ -290,7 +292,7 @@ public abstract class YangSurface {
 //		return;
 //	}
 //	alt = true;
-		if(!mInitialized || mRuntimeState>0)
+		if(!mInitialized || mRuntimeState>0 || mLoadingState<mLoadingSteps)
 			return;
 		if(mCatchUpTime==0)
 			mCatchUpTime = System.nanoTime()-1;
@@ -313,11 +315,11 @@ public abstract class YangSurface {
 				if(mMacro!=null)
 					mMacro.step();
 				handleEvents();
-				mStepCount ++;
-				mProgramTime += deltaTimeSeconds;
-	
-				if(mLoadingState>=mLoadingSteps)
+				if(mLoadingState>=mLoadingSteps) {
+					mStepCount ++;
+					mProgramTime += deltaTimeSeconds;
 					step(deltaTimeSeconds);
+				}
 			}catch(Exception ex){
 				exceptionOccurred(ex);
 			}
@@ -336,7 +338,7 @@ public abstract class YangSurface {
 	}
 	
 	protected void drawLoadingScreen(int loadState,boolean resuming) {
-		//mGraphics.clear(0, 0, 0.1f);
+
 	}
 	
 	protected void onLoadingFinished(boolean resuming) {
@@ -358,12 +360,9 @@ public abstract class YangSurface {
 				mEventQueue.handleMetaEvents(mMetaEventListener);
 			
 			if(mRuntimeState>0 && !mResuming) {
-				mGraphics.restart();
-				mLoadingProgress = 0;
-				initGraphicsForResume();
-				
 				mResuming = true;
-				
+				mGraphics.restart();
+				initGraphicsForResume();
 				if(mGraphics.mCurDrawListener!=null)
 					mGraphics.mCurDrawListener.onRestartGraphics();
 			}
@@ -384,20 +383,18 @@ public abstract class YangSurface {
 				}
 			}else{
 				loadAssets(mLoadingState,mResuming);
-				mLoadingState++;
-				if(mLoadingState==mLoadingSteps) {
+				if(mLoadingState==mLoadingSteps-1) {
 					onLoadingFinished(mResuming);
+					mEventQueue.clearEvents();
 					if(mResuming) {
-//						if(mRuntimeState==1)
-//							resumedFromPause();
-//						if(mRuntimeState==2)
-//							resumedFromStop();
 						mRuntimeState = 0;
 						mResuming = false;
 					}
 					draw();
 				}else
 					drawLoadingScreen(mLoadingState,mResuming);
+				mCatchUpTime = 0;
+				mLoadingState++;
 			}
 			mGraphics.endFrame();
 		
@@ -409,7 +406,6 @@ public abstract class YangSurface {
 	
 	public void stop() {
 		mRuntimeState = 2;
-		mLoadingProgress = -1;
 		mLoadingState = 0;
 	}
 	
@@ -423,7 +419,6 @@ public abstract class YangSurface {
 //			}
 		mRuntimeState = 1;
 		mCatchUpTime = 0;
-		mLoadingProgress = -1;
 		mLoadingState = 0;
 	}
 	
