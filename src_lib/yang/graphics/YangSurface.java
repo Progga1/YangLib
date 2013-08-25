@@ -330,20 +330,23 @@ public abstract class YangSurface {
 		
 	}
 	
-	protected void prepateLoading(boolean resuming) {
+	protected void prepareLoading(boolean resuming) {
+		if(resuming)
+			mGFXLoader.reenqueueTextures();
 		if(mLoadingSteps>0)
-			mGraphics.mGFXLoader.divideQueueLoading(mLoadingSteps);
+			mGFXLoader.divideQueueLoading(mLoadingSteps-1);
+		mGFXLoader.mEnqueueMode = false;
 	}
 	
 	protected void loadAssets(int loadState,boolean resuming) {
-		if(resuming) {
-			mGraphics.mGFXLoader.reloadTextures();
-		}
+		if(loadState>0 || mLoadingSteps==1)
+			mGFXLoader.loadEnqueuedTextures();
+
 		mGraphics.unbindTextures();
 	}
 	
-	protected void drawLoadingScreen(int loadState,boolean resuming) {
-
+	protected void drawLoadingScreen(int loadState,float progress,boolean resuming) {
+		
 	}
 	
 	protected void onLoadingFinished(boolean resuming) {
@@ -387,7 +390,7 @@ public abstract class YangSurface {
 				}
 			}else{
 				if(mLoadingState==0)
-					prepateLoading(mResuming);
+					prepareLoading(mResuming);
 				loadAssets(mLoadingState,mResuming);
 				if(mLoadingState==mLoadingSteps-1) {
 					onLoadingFinished(mResuming);
@@ -397,8 +400,14 @@ public abstract class YangSurface {
 						mResuming = false;
 					}
 					draw();
-				}else
-					drawLoadingScreen(mLoadingState,mResuming);
+				}else{
+					float progress;
+					if(mLoadingSteps==2)
+						progress = 1;
+					else
+						progress = (float)mLoadingState/(mLoadingSteps-2);
+					drawLoadingScreen(mLoadingState,progress,mResuming);
+				}
 				mCatchUpTime = 0;
 				mLoadingState++;
 			}

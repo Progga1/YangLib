@@ -26,16 +26,18 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	protected String[] IMAGE_PATH		= new String[]{"","textures"+File.separatorChar,"models"+File.separatorChar};
 	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 	
-	protected HashMap<String, Texture> mTextures;
+	public HashMap<String, Texture> mTextures;
 	protected HashMap<String, String> mShaders;
 	protected HashMap<String, YangMaterialSet> mMaterials;
 	protected GraphicsTranslator mGraphics;
 	
-	protected String[] mTexQueue;
+	public String[] mTexQueue;
 	protected int mTexQueueId = 0;
 	public boolean mEnqueueMode = false;
 	protected int mQueueBytes = 0;
 	public int mMaxQueueLoadingBytes = -1;
+	
+	public int mDefaultApproxTextureSize = 256;
 	
 	public AbstractResourceManager mResources;
 
@@ -131,6 +133,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	private Texture loadTexture(String filename,TextureProperties textureProperties,int approxWidth,int approxHeight,boolean alphaMap) {
 		if(mEnqueueMode) {
 			Texture result = new Texture(mGraphics,textureProperties).generate();
+			result.mWidth = approxWidth;
+			result.mHeight = approxHeight;
 			if(alphaMap)
 				result.mIsAlphaMap = true;
 			enqueue(filename,result);
@@ -143,31 +147,36 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		}
 	}
 	
-	public synchronized Texture getImage(String name,TextureProperties textureProperties,boolean alphaMap) {
+	public synchronized Texture getImage(String name,TextureProperties textureProperties,int approxWidth,int approxHeight,boolean alphaMap) {
 		String filename = createExistingFilename(name);
 		Texture texture = mTextures.get(filename);
 		
+		if (texture != null && (textureProperties==null || texture.mProperties.equals(textureProperties))) {System.out.println(name);
+			return texture;
+		}
 		if(textureProperties==null)
 			textureProperties = new TextureProperties();
-		if (texture != null && texture.mProperties.equals(textureProperties))
-			return texture;
-		
 
-		texture = loadTexture(filename, textureProperties,1024,1024,alphaMap);
+		texture = loadTexture(filename, textureProperties,approxWidth,approxHeight,alphaMap);
 		mTextures.put(filename, texture);
 		mGraphics.rebindTexture(0);
 		
 		return texture;
 	}
 	
+	public synchronized Texture getImage(String name,TextureProperties textureProperties,int approxWidth,int approxHeight) {
+		return getImage(name,textureProperties,approxWidth,approxHeight,false);
+	}
+	
 	public synchronized Texture getImage(String name,TextureProperties textureProperties) {
-		return getImage(name,textureProperties,false);
+		return getImage(name,textureProperties,mDefaultApproxTextureSize,mDefaultApproxTextureSize,false);
 	}
 	
 	public void freeTexture(String name) {
 		String filename = createExistingFilename(name);
 		Texture tex = mTextures.remove(filename);
-		tex.free();
+		if(tex!=null)
+			tex.free();
 	}
 	
 	public Texture getImage(String name, TextureWrap wrapX, TextureWrap wrapY) {
@@ -187,7 +196,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	public Texture getAlphaMap(String name,TextureProperties textureProperties) {
-		return getImage(name,textureProperties,true);
+		return getImage(name,textureProperties,mDefaultApproxTextureSize,mDefaultApproxTextureSize,true);
 	}
 	
 	public Texture getAlphaMap(String name) {
@@ -231,17 +240,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return result.init(texture,fontDataFilename,mResources);
 	}
 
-	//TODO handling same filenames with different texture settings
-	public void reloadTextures() {
-		for(Entry<String,Texture> entry:mTextures.entrySet()) {
-			TextureData data = loadImageData(entry.getKey());
-			Texture tex = entry.getValue();
-			if(tex.mIsAlphaMap)
-				data.redToAlpha();
-			tex.update(data.mData);
-			data = null;
-		}
-	}
+
 	
 	public void deleteTextures() {
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
@@ -254,8 +253,28 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 
 	public void divideQueueLoading(int steps) {
-		if(mQueueBytes>0)
+		if(steps<=0 || mQueueBytes<=0)
+			mMaxQueueLoadingBytes = -1;
+		else
 			mMaxQueueLoadingBytes = mQueueBytes/steps;
+	}
+	
+	//TODO handling same filenames with different texture settings
+	public void reloadTextures() {
+		for(Entry<String,Texture> entry:mTextures.entrySet()) {
+			TextureData data = loadImageData(entry.getKey());
+			Texture tex = entry.getValue();
+			if(tex.mIsAlphaMap)
+				data.redToAlpha();
+			tex.update(data.mData);
+			data = null;
+		}
+	}
+
+	public void reenqueueTextures() {
+		for(Entry<String,Texture> entry:mTextures.entrySet()) {
+			enqueue(entry.getKey(),entry.getValue());
+		}
 	}
 	
 }

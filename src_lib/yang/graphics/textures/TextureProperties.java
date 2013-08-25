@@ -61,4 +61,9 @@ public class TextureProperties {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return mWrapX+" "+mWrapY+" "+mFilter+" "+mChannels;
+	}
+	
 }
