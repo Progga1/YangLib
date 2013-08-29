@@ -38,6 +38,7 @@ public class YangEventQueue {
 	private boolean[] mMetaKeys;
 	public boolean mMetaMode = false;
 	public NonConcurrentList<MacroWriter> mMacroWriters;
+	public boolean mTriggerZooming = true;
 	
 	public YangEventQueue(int maxEvents,int eventTypes) {
 		mGraphics = null;

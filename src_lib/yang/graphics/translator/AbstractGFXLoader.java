@@ -12,6 +12,7 @@ import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
+import yang.model.DebugYang;
 import yang.systemdependent.AbstractResourceManager;
 
 
@@ -151,8 +152,13 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		String filename = createExistingFilename(name);
 		Texture texture = mTextures.get(filename);
 		
-		if (texture != null && (textureProperties==null || texture.mProperties.equals(textureProperties))) {System.out.println(name);
-			return texture;
+		if (texture != null) {
+			if((textureProperties==null || texture.mProperties.equals(textureProperties)))
+				return texture;
+			else{
+				System.out.println("double loaded texture: "+filename+" "+textureProperties+" != "+texture.mProperties);
+				//DebugYang.showStackTrace();
+			}
 		}
 		if(textureProperties==null)
 			textureProperties = new TextureProperties();
