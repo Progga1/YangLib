@@ -1,6 +1,7 @@
 package yang.graphics.textures;
 
 import yang.graphics.translator.Texture;
+import yang.math.BinaryOps;
 import yang.model.Rect;
 
 public class TextureCoordinatesQuad {
@@ -32,8 +33,8 @@ public class TextureCoordinatesQuad {
 	public static TextureCoordinatesQuad[] createSequence(TextureCoordinatesQuad texCoords,int countX,int countY) {
 		int count = countX*countY;
 		TextureCoordinatesQuad[] result = new TextureCoordinatesQuad[count];
-		float w = texCoords.getWidth();
-		float h = texCoords.getHeight();
+		float w = Math.abs(texCoords.getWidth());
+		float h = Math.abs(texCoords.getHeight());
 		
 		int c = 0;
 		result[0] = texCoords;
@@ -51,51 +52,65 @@ public class TextureCoordinatesQuad {
 		return createSequence(texCoords,countX,1);
 	}
 	
+	public static TextureCoordinatesQuad[] setFlipped(TextureCoordinatesQuad[] target, boolean flipX,boolean flipY) {
+		for(TextureCoordinatesQuad coords:target) {
+			coords.setFlipped(flipX, flipY);
+		}
+		return target;
+	}
+	
+	public static TextureCoordinatesQuad[] setRotation(TextureCoordinatesQuad[] target,int rotation) {
+		for(TextureCoordinatesQuad coords:target) {
+			coords.setRotation(rotation);
+		}
+		return target;
+	}
+	
 	public TextureCoordinatesQuad() {
 		
 	}
 	
-	public TextureCoordinatesQuad setModifier(int modifier) {
+	protected TextureCoordinatesQuad setModifier(int modifier) {
 		mModifier = modifier;
 		refreshCoordArray();
 		return this;
 	}
 	
 	public TextureCoordinatesQuad setRotation(int rotation) {
-		return setModifier(mModifier & 0xF00 | rotation);
+		return setModifier((mModifier & 0xF00) | rotation);
 	}
 	
 	public int getRotation() {
 		return mModifier & 0xFF;
 	}
 	
-	public void setFlipped(boolean flipX,boolean flipY) {
-		setModifier(mModifier & 0xFF + (flipX?256:0) + (flipY?512:0));
+	public TextureCoordinatesQuad setFlipped(boolean flipX,boolean flipY) {
+		return setModifier((mModifier & 0xFF) + (flipX?256:0) + (flipY?512:0));
 	}
 	
-	public void setFlippedX() {
-		mModifier |= 1 << 3;
+	public TextureCoordinatesQuad setFlippedX() {
+		return setModifier(mModifier | (1 << 8));
 	}
 	
-	public void setFlippedY() {
-		mModifier |= 1 << 4;
+	public TextureCoordinatesQuad setFlippedY() {
+		return setModifier(mModifier | (1 << 9));
 	}
 	
 	public void refreshCoordArray() {
 		mAppliedCoordinates = new float[8];
 		int uMirror = mModifier/256;
 		boolean flipX = uMirror%2==1;
-		boolean flipY = uMirror/2==1;
+		boolean flipY = uMirror/2>=1;
 		float x = mLeft+mBiasX;
 		float x2 = mLeft+mWidth-mBiasX;
 		float y = mTop+mBiasY;
 		float y2 = mTop+mHeight-mBiasY;
-		if(flipX) {System.out.println("FLIP X:" +x);
+		if(flipX) {
 			float swap = x;
 			x = x2;
 			x2 = swap;
 		}
-		if(flipY) {System.out.println("Y "+y);
+		if(flipY) {
 			float swap = y;
 			y = y2;
 			y2 = swap;
@@ -109,8 +124,8 @@ public class TextureCoordinatesQuad {
 		mAppliedCoordinates[6] = x2;
 		mAppliedCoordinates[7] = y;
 		int uRot = mModifier & 0xFF;
-		if(mModifier!=0) {
-			for(int i=0;i<mModifier;i++) {
+		if(uRot!=0) {
+			for(int i=0;i<uRot;i++) {
 				float cx = mAppliedCoordinates[0];
 				float cy = mAppliedCoordinates[1];
 				mAppliedCoordinates[0] = mAppliedCoordinates[4];
@@ -130,18 +145,18 @@ public class TextureCoordinatesQuad {
 	
 	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float biasX, float biasY, int rotation) {
 
-//		if(x2<x1) {
-//			float swap = x1;
-//			x1 = x2;
-//			x2 = swap;
-//			setFlippedX();
-//		}
-//		if(y2<y1) {
-//			float swap = y1;
-//			y1 = y2;
-//			y2 = swap;
-//			setFlippedY();
-//		}
+		if(x2<x1) {
+			float swap = x1;
+			x1 = x2;
+			x2 = swap;
+			setFlippedX();
+		}
+		if(y2<y1) {
+			float swap = y1;
+			y1 = y2;
+			y2 = swap;
+			setFlippedY();
+		}
 		this.mLeft = x1;
 		this.mTop = y1;
 		this.mWidth = x2-x1;
