@@ -51,6 +51,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private NonConcurrentList<SurfaceListener> mScreenListeners;
 	public float mMinRatioX = 1;
 	public float mMaxTime = 60;
+	private int mMaxTextureId = -1;
 	
 	//State
 	protected Texture[] mCurrentTextures;
@@ -103,7 +104,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
 	protected abstract void genTextures(int[] target,int count);
-	protected abstract void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings);
+	public abstract void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings);
 	public abstract void deleteTextures(int[] ids);
 	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, ShortBuffer indexBuffer);
 	public abstract void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer);
@@ -248,7 +249,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public int genTexture() {
 		genTextures(mTempInt,1);
+		if(mTempInt[0]>mMaxTextureId)
+			mMaxTextureId = mTempInt[0];
 		return mTempInt[0];
+	}
+	
+	public int getMaxTexId() {
+		return mMaxTextureId;
 	}
 	
 	protected void setTextureData(Texture targetTexture,ByteBuffer data) {
@@ -586,8 +593,17 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public void deleteTexture(int id) {
+		assert preCheck("Delete texture");
 		mTempInt[0] = id;
 		deleteTextures(mTempInt);
+		assert checkErrorInst("Delete texture");
+	}
+	
+	public void deleteAllTextures() {
+		for(int i=0;i<=mMaxTextureId;i++) {
+			//setTextureData(i, 2, 2, buf, new TextureProperties());
+			deleteTexture(i);
+		}
 	}
 	
 	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {

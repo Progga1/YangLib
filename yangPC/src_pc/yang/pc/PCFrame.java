@@ -1,5 +1,7 @@
 package yang.pc;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -9,9 +11,10 @@ import javax.swing.WindowConstants;
 import yang.graphics.YangSurface;
 import yang.pc.fileio.PCSoundManager;
 
-public class PCFrame extends JFrame implements WindowListener {
+public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 	
 	private static final long serialVersionUID = 42L;
+	private boolean mFirstFocLost = true;
 	
 	public YangSurface mSurface;
 	
@@ -24,6 +27,7 @@ public class PCFrame extends JFrame implements WindowListener {
 		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.addFocusListener(this);
 	}
 
 	protected void close() {
@@ -63,6 +67,24 @@ public class PCFrame extends JFrame implements WindowListener {
 	@Override
 	public void windowOpened(WindowEvent arg0) {
 		
+	}
+
+	@Override
+	public void focusGained(FocusEvent arg0) {
+		mSurface.resume();
+	}
+
+	@Override
+	public void focusLost(FocusEvent arg0) {
+//		if(mFirstFocLost) {
+//			mFirstFocLost = false;
+//			return;
+//		}
+		if(!mSurface.isInitialized())
+			return;
+		mSurface.mGraphics.deleteAllTextures();
+		mSurface.pause();
+		mSurface.stop();
 	}
 	
 }

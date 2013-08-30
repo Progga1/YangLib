@@ -50,6 +50,7 @@ public abstract class YangSurface {
 	protected static long deltaTimeNanos;
 	protected int mUpdateWaitMillis = 1000/70;
 	protected int mRuntimeState = 0;
+	protected boolean mInactive = false;
 
 
 	
@@ -82,10 +83,6 @@ public abstract class YangSurface {
 	//Optional methods
 	protected void postInitGraphics() { }
 	protected void initGraphicsForResume() { }
-	
-	protected void drawResume() {
-		mGraphics.clear(0, 0, 0.1f);
-	}
 	
 	public YangSurface() {
 		mInitializedNotifier = new Object();
@@ -292,7 +289,7 @@ public abstract class YangSurface {
 //		return;
 //	}
 //	alt = true;
-		if(!mInitialized || mRuntimeState>0 || mLoadingState<mLoadingSteps)
+		if(mInactive || !mInitialized || mRuntimeState>0 || mLoadingState<mLoadingSteps)
 			return;
 		if(mCatchUpTime==0)
 			mCatchUpTime = System.nanoTime()-1;
@@ -354,7 +351,12 @@ public abstract class YangSurface {
 	}
 	
 	public final void drawFrame() {
-		
+		if(mInactive) {
+			mGraphics.beginFrame();
+			mGraphics.clear(0,0,0);
+			mGraphics.endFrame();
+			return;
+		}
 		if(mException) {
 			mGraphics.beginFrame();
 			mGraphics.clear(0.1f,0,0);
@@ -420,6 +422,7 @@ public abstract class YangSurface {
 	}
 	
 	public void stop() {
+		mInactive = true;
 		mRuntimeState = 2;
 		mLoadingState = 0;
 	}
@@ -432,9 +435,10 @@ public abstract class YangSurface {
 //			synchronized (mUpdateThread) {
 //				mUpdateThread.suspend();
 //			}
+		mInactive = true;
 		mRuntimeState = 1;
 		mCatchUpTime = 0;
-		mLoadingState = 0;
+		mLoadingState = 0;System.out.println(mInactive);
 	}
 	
 	/**
@@ -448,10 +452,13 @@ public abstract class YangSurface {
 	 * Non-GL-Thread!
 	 */
 	public void resume() {
+		if(!mInactive)
+			return;
 //		if(mUpdateThread!=null && mUpdateThread.isAlive())
 //			synchronized (mUpdateThread) {
 //				mUpdateThread.resume();
 //			}
+		mInactive = false;
 		mCatchUpTime = 0;
 		mResuming = false;
 		mLoadingState = 0;

@@ -98,7 +98,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 	
 	@Override
-	protected void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings) {
+	public void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings) {
 		assert preCheck("Set texture data");
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);

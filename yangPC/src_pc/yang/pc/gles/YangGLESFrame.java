@@ -75,6 +75,7 @@ public class YangGLESFrame extends PCFrame{
 			PCEventHandler eventHandler = mGraphics.setMouseEventListener(eventListener);
 			addKeyListener(eventHandler);
 			mGraphics.getPanel().addKeyListener(eventHandler);
+			mGraphics.getPanel().addFocusListener(this);
 			mEventListener = eventListener;
 			mPCEventHandler = eventHandler;
 		}
