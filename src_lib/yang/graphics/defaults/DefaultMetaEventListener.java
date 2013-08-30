@@ -53,6 +53,12 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void keyDown(int code) {
+		if(code==Keys.F1) {
+			if(mSurface.isInactive())
+				mSurface.simulateResume();
+			else
+				mSurface.simulatePause();
+		}
 		if(code==Keys.F2)
 			DebugYang.DRAW_GFX_VALUES ^= true;
 		if(code==Keys.F3)

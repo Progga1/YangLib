@@ -39,7 +39,7 @@ public abstract class YangSurface {
 	
 	private UpdateMode mUpdateMode;
 	protected boolean mAutoReloadTexturesOnResume = true;
-	protected boolean mInitialized;
+	protected boolean mInitialized = false;
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
 	
@@ -51,8 +51,6 @@ public abstract class YangSurface {
 	protected int mUpdateWaitMillis = 1000/70;
 	protected int mRuntimeState = 0;
 	protected boolean mInactive = false;
-
-
 	
 	private Thread mUpdateThread = null;
 	public YangEventListener mEventListener;
@@ -289,7 +287,7 @@ public abstract class YangSurface {
 //		return;
 //	}
 //	alt = true;
-		if(mInactive || !mInitialized || mRuntimeState>0 || mLoadingState<mLoadingSteps)
+		if(!mInitialized || mRuntimeState>0 || mLoadingState<mLoadingSteps)
 			return;
 		if(mCatchUpTime==0)
 			mCatchUpTime = System.nanoTime()-1;
@@ -351,23 +349,27 @@ public abstract class YangSurface {
 	}
 	
 	public final void drawFrame() {
-		if(mInactive) {
-			mGraphics.beginFrame();
-			mGraphics.clear(0,0,0);
-			mGraphics.endFrame();
-			return;
-		}
-		if(mException) {
-			mGraphics.beginFrame();
-			mGraphics.clear(0.1f,0,0);
-			if(mGFXDebug!=null)
-				mGFXDebug.draw();
-			mGraphics.endFrame();
-			return;
-		}
+
+		
 		try{
 			if(mMetaEventListener!=null)
 				mEventQueue.handleMetaEvents(mMetaEventListener);
+			
+			if(mInactive) {
+				mGraphics.beginFrame();
+				mGraphics.clear(0,0,0);
+				mGraphics.endFrame();
+				return;
+			}
+			
+			if(mException) {
+				mGraphics.beginFrame();
+				mGraphics.clear(0.1f,0,0);
+				if(mGFXDebug!=null)
+					mGFXDebug.draw();
+				mGraphics.endFrame();
+				return;
+			}
 			
 			if(mRuntimeState>0 && !mResuming) {
 				mResuming = true;
@@ -487,4 +489,18 @@ public abstract class YangSurface {
 			setMacroFilename(args[0]);
 	}
 	
+	public void simulatePause() {
+		mGraphics.deleteAllTextures();
+		pause();
+		stop();
+	}
+	
+	public void simulateResume() {
+		if(mInactive)
+			resume();
+	}
+	public boolean isInactive() {
+		return mInactive;
+	}
+
 }

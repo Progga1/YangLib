@@ -71,7 +71,7 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 
 	@Override
 	public void focusGained(FocusEvent arg0) {
-		mSurface.resume();
+		//mSurface.resume();
 	}
 
 	@Override
@@ -80,11 +80,11 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 //			mFirstFocLost = false;
 //			return;
 //		}
-		if(!mSurface.isInitialized())
-			return;
-		mSurface.mGraphics.deleteAllTextures();
-		mSurface.pause();
-		mSurface.stop();
+//		if(!mSurface.isInitialized())
+//			return;
+//		mSurface.mGraphics.deleteAllTextures();
+//		mSurface.pause();
+//		mSurface.stop();
 	}
 	
 }
