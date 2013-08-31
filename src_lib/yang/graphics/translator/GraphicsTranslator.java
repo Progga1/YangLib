@@ -479,19 +479,20 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public final void measureTime() {
 		mTargetTime += mMinDrawFrameIntervalNanos;
 		long curTime = System.nanoTime();
-		if(mTargetTime<curTime)
-			mTargetTime=curTime;
-		else{
-			try {
-				Thread.sleep((long) ((mTargetTime-curTime)*0.000001));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			curTime = System.nanoTime();
-		}
-			
-		final float TO_SEC = 0.000000001f;
 		if(mLstTimestamp>0) {
+			if(mTargetTime<curTime)
+				mTargetTime=curTime;
+			else{
+				try {
+					Thread.sleep((long) ((mTargetTime-curTime)*0.000001));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				curTime = System.nanoTime();
+			}
+				
+			final float TO_SEC = 0.000000001f;
+		
 			mCurFrameDeltaTime = (curTime-mLstTimestamp)*TO_SEC;
 //			if(mCurFrameDeltaTime<mMinDrawFrameInterval) {
 //				try {
@@ -515,6 +516,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mShaderTimer = 0;
 			mTimer = 0;
 			mFPSStartTime = -1;
+			mTargetTime = curTime;
 		}
 		mLstTimestamp = curTime;
 	}

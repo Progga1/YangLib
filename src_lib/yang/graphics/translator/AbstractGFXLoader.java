@@ -281,8 +281,14 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			data = null;
 		}
 	}
+	
+	public void clearQueue() {
+		mQueueBytes = 0;
+		mTexQueueId = 0;
+	}
 
 	public void reenqueueTextures() {
+		clearQueue();
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
 			enqueue(entry.getKey(),entry.getValue());
 		}

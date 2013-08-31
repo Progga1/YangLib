@@ -64,6 +64,7 @@ public abstract class YangSurface {
 	private int mLoadingSteps = 1;
 	private int mLoadingState = 0;
 	private boolean mResuming = false;
+	private boolean mLoadedOnce = false;
 	
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
@@ -81,6 +82,7 @@ public abstract class YangSurface {
 	//Optional methods
 	protected void postInitGraphics() { }
 	protected void initGraphicsForResume() { }
+	protected void onLoadingInterrupted(boolean resuming) { }
 	
 	public YangSurface() {
 		mInitializedNotifier = new Object();
@@ -134,7 +136,7 @@ public abstract class YangSurface {
 		mGraphics = graphics;
 	}
 	
-	private boolean assertMessage() {
+	protected boolean assertMessage() {
 		System.out.println("ASSERTIONS ARE ACTIVATED");
 		return true;
 	}
@@ -287,6 +289,7 @@ public abstract class YangSurface {
 //		return;
 //	}
 //	alt = true;
+
 		if(!mInitialized || mRuntimeState>0 || mLoadingState<mLoadingSteps)
 			return;
 		if(mCatchUpTime==0)
@@ -326,7 +329,7 @@ public abstract class YangSurface {
 	}
 	
 	protected void prepareLoading(boolean resuming) {
-		if(resuming)
+		//if(resuming)
 			mGFXLoader.reenqueueTextures();
 		if(mLoadingSteps>0)
 			mGFXLoader.divideQueueLoading(mLoadingSteps-1);
@@ -350,7 +353,6 @@ public abstract class YangSurface {
 	
 	public final void drawFrame() {
 
-		
 		try{
 			if(mMetaEventListener!=null)
 				mEventQueue.handleMetaEvents(mMetaEventListener);
@@ -370,9 +372,9 @@ public abstract class YangSurface {
 				mGraphics.endFrame();
 				return;
 			}
-			
+
 			if(mRuntimeState>0 && !mResuming) {
-				mResuming = true;
+				mResuming = mLoadedOnce;
 				mGraphics.restart();
 				if(mGraphics.mCurDrawListener!=null)
 					mGraphics.mCurDrawListener.onRestartGraphics();
@@ -398,11 +400,10 @@ public abstract class YangSurface {
 				loadAssets(mLoadingState,mResuming);
 				if(mLoadingState==mLoadingSteps-1) {
 					onLoadingFinished(mResuming);
+					mLoadedOnce = true;
 					mEventQueue.clearEvents();
-					if(mResuming) {
-						mRuntimeState = 0;
-						mResuming = false;
-					}
+					mRuntimeState = 0;
+					mResuming = false;
 					draw();
 				}else{
 					float progress;
@@ -440,7 +441,12 @@ public abstract class YangSurface {
 		mInactive = true;
 		mRuntimeState = 1;
 		mCatchUpTime = 0;
-		mLoadingState = 0;System.out.println(mInactive);
+		mLoadingState = 0;
+		if(!mLoadedOnce) {
+			onLoadingInterrupted(false);
+		}
+		if(mResuming)
+			onLoadingInterrupted(true);
 	}
 	
 	/**
@@ -454,8 +460,6 @@ public abstract class YangSurface {
 	 * Non-GL-Thread!
 	 */
 	public void resume() {
-		if(!mInactive)
-			return;
 //		if(mUpdateThread!=null && mUpdateThread.isAlive())
 //			synchronized (mUpdateThread) {
 //				mUpdateThread.resume();
@@ -490,9 +494,9 @@ public abstract class YangSurface {
 	}
 	
 	public void simulatePause() {
-		mGraphics.deleteAllTextures();
 		pause();
 		stop();
+		mGraphics.deleteAllTextures();
 	}
 	
 	public void simulateResume() {
