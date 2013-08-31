@@ -94,6 +94,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private NonConcurrentList<TextureRenderTarget> mRenderTargets;
 	private NonConcurrentList<BasicProgram> mPrograms;
 	private ShortBuffer mWireFrameIndexBuffer;
+	private int mMaxFPS;
+	private float mMinDrawFrameInterval;
 	
 	//Helpers
 	protected final int[] mTempInt = new int[1];
@@ -186,6 +188,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mNoTexture = new Texture(this);
 		mScreenListeners = new NonConcurrentList<SurfaceListener>();
 		mRenderTargets = new NonConcurrentList<TextureRenderTarget>();
+		setMaxFPS(0);
 	}
 	
 	public void addScreenListener(SurfaceListener listener) {
@@ -463,17 +466,34 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurDrawListener.bindBuffers();
 	}
 	
+	public void setMaxFPS(int fps) {
+		if(fps<=0)
+			fps = Integer.MAX_VALUE;
+		mMaxFPS = fps;
+		mMinDrawFrameInterval = 1f/fps;
+	}
+	
 	public final void measureTime() {
-		long curTime = System.currentTimeMillis();
+		long curTime = System.nanoTime();
+		final float TO_SEC = 0.000000001f;
 		if(mLstTimestamp>0) {
-			mCurFrameDeltaTime = (curTime-mLstTimestamp)*0.001f;
+			mCurFrameDeltaTime = (curTime-mLstTimestamp)*TO_SEC;
+			if(mCurFrameDeltaTime<mMinDrawFrameInterval) {
+				try {
+					Thread.sleep((long) ((mMinDrawFrameInterval-mCurFrameDeltaTime)*1000));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				mCurFrameDeltaTime = mMinDrawFrameInterval;
+				curTime = System.nanoTime();
+			}
 			mTimer += mCurFrameDeltaTime;
 			mShaderTimer += mCurFrameDeltaTime;
 			if(mShaderTimer>mMaxTime)
 				mShaderTimer-=mMaxTime;
 			if(mFrameCount%FPS_REFRESH_FRAMES==0) {
 				if(mFPSStartTime>0)
-					mFPS = 1f/((curTime-mFPSStartTime)*0.001f)*FPS_REFRESH_FRAMES;
+					mFPS = 1f/((curTime-mFPSStartTime)*TO_SEC)*FPS_REFRESH_FRAMES;
 				mFPSStartTime = curTime;
 			}
 		}else{

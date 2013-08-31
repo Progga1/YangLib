@@ -37,6 +37,7 @@ public class YangGLESFrame extends PCFrame{
 		FullGraphicsInitializer initializer = new FullGraphicsInitializer();
 		initializer.init(width, height);
 		mGraphics = initializer.mTranslator;
+		mGraphics.setMaxFPS(60);
 		
 		if(autoBuild) {
 			this.add(mGraphics.getPanel());
