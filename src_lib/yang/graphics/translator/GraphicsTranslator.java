@@ -70,6 +70,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public long mFrameCount = 0;
 	public boolean mForceWireFrames = false;
 	private GraphicsState mSavedState;
+	private long mTargetTime = 0;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
@@ -96,6 +97,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private ShortBuffer mWireFrameIndexBuffer;
 	private int mMaxFPS;
 	private float mMinDrawFrameInterval;
+	private long mMinDrawFrameIntervalNanos;
 	
 	//Helpers
 	protected final int[] mTempInt = new int[1];
@@ -471,22 +473,35 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			fps = Integer.MAX_VALUE;
 		mMaxFPS = fps;
 		mMinDrawFrameInterval = 1f/fps;
+		mMinDrawFrameIntervalNanos = 1000000000/fps;
 	}
 	
 	public final void measureTime() {
+		mTargetTime += mMinDrawFrameIntervalNanos;
 		long curTime = System.nanoTime();
+		if(mTargetTime<curTime)
+			mTargetTime=curTime;
+		else{
+			try {
+				Thread.sleep((long) ((mTargetTime-curTime)*0.000001));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			curTime = System.nanoTime();
+		}
+			
 		final float TO_SEC = 0.000000001f;
 		if(mLstTimestamp>0) {
 			mCurFrameDeltaTime = (curTime-mLstTimestamp)*TO_SEC;
-			if(mCurFrameDeltaTime<mMinDrawFrameInterval) {
-				try {
-					Thread.sleep((long) ((mMinDrawFrameInterval-mCurFrameDeltaTime)*1000));
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				mCurFrameDeltaTime = mMinDrawFrameInterval;
-				curTime = System.nanoTime();
-			}
+//			if(mCurFrameDeltaTime<mMinDrawFrameInterval) {
+//				try {
+//					Thread.sleep((long) ((mMinDrawFrameInterval-mCurFrameDeltaTime)*1000));
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				mCurFrameDeltaTime = mMinDrawFrameInterval;
+//				curTime = System.nanoTime();
+//			}
 			mTimer += mCurFrameDeltaTime;
 			mShaderTimer += mCurFrameDeltaTime;
 			if(mShaderTimer>mMaxTime)
