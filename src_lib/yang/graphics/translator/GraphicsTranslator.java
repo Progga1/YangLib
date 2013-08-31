@@ -240,6 +240,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			program.restart();
 		}
 		for(TextureRenderTarget renderTarget:mRenderTargets) {
+			renderTarget.mTargetTexture.generate();
 			renderTarget.mTargetTexture.setEmpty(null);
 			derivedCreateRenderTarget(renderTarget.mTargetTexture);
 		}
