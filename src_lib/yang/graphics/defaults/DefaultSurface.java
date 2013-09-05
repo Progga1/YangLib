@@ -1,6 +1,5 @@
 package yang.graphics.defaults;
 
-import yang.events.EventQueueHolder;
 import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
@@ -8,13 +7,13 @@ import yang.events.listeners.YangEventListener;
 import yang.graphics.YangSurface;
 import yang.graphics.font.BitmapFont;
 
-public abstract class DefaultSurface extends YangSurface implements YangEventListener,EventQueueHolder{
+public abstract class DefaultSurface extends YangSurface implements YangEventListener{
 
 	public Default2DGraphics mGraphics2D;
 	public Default3DGraphics mGraphics3D;
 	private boolean mInit2DGraphics;
 	private boolean mInit3DGraphics;
-	
+
 	protected DefaultSurface(boolean init2DGraphics,boolean init3DGraphics) {
 		super();
 		mInit2DGraphics = init2DGraphics;
@@ -22,7 +21,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 		mEventListener = this;
 		mMetaEventListener = new DefaultMetaEventListener(this);
 	}
-	
+
 	@Override
 	protected final void initGraphics() {
 		if(mInit2DGraphics) {
@@ -42,33 +41,33 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 			}
 		}
 	}
-	
+
 	protected void initDebugOutput(BitmapFont font) {
 		initDebugOutput(mGraphics2D,font);
 	}
-	
+
 	public boolean rawEvent(YangEvent event) {
 		return false;
 	}
-	
+
 	public void pointerDown(float x, float y, YangPointerEvent event) {
 
 	}
 
 	public void pointerDragged(float x, float y, YangPointerEvent event) {
-		
+
 	}
-	
+
 	public void pointerMoved(float x, float y, YangPointerEvent event) {
-		
+
 	}
 
 	public void pointerUp(float x, float y, YangPointerEvent event) {
-		
+
 	}
-	
+
 	public void keyDown(int code) {
-		
+
 	}
 
 	public void keyUp(int code) {
@@ -77,7 +76,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 	}
 
 	public void zoom(float factor) {
-		
+
 	}
-	
+
 }
