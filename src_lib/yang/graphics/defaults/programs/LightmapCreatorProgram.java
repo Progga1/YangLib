@@ -8,7 +8,7 @@ public class LightmapCreatorProgram extends ShadowProgram {
 			"uniform mat4 projTransform;\n"
 			+"uniform mat4 worldTransform;\n"
 			+"uniform mat4 depthMapTransform;\n"
-			+"uniform vec4 ambientColor;\n"
+			+"uniform vec4 colorFactor;\n"
 			+"uniform float time;\n"
 			+"\n"
 			+"attribute vec4 vPosition;\n"
@@ -23,12 +23,13 @@ public class LightmapCreatorProgram extends ShadowProgram {
 			+"varying vec4 normal;\n"
 			+"\n"
 			+"void main() {\n"
-			+"	worldPosition = worldTransform * vPosition;\n"
-			+"	depthMapPosition = depthMapTransform * worldPosition;\n"
-			+"	gl_Position = projTransform * worldPosition;\n"
+			+"	vec4 worldPos = worldTransform * vPosition;\n"
+			+"	worldPosition = worldPos;\n"
+			+"	depthMapPosition = depthMapTransform * worldPos;\n"
+			+"	gl_Position = projTransform * worldPos;\n"
 			+"	normal = vNormal;\n"
 			+"	texCoord = vTexture;\n"
-			+"	color = vColor * ambientColor;\n"
+			+"	color = vColor * colorFactor;\n"
 			+"}";
 
 	

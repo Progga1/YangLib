@@ -21,7 +21,7 @@ public class TokenReader {
 	public int mNumberPos = -1;
 	
 	public TokenReader(InputStream stream) {
-		mInputStream = new BufferedReader(new InputStreamReader(stream));
+		mInputStream = new BufferedReader(new InputStreamReader(stream));	//TODO crash on nexus
 		mLstRead = 0;
 	}
 	

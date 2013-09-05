@@ -77,10 +77,10 @@ public class PlanarLightmapHelper {
 		mGraphics3D.setColorFactor(1);
 		mGraphics.clear(0, 0, 0, 1, GLMasks.DEPTH_BUFFER_BIT);
 		//mGraphics3D.setCameraProjection(mCameraTransform,mOrthoProjection,mInvOrthoProjection);
+		mGraphics3D.setShaderProgram(mLightmapCreatorProgram);
 		mGraphics3D.setCameraLookAt(0,0,0, 0,-1,0, 0,0,-1);
 		mGraphics.setCullMode(true);
 		mGraphics3D.setOrthogonalProjection(mObjectWidth,-mObjectHeight, mNear, mFar);
-		mGraphics3D.setShaderProgram(mLightmapCreatorProgram);
 		mShadowHelper.setShadowShaderProperties(mLightmapCreatorProgram);
 	}
 	
