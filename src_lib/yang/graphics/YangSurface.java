@@ -2,6 +2,7 @@ package yang.graphics;
 
 import java.io.FileNotFoundException;
 
+import yang.events.EventQueueHolder;
 import yang.events.YangEventQueue;
 import yang.events.listeners.YangEventListener;
 import yang.events.macro.AbstractMacroIO;
@@ -21,14 +22,14 @@ import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 import yang.util.Util;
 
-public abstract class YangSurface {
-	
+public abstract class YangSurface implements EventQueueHolder {
+
 	public static boolean CATCH_EXCEPTIONS = true;
-	
+
 	public final static int RUNTIME_STATE_RUNNING = 0;
 	public final static int RUNTIME_STATE_PAUSED = 1;
 	public final static int RUNTIME_STATE_STOPPED = 2;
-	
+
 	public GraphicsTranslator mGraphics;
 	public StringsXML mStrings;
 	public AbstractResourceManager mResources;
@@ -36,13 +37,12 @@ public abstract class YangSurface {
 	public SoundManager mSounds;
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
-	
+
 	private UpdateMode mUpdateMode;
-	protected boolean mAutoReloadTexturesOnResume = true;
 	protected boolean mInitialized = false;
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
-	
+
 	protected long mCatchUpTime;
 	public double mProgramTime;
 	public int mStepCount;
@@ -51,7 +51,7 @@ public abstract class YangSurface {
 	protected int mUpdateWaitMillis = 1000/70;
 	protected int mRuntimeState = 0;
 	protected boolean mInactive = false;
-	
+
 	private Thread mUpdateThread = null;
 	public YangEventListener mEventListener;
 	public YangEventListener mMetaEventListener;
@@ -67,25 +67,25 @@ public abstract class YangSurface {
 	private int mInitSteps = 0;
 	private boolean mResuming = false;
 	private boolean mLoadedOnce = false;
-	
+
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
-	
+
 	/**
 	 * GL-Thread
 	 */
 	protected abstract void initGraphics();
 	protected abstract void draw();
-	
+
 	protected void onException(Exception ex) {
-		
+
 	}
-	
+
 	//Optional methods
 	protected void postInitGraphics() { }
 	protected void initGraphicsForResume() { }
 	protected void onLoadingInterrupted(boolean resuming) { }
-	
+
 	public YangSurface() {
 		mInitializedNotifier = new Object();
 		mCatchUpTime = 0;
@@ -99,7 +99,6 @@ public abstract class YangSurface {
 		mLoadingSteps = loadingSteps;
 		mInitSteps = initSteps;
 		mStartupSteps = initSteps+loadingSteps;
-		mAutoReloadTexturesOnResume = false;
 	}
 	
 	protected void setStartupSteps(int loadingSteps) {
@@ -112,7 +111,7 @@ public abstract class YangSurface {
 			if(mMacro!=null)
 				mMacro.close();
 		}catch(Exception ex2) {
-			
+
 		}
 		onException(ex);
 		if(!CATCH_EXCEPTIONS) {
@@ -127,37 +126,38 @@ public abstract class YangSurface {
 			mGFXDebug.setErrorString(ex.getClass()+": "+ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
 		ex.printStackTrace();
 	}
-	
+
 	public void setMacroFilename(String filename) {
 		mMacroFilename = filename;
 	}
-	
+
+	@Override
 	public YangEventQueue getEventQueue() {
 		return mEventQueue;
 	}
-	
+
 	protected int getMaxEventCount() {
 		return 2048;
 	}
-	
+
 	public void setGraphics(GraphicsTranslator graphics) {
 		mGraphics = graphics;
 	}
-	
+
 	protected boolean assertMessage() {
 		System.out.println("ASSERTIONS ARE ACTIVATED");
 		return true;
 	}
-	
+
 	public void recordMacro(String filename,AbstractMacroIO macroIO) throws FileNotFoundException {
 		MacroWriter writer = new MacroWriter(mResources.getFileSystemOutputStream(filename), mDefaultMacroIO);
 		mEventQueue.registerEventWriter(writer);
 	}
-	
+
 	public void recordMacro(String filename) throws FileNotFoundException {
 		recordMacro(filename,mDefaultMacroIO);
 	}
-	
+
 	public void playMacro(String filename,AbstractMacroIO macroIO) {
 		try {
 			mMacro = new MacroExecuter(mResources.getFileSystemInputStream(filename), macroIO);
@@ -165,11 +165,11 @@ public abstract class YangSurface {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void playMacro(String filename) {
 		playMacro(filename,mDefaultMacroIO);
 	}
-	
+
 	public void onSurfaceCreated() {
 		if(mInitialized) {
 			DebugYang.println("ALREADY INITIALIZED");
@@ -186,7 +186,7 @@ public abstract class YangSurface {
 			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
 		try{
 			initGraphics();
-			
+
 			mDefaultMacroIO = new DefaultMacroIO(this);
 			if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
 				playMacro(mMacroFilename);
@@ -198,24 +198,24 @@ public abstract class YangSurface {
 					DebugYang.printerr("Could not create '"+filename+"'");
 				}
 			}
-			
+
 			postInitGraphics();
-			
+
 			if(mInitCallback!=null)
 				mInitCallback.initializationFinished();
 			mInitialized = true;
 			synchronized(mInitializedNotifier) {
 				mInitializedNotifier.notifyAll();
 			}
-			
+
 			if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
 				mUpdateThread.start();
 		}catch(Exception ex) {
 			exceptionOccurred(ex);
 		}
-		
+
 	}
-	
+
 	public void waitUntilInitialized() {
 		synchronized(mInitializedNotifier) {
 			try {
@@ -225,7 +225,7 @@ public abstract class YangSurface {
 			}
 		}
 	}
-	
+
 	public void onSurfaceChanged(int width,int height) {
 		try{
 			mGraphics.setSurfaceSize(width, height);
@@ -235,27 +235,27 @@ public abstract class YangSurface {
 			exceptionOccurred(ex);
 		}
 	}
-	
+
 	public boolean isInitialized() {
 		return mInitialized;
 	}
-	
+
 	public void setInitializationCallback(InitializationCallback initCallback) {
 		mInitCallback = initCallback;
 	}
-	
+
 	public static void setUpdatesPerSecond(int updatesPerSecond) {
 		deltaTimeSeconds = 1f/updatesPerSecond;
 		deltaTimeNanos = 1000000000/updatesPerSecond;
 	}
-	
+
 	public void setUpdateMode(UpdateMode updateMode) {
 		mUpdateMode = updateMode;
 		if(mUpdateMode==UpdateMode.ASYNCHRONOUS) {
 			mUpdateThread = new Thread() {
 				@Override
 				public void run() {
-					
+
 					while(true) {
 						try {
 							if(mRuntimeState>0) {
@@ -272,16 +272,16 @@ public abstract class YangSurface {
 			};
 		}
 	}
-	
+
 	protected void initDebugOutput(DefaultGraphics<?> graphics, BitmapFont font) {
 		mGFXDebug = new GFXDebug(this,graphics,font);
 		mGFXDebug.surfaceChanged();
 	}
-	
+
 	protected boolean isLoadingFinished() {
 		return mLoadingState>=mStartupSteps;
 	}
-	
+
 	private void handleEvents() {
 		if(mEventListener!=null) {
 			if(!mPaused && mLoadingState>=mStartupSteps)
@@ -290,8 +290,8 @@ public abstract class YangSurface {
 				mEventQueue.clearEvents();
 		}
 	}
-	
-	protected void catchUp() {		
+
+	protected void catchUp() {
 //		if(alt) {
 //		alt = false;
 //		return;
@@ -302,7 +302,7 @@ public abstract class YangSurface {
 			return;
 		if(mCatchUpTime==0)
 			mCatchUpTime = System.nanoTime()-1;
-		
+
 		if(mPlaySpeed==0) {
 			handleEvents();
 			mCatchUpTime = 0;
@@ -331,11 +331,11 @@ public abstract class YangSurface {
 			}
 		}
 	}
-	
+
 	protected void step(float deltaTime) {
-		
+
 	}
-	
+
 	protected void prepareLoading(boolean resuming) {
 		//if(resuming)
 			mGFXLoader.reenqueueTextures();
@@ -343,7 +343,7 @@ public abstract class YangSurface {
 			mGFXLoader.divideQueueLoading(mStartupSteps-1);
 		mGFXLoader.mEnqueueMode = false;
 	}
-	
+
 	protected void loadAssets(int loadState,boolean resuming) {
 		System.out.println(loadState);
 		if(loadState>0 || mStartupSteps==1)
@@ -351,32 +351,33 @@ public abstract class YangSurface {
 
 		mGraphics.unbindTextures();
 	}
-	
+
 	protected void initializeAssets(int initStep,boolean resuming) {
 		System.out.println(mLoadingState+" "+initStep);
 	}
 	
+
 	protected void drawLoadingScreen(int loadState,float progress,boolean resuming) {
-		
+
 	}
-	
+
 	protected void onLoadingFinished(boolean resuming) {
-		
+
 	}
-	
+
 	public final void drawFrame() {
 
 		try{
 			if(mMetaEventListener!=null)
 				mEventQueue.handleMetaEvents(mMetaEventListener);
-			
+
 			if(mInactive) {
 				mGraphics.beginFrame();
 				mGraphics.clear(0,0,0);
 				mGraphics.endFrame();
 				return;
 			}
-			
+
 			if(mException) {
 				mGraphics.beginFrame();
 				mGraphics.clear(0.1f,0,0);
@@ -392,7 +393,7 @@ public abstract class YangSurface {
 				if(mGraphics.mCurDrawListener!=null)
 					mGraphics.mCurDrawListener.onRestartGraphics();
 			}
-			
+
 			if(mUpdateMode==UpdateMode.SYNCHRONOUS)
 				catchUp();
 
@@ -433,19 +434,19 @@ public abstract class YangSurface {
 				mLoadingState++;
 			}
 			mGraphics.endFrame();
-		
+
 		}catch(Exception ex){
 			exceptionOccurred(ex);
 		}
-		
+
 	}
-	
+
 	public void stop() {
 		mInactive = true;
 		mRuntimeState = 2;
 		mLoadingState = 0;
 	}
-	
+
 	/**
 	 * Non-GL-Thread!
 	 */
@@ -464,14 +465,14 @@ public abstract class YangSurface {
 		if(mResuming)
 			onLoadingInterrupted(true);
 	}
-	
+
 	/**
 	 * Non-GL-Thread!
 	 */
 	public void destroy() {
 		mGraphics.mGFXLoader.deleteTextures();
 	}
-	
+
 	/**
 	 * Non-GL-Thread!
 	 */
@@ -485,36 +486,36 @@ public abstract class YangSurface {
 		mResuming = false;
 		mLoadingState = 0;
 	}
-	
+
 	public void setPaused(boolean paused) {
 		mPaused = paused;
 		mEventQueue.mMetaMode = paused;
 	}
-	
+
 	public boolean isPaused() {
 		return mPaused;
 	}
-	
+
 	public void exit() {
 		mEventQueue.close();
 		if(mMacro!=null)
 			mMacro.close();
 		System.exit(0);
 	}
-	
+
 	public void handleArgs(String[] args,int startIndex) {
 		if(args==null)
 			return;
 		if(args.length>=1)
 			setMacroFilename(args[0]);
 	}
-	
+
 	public void simulatePause() {
 		pause();
 		stop();
 		mGraphics.deleteAllTextures();
 	}
-	
+
 	public void simulateResume() {
 		if(mInactive)
 			resume();

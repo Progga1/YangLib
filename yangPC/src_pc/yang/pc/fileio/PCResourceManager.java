@@ -27,7 +27,7 @@ public class PCResourceManager extends AbstractResourceManager {
 		}
 		return fis;
 	}
-	
+
 	@Override
 	public InputStream getFileSystemInputStream(String filename) {
 		File file = new File(filename);
@@ -76,7 +76,7 @@ public class PCResourceManager extends AbstractResourceManager {
 	@Override
 	public void savePropertiesFile(String filename, Properties props) {
 		try {
-			FileOutputStream fos = getOutputStream(filename); 
+			FileOutputStream fos = getOutputStream(filename);
 			props.store(fos, null);
 			fos.close();
 		} catch (Exception e) {
@@ -98,23 +98,23 @@ public class PCResourceManager extends AbstractResourceManager {
 	public FileOutputStream getOutputStream(String filename) throws FileNotFoundException {
 		return new FileOutputStream(PathSpecs.ASSET_PATH+filename);
 	}
-	
+
 	@Override
 	public FileOutputStream getFileSystemOutputStream(String filename) throws FileNotFoundException {
 		return new FileOutputStream(filename);
 	}
 
 	@Override
-	public boolean deleteFile(String filename) {		
+	public boolean deleteFile(String filename) {
 		File f = new File(PathSpecs.ASSET_PATH+filename);
-		return f.delete();	
+		return f.delete();
 	}
 
 	@Override
 	public boolean fileExists(String filename) {
 		return new File(PathSpecs.ASSET_PATH+filename).exists();
 	}
-	
+
 	@Override
 	public boolean fileExistsInFileSystem(String filename) {
 		return new File(filename).exists();
