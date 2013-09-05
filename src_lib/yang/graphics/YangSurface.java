@@ -61,8 +61,10 @@ public abstract class YangSurface {
 	public float mPlaySpeed = 1;
 	public String mMacroFilename;
 	public boolean mException = false;
+	private int mStartupSteps = 1;
 	private int mLoadingSteps = 1;
 	private int mLoadingState = 0;
+	private int mInitSteps = 0;
 	private boolean mResuming = false;
 	private boolean mLoadedOnce = false;
 	
@@ -93,9 +95,15 @@ public abstract class YangSurface {
 		mMacroFilename = null;
 	}
 	
-	protected void setLoadingSteps(int steps) {
-		mLoadingSteps = steps;
+	protected void setStartupSteps(int loadingSteps,int initSteps) {
+		mLoadingSteps = loadingSteps;
+		mInitSteps = initSteps;
+		mStartupSteps = initSteps+loadingSteps;
 		mAutoReloadTexturesOnResume = false;
+	}
+	
+	protected void setStartupSteps(int loadingSteps) {
+		setStartupSteps(loadingSteps,0);
 	}
 	
 	protected void exceptionOccurred(Exception ex) {
@@ -271,12 +279,12 @@ public abstract class YangSurface {
 	}
 	
 	protected boolean isLoadingFinished() {
-		return mLoadingState>=mLoadingSteps;
+		return mLoadingState>=mStartupSteps;
 	}
 	
 	private void handleEvents() {
 		if(mEventListener!=null) {
-			if(!mPaused && mLoadingState>=mLoadingSteps)
+			if(!mPaused && mLoadingState>=mStartupSteps)
 				mEventQueue.handleEvents(mEventListener);
 			else
 				mEventQueue.clearEvents();
@@ -290,7 +298,7 @@ public abstract class YangSurface {
 //	}
 //	alt = true;
 
-		if(!mInitialized || mRuntimeState>0 || mLoadingState<mLoadingSteps)
+		if(!mInitialized || mRuntimeState>0 || mLoadingState<mStartupSteps)
 			return;
 		if(mCatchUpTime==0)
 			mCatchUpTime = System.nanoTime()-1;
@@ -313,7 +321,7 @@ public abstract class YangSurface {
 				if(mMacro!=null)
 					mMacro.step();
 				handleEvents();
-				if(mLoadingState>=mLoadingSteps) {
+				if(mLoadingState>=mStartupSteps) {
 					mStepCount ++;
 					mProgramTime += deltaTimeSeconds;
 					step(deltaTimeSeconds);
@@ -331,16 +339,21 @@ public abstract class YangSurface {
 	protected void prepareLoading(boolean resuming) {
 		//if(resuming)
 			mGFXLoader.reenqueueTextures();
-		if(mLoadingSteps>0)
-			mGFXLoader.divideQueueLoading(mLoadingSteps-1);
+		if(mStartupSteps>0)
+			mGFXLoader.divideQueueLoading(mStartupSteps-1);
 		mGFXLoader.mEnqueueMode = false;
 	}
 	
 	protected void loadAssets(int loadState,boolean resuming) {
-		if(loadState>0 || mLoadingSteps==1)
+		System.out.println(loadState);
+		if(loadState>0 || mStartupSteps==1)
 			mGFXLoader.loadEnqueuedTextures();
 
 		mGraphics.unbindTextures();
+	}
+	
+	protected void initializeAssets(int initStep,boolean resuming) {
+		System.out.println(mLoadingState+" "+initStep);
 	}
 	
 	protected void drawLoadingScreen(int loadState,float progress,boolean resuming) {
@@ -383,13 +396,13 @@ public abstract class YangSurface {
 			if(mUpdateMode==UpdateMode.SYNCHRONOUS)
 				catchUp();
 
-			if(mLoadingState>=mLoadingSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+			if(mLoadingState>=mStartupSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 				mGFXDebug.reset();
 				if(DebugYang.DRAW_GFX_VALUES)
 					mGFXDebug.printGFXDebugValues();
 			}
 			mGraphics.beginFrame();
-			if(mLoadingState>=mLoadingSteps) {
+			if(mLoadingState>=mStartupSteps) {
 				draw();
 				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 					mGFXDebug.draw();
@@ -397,8 +410,11 @@ public abstract class YangSurface {
 			}else{
 				if(mLoadingState==0)
 					prepareLoading(mResuming);
-				loadAssets(mLoadingState,mResuming);
-				if(mLoadingState==mLoadingSteps-1) {
+				if(mLoadingState>=mLoadingSteps)
+					initializeAssets(mLoadingState-mLoadingSteps,mResuming);
+				else
+					loadAssets(mLoadingState,mResuming);
+				if(mLoadingState==mStartupSteps-1) {
 					onLoadingFinished(mResuming);
 					mLoadedOnce = true;
 					mEventQueue.clearEvents();
@@ -407,10 +423,10 @@ public abstract class YangSurface {
 					draw();
 				}else{
 					float progress;
-					if(mLoadingSteps==2)
+					if(mStartupSteps==2)
 						progress = 1;
 					else
-						progress = (float)mLoadingState/(mLoadingSteps-2);
+						progress = (float)mLoadingState/(mStartupSteps-2);
 					drawLoadingScreen(mLoadingState,progress,mResuming);
 				}
 				mCatchUpTime = 0;
