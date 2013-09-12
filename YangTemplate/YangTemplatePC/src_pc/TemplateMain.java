@@ -1,12 +1,12 @@
 import yang.pc.gles.YangGLESFrame;
-import yang.samples.small.MinimumSample;
+import samplesurface.SampleSurface;
 
 
 public class TemplateMain {
 
 	public static void main(String[] args) {
 		YangGLESFrame frame = new YangGLESFrame().init(800,600);
-		frame.setSurface(new MinimumSample());
+		frame.setSurface(new SampleSurface());
 		frame.run();
 	}
 	

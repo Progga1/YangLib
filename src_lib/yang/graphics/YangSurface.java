@@ -403,6 +403,7 @@ public abstract class YangSurface implements EventQueueHolder {
 					mGFXDebug.printGFXDebugValues();
 			}
 			mGraphics.beginFrame();
+			DebugYang.DRAW_GFX_VALUES = true;
 			if(mLoadingState>=mStartupSteps) {
 				draw();
 				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
