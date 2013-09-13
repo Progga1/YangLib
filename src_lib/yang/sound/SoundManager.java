@@ -66,7 +66,7 @@ public abstract class SoundManager {
 	}
 
 	public void stopLoop(AbstractSound sound) {
-		sound.stopLoop();
+		sound.stop();
 	}
 
 	public void enableSound(boolean enabled) {

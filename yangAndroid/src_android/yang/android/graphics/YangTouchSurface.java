@@ -1,7 +1,7 @@
 package yang.android.graphics;
 
+import yang.android.AndroidVibrator;
 import yang.android.io.AndroidDataStorage;
-import yang.android.io.AndroidResourceManager;
 import yang.android.sound.AndroidSoundManager;
 import yang.events.EventQueueHolder;
 import yang.events.Keys;
@@ -24,21 +24,21 @@ public class YangTouchSurface extends GLSurfaceView{
 	public YangEventQueue mEventQueue;
 	public YangSceneRenderer mSceneRenderer;
 	public Context mContext;
-	
+
 	public YangTouchSurface(Context context) {
 		super(context);
 		mContext = context;
 		mEventQueue = null;
 		initGL(context);
 	}
-	
+
 	protected void initGL(Context context) {
 		super.setEGLContextClientVersion(2);
 		super.setEGLConfigChooser(8,8,8,0, 16,0);
 		//HTC working: RGBA_8888
 		super.getHolder().setFormat(PixelFormat.RGBA_8888);
 		DebugYang.println("INITIALIZE OPENGL");
-		
+
 		mSceneRenderer = new YangSceneRenderer(context);
 		super.setRenderer(mSceneRenderer);
 
@@ -46,28 +46,28 @@ public class YangTouchSurface extends GLSurfaceView{
 			App.soundManager = new AndroidSoundManager(context);
 			App.storage = new AndroidDataStorage(context);
 			App.gfxLoader = mSceneRenderer.mGraphicsTranslator.mGFXLoader;
-			App.resourceManager = new AndroidResourceManager(context);
+			App.resourceManager = App.gfxLoader.mResources;
+			App.vibrator = new AndroidVibrator(context);
 		}else{
 			DebugYang.println("App references already set");
 		}
 	}
-	
+
 	public void setSurface(YangSurface surface) {
 		surface.mPlatformKey = "ANDROID";
 		mSceneRenderer.setSurface(surface);
-		surface.mSounds = new AndroidSoundManager(mContext);
-		
+
 		if (surface instanceof EventQueueHolder)
 			setEventListener((EventQueueHolder)surface);
 	}
-	
+
 	public void setEventListener(EventQueueHolder eventQueue) {
 		mEventQueue = eventQueue.getEventQueue();
 	}
 
 	@SuppressLint("NewApi")
 	private PointerCoords pointerCoords = new PointerCoords();
-	
+
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -92,7 +92,7 @@ public class YangTouchSurface extends GLSurfaceView{
 			break;
 
 		case MotionEvent.ACTION_MOVE:
-			
+
 			for(int i = 0; i < event.getPointerCount(); i++){
 				id = event.getPointerId(i);
 				event.getPointerCoords(i, pointerCoords);
@@ -105,27 +105,27 @@ public class YangTouchSurface extends GLSurfaceView{
 
 		return true;
 	}
-	
+
 	public void onBackPressed() {
 		if (mEventQueue!=null) {
 			mEventQueue.putKeyEvent(Keys.ESC, YangKeyEvent.ACTION_KEYDOWN);
 			mEventQueue.putKeyEvent(Keys.ESC, YangKeyEvent.ACTION_KEYUP);
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		mSceneRenderer.mSurface.pause();
 	}
 
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		mSceneRenderer.mSurface.resume();
 	}
-	
+
 	public View getView() {
 		return this;
 	}

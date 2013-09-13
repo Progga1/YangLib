@@ -8,16 +8,16 @@ public class SoundSampleState extends SampleState {
 
 	private AbstractSound mSound;
 	private AbstractSound mLoopSound;
-	
+
 	@Override
 	protected void postInit() {
 		mSound = mSounds.getSound("sound");
 		mLoopSound = mSounds.getSound("loopsound");
 	}
-	
+
 	@Override
 	protected void step(float deltaTime) {
-		
+
 	}
 
 	@Override
@@ -30,23 +30,23 @@ public class SoundSampleState extends SampleState {
 //		mSound.play();
 		mLoopSound.playLoop();
 	}
-	
+
 	public void pointerUp(float x,float y, YangPointerEvent event) {
-		mLoopSound.stopLoop();
+		mLoopSound.stop();
 	}
-	
+
 	@Override
 	public void keyDown(int code) {
 		super.keyDown(code);
 //		if(code=='p')
 //			mLoopSound.playLoop();
 	}
-	
+
 	@Override
 	public void keyUp(int code) {
 		super.keyUp(code);
 		if(code=='p')
-			mLoopSound.stopLoop();
+			mLoopSound.stop();
 	}
-	
+
 }
