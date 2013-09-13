@@ -41,4 +41,9 @@ public class AndroidVibrator extends AbstractVibrator {
 	public void vibrate(long[] pattern, int repeat) {
 		if (mHasVibrator) mVibrator.vibrate(pattern, repeat);
 	}
+
+	@Override
+	public void cancel() {
+		if (mHasVibrator) mVibrator.cancel();
+	}
 }

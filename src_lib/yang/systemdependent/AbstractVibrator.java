@@ -13,4 +13,8 @@ public abstract class AbstractVibrator {
 	public void vibrate(long[] pattern, int repeat) {
 
 	}
+
+	public void cancel() {
+
+	}
 }
