@@ -598,6 +598,18 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 	}
 	
+	public void drawBuffer(IndexedVertexBuffer buffer,int bufferStart,int vertexCount,int mode) {
+		IndexedVertexBuffer prevBuffer = mCurrentVertexBuffer;
+		setVertexBuffer(buffer);
+		prepareDraw();
+		drawVertices(bufferStart,vertexCount,mode);
+		setVertexBuffer(prevBuffer);
+	}
+	
+	public void drawBuffer(IndexedVertexBuffer buffer) {
+		drawBuffer(buffer,0,buffer.getIndexCount(),T_TRIANGLES);
+	}
+	
 	public void setVertexBuffer(IndexedVertexBuffer vertexBuffer) {
 		assert preCheck("Set vertex buffer");
 		mCurrentVertexBuffer = vertexBuffer;
