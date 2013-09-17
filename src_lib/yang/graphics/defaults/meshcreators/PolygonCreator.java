@@ -24,6 +24,7 @@ public class PolygonCreator {
 	private int mElemsPerPos;
 	private int mOrientation = 1;
 	private boolean mAutoOrientation = true;
+	public float mCurrentZ = 0;
 	public boolean mAutoClose = false;
 	
 	public PolygonCreator(IndexedVertexBuffer vertexBuffer,int elementsPerPosition,int capacity) {
@@ -43,12 +44,16 @@ public class PolygonCreator {
 	public void addPoint(float x,float y) {
 		mPositions[mPointCount*mElemsPerPos] = x;
 		mPositions[mPointCount*mElemsPerPos+1] = y;
+		if(mElemsPerPos==3)
+			mPositions[mPointCount*mElemsPerPos+2] = mCurrentZ;
 		mIndices[mIndexCount++] = mElemsPerPos*mPointCount++;
 	}
 	
 	public void addPointNoIndex(float x,float y) {
 		mPositions[mPointCount*mElemsPerPos] = x;
 		mPositions[mPointCount*mElemsPerPos+1] = y;
+		if(mElemsPerPos==3)
+			mPositions[mPointCount*mElemsPerPos+2] = mCurrentZ;
 	}
 	
 	public void addIndex(int pointIndex) {
