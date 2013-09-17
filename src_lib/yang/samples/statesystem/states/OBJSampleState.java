@@ -72,7 +72,7 @@ public class OBJSampleState extends SampleState {
 			transform.loadIdentity();
 			transform.scale(0.5f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
-			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/peapodboat.obj"),mGFXLoader,transform,true,true);
+			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.translate(0, 0.3f);
@@ -80,7 +80,7 @@ public class OBJSampleState extends SampleState {
 			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/supermario.obj"),mGFXLoader,transform,true,true);
+			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/SuperMario.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.42f);	

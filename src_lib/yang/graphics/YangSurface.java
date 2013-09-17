@@ -15,10 +15,12 @@ import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.model.App;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
 import yang.sound.SoundManager;
 import yang.systemdependent.AbstractResourceManager;
+import yang.systemdependent.AbstractVibrator;
 import yang.util.StringsXML;
 import yang.util.Util;
 
@@ -35,6 +37,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	public AbstractResourceManager mResources;
 	public AbstractGFXLoader mGFXLoader;
 	public SoundManager mSounds;
+	public AbstractVibrator mVibrator;
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 
@@ -94,17 +97,17 @@ public abstract class YangSurface implements EventQueueHolder {
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
 		mMacroFilename = null;
 	}
-	
+
 	protected void setStartupSteps(int loadingSteps,int initSteps) {
 		mLoadingSteps = loadingSteps;
 		mInitSteps = initSteps;
 		mStartupSteps = initSteps+loadingSteps;
 	}
-	
+
 	protected void setStartupSteps(int loadingSteps) {
 		setStartupSteps(loadingSteps,0);
 	}
-	
+
 	protected void exceptionOccurred(Exception ex) {
 		try{
 			mEventQueue.close();
@@ -181,6 +184,7 @@ public abstract class YangSurface implements EventQueueHolder {
 		mGraphics.init();
 		mGFXLoader = mGraphics.mGFXLoader;
 		mResources = mGraphics.mGFXLoader.mResources;
+		mSounds = App.soundManager;
 		mEventQueue.setGraphics(mGraphics);
 		if(mResources.fileExists("strings/strings.xml"))
 			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
@@ -355,7 +359,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	protected void initializeAssets(int initStep,boolean resuming) {
 		System.out.println(mLoadingState+" "+initStep);
 	}
-	
+
 
 	protected void drawLoadingScreen(int loadState,float progress,boolean resuming) {
 

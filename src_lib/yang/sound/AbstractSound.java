@@ -9,7 +9,7 @@ public abstract class AbstractSound {
 
 	public abstract void play();
 	public abstract void playLoop();
-	public abstract void stopLoop();
+	public abstract void stop();
 
 	public abstract boolean isLoaded();
 

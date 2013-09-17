@@ -23,7 +23,7 @@ public class PCSound extends AbstractSound {
 	private NonConcurrentList<Clip> playingList;
 
 	private float volume;
-	
+
 	private Clip loop;
 
 	public PCSound(String name, byte[] data) {
@@ -60,7 +60,7 @@ public class PCSound extends AbstractSound {
 	}
 
 	@Override
-	public void stopLoop() {
+	public void stop() {
 		if (loop == null) return;
 		loop.stop();
 		waitingList.add(loop);
