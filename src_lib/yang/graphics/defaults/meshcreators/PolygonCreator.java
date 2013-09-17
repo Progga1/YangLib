@@ -1,7 +1,6 @@
 package yang.graphics.defaults.meshcreators;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.model.FloatColor;
 import yang.math.Geometry;
@@ -13,6 +12,7 @@ public class PolygonCreator {
 	public final static int ORIENTATION_BOTH = 0;
 	public final static int ORIENTATION_COUNTERCLOCKWISE = -1;
 	
+	private IndexedVertexBuffer mVertexBuffer;
 	private float[] mPositions;
 	private int[] mIndices;
 	private int[] mWorkingIndices;
@@ -26,7 +26,8 @@ public class PolygonCreator {
 	private boolean mAutoOrientation = true;
 	public boolean mAutoClose = false;
 	
-	public PolygonCreator(int elementsPerPosition,int capacity) {
+	public PolygonCreator(IndexedVertexBuffer vertexBuffer,int elementsPerPosition,int capacity) {
+		mVertexBuffer = vertexBuffer;
 		mElemsPerPos = elementsPerPosition;
 		mPositions = new float[capacity*mElemsPerPos];
 		mIndices = new int[capacity];
@@ -36,7 +37,7 @@ public class PolygonCreator {
 	}
 	
 	public PolygonCreator(DefaultGraphics<?> graphics,int capacity) {
-		this(graphics.mPositionDimension,capacity);
+		this(graphics.getCurrentVertexBuffer(),graphics.mPositionDimension,capacity);
 	}
 	
 	public void addPoint(float x,float y) {
@@ -162,24 +163,23 @@ public class PolygonCreator {
 		}
 	}
 	
-	public void putVertices(DefaultGraphics<?> graphics) {
+	public void putVertices() {
 		if(mResultIndexCount<0)
 			return;
-		IndexedVertexBuffer vertexBuffer = graphics.mCurrentVertexBuffer;
 		
-		int indexOffset = vertexBuffer.getCurrentVertexWriteCount();
+		int indexOffset = mVertexBuffer.getCurrentVertexWriteCount();
 		int c = 0;
 		for(int index:mResultIndices) {
 			if(c++>=mResultIndexCount)
 				break;
-			vertexBuffer.putIndex((short)(index+indexOffset));
+			mVertexBuffer.putIndex((short)(index+indexOffset));
 		}
 		
-		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions, mPointCount*mElemsPerPos);
+		mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions, mPointCount*mElemsPerPos);
 	}
 	
-	public void drawTriangleLines(Default2DGraphics graphics2D,float width) {
-		graphics2D.mTranslator.bindTexture(null);
+	public void drawTriangleLines(DefaultGraphics<?> graphics,float width) {
+		graphics.mTranslator.bindTexture(null);
 		for(int i=0;i<mResultIndexCount;i+=3) {
 			float x1 = mPositions[mResultIndices[i]*mElemsPerPos];
 			float y1 = mPositions[mResultIndices[i]*mElemsPerPos+1];
@@ -187,11 +187,11 @@ public class PolygonCreator {
 			float y2 = mPositions[mResultIndices[i+1]*mElemsPerPos+1];
 			float x3 = mPositions[mResultIndices[i+2]*mElemsPerPos];
 			float y3 = mPositions[mResultIndices[i+2]*mElemsPerPos+1];
-			graphics2D.drawLine(x1, y1, x2, y2, width);
-			graphics2D.drawLine(x1, y1, x3, y3, width);
-			graphics2D.drawLine(x2, y2, x3, y3, width);
+			graphics.drawLine(x1, y1, x2, y2, width);
+			graphics.drawLine(x1, y1, x3, y3, width);
+			graphics.drawLine(x2, y2, x3, y3, width);
 			
-			graphics2D.drawRectCentered(x2, y2, width*2.5f);
+			graphics.drawRectCentered(x2, y2, width*2.5f);
 		}
 	}
 	
@@ -256,25 +256,23 @@ public class PolygonCreator {
 		mResultIndexCount = -1;
 	}
 	
-	public void putTextureCoordinates(DefaultGraphics<?> graphics,float offsetX,float offsetY,float scaleX,float scaleY) {
-		IndexedVertexBuffer vertexBuffer = graphics.mCurrentVertexBuffer;
+	public void putTextureCoordinates(float offsetX,float offsetY,float scaleX,float scaleY) {
 		for(int i=0;i<mPointCount;i++) {
-			vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, offsetX+mPositions[i*mElemsPerPos]*scaleX, offsetY+mPositions[i*mElemsPerPos+1]*scaleY);
+			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, offsetX+mPositions[i*mElemsPerPos]*scaleX, offsetY+mPositions[i*mElemsPerPos+1]*scaleY);
 		}
 	}
 	
-	public void putTextureCoordinates(DefaultGraphics<?> graphics,float scale) {
-		putTextureCoordinates(graphics,0,0,scale,scale);
+	public void putTextureCoordinates(float scale) {
+		putTextureCoordinates(0,0,scale,scale);
 	}
 	
-	public void putColor(DefaultGraphics<?> graphics,FloatColor color) {
-		graphics.putColor(color.mValues, mPointCount);
+	public void putColor(FloatColor color) {
+		mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS,color.mValues, mPointCount);
 	}
 	
-	public void putColor(DefaultGraphics<?> graphics,float r,float g,float b,float a) {
-		IndexedVertexBuffer vertexBuffer = graphics.mCurrentVertexBuffer;
+	public void putColor(float r,float g,float b,float a) {
 		for(int i=0;i<mPointCount;i++) {
-			vertexBuffer.putVec4(DefaultGraphics.ID_COLORS, r,g,b,a);
+			mVertexBuffer.putVec4(DefaultGraphics.ID_COLORS, r,g,b,a);
 		}
 	}
 

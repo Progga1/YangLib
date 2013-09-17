@@ -199,6 +199,7 @@ public abstract class YangSurface implements EventQueueHolder {
 				}
 			}
 
+			
 			postInitGraphics();
 
 			if(mInitCallback!=null)
@@ -345,7 +346,6 @@ public abstract class YangSurface implements EventQueueHolder {
 	}
 
 	protected void loadAssets(int loadState,boolean resuming) {
-		System.out.println(loadState);
 		if(loadState>0 || mStartupSteps==1)
 			mGFXLoader.loadEnqueuedTextures();
 
@@ -366,7 +366,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	}
 
 	public final void drawFrame() {
-
+		mGraphics.clear(0,0,0);
 		try{
 			if(mMetaEventListener!=null)
 				mEventQueue.handleMetaEvents(mMetaEventListener);
@@ -405,6 +405,7 @@ public abstract class YangSurface implements EventQueueHolder {
 			mGraphics.beginFrame();
 			DebugYang.DRAW_GFX_VALUES = true;
 			if(mLoadingState>=mStartupSteps) {
+
 				draw();
 				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 					mGFXDebug.draw();

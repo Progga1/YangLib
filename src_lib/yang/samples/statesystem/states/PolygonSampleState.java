@@ -38,8 +38,8 @@ public class PolygonSampleState extends SampleState {
 		else
 			mGraphics.bindTexture(null);
 		mGraphics.switchCulling(false);
-		mPolygon.putVertices(mGraphics2D);
-		mPolygon.putTextureCoordinates(mGraphics2D, 2);
+		mPolygon.putVertices();
+		mPolygon.putTextureCoordinates(2);
 		mGraphics2D.fillBuffers();
 		
 		if(mDrawDebug) {
