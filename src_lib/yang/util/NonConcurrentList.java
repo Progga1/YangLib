@@ -7,7 +7,7 @@ import java.util.ListIterator;
 
 
 public class NonConcurrentList<E> implements List<E> {
-	
+
 	private class Node {
 		E elem;
 		public Node prev;
@@ -40,19 +40,19 @@ public class NonConcurrentList<E> implements List<E> {
 		public void remove() {
 			NonConcurrentList.this.remove((Node)current, (E)current.elem);
 		}
-		
+
 		public void prepare(int idx) {
 			current = (Node) first;
 			for (int i = 0; i < idx; i++) current = current.next;
-			
+
 			dummy.next = current;
 			dummy.prev = current;
 			current = dummy;
 		}
-		
+
 		public void prepare(Node startElement) {
 			current = (Node) startElement;
-			
+
 			dummy.next = current;
 			dummy.prev = current;
 			current = dummy;
@@ -88,24 +88,24 @@ public class NonConcurrentList<E> implements List<E> {
 			current.elem = (E) e;
 		}
 	}
-	
+
 	public Node first;
 	public Node last;
 	public int defaultIteratorIndex;
 	private NonConcurrentIterator<E>[] iterators;
 	private int size;
-	
+
 	@SuppressWarnings("unchecked")
 	public NonConcurrentList(int iteratorCount) {
 		iterators = new NonConcurrentIterator[iteratorCount];
 		for (int i = 0; i < iteratorCount; i++) iterators[i] = new NonConcurrentIterator<E>();
 		defaultIteratorIndex = 0;
 	}
-	
+
 	public NonConcurrentList() {
 		this(2);
 	}
-	
+
 	public boolean add(E element) {	//end of list
 		add(last, element, true);
 		return true;
@@ -115,14 +115,14 @@ public class NonConcurrentList<E> implements List<E> {
 		if (index > size || index < 0) {
 			throw new IndexOutOfBoundsException("item: "+index +" size: "+size);
 		}
-		
+
 		if (index == size) {
 			add(element);	//end of list
 		} else {
 			Node curr = first;
 			for(int i = 0; i < index; i++) curr = curr.next;
 			add(curr, element, index==size);
-		}		
+		}
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
@@ -196,13 +196,13 @@ public class NonConcurrentList<E> implements List<E> {
 		}
 		return idx;
 	}
-	
+
 	public ListIterator<E> listIterator() {
 		NonConcurrentIterator<E> iterator = iterators[defaultIteratorIndex];
 		iterator.prepare(0);
 		return iterator;
 	}
-	
+
 	public ListIterator<E> listIteratorLast() {
 		return listIterator(size-1);
 	}
@@ -221,7 +221,7 @@ public class NonConcurrentList<E> implements List<E> {
 			curr = curr.next;
 		}
 
-		if (!curr.elem.equals(startElement)) throw new RuntimeException("start element not found: "+startElement); 
+		if (!curr.elem.equals(startElement)) throw new RuntimeException("start element not found: "+startElement);
 
 		iterator.prepare(curr);
 		return iterator;
@@ -270,7 +270,7 @@ public class NonConcurrentList<E> implements List<E> {
 	public int size() {
 		return size;
 	}
-	
+
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
@@ -289,15 +289,15 @@ public class NonConcurrentList<E> implements List<E> {
 
 	public <T> T[] toArray(T[] a) {
 		throw new UnsupportedOperationException();
-	}	
-	
+	}
+
 	private boolean validIdx(int index) {
 		if (index >= size || index < 0) {
 			throw new IndexOutOfBoundsException("item: "+index +" size: "+size);
 		}
 		return true;
 	}
-	
+
 	public void add(Node node, E elem, boolean after) {
 		size++;
 
@@ -311,49 +311,59 @@ public class NonConcurrentList<E> implements List<E> {
 				if (node == last) last = newNode;
 				node.next = newNode;
 				if (newNode.next != null) newNode.next.prev = newNode;
-				
+
 			} else {
 				//add before node
 				Node newNode = new Node(elem, node.prev, node);
 				if (node == first) first = newNode;
-				
+
 				node.prev = newNode;
 				if (newNode.prev != null) newNode.prev.next = newNode;
 			}
 		}
 	}
-	
+
 	public void remove(Node node, E elem) {
 		size--;
 		if (node == first) first = node.next;
 		if (node == last) last = node.prev;
-		
+
 		Node prev = node.prev;
 		Node next = node.next;
-		
+
 		if (prev != null) {
 			prev.next = node.next;
 		}
-		
+
 		if (next != null) {
 			next.prev = node.prev;
 		}
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
 		String list = "[ | ";
-		
+
 		Node curr = first;
 		while(curr != null) {
 			list+= curr.elem.toString()+" | ";
 			curr = curr.next;
 		}
-		
+
 		return size + " items " + list+"] ";
 	}
-	
+
+	public E getFirst() {
+		if (first != null) return first.elem;
+		else return null;
+	}
+
+	public E getLast() {
+		if (last != null) return last.elem;
+		else return null;
+	}
+
 //	public static void main(String[] args) {
 //		NonConcurrentList<String> list = new NonConcurrentList<String>(2);
 //		System.out.println("add/remove test:");
@@ -397,14 +407,14 @@ public class NonConcurrentList<E> implements List<E> {
 //			System.out.print(elemIter.next());
 //		}
 //		System.out.println();
-//		
+//
 //		System.out.print("\n\nfw-iterator: -> ");
 //		ListIterator<String> fwIter = list.listIterator();
 //		while(fwIter.hasNext()) {
 //			System.out.print(fwIter.next());
 //		}
 //		System.out.println();
-//		
+//
 //		System.out.print("\n\nbw-iterator: -> ");
 //		ListIterator<String> bwIter = list.listIterator(list.size-1);
 //		while (bwIter.hasPrevious()) {
