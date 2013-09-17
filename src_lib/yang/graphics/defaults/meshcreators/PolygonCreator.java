@@ -55,6 +55,10 @@ public class PolygonCreator {
 		mIndices[mIndexCount++] = mElemsPerPos*pointIndex;
 	}
 	
+	public void setVertexBuffer(IndexedVertexBuffer targetBuffer) {
+		mVertexBuffer = targetBuffer;
+	}
+	
 	public void triangulate() {
 		if(mAutoOrientation)
 			setOrientationByPoints();
