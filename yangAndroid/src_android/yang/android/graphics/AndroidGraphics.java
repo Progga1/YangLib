@@ -307,5 +307,10 @@ public class AndroidGraphics extends GraphicsTranslator {
 	public void setScissorRectI(int x, int y, int width, int height) {
 		GLES20.glScissor(x, y, width, height);
 	}
+	
+	@Override
+	public void switchZWriting(boolean enabled) {
+		GLES20.glDepthMask(enabled);
+	}
 
 }

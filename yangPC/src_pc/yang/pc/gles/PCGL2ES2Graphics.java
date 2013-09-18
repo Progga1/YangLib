@@ -389,4 +389,9 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public void setScissorRectI(int x, int y, int width, int height) {
 		gles2.glScissor(x, y, width, height);
 	}
+	
+	@Override
+	public void switchZWriting(boolean enabled) {
+		gles2.glDepthMask(enabled);
+	}
 }

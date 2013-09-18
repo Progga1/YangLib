@@ -130,10 +130,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void enable(int glConstant);
 	public abstract void disable(int glConstant);
 	public abstract void setScissorRectI(int x,int y,int width,int height);
+	public abstract void switchZWriting(boolean enable);
 	
 	protected void postInit() { }
 	
-	//TODO: glColorMask, glDepthMask
+	//TODO: glColorMask
 	
 	public static String errorCodeToString(int code) {
 		switch(code) {
