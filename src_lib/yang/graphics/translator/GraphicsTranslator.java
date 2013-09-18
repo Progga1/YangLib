@@ -483,7 +483,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			if(mTargetTime<curTime)
 				mTargetTime=curTime;
 			else{
-				if(false)
 				try {
 					Thread.sleep((long) ((mTargetTime-curTime)*0.000001));
 				} catch (InterruptedException e) {
