@@ -10,6 +10,7 @@ import yang.pc.PCFrame;
 
 public class YangGLESFrame extends PCFrame{
 
+	public static int DEFAULT_MAX_FPS = 60;
 	private static final long serialVersionUID = 1L;
 
 	public PCGL2ES2Graphics mGraphics;
@@ -36,7 +37,7 @@ public class YangGLESFrame extends PCFrame{
 		FullGraphicsInitializer initializer = new FullGraphicsInitializer();
 		initializer.init(width, height);
 		mGraphics = initializer.mTranslator;
-		mGraphics.setMaxFPS(60);
+		mGraphics.setMaxFPS(DEFAULT_MAX_FPS);
 
 		if(autoBuild) {
 			this.add(mGraphics.getPanel());
