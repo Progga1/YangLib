@@ -627,7 +627,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mRatioY = 1;
 		mInvRatioX = 1/mRatioX;
 		mInvRatioY = 1/mRatioY;
-		mProjScreenTransform.setOrthogonalProjection(-mRatioX, mRatioX, mRatioY, -mRatioY);
+		mProjScreenTransform.setOrthogonalProjection(-mRatioX,mRatioX, mRatioY,-mRatioY, -1,1);
 		mProjScreenTransform.refreshInverted();
 		setViewPort(width,height);
 		for(SurfaceListener surfaceListener:mScreenListeners) {

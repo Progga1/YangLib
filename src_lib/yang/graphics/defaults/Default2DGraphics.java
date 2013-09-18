@@ -5,6 +5,7 @@ import yang.graphics.programs.BasicProgram;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera2D;
 import yang.math.MatrixOps;
+import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.model.Rect;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
@@ -34,7 +35,9 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	protected float mOrthoBottom;
 	private int mOrthoWidth;
 	private int mOrthoHeight;
-
+	public float mGameNear = YangMatrixCameraOps.DEFAULT_NEAR;
+	public float mGameFar = YangMatrixCameraOps.DEFAULT_FAR;
+	
 	public Default2DGraphics(GraphicsTranslator graphics) {
 		super(graphics,3);
 	}
@@ -196,7 +199,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			mOrthoWidth = (int)(Math.ceil(mOrthoRight - mOrthoLeft));
 			mOrthoHeight = (int)(Math.ceil(mOrthoTop - mOrthoBottom));
 	
-			mProjectionTransform.setOrthogonalProjection(mOrthoLeft, mOrthoRight, mOrthoTop, mOrthoBottom);
+			mProjectionTransform.setOrthogonalProjection(mOrthoLeft, mOrthoRight, mOrthoTop, mOrthoBottom, mGameFar, mGameNear);
 		}else{
 			mProjectionTransform.setOrthogonalProjection(
 					-mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom, mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom,
