@@ -24,6 +24,8 @@ public abstract class AbstractSoundManager {
 	public AbstractSoundManager() {
 		if (DebugYang.showStart) DebugYang.showStackTrace("1", 1);
 		mSounds = new HashMap<String, AbstractSound>();
+		mMusics = new HashMap<String, AbstractMusic>();
+
 		mSoundMute = false;
 		mMusicMute = false;
 

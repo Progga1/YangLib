@@ -17,6 +17,7 @@ public class PCSound extends AbstractSound {
 
 	@Override
 	public void play() {
+		if (mSound == null) return;
 		if (mManager.isSoundMuted()) return;
 		if (mSound.isPlaying()) return;
 
@@ -27,6 +28,7 @@ public class PCSound extends AbstractSound {
 
 	@Override
 	public void playLoop() {
+		if (mSound == null) return;
 		if (mManager.isSoundMuted()) return;
 		if (mSound.isPlaying()) return;
 
@@ -37,26 +39,31 @@ public class PCSound extends AbstractSound {
 
 	@Override
 	public void stop() {
+		if (mSound == null) return;
 		mSound.stop();
 	}
 
 	@Override
 	public void setSpeed(float speed) {
+		if (mSound == null) return;
 		mSound.setRate(speed);
 	}
 
 	@Override
 	public void setVolume(float volume) {
+		if (mSound == null) return;
 		mSound.setVolume(volume);
 	}
 
 	@Override
 	public void setRepeatCount(int count) {
+		if (mSound == null) return;
 		mSound.setCycleCount(count);
 	}
 
 	@Override
 	public void setBalance(float balance) {
+		if (mSound == null) return;
 		mSound.setBalance(balance);
 	}
 }

@@ -17,6 +17,8 @@ public class AndroidMusic extends AbstractMusic {
 
 	@Override
 	public void play() {
+		if (mManager.isMusicMuted()) return;
+		if (mMusic == null) return;
 		mMusic.setLooping(false);
 		mMusic.setVolume(mVolLeft*mVolume*mManager.getMusicVolume(), mVolRight*mVolume*mManager.getMusicVolume());
 		mMusic.start();
@@ -24,6 +26,8 @@ public class AndroidMusic extends AbstractMusic {
 
 	@Override
 	public void playLoop() {
+		if (mManager.isMusicMuted()) return;
+		if (mMusic == null) return;
 		mMusic.setLooping(true);
 		mMusic.setVolume(mVolLeft*mVolume*mManager.getMusicVolume(), mVolRight*mVolume*mManager.getMusicVolume());
 		mMusic.start();
@@ -31,16 +35,19 @@ public class AndroidMusic extends AbstractMusic {
 
 	@Override
 	public void stop() {
+		if (mMusic == null) return;
 		mMusic.stop();
 	}
 
 	@Override
 	public void pause() {
+		if (mMusic == null) return;
 		mMusic.pause();
 	}
 
 	@Override
 	public void seek(int time) {
+		if (mMusic == null) return;
 		mMusic.seekTo(time*1000);
 	}
 

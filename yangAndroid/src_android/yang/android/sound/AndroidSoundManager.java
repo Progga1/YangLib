@@ -1,5 +1,6 @@
 package yang.android.sound;
 
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -32,15 +33,14 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 	@Override
 	public AbstractSound loadSound(String name) {
 		AndroidSound sound = null;
+		int sId = -1;
 		try {
-			int sId = mSoundPool.load(mContext.getAssets().openFd(SOUND_PATH + name + SOUND_EXT), 1);
-			sound = new AndroidSound(this, sId, mSoundPool);
-			mSounds.put(name, sound);
+			sId = mSoundPool.load(mContext.getAssets().openFd(SOUND_PATH + name + SOUND_EXT), 1);
 			mAndroidSounds.put(sId, sound);
 		} catch (IOException e) {
-			throw new RuntimeException("Error reading resource: '"+name+"'");
+			System.err.println("failed loading sound: "+name);
 		}
-
+		sound = new AndroidSound(this, sId, mSoundPool);
 		return sound;
 	}
 
@@ -49,13 +49,16 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 		MediaPlayer player = new MediaPlayer();
 		AndroidMusic music = null;
 		try {
-			player.setDataSource(mContext.getAssets().openFd(SOUND_PATH + name + SOUND_EXT).getFileDescriptor());
+			FileDescriptor fd = mContext.getAssets().openFd(SOUND_PATH + name + SOUND_EXT).getFileDescriptor();
+			player.setDataSource(fd);
 			player.prepareAsync();
-			music = new AndroidMusic(player, this);
-			mMusics.put(name, music);
 		} catch (Exception e) {
-			throw new RuntimeException("Error reading resource: '"+name+"'");
+			player.release();
+			player = null;
+			System.err.println("failed loading sound: "+name);
 		}
+
+		music = new AndroidMusic(player, this);
 		return music;
 	}
 
@@ -64,7 +67,6 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 		while ((sound = mAndroidSounds.get(sampleId)) == null) {
 			try {Thread.sleep(30); } catch (Exception e) {};
 		}
-
 		sound.setLoaded();
 	}
 

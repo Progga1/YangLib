@@ -27,12 +27,28 @@ public class PCSoundManager extends AbstractSoundManager {
 
 	@Override
 	public synchronized AbstractSound loadSound(String name) {
-		return new PCSound(this, new AudioClip(new File(SOUND_PATH+ name + SOUND_EXT).toURI().toString()));
+		AudioClip clip = null;
+		try {
+			File file = new File(SOUND_PATH+ name + SOUND_EXT);
+			if (!file.exists()) throw new RuntimeException();
+			clip = new AudioClip(file.toURI().toString());
+		} catch (Exception e) {
+			System.err.println("failed loading sound: "+name);
+		}
+		return new PCSound(this, clip);
 	}
 
 	@Override
 	protected AbstractMusic loadMusic(String name) {
-		return new PCMusic(this, new MediaPlayer(new Media(new File(SOUND_PATH+name+SOUND_EXT).toURI().toString())));
+		MediaPlayer player = null;
+		try {
+			File file = new File(SOUND_PATH+ name + SOUND_EXT);
+			if (!file.exists()) throw new RuntimeException();
+			player = new MediaPlayer(new Media(file.toURI().toString()));
+		} catch (Exception e) {
+			System.err.println("failed loading sound: "+name);
+		}
+		return new PCMusic(this, player);
 	}
 
 }
