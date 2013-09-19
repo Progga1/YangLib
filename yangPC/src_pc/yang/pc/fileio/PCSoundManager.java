@@ -1,37 +1,38 @@
 package yang.pc.fileio;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import yang.model.PathSpecs;
+import yang.pc.PCMusic;
 import yang.pc.PCSound;
+import yang.sound.AbstractMusic;
 import yang.sound.AbstractSound;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 
-public class PCSoundManager extends SoundManager {
+public class PCSoundManager extends AbstractSoundManager {
+
+	@SuppressWarnings("unused")
+	private JFXPanel fxPanel;
 
 	public PCSoundManager() {
 		super();
 		SOUND_PATH = PathSpecs.ASSET_PATH + SOUND_PATH;
+		//need to call this to initialize javafx
+		fxPanel = new JFXPanel();
 	}
-	
+
 	@Override
 	public synchronized AbstractSound loadSound(String name) {
-		File file = new File(SOUND_PATH, name + SOUND_EXT);
-		byte[] data = new byte[(int) file.length()];
-		try {
-			new FileInputStream(file).read(data);
-		} catch (FileNotFoundException e) {
-			System.err.println("**ERROR** Could not find '" + SOUND_PATH + name + SOUND_EXT + "'.");
-			data = null;
-		} catch (IOException e) {
-			System.err.println("**ERROR** " + e.getMessage());
-			e.printStackTrace();
-			data = null;
-		}
-		return new PCSound(name, data);
+		return new PCSound(this, new AudioClip(new File(SOUND_PATH+ name + SOUND_EXT).toURI().toString()));
 	}
-	
+
+	@Override
+	protected AbstractMusic loadMusic(String name) {
+		return new PCMusic(this, new MediaPlayer(new Media(new File(SOUND_PATH+name+SOUND_EXT).toURI().toString())));
+	}
+
 }

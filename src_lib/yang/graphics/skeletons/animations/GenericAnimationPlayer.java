@@ -6,18 +6,18 @@ import yang.sound.AbstractSound;
 public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,AnimationType extends Animation<CarrierType>> extends AnimationPlayer<AnimationType> {
 
 	public CarrierType mBody;
-	
+
 	public GenericAnimationPlayer(CarrierType body,AnimationType startAnimation) {
 		super(body.getSkeleton(),startAnimation);
 		mBody = body;
 	}
-	
+
 	public void setAnimation(AnimationType animation) {
 		if(mLockedAnimation)
 			return;
 		if(mCurrentAnimation!=null)
 			cleanUp();
-		
+
 		animation.startPhysics(mBody);
 		if(!mOnlyPhysics) {
 			animation.startVisuals(mBody);
@@ -28,7 +28,7 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 		super.setAnimation(animation);
 		animation.start(mBody);
 	}
-	
+
 //	public void incFrame() {
 //		mCurFrame++;
 //		if(mCurFrame>mEndFrame) {
@@ -41,7 +41,7 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 //		}
 //		mCurrentAnimation.mFrames[mCurFrame].mPose.applyPose(mSkeleton);
 //	}
-	
+
 	@Override
 	public void proceed(float deltaTime) {
 		super.proceed(deltaTime);
@@ -49,7 +49,7 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 		if(!mOnlyPhysics)
 			mCurrentAnimation.stepVisuals(mBody,mCurrentAnimationTime,deltaTime);
 	}
-	
+
 	@Override
 	public final void setAnimationTime(float newTime) {
 		super.setAnimationTime(newTime);
@@ -67,11 +67,11 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 		if(!mOnlyPhysics)
 			mCurrentAnimation.cleanUpVisuals(mBody);
 	}
-	
-	
+
+
 	public void playSound(AbstractSound sound) {
 		if(mPlaySounds)
-			mSound.play(sound);
+			sound.play();
 	}
 
 	public void setFrame(int frame) {
@@ -88,7 +88,7 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 	public void restart() {
 		setAnimation(this.mStartAnimation);
 	}
-	
+
 	@Override
 	public void stopNode() {
 		mCurrentAnimation.onStop(mBody);

@@ -7,7 +7,7 @@ import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.StringsXML;
 
@@ -23,7 +23,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected GraphicsTranslator mGraphics;
 	protected Default2DGraphics mGraphics2D;
 	protected Default3DGraphics mGraphics3D;
-	protected SoundManager mSounds;
+	protected AbstractSoundManager mSounds;
 	protected AbstractGFXLoader mGFXLoader;
 	protected AbstractResourceManager mResources;
 	public StringsXML mStrings;

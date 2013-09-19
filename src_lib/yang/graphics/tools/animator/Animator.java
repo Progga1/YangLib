@@ -14,12 +14,12 @@ import yang.graphics.skeletons.animations.KeyFrame;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera2D;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 import yang.util.NonConcurrentList;
 
 public class Animator implements YangEventListener {
 
-	public SoundManager mSound;
+	public AbstractSoundManager mSound;
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
 	protected Skeleton mCurSkeleton;

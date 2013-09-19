@@ -18,7 +18,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.model.App;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 import yang.systemdependent.AbstractResourceManager;
 import yang.systemdependent.AbstractVibrator;
 import yang.util.StringsXML;
@@ -36,7 +36,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	public StringsXML mStrings;
 	public AbstractResourceManager mResources;
 	public AbstractGFXLoader mGFXLoader;
-	public SoundManager mSounds;
+	public AbstractSoundManager mSounds;
 	public AbstractVibrator mVibrator;
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";

@@ -23,7 +23,7 @@ import yang.pc.gles.YangGLESFrame;
 import yang.pc.tools.keymainmenu.KeyItem;
 import yang.pc.tools.keymainmenu.KeyMainMenu;
 import yang.pc.tools.keymainmenu.KeyMenuListener;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 
 public class AnimatorFrame implements InitializationCallback, KeyMenuListener, ExitCallback {
 
@@ -56,7 +56,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 	public void init(int areaWidthAndHeight,BasicProgram[] usedShaders) {
 		mUsedShaders = usedShaders;
 		mFrame = new YangGLESFrame(mTitle);
-		SoundManager sound = new PCSoundManager();
+		AbstractSoundManager sound = new PCSoundManager();
 		mSurface = new DefaultAnimatorSurface(sound,this);
 		mSurface.setInitializationCallback(new InitCallback());
 		
