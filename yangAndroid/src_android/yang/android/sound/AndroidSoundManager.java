@@ -38,7 +38,8 @@ public class AndroidSoundManager extends SoundManager implements OnLoadCompleteL
 			mSounds.put(name, sound);
 			mAndroidSounds.put(sId, sound);
 		} catch (IOException e) {
-			throw new RuntimeException("Error reading resource: '"+name+"'");
+			//throw new RuntimeException("Error reading resource: '"+name+"'");
+			System.err.println("Error reading resource: '"+name+"'");
 		}
 	
 		return sound;

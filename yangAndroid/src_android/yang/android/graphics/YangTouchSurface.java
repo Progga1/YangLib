@@ -11,12 +11,10 @@ import yang.events.eventtypes.YangKeyEvent;
 import yang.graphics.YangSurface;
 import yang.model.App;
 import yang.model.DebugYang;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
-import android.view.MotionEvent.PointerCoords;
 import android.view.View;
 
 public class YangTouchSurface extends GLSurfaceView{
@@ -33,7 +31,7 @@ public class YangTouchSurface extends GLSurfaceView{
 	}
 
 	protected void initGL(Context context) {
-		super.setEGLContextClientVersion(2);
+		super.setEGLContextClientVersion(2); 
 		super.setEGLConfigChooser(8,8,8,0, 16,0);
 		//HTC working: RGBA_8888
 		super.getHolder().setFormat(PixelFormat.RGBA_8888);
@@ -65,10 +63,6 @@ public class YangTouchSurface extends GLSurfaceView{
 		mEventQueue = eventQueue.getEventQueue();
 	}
 
-	@SuppressLint("NewApi")
-	private PointerCoords pointerCoords = new PointerCoords();
-
-	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if(mEventQueue==null)
@@ -94,11 +88,9 @@ public class YangTouchSurface extends GLSurfaceView{
 		case MotionEvent.ACTION_MOVE:
 
 			for(int i = 0; i < event.getPointerCount(); i++){
-				id = event.getPointerId(i);
-				event.getPointerCoords(i, pointerCoords);
-				mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDRAG, (int)pointerCoords.x, (int)pointerCoords.y, AbstractPointerEvent.BUTTON_LEFT, id);
+				mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDRAG, (int)event.getX(i), (int)event.getY(i), AbstractPointerEvent.BUTTON_LEFT, event.getPointerId(i));
 			}
-//			System.out.println(x+" "+y+" "+id);
+
 //			mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDRAG, x, y, AbstractPointerEvent.BUTTON_LEFT, id);
 			break;
 		}

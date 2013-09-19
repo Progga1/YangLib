@@ -271,16 +271,16 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	//TODO handling same filenames with different texture settings
-	public void reloadTextures() {
-		for(Entry<String,Texture> entry:mTextures.entrySet()) {
-			TextureData data = loadImageData(entry.getKey());
-			Texture tex = entry.getValue();
-			if(tex.mIsAlphaMap)
-				data.redToAlpha();
-			tex.update(data.mData);
-			data = null;
-		}
-	}
+//	public void reloadTextures() {
+//		for(Entry<String,Texture> entry:mTextures.entrySet()) {
+//			TextureData data = loadImageData(entry.getKey());
+//			Texture tex = entry.getValue();
+//			if(tex.mIsAlphaMap)
+//				data.redToAlpha();
+//			tex.update(data.mData);
+//			data = null;
+//		}
+//	}
 	
 	public void clearQueue() {
 		mQueueBytes = 0;

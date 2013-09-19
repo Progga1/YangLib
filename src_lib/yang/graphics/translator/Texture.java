@@ -106,7 +106,7 @@ public class Texture {
 		update(data.mData, data.mWidth,data.mHeight);
 	}
 	
-	public void setEmpty(Object object) {
+	public void setEmpty() {
 		update(null,mWidth,mHeight);
 	}
 	

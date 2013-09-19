@@ -203,7 +203,7 @@ public abstract class YangSurface implements EventQueueHolder {
 				}
 			}
 
-			
+			mGFXLoader.startEnqueuing();
 			postInitGraphics();
 
 			if(mInitCallback!=null)

@@ -212,8 +212,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			buf.put((byte)255);
 		if(mWhiteTexture==null)
 			mWhiteTexture = createTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
-		else
+		else{
+			mWhiteTexture.generate();
 			mWhiteTexture.update(buf);
+		}
 		buf = ByteBuffer.allocateDirect(BYTES);
 		for(int i=0;i<BYTES;i++)
 			if(i%4==3)
@@ -222,8 +224,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 				buf.put((byte)0);
 		if(mBlackTexture==null)
 			mBlackTexture = createTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
-		else
+		else{
+			mBlackTexture.generate();
 			mBlackTexture.update(buf);
+		}
 		assert checkErrorInst("Create def textures");
 		
 		enable(GLOps.BLEND);
@@ -247,7 +251,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		for(TextureRenderTarget renderTarget:mRenderTargets) {
 			renderTarget.mTargetTexture.generate();
-			renderTarget.mTargetTexture.setEmpty(null);
+			renderTarget.mTargetTexture.setEmpty();
 			derivedCreateRenderTarget(renderTarget.mTargetTexture);
 		}
 		mRestartCount++;

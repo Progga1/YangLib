@@ -33,6 +33,8 @@ public abstract class SoundManager {
 		if (sound != null)
 			return sound;
 		sound = loadSound(name);
+		if(sound==null)
+			return null;
 		sound.init(volume);
 		mSounds.put(name, sound);
 		return sound;
