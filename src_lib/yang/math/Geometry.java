@@ -30,6 +30,16 @@ public class Geometry {
 		return (float)Math.sqrt(result);
 	}
 	
+	/** Quick 2D distance check that sums x and y distances*/
+	public static float getManhattenDistance(float x1, float y1, float x2, float y2 ) {
+		return (Math.abs(x1-x2) + Math.abs(y1-y2));
+	}
+	
+	/** Quick 2D distance check that sums x and y distances*/
+	public static float getManhattenDistance(float deltaX, float deltaY) {
+		return (Math.abs(deltaX) + Math.abs(deltaY));
+	}
+	
 	public static float getAngleDown(float distance,float dX,float dY) {
 		if(distance==0)
 			return 0;
