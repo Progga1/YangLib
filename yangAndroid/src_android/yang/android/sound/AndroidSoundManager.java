@@ -36,11 +36,11 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 		int sId = -1;
 		try {
 			sId = mSoundPool.load(mContext.getAssets().openFd(SOUND_PATH + name + SOUND_EXT), 1);
-			mAndroidSounds.put(sId, sound);
 		} catch (IOException e) {
 			System.err.println("failed loading sound: "+name);
 		}
 		sound = new AndroidSound(this, sId, mSoundPool);
+		mAndroidSounds.put(sId, sound);
 		return sound;
 	}
 
@@ -63,6 +63,7 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 	}
 
 	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+		if (status != 0) return;
 		AndroidSound sound = null;
 		while ((sound = mAndroidSounds.get(sampleId)) == null) {
 			try {Thread.sleep(30); } catch (Exception e) {};
