@@ -203,7 +203,8 @@ public class Joint {
 	}
 	
 	public float getOutputRadius() {
-		return Math.max(0.01f,Math.min(0.1f,mRadius));
+		//return Math.max(0.01f,Math.min(0.1f,mRadius));
+		return Math.max(0.01f,mRadius);
 	}
 
 	public void addForce(float fX, float fY) {
@@ -272,11 +273,6 @@ public class Joint {
 	public void setPos(Joint joint) {
 		mPosX = joint.mPosX;
 		mPosY = joint.mPosY;
-	}
-	
-	@Override
-	public String toString() {
-		return "BONE:"+this.mName;
 	}
 
 	public void setPosIK(float posX, float posY) {
@@ -349,6 +345,11 @@ public class Joint {
 	public void setSpeed(float velX,float velY) {
 		mVelX = velX;
 		mVelY = velY;
+	}
+	
+	@Override
+	public String toString() {
+		return "JOINT:"+this.mName;
 	}
 
 }
