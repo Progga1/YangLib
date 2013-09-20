@@ -20,7 +20,7 @@ import yang.util.NonConcurrentList;
 
 //TODO: bone-arrays
 
-public abstract class Skeleton {
+public class Skeleton {
 
 	public static int DEFAULT_ACCURACY = 16;
 	static final float[] COLOR_BLACK = {0,0,0,1};
@@ -103,7 +103,9 @@ public abstract class Skeleton {
 		mDrawContour = true;
 	}
 	
-	protected abstract void build();
+	protected void build() {
+		
+	}
 	
 	public void recalculateConstraints() {
 		for(Joint joint:mJoints) {

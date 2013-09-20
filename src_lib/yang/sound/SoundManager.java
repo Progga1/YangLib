@@ -35,7 +35,6 @@ public abstract class SoundManager {
 		sound = loadSound(name);
 		if(sound==null)
 			return null;
-		sound.init(volume);
 		mSounds.put(name, sound);
 		return sound;
 	}

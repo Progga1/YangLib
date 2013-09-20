@@ -1,37 +1,54 @@
 package yang.pc.fileio;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import yang.model.PathSpecs;
+import yang.pc.PCMusic;
 import yang.pc.PCSound;
+import yang.sound.AbstractMusic;
 import yang.sound.AbstractSound;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 
-public class PCSoundManager extends SoundManager {
+public class PCSoundManager extends AbstractSoundManager {
+
+	@SuppressWarnings("unused")
+	private JFXPanel fxPanel;
 
 	public PCSoundManager() {
 		super();
 		SOUND_PATH = PathSpecs.ASSET_PATH + SOUND_PATH;
+		//need to call this to initialize javafx
+		fxPanel = new JFXPanel();
 	}
-	
+
 	@Override
 	public synchronized AbstractSound loadSound(String name) {
-		File file = new File(SOUND_PATH, name + SOUND_EXT);
-		byte[] data = new byte[(int) file.length()];
+		AudioClip clip = null;
 		try {
-			new FileInputStream(file).read(data);
-		} catch (FileNotFoundException e) {
-			System.err.println("**ERROR** Could not find '" + SOUND_PATH + name + SOUND_EXT + "'.");
-			data = null;
-		} catch (IOException e) {
-			System.err.println("**ERROR** " + e.getMessage());
-			e.printStackTrace();
-			data = null;
+			File file = new File(SOUND_PATH+ name + SOUND_EXT);
+			if (!file.exists()) throw new RuntimeException();
+			clip = new AudioClip(file.toURI().toString());
+		} catch (Exception e) {
+			System.err.println("failed loading sound: "+name);
 		}
-		return new PCSound(name, data);
+		return new PCSound(this, clip);
 	}
-	
+
+	@Override
+	protected AbstractMusic loadMusic(String name) {
+		MediaPlayer player = null;
+		try {
+			File file = new File(SOUND_PATH+ name + SOUND_EXT);
+			if (!file.exists()) throw new RuntimeException();
+			player = new MediaPlayer(new Media(file.toURI().toString()));
+		} catch (Exception e) {
+			System.err.println("failed loading sound: "+name);
+		}
+		return new PCMusic(this, player);
+	}
+
 }

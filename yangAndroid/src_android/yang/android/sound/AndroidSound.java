@@ -1,6 +1,7 @@
 package yang.android.sound;
 
 import yang.sound.AbstractSound;
+import yang.sound.AbstractSoundManager;
 import android.media.SoundPool;
 
 public class AndroidSound extends AbstractSound {
@@ -9,9 +10,14 @@ public class AndroidSound extends AbstractSound {
 	private int mId;
 	private int mPlayingId;
 	private boolean mIsLoaded;
-	private float mVolume;
+	private float mVolLeft;
+	private float mVolRight;
+	private float mSpeed;
+	private int mRepeatCount;
 
-	public AndroidSound(int id, SoundPool soundPool) {
+	public AndroidSound(AbstractSoundManager mgr, int id, SoundPool soundPool) {
+		super(mgr);
+		setBalance(0.0f);
 		mId = id;
 		mIsLoaded = false;
 		mSoundPool = soundPool;
@@ -23,16 +29,18 @@ public class AndroidSound extends AbstractSound {
 
 	@Override
 	public void play() {
-		if (mIsLoaded) {
-			mPlayingId = mSoundPool.play(mId, mVolume, mVolume, 1, 0, 1.0f);
-		}
+		if (mManager.isSoundMuted()) return;
+		if (!mIsLoaded) return;
+
+		mPlayingId = mSoundPool.play(mId, mVolLeft*mVolume*mManager.getSoundVolume(), mVolRight*mVolume*mManager.getSoundVolume(), 1, mRepeatCount, mSpeed);
 	}
 
 	@Override
 	public void playLoop() {
-		if (mIsLoaded) {
-			mPlayingId =  mSoundPool.play(mId, mVolume, mVolume, 1, -1, 1.0f);
-		}
+		if (mManager.isSoundMuted()) return;
+		if (!mIsLoaded) return;
+
+		mPlayingId =  mSoundPool.play(mId, mVolLeft*mVolume*mManager.getSoundVolume(), mVolRight*mVolume*mManager.getSoundVolume(), 1, -1, mSpeed);
 	}
 
 	@Override
@@ -40,18 +48,23 @@ public class AndroidSound extends AbstractSound {
 		if (mIsLoaded && mPlayingId != -1) mSoundPool.stop(mPlayingId);
 	}
 
-	@Override
-	public boolean isLoaded() {
-		return mIsLoaded;
-	}
-
 	public int getId() {
 		return mId;
 	}
 
 	@Override
-	public void init(float volume) {
-		mVolume = volume;
+	public void setSpeed(float speed) {
+		mSpeed = speed;
 	}
 
+	@Override
+	public void setRepeatCount(int count) {
+		mRepeatCount = count;
+	}
+
+	@Override
+	public void setBalance(float balance) {
+		mVolLeft = (1-balance)/2;
+		mVolRight = (1+balance)/2;
+	}
 }

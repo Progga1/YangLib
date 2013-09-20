@@ -2,7 +2,7 @@ package yang.graphics.skeletons.animations;
 
 import yang.graphics.skeletons.Skeleton;
 import yang.model.App;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 
 public class AnimationPlayer<AnimationType extends Animation<?>> {
 
@@ -15,7 +15,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public int mStateMarkInt;
 	public float mCurrentAnimationTime;
 	public int mCurFrame;
-	public SoundManager mSound;
+	public AbstractSoundManager mSound;
 	public float mAnimationSpeed;
 	public boolean mLockedAnimation;
 	

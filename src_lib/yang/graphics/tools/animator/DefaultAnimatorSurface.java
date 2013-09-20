@@ -3,16 +3,16 @@ package yang.graphics.tools.animator;
 import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultSurface;
 import yang.graphics.interfaces.InitializationCallback;
-import yang.sound.SoundManager;
+import yang.sound.AbstractSoundManager;
 
 public class DefaultAnimatorSurface extends DefaultSurface {
 
-	public SoundManager mSound;
+	public AbstractSoundManager mSound;
 	public Animator mAnimator;
 	private InitializationCallback mInitCallback;
 	public float mSpeedFactor = 1;
 	
-	public DefaultAnimatorSurface(SoundManager sound,InitializationCallback initCallback) {
+	public DefaultAnimatorSurface(AbstractSoundManager sound,InitializationCallback initCallback) {
 		super(true,false);
 		mSound = sound;
 		mInitCallback = initCallback;
