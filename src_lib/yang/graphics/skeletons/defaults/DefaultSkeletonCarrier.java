@@ -14,12 +14,12 @@ public class DefaultSkeletonCarrier implements SkeletonCarrier {
 	public int mLookDirection;
 	public float mScale;
 	
-	public DefaultSkeletonCarrier() {
+	public DefaultSkeletonCarrier(Skeleton skeleton) {
 		mPosX = 0;
 		mPosY = 0;
 		mScale = 1;
 		mLookDirection = 1;
-		
+		setSkeleton(skeleton);
 	}
 	
 	public float getWorldX() {

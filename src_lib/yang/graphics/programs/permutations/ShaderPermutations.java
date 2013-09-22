@@ -21,7 +21,7 @@ public class ShaderPermutations extends Basic3DProgram {
 		mPassingDataCount = 0;
 	}
 	
-	public ShaderPermutations(GraphicsTranslator graphics,SubShader[] subShaders) {
+	public ShaderPermutations(GraphicsTranslator graphics,SubShader... subShaders) {
 		this(graphics);
 		addSubShaders(subShaders);
 		initPermutations();

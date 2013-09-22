@@ -19,9 +19,9 @@ import yang.graphics.translator.Texture;
 import yang.model.Rect;
 import yang.util.NonConcurrentList;
 
+//TODO: bone-arrays
 
-public class Skeleton {
-
+public class SkeletonZBuffer extends Skeleton {
 
 	public static int DEFAULT_ACCURACY = 16;
 	static final float[] COLOR_BLACK = {0,0,0,1};
@@ -68,6 +68,7 @@ public class Skeleton {
 	public float mPosZ = 0;
 	private int mCurJointId = 0;
 	public boolean m3D = true;
+	public FloatColor mFillColor = FloatColor.WHITE.clone();
 	
 	public DrawBatch mMesh;
 	protected IndexedVertexBuffer mVertexBuffer;
@@ -78,7 +79,7 @@ public class Skeleton {
 	protected float[] mInterColor = new float[4];
 	
 	
-	public Skeleton() {
+	public SkeletonZBuffer() {
 		mJoints = new NonConcurrentList<Joint>();
 		mBones = new NonConcurrentList<Bone>();
 		mLayersList = new NonConcurrentList<NonConcurrentList<Bone>>();
@@ -186,11 +187,11 @@ public class Skeleton {
 	}
 	
 	public void init(DefaultGraphics<?> graphics) {
-		init(graphics,new DefaultSkeletonCarrier(this));
+		//init(graphics,new DefaultSkeletonCarrier(this));
 	}
 	
-	public void addJoint(Joint joint) {
-		mJoints.add(joint);
+	public void addJoint(Joint bone) {
+		mJoints.add(bone);
 	}
 	
 	public void addConstraint(Constraint constraint) {
@@ -234,7 +235,6 @@ public class Skeleton {
 	}
 	
 	public void draw() {	
-
 		if(mMesh==null) {
 			//FIRST DRAW
 			mVertexCount = 0;
@@ -268,7 +268,13 @@ public class Skeleton {
 			
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_COLORS,0);
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SUPPDATA, 0);
-			for(Bone[] layer:mLayers) {
+			for(Bone[] layer:mFrontToBackLayers) {
+				//Fill
+				for(Bone _:layer) {
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mFillColor.mValues,4);
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4);
+					//mInterColor[3] += zInc;
+				}
 				//Contour
 				if(mDrawContour)
 					for(Bone bone:layer) {
@@ -277,12 +283,6 @@ public class Skeleton {
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mContourColor,4);
 						}
 					}
-				//Fill
-				for(Bone _:layer) {
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4);
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4);
-					//mInterColor[3] += zInc;
-				}
 				//mInterColor[3] += 0.05f;
 			}
 			mUpdateColor = false;
@@ -291,7 +291,12 @@ public class Skeleton {
 		//--UPDATE TEXTURE COORDINATES--
 		if(mUpdateTexCoords) {
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_TEXTURES, 0);
-			for(Bone[] layer:mLayers) {
+
+			for(Bone[] layer:mFrontToBackLayers) {
+				//Fill
+				for(Bone bone:layer) {
+					mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
+				}
 				//Contour
 				if(mDrawContour) {
 					for(Bone bone:layer) {
@@ -300,13 +305,10 @@ public class Skeleton {
 						}
 					}
 				}
-				//Fill
-				for(Bone bone:layer) {
-					mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
-				}
 			}
 			mUpdateTexCoords = false;
 		}
+		
 		
 		//--UPDATE POSITIONS--
 		mVertexBuffer.setDataPosition(DefaultGraphics.ID_POSITIONS, 0);
@@ -314,10 +316,30 @@ public class Skeleton {
 		float worldPosY = mCarrier.getWorldY() + mSkeletonOffsetY;
 		float scale = mCarrier.getScale()*mScale;
 		int mirrorFac = mCarrier.getLookDirection();
+		float z = -0.1f;
+		float lstZ;
 		
-		for(Bone[] layer:mLayers) {
+		for(Bone[] layer:mFrontToBackLayers) {
+			
+			lstZ = z;
+			//Fill
+			for(Bone bone:layer) {
+				if(bone.mVisible) {
+					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX4*scale * mirrorFac , worldPosY + bone.mVertY4*scale, mPosZ);
+					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX3*scale * mirrorFac , worldPosY + bone.mVertY3*scale, mPosZ);
+					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX2*scale * mirrorFac , worldPosY + bone.mVertY2*scale, mPosZ);
+					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX1*scale * mirrorFac , worldPosY + bone.mVertY1*scale, mPosZ);
+				}else{
+					mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_12);
+				}
+				z += 0.01f;
+			}
+			z += 0.1f;
+			
 			//Contour
 			if(mDrawContour) {
+				lstZ = z;
+				z -= 0.1f;
 				for(Bone bone:layer) {
 					if(bone.mCelShading) {
 						if(bone.mVisible) {
@@ -333,23 +355,16 @@ public class Skeleton {
 							mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_12);
 						}
 					}
+					z += 0.01f;
 				}
+				z = lstZ;
 			}
 			
-			//Fill
-			for(Bone bone:layer) {
-				if(bone.mVisible) {
-					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX4*scale * mirrorFac , worldPosY + bone.mVertY4*scale, mPosZ);
-					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX3*scale * mirrorFac , worldPosY + bone.mVertY3*scale, mPosZ);
-					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX2*scale * mirrorFac , worldPosY + bone.mVertY2*scale, mPosZ);
-					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX1*scale * mirrorFac , worldPosY + bone.mVertY1*scale, mPosZ);
-				}else{
-					mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_12);
-				}
-			}
+			z += 0.15f;
 		}
 
 		mGraphics.bindTextureInHolder(mTextureHolder);
+		mTranslator.switchZBuffer(true);
 		
 		mMesh.draw();
 		

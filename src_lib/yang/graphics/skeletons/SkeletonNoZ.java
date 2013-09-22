@@ -3,7 +3,6 @@ package yang.graphics.skeletons;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.constraints.Constraint;
 import yang.graphics.skeletons.constraints.DistanceConstraint;
 import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;
@@ -19,9 +18,9 @@ import yang.graphics.translator.Texture;
 import yang.model.Rect;
 import yang.util.NonConcurrentList;
 
+//TODO: bone-arrays
 
-public class Skeleton {
-
+public class SkeletonNoZ extends Skeleton{
 
 	public static int DEFAULT_ACCURACY = 16;
 	static final float[] COLOR_BLACK = {0,0,0,1};
@@ -78,7 +77,7 @@ public class Skeleton {
 	protected float[] mInterColor = new float[4];
 	
 	
-	public Skeleton() {
+	public SkeletonNoZ() {
 		mJoints = new NonConcurrentList<Joint>();
 		mBones = new NonConcurrentList<Bone>();
 		mLayersList = new NonConcurrentList<NonConcurrentList<Bone>>();
@@ -186,11 +185,11 @@ public class Skeleton {
 	}
 	
 	public void init(DefaultGraphics<?> graphics) {
-		init(graphics,new DefaultSkeletonCarrier(this));
+		//init(graphics,new DefaultSkeletonCarrier());
 	}
 	
-	public void addJoint(Joint joint) {
-		mJoints.add(joint);
+	public void addJoint(Joint bone) {
+		mJoints.add(bone);
 	}
 	
 	public void addConstraint(Constraint constraint) {

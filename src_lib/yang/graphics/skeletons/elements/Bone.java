@@ -55,7 +55,10 @@ public class Bone {
 	}
 	
 	public TextureCoordinatesQuad getTextureCoordinates() {
-		return mTexCoords.get(mCurTexCoords);
+		if(mTexCoords.size()==0)
+			return null;
+		else
+			return mTexCoords.get(mCurTexCoords);
 	}
 	
 	public TextureCoordinatesQuad getContourTextureCoordinates() {

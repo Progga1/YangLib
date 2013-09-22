@@ -150,7 +150,7 @@ public abstract class LegacySkeleton {
 	}
 	
 	public void init(Default2DGraphics graphics2D) {
-		init(new DefaultSkeletonCarrier(),graphics2D);
+		//init(new DefaultSkeletonCarrier(this),graphics2D);
 	}
 	
 	public void addJoint(Joint bone) {

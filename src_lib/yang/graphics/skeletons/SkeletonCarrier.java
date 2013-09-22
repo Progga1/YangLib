@@ -10,7 +10,6 @@ public interface SkeletonCarrier {
 	public float getScale();
 	public Skeleton getSkeleton();
 	public void draw();
-	public void setSkeleton(Skeleton skeleton);
 	public void drawCollision();
 	public AnimationPlayer<?> getAnimationPlayer();
 	
