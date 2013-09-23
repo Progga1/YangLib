@@ -428,9 +428,9 @@ public class Skeleton {
 			
 			//Init force
 			for(Joint joint:mJoints) {
-				joint.mForceX = mConstantForceX;
-				joint.mForceY = mConstantForceY;
-				joint.mForceZ = mConstantForceZ;
+				joint.mForceX = mConstantForceX*joint.mMass;
+				joint.mForceY = mConstantForceY*joint.mMass;
+				joint.mForceZ = mConstantForceZ*joint.mMass;
 				
 				if(joint.mPosY+worldY<mLowerLimit) {
 					float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
@@ -537,6 +537,12 @@ public class Skeleton {
 				return (ConstraintType)constraint;
 		}
 		return null;
+	}
+	
+	public void reset() {
+		for(Joint joint:mJoints) {
+			joint.reset();
+		}
 	}
 
 	public void setFriction(float friction) {

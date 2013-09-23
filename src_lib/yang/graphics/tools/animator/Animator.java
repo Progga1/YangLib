@@ -4,6 +4,7 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
+import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.Skeleton;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.SkeletonEditing;
@@ -82,9 +83,14 @@ public class Animator implements YangEventListener {
 		mGraphics.clear(gray, gray, gray);
 		mGraphics2D.switchGameCoordinates(true);
 		mGraphics2D.setCamera(mCamera);
+		
+		//Floor
 		mGraphics.bindTexture(null);
 		mGraphics2D.setColor(0.5f);
 		mGraphics2D.drawRect(mGraphics2D.normToGameX(mGraphics2D.getScreenLeft()), 0, mGraphics2D.normToGameX(mGraphics2D.getScreenRight()), mGraphics2D.normToGameY(mGraphics2D.getScreenBottom()));
+		mGraphics2D.setColor(0.3f);
+		mGraphics2D.drawLine(0, 0, 0, 100, 0.01f);
+		
 		if(mCurSkeleton!=null) {
 			mCurSkeleton.refreshVisualVars();
 			mCurSkeleton.draw();
@@ -328,7 +334,7 @@ public class Animator implements YangEventListener {
 		if(mSkeletonEditing.mMarkedJoint!=null) {
 			mSkeletonEditing.mMarkedJoint.endDrag();
 			if(mSkeletonEditing.mMarkedJoint.mFixed)
-				mSkeletonEditing.mMarkedJoint.setSpeed(0,0);
+				mSkeletonEditing.mMarkedJoint.setVelocity(0,0);
 		}
 		mSkeletonEditing.mMarkedJoint = null;
 		

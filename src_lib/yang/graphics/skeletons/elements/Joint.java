@@ -17,6 +17,7 @@ public class Joint {
 	public float mRadius;
 	public boolean mFixed;
 	public float mMass;
+	public float mInitialMass;
 	public Skeleton mSkeleton;
 	public Joint mAngleParent;
 	public float mParentDistance;
@@ -27,6 +28,7 @@ public class Joint {
 	public float mForceFactor = 80;
 	public boolean mAnimate;
 	public boolean mEnabled;
+	public float mInitialX,mInitialY,mInitialZ;
 	
 	//State
 	public float mForceX,mForceY,mForceZ;
@@ -43,9 +45,11 @@ public class Joint {
 		mPosX = posX;
 		mPosY = posY;
 		mPosZ = 0;
+
 		mRadius = radius;
 		mFixed = false;
 		mMass = 1;
+		setInitials();
 		mDragging = false;
 		mAnimate = true;
 		mSkeleton = skeleton;
@@ -56,6 +60,23 @@ public class Joint {
 		setParent(parent);
 		refreshParentAngle();
 		mEnabled = true;
+	}
+	
+	public void setInitials() {
+		mInitialX = mPosX;
+		mInitialY = mPosY;
+		mInitialZ = mPosZ;
+		mInitialMass = mMass;
+	}
+	
+	public void reset() {
+		mPosX = mInitialX;
+		mPosY = mInitialY;
+		mPosZ = mInitialZ;
+		mMass = mInitialMass;
+		mVelX = 0;
+		mVelY = 0;
+		mVelZ = 0;
 	}
 	
 	public void setParent(Joint parent) {
@@ -88,6 +109,14 @@ public class Joint {
 			return -1;
 		else
 			return count;
+	}
+	
+	public float getWorldX() {
+		return mSkeleton.getJointWorldX(this);
+	}
+	
+	public float getWorldY() {
+		return mSkeleton.getJointWorldY(this);
 	}
 	
 	public boolean isSubChildOf(Joint joint) {
@@ -342,14 +371,27 @@ public class Joint {
 		mParentDistance = getDistance(mAngleParent);
 	}
 
-	public void setSpeed(float velX,float velY) {
+	public void setVelocity(float velX,float velY) {
 		mVelX = velX;
 		mVelY = velY;
+	}
+	
+	public void addVelocity(float velX, float velY) {
+		mVelX += velX;
+		mVelY += velY;
 	}
 	
 	@Override
 	public String toString() {
 		return "JOINT:"+this.mName;
 	}
+
+	public float getWorldDistance(float worldX, float worldY) {
+		float dx = worldX-mSkeleton.getJointWorldX(this);
+		float dy = worldY-mSkeleton.getJointWorldY(this);
+		return (float)Math.sqrt(dx*dx + dy*dy);
+	}
+
+
 
 }
