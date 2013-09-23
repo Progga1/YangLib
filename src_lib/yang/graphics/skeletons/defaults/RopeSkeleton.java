@@ -11,7 +11,7 @@ public class RopeSkeleton extends Skeleton {
 	private float mRopeLength = 2;
 	private float mWidth = 1;
 
-	public float mJointMass = 1;
+	public float mJointMass = 3;
 	
 	public RopeSkeleton(int jointCount,float length,float width) {
 		super();
@@ -37,9 +37,9 @@ public class RopeSkeleton extends Skeleton {
 				bone.putTextureCoords(0,0, 1,1);
 				bone.setShiftY(0, -0.1f);
 				//DistanceConstraint constraint = new DistanceConstraint(bone);
-				super.addBone(bone, 0, 2);
+				super.addBone(bone, 0, 15);
 				if(prevBone!=null)
-					super.addConstraint(new AngleConstraint(prevBone,bone, -0.5f,0.5f));
+					super.addConstraint(new AngleConstraint(prevBone,bone, -0.2f,0.2f));
 				prevBone = bone;
 			}else{
 				joint.mFixed = true;

@@ -24,6 +24,7 @@ public abstract class AbstractVertexBuffer {
 	public abstract void putVec2(int bufId, float v1,float v2);
 	public abstract void putVec3(int bufId, float v1,float v2,float v3);
 	public abstract void putVec4(int bufId, float v1,float v2,float v3,float v4);
+	public abstract void putVec6(int bufId, float v1,float v2,float v3, float v4,float v5,float v6);
 	public abstract void putVec8(int bufId, float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8);
 	public abstract void putVec12(int bufId, float v1,float v2,float v3,float v4,float v5,float v6,float v7,float v8,float v9,float v10,float v11,float v12);
 	public abstract void putRect2D(int bufId, float x1, float y1, float x2, float y2);

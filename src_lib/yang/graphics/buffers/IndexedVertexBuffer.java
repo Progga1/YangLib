@@ -104,6 +104,12 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		}
 	}
 	
+	public void putQuadIndices(int count) {
+		for(int i=0;i<count;i++) {
+			beginQuad(false,(short)(i*4));
+		}
+	}
+	
 	public void putRectIndices(int bottomLeft,int bottomRight,int topLeft,int topRight) {
 		mIndexBuffer.put((short)bottomLeft);
 		mIndexBuffer.put((short)bottomRight);
@@ -129,10 +135,18 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		
 	}
 	
+	public void beginDataUpdate() {
+		
+	}
+	
 	//---After-finish---
 	public void finishUpdate() {
 		mFinishedVertexCount = getCurrentVertexWriteCount();
 		mFinishedIndexCount = getCurrentIndexWriteCount();
+	}
+	
+	public void finishDataUpdate() {
+		mFinishedVertexCount = getCurrentVertexWriteCount();
 	}
 	
 	public int getVertexCount() {

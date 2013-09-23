@@ -9,7 +9,7 @@ public class Joint {
 
 	public static float DEFAULT_FRICTION = 0.9998f;
 	public static float TOWARDS_FACTOR = 50;
-	public static float AWAY_FACTOR = 160;
+	public static float AWAY_FACTOR = 820;
 	
 	//Properties
 	public int mId;
