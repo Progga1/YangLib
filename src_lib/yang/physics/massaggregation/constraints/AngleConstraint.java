@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.constraints;
+package yang.physics.massaggregation.constraints;
 
 import yang.graphics.skeletons.elements.Bone;
 
@@ -19,6 +19,7 @@ public class AngleConstraint extends Constraint{
 		
 		mSpanAngle = (toAngle-fromAngle)/2;
 		mShiftAngle = (mSpanAngle+fromAngle);
+		mStrength = 3;
 	}
 	
 	public AngleConstraint(Bone bone1,Bone bone2) {

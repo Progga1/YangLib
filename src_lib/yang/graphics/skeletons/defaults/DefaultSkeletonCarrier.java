@@ -1,20 +1,21 @@
 package yang.graphics.skeletons.defaults;
 
 import yang.graphics.defaults.DefaultAnimationPlayer;
-import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.AnimationPlayer;
+import yang.physics.massaggregation.MassAggregation;
 
 public class DefaultSkeletonCarrier implements SkeletonCarrier {
 
-	private Skeleton mSkeleton;
+	private MassAggregation mSkeleton;
 	public DefaultAnimationPlayer mAnimationPlayer;
 	public float mPosX;
 	public float mPosY;
 	public int mLookDirection;
 	public float mScale;
 	
-	public DefaultSkeletonCarrier(Skeleton skeleton) {
+	public DefaultSkeletonCarrier(MassAggregation skeleton) {
 		mPosX = 0;
 		mPosY = 0;
 		mScale = 1;
@@ -38,18 +39,11 @@ public class DefaultSkeletonCarrier implements SkeletonCarrier {
 		return mScale;
 	}
 
-	public Skeleton getSkeleton() {
+	public MassAggregation getSkeleton() {
 		return mSkeleton;
 	}
 
-	public void draw() {
-		if(mSkeleton!=null) {
-			mSkeleton.refreshVisualVars();
-			mSkeleton.draw();
-		}
-	}
-
-	public void setSkeleton(Skeleton skeleton) {
+	public void setSkeleton(MassAggregation skeleton) {
 		mSkeleton = skeleton;
 		mAnimationPlayer = new DefaultAnimationPlayer(skeleton,null);
 	}

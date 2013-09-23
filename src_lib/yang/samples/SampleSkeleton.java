@@ -1,9 +1,9 @@
 package yang.samples;
 
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.skeletons.defaults.HumanSkeleton;
+import yang.graphics.skeletons.defaults.HumanSkeleton2D;
 
-public class SampleSkeleton extends HumanSkeleton {
+public class SampleSkeleton extends HumanSkeleton2D {
 
 	public SampleSkeleton(DefaultGraphics<?> graphics) {
 		this.init(graphics);

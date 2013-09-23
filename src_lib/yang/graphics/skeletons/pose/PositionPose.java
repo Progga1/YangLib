@@ -1,7 +1,8 @@
 package yang.graphics.skeletons.pose;
 
-import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.elements.Joint;
+import yang.physics.massaggregation.MassAggregation;
 
 public class PositionPose extends Pose<PositionPose>{
 
@@ -9,7 +10,7 @@ public class PositionPose extends Pose<PositionPose>{
 	protected float[] mPositionsY;
 
 	@Override
-	public void applyPose(Skeleton skeleton, PositionPose pose, float weight) {
+	public void applyPose(MassAggregation skeleton, PositionPose pose, float weight) {
 		skeleton.mCurrentPose = this;
 		int c = 0;
 		for(Joint joint:skeleton.mJoints) {
@@ -22,7 +23,7 @@ public class PositionPose extends Pose<PositionPose>{
 	}
 
 	@Override
-	public void copyFromSkeleton(Skeleton skeleton) {
+	public void copyFromSkeleton(Skeleton2D skeleton) {
 		int c = 0;
 		for(Joint joint:skeleton.mJoints) {
 			if(c>=mPositionsX.length)

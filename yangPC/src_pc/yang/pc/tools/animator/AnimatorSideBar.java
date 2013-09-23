@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.animations.Animation;
 import yang.pc.tools.StringListBox;
 import yang.util.Util;
@@ -56,7 +56,7 @@ public class AnimatorSideBar extends JPanel implements ListSelectionListener {
 	public void refreshSkeletonListBox() {
 		mRefreshing = true;
 		mSkeletonListBox.clear();
-		for(Skeleton skeleton:mFrame.getAnimator().mSkeletons) {
+		for(Skeleton2D skeleton:mFrame.getAnimator().mSkeletons) {
 			mSkeletonListBox.addItem(Util.getClassName(skeleton,"Skeleton"));
 		}
 		mSkeletonListBox.setSelectedIndex(0);

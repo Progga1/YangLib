@@ -8,9 +8,10 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.elements.Joint;
 import yang.math.Geometry;
 import yang.math.objects.Vector3f;
+import yang.physics.massaggregation.MassAggregation;
 import yang.util.NonConcurrentList;
 
-public class Skeleton3D {
+public class Skeleton3DEditing {
 
 	public static int SPHERE_VERTICES_X = 24;
 	public static int SPHERE_VERTICES_Y = 16;
@@ -23,14 +24,14 @@ public class Skeleton3D {
 	public JointEditData[] mJointData = new JointEditData[MAX_JOINTS];
 	//public JointEditData[] mSelection = new JointEditData[MAX_JOINTS];
 	public Default3DGraphics mGraphics3D;
-	public Skeleton mSkeleton;
+	public MassAggregation mSkeleton;
 	public LineDrawer3D mLineDrawer;
 	
 	private Vector3f tempVec1 = new Vector3f();
 	public Joint mHoverJoint = null;
 	private DrawBatch mSphereBatch;
 	
-	public Skeleton3D(Default3DGraphics graphics3D,Skeleton skeleton) {
+	public Skeleton3DEditing(Default3DGraphics graphics3D,Skeleton2D skeleton) {
 		mGraphics3D = graphics3D;
 		mSkeleton = skeleton;
 		mSkeleton.m3D = true;
@@ -40,7 +41,7 @@ public class Skeleton3D {
 		refreshSkeletonData();
 	}
 	
-	public Skeleton3D initLines(int cylinderSamples,float lineWidth) {
+	public Skeleton3DEditing initLines(int cylinderSamples,float lineWidth) {
 		mLineDrawer = new LineDrawer3D(mGraphics3D);
 		mLineDrawer.setSamples(cylinderSamples);
 		mLineDrawer.mLineWidth = lineWidth;
@@ -97,7 +98,7 @@ public class Skeleton3D {
 		
 	}
 	
-	public Skeleton3D initLines() {
+	public Skeleton3DEditing initLines() {
 		return initLines(16,0.03f);
 	}
 

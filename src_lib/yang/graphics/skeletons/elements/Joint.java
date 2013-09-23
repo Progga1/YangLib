@@ -1,8 +1,9 @@
 package yang.graphics.skeletons.elements;
 
-import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.Skeleton2D;
 import yang.math.Geometry;
 import yang.math.objects.Point3f;
+import yang.physics.massaggregation.MassAggregation;
 import yang.util.NonConcurrentList;
 
 public class Joint {
@@ -18,7 +19,7 @@ public class Joint {
 	public boolean mFixed;
 	public float mMass;
 	public float mInitialMass;
-	public Skeleton mSkeleton;
+	public MassAggregation mSkeleton;
 	public Joint mAngleParent;
 	public float mParentDistance;
 	public NonConcurrentList<Joint> mChildren;
@@ -39,7 +40,7 @@ public class Joint {
 	public boolean mDragging;
 	public float mParentCurAngle;
 	
-	public Joint(String name,Joint parent,float posX,float posY,float radius,Skeleton skeleton) {
+	public Joint(String name,Joint parent,float posX,float posY,float radius,MassAggregation skeleton) {
 		mName = name;
 		mFixed = false;
 		mPosX = posX;
@@ -340,7 +341,7 @@ public class Joint {
 				);
 	}
 
-	public void setNormalDirectionIK(float relativeX, float relativeY, Skeleton skeleton, float straight, float orthoOffset) {
+	public void setNormalDirectionIK(float relativeX, float relativeY, Skeleton2D skeleton, float straight, float orthoOffset) {
 		float shoulderX = skeleton.getJointWorldX(mAngleParent.mAngleParent);
 		float shoulderY = skeleton.getJointWorldY(mAngleParent.mAngleParent);
 		float dirX = relativeX - shoulderX;

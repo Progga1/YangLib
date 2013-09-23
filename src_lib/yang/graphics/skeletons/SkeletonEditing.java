@@ -4,6 +4,6 @@ import yang.graphics.skeletons.elements.Joint;
 
 public class SkeletonEditing {
 
-	public Joint mMarkedJoint;
+	public Joint mMainMarkedJoint;
 	
 }

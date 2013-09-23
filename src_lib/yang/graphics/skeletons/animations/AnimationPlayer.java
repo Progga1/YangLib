@@ -1,12 +1,13 @@
 package yang.graphics.skeletons.animations;
 
-import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.Skeleton2D;
 import yang.model.App;
+import yang.physics.massaggregation.MassAggregation;
 import yang.sound.AbstractSoundManager;
 
 public class AnimationPlayer<AnimationType extends Animation<?>> {
 
-	public Skeleton mSkeleton;
+	public MassAggregation mSkeleton;
 	public boolean mOnlyPhysics;
 	
 	protected AnimationType mStartAnimation;
@@ -19,7 +20,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public float mAnimationSpeed;
 	public boolean mLockedAnimation;
 	
-	public AnimationPlayer(Skeleton skeleton,AnimationType startAnimation) {
+	public AnimationPlayer(MassAggregation skeleton,AnimationType startAnimation) {
 		mSkeleton = skeleton;
 		mStartAnimation = startAnimation;
 		mStartAnimation = startAnimation;

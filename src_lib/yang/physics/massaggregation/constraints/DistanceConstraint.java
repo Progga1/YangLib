@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.constraints;
+package yang.physics.massaggregation.constraints;
 
 import yang.graphics.skeletons.elements.Bone;
 import yang.graphics.skeletons.elements.Joint;

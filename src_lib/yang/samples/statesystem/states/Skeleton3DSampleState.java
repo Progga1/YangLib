@@ -17,7 +17,7 @@ import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
 import yang.graphics.skeletons.JointEditData;
-import yang.graphics.skeletons.Skeleton3D;
+import yang.graphics.skeletons.Skeleton3DEditing;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.samples.SampleSkeleton;
@@ -25,7 +25,7 @@ import yang.samples.statesystem.SampleStateCameraControl;
 
 public class Skeleton3DSampleState extends SampleStateCameraControl {
 
-	public Skeleton3D mSkeleton3D;
+	public Skeleton3DEditing mSkeleton3D;
 	public SampleSkeleton mSkeleton;
 	public ShaderPermutations mShader;
 	private LightProperties mLight;
@@ -34,7 +34,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	public void initGraphics() {
 		mSkeleton = new SampleSkeleton(mGraphics2D);
-		mSkeleton3D = new Skeleton3D(mGraphics3D,mSkeleton).initLines();
+		mSkeleton3D = new Skeleton3DEditing(mGraphics3D,mSkeleton).initLines();
 		mLight = new LightProperties();
 		SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),

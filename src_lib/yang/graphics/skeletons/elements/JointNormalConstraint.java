@@ -1,6 +1,6 @@
 package yang.graphics.skeletons.elements;
 
-import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.Skeleton2D;
 
 public class JointNormalConstraint extends Joint{
 
@@ -10,7 +10,7 @@ public class JointNormalConstraint extends Joint{
 	
 	public float mForcePosX,mForcePosY;
 	
-	public JointNormalConstraint(String name, Joint angleParent, Bone cBone, float boneX, float boneY, float radius, Skeleton skeleton) {
+	public JointNormalConstraint(String name, Joint angleParent, Bone cBone, float boneX, float boneY, float radius, Skeleton2D skeleton) {
 		super(name, angleParent, 0, 0, radius, skeleton);
 		mBone = cBone;
 		mRelativeX = boneX;

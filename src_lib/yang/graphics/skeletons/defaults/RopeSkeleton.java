@@ -1,11 +1,11 @@
 package yang.graphics.skeletons.defaults;
 
-import yang.graphics.skeletons.Skeleton;
-import yang.graphics.skeletons.constraints.AngleConstraint;
 import yang.graphics.skeletons.elements.Bone;
 import yang.graphics.skeletons.elements.Joint;
+import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.constraints.AngleConstraint;
 
-public class RopeSkeleton extends Skeleton {
+public class RopeSkeleton extends MassAggregation {
 	
 	private int mJointCount = 1;
 	private float mRopeLength = 2;

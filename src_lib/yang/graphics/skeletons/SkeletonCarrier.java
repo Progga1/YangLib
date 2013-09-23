@@ -1,6 +1,7 @@
 package yang.graphics.skeletons;
 
 import yang.graphics.skeletons.animations.AnimationPlayer;
+import yang.physics.massaggregation.MassAggregation;
 
 public interface SkeletonCarrier {
 
@@ -8,9 +9,7 @@ public interface SkeletonCarrier {
 	public float getWorldY();
 	public int getLookDirection();
 	public float getScale();
-	public Skeleton getSkeleton();
-	public void draw();
-	public void drawCollision();
+	public MassAggregation getSkeleton();
 	public AnimationPlayer<?> getAnimationPlayer();
 	
 }

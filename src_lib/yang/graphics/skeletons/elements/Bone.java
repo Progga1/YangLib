@@ -2,6 +2,7 @@ package yang.graphics.skeletons.elements;
 
 import java.util.ArrayList;
 
+import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 
@@ -67,7 +68,7 @@ public class Bone {
 	
 	public void setTextureCoordinatesIndex(int newIndex) {
 		mCurTexCoords = newIndex;
-		mJoint1.mSkeleton.updatedTextureCoords();
+		((Skeleton2D)mJoint1.mSkeleton).updatedTextureCoords();
 	}
 	
 	public void incTextureCoordinatesIndex() {

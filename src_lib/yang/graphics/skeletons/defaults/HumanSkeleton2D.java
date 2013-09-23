@@ -1,13 +1,13 @@
 package yang.graphics.skeletons.defaults;
 
-import yang.graphics.skeletons.Skeleton;
-import yang.graphics.skeletons.constraints.AngleConstraint;
-import yang.graphics.skeletons.constraints.DistanceConstraint;
+import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.elements.Bone;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.skeletons.elements.JointNormalConstraint;
+import yang.physics.massaggregation.constraints.AngleConstraint;
+import yang.physics.massaggregation.constraints.DistanceConstraint;
 
-public abstract class HumanSkeleton extends Skeleton{
+public abstract class HumanSkeleton2D extends Skeleton2D{
 
 	public static final float HEADTOPSHIFT = 0.05f;
 	public static final float HEADBOTTOMSHIFT = -0.06f;
@@ -47,7 +47,7 @@ public abstract class HumanSkeleton extends Skeleton{
 	public Bone mLeftFootBone;
 	public Bone mRightFootBone;
 	
-	public HumanSkeleton() {
+	public HumanSkeleton2D() {
 		super();
 		mLeftToesJoint = null;
 		mRightToesJoint = null;
@@ -236,19 +236,17 @@ public abstract class HumanSkeleton extends Skeleton{
 		
 
 		//Angle constraints
-		if(mSkeletonAngleConstraints) {
-			super.addConstraint(new AngleConstraint(mLeftUpperLegBone,mLeftLowerLegBone, -3*PI/4,-0.01f));
-			super.addConstraint(new AngleConstraint(mRightUpperLegBone,mRightLowerLegBone, -3*PI/4,-0.01f));
-			super.addConstraint(new AngleConstraint(mLeftUpperArmBone,mLeftLowerArmBone, 0,3*PI/4));
-			super.addConstraint(new AngleConstraint(mRightUpperArmBone,mRightLowerArmBone, 0,3*PI/4));
-			super.addConstraint(new AngleConstraint(mBodyBone,mLeftUpperLegBone, -PI/3,8*PI/9));
-			super.addConstraint(new AngleConstraint(mBodyBone,mRightUpperLegBone, -PI/3,8*PI/9));
-			super.addConstraint(new AngleConstraint(mBodyBone,mHeadBone, -PI/2,PI/2));
-			
-			if(addFeet) {
-				super.addConstraint(new AngleConstraint(mLeftLowerLegBone,mLeftFootBone, PI/8,10*PI/11));
-				super.addConstraint(new AngleConstraint(mRightLowerLegBone,mRightFootBone, PI/8,10*PI/11));
-			}
+		super.addConstraint(new AngleConstraint(mLeftUpperLegBone,mLeftLowerLegBone, -3*PI/4,-0.01f));
+		super.addConstraint(new AngleConstraint(mRightUpperLegBone,mRightLowerLegBone, -3*PI/4,-0.01f));
+		super.addConstraint(new AngleConstraint(mLeftUpperArmBone,mLeftLowerArmBone, 0,3*PI/4));
+		super.addConstraint(new AngleConstraint(mRightUpperArmBone,mRightLowerArmBone, 0,3*PI/4));
+		super.addConstraint(new AngleConstraint(mBodyBone,mLeftUpperLegBone, -PI/3,8*PI/9));
+		super.addConstraint(new AngleConstraint(mBodyBone,mRightUpperLegBone, -PI/3,8*PI/9));
+		super.addConstraint(new AngleConstraint(mBodyBone,mHeadBone, -PI/2,PI/2));
+		
+		if(addFeet) {
+			super.addConstraint(new AngleConstraint(mLeftLowerLegBone,mLeftFootBone, PI/8,10*PI/11));
+			super.addConstraint(new AngleConstraint(mRightLowerLegBone,mRightFootBone, PI/8,10*PI/11));
 		}
 		
 		if(m3D) {

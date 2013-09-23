@@ -5,7 +5,7 @@ import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.model.FloatColor;
-import yang.graphics.skeletons.Skeleton;
+import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.SkeletonEditing;
 import yang.graphics.skeletons.animations.Animation;
@@ -23,13 +23,13 @@ public class Animator implements YangEventListener {
 	public AbstractSoundManager mSound;
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
-	protected Skeleton mCurSkeleton;
+	protected Skeleton2D mCurSkeleton;
 	protected SkeletonCarrier mCurCarrier;
 	@SuppressWarnings("rawtypes")
 	public AnimationPlayer mCurAnimationPlayer;
 	private Camera2D mCamera;
 	private SkeletonEditing mSkeletonEditing;
-	public NonConcurrentList<Skeleton> mSkeletons;
+	public NonConcurrentList<Skeleton2D> mSkeletons;
 	public NonConcurrentList<AnimationSystem<?,?>> mAnimationSystems;
 	public AnimationSystem<?,?> mCurAnimationSystem;
 	public Animation<?> mCurAnimation;
@@ -56,10 +56,10 @@ public class Animator implements YangEventListener {
 		mGraphics = graphics2D.mTranslator;
 		mCamera = new Camera2D();
 		mCamera.mAdaption = 0.2f;
-		mSkeletons = new NonConcurrentList<Skeleton>();
+		mSkeletons = new NonConcurrentList<Skeleton2D>();
 		mSkeletonIndex = -1;
 		mSkeletonEditing = new SkeletonEditing();
-		Skeleton.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
+		Skeleton2D.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
 		mAnimationSystems = new NonConcurrentList<AnimationSystem<?,?>>();
 		mPaused = false;
 		mPlaying = false;
@@ -95,7 +95,7 @@ public class Animator implements YangEventListener {
 			mCurSkeleton.refreshVisualVars();
 			mCurSkeleton.draw();
 			if(mDrawSkeleton) {
-				mCurSkeleton.mCarrier.drawCollision();
+				//mCurSkeleton.mCarrier.drawCollision();
 				mCurSkeleton.drawEditing(mSkeletonEditing);
 			}
 		}
@@ -139,7 +139,7 @@ public class Animator implements YangEventListener {
 		}
 	}
 
-	public void addSkeleton(Skeleton skeleton,AnimationSystem<?,?> animationSystem) {
+	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
 		if(!skeleton.isInitialized())
 			skeleton.init(mGraphics2D);
 		mAnimationSystems.add(animationSystem);
@@ -149,9 +149,9 @@ public class Animator implements YangEventListener {
 		}
 	}
 	
-	public void addSkeleton(Class<? extends Skeleton> skeletonClass,AnimationSystem<?,?> animationSystem) {
+	public void addSkeleton(Class<? extends Skeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {
 		try {
-			Skeleton skeleton = skeletonClass.newInstance();
+			Skeleton2D skeleton = skeletonClass.newInstance();
 			skeleton.init(mGraphics2D);
 			addSkeleton(skeleton,animationSystem);
 		} catch (InstantiationException e) {
@@ -198,9 +198,9 @@ public class Animator implements YangEventListener {
 		selectKeyFrame(mFrameIndex,true);
 	}
 	
-	public boolean selectSkeleton(Class<? extends Skeleton> skeletonClass) {
+	public boolean selectSkeleton(Class<? extends Skeleton2D> skeletonClass) {
 		int i=0;
-		for(Skeleton skeleton:mSkeletons) {
+		for(Skeleton2D skeleton:mSkeletons) {
 			if(skeletonClass==skeleton.getClass()) {
 				selectSkeleton(i);
 				return true;
@@ -210,9 +210,9 @@ public class Animator implements YangEventListener {
 		return false;
 	}
 	
-	public boolean selectSkeleton(Skeleton skeleton) {
+	public boolean selectSkeleton(Skeleton2D skeleton) {
 		int i=0;
-		for(Skeleton skel:mSkeletons) {
+		for(Skeleton2D skel:mSkeletons) {
 			if(skel==skeleton) {
 				selectSkeleton(i);
 				return true;
@@ -290,15 +290,15 @@ public class Animator implements YangEventListener {
 		mPrevSY = y;
 		switch(event.mButton) {
 		case YangPointerEvent.BUTTON_LEFT:
-			mSkeletonEditing.mMarkedJoint = mCurSkeleton.pickJoint(mCurPntX, mCurPntY);
-			if(mSkeletonEditing.mMarkedJoint!=null)
-				mSkeletonEditing.mMarkedJoint.startDrag();
+			mSkeletonEditing.mMainMarkedJoint = mCurSkeleton.pickJoint2D(mCurPntX, mCurPntY);
+			if(mSkeletonEditing.mMainMarkedJoint!=null)
+				mSkeletonEditing.mMainMarkedJoint.startDrag();
 			break;
 		case YangPointerEvent.BUTTON_MIDDLE:
 			
 			break;
 		case YangPointerEvent.BUTTON_RIGHT:
-			Joint pick = mCurSkeleton.pickJoint(mCurPntX, mCurPntY);
+			Joint pick = mCurSkeleton.pickJoint2D(mCurPntX, mCurPntY);
 			if(pick!=null)
 				pick.mFixed ^= true;
 			break;
@@ -316,8 +316,8 @@ public class Animator implements YangEventListener {
 		
 		switch(event.mButton) {
 			case YangPointerEvent.BUTTON_LEFT:
-				if(mSkeletonEditing.mMarkedJoint!=null) {
-					mSkeletonEditing.mMarkedJoint.drag(deltaX, deltaY);
+				if(mSkeletonEditing.mMainMarkedJoint!=null) {
+					mSkeletonEditing.mMainMarkedJoint.drag(deltaX, deltaY);
 					mPoseChanged = true;
 				}
 				break;
@@ -331,12 +331,12 @@ public class Animator implements YangEventListener {
 	}
 	
 	public void pointerUp(float x,float y,YangPointerEvent event) {
-		if(mSkeletonEditing.mMarkedJoint!=null) {
-			mSkeletonEditing.mMarkedJoint.endDrag();
-			if(mSkeletonEditing.mMarkedJoint.mFixed)
-				mSkeletonEditing.mMarkedJoint.setVelocity(0,0);
+		if(mSkeletonEditing.mMainMarkedJoint!=null) {
+			mSkeletonEditing.mMainMarkedJoint.endDrag();
+			if(mSkeletonEditing.mMainMarkedJoint.mFixed)
+				mSkeletonEditing.mMainMarkedJoint.setVelocity(0,0);
 		}
-		mSkeletonEditing.mMarkedJoint = null;
+		mSkeletonEditing.mMainMarkedJoint = null;
 		
 	}
 
@@ -364,7 +364,7 @@ public class Animator implements YangEventListener {
 		return mDrawSkeleton;
 	}
 
-	public Skeleton getCurrentSkeleton() {
+	public Skeleton2D getCurrentSkeleton() {
 		return mCurSkeleton;
 	}
 
