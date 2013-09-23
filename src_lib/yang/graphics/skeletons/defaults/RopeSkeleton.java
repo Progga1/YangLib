@@ -11,7 +11,7 @@ public class RopeSkeleton extends Skeleton {
 	private float mRopeLength = 2;
 	private float mWidth = 1;
 
-	public float mJointMass = 3;
+	public float mJointMass = 2;
 	
 	public RopeSkeleton(int jointCount,float length,float width) {
 		super();
