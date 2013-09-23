@@ -269,6 +269,17 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 	
+	public void drawLineRect(float worldX1, float worldY1, float worldX2, float worldY2, float width, TextureCoordinatesQuad texCoordinates) {
+		drawLine(worldX1,worldY1, worldX2,worldY1, width, texCoordinates);
+		drawLine(worldX2,worldY1, worldX2,worldY2, width, texCoordinates);
+		drawLine(worldX2,worldY2, worldX1,worldY2, width, texCoordinates);
+		drawLine(worldX1,worldY2, worldX1,worldY1, width, texCoordinates);
+	}
+	
+	public void drawLineRect(float worldX1, float worldY1, float worldX2, float worldY2, float width) {
+		drawLineRect(worldX1,worldY1, worldX2,worldY2, width, null);
+	}
+	
 	public void drawRectWH(float left, float bottom, float width, float height, TextureCoordinatesQuad texCoords) {
 		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,left, bottom, left+width, bottom+height, mCurrentZ);
