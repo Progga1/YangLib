@@ -1,35 +1,35 @@
 package yang.physics.massaggregation.constraints;
 
-import yang.graphics.skeletons.elements.Bone;
-import yang.graphics.skeletons.elements.Joint;
+import yang.graphics.skeletons.CartoonBone;
+import yang.physics.massaggregation.elements.Joint;
 
 public class DistanceConstraint extends Constraint{
 	
 	public float mForceDistance;
-	public Bone mBone;
+	public CartoonBone mBone;
 	public boolean m3D = true;
 	
-	public DistanceConstraint(Bone bone, float strength) {
+	public DistanceConstraint(CartoonBone bone, float strength) {
 		mBone = bone;
 		mStrength = strength;
 		mForceDistance = mBone.mDistance;
 		m3D = bone.mJoint1.mSkeleton.m3D;
 	}
 	
-	public DistanceConstraint(Bone bone) {
+	public DistanceConstraint(CartoonBone bone) {
 		this(bone,10);
 	}
 	
 	@Override
 	public void recalculate() {
-		mBone.refreshDistance();
+		mBone.refreshGeometry();
 		mForceDistance = mBone.mDistance;
 	}
 	
 	@Override
 	public void apply() {
 		if(mEnabled) {
-			mBone.refreshDistance();
+			mBone.refreshGeometry();
 			
 			float diff = mBone.mDistance - mForceDistance;
 			
@@ -51,7 +51,7 @@ public class DistanceConstraint extends Constraint{
 	}
 
 	@Override
-	public boolean containsBone(Bone bone) {
+	public boolean containsBone(CartoonBone bone) {
 		return mBone==bone;
 	}
 	

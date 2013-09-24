@@ -5,17 +5,17 @@ import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultAnimationPlayer;
-import yang.graphics.skeletons.Skeleton2D;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.SkeletonEditing;
 import yang.graphics.skeletons.animations.Animation;
 import yang.graphics.skeletons.animations.AnimationPlayer;
 import yang.graphics.skeletons.animations.AnimationSystem;
 import yang.graphics.skeletons.animations.KeyFrame;
-import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera2D;
 import yang.model.Rect;
+import yang.physics.massaggregation.elements.Joint;
 import yang.sound.AbstractSoundManager;
 import yang.util.NonConcurrentList;
 
@@ -24,13 +24,13 @@ public class Animator implements YangEventListener {
 	public AbstractSoundManager mSound;
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
-	protected Skeleton2D mCurSkeleton;
+	protected CartoonSkeleton2D mCurSkeleton;
 	protected SkeletonCarrier mCurCarrier;
 	@SuppressWarnings("rawtypes")
 	public AnimationPlayer mCurAnimationPlayer;
 	private Camera2D mCamera;
 	private SkeletonEditing mSkeletonEditing;
-	public NonConcurrentList<Skeleton2D> mSkeletons;
+	public NonConcurrentList<CartoonSkeleton2D> mSkeletons;
 	public NonConcurrentList<AnimationSystem<?,?>> mAnimationSystems;
 	public NonConcurrentList<AnimationPlayer<?>> mAnimationPlayers;
 	public AnimationSystem<?,?> mCurAnimationSystem;
@@ -59,11 +59,11 @@ public class Animator implements YangEventListener {
 		mGraphics = graphics2D.mTranslator;
 		mCamera = new Camera2D();
 		mCamera.mAdaption = 0.2f;
-		mSkeletons = new NonConcurrentList<Skeleton2D>();
+		mSkeletons = new NonConcurrentList<CartoonSkeleton2D>();
 		mAnimationPlayers = new NonConcurrentList<AnimationPlayer<?>>();
 		mSkeletonIndex = -1;
 		mSkeletonEditing = new SkeletonEditing();
-		Skeleton2D.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
+		CartoonSkeleton2D.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
 		mAnimationSystems = new NonConcurrentList<AnimationSystem<?,?>>();
 		mPaused = false;
 		mPlaying = false;
@@ -144,7 +144,7 @@ public class Animator implements YangEventListener {
 		}
 	}
 
-	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem,AnimationPlayer<?> animationPlayer) {
+	public void addSkeleton(CartoonSkeleton2D skeleton,AnimationSystem<?,?> animationSystem,AnimationPlayer<?> animationPlayer) {
 		if(!skeleton.isInitialized())
 			skeleton.init(mGraphics2D);
 		mAnimationSystems.add(animationSystem);
@@ -157,9 +157,9 @@ public class Animator implements YangEventListener {
 		}
 	}
 	
-	public void addSkeleton(Class<? extends Skeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {
+	public void addSkeleton(Class<? extends CartoonSkeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {
 		try {
-			Skeleton2D skeleton = skeletonClass.newInstance();
+			CartoonSkeleton2D skeleton = skeletonClass.newInstance();
 			skeleton.init(mGraphics2D);
 			addSkeleton(skeleton,animationSystem,null);
 		} catch (InstantiationException e) {
@@ -206,9 +206,9 @@ public class Animator implements YangEventListener {
 		selectKeyFrame(mFrameIndex,true);
 	}
 	
-	public boolean selectSkeleton(Class<? extends Skeleton2D> skeletonClass) {
+	public boolean selectSkeleton(Class<? extends CartoonSkeleton2D> skeletonClass) {
 		int i=0;
-		for(Skeleton2D skeleton:mSkeletons) {
+		for(CartoonSkeleton2D skeleton:mSkeletons) {
 			if(skeletonClass==skeleton.getClass()) {
 				selectSkeleton(i);
 				return true;
@@ -218,9 +218,9 @@ public class Animator implements YangEventListener {
 		return false;
 	}
 	
-	public boolean selectSkeleton(Skeleton2D skeleton) {
+	public boolean selectSkeleton(CartoonSkeleton2D skeleton) {
 		int i=0;
-		for(Skeleton2D skel:mSkeletons) {
+		for(CartoonSkeleton2D skel:mSkeletons) {
 			if(skel==skeleton) {
 				selectSkeleton(i);
 				return true;
@@ -374,7 +374,7 @@ public class Animator implements YangEventListener {
 		return mDrawSkeleton;
 	}
 
-	public Skeleton2D getCurrentSkeleton() {
+	public CartoonSkeleton2D getCurrentSkeleton() {
 		return mCurSkeleton;
 	}
 

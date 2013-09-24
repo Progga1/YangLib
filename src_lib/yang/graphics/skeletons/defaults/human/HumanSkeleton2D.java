@@ -1,13 +1,13 @@
 package yang.graphics.skeletons.defaults.human;
 
-import yang.graphics.skeletons.Skeleton2D;
-import yang.graphics.skeletons.elements.Bone;
-import yang.graphics.skeletons.elements.Joint;
-import yang.graphics.skeletons.elements.JointNormalConstraint;
+import yang.graphics.skeletons.CartoonBone;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.physics.massaggregation.constraints.AngleConstraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
+import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointNormalConstraint;
 
-public abstract class HumanSkeleton2D extends Skeleton2D{
+public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 
 	public static final float HEADTOPSHIFT = 0.05f;
 	public static final float HEADBOTTOMSHIFT = -0.06f;
@@ -34,18 +34,18 @@ public abstract class HumanSkeleton2D extends Skeleton2D{
 	public JointNormalConstraint mLeftLegJoint;
 	public JointNormalConstraint mRightLegJoint;
 	
-	public Bone mBodyBone;
-	public Bone mHeadBone;
-	public Bone mLeftUpperArmBone;
-	public Bone mRightUpperArmBone;
-	public Bone mLeftLowerArmBone;
-	public Bone mRightLowerArmBone;
-	public Bone mLeftUpperLegBone;
-	public Bone mRightUpperLegBone;
-	public Bone mLeftLowerLegBone;
-	public Bone mRightLowerLegBone;
-	public Bone mLeftFootBone;
-	public Bone mRightFootBone;
+	public CartoonBone mBodyBone;
+	public CartoonBone mHeadBone;
+	public CartoonBone mLeftUpperArmBone;
+	public CartoonBone mRightUpperArmBone;
+	public CartoonBone mLeftLowerArmBone;
+	public CartoonBone mRightLowerArmBone;
+	public CartoonBone mLeftUpperLegBone;
+	public CartoonBone mRightUpperLegBone;
+	public CartoonBone mLeftLowerLegBone;
+	public CartoonBone mRightLowerLegBone;
+	public CartoonBone mLeftFootBone;
+	public CartoonBone mRightFootBone;
 	
 	public HumanSkeleton2D() {
 		super();
@@ -85,7 +85,7 @@ public abstract class HumanSkeleton2D extends Skeleton2D{
 		}
 		
 		//Body
-		mBodyBone = new Bone(mTranslator,"Body",mBreastJoint,mHipJoint);
+		mBodyBone = new CartoonBone(mTranslator,"Body",mBreastJoint,mHipJoint);
 		mBodyBone.putTextureCoords(texShiftX, 0.5f, texShiftX+0.25f, 0.875f);
 		mBodyBone.setWidth(0.23f*locScaleWidth);
 		mBodyBone.setShift(-0.01f,0.06f,-0.01f,-0.1f);
@@ -124,46 +124,46 @@ public abstract class HumanSkeleton2D extends Skeleton2D{
 		}
 		
 		//head
-		mHeadBone = new Bone(mTranslator,"Head",mHeadJoint,mBreastJoint);
+		mHeadBone = new CartoonBone(mTranslator,"Head",mHeadJoint,mBreastJoint);
 		mHeadBone.putTextureCoords(texShiftX, 0, texShiftX+0.25f, 0.25f);
 		mHeadBone.putTextureCoords(texShiftX, 0.25f, texShiftX+0.25f, 0.5f);
 		mHeadBone.setWidth(0.35f);
 		mHeadBone.setShift(-0.06f,HEADTOPSHIFT,-0.015f,HEADBOTTOMSHIFT);
 		
 		//arms
-		mLeftUpperArmBone = new Bone(mTranslator,"LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint);
+		mLeftUpperArmBone = new CartoonBone(mTranslator,"LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint);
 		mLeftUpperArmBone.putTextureCoords(texShiftX+0.25f, 0, texShiftX+0.375f, 0.25f);
 		mLeftUpperArmBone.setWidth(0.115f*locScaleWidth);
 		mLeftUpperArmBone.setShift(-0.015f,0.07f,0,-0.06f);
-		mLeftLowerArmBone = new Bone(mTranslator,"LeftLowerLeg",mLeftElbowJoint,mLeftHandJoint);
+		mLeftLowerArmBone = new CartoonBone(mTranslator,"LeftLowerLeg",mLeftElbowJoint,mLeftHandJoint);
 		mLeftLowerArmBone.putTextureCoords(texShiftX+0.25f, 0.25f, texShiftX+0.375f, 0.5f);
 		mLeftLowerArmBone.setWidth(0.1f*locScaleWidth);
 		mLeftLowerArmBone.setShift(0,0.08f,0,-0.05f);
 		
-		mRightUpperArmBone = new Bone(mTranslator,"LeftUpperArm",mRightShoulderJoint,mRightElbowJoint);
+		mRightUpperArmBone = new CartoonBone(mTranslator,"LeftUpperArm",mRightShoulderJoint,mRightElbowJoint);
 		mRightUpperArmBone.putTextureCoords(texShiftX+0.375f, 0, texShiftX+0.5f, 0.25f);
 		mRightUpperArmBone.setWidth(0.115f*locScaleWidth);
 		mRightUpperArmBone.setShift(0,0.06f,0,-0.06f); 
-		mRightLowerArmBone = new Bone(mTranslator,"LeftLowerArm",mRightElbowJoint,mRightHandJoint);
+		mRightLowerArmBone = new CartoonBone(mTranslator,"LeftLowerArm",mRightElbowJoint,mRightHandJoint);
 		mRightLowerArmBone.putTextureCoords(texShiftX+0.375f, 0.25f, texShiftX+0.5f, 0.5f);
 		mRightLowerArmBone.setWidth(0.09f*locScaleWidth);
 		mRightLowerArmBone.setShift(0,0.08f,0,-0.05f);
 		
 		//legs
-		mLeftUpperLegBone = new Bone(mTranslator,"LeftUpperLeg",mLeftLegJoint,mLeftKneeJoint);
+		mLeftUpperLegBone = new CartoonBone(mTranslator,"LeftUpperLeg",mLeftLegJoint,mLeftKneeJoint);
 		mLeftUpperLegBone.putTextureCoords(texShiftX+0.25f, 0.5f, texShiftX+0.375f, 0.75f);
 		mLeftUpperLegBone.setWidth(0.12f*locScaleWidth);
 		mLeftUpperLegBone.setShift(0.008f,0.08f,0.008f,-0.07f);
-		mRightUpperLegBone = new Bone(mTranslator,"RightUpperLeg",mRightLegJoint,mRightKneeJoint);
+		mRightUpperLegBone = new CartoonBone(mTranslator,"RightUpperLeg",mRightLegJoint,mRightKneeJoint);
 		mRightUpperLegBone.putTextureCoords(texShiftX+0.375f, 0.5f, texShiftX+0.5f, 0.75f);
 		mRightUpperLegBone.setWidth(0.112f*locScaleWidth);
 		mRightUpperLegBone.setShift(0,0.08f,0,-0.07f);
 		
-		mLeftLowerLegBone = new Bone(mTranslator,"LeftLowerLeg",mLeftKneeJoint,mLeftFootJoint);
+		mLeftLowerLegBone = new CartoonBone(mTranslator,"LeftLowerLeg",mLeftKneeJoint,mLeftFootJoint);
 		mLeftLowerLegBone.putTextureCoords(texShiftX+0.25f, 0.75f, texShiftX+0.375f, 1);
 		mLeftLowerLegBone.setWidth(0.115f*locScaleWidth);
 		mLeftLowerLegBone.setShift(-0.005f,0.08f,0,-0.05f);
-		mRightLowerLegBone = new Bone(mTranslator,"RightLowerLeg",mRightKneeJoint,mRightFootJoint);
+		mRightLowerLegBone = new CartoonBone(mTranslator,"RightLowerLeg",mRightKneeJoint,mRightFootJoint);
 		mRightLowerLegBone.putTextureCoords(texShiftX+0.375f, 0.75f, texShiftX+0.5f, 1);
 		mRightLowerLegBone.setWidth(0.11f*locScaleWidth);
 		mRightLowerLegBone.setShift(-0.005f,0.08f,0,-0.05f);
@@ -171,12 +171,12 @@ public abstract class HumanSkeleton2D extends Skeleton2D{
 		//feet
 		if(addFeet) {
 			float footShift = -0.03f;
-			mLeftFootBone = new Bone(mTranslator,"LeftFoot",mLeftFootJoint,mLeftToesJoint);
+			mLeftFootBone = new CartoonBone(mTranslator,"LeftFoot",mLeftFootJoint,mLeftToesJoint);
 			mLeftFootBone.putTextureCoords(texShiftX, 7/8f, texShiftX+1/16f, 1);
 			mLeftFootBone.putTextureCoords(texShiftX+3/16f, 7/8f, texShiftX+4/16f, 1);
 			mLeftFootBone.setWidth(0.052f*locScaleWidth);
 			mLeftFootBone.setShift(footShift,0.09f,footShift,-0.07f);
-			mRightFootBone = new Bone(mTranslator,"RightFoot",mRightFootJoint,mRightToesJoint);
+			mRightFootBone = new CartoonBone(mTranslator,"RightFoot",mRightFootJoint,mRightToesJoint);
 			mRightFootBone.putTextureCoords(texShiftX+1/16f, 7/8f, texShiftX+2/16f, 1);
 			mRightFootBone.putTextureCoords(texShiftX+5/16f, 7/8f, texShiftX+6/16f, 1);
 			mRightFootBone.setWidth(0.052f*locScaleWidth);
@@ -250,10 +250,10 @@ public abstract class HumanSkeleton2D extends Skeleton2D{
 		}
 		
 		if(m3D) {
-			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"LeftShoulderConstraint",mLeftShoulderJoint,mBreastJoint)));
-			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"RightShoulderConstraint",mRightShoulderJoint,mBreastJoint)));
-			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"LeftLegConstraint",mLeftLegJoint,mHipJoint)));
-			addConstraint(new DistanceConstraint(new Bone(mGraphics.mTranslator,"RightLegConstraint",mRightLegJoint,mHipJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"LeftShoulderConstraint",mLeftShoulderJoint,mBreastJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"RightShoulderConstraint",mRightShoulderJoint,mBreastJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"LeftLegConstraint",mLeftLegJoint,mHipJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"RightLegConstraint",mRightLegJoint,mHipJoint)));
 		}
 		
 		mBreastJoint.mFixed = true;

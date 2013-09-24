@@ -1,6 +1,7 @@
-package yang.graphics.skeletons;
+package yang.physics.massaggregation.editing;
 
-import yang.graphics.skeletons.elements.Joint;
+import yang.physics.massaggregation.elements.Joint;
+
 
 public class JointEditData {
 

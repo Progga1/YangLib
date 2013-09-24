@@ -1,6 +1,6 @@
 package yang.graphics.skeletons.animations;
 
-import yang.graphics.skeletons.Skeleton2D;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.model.App;
 import yang.physics.massaggregation.MassAggregation;
 import yang.sound.AbstractSoundManager;

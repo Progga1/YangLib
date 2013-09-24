@@ -1,6 +1,6 @@
 package yang.graphics.skeletons;
 
-import yang.graphics.skeletons.elements.Joint;
+import yang.physics.massaggregation.elements.Joint;
 
 public class SkeletonEditing {
 

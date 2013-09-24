@@ -1,16 +1,16 @@
 package yang.physics.massaggregation;
 
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.skeletons.CartoonBone;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
-import yang.graphics.skeletons.elements.Bone;
-import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.skeletons.pose.Posture;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.Rect;
 import yang.physics.massaggregation.constraints.Constraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
+import yang.physics.massaggregation.elements.Joint;
 import yang.util.NonConcurrentList;
 
 public class MassAggregation {
@@ -35,8 +35,8 @@ public class MassAggregation {
 	
 	//Data
 	public NonConcurrentList<Joint> mJoints;
-	public NonConcurrentList<NonConcurrentList<Bone>> mLayersList;
-	public NonConcurrentList<Bone> mBones;
+	public NonConcurrentList<NonConcurrentList<CartoonBone>> mLayersList;
+	public NonConcurrentList<CartoonBone> mBones;
 	public NonConcurrentList<Constraint> mConstraints;
 
 	//State
@@ -51,8 +51,8 @@ public class MassAggregation {
 	
 	public MassAggregation() {
 		mJoints = new NonConcurrentList<Joint>();
-		mBones = new NonConcurrentList<Bone>();
-		mLayersList = new NonConcurrentList<NonConcurrentList<Bone>>();
+		mBones = new NonConcurrentList<CartoonBone>();
+		mLayersList = new NonConcurrentList<NonConcurrentList<CartoonBone>>();
 		mConstraints = new NonConcurrentList<Constraint>();
 		
 		mCarrier = NEUTRAL_CARRIER;
@@ -80,7 +80,7 @@ public class MassAggregation {
 	}
 	
 	public void setBonesVisible(boolean visible) {
-		for(Bone bone:mBones) {
+		for(CartoonBone bone:mBones) {
 			bone.mVisible = visible;
 		}
 	}
@@ -118,10 +118,10 @@ public class MassAggregation {
 		mConstraints.add(constraint);
 	}
 	
-	public void addBone(Bone bone,int layer,float constraintDistanceStrength) {
+	public void addBone(CartoonBone bone,int layer,float constraintDistanceStrength) {
 		while(layer>mLayersList.size()-1)
 		{
-			mLayersList.add(new NonConcurrentList<Bone>());
+			mLayersList.add(new NonConcurrentList<CartoonBone>());
 		}
 		mLayersList.get(layer).add(bone);
 		mBones.add(bone);
@@ -129,7 +129,7 @@ public class MassAggregation {
 			addConstraint(new DistanceConstraint(bone,constraintDistanceStrength));
 	}
 
-	public void addBone(Bone bone,int layer) {
+	public void addBone(CartoonBone bone,int layer) {
 		addBone(bone,layer,10);
 	}
 
@@ -164,7 +164,7 @@ public class MassAggregation {
 	}
 	
 	public void refreshVisualVars() {
-		for(Bone connection:mBones)
+		for(CartoonBone connection:mBones)
 			connection.refreshVisualVars();
 	}
 	
@@ -212,7 +212,7 @@ public class MassAggregation {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <ConstraintType extends Constraint> ConstraintType getBoneConstraint(Bone bone,Class<ConstraintType> type) {
+	public <ConstraintType extends Constraint> ConstraintType getBoneConstraint(CartoonBone bone,Class<ConstraintType> type) {
 		for(Constraint constraint:mConstraints) {
 			if((constraint.getClass()==type) && (constraint.containsBone(bone)))
 				return (ConstraintType)constraint;

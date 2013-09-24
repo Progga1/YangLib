@@ -1,10 +1,10 @@
 package yang.physics.massaggregation.constraints;
 
-import yang.graphics.skeletons.elements.Bone;
+import yang.graphics.skeletons.CartoonBone;
 
 public class AngleConstraint extends Constraint{
 
-	public Bone mBone1,mBone2;
+	public CartoonBone mBone1,mBone2;
 	
 	private float mPrevUNormDirX;
 	private float mPrevUNormDirY;
@@ -13,7 +13,7 @@ public class AngleConstraint extends Constraint{
 	public float mSpanAngle;
 	public float mShiftAngle;
 	
-	public AngleConstraint(Bone bone1,Bone bone2,float fromAngle,float toAngle) {
+	public AngleConstraint(CartoonBone bone1,CartoonBone bone2,float fromAngle,float toAngle) {
 		mBone1 = bone1;
 		mBone2 = bone2;
 		
@@ -22,13 +22,13 @@ public class AngleConstraint extends Constraint{
 		mStrength = 3;
 	}
 	
-	public AngleConstraint(Bone bone1,Bone bone2) {
+	public AngleConstraint(CartoonBone bone1,CartoonBone bone2) {
 		this(bone1,bone2,0,0);
 	}
 	
 	public void apply() {
-		mBone1.refreshDistance();
-		mBone2.refreshDistance();
+		mBone1.refreshGeometry();
+		mBone2.refreshGeometry();
 		float uNormX = (float)(Math.cos(-mShiftAngle)*mBone1.mNormDirX + Math.sin(-mShiftAngle)*mBone1.mNormDirY);
 		float uNormY = (float)(-Math.sin(-mShiftAngle)*mBone1.mNormDirX + Math.cos(-mShiftAngle)*mBone1.mNormDirY);
 		float angle = (float)Math.acos(mBone2.mNormDirX*uNormX + mBone2.mNormDirY*uNormY);
@@ -57,7 +57,7 @@ public class AngleConstraint extends Constraint{
 	}
 	
 	@Override
-	public boolean containsBone(Bone bone) {
+	public boolean containsBone(CartoonBone bone) {
 		return mBone1==bone || mBone2==bone;
 	}
 	

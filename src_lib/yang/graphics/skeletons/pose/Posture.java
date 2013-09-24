@@ -1,6 +1,6 @@
 package yang.graphics.skeletons.pose;
 
-import yang.graphics.skeletons.Skeleton2D;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.physics.massaggregation.MassAggregation;
 import yang.util.Util;
 
@@ -14,7 +14,7 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 	}
 	
 	public abstract void applyPose(SkeletonType skeleton,InterpolationPoseType interpolationPose, float weight);
-	public abstract void copyFromSkeleton(Skeleton2D skeleton);
+	public abstract void copyFromSkeleton(CartoonSkeleton2D skeleton);
 	public abstract String toSourceCode();
 	
 	public void applyPose(SkeletonType skeleton) {

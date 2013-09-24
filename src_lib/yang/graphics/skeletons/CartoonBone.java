@@ -1,18 +1,16 @@
-package yang.graphics.skeletons.elements;
+package yang.graphics.skeletons;
 
 import java.util.ArrayList;
 
-import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.physics.massaggregation.elements.Bone2D;
+import yang.physics.massaggregation.elements.Joint;
 
 
-public class Bone {
+public class CartoonBone extends Bone2D {
 
 	//Properties
-	public String mName;
-	public Joint mJoint1;
-	public Joint mJoint2;
 	public GraphicsTranslator mGraphics;
 	public float strength = 0.1f;
 	public int mCurTexCoords;
@@ -25,22 +23,14 @@ public class Bone {
 	public boolean mCelShading;
 	
 	//State
-	public float mDistX, mDistY, mDistZ;
-	public float mDistance;
-	public float mNormDirX,mNormDirY,mNormDirZ,mPrevNormDirX,mPrevNormDirY,mPrevNormDirZ;
-	public float mOrthNormX;
-	public float mOrthNormY;
-	public float mBoneDirX1,mBoneDirY1,mBoneDirX2,mBoneDirY2;
 	public float mResShiftX1,mResShiftY1,mResShiftX2,mResShiftY2;
 	public float mVertX1,mVertY1,mVertX2,mVertY2,mVertX3,mVertY3,mVertX4,mVertY4;
 	public float mWidthFac;
 	public boolean mVisible;
 	
 	
-	public Bone(GraphicsTranslator graphics,String name,Joint bone1,Joint bone2) {
-		mName = name;
-		mJoint1 = bone1;
-		mJoint2 = bone2;
+	public CartoonBone(GraphicsTranslator graphics,String name,Joint joint1,Joint joint2) {
+		super(name,joint1,joint2);
 		mGraphics = graphics;
 		mCurTexCoords = 0;
 		mTexCoords = new ArrayList<TextureCoordinatesQuad>(2);
@@ -68,7 +58,7 @@ public class Bone {
 	
 	public void setTextureCoordinatesIndex(int newIndex) {
 		mCurTexCoords = newIndex;
-		((Skeleton2D)mJoint1.mSkeleton).updatedTextureCoords();
+		((CartoonSkeleton2D)mJoint1.mSkeleton).updatedTextureCoords();
 	}
 	
 	public void incTextureCoordinatesIndex() {
@@ -106,10 +96,6 @@ public class Bone {
 		mContourY4 = contourY4;
 	}
 	
-	public void setAngle(float angle) {
-		mJoint2.setPosByAngle(mJoint1, this, angle);
-	}
-	
 	public void setContour(float contourX1,float contourY1,float contourX2,float contourY2) {
 		setContour(contourX1,contourY1,contourX2,contourY1,contourX1,contourY2,contourX2,contourY2);
 	}
@@ -118,7 +104,7 @@ public class Bone {
 		setContour(contourX,contourY,contourX,contourY);
 	}
 
-	public void copyContour(Bone bone) {
+	public void copyContour(CartoonBone bone) {
 		mContourX1 = bone.mContourX1;
 		mContourY1 = bone.mContourY1;
 		mContourX2 = bone.mContourX2;
@@ -133,28 +119,8 @@ public class Bone {
 		setContour(contour,contour);
 	}
 	
-	public void refreshDistance() {
-		mPrevNormDirX = mNormDirX;
-		mPrevNormDirY = mNormDirY;
-		mPrevNormDirZ = mNormDirZ;
-		
-		mDistX = mJoint2.mPosX - mJoint1.mPosX;
-		mDistY = mJoint2.mPosY - mJoint1.mPosY;
-		mDistZ = mJoint2.mPosZ - mJoint1.mPosZ;
-		mDistance = (float)Math.sqrt(mDistX*mDistX + mDistY*mDistY + mDistZ*mDistZ);
-		
-		if(mDistance!=0) {
-			float d = 1 / mDistance;
-			mNormDirX = mDistX * d;
-			mNormDirY = mDistY * d;
-			mNormDirZ = mDistZ * d;
-			mOrthNormX = mNormDirY;
-			mOrthNormY = -mNormDirX;
-		}
-	}
-	
 	public void refreshVisualVars() {
-		refreshDistance();
+		refreshGeometry();
 
 		mResShiftX1 = -mOrthNormX * mShiftX1 - mNormDirX * mShiftY1;
 		mResShiftY1 = -mOrthNormY * mShiftX1 - mNormDirY * mShiftY1;
@@ -205,8 +171,6 @@ public class Bone {
 		mShiftX2 = shiftX2;
 		mShiftY2 = shiftY2;
 	}
-	
-	public void applyConstraint() { }
 
 	public void setShiftX(float shift) {
 		mShiftX1 = shift;

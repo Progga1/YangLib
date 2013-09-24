@@ -3,8 +3,6 @@ package yang.graphics.skeletons;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.skeletons.elements.Bone;
-import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
@@ -12,9 +10,10 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.Joint;
 import yang.util.NonConcurrentList;
 
-public class Skeleton2D extends MassAggregation {
+public class CartoonSkeleton2D extends MassAggregation {
 
 	//Properties
 	public float mContourFactor = 0.015f;
@@ -35,8 +34,8 @@ public class Skeleton2D extends MassAggregation {
 	protected float[] mSkeletonColor;
 	protected float[] mContourColor;
 	protected float[] mSuppData;
-	public Bone[][] mLayers;
-	public Bone[][] mFrontToBackLayers;
+	public CartoonBone[][] mLayers;
+	public CartoonBone[][] mFrontToBackLayers;
 	
 	//State
 	protected boolean mUpdateColor;
@@ -48,7 +47,7 @@ public class Skeleton2D extends MassAggregation {
 	public float mRotAnchorY;
 	public int mLookDirection;
 	
-	public Skeleton2D() {
+	public CartoonSkeleton2D() {
 		super();
 		m3D = false;
 		mTextureHolder = null;
@@ -95,9 +94,9 @@ public class Skeleton2D extends MassAggregation {
 		if(mMesh==null) {
 			//FIRST DRAW
 			mVertexCount = 0;
-			for(NonConcurrentList<Bone> layer:mLayersList) {
+			for(NonConcurrentList<CartoonBone> layer:mLayersList) {
 				//Contour
-				for(Bone bone:layer) {
+				for(CartoonBone bone:layer) {
 					if(mDrawContour && bone.mCelShading)
 						mVertexCount += 4;
 					mVertexCount += 4;
@@ -125,17 +124,17 @@ public class Skeleton2D extends MassAggregation {
 			
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_COLORS,0);
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SUPPDATA, 0);
-			for(Bone[] layer:mLayers) {
+			for(CartoonBone[] layer:mLayers) {
 				//Contour
 				if(mDrawContour)
-					for(Bone bone:layer) {
+					for(CartoonBone bone:layer) {
 						if(bone.mCelShading) {
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.BLACK,4);
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mContourColor,4);
 						}
 					}
 				//Fill
-				for(Bone _:layer) {
+				for(CartoonBone _:layer) {
 					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4);
 					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4);
 					//mInterColor[3] += zInc;
@@ -148,17 +147,17 @@ public class Skeleton2D extends MassAggregation {
 		//--UPDATE TEXTURE COORDINATES--
 		if(mUpdateTexCoords) {
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_TEXTURES, 0);
-			for(Bone[] layer:mLayers) {
+			for(CartoonBone[] layer:mLayers) {
 				//Contour
 				if(mDrawContour) {
-					for(Bone bone:layer) {
+					for(CartoonBone bone:layer) {
 						if(bone.mCelShading) {
 							mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
 						}
 					}
 				}
 				//Fill
-				for(Bone bone:layer) {
+				for(CartoonBone bone:layer) {
 					mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
 				}
 			}
@@ -172,10 +171,10 @@ public class Skeleton2D extends MassAggregation {
 		float scale = mCarrier.getScale()*mScale;
 		int mirrorFac = mLookDirection;
 		
-		for(Bone[] layer:mLayers) {
+		for(CartoonBone[] layer:mLayers) {
 			//Contour
 			if(mDrawContour) {
-				for(Bone bone:layer) {
+				for(CartoonBone bone:layer) {
 					if(bone.mCelShading) {
 						if(bone.mVisible) {
 							float contourOrthoX = bone.mOrthNormX * mContourFactor;
@@ -194,7 +193,7 @@ public class Skeleton2D extends MassAggregation {
 			}
 			
 			//Fill
-			for(Bone bone:layer) {
+			for(CartoonBone bone:layer) {
 				if(bone.mVisible) {
 					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX4*scale * mirrorFac , worldPosY + bone.mVertY4*scale, mShiftZ);
 					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX3*scale * mirrorFac , worldPosY + bone.mVertY3*scale, mShiftZ);
@@ -356,13 +355,13 @@ public class Skeleton2D extends MassAggregation {
 
 	protected void finishUpdate() {
 		int l = mLayersList.size();
-		mLayers = new Bone[l][];
-		mFrontToBackLayers = new Bone[l][];
+		mLayers = new CartoonBone[l][];
+		mFrontToBackLayers = new CartoonBone[l][];
 		int k=0;
-		for(NonConcurrentList<Bone> layer:mLayersList) {
-			Bone[] layerArray = new Bone[layer.size()];
+		for(NonConcurrentList<CartoonBone> layer:mLayersList) {
+			CartoonBone[] layerArray = new CartoonBone[layer.size()];
 			int c=0;
-			for(Bone bone:layer) {
+			for(CartoonBone bone:layer) {
 				layerArray[c] = bone;
 				c++;
 			}

@@ -1,15 +1,15 @@
 package yang.graphics.skeletons.pose;
 
-import yang.graphics.skeletons.Skeleton2D;
-import yang.graphics.skeletons.elements.Joint;
-import yang.graphics.skeletons.elements.JointNormalConstraint;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.math.Geometry;
 import yang.math.MathConst;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointNormalConstraint;
 import yang.util.Util;
 
 
-public class AnglePose2D extends Posture<AnglePose2D,Skeleton2D>{
+public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 
 	public final static float PI2 = (float)Math.PI/2;
 	
@@ -27,7 +27,7 @@ public class AnglePose2D extends Posture<AnglePose2D,Skeleton2D>{
 	}
 	
 	@Override
-	public void applyPose(Skeleton2D skeleton,AnglePose2D interpolationPose,float weight) {
+	public void applyPose(CartoonSkeleton2D skeleton,AnglePose2D interpolationPose,float weight) {
 		int c = 0;
 		float dWeight = 1-weight;
 		skeleton.mCurrentPose = this;
@@ -87,7 +87,7 @@ public class AnglePose2D extends Posture<AnglePose2D,Skeleton2D>{
 	}
 
 	@Override
-	public void copyFromSkeleton(Skeleton2D skeleton) {
+	public void copyFromSkeleton(CartoonSkeleton2D skeleton) {
 		int c = 0;
 		//get array length
 		for(Joint joint:skeleton.mJoints) {

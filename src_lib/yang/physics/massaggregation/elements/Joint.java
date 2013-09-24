@@ -1,6 +1,6 @@
-package yang.graphics.skeletons.elements;
+package yang.physics.massaggregation.elements;
 
-import yang.graphics.skeletons.Skeleton2D;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.math.Geometry;
 import yang.math.objects.Point3f;
 import yang.physics.massaggregation.MassAggregation;
@@ -183,7 +183,7 @@ public class Joint {
 		mPosY = relativeJoint.mPosY - (float)(distance*Math.cos(angle));//System.out.println(angle+" "+getAngle(relativeJoint));
 	}
 	
-	public void setPosByAngle(Joint relativeJoint,Bone connectingBone,float angle) {
+	public void setPosByAngle(Joint relativeJoint,JointConnection connectingBone,float angle) {
 		setPosByAngle(relativeJoint,connectingBone.mDistance,angle);
 	}
 	
@@ -351,7 +351,7 @@ public class Joint {
 				);
 	}
 
-	public void setNormalDirectionIK(float relativeX, float relativeY, Skeleton2D skeleton, float straight, float orthoOffset) {
+	public void setNormalDirectionIK(float relativeX, float relativeY, CartoonSkeleton2D skeleton, float straight, float orthoOffset) {
 		float shoulderX = skeleton.getJointWorldX(mAngleParent.mAngleParent);
 		float shoulderY = skeleton.getJointWorldY(mAngleParent.mAngleParent);
 		float dirX = relativeX - shoulderX;

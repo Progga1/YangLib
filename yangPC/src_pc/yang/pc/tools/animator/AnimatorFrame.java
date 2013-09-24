@@ -8,10 +8,9 @@ import javax.swing.JPanel;
 
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.programs.BasicProgram;
-import yang.graphics.skeletons.Skeleton2D;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.graphics.skeletons.animations.AnimationPlayer;
 import yang.graphics.skeletons.animations.AnimationSystem;
-import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.tools.animator.Animator;
 import yang.graphics.tools.animator.DefaultAnimatorSurface;
 import yang.model.App;
@@ -24,6 +23,7 @@ import yang.pc.gles.YangGLESFrame;
 import yang.pc.tools.keymainmenu.KeyItem;
 import yang.pc.tools.keymainmenu.KeyMainMenu;
 import yang.pc.tools.keymainmenu.KeyMenuListener;
+import yang.physics.massaggregation.elements.Joint;
 import yang.sound.AbstractSoundManager;
 
 public class AnimatorFrame implements InitializationCallback, KeyMenuListener, ExitCallback {
@@ -112,15 +112,15 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mSurface.waitUntilInitialized();
 	}
 
-	public void addSkeleton(Class<? extends Skeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {
+	public void addSkeleton(Class<? extends CartoonSkeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {
 		mSurface.mAnimator.addSkeleton(skeletonClass,animationSystem);
 	}
 	
-	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem,AnimationPlayer<?> animationPlayer) {
+	public void addSkeleton(CartoonSkeleton2D skeleton,AnimationSystem<?,?> animationSystem,AnimationPlayer<?> animationPlayer) {
 		mSurface.mAnimator.addSkeleton(skeleton,animationSystem,animationPlayer);
 	}
 	
-	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
+	public void addSkeleton(CartoonSkeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
 		mSurface.mAnimator.addSkeleton(skeleton,animationSystem,null);
 	}
 

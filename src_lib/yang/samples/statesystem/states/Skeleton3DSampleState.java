@@ -16,13 +16,13 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
-import yang.graphics.skeletons.JointEditData;
-import yang.graphics.skeletons.Skeleton3DEditing;
 import yang.graphics.skeletons.defaults.human.HumanSkeletonCreator3D;
 import yang.graphics.skeletons.defaults.human.HumanSkeletonProperties;
-import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.editing.JointEditData;
+import yang.physics.massaggregation.editing.Skeleton3DEditing;
+import yang.physics.massaggregation.elements.Joint;
 import yang.samples.statesystem.SampleStateCameraControl;
 
 public class Skeleton3DSampleState extends SampleStateCameraControl {

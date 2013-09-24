@@ -1,8 +1,8 @@
 package yang.graphics.skeletons.defaults.human;
 
-import yang.graphics.skeletons.elements.Bone;
-import yang.graphics.skeletons.elements.Joint;
+import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.Joint;
 
 public class HumanSkeletonCreator3D {
 
@@ -25,16 +25,16 @@ public class HumanSkeletonCreator3D {
 	public Joint mLeftLegJoint;
 	public Joint mRightLegJoint;
 	
-	public Bone mBodyBone;
-	public Bone mHeadBone;
-	public Bone mLeftUpperArmBone;
-	public Bone mRightUpperArmBone;
-	public Bone mLeftLowerArmBone;
-	public Bone mRightLowerArmBone;
-	public Bone mLeftUpperLegBone;
-	public Bone mRightUpperLegBone;
-	public Bone mLeftLowerLegBone;
-	public Bone mRightLowerLegBone;
+	public CartoonBone mBodyBone;
+	public CartoonBone mHeadBone;
+	public CartoonBone mLeftUpperArmBone;
+	public CartoonBone mRightUpperArmBone;
+	public CartoonBone mLeftLowerArmBone;
+	public CartoonBone mRightLowerArmBone;
+	public CartoonBone mLeftUpperLegBone;
+	public CartoonBone mRightUpperLegBone;
+	public CartoonBone mLeftLowerLegBone;
+	public CartoonBone mRightLowerLegBone;
 	
 	public MassAggregation mSkeleton;
 	

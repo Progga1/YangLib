@@ -1,9 +1,9 @@
 package yang.graphics.skeletons.defaults;
 
-import yang.graphics.skeletons.elements.Bone;
-import yang.graphics.skeletons.elements.Joint;
+import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.constraints.AngleConstraint;
+import yang.physics.massaggregation.elements.Joint;
 
 public class RopeSkeleton extends MassAggregation {
 	
@@ -26,14 +26,14 @@ public class RopeSkeleton extends MassAggregation {
 	protected void build() {
 		float lenPerJoint = mRopeLength/Math.max(1,mJointCount-1);
 		Joint prevJoint = null;
-		Bone prevBone = null;
+		CartoonBone prevBone = null;
 		for(int i=0;i<mJointCount;i++) {
 			Joint joint = new Joint("R"+i,prevJoint,0,-i*lenPerJoint,lenPerJoint*0.5f,this);
 			joint.mMass = mJointMass;
 			joint.setInitials();
 			super.addJoint(joint);
 			if(i>0) {
-				Bone bone = new Bone(null,"RB"+i, prevJoint,joint);
+				CartoonBone bone = new CartoonBone(null,"RB"+i, prevJoint,joint);
 				bone.setWidth(mWidth);
 				//bone.putTextureCoords(0,0, 1,1);
 				bone.setShiftY(0, -0.1f);

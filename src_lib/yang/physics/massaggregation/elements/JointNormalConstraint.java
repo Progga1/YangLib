@@ -1,21 +1,22 @@
-package yang.graphics.skeletons.elements;
+package yang.physics.massaggregation.elements;
 
-import yang.graphics.skeletons.Skeleton2D;
+import yang.graphics.skeletons.CartoonBone;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 
 public class JointNormalConstraint extends Joint{
 
-	public Bone mBone;
+	public CartoonBone mBone;
 	public float mRelativeX,mRelativeY;
 	public float mWeightJoint1,mWeightJoint2;
 	
 	public float mForcePosX,mForcePosY;
 	
-	public JointNormalConstraint(String name, Joint angleParent, Bone cBone, float boneX, float boneY, float radius, Skeleton2D skeleton) {
+	public JointNormalConstraint(String name, Joint angleParent, CartoonBone cBone, float boneX, float boneY, float radius, CartoonSkeleton2D skeleton) {
 		super(name, angleParent, 0, 0, radius, skeleton);
 		mBone = cBone;
 		mRelativeX = boneX;
 		mRelativeY = boneY;
-		mBone.refreshDistance();
+		mBone.refreshGeometry();
 		refreshConstraintPos();
 		mPosX = mForcePosX;
 		mPosY = mForcePosY;
@@ -32,7 +33,7 @@ public class JointNormalConstraint extends Joint{
 	}
 
 	public void refreshConstraintPos() {
-		mBone.refreshDistance();
+		mBone.refreshGeometry();
 		mForcePosX = mBone.mJoint1.mPosX + mBone.mDistX * mRelativeX + mBone.mOrthNormX * mRelativeY;
 		mForcePosY = mBone.mJoint1.mPosY + mBone.mDistY * mRelativeX + mBone.mOrthNormY * mRelativeY;
 	}

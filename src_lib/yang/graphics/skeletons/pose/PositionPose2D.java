@@ -1,16 +1,16 @@
 package yang.graphics.skeletons.pose;
 
-import yang.graphics.skeletons.Skeleton2D;
-import yang.graphics.skeletons.elements.Joint;
+import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.Joint;
 
-public class PositionPose2D extends Posture<PositionPose2D,Skeleton2D>{
+public class PositionPose2D extends Posture<PositionPose2D,CartoonSkeleton2D>{
 
 	protected float[] mPositionsX;
 	protected float[] mPositionsY;
 
 	@Override
-	public void applyPose(Skeleton2D skeleton, PositionPose2D pose, float weight) {
+	public void applyPose(CartoonSkeleton2D skeleton, PositionPose2D pose, float weight) {
 		skeleton.mCurrentPose = this;
 		int c = 0;
 		for(Joint joint:skeleton.mJoints) {
@@ -23,7 +23,7 @@ public class PositionPose2D extends Posture<PositionPose2D,Skeleton2D>{
 	}
 
 	@Override
-	public void copyFromSkeleton(Skeleton2D skeleton) {
+	public void copyFromSkeleton(CartoonSkeleton2D skeleton) {
 		int c = 0;
 		for(Joint joint:skeleton.mJoints) {
 			if(c>=mPositionsX.length)

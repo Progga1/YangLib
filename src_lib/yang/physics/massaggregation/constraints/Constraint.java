@@ -1,6 +1,6 @@
 package yang.physics.massaggregation.constraints;
 
-import yang.graphics.skeletons.elements.Bone;
+import yang.graphics.skeletons.CartoonBone;
 
 public abstract class Constraint {
 
@@ -8,7 +8,7 @@ public abstract class Constraint {
 	public boolean mEnabled;
 	
 	public abstract void apply();
-	public abstract boolean containsBone(Bone bone);
+	public abstract boolean containsBone(CartoonBone bone);
 	
 	public void recalculate() {
 		

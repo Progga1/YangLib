@@ -1,14 +1,14 @@
-package yang.graphics.skeletons;
+package yang.physics.massaggregation.editing;
 
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.meshcreators.LineDrawer3D;
 import yang.graphics.defaults.meshcreators.SphereCreator;
 import yang.graphics.model.FloatColor;
-import yang.graphics.skeletons.elements.Joint;
 import yang.math.Geometry;
 import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.Joint;
 import yang.util.NonConcurrentList;
 
 public class Skeleton3DEditing {
