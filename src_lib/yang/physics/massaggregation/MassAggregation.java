@@ -5,7 +5,7 @@ import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;
 import yang.graphics.skeletons.elements.Bone;
 import yang.graphics.skeletons.elements.Joint;
-import yang.graphics.skeletons.pose.Pose;
+import yang.graphics.skeletons.pose.Posture;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.Rect;
 import yang.physics.massaggregation.constraints.Constraint;
@@ -25,7 +25,7 @@ public class MassAggregation {
 	public float mLimitForceInwards;
 	public float mLimitForceOutwards;
 	public int mAccuracy;
-	public boolean m3D = true;
+	public boolean m3D;
 	
 	//Objects
 	public DefaultGraphics<?> mGraphics;
@@ -36,8 +36,6 @@ public class MassAggregation {
 	public NonConcurrentList<Joint> mJoints;
 	public NonConcurrentList<NonConcurrentList<Bone>> mLayersList;
 	public NonConcurrentList<Bone> mBones;
-	public Bone[][] mLayers;
-	public Bone[][] mFrontToBackLayers;
 	public NonConcurrentList<Constraint> mConstraints;
 	public Rect mBoundariesRect;
 
@@ -46,11 +44,8 @@ public class MassAggregation {
 	public float mShiftY = 0;
 	public float mShiftZ = 0;
 	public boolean mConstraintsActivated;
-	public Pose<?> mCurrentPose;
+	public Posture mCurrentPose;
 	private boolean mInitialized;
-	public float mRotation;
-	public float mRotAnchorX;
-	public float mRotAnchorY;
 	public float mScale = 1;
 	private int mCurJointId = 0;
 	
@@ -61,8 +56,8 @@ public class MassAggregation {
 		mLayersList = new NonConcurrentList<NonConcurrentList<Bone>>();
 		mConstraints = new NonConcurrentList<Constraint>();
 		
+		m3D = true;
 		mConstraintsActivated = true;
-		mRotation = 0;
 		mInitialized = false;
 		mAccuracy = DEFAULT_ACCURACY;
 		mConstantForceX = 0;
@@ -108,21 +103,7 @@ public class MassAggregation {
 	}
 	
 	protected void finish() {
-		int l = mLayersList.size();
-		mLayers = new Bone[l][];
-		mFrontToBackLayers = new Bone[l][];
-		int k=0;
-		for(NonConcurrentList<Bone> layer:mLayersList) {
-			Bone[] layerArray = new Bone[layer.size()];
-			int c=0;
-			for(Bone bone:layer) {
-				layerArray[c] = bone;
-				c++;
-			}
-			mLayers[k] = layerArray;
-			mFrontToBackLayers[l-1-k] = layerArray;
-			k++;
-		}
+		
 	}
 	
 	public void refreshBoundariesRect() {
@@ -237,16 +218,6 @@ public class MassAggregation {
 		
 		}
 		
-	}
-	
-	public void setRotationAnchor(float anchorX,float anchorY) {
-		mRotAnchorX = anchorX;
-		mRotAnchorY = anchorY;
-	}
-	
-	public void resetRotationAnchor() {
-		mRotAnchorX = 0;
-		mRotAnchorY = 0;
 	}
 
 	public void reApplyPose() {

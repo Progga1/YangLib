@@ -33,7 +33,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	
 	@Override
 	public void initGraphics() {
-		mSkeleton = new SampleSkeleton(mGraphics2D);
+		mSkeleton = new SampleSkeleton(mGraphics2D,true);
 		mSkeleton3D = new Skeleton3DEditing(mGraphics3D,mSkeleton).initLines();
 		mLight = new LightProperties();
 		SubShader[] subShaders = new SubShader[]{

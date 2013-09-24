@@ -11,7 +11,7 @@ public class RopeSkeleton extends MassAggregation {
 	private float mRopeLength = 2;
 	private float mWidth = 1;
 
-	public float mJointMass = 2;
+	public float mJointMass = 1.5f;
 	
 	public RopeSkeleton(int jointCount,float length,float width) {
 		super();
@@ -37,7 +37,7 @@ public class RopeSkeleton extends MassAggregation {
 				bone.putTextureCoords(0,0, 1,1);
 				bone.setShiftY(0, -0.1f);
 				//DistanceConstraint constraint = new DistanceConstraint(bone);
-				super.addBone(bone, 0, 15);
+				super.addBone(bone, 0, 65);
 				if(prevBone!=null)
 					super.addConstraint(new AngleConstraint(prevBone,bone, -0.2f,0.2f));
 				prevBone = bone;

@@ -9,8 +9,8 @@ import yang.util.NonConcurrentList;
 public class Joint {
 
 	public static float DEFAULT_FRICTION = 0.9998f;
-	public static float TOWARDS_FACTOR = 50;
-	public static float AWAY_FACTOR = 1000;
+	public static float TOWARDS_FACTOR = 150;
+	public static float AWAY_FACTOR = 22000;
 	
 	//Properties
 	public int mId;

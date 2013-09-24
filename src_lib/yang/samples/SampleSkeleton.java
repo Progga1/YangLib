@@ -5,7 +5,9 @@ import yang.graphics.skeletons.defaults.HumanSkeleton2D;
 
 public class SampleSkeleton extends HumanSkeleton2D {
 
-	public SampleSkeleton(DefaultGraphics<?> graphics) {
+	public SampleSkeleton(DefaultGraphics<?> graphics,boolean use3D) {
+		super();
+		m3D = use3D;
 		this.init(graphics);
 	}
 	

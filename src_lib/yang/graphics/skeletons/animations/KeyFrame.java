@@ -1,6 +1,6 @@
 package yang.graphics.skeletons.animations;
 
-import yang.graphics.skeletons.pose.Pose;
+import yang.graphics.skeletons.pose.Posture;
 
 public class KeyFrame {
 
@@ -8,14 +8,14 @@ public class KeyFrame {
 	public int mFirstFrame;
 	public int mDuration;
 	public float mTimeFactor;
-	public Pose mPose;
+	public Posture mPose;
 	
-	public KeyFrame(Pose<?> pose, int duration) {
+	public KeyFrame(Posture<?,?> pose, int duration) {
 		mPose = pose;
 		mDuration = duration;
 	}
 	
-	public KeyFrame(Pose<?> pose) {
+	public KeyFrame(Posture<?,?> pose) {
 		this(pose,1);
 	}
 	

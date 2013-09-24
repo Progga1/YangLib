@@ -34,17 +34,24 @@ public class Skeleton2D extends MassAggregation {
 	protected float[] mSkeletonColor;
 	protected float[] mContourColor;
 	protected float[] mSuppData;
+	public Bone[][] mLayers;
+	public Bone[][] mFrontToBackLayers;
 	
 	//State
 	protected boolean mUpdateColor;
 	protected boolean mUpdateTexCoords;
 	protected int mVertexCount;
 	protected float[] mInterColor = new float[4];
+	public float mRotation;
+	public float mRotAnchorX;
+	public float mRotAnchorY;
 	
 	public Skeleton2D() {
 		super();
+		m3D = false;
 		mTextureHolder = null;
 		mContourTextureHolder = null;
+		mRotation = 0;
 		mSkeletonColor = new float[4];
 		mContourColor = new float[4];
 		mSuppData = new float[4];
@@ -300,5 +307,35 @@ public class Skeleton2D extends MassAggregation {
 	
 	public void updatedTextureCoords() {
 		this.mUpdateTexCoords = true;
+	}
+	
+	public void setRotationAnchor(float anchorX,float anchorY) {
+		mRotAnchorX = anchorX;
+		mRotAnchorY = anchorY;
+	}
+	
+	public void resetRotationAnchor() {
+		mRotAnchorX = 0;
+		mRotAnchorY = 0;
+	}
+	
+	@Override
+	protected void finish() {
+		super.finish();
+		int l = mLayersList.size();
+		mLayers = new Bone[l][];
+		mFrontToBackLayers = new Bone[l][];
+		int k=0;
+		for(NonConcurrentList<Bone> layer:mLayersList) {
+			Bone[] layerArray = new Bone[layer.size()];
+			int c=0;
+			for(Bone bone:layer) {
+				layerArray[c] = bone;
+				c++;
+			}
+			mLayers[k] = layerArray;
+			mFrontToBackLayers[l-1-k] = layerArray;
+			k++;
+		}
 	}
 }

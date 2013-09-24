@@ -104,11 +104,11 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		deltaTime *= mAnimationSpeed;
 		if(mCurrentAnimation.mAutoSetAnimationTime)
 			setAnimationTime(mCurrentAnimationTime+deltaTime);
-		if(mCurrentAnimation.mAutoRotation!=0) {
-			mSkeleton.mRotation += mCurrentAnimation.mAutoRotation*deltaTime;
-			if(!mOnlyPhysics)
-				mSkeleton.reApplyPose();
-		}
+//		if(mCurrentAnimation.mAutoRotation!=0) {
+//			mSkeleton.mRotation += mCurrentAnimation.mAutoRotation*deltaTime;
+//			if(!mOnlyPhysics)
+//				mSkeleton.reApplyPose();
+//		}
 	}
 	
 	public void stopNode() {

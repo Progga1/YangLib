@@ -9,7 +9,7 @@ import yang.physics.massaggregation.MassAggregation;
 import yang.util.Util;
 
 
-public class AnglePose2D extends Pose<AnglePose2D>{
+public class AnglePose2D extends Posture<AnglePose2D,Skeleton2D>{
 
 	public final static float PI2 = (float)Math.PI/2;
 	
@@ -27,7 +27,7 @@ public class AnglePose2D extends Pose<AnglePose2D>{
 	}
 	
 	@Override
-	public void applyPose(MassAggregation skeleton,AnglePose2D interpolationPose,float weight) {
+	public void applyPose(Skeleton2D skeleton,AnglePose2D interpolationPose,float weight) {
 		int c = 0;
 		float dWeight = 1-weight;
 		skeleton.mCurrentPose = this;

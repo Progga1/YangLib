@@ -3,7 +3,7 @@ package yang.graphics.skeletons.animations;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.interpolation.ConstantInterpolation;
 import yang.graphics.skeletons.animations.interpolation.Interpolation;
-import yang.graphics.skeletons.pose.Pose;
+import yang.graphics.skeletons.pose.Posture;
 
 public class Animation<CarrierType extends SkeletonCarrier> {
 
@@ -14,7 +14,6 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 	public KeyFrame[] mNextFrames;
 	protected WrapMode mWrap;
 	public boolean mAutoAnimate;
-	protected float mAutoRotation;
 	protected float mFramesPerSecond;
 	public Interpolation mInterpolation;
 	public int mFrameCount;
@@ -108,7 +107,7 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 		setFrames(DEFAULT_WRAP_MODE,frames);
 	}
 	
-	protected void setFrames(Pose[] frames,WrapMode clampMode) {
+	protected void setFrames(Posture[] frames,WrapMode clampMode) {
 		mKeyFrames = new KeyFrame[frames.length];
 		for(int i=0;i<frames.length;i++) {
 			mKeyFrames[i] = new KeyFrame(frames[i]);
@@ -116,15 +115,15 @@ public class Animation<CarrierType extends SkeletonCarrier> {
 		setFrames(clampMode,mKeyFrames);
 	}
 	
-	protected void setFrames(Pose[] frames) {
+	protected void setFrames(Posture[] frames) {
 		setFrames(frames,DEFAULT_WRAP_MODE);
 	}
 	
-	protected void setFrame(Pose frame,WrapMode clampMode) {
+	protected void setFrame(Posture frame,WrapMode clampMode) {
 		setFrames(clampMode,new KeyFrame[]{new KeyFrame(frame)});
 	}
 	
-	protected void setFrame(Pose frame) {
+	protected void setFrame(Posture frame) {
 		setFrames(new KeyFrame[]{new KeyFrame(frame)});
 	}
 	
