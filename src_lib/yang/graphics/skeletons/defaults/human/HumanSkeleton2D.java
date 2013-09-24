@@ -257,7 +257,6 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 		}
 		
 		mBreastJoint.mFixed = true;
-		this.refreshVisualVars();
 	}
 	
 	protected void buildDefaultLayers() {

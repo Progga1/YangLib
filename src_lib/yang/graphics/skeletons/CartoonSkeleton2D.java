@@ -10,6 +10,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.constraints.DistanceConstraint;
 import yang.physics.massaggregation.elements.Joint;
 import yang.util.NonConcurrentList;
 
@@ -28,12 +29,14 @@ public class CartoonSkeleton2D extends MassAggregation {
 	public GraphicsTranslator mTranslator;
 	public DefaultGraphics<?> mGraphics;
 	
+	
 	//GFX data
 	public DrawBatch mMesh;
 	protected IndexedVertexBuffer mVertexBuffer;
 	protected float[] mSkeletonColor;
 	protected float[] mContourColor;
 	protected float[] mSuppData;
+	public NonConcurrentList<NonConcurrentList<CartoonBone>> mLayersList;
 	public CartoonBone[][] mLayers;
 	public CartoonBone[][] mFrontToBackLayers;
 	
@@ -50,6 +53,7 @@ public class CartoonSkeleton2D extends MassAggregation {
 	public CartoonSkeleton2D() {
 		super();
 		m3D = false;
+		mLayersList = new NonConcurrentList<NonConcurrentList<CartoonBone>>();
 		mTextureHolder = null;
 		mContourTextureHolder = null;
 		mRotation = 0;
@@ -76,9 +80,10 @@ public class CartoonSkeleton2D extends MassAggregation {
 		mCurJointId = 0;
 		build();
 		
-		mInitialized = true;
-		
 		finishUpdate();
+		refreshVisualData();
+		
+		mInitialized = true;
 	}
 	
 	public void init(DefaultGraphics<?> graphics) {
@@ -87,6 +92,34 @@ public class CartoonSkeleton2D extends MassAggregation {
 	
 	public boolean isInitialized() {
 		return mInitialized;
+	}
+	
+	public void setBonesVisible(boolean visible) {
+		for(CartoonBone[] layer:mLayers)
+			for(CartoonBone bone:layer)
+				bone.mVisible = visible;
+	}
+	
+	public void refreshVisualData() {
+		for(CartoonBone[] layer:mLayers)
+			for(CartoonBone bone:layer)
+				bone.refreshVisualVars();
+	}
+	
+	public void addSpringBone(CartoonBone bone,int layer,float constraintDistanceStrength) {
+		super.addSpringBone(bone, constraintDistanceStrength);
+		while(layer>mLayersList.size()-1)
+			mLayersList.add(new NonConcurrentList<CartoonBone>());
+		mLayersList.get(layer).add(bone);
+	}
+	
+	public void addBone(CartoonBone bone,int layer) {
+		addSpringBone(bone,layer,mDefaultBoneSpring);
+	}
+	
+	@Override
+	public void addBone(CartoonBone bone) {
+		addSpringBone(bone,0,mDefaultBoneSpring);
 	}
 	
 	public void draw() {

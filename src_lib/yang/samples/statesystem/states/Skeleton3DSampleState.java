@@ -66,7 +66,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	@Override
 	protected void draw() {
-		mSkeleton.refreshVisualVars();
+		//mSkeleton.refreshVisualVars();
 		
 		mGraphics3D.activate();
 		mGraphics.clear(0f,0f,0.3f, GLMasks.DEPTH_BUFFER_BIT);

@@ -97,7 +97,7 @@ public class Animator implements YangEventListener {
 		mGraphics2D.drawLine(0, 0, 0, 100, 0.01f);
 		
 		if(mCurSkeleton!=null) {
-			mCurSkeleton.refreshVisualVars();
+			mCurSkeleton.refreshVisualData();
 			mCurSkeleton.draw();
 			if(mDrawSkeleton) {
 				//mCurSkeleton.mCarrier.drawCollision();

@@ -38,7 +38,7 @@ public class RopeSkeleton extends MassAggregation {
 				//bone.putTextureCoords(0,0, 1,1);
 				bone.setShiftY(0, -0.1f);
 				//DistanceConstraint constraint = new DistanceConstraint(bone);
-				super.addBone(bone, 0, 65);
+				super.addSpringBone(bone, 100);
 				if(prevBone!=null)
 					super.addConstraint(new AngleConstraint(prevBone,bone, -0.2f,0.2f));
 				prevBone = bone;

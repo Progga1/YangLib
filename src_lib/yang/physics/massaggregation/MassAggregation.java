@@ -1,16 +1,14 @@
 package yang.physics.massaggregation;
 
-import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.CartoonBone;
 import yang.graphics.skeletons.SkeletonCarrier;
-import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
 import yang.graphics.skeletons.pose.Posture;
-import yang.graphics.translator.GraphicsTranslator;
 import yang.model.Rect;
 import yang.physics.massaggregation.constraints.Constraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
 import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.NonConcurrentList;
 
 public class MassAggregation {
@@ -29,14 +27,14 @@ public class MassAggregation {
 	public int mAccuracy;
 	public boolean m3D;
 	public float mDefaultJointRadius = 0.1f;
+	public float mDefaultBoneSpring = 10;
 	
 	//Objects
 	public SkeletonCarrier mCarrier;
 	
 	//Data
 	public NonConcurrentList<Joint> mJoints;
-	public NonConcurrentList<NonConcurrentList<CartoonBone>> mLayersList;
-	public NonConcurrentList<CartoonBone> mBones;
+	public NonConcurrentList<JointConnection> mBones;
 	public NonConcurrentList<Constraint> mConstraints;
 
 	//State
@@ -51,8 +49,7 @@ public class MassAggregation {
 	
 	public MassAggregation() {
 		mJoints = new NonConcurrentList<Joint>();
-		mBones = new NonConcurrentList<CartoonBone>();
-		mLayersList = new NonConcurrentList<NonConcurrentList<CartoonBone>>();
+		mBones = new NonConcurrentList<JointConnection>();
 		mConstraints = new NonConcurrentList<Constraint>();
 		
 		mCarrier = NEUTRAL_CARRIER;
@@ -77,12 +74,6 @@ public class MassAggregation {
 		}
 		for(Constraint constraint:mConstraints)
 			constraint.recalculate();
-	}
-	
-	public void setBonesVisible(boolean visible) {
-		for(CartoonBone bone:mBones) {
-			bone.mVisible = visible;
-		}
 	}
 	
 	public void get2DBoundaries(Rect target) {
@@ -118,19 +109,14 @@ public class MassAggregation {
 		mConstraints.add(constraint);
 	}
 	
-	public void addBone(CartoonBone bone,int layer,float constraintDistanceStrength) {
-		while(layer>mLayersList.size()-1)
-		{
-			mLayersList.add(new NonConcurrentList<CartoonBone>());
-		}
-		mLayersList.get(layer).add(bone);
+	public void addSpringBone(CartoonBone bone,float constraintDistanceStrength) {
 		mBones.add(bone);
 		if(constraintDistanceStrength>0)
 			addConstraint(new DistanceConstraint(bone,constraintDistanceStrength));
 	}
 
-	public void addBone(CartoonBone bone,int layer) {
-		addBone(bone,layer,10);
+	public void addBone(CartoonBone bone) {
+		addSpringBone(bone,mDefaultBoneSpring);
 	}
 
 	public Joint getBoneByName(String name) {
@@ -161,11 +147,6 @@ public class MassAggregation {
 	
 	public float toJointY(float y) {
 		return (y-mCarrier.getWorldY())*mCarrier.getScale();
-	}
-	
-	public void refreshVisualVars() {
-		for(CartoonBone connection:mBones)
-			connection.refreshVisualVars();
 	}
 	
 	public void applyConstraints(float deltaTime) {
