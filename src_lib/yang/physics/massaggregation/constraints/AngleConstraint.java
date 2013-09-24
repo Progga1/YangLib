@@ -40,14 +40,14 @@ public class AngleConstraint extends Constraint{
 			if(cross>0)
 				f = -f;
 			float off = 1;
-			mBone2.mJoint2.mForceX += mBone2.mOrthNormX*f;
-			mBone2.mJoint2.mForceY += mBone2.mOrthNormY*f;
-			mBone2.mJoint1.mForceX -= mBone2.mOrthNormX*f * off;
-			mBone2.mJoint1.mForceY -= mBone2.mOrthNormY*f * off;
-			mBone1.mJoint2.mForceX -= mBone1.mOrthNormX*f * off;
-			mBone1.mJoint2.mForceY -= mBone1.mOrthNormY*f * off;
-			mBone1.mJoint1.mForceX += mBone1.mOrthNormX*f;
-			mBone1.mJoint1.mForceY += mBone1.mOrthNormY*f;
+			mBone2.mJoint2.mForceX += mBone2.mNormDirY*f;
+			mBone2.mJoint2.mForceY -= mBone2.mNormDirX*f;
+			mBone2.mJoint1.mForceX -= mBone2.mNormDirY*f * off;
+			mBone2.mJoint1.mForceY += mBone2.mNormDirX*f * off;
+			mBone1.mJoint2.mForceX -= mBone1.mNormDirY*f * off;
+			mBone1.mJoint2.mForceY += mBone1.mNormDirX*f * off;
+			mBone1.mJoint1.mForceX += mBone1.mNormDirY*f;
+			mBone1.mJoint1.mForceY -= mBone1.mNormDirX*f;
 			//mBone1.mJoint2.mForceX += mBone2.mOrthNormX*f*0.5f;
 			//mBone1.mJoint2.mForceY += mBone2.mOrthNormY*f*0.5f;
 		}

@@ -10,8 +10,8 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.MassAggregation;
-import yang.physics.massaggregation.constraints.DistanceConstraint;
 import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.NonConcurrentList;
 
 public class CartoonSkeleton2D extends MassAggregation {
@@ -106,19 +106,21 @@ public class CartoonSkeleton2D extends MassAggregation {
 				bone.refreshVisualVars();
 	}
 	
-	public void addSpringBone(CartoonBone bone,int layer,float constraintDistanceStrength) {
+	public void addSpringBone(JointConnection bone,int layer,float constraintDistanceStrength) {
 		super.addSpringBone(bone, constraintDistanceStrength);
-		while(layer>mLayersList.size()-1)
-			mLayersList.add(new NonConcurrentList<CartoonBone>());
-		mLayersList.get(layer).add(bone);
+		if(bone instanceof CartoonBone) {
+			while(layer>mLayersList.size()-1)
+				mLayersList.add(new NonConcurrentList<CartoonBone>());
+			mLayersList.get(layer).add((CartoonBone)bone);
+		}
 	}
 	
-	public void addBone(CartoonBone bone,int layer) {
+	public void addBone(JointConnection bone,int layer) {
 		addSpringBone(bone,layer,mDefaultBoneSpring);
 	}
 	
 	@Override
-	public void addBone(CartoonBone bone) {
+	public void addBone(JointConnection bone) {
 		addSpringBone(bone,0,mDefaultBoneSpring);
 	}
 	
@@ -210,8 +212,8 @@ public class CartoonSkeleton2D extends MassAggregation {
 				for(CartoonBone bone:layer) {
 					if(bone.mCelShading) {
 						if(bone.mVisible) {
-							float contourOrthoX = bone.mOrthNormX * mContourFactor;
-							float contourOrthoY = bone.mOrthNormY * mContourFactor;
+							float contourOrthoX = bone.mNormDirY * mContourFactor;
+							float contourOrthoY = -bone.mNormDirX * mContourFactor;
 							float contourNormX = bone.mNormDirX * mContourFactor;
 							float contourNormY = bone.mNormDirY * mContourFactor;
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX4*scale + contourOrthoX*bone.mContourX3 + contourNormX*bone.mContourY4) * mirrorFac, worldPosY + bone.mVertY4*scale + contourOrthoY*bone.mContourX3 + contourNormY*bone.mContourY4, mShiftZ);

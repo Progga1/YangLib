@@ -109,13 +109,13 @@ public class MassAggregation {
 		mConstraints.add(constraint);
 	}
 	
-	public void addSpringBone(CartoonBone bone,float constraintDistanceStrength) {
+	public void addSpringBone(JointConnection bone,float constraintDistanceStrength) {
 		mBones.add(bone);
 		if(constraintDistanceStrength>0)
 			addConstraint(new DistanceConstraint(bone,constraintDistanceStrength));
 	}
 
-	public void addBone(CartoonBone bone) {
+	public void addBone(JointConnection bone) {
 		addSpringBone(bone,mDefaultBoneSpring);
 	}
 

@@ -2,14 +2,15 @@ package yang.physics.massaggregation.constraints;
 
 import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointConnection;
 
 public class DistanceConstraint extends Constraint{
 	
 	public float mForceDistance;
-	public CartoonBone mBone;
+	public JointConnection mBone;
 	public boolean m3D = true;
 	
-	public DistanceConstraint(CartoonBone bone, float strength) {
+	public DistanceConstraint(JointConnection bone, float strength) {
 		mBone = bone;
 		mStrength = strength;
 		mForceDistance = mBone.mDistance;

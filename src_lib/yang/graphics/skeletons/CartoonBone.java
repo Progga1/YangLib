@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.physics.massaggregation.elements.Bone2D;
 import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointConnection;
 
 
-public class CartoonBone extends Bone2D {
+public class CartoonBone extends JointConnection {
 
 	//Properties
 	public GraphicsTranslator mGraphics;
@@ -121,25 +121,28 @@ public class CartoonBone extends Bone2D {
 	
 	public void refreshVisualVars() {
 		refreshGeometry();
+		
+		float orthNormX = mNormDirY;
+		float orthNormY = -mNormDirX;
 
-		mResShiftX1 = -mOrthNormX * mShiftX1 - mNormDirX * mShiftY1;
-		mResShiftY1 = -mOrthNormY * mShiftX1 - mNormDirY * mShiftY1;
-		mResShiftX2 = -mOrthNormX * mShiftX2 - mNormDirX * mShiftY2;
-		mResShiftY2 = -mOrthNormY * mShiftX2 - mNormDirY * mShiftY2;
+		mResShiftX1 = -orthNormX * mShiftX1 - mNormDirX * mShiftY1;
+		mResShiftY1 = -orthNormY * mShiftX1 - mNormDirY * mShiftY1;
+		mResShiftX2 = -orthNormX * mShiftX2 - mNormDirX * mShiftY2;
+		mResShiftY2 = -orthNormY * mShiftX2 - mNormDirY * mShiftY2;
 		
 		float posX1 = mJoint1.mPosX;
 		float posY1 = mJoint1.mPosY;
 		float posX2 = mJoint2.mPosX;
 		float posY2 = mJoint2.mPosY;
 		
-		mVertX1 = posX1+mResShiftX1-mOrthNormX*mWidth1 * mWidthFac;
-		mVertY1 = posY1+mResShiftY1-mOrthNormY*mWidth1 * mWidthFac;
-		mVertX2 = posX1+mResShiftX1+mOrthNormX*mWidth1 * mWidthFac;
-		mVertY2 = posY1+mResShiftY1+mOrthNormY*mWidth1 * mWidthFac;
-		mVertX3 = posX2+mResShiftX2-mOrthNormX*mWidth2 * mWidthFac;
-		mVertY3 = posY2+mResShiftY2-mOrthNormY*mWidth2 * mWidthFac;
-		mVertX4 = posX2+mResShiftX2+mOrthNormX*mWidth2 * mWidthFac;
-		mVertY4 = posY2+mResShiftY2+mOrthNormY*mWidth2 * mWidthFac;
+		mVertX1 = posX1+mResShiftX1-orthNormX*mWidth1 * mWidthFac;
+		mVertY1 = posY1+mResShiftY1-orthNormY*mWidth1 * mWidthFac;
+		mVertX2 = posX1+mResShiftX1+orthNormX*mWidth1 * mWidthFac;
+		mVertY2 = posY1+mResShiftY1+orthNormY*mWidth1 * mWidthFac;
+		mVertX3 = posX2+mResShiftX2-orthNormX*mWidth2 * mWidthFac;
+		mVertY3 = posY2+mResShiftY2-orthNormY*mWidth2 * mWidthFac;
+		mVertX4 = posX2+mResShiftX2+orthNormX*mWidth2 * mWidthFac;
+		mVertY4 = posY2+mResShiftY2+orthNormY*mWidth2 * mWidthFac;
 	}
 	
 	public void setWidth(float width1,float width2) {
