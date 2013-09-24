@@ -51,6 +51,7 @@ public class HumanSkeletonCreator3D {
 			
 		float locScaleX = 1;
 		float locScaleY = 1;
+		float smallRad = 0.05f*locScaleX;
 		float neckY = (1-properties.mHeadRatio)*properties.mHeight;
 		float hipsY = properties.mHeight*properties.mHipRatio;
 		float kneeY = hipsY*0.5f;
@@ -66,12 +67,16 @@ public class HumanSkeletonCreator3D {
 		mBreastJoint = mSkeleton.addJoint("Breast",null, 0,neckY,0);
 		mHeadJoint = mSkeleton.addJoint("Head",mBreastJoint, 0,2*locScaleY,0).setRadius(0.15f*locScaleX);
 		mHipJoint = mSkeleton.addJoint("Hip",mBreastJoint, 0,hipsY,0);
-		mLeftKneeJoint = mSkeleton.addJoint("LeftKnee",null, legsX, kneeY,0);
-		mRightKneeJoint = mSkeleton.addJoint("RightKnee",null, -legsX, kneeY,0);
+		mLeftLegJoint = mSkeleton.addJoint("LeftLeg",mHipJoint, legsX, hipsY,0).setRadius(smallRad);
+		mRightLegJoint = mSkeleton.addJoint("RightLeg",mHipJoint, -legsX, hipsY,0).setRadius(smallRad);
+		mLeftKneeJoint = mSkeleton.addJoint("LeftKnee",mLeftLegJoint, legsX, kneeY,0);
+		mRightKneeJoint = mSkeleton.addJoint("RightKnee",mRightLegJoint, -legsX, kneeY,0);
 		mLeftFootJoint = mSkeleton.addJoint("LeftFoot",mLeftKneeJoint, legsX,0,0);
 		mRightFootJoint = mSkeleton.addJoint("RightFoot",mRightKneeJoint, -legsX,0,0);
-		mLeftElbowJoint = mSkeleton.addJoint("LeftElbow",null, armX,elbowY,0);
-		mRightElbowJoint = mSkeleton.addJoint("RightElbow",null, -armX,elbowY,0);
+		mLeftShoulderJoint = mSkeleton.addJoint("LeftShoulder",mBreastJoint, shoulderX,shoulderY,0).setRadius(smallRad);
+		mRightShoulderJoint = mSkeleton.addJoint("RightShoulder",mBreastJoint, -shoulderX,shoulderY,0).setRadius(smallRad);
+		mLeftElbowJoint = mSkeleton.addJoint("LeftElbow",mLeftShoulderJoint, armX,elbowY,0);
+		mRightElbowJoint = mSkeleton.addJoint("RightElbow",mRightShoulderJoint, -armX,elbowY,0);
 		mLeftHandJoint = mSkeleton.addJoint("LeftHand",mLeftElbowJoint, armX, handY, 0);
 		mRightHandJoint = mSkeleton.addJoint("RightHand",mRightElbowJoint, -armX, handY, 0);
 		
