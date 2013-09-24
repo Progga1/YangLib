@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.skeletons.Skeleton2D;
+import yang.graphics.skeletons.animations.AnimationPlayer;
 import yang.graphics.skeletons.animations.AnimationSystem;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.tools.animator.Animator;
@@ -115,8 +116,12 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mSurface.mAnimator.addSkeleton(skeletonClass,animationSystem);
 	}
 	
+	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem,AnimationPlayer<?> animationPlayer) {
+		mSurface.mAnimator.addSkeleton(skeleton,animationSystem,animationPlayer);
+	}
+	
 	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
-		mSurface.mAnimator.addSkeleton(skeleton,animationSystem);
+		mSurface.mAnimator.addSkeleton(skeleton,animationSystem,null);
 	}
 
 	@Override

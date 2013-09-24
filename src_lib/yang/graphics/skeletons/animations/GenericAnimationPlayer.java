@@ -1,14 +1,15 @@
 package yang.graphics.skeletons.animations;
 
 import yang.graphics.skeletons.SkeletonCarrier;
+import yang.physics.massaggregation.MassAggregation;
 import yang.sound.AbstractSound;
 
 public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,AnimationType extends Animation<CarrierType>> extends AnimationPlayer<AnimationType> {
 
 	public CarrierType mBody;
 
-	public GenericAnimationPlayer(CarrierType body,AnimationType startAnimation) {
-		super(body.getSkeleton(),startAnimation);
+	public GenericAnimationPlayer(CarrierType body,MassAggregation skeleton,AnimationType startAnimation) {
+		super(skeleton,startAnimation);
 		mBody = body;
 	}
 

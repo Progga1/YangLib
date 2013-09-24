@@ -5,7 +5,7 @@ import yang.graphics.skeletons.animations.interpolation.ConstantInterpolation;
 import yang.graphics.skeletons.animations.interpolation.Interpolation;
 import yang.graphics.skeletons.pose.Posture;
 
-public class Animation<CarrierType extends SkeletonCarrier> {
+public class Animation<CarrierType> {
 
 	public static WrapMode DEFAULT_WRAP_MODE = WrapMode.LOOP;
 	

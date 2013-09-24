@@ -4,7 +4,7 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
-import yang.graphics.model.FloatColor;
+import yang.graphics.defaults.DefaultAnimationPlayer;
 import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.SkeletonEditing;
@@ -31,6 +31,7 @@ public class Animator implements YangEventListener {
 	private SkeletonEditing mSkeletonEditing;
 	public NonConcurrentList<Skeleton2D> mSkeletons;
 	public NonConcurrentList<AnimationSystem<?,?>> mAnimationSystems;
+	public NonConcurrentList<AnimationPlayer<?>> mAnimationPlayers;
 	public AnimationSystem<?,?> mCurAnimationSystem;
 	public Animation<?> mCurAnimation;
 	public KeyFrame mCurFrame;
@@ -57,6 +58,7 @@ public class Animator implements YangEventListener {
 		mCamera = new Camera2D();
 		mCamera.mAdaption = 0.2f;
 		mSkeletons = new NonConcurrentList<Skeleton2D>();
+		mAnimationPlayers = new NonConcurrentList<AnimationPlayer<?>>();
 		mSkeletonIndex = -1;
 		mSkeletonEditing = new SkeletonEditing();
 		Skeleton2D.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
@@ -139,11 +141,14 @@ public class Animator implements YangEventListener {
 		}
 	}
 
-	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
+	public void addSkeleton(Skeleton2D skeleton,AnimationSystem<?,?> animationSystem,AnimationPlayer<?> animationPlayer) {
 		if(!skeleton.isInitialized())
 			skeleton.init(mGraphics2D);
 		mAnimationSystems.add(animationSystem);
 		mSkeletons.add(skeleton);
+		if(animationPlayer==null)
+			animationPlayer = new DefaultAnimationPlayer(skeleton,null);
+		mAnimationPlayers.add(animationPlayer);
 		if(mSkeletons.size()==1) {
 			selectSkeleton(0);
 		}
@@ -153,7 +158,7 @@ public class Animator implements YangEventListener {
 		try {
 			Skeleton2D skeleton = skeletonClass.newInstance();
 			skeleton.init(mGraphics2D);
-			addSkeleton(skeleton,animationSystem);
+			addSkeleton(skeleton,animationSystem,null);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -166,7 +171,7 @@ public class Animator implements YangEventListener {
 		mCurSkeleton = mSkeletons.get(index);
 		mCurCarrier = mCurSkeleton.mCarrier;
 		mCurAnimationSystem = mAnimationSystems.get(index);
-		mCurAnimationPlayer = mCurCarrier.getAnimationPlayer();
+		mCurAnimationPlayer = mAnimationPlayers.get(index);
 		mSkeletonIndex = index;
 		selectAnimation(0);
 		refreshPhysics();

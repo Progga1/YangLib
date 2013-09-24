@@ -3,6 +3,7 @@ package yang.physics.massaggregation;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.DefaultSkeletonCarrier;
+import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
 import yang.graphics.skeletons.elements.Bone;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.skeletons.pose.Posture;
@@ -15,6 +16,7 @@ import yang.util.NonConcurrentList;
 public class MassAggregation {
 
 	public static int DEFAULT_ACCURACY = 16;
+	private static SkeletonCarrier NEUTRAL_CARRIER = new NeutralSkeletonCarrier();
 	
 	//Properties
 	public float mFloorFriction = 0.98f;
@@ -102,6 +104,11 @@ public class MassAggregation {
 		finish();
 	}
 	
+	public void init(DefaultGraphics<?> graphics) {
+		init(graphics,NEUTRAL_CARRIER);
+	}
+	
+	
 	protected void finish() {
 		
 	}
@@ -118,10 +125,6 @@ public class MassAggregation {
 			if(joint.mPosY<mBoundariesRect.mBottom)
 				mBoundariesRect.mBottom = joint.mPosY;
 		}
-	}
-	
-	public void init(DefaultGraphics<?> graphics) {
-		init(graphics,new DefaultSkeletonCarrier(this));
 	}
 	
 	public void addJoint(Joint joint) {
@@ -157,7 +160,7 @@ public class MassAggregation {
 	}
 	
 	public float getJointWorldX(Joint joint) {
-		return mCarrier.getWorldX() + (mShiftX + joint.mPosX*mCarrier.getLookDirection())*mCarrier.getScale()*mScale;
+		return mCarrier.getWorldX() + (mShiftX + joint.mPosX)*mCarrier.getScale()*mScale;
 	}
 	
 	public float getJointWorldY(Joint joint) {

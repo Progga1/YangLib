@@ -1,7 +1,6 @@
 package yang.graphics.skeletons.defaults;
 
 import yang.graphics.defaults.DefaultAnimationPlayer;
-import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.AnimationPlayer;
 import yang.physics.massaggregation.MassAggregation;

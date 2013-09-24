@@ -14,8 +14,6 @@ import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.MassAggregation;
 import yang.util.NonConcurrentList;
 
-
-
 public class Skeleton2D extends MassAggregation {
 
 	//Properties
@@ -41,10 +39,11 @@ public class Skeleton2D extends MassAggregation {
 	protected boolean mUpdateColor;
 	protected boolean mUpdateTexCoords;
 	protected int mVertexCount;
-	protected float[] mInterColor = new float[4];
+	protected float[] mInterColor;
 	public float mRotation;
 	public float mRotAnchorX;
 	public float mRotAnchorY;
+	public int mLookDirection;
 	
 	public Skeleton2D() {
 		super();
@@ -55,9 +54,11 @@ public class Skeleton2D extends MassAggregation {
 		mSkeletonColor = new float[4];
 		mContourColor = new float[4];
 		mSuppData = new float[4];
+		mInterColor = new float[4];
 		setFillColor(1,1,1);
 		mDrawContour = true;
 		mDrawFill = true;
+		mLookDirection = 1;
 	}
 	
 	public void draw() {
@@ -140,7 +141,7 @@ public class Skeleton2D extends MassAggregation {
 		float worldPosX = mCarrier.getWorldX() + mShiftX;
 		float worldPosY = mCarrier.getWorldY() + mShiftY;
 		float scale = mCarrier.getScale()*mScale;
-		int mirrorFac = mCarrier.getLookDirection();
+		int mirrorFac = mLookDirection;
 		
 		for(Bone[] layer:mLayers) {
 			//Contour
@@ -183,10 +184,10 @@ public class Skeleton2D extends MassAggregation {
 	}
 	
 	public void drawEditing(SkeletonEditing skeletonEditing) {
-		drawEditing(this,skeletonEditing,mGraphics,mShiftX,mShiftY);
+		drawEditing(this,skeletonEditing,mGraphics,mShiftX,mShiftY,mLookDirection);
 	}
 	
-	public static void drawEditing(MassAggregation massAggregation,SkeletonEditing skeletonEditing,DefaultGraphics<?> graphics,float offsetX,float offsetY) {
+	public static void drawEditing(MassAggregation massAggregation,SkeletonEditing skeletonEditing,DefaultGraphics<?> graphics,float offsetX,float offsetY,int lookDirection) {
 		Joint markedJoint;
 		if(skeletonEditing==null)
 			markedJoint = null;
@@ -195,7 +196,7 @@ public class Skeleton2D extends MassAggregation {
 		float worldPosX = massAggregation.mCarrier.getWorldX() + offsetX;
 		float worldPosY = massAggregation.mCarrier.getWorldY() + offsetY;
 		float scale = massAggregation.mCarrier.getScale()*massAggregation.mScale;
-		int mirrorFac = massAggregation.mCarrier.getLookDirection();
+		int mirrorFac = lookDirection;
 
 		GraphicsTranslator translator = graphics.mTranslator;
 		massAggregation.mGraphics.setDefaultProgram();
@@ -317,6 +318,11 @@ public class Skeleton2D extends MassAggregation {
 	public void resetRotationAnchor() {
 		mRotAnchorX = 0;
 		mRotAnchorY = 0;
+	}
+	
+	@Override
+	public float getJointWorldX(Joint joint) {
+		return mCarrier.getWorldX() + (mShiftX + joint.mPosX*mLookDirection)*mCarrier.getScale()*mScale;
 	}
 	
 	@Override
