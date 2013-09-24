@@ -16,7 +16,7 @@ import yang.util.NonConcurrentList;
 public class MassAggregation {
 
 	public static int DEFAULT_ACCURACY = 16;
-	private static SkeletonCarrier NEUTRAL_CARRIER = new NeutralSkeletonCarrier();
+	protected static SkeletonCarrier NEUTRAL_CARRIER = new NeutralSkeletonCarrier();
 	
 	//Properties
 	public float mFloorFriction = 0.98f;
@@ -28,10 +28,9 @@ public class MassAggregation {
 	public float mLimitForceOutwards;
 	public int mAccuracy;
 	public boolean m3D;
+	public float mDefaultJointRadius = 0.1f;
 	
 	//Objects
-	public DefaultGraphics<?> mGraphics;
-	public GraphicsTranslator mTranslator;
 	public SkeletonCarrier mCarrier;
 	
 	//Data
@@ -39,7 +38,6 @@ public class MassAggregation {
 	public NonConcurrentList<NonConcurrentList<Bone>> mLayersList;
 	public NonConcurrentList<Bone> mBones;
 	public NonConcurrentList<Constraint> mConstraints;
-	public Rect mBoundariesRect;
 
 	//State
 	public float mShiftX = 0;
@@ -47,9 +45,8 @@ public class MassAggregation {
 	public float mShiftZ = 0;
 	public boolean mConstraintsActivated;
 	public Posture mCurrentPose;
-	private boolean mInitialized;
 	public float mScale = 1;
-	private int mCurJointId = 0;
+	protected int mCurJointId = 0;
 	
 	
 	public MassAggregation() {
@@ -58,9 +55,9 @@ public class MassAggregation {
 		mLayersList = new NonConcurrentList<NonConcurrentList<Bone>>();
 		mConstraints = new NonConcurrentList<Constraint>();
 		
+		mCarrier = NEUTRAL_CARRIER;
 		m3D = true;
 		mConstraintsActivated = true;
-		mInitialized = false;
 		mAccuracy = DEFAULT_ACCURACY;
 		mConstantForceX = 0;
 		mConstantForceY = 0;
@@ -88,47 +85,33 @@ public class MassAggregation {
 		}
 	}
 	
-	public void init(DefaultGraphics<?> graphics,SkeletonCarrier carrier) {
-		mCarrier = carrier;
-
-		mGraphics = graphics;
-		mTranslator = mGraphics.mTranslator;
-		
-		mCurJointId = 0;
-		build();
-		
-		mBoundariesRect = new Rect();
-		refreshBoundariesRect();
-		mInitialized = true;
-		
-		finish();
-	}
-	
-	public void init(DefaultGraphics<?> graphics) {
-		init(graphics,NEUTRAL_CARRIER);
-	}
-	
-	
-	protected void finish() {
-		
-	}
-	
-	public void refreshBoundariesRect() {
-		mBoundariesRect.set(100000,-100000,-100000,100000);
+	public void get2DBoundaries(Rect target) {
+		target.set(100000,-100000,-100000,100000);
 		for(Joint joint:mJoints) {
-			if(joint.mPosX<mBoundariesRect.mLeft)
-				mBoundariesRect.mLeft = joint.mPosX;
-			if(joint.mPosX>mBoundariesRect.mRight)
-				mBoundariesRect.mRight = joint.mPosX;
-			if(joint.mPosY>mBoundariesRect.mTop)
-				mBoundariesRect.mTop = joint.mPosY;
-			if(joint.mPosY<mBoundariesRect.mBottom)
-				mBoundariesRect.mBottom = joint.mPosY;
+			if(joint.mPosX<target.mLeft)
+				target.mLeft = joint.mPosX;
+			if(joint.mPosX>target.mRight)
+				target.mRight = joint.mPosX;
+			if(joint.mPosY>target.mTop)
+				target.mTop = joint.mPosY;
+			if(joint.mPosY<target.mBottom)
+				target.mBottom = joint.mPosY;
 		}
 	}
 	
-	public void addJoint(Joint joint) {
+	public Joint addJoint(Joint joint) {
 		mJoints.add(joint);
+		return joint;
+	}
+	
+	public Joint addJoint(String name,Joint parent,float x,float y,float z) {
+		Joint newJoint = new Joint(name, parent, x,y, mDefaultJointRadius, this);
+		newJoint.mPosZ = z;
+		return addJoint(newJoint);
+	}
+	
+	public Joint addJoint(Joint parent,float x,float y,float z) {
+		return addJoint("JOINT",parent,x,y,z);
 	}
 	
 	public void addConstraint(Constraint constraint) {
@@ -227,10 +210,6 @@ public class MassAggregation {
 		if(mCurrentPose!=null)
 			mCurrentPose.applyPose(this);
 	}
-
-	public boolean isInitialized() {
-		return mInitialized;
-	}
 	
 	@SuppressWarnings("unchecked")
 	public <ConstraintType extends Constraint> ConstraintType getBoneConstraint(Bone bone,Class<ConstraintType> type) {
@@ -255,6 +234,10 @@ public class MassAggregation {
 
 	public int getNextJointId() {
 		return mCurJointId++;
+	}
+	
+	public void setCarrier(SkeletonCarrier carrier) {
+		mCarrier = carrier;
 	}
 	
 }

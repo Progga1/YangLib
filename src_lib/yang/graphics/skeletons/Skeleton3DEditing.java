@@ -31,7 +31,7 @@ public class Skeleton3DEditing {
 	public Joint mHoverJoint = null;
 	private DrawBatch mSphereBatch;
 	
-	public Skeleton3DEditing(Default3DGraphics graphics3D,Skeleton2D skeleton) {
+	public Skeleton3DEditing(Default3DGraphics graphics3D,MassAggregation skeleton) {
 		mGraphics3D = graphics3D;
 		mSkeleton = skeleton;
 		mSkeleton.m3D = true;

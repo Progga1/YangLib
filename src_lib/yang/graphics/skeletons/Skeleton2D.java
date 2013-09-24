@@ -25,6 +25,9 @@ public class Skeleton2D extends MassAggregation {
 	public static Texture CURSOR_TEXTURE;
 	public TextureHolder mTextureHolder;
 	public TextureHolder mContourTextureHolder;
+	private boolean mInitialized;
+	public GraphicsTranslator mTranslator;
+	public DefaultGraphics<?> mGraphics;
 	
 	//GFX data
 	public DrawBatch mMesh;
@@ -59,6 +62,32 @@ public class Skeleton2D extends MassAggregation {
 		mDrawContour = true;
 		mDrawFill = true;
 		mLookDirection = 1;
+		mInitialized = false;
+		
+	}
+	
+	public void init(DefaultGraphics<?> graphics,SkeletonCarrier carrier) {
+		if(mInitialized)
+			throw new RuntimeException("Already initialized");
+		mCarrier = carrier;
+
+		mGraphics = graphics;
+		mTranslator = mGraphics.mTranslator;
+		
+		mCurJointId = 0;
+		build();
+		
+		mInitialized = true;
+		
+		finishUpdate();
+	}
+	
+	public void init(DefaultGraphics<?> graphics) {
+		init(graphics,NEUTRAL_CARRIER);
+	}
+	
+	public boolean isInitialized() {
+		return mInitialized;
 	}
 	
 	public void draw() {
@@ -199,7 +228,7 @@ public class Skeleton2D extends MassAggregation {
 		int mirrorFac = lookDirection;
 
 		GraphicsTranslator translator = graphics.mTranslator;
-		massAggregation.mGraphics.setDefaultProgram();
+		graphics.setDefaultProgram();
 		translator.bindTexture(CURSOR_TEXTURE);
 		
 		for(Joint joint:massAggregation.mJoints) 
@@ -324,10 +353,8 @@ public class Skeleton2D extends MassAggregation {
 	public float getJointWorldX(Joint joint) {
 		return mCarrier.getWorldX() + (mShiftX + joint.mPosX*mLookDirection)*mCarrier.getScale()*mScale;
 	}
-	
-	@Override
-	protected void finish() {
-		super.finish();
+
+	protected void finishUpdate() {
 		int l = mLayersList.size();
 		mLayers = new Bone[l][];
 		mFrontToBackLayers = new Bone[l][];

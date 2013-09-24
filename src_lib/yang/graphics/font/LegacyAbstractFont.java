@@ -109,7 +109,7 @@ public abstract class LegacyAbstractFont {
 		float charHeight = fontHeight + fontFix[c][0] + fontFix[c][3];
 		float textureWidth = getTextureWidth();
 		float textureHeight = getTextureHeight();
-		TextureCoordinatesQuad result = mGraphics.createTexCoords();
+		TextureCoordinatesQuad result = new TextureCoordinatesQuad();
 		result.init(
 			charX / textureWidth,
 			charY / textureHeight,

@@ -15,6 +15,7 @@ import yang.graphics.skeletons.animations.KeyFrame;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.Camera2D;
+import yang.model.Rect;
 import yang.sound.AbstractSoundManager;
 import yang.util.NonConcurrentList;
 
@@ -51,6 +52,7 @@ public class Animator implements YangEventListener {
 	public boolean mDrawSkeleton;
 	public float mPrevSX;
 	public float mPrevSY;
+	private Rect mBoundaries;
 	
 	public Animator(Default2DGraphics graphics2D) {
 		mGraphics2D = graphics2D;
@@ -68,6 +70,7 @@ public class Animator implements YangEventListener {
 		mPhysicsMode = false;
 		mLimitFloor = false;
 		mDrawSkeleton = true;
+		mBoundaries = new Rect();
 	}
 	
 	public void savePose() {
@@ -230,8 +233,10 @@ public class Animator implements YangEventListener {
 	public void centerCamera() {
 		if(mCurSkeleton==null)
 			mCamera.set(0,1,1.5f);
-		else
-			mCamera.set(mCurSkeleton.mBoundariesRect.getCenterX(), mCurSkeleton.mBoundariesRect.getCenterY(), Math.max(mCurSkeleton.mBoundariesRect.getWidth(),mCurSkeleton.mBoundariesRect.getHeight())*1.1f);
+		else{
+			mCurSkeleton.get2DBoundaries(mBoundaries);
+			mCamera.set(mBoundaries.getCenterX(), mBoundaries.getCenterY(), Math.max(mBoundaries.getWidth(),mBoundaries.getHeight())*1.1f);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

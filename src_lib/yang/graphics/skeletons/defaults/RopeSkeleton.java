@@ -20,6 +20,7 @@ public class RopeSkeleton extends MassAggregation {
 		this.mLowerLimit = -1024;
 		mWidth = width;
 		mConstantForceY = -0.3f;
+		build();
 	}
 	
 	protected void build() {
@@ -32,9 +33,9 @@ public class RopeSkeleton extends MassAggregation {
 			joint.setInitials();
 			super.addJoint(joint);
 			if(i>0) {
-				Bone bone = new Bone(mTranslator,"RB"+i, prevJoint,joint);
+				Bone bone = new Bone(null,"RB"+i, prevJoint,joint);
 				bone.setWidth(mWidth);
-				bone.putTextureCoords(0,0, 1,1);
+				//bone.putTextureCoords(0,0, 1,1);
 				bone.setShiftY(0, -0.1f);
 				//DistanceConstraint constraint = new DistanceConstraint(bone);
 				super.addBone(bone, 0, 65);

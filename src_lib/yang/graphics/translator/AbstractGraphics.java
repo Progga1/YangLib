@@ -86,7 +86,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mInterTexTransf = new YangMatrixRectOps();
 		mIdentity = new YangMatrix();
 		mIdentity.loadIdentity();
-		mTexIdentity = mTranslator.createTexCoords();
+		mTexIdentity = new TextureCoordinatesQuad();
 		mTexIdentity.init(0, 0, 1);
 		mTranslator.checkErrorInst("Matrices");
 		invGameProjection = new float[16];

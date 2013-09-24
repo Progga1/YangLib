@@ -18,22 +18,26 @@ import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
 import yang.graphics.skeletons.JointEditData;
 import yang.graphics.skeletons.Skeleton3DEditing;
+import yang.graphics.skeletons.defaults.human.HumanSkeletonCreator3D;
+import yang.graphics.skeletons.defaults.human.HumanSkeletonProperties;
 import yang.graphics.skeletons.elements.Joint;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.samples.SampleSkeleton;
+import yang.physics.massaggregation.MassAggregation;
 import yang.samples.statesystem.SampleStateCameraControl;
 
 public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	public Skeleton3DEditing mSkeleton3D;
-	public SampleSkeleton mSkeleton;
+	public HumanSkeletonCreator3D mSkeletonCreator;
+	public MassAggregation mSkeleton;
 	public ShaderPermutations mShader;
 	private LightProperties mLight;
 	private boolean mMultiSelect = false;
 	
 	@Override
 	public void initGraphics() {
-		mSkeleton = new SampleSkeleton(mGraphics2D,true);
+		mSkeletonCreator = new HumanSkeletonCreator3D();
+		mSkeleton = mSkeletonCreator.create(new HumanSkeletonProperties());
 		mSkeleton3D = new Skeleton3DEditing(mGraphics3D,mSkeleton).initLines();
 		mLight = new LightProperties();
 		SubShader[] subShaders = new SubShader[]{
@@ -47,7 +51,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		//mShader = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLight,new FloatColor(0.3f)));
 		mShader = mGraphics.addProgram(new ShaderPermutations(mGraphics,subShaders));
 		mLight.mDirection.setAlphaBeta(0.4f, 0.4f);
-		mSkeleton.mBreastJoint.mFixed = false;
+		mSkeletonCreator.mBreastJoint.mFixed = false;
 		mSkeleton.setFriction(0.98f);
 		mCamera.setZoom(1.5f);
 		mCamera.mFocusY = 1;

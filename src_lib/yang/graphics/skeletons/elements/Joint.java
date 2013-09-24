@@ -63,6 +63,16 @@ public class Joint {
 		mEnabled = true;
 	}
 	
+	public Joint setName(String name) {
+		mName = name;
+		return this;
+	}
+	
+	public Joint setRadius(float radius) {
+		mRadius = radius;
+		return this;
+	}
+	
 	public void setInitials() {
 		mInitialX = mPosX;
 		mInitialY = mPosY;

@@ -366,22 +366,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return new UniversalVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
 	}
 	
-	public TextureCoordinatesQuad createTexCoords() {
-		return new TextureCoordinatesQuad();
-	}
-	
-	public final TextureCoordinatesQuad createTexCoords(int x1, int y1, int x2, int y2, int textureWidth, int textureHeight) {
-		return createTexCoords().init(x1,y1,x2,y2,textureWidth,textureHeight);
-	}
-	
-	public final TextureCoordinatesQuad createTexCoords(float x1,float y1,float x2,float y2) {
-		return createTexCoords().init(x1,y1,x2,y2);
-	}
-	
-	public final TextureCoordinatesQuad createTexCoords(float x1, float y1, float widthAndHeight) {
-		return createTexCoords().init(x1,y1,widthAndHeight);
-	}
-	
 	public Texture createSingleColorTexture(int width,int height,TextureProperties texProperties,FloatColor fillColor) {
 		Texture texture = new Texture(this);
 		if(fillColor==null) {

@@ -87,7 +87,7 @@ public class Bone {
 	}
 	
 	public void putTextureCoords(float x1,float y1,float x2,float y2,int rotation) {
-		TextureCoordinatesQuad texCoords = mGraphics.createTexCoords().initBiased(x1,y1,x2,y2,0,0,rotation);
+		TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(x1,y1,x2,y2,0,0,rotation);
 		putTextureCoords(texCoords);
 	}
 	

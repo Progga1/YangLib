@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.defaults;
+package yang.graphics.skeletons.defaults.human;
 
 import yang.graphics.skeletons.Skeleton2D;
 import yang.graphics.skeletons.elements.Bone;
@@ -68,9 +68,9 @@ public abstract class HumanSkeleton2D extends Skeleton2D{
 		//--- Joints ---
 		float midX = 0;
 		
-		mBreastJoint = new Joint("Breast",null,midX, 1.5f*locScaleY, 0.2f*locScaleX,this);
-		mHeadJoint = new Joint("Head",mBreastJoint,midX,2*locScaleY, 0.2f*locScaleX,this);
-		mHipJoint = new Joint("Hip",mBreastJoint,midX,0.9f*locScaleY, 0.2f*locScaleX,this);
+		mBreastJoint = new Joint("Breast",null,midX, 1.5f*locScaleY, 0.1f*locScaleX,this);
+		mHeadJoint = new Joint("Head",mBreastJoint,midX,2*locScaleY, 0.1f*locScaleX,this);
+		mHipJoint = new Joint("Hip",mBreastJoint,midX,0.9f*locScaleY, 0.1f*locScaleX,this);
 		mLeftKneeJoint = new Joint("LeftKnee",null,midX-(legDist+legShift)*locScaleX, 0.5f*locScaleY-kneeDist, 0.1f*locScaleX,this);
 		mRightKneeJoint = new Joint("RightKnee",null,midX+(legDist+legShift)*locScaleX, 0.5f*locScaleY+kneeDist, 0.1f*locScaleX,this);
 		mLeftFootJoint = new Joint("LeftFoot",mLeftKneeJoint,midX-(legDist+legShift*2)*locScaleX, leftFootY*locScaleY, 0.1f*locScaleX,this);
