@@ -2,6 +2,7 @@ package yang.graphics.skeletons.defaults.human;
 
 import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.Bone3D;
 import yang.physics.massaggregation.elements.Joint;
 
 public class HumanSkeletonCreator3D {
@@ -25,16 +26,21 @@ public class HumanSkeletonCreator3D {
 	public Joint mLeftLegJoint;
 	public Joint mRightLegJoint;
 	
-	public CartoonBone mBodyBone;
-	public CartoonBone mHeadBone;
-	public CartoonBone mLeftUpperArmBone;
-	public CartoonBone mRightUpperArmBone;
-	public CartoonBone mLeftLowerArmBone;
-	public CartoonBone mRightLowerArmBone;
-	public CartoonBone mLeftUpperLegBone;
-	public CartoonBone mRightUpperLegBone;
-	public CartoonBone mLeftLowerLegBone;
-	public CartoonBone mRightLowerLegBone;
+	public Bone3D mBodyBone;
+	public Bone3D mHeadBone;
+	public Bone3D mLeftUpperArmBone;
+	public Bone3D mRightUpperArmBone;
+	public Bone3D mLeftLowerArmBone;
+	public Bone3D mRightLowerArmBone;
+	public Bone3D mLeftUpperLegBone;
+	public Bone3D mRightUpperLegBone;
+	public Bone3D mLeftLowerLegBone;
+	public Bone3D mRightLowerLegBone;
+	
+	public Bone3D mLeftShoulderBone;
+	public Bone3D mRightShoulderBone;
+	public Bone3D mLeftLegBone;
+	public Bone3D mRightLegBone;
 	
 	public MassAggregation mSkeleton;
 	
@@ -78,6 +84,23 @@ public class HumanSkeletonCreator3D {
 		mRightElbowJoint = mSkeleton.addJoint("RightElbow",mRightShoulderJoint, -armX,elbowY,0);
 		mLeftHandJoint = mSkeleton.addJoint("LeftHand",mLeftElbowJoint, armX, handY, 0);
 		mRightHandJoint = mSkeleton.addJoint("RightHand",mRightElbowJoint, -armX, handY, 0);
+		
+		mSkeleton.mDefaultBoneSpring = 10;
+		mBodyBone = mSkeleton.addSpringBone(new Bone3D("Body",mBreastJoint,mHipJoint));
+		mBodyBone = mSkeleton.addSpringBone(new Bone3D("Head",mBreastJoint,mHeadJoint));
+		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftShoulder",mBreastJoint,mLeftShoulderJoint));
+		mRightUpperArmBone = mSkeleton.addSpringBone(new Bone3D("RightShoulder",mBreastJoint,mRightShoulderJoint));
+		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint));
+		mRightUpperArmBone = mSkeleton.addSpringBone(new Bone3D("RightUpperArm",mRightShoulderJoint,mRightElbowJoint));
+		mLeftLowerArmBone = mSkeleton.addSpringBone(new Bone3D("LeftLowerArm",mLeftElbowJoint,mLeftHandJoint));
+		mRightLowerArmBone = mSkeleton.addSpringBone(new Bone3D("RightLowerArm",mRightElbowJoint,mRightHandJoint));
+		mLeftLegBone = mSkeleton.addSpringBone(new Bone3D("LeftLeg",mHipJoint,mLeftLegJoint));
+		mRightLegBone = mSkeleton.addSpringBone(new Bone3D("RightLeg",mHipJoint,mRightLegJoint));	
+		mLeftUpperLegBone = mSkeleton.addSpringBone(new Bone3D("LeftUpperLeg",mLeftLegJoint,mLeftKneeJoint));
+		mRightUpperLegBone = mSkeleton.addSpringBone(new Bone3D("RightUpperLeg",mRightLegJoint,mRightKneeJoint));
+		mLeftLowerLegBone = mSkeleton.addSpringBone(new Bone3D("LeftLowerLeg",mLeftKneeJoint,mLeftFootJoint));
+		mRightLowerLegBone = mSkeleton.addSpringBone(new Bone3D("RightLowerLeg",mRightKneeJoint,mRightFootJoint));
+		
 		
 		return mSkeleton;
 	}

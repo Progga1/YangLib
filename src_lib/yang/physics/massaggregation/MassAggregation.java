@@ -109,14 +109,19 @@ public class MassAggregation {
 		mConstraints.add(constraint);
 	}
 	
-	public void addSpringBone(JointConnection bone,float constraintDistanceStrength) {
+	public <ConnectionType extends JointConnection> ConnectionType addSpringBone(ConnectionType bone,float constraintDistanceStrength) {
 		mBones.add(bone);
 		if(constraintDistanceStrength>0)
 			addConstraint(new DistanceConstraint(bone,constraintDistanceStrength));
+		return bone;
 	}
 
-	public void addBone(JointConnection bone) {
-		addSpringBone(bone,mDefaultBoneSpring);
+	public <ConnectionType extends JointConnection> ConnectionType addSpringBone(ConnectionType bone) {
+		return addSpringBone(bone,mDefaultBoneSpring);
+	}
+	
+	public <ConnectionType extends JointConnection> ConnectionType addBone(ConnectionType bone) {
+		return addSpringBone(bone);
 	}
 
 	public Joint getBoneByName(String name) {

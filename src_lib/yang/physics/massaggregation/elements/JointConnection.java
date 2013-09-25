@@ -17,6 +17,7 @@ public class JointConnection {
 		mName = name;
 		mJoint1 = joint1;
 		mJoint2 = joint2;
+		refreshGeometry();
 	}
 	
 	public void refreshGeometry() {

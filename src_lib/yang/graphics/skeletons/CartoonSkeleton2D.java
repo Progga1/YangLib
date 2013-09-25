@@ -103,22 +103,23 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				bone.refreshVisualVars();
 	}
 	
-	public void addSpringBone(JointConnection bone,int layer,float constraintDistanceStrength) {
+	public <ConnectionType extends JointConnection> ConnectionType addSpringBone(ConnectionType bone,int layer,float constraintDistanceStrength) {
 		super.addSpringBone(bone, constraintDistanceStrength);
 		if(bone instanceof CartoonBone) {
 			while(layer>mLayersList.size()-1)
 				mLayersList.add(new NonConcurrentList<CartoonBone>());
 			mLayersList.get(layer).add((CartoonBone)bone);
 		}
+		return bone;
 	}
 	
-	public void addBone(JointConnection bone,int layer) {
-		addSpringBone(bone,layer,mDefaultBoneSpring);
+	public <ConnectionType extends JointConnection> ConnectionType addBone(ConnectionType bone,int layer) {
+		return addSpringBone(bone,layer,mDefaultBoneSpring);
 	}
 	
 	@Override
-	public void addBone(JointConnection bone) {
-		addSpringBone(bone,0,mDefaultBoneSpring);
+	public <ConnectionType extends JointConnection> ConnectionType addSpringBone(ConnectionType bone) {
+		return addSpringBone(bone,0,mDefaultBoneSpring);
 	}
 	
 	public void draw() {
