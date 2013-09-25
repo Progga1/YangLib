@@ -101,7 +101,7 @@ public class Animator implements YangEventListener {
 			mCurSkeleton.draw();
 			if(mDrawSkeleton) {
 				//mCurSkeleton.mCarrier.drawCollision();
-				mCurSkeleton.drawEditing(mSkeletonEditing);
+				mCurSkeleton.drawEditing(mGraphics2D,mSkeletonEditing);
 			}
 		}
 		mGraphics.flush();

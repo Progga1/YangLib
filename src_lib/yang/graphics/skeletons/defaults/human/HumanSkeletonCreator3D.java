@@ -46,7 +46,6 @@ public class HumanSkeletonCreator3D {
 		
 		if(mSkeleton==null) {
 			mSkeleton = new MassAggregation();
-			//mSkeleton.init(graphics);
 		}
 			
 		float locScaleX = 1;

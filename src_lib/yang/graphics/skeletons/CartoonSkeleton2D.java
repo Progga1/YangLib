@@ -10,11 +10,12 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.Skeleton2D;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.NonConcurrentList;
 
-public class CartoonSkeleton2D extends MassAggregation {
+public class CartoonSkeleton2D extends Skeleton2D {
 
 	//Properties
 	public float mContourFactor = 0.015f;
@@ -22,7 +23,6 @@ public class CartoonSkeleton2D extends MassAggregation {
 	public boolean mDrawFill;
 	
 	//Persistent
-	public static Texture CURSOR_TEXTURE;
 	public TextureHolder mTextureHolder;
 	public TextureHolder mContourTextureHolder;
 	private boolean mInitialized;
@@ -45,18 +45,12 @@ public class CartoonSkeleton2D extends MassAggregation {
 	protected boolean mUpdateTexCoords;
 	protected int mVertexCount;
 	protected float[] mInterColor;
-	public float mRotation;
-	public float mRotAnchorX;
-	public float mRotAnchorY;
-	public int mLookDirection;
 	
 	public CartoonSkeleton2D() {
 		super();
-		m3D = false;
 		mLayersList = new NonConcurrentList<NonConcurrentList<CartoonBone>>();
 		mTextureHolder = null;
 		mContourTextureHolder = null;
-		mRotation = 0;
 		mSkeletonColor = new float[4];
 		mContourColor = new float[4];
 		mSuppData = new float[4];
@@ -64,7 +58,6 @@ public class CartoonSkeleton2D extends MassAggregation {
 		setFillColor(1,1,1);
 		mDrawContour = true;
 		mDrawFill = true;
-		mLookDirection = 1;
 		mInitialized = false;
 		
 	}
@@ -88,6 +81,10 @@ public class CartoonSkeleton2D extends MassAggregation {
 	
 	public void init(DefaultGraphics<?> graphics) {
 		init(graphics,NEUTRAL_CARRIER);
+	}
+	
+	public void drawEditing(SkeletonEditing skeletonEditing) {
+		super.drawEditing(mGraphics,skeletonEditing);
 	}
 	
 	public boolean isInitialized() {
@@ -243,48 +240,6 @@ public class CartoonSkeleton2D extends MassAggregation {
 		mGraphics.bindTextureInHolder(mTextureHolder);
 		
 		mMesh.draw();
-		
-	}
-	
-	public void drawEditing(SkeletonEditing skeletonEditing) {
-		drawEditing(this,skeletonEditing,mGraphics,mShiftX,mShiftY,mLookDirection);
-	}
-	
-	public static void drawEditing(MassAggregation massAggregation,SkeletonEditing skeletonEditing,DefaultGraphics<?> graphics,float offsetX,float offsetY,int lookDirection) {
-		Joint markedJoint;
-		if(skeletonEditing==null)
-			markedJoint = null;
-		else
-			markedJoint = skeletonEditing.mMainMarkedJoint;
-		float worldPosX = massAggregation.mCarrier.getWorldX() + offsetX;
-		float worldPosY = massAggregation.mCarrier.getWorldY() + offsetY;
-		float scale = massAggregation.mCarrier.getScale()*massAggregation.mScale;
-		int mirrorFac = lookDirection;
-
-		GraphicsTranslator translator = graphics.mTranslator;
-		graphics.setDefaultProgram();
-		translator.bindTexture(CURSOR_TEXTURE);
-		
-		for(Joint joint:massAggregation.mJoints) 
-			if(joint.mEnabled){
-				float alpha = (markedJoint==joint)?1:0.6f;
-				if(joint.mFixed)
-					graphics.setColor(1, 0, 0, alpha);
-				else
-					graphics.setColor(0.8f,0.8f,0.8f,alpha);
-				graphics.drawRectCentered(worldPosX + joint.mPosX*scale * mirrorFac, worldPosY + joint.mPosY*scale, joint.getOutputRadius()*2);
-			}
-		
-		translator.bindTexture(null);
-		graphics.setColor(0.8f, 0.1f, 0,0.8f);
-		for(Joint joint:massAggregation.mJoints)
-			if(joint.mEnabled && joint.mAngleParent!=null){
-				graphics.drawLine(
-						worldPosX + joint.mPosX*scale * mirrorFac, worldPosY + joint.mPosY*scale, 
-						worldPosX + joint.mAngleParent.mPosX*scale * mirrorFac, worldPosY + joint.mAngleParent.mPosY*scale,
-						0.015f
-						);
-		}
 		
 	}
 	
