@@ -11,7 +11,6 @@ import yang.graphics.listeners.SurfaceListener;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.programs.GLProgramFactory;
-import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureProperties;
@@ -32,6 +31,7 @@ import yang.util.NonConcurrentList;
 
 public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,ScreenInfo {
 
+	public static int MAX_NESTED_RENDERTARGETS = 128;
 	public final static int T_TRIANGLES = 0;
 	public final static int T_STRIP = 1;
 	public final static int MAX_TEXTURES = 32;
@@ -71,6 +71,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public boolean mForceWireFrames = false;
 	private GraphicsState mSavedState;
 	private long mTargetTime = 0;
+	private TextureRenderTarget[] mRenderTargetStack = new TextureRenderTarget[MAX_NESTED_RENDERTARGETS];
+	private int mRenderTargetStackPos = -1;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
@@ -96,7 +98,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private NonConcurrentList<BasicProgram> mPrograms;
 	private ShortBuffer mWireFrameIndexBuffer;
 	private int mMaxFPS;
-	private float mMinDrawFrameInterval;
 	private long mMinDrawFrameIntervalNanos;
 	
 	//Helpers
@@ -203,6 +204,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	private void start() {
+		mRenderTargetStackPos = -1;
 		mThreadId = Thread.currentThread().getId();
 		assert preCheck("Start graphics translator");
 		final int DIM = 2;
@@ -461,7 +463,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(fps<=0)
 			fps = Integer.MAX_VALUE;
 		mMaxFPS = fps;
-		mMinDrawFrameInterval = 1f/fps;
 		mMinDrawFrameIntervalNanos = 1000000000/fps;
 	}
 	
@@ -652,22 +653,37 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return result;
 	}
 	
-	public void setScreenRenderTarget() {
-		flush();
-		mCurrentScreen = this;
-		setViewPort(mScreenWidth,mScreenHeight);
-		derivedSetScreenRenderTarget();
-		unbindTextures();
-		assert checkErrorInst("Set screen render target");
-	}
-	
 	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {
 		flush();
+		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;
 		mCurrentScreen = renderTarget;
 		setViewPort(renderTarget.mTargetTexture.mWidth,renderTarget.mTargetTexture.mHeight);
 		derivedSetTextureRenderTarget(renderTarget);
 		unbindTextures();
 		assert checkErrorInst("Set texture render target");
+	}
+	
+	public void leaveTextureRenderTarget() {
+		flush();
+		if(mRenderTargetStackPos>0) {
+			setTextureRenderTarget(mRenderTargetStack[mRenderTargetStackPos-1]);
+			mRenderTargetStackPos -= 2;
+		}else{
+			mRenderTargetStackPos = -1;
+			mCurrentScreen = this;
+			setViewPort(mScreenWidth,mScreenHeight);
+			derivedSetScreenRenderTarget();
+			unbindTextures();
+			assert checkErrorInst("Set screen render target");
+		}
+	}
+	
+	/**
+	 * Ignores the render target stack and sets the screen as render target. Call only, if absolutely necessary!
+	 */
+	public void enforceScreenRenderTarget() {
+		mRenderTargetStackPos = 0;
+		leaveTextureRenderTarget();
 	}
 	
 	public YangMatrix getStaticTransformation() {
@@ -740,6 +756,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			enable(GLOps.STENCIL_TEST);
 		else
 			disable(GLOps.STENCIL_TEST);
+	}
+	
+	public boolean isScreenRenderTarget() {
+		return mRenderTargetStackPos==-1;
 	}
 	
 }

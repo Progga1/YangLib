@@ -8,6 +8,7 @@ import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.MatrixStackSampleState;
 import yang.samples.statesystem.states.MemorySampleState;
+import yang.samples.statesystem.states.NestedTextureRenderTargetsSampleState;
 import yang.samples.statesystem.states.OBJSampleState;
 import yang.samples.statesystem.states.ParticleSampleState;
 import yang.samples.statesystem.states.PolygonSampleState;
@@ -50,8 +51,9 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		mGUI.setDefaultActionListener(this);
 		addMenuItem("Strings", new StringSampleState());
 		addMenuItem("GUI", new GUISampleState());
-		addMenuItem("Tails", new TailSampleState());
+		addMenuItem("Sounds", new SoundSampleState());
 		addMenuItem("Alloc - free", new MemorySampleState());
+		addMenuItem("Tails", new TailSampleState());
 		addMenuItem("Matrix stack", new MatrixStackSampleState());
 		addMenuItem("Advanced rotations", new Rotations3DSampleState());
 		addMenuItem("Stroke", new StrokeDrawerSampleState());
@@ -59,7 +61,8 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Polygon", new PolygonSampleState());
 		addMenuItem("Particles", new ParticleSampleState());
 		addMenuItem("Texture Atlas", new TexAtlasSampleState());
-		addMenuItem("Sounds", new SoundSampleState());
+		addMenuItem("Nested Render targets", new NestedTextureRenderTargetsSampleState());
+		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("Shader permutations", new ShaderPermutationsSampleState());
 		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("3D skeleton", new Skeleton3DSampleState());
@@ -77,7 +80,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 //			}
 //		}else{
 		float x;
-		if(false && mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
+		if(mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
 			x = mGUI.getGUICenterX()-1f;
 		else 
 			x = mGUI.getGUICenterX()-0.5f;

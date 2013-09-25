@@ -86,7 +86,7 @@ public class PlanarLightmapHelper {
 	
 	public void finishRender() {
 		if(!mRenderToScreen)
-			mGraphics.setScreenRenderTarget();
+			mGraphics.leaveTextureRenderTarget();
 		mFinished = true;
 //		try {
 //			Thread.sleep(1000);

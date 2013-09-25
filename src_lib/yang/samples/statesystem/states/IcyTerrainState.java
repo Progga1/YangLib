@@ -309,7 +309,7 @@ public class IcyTerrainState extends SampleState {
 
 			//drawWeather();
 			
-			mGraphics.setScreenRenderTarget();
+			mGraphics.leaveTextureRenderTarget();
 			waterTex = mEnvironmentMap.mTargetTexture;
 			mGraphics.checkErrorInst("Post environment mapping");
 		}

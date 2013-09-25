@@ -103,7 +103,7 @@ public class ShadowHelper {
 	
 	public void endDepthRendering() {
 		if(!mRenderToScreen)
-			mGraphics.setScreenRenderTarget();
+			mGraphics.leaveTextureRenderTarget();
 		mDepthTransformation.set(mGraphics3D.mCameraProjectionMatrix);
 		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
 	}
