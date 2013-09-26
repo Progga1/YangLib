@@ -1,9 +1,9 @@
-package yang.graphics.stereovision;
+package yang.graphics.defaults.programs;
 
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.translator.AbstractGFXLoader;
 
-public class StereoShader extends AbstractProgram {
+public class MinimumTexShader extends AbstractProgram {
 
 	public int mTexSamplerHandle;
 	public int mPositionHandle;

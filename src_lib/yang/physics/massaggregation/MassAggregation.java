@@ -226,4 +226,10 @@ public class MassAggregation {
 		mCarrier = carrier;
 	}
 	
+	public void refreshGeometry() {
+		for(JointConnection connection:mBones) {
+			connection.refreshGeometry();
+		}
+	}
+	
 }

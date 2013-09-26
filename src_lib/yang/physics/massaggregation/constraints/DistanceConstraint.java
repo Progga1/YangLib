@@ -50,6 +50,10 @@ public class DistanceConstraint extends Constraint{
 			mBone.mJoint2.addForce(-fX*fac,-fY*fac,-fZ*fac);
 		}
 	}
+	
+	public void setAngle2D(float angle) {
+		mBone.mJoint2.setPosByAngle(mBone.mJoint1, mForceDistance, angle);
+	}
 
 	@Override
 	public boolean containsBone(CartoonBone bone) {
