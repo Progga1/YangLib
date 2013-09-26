@@ -95,8 +95,8 @@ public class StereoVision {
 	public void surfaceChanged(ScreenInfo screenInfo) {
 		if(mStereoLeftRenderTarget==null)
 			return;
-		mStereoLeftRenderTarget.enforceRatio(screenInfo.getSurfaceRatioX(),screenInfo.getSurfaceRatioY());
-		mStereoRightRenderTarget.enforceRatio(screenInfo.getSurfaceRatioX(),screenInfo.getSurfaceRatioY());
+		mStereoLeftRenderTarget.fakeDimensions(screenInfo);
+		mStereoRightRenderTarget.fakeDimensions(screenInfo);
 	}
 	
 }

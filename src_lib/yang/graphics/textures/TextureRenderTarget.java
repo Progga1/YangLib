@@ -8,6 +8,8 @@ public class TextureRenderTarget implements ScreenInfo{
 	public Texture mTargetTexture;
 	public int mFrameBufferId;
 	public int mDepthBufferId;
+	public int mWidth;
+	public int mHeight;
 	public float mRatioX;
 	public float mRatioY;
 	
@@ -15,8 +17,7 @@ public class TextureRenderTarget implements ScreenInfo{
 		mTargetTexture = targetTexture;
 		mFrameBufferId = frameBufferId;
 		mDepthBufferId = depthBufferId;
-		mRatioX = mTargetTexture.mWidth/mTargetTexture.mHeight;
-		mRatioY = 1;
+		fakeDimensions(targetTexture.mWidth,targetTexture.mHeight);
 	}
 
 	public TextureRenderTarget(Texture targetTexture) {
@@ -24,11 +25,11 @@ public class TextureRenderTarget implements ScreenInfo{
 	}
 
 	public int getSurfaceWidth() {
-		return mTargetTexture.mWidth;
+		return mWidth;
 	}
 
 	public int getSurfaceHeight() {
-		return mTargetTexture.mHeight;
+		return mHeight;
 	}
 
 	public float getSurfaceRatioX() {
@@ -39,9 +40,19 @@ public class TextureRenderTarget implements ScreenInfo{
 		return mRatioY;
 	}
 
-	public void enforceRatio(float ratioX, float ratioY) {
+	public void fakeDimensions(int width, int height,float ratioX,float ratioY) {
+		mWidth = width;
+		mHeight = height;
 		mRatioX = ratioX;
 		mRatioY = ratioY;
+	}
+	
+	public void fakeDimensions(int width, int height) {
+		fakeDimensions(width,height,width/height,mRatioY);
+	}
+	
+	public void fakeDimensions(ScreenInfo surface) {
+		fakeDimensions(surface.getSurfaceWidth(),surface.getSurfaceHeight(),surface.getSurfaceRatioX(),surface.getSurfaceRatioY());
 	}
 	
 }
