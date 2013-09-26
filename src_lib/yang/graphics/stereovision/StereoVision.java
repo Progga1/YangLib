@@ -10,6 +10,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLMasks;
+import yang.model.ScreenInfo;
 
 public class StereoVision {
 
@@ -35,6 +36,8 @@ public class StereoVision {
 		
 		mStereoLeftRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(TextureWrap.MIRROR,TextureFilter.LINEAR));
 		mStereoRightRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(TextureWrap.MIRROR,TextureFilter.LINEAR));
+		
+		surfaceChanged(graphics);
 	}
 	
 	public void draw() {
@@ -69,6 +72,13 @@ public class StereoVision {
 		mGraphics.enableBuffers();
 
 		assert mGraphics.checkErrorInst("3");
+	}
+	
+	public void surfaceChanged(ScreenInfo screenInfo) {
+		if(mStereoLeftRenderTarget==null)
+			return;
+		mStereoLeftRenderTarget.enforceRatio(screenInfo.getSurfaceRatioX(),screenInfo.getSurfaceRatioY());
+		mStereoRightRenderTarget.enforceRatio(screenInfo.getSurfaceRatioX(),screenInfo.getSurfaceRatioY());
 	}
 	
 }

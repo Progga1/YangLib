@@ -19,6 +19,7 @@ import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.model.DebugYang;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {

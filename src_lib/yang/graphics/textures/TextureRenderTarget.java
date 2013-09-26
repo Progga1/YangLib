@@ -38,5 +38,10 @@ public class TextureRenderTarget implements ScreenInfo{
 	public float getSurfaceRatioY() {
 		return mRatioY;
 	}
+
+	public void enforceRatio(float ratioX, float ratioY) {
+		mRatioX = ratioX;
+		mRatioY = ratioY;
+	}
 	
 }

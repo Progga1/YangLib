@@ -191,10 +191,12 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	protected void refreshCamera() {
-		mOrthoLeft = -mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom + mCamX;
-		mOrthoRight = mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom + mCamX;
-		mOrthoTop = mTranslator.mCurrentScreen.getSurfaceRatioY() * mZoom + mCamY;
-		mOrthoBottom = -mTranslator.mCurrentScreen.getSurfaceRatioY() * mZoom + mCamY;
+		float ratioX = mTranslator.mCurrentScreen.getSurfaceRatioX();
+		float ratioY = mTranslator.mCurrentScreen.getSurfaceRatioY();
+		mOrthoLeft = -ratioX * mZoom + mCamX;
+		mOrthoRight = ratioX * mZoom + mCamX;
+		mOrthoTop = ratioY * mZoom + mCamY;
+		mOrthoBottom = -ratioY * mZoom + mCamY;
 		if(mCamRot==0) {
 			mOrthoWidth = (int)(Math.ceil(mOrthoRight - mOrthoLeft));
 			mOrthoHeight = (int)(Math.ceil(mOrthoTop - mOrthoBottom));
@@ -202,8 +204,8 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			mProjectionTransform.setOrthogonalProjection(mOrthoLeft, mOrthoRight, mOrthoTop, mOrthoBottom, mGameFar, mGameNear);
 		}else{
 			mProjectionTransform.setOrthogonalProjection(
-					-mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom, mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom,
-					 mTranslator.mCurrentScreen.getSurfaceRatioY() * mZoom, -mTranslator.mCurrentScreen.getSurfaceRatioY() * mZoom
+					-mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom, ratioX * mZoom,
+					 mTranslator.mCurrentScreen.getSurfaceRatioY() * mZoom, -ratioY * mZoom
 					);
 			mProjectionTransform.rotateZ(mCamRot);
 			mProjectionTransform.translate(-mCamX, -mCamY);
