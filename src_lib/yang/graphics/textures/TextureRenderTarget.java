@@ -48,7 +48,7 @@ public class TextureRenderTarget implements ScreenInfo{
 	}
 	
 	public void fakeDimensions(int width, int height) {
-		fakeDimensions(width,height,width/height,mRatioY);
+		fakeDimensions(width,height,width/height,1);
 	}
 	
 	public void fakeDimensions(ScreenInfo surface) {

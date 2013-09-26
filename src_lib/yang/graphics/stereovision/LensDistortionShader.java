@@ -24,6 +24,7 @@ public class LensDistortionShader extends MinimumTexShader {
 	public final static String FRAGMENT_SHADER = 
 			"#ANDROID precision mediump float;\r\n" +
 			"const vec2 lensCenter = vec2(0.5,0.5);\r\n" +
+			"const float sampleDist = 1.5/2048.0;\r\n"+
 			"uniform vec2 scale;\r\n" +
 			"uniform sampler2D texSampler;\r\n" +
 			"uniform vec4 lensParameters;\r\n" +
@@ -33,7 +34,9 @@ public class LensDistortionShader extends MinimumTexShader {
 			"	vec2 theta = (texCoord - lensCenter) * 2.0;\r\n" +
 			"   float rSq = theta.x * theta.x + theta.y * theta.y;\r\n" +
 			"   vec2 rvector = theta * (lensParameters.x + lensParameters.y*rSq + lensParameters.z*rSq*rSq + lensParameters.w*rSq*rSq*rSq);\r\n" +
-			"	gl_FragColor = texture2D(texSampler, lensCenter + scale*rvector);\r\n" +
+//			"	gl_FragColor = texture2D(texSampler, lensCenter + scale*rvector);\r\n" +
+			"   vec2 resCoord = lensCenter + scale*rvector;\r\n" +
+			"	gl_FragColor = texture2D(texSampler, resCoord)*0.3 + (texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y+sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y+sampleDist)))*0.7*0.25;\r\n" +
 			"}\r\n";
 	
 	public void initHandles() {

@@ -76,7 +76,6 @@ public class GFXDebug implements PrintInterface {
 	private int mShaderSwitchCount;
 	
 	public void printGFXDebugValues() {
-		mTranslator.flush();
 		
 		printDebugValue(FPS,"FPS",mTranslator.mFPS,1,true);
 		printDebugValue(DRAW_COUNT,"Draw calls",mDrawCount,0,false);
