@@ -21,6 +21,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.glconsts.GLBlendFuncs;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
+import yang.graphics.translator.glconsts.GLTex;
 import yang.math.objects.Bounds;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
@@ -112,7 +113,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
 	protected abstract void genTextures(int[] target,int count);
-	public abstract void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings);
+	public abstract void setTextureData(int texId,int width,int height,int channels, ByteBuffer buffer);
+	public abstract void setTextureParameter(int pName,int param);
 	public abstract void deleteTextures(int[] ids);
 	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, ShortBuffer indexBuffer);
 	public abstract void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer);
@@ -274,7 +276,43 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return mMaxTextureId;
 	}
 	
-	protected void setTextureData(Texture targetTexture,ByteBuffer data) {
+	public void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureProperties) {
+		setTextureData(texId,width,height,textureProperties.mChannels,buffer);
+		
+		switch(textureProperties.mWrapX) {
+		case CLAMP: setTextureParameter(GLTex.GL_TEXTURE_WRAP_S, GLTex.GL_CLAMP_TO_EDGE); break;
+		case REPEAT: setTextureParameter(GLTex.GL_TEXTURE_WRAP_S, GLTex.GL_REPEAT); break;
+		case MIRROR: setTextureParameter(GLTex.GL_TEXTURE_WRAP_S, GLTex.GL_MIRRORED_REPEAT); break;
+		}
+		switch(textureProperties.mWrapY) {
+		case CLAMP: setTextureParameter(GLTex.GL_TEXTURE_WRAP_T, GLTex.GL_CLAMP_TO_EDGE); break;
+		case REPEAT: setTextureParameter(GLTex.GL_TEXTURE_WRAP_T, GLTex.GL_REPEAT); break;
+		case MIRROR: setTextureParameter(GLTex.GL_TEXTURE_WRAP_T, GLTex.GL_MIRRORED_REPEAT); break;
+		}
+		assert checkErrorInst("Set texture wrap");
+		
+		switch(textureProperties.mFilter) {
+		case NEAREST:
+			setTextureParameter(GLTex.GL_TEXTURE_MAG_FILTER, GLTex.GL_NEAREST);
+			setTextureParameter(GLTex.GL_TEXTURE_MIN_FILTER, GLTex.GL_NEAREST);
+			break;		
+		default:
+			setTextureParameter(GLTex.GL_TEXTURE_MAG_FILTER, GLTex.GL_LINEAR);
+			setTextureParameter(GLTex.GL_TEXTURE_MIN_FILTER, GLTex.GL_LINEAR);
+			break;
+		case LINEAR_MIP_LINEAR:
+			setTextureParameter(GLTex.GL_TEXTURE_MAG_FILTER, GLTex.GL_LINEAR);
+			setTextureParameter(GLTex.GL_TEXTURE_MIN_FILTER, GLTex.GL_LINEAR_MIPMAP_LINEAR);
+			break;
+		case NEAREST_MIP_LINEAR:
+			setTextureParameter(GLTex.GL_TEXTURE_MAG_FILTER, GLTex.GL_LINEAR);
+			setTextureParameter(GLTex.GL_TEXTURE_MIN_FILTER, GLTex.GL_NEAREST_MIPMAP_LINEAR);
+			break;
+		}
+		assert checkErrorInst("Set texture filter ("+textureProperties.mFilter+")");
+	}
+	
+	public void setTextureData(Texture targetTexture,ByteBuffer data) {
 		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),data,targetTexture.mProperties);
 	}
 	

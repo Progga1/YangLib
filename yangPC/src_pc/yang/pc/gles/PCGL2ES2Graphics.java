@@ -169,48 +169,22 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		assert checkErrorInst("Generate texture");
 	}
 
+	public void setTextureParameter(int pName,int param) {
+		gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, pName, param);
+	}
+	
 	@Override
-	public void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings) {
+	public void setTextureData(int texId,int width,int height,int channels, ByteBuffer buffer) {
 		assert preCheck("Init texture");
 		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
 		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);
 		gles2.glPixelStorei(GL2ES2.GL_UNPACK_ALIGNMENT, GL2ES2.GL_TRUE);
 		assert checkErrorInst("Bind new texture");
-		switch(textureSettings.mWrapX) {
-		case CLAMP: gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_WRAP_S, GL2ES2.GL_CLAMP_TO_EDGE); break;
-		case REPEAT: gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_WRAP_S, GL2ES2.GL_REPEAT); break;
-		case MIRROR: gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_WRAP_S, GL2ES2.GL_MIRRORED_REPEAT); break;
-		}
-		switch(textureSettings.mWrapY) {
-		case CLAMP: gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_WRAP_T, GL2ES2.GL_CLAMP_TO_EDGE); break;
-		case REPEAT: gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_WRAP_T, GL2ES2.GL_REPEAT); break;
-		case MIRROR: gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_WRAP_T, GL2ES2.GL_MIRRORED_REPEAT); break;
-		}
-		assert checkErrorInst("Set texture repeat");
 		
-		int format = channelsToConst(textureSettings.mChannels);
+		
+		int format = channelsToConst(channels);
 		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL2ES2.GL_UNSIGNED_BYTE, buffer);
-		assert checkErrorInst("Pass texture data with "+textureSettings.mChannels+" channels");
-
-		switch(textureSettings.mFilter) {
-		case NEAREST:
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MAG_FILTER, GL2ES2.GL_NEAREST);
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MIN_FILTER, GL2ES2.GL_NEAREST);
-			break;		
-		default:
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MAG_FILTER, GL2ES2.GL_LINEAR);
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MIN_FILTER, GL2ES2.GL_LINEAR);
-			break;
-		case LINEAR_MIP_LINEAR:
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MAG_FILTER, GL2ES2.GL_LINEAR);
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MIN_FILTER, GL2ES2.GL_LINEAR_MIPMAP_LINEAR);
-			break;
-		case NEAREST_MIP_LINEAR:
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MAG_FILTER, GL2ES2.GL_LINEAR);
-			gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, GL2ES2.GL_TEXTURE_MIN_FILTER, GL2ES2.GL_NEAREST_MIPMAP_LINEAR);
-			break;
-		}
-		assert checkErrorInst("Set texture filter ("+textureSettings.mFilter+")");
+		assert checkErrorInst("Pass texture data with "+channels+" channels");
 	}
 
 	@Override

@@ -300,7 +300,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		SpecularLightBasicSubShader specShader = mHandles.mSpecShader;
 		for(OBJMaterialSection matSec:mMaterialSections) {
 			YangMaterial mat = matSec.mMaterial;
-			mTranslator.bindTexture(mat.mDiffuseTexture);
+			if(mat!=null)
+				mTranslator.bindTexture(mat.mDiffuseTexture);
 			if(specShader!=null) {
 				if(mat.mSpecularProps.mTexture!=null) {
 					program.setUniformInt(specShader.mSpecTexSampler,specShader.mTextureLevel);

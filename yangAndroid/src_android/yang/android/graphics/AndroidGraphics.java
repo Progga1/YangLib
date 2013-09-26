@@ -98,26 +98,21 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 	
 	@Override
-	public void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureSettings) {
+	public void setTextureParameter(int pName, int param) {
+		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, pName, param);
+	}
+	
+	@Override
+	public void setTextureData(int texId,int width,int height,int channels, ByteBuffer buffer) {
 		assert preCheck("Set texture data");
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
 		assert checkError("Bind new texture");
 		GLES20.glPixelStorei(GLES20.GL_UNPACK_ALIGNMENT, GLES20.GL_TRUE);
-		switch(textureSettings.mWrapX) {
-		case CLAMP: GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE); break;
-		case REPEAT: GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT); break;
-		case MIRROR: GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_MIRRORED_REPEAT); break;
-		}
-		switch(textureSettings.mWrapY) {
-		case CLAMP: GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE); break;
-		case REPEAT: GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT); break;
-		case MIRROR: GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_MIRRORED_REPEAT); break;
-		}
-		assert checkError("Set texture wrap");
+		
 		int format;
 		int outFormat;
-		switch(textureSettings.mChannels) {
+		switch(channels) {
 //		case 1: 
 //			format = GLES20.GL_LUMINANCE;
 //			outFormat = GLES20.GL_RGB;
@@ -130,31 +125,12 @@ public class AndroidGraphics extends GraphicsTranslator {
 			format = GLES20.GL_RGBA;
 			outFormat = GLES20.GL_RGBA;
 			break;
-			default: throw new RuntimeException(textureSettings.mChannels + " channels not supported.");
+			default: throw new RuntimeException(channels + " channels not supported.");
 		}
 
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, width, height, 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
 		assert checkError("Pass texture data");
-		
-		switch(textureSettings.mFilter) {
-		case NEAREST: 
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-			break;
-		case LINEAR_MIP_LINEAR:
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR_MIPMAP_LINEAR);
-			break;
-		case NEAREST_MIP_LINEAR:
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST_MIPMAP_LINEAR);
-			break;
-		default:
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-			break;
-		}
-		assert checkError("Set texture filter");
+
 	}
 
 	@Override

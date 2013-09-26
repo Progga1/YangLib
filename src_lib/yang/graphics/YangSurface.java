@@ -390,13 +390,15 @@ public abstract class YangSurface implements EventQueueHolder {
 				mStereoVision = new StereoVision();
 				mStereoVision.init(mGraphics,mStereoResolution);
 			}
-			
-			mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
-			drawContent();
-			mGraphics.leaveTextureRenderTarget();
-			mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
-			drawContent();
-			mGraphics.leaveTextureRenderTarget();
+			try{
+				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
+				drawContent();
+				mGraphics.leaveTextureRenderTarget();
+				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
+				drawContent();
+			}finally{
+				mGraphics.leaveTextureRenderTarget();
+			}
 			
 			mStereoVision.draw();
 		}else{
