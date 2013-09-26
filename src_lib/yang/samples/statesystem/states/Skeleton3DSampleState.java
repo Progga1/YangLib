@@ -84,6 +84,8 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mGraphics3D.setDefaultProgram();
 		mGraphics3D.drawDebugCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.YELLOW,0.5f,0.3f);
 
+		
+		
 		mGraphics2D.activate();
 		mGraphics.switchZBuffer(false);
 		

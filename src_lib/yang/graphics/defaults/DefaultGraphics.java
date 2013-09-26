@@ -26,6 +26,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public static final float[][] DEFAULT_NEUTRAL_ELEMENTS = { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
 
 	public static final float[] RECT_TEXTURECOORDS = { 0.0f,1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,0.0f};
+	public static final float[] RECT_TEXTURECOORDS_INV = { 0.0f,0.0f, 1.0f,0.0f, 0.0f,1.0f, 1.0f,1.0f};
 	public static final TextureCoordinatesQuad RECT_TEXQUAD = new TextureCoordinatesQuad().init(0, 0, 1, 1);
 
 	public static final float[] RECT_WHITE = { 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 };

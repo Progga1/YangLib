@@ -53,6 +53,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mMinRatioX = 1;
 	public float mMaxTime = 60;
 	private int mMaxTextureId = -1;
+	private boolean mStereo = false;
 	
 	//State
 	protected Texture[] mCurrentTextures;
@@ -615,9 +616,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public void setSurfaceSize(int width, int height, boolean stereo) {
+		mStereo = stereo;
 		setViewPort(width,height);
-//		if(stereo)
-//			width /= 2;
+		if(stereo)
+			width /= 2;
 		this.mScreenWidth = width;
 		this.mScreenHeight = height;
 		this.mRatioX = (float) width / height;
@@ -683,7 +685,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}else{
 			mRenderTargetStackPos = -1;
 			mCurrentScreen = this;
-			setViewPort(mScreenWidth,mScreenHeight);
+			if(mStereo)
+				setViewPort(mScreenWidth*2,mScreenHeight);
+			else
+				setViewPort(mScreenWidth,mScreenHeight);
 			derivedSetScreenRenderTarget();
 			unbindTextures();
 			assert checkErrorInst("Set screen render target");

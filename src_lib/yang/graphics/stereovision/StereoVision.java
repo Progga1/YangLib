@@ -2,12 +2,14 @@ package yang.graphics.stereovision;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.glconsts.GLMasks;
 
 public class StereoVision {
 
@@ -23,11 +25,12 @@ public class StereoVision {
 		mShader = mGraphics.addProgram(new StereoShader());
 		mStereoVertexBuffer = DefaultGraphics.createVertexBuffer(graphics,true,true, 2*6, 2*4);
 		mStereoVertexBuffer.putQuadIndicesMultiple(2);
-		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, -1,1, 0,-1, 0);
-		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, 0,1, 1,-1, 0);
-		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_TEXTURES, DefaultGraphics.RECT_TEXTURECOORDS,2);
-//		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, FloatColor.WHITE.mValues,2*4);
-//		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, FloatColor.WHITE.mValues,2*4);
+
+		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, -1,-1, 0,1, 0);
+		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, 0,-1, 1,1, 0);
+		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_TEXTURES, DefaultGraphics.RECT_TEXTURECOORDS_INV,2);
+		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, FloatColor.WHITE.mValues,2*4);
+		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, FloatColor.WHITE.mValues,2*4);
 		mStereoVertexBuffer.finishUpdate();
 		
 		mStereoLeftRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(TextureWrap.MIRROR,TextureFilter.LINEAR));
@@ -35,35 +38,35 @@ public class StereoVision {
 	}
 	
 	public void draw() {
-		mGraphics.switchZBuffer(false);
-		
-		//Save
+		//Save state
 		IndexedVertexBuffer buf = mGraphics.mCurrentVertexBuffer;
 		AbstractProgram prevShader = mGraphics.mCurrentProgram;
 		
-		
+		//Activate stereo state
 		mGraphics.disableBuffers();
 		mShader.activate();
-		assert mGraphics.checkErrorInst("1");
-		mGraphics.mCurrentVertexBuffer = mStereoVertexBuffer;
+		mStereoVertexBuffer.reset();
+		mGraphics.setVertexBuffer(mStereoVertexBuffer);
 		mGraphics.enableAttributePointer(mShader.mPositionHandle);
 		mGraphics.enableAttributePointer(mShader.mTexCoordsHandle);
 		mGraphics.setAttributeBuffer(mShader.mPositionHandle, DefaultGraphics.ID_POSITIONS);
 		mGraphics.setAttributeBuffer(mShader.mTexCoordsHandle, DefaultGraphics.ID_TEXTURES);
+		mGraphics.setAttributeBuffer(mShader.mPositionHandle, DefaultGraphics.ID_POSITIONS);
+		mGraphics.setAttributeBuffer(mShader.mTexCoordsHandle, DefaultGraphics.ID_TEXTURES);
+		
+		//Draw
+		mGraphics.clear(0.2f,0,0, GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics.bindTextureNoFlush(mStereoLeftRenderTarget.mTargetTexture, 0);
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 0,6, GraphicsTranslator.T_TRIANGLES);
 		mGraphics.bindTextureNoFlush(mStereoRightRenderTarget.mTargetTexture, 0);
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 6,6, GraphicsTranslator.T_TRIANGLES);
 		
-		assert mGraphics.checkErrorInst("2");
+		//reset
 		mGraphics.disableAttributePointer(mShader.mPositionHandle);
 		mGraphics.disableAttributePointer(mShader.mTexCoordsHandle);
-		
-		//reset
-		mGraphics.mCurrentVertexBuffer = buf;
+		mGraphics.setVertexBuffer(buf);
 		prevShader.activate();
 		mGraphics.enableBuffers();
-		mGraphics.bindBuffers();
 
 		assert mGraphics.checkErrorInst("3");
 	}
