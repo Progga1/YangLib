@@ -62,7 +62,6 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Particles", new ParticleSampleState());
 		addMenuItem("Texture Atlas", new TexAtlasSampleState());
 		addMenuItem("Nested Render targets", new NestedTextureRenderTargetsSampleState());
-		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("Shader permutations", new ShaderPermutationsSampleState());
 		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("3D skeleton", new Skeleton3DSampleState());
@@ -80,7 +79,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 //			}
 //		}else{
 		float x;
-		if(mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
+		if(false && mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
 			x = mGUI.getGUICenterX()-1f;
 		else 
 			x = mGUI.getGUICenterX()-0.5f;

@@ -50,6 +50,7 @@ public abstract class AbstractProgram {
 	}
 
 	public void activate() {
+		mGraphics.mCurrentProgram = this;
 		mProgram.activate();
 	}
 	

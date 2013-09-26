@@ -36,6 +36,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	private Animator mGLAnimator;
 	public static boolean DEFAULT_USE_GLPANEL = false;
 	public static boolean USE_DISPLAY = false;
+	public boolean mStereo = false;
 	
 	public static final boolean clearError(GL2ES2 gl2) {
 		gl2.glGetError();

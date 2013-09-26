@@ -104,7 +104,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		}
 	}
 	
-	public void putQuadIndices(int count) {
+	public void putQuadIndicesMultiple(int count) {
 		for(int i=0;i<count;i++) {
 			beginQuad(false,(short)(i*4));
 		}

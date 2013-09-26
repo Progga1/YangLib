@@ -25,7 +25,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public static final float[] RECT_POSITIONS = {0,0,0, 1,0,0, 0,1,0, 1,1,0};
 	public static final float[][] DEFAULT_NEUTRAL_ELEMENTS = { { 0, 0, 0 }, { 0, 0 }, { 1, 1, 1, 1 }, { 0, 0, 0, 0 } };
 
-	public static final float[] RECT_TEXTURECOORDS = { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f};
+	public static final float[] RECT_TEXTURECOORDS = { 0.0f,1.0f, 1.0f,1.0f, 0.0f,0.0f, 1.0f,0.0f};
 	public static final TextureCoordinatesQuad RECT_TEXQUAD = new TextureCoordinatesQuad().init(0, 0, 1, 1);
 
 	public static final float[] RECT_WHITE = { 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 };
@@ -87,13 +87,17 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		setColorFactor(1);
 	}
 
+	public static IndexedVertexBuffer createVertexBuffer(GraphicsTranslator graphics,boolean dynamicVertices, boolean dynamicIndices, int maxIndices, int maxVertices) {
+		assert graphics.preCheck("create vertex buffer");
+		IndexedVertexBuffer vertexBuffer = graphics.createUninitializedVertexBuffer(dynamicVertices, dynamicIndices, maxIndices, maxVertices);
+		vertexBuffer.init(new int[] { 3, 2, 4, 4 }, DEFAULT_NEUTRAL_ELEMENTS);
+		assert graphics.checkErrorInst("Create vertex buffer");
+		return vertexBuffer;
+	}
+	
 	@Override
 	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices, int maxVertices) {
-		assert mTranslator.preCheck("create vertex buffer");
-		IndexedVertexBuffer vertexBuffer = mTranslator.createUninitializedVertexBuffer(dynamicVertices, dynamicIndices, maxIndices, maxVertices);
-		vertexBuffer.init(new int[] { mPositionDimension, 2, 4, 4 }, DEFAULT_NEUTRAL_ELEMENTS);
-		assert mTranslator.checkErrorInst("Create vertex buffer");
-		return vertexBuffer;
+		return createVertexBuffer(mTranslator,dynamicVertices,dynamicIndices,maxIndices,maxVertices);
 	}
 
 	public void bindBuffers() {

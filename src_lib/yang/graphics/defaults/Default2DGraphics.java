@@ -344,5 +344,9 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public void onSurfaceSizeChanged(int width, int height) {
 		refreshCamera();
 	}
+
+	public void resetCamera() {
+		setCamera(0,0,1);
+	}
 	
 }

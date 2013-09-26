@@ -9,6 +9,7 @@ import yang.graphics.buffers.UniversalVertexBuffer;
 import yang.graphics.listeners.DrawListener;
 import yang.graphics.listeners.SurfaceListener;
 import yang.graphics.model.FloatColor;
+import yang.graphics.programs.AbstractProgram;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.programs.GLProgramFactory;
 import yang.graphics.textures.TextureData;
@@ -95,7 +96,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
 	private NonConcurrentList<TextureRenderTarget> mRenderTargets;
-	private NonConcurrentList<BasicProgram> mPrograms;
+	private NonConcurrentList<AbstractProgram> mPrograms;
 	private ShortBuffer mWireFrameIndexBuffer;
 	private int mMaxFPS;
 	private long mMinDrawFrameIntervalNanos;
@@ -105,6 +106,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected final int[] mTempInt2 = new int[1];
 	protected final int[] mTempIntArray = new int[128];
 	public int mRestartCount = 0;
+	public AbstractProgram mCurrentProgram = null;
 	
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
@@ -185,7 +187,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mFlushCount = 0;
 		mDrawMode = T_TRIANGLES;
 		mWireFrames = false;
-		mPrograms = new NonConcurrentList<BasicProgram>();
+		mPrograms = new NonConcurrentList<AbstractProgram>();
 		mCurDrawListener = null;
 		appInstance = this;
 		mCurrentScreen = this;
@@ -248,7 +250,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public void restart() {
 		start();
-		for(BasicProgram program:mPrograms) {
+		for(AbstractProgram program:mPrograms) {
 			program.restart();
 		}
 		for(TextureRenderTarget renderTarget:mRenderTargets) {
@@ -415,7 +417,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurDrawListener = drawListener;
 	}
 	
-	public <ShaderType extends BasicProgram> ShaderType addProgram(ShaderType program) {
+	public <ShaderType extends AbstractProgram> ShaderType addProgram(ShaderType program) {
 		assert preCheck("Add program");
 		program.init(this);
 		mPrograms.add(program);
@@ -595,6 +597,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		setVertexBuffer(prevBuffer);
 	}
 	
+	public void drawBufferDirectly(IndexedVertexBuffer buffer,int bufferStart,int vertexCount,int mode) {
+		IndexedVertexBuffer prevBuffer = mCurrentVertexBuffer;
+		mCurrentVertexBuffer = buffer;
+		drawVertices(bufferStart,vertexCount,mode);
+		mCurrentVertexBuffer = prevBuffer;
+	}
+	
 	public void drawBuffer(IndexedVertexBuffer buffer) {
 		drawBuffer(buffer,0,buffer.getIndexCount(),T_TRIANGLES);
 	}
@@ -605,7 +614,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		vertexBuffer.setAsCurrent();
 	}
 	
-	public void setSurfaceSize(int width, int height) {
+	public void setSurfaceSize(int width, int height, boolean stereo) {
+		setViewPort(width,height);
+//		if(stereo)
+//			width /= 2;
 		this.mScreenWidth = width;
 		this.mScreenHeight = height;
 		this.mRatioX = (float) width / height;
@@ -618,7 +630,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mInvRatioY = 1/mRatioY;
 		mProjScreenTransform.setOrthogonalProjection(-mRatioX,mRatioX, mRatioY,-mRatioY, -1,1);
 		mProjScreenTransform.refreshInverted();
-		setViewPort(width,height);
+		
 		for(SurfaceListener surfaceListener:mScreenListeners) {
 			surfaceListener.onSurfaceSizeChanged(width, height);
 		}
@@ -760,6 +772,17 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	
 	public boolean isScreenRenderTarget() {
 		return mRenderTargetStackPos==-1;
+	}
+	
+	public void disableBuffers() {
+		mCurDrawListener.disableBuffers();
+	}
+	
+	public void enableBuffers() {
+		mCurDrawListener.enableBuffers();
+	}
+	public void bindBuffers() {
+		mCurDrawListener.bindBuffers();
 	}
 	
 }

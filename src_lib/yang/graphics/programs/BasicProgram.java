@@ -9,7 +9,6 @@ public class BasicProgram extends AbstractProgram {
 	
 	public final static String VERTEX_SHADER = 
 			"uniform mat4 projTransform;\r\n" +
-			"uniform float time;\r\n" +
 			"uniform vec4 colorFactor;\r\n" +
 			"attribute vec4 vPosition;\r\n" +
 			"attribute vec2 vTexture;\r\n" +
@@ -26,7 +25,6 @@ public class BasicProgram extends AbstractProgram {
 	
 	public final static String VERTEX_SHADER_SCREENPOS = 
 			"uniform mat4 projTransform;\r\n" +
-			"uniform float time;\r\n" +
 			"uniform vec4 colorFactor;\r\n" +
 			"attribute vec4 vPosition;\r\n" +
 			"attribute vec2 vTexture;\r\n" +
@@ -132,7 +130,7 @@ public class BasicProgram extends AbstractProgram {
 	}
 
 	public void activate() {
-		mProgram.activate();
+		super.activate();
 		assert mGraphics.checkErrorInst("Activate");
 		mProgram.setUniformInt(mTexSamplerHandle, 0);
 		assert mGraphics.checkErrorInst("Set tex handle");

@@ -13,6 +13,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
+import yang.graphics.stereovision.StereoVision;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.App;
@@ -27,6 +28,7 @@ import yang.util.Util;
 public abstract class YangSurface implements EventQueueHolder {
 
 	public static boolean CATCH_EXCEPTIONS = true;
+	public static int ALWAYS_STEREO_VISION = 1024;
 
 	public final static int RUNTIME_STATE_RUNNING = 0;
 	public final static int RUNTIME_STATE_PAUSED = 1;
@@ -71,9 +73,12 @@ public abstract class YangSurface implements EventQueueHolder {
 	private boolean mResuming = false;
 	private boolean mLoadedOnce = false;
 
+	private boolean mUseStereoVision = false;
+	private StereoVision mStereoVision = null;
+	private int mStereoResolution = 1024;
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
-
+	
 	/**
 	 * GL-Thread
 	 */
@@ -96,6 +101,13 @@ public abstract class YangSurface implements EventQueueHolder {
 		setUpdatesPerSecond(120);
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
 		mMacroFilename = null;
+		if(ALWAYS_STEREO_VISION>0)
+			setStereoVision(ALWAYS_STEREO_VISION);
+	}
+	
+	public void setStereoVision(int resolution) {
+		mUseStereoVision = true;
+		mStereoResolution = resolution;
 	}
 
 	protected void setStartupSteps(int loadingSteps,int initSteps) {
@@ -233,7 +245,7 @@ public abstract class YangSurface implements EventQueueHolder {
 
 	public void onSurfaceChanged(int width,int height) {
 		try{
-			mGraphics.setSurfaceSize(width, height);
+			mGraphics.setSurfaceSize(width, height, mUseStereoVision);
 			if(mGFXDebug!=null)
 				mGFXDebug.surfaceChanged();
 		}catch(Exception ex) {
@@ -368,8 +380,30 @@ public abstract class YangSurface implements EventQueueHolder {
 	protected void onLoadingFinished(boolean resuming) {
 
 	}
-
+	
 	public final void drawFrame() {
+		if(mUseStereoVision) {
+			//STEREO VISION
+			if(mStereoVision == null) {
+				mStereoVision = new StereoVision();
+				mStereoVision.init(mGraphics,mStereoResolution);
+			}
+			
+			mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
+			drawContent();
+			mGraphics.leaveTextureRenderTarget();
+			mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
+			drawContent();
+			mGraphics.leaveTextureRenderTarget();
+			
+			mStereoVision.draw();
+		}else{
+			drawContent();
+		}
+
+	}
+	
+	private final void drawContent() {
 		mGraphics.clear(0,0,0);
 		try{
 			if(mMetaEventListener!=null)
@@ -408,7 +442,6 @@ public abstract class YangSurface implements EventQueueHolder {
 			}
 			mGraphics.beginFrame();
 			if(mLoadingState>=mStartupSteps) {
-
 				draw();
 				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 					mGFXDebug.draw();
@@ -443,7 +476,6 @@ public abstract class YangSurface implements EventQueueHolder {
 		}catch(Exception ex){
 			exceptionOccurred(ex);
 		}
-
 	}
 
 	public void stop() {
@@ -525,8 +557,13 @@ public abstract class YangSurface implements EventQueueHolder {
 		if(mInactive)
 			resume();
 	}
+	
 	public boolean isInactive() {
 		return mInactive;
+	}
+	
+	public boolean isStereoVision() {
+		return mUseStereoVision;
 	}
 
 }

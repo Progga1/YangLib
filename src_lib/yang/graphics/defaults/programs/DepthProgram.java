@@ -42,10 +42,5 @@ public class DepthProgram extends Basic3DProgram {
 		mPositionHandle = mProgram.getAttributeLocation("vPosition");
 		mProjHandle = mProgram.getUniformLocation("projTransform");
 	}
-
-	@Override
-	public void activate() {
-		mProgram.activate();
-	}
 	
 }

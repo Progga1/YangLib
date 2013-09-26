@@ -157,8 +157,6 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 			mTranslator.mShaderSwitchCount++;
 			program.activate();
 			enableBuffers();
-			//setColor(1, 1, 1);
-			//if(mAutoUpdateAmbientColor)
 				
 			return true;
 		}else
