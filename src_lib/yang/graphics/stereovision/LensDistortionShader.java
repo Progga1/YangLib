@@ -34,9 +34,10 @@ public class LensDistortionShader extends MinimumTexShader {
 			"	vec2 theta = (texCoord - lensCenter) * 2.0;\r\n" +
 			"   float rSq = theta.x * theta.x + theta.y * theta.y;\r\n" +
 			"   vec2 rvector = theta * (lensParameters.x + lensParameters.y*rSq + lensParameters.z*rSq*rSq + lensParameters.w*rSq*rSq*rSq);\r\n" +
-//			"	gl_FragColor = texture2D(texSampler, lensCenter + scale*rvector);\r\n" +
 			"   vec2 resCoord = lensCenter + scale*rvector;\r\n" +
-			"	gl_FragColor = texture2D(texSampler, resCoord)*0.3 + (texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y+sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y+sampleDist)))*0.7*0.25;\r\n" +
+			"if(resCoord.x<0.0 || resCoord.y<0.0 || resCoord.x>1.0 || resCoord.y>1.0) gl_FragColor = vec4(0.0,0.0,0.0,1.0); else \r\n" +
+			"	gl_FragColor = texture2D(texSampler, resCoord);\r\n" +
+//			"	gl_FragColor = texture2D(texSampler, resCoord)*0.3 + (texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y+sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y+sampleDist)))*0.7*0.25;\r\n" +
 			"}\r\n";
 	
 	public void initHandles() {
