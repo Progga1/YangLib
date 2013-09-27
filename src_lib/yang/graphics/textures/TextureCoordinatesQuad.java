@@ -1,7 +1,6 @@
 package yang.graphics.textures;
 
 import yang.graphics.translator.Texture;
-import yang.math.BinaryOps;
 import yang.model.Rect;
 
 public class TextureCoordinatesQuad {

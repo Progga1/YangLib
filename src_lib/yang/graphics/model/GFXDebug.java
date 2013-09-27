@@ -1,12 +1,16 @@
 package yang.graphics.model;
 
+import yang.events.YangEventQueue;
+import yang.events.eventtypes.PointerTracker;
 import yang.graphics.YangSurface;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
 import yang.graphics.listeners.DrawListener;
+import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.Texture;
 import yang.model.DebugYang;
 import yang.model.PrintInterface;
 
@@ -23,9 +27,7 @@ public class GFXDebug implements PrintInterface {
 	public static int TEXBIND_COUNT = 1<<8;
 	public static int SHADERSWITCH_COUNT = 1<<9;
 	
-	public YangSurface mSurface;
-	public DrawableString mTempPrintString;
-	public DrawableString mStateString;
+	//Properties
 	public int mDebugValuesMask = Integer.MAX_VALUE;
 	public float mDebugOffsetX=0.025f,mDebugOffsetY=0.025f;
 	public float mDebugColumnWidth=0.1f,mDebugLineHeight=0.05f;
@@ -33,14 +35,26 @@ public class GFXDebug implements PrintInterface {
 	public FloatColor mStateColor = new FloatColor(1,0.8f,0);
 	public float mFontSize = 0.08f;
 	public int mMinKeyChars = 10;
-	public int mRefreshEvery = 2;
-	public long mRefreshCount = 0;
+	public int mRefreshFPSEvery = 2;
+	public Texture mPointerTexture = null;
+	public boolean mDrawPointerContours = true;
+	public float mPointerSize = 0.06f;
+	public FloatColor[] mPointerColors = {FloatColor.YELLOW,FloatColor.GREEN,FloatColor.RED,FloatColor.WHITE,new FloatColor(1,0.5f,0),new FloatColor(1,0,1),new FloatColor(0,1,1),new FloatColor(1,0.8f,0.4f),new FloatColor(0.5f,0.5f,1),new FloatColor(0.5f,0.5f,0.5f)};
+	
+	//Object
+	public YangSurface mSurface;
+	protected GraphicsTranslator mTranslator;
+	protected DefaultGraphics<?> mGraphics;
+	
+	//Strings
 	public DrawableString mSpeedString;
 	public DrawableString mExecMacroString;
 	private DrawableString mExceptionString;
+	public DrawableString mTempPrintString;
+	public DrawableString mStateString;
 	
-	protected GraphicsTranslator mTranslator;
-	protected DefaultGraphics<?> mGraphics;
+	//State
+	public long mRefreshCount = 0;
 	
 	public GFXDebug(YangSurface surface, DefaultGraphics<?> graphics,BitmapFont font) {
 		mSurface = surface;
@@ -76,7 +90,6 @@ public class GFXDebug implements PrintInterface {
 	private int mShaderSwitchCount;
 	
 	public void printGFXDebugValues() {
-		
 		printDebugValue(FPS,"FPS",mTranslator.mFPS,1,true);
 		printDebugValue(DRAW_COUNT,"Draw calls",mDrawCount,0,false);
 		if(isActive(DRAW_DYNAMIC_STATIC_COUNT)) {
@@ -134,7 +147,7 @@ public class GFXDebug implements PrintInterface {
 		
 		float playSpeed = mSurface.mPlaySpeed;
 		
-		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString=="") && (mSurface.mMacro==null || mSurface.mMacro.mFinished) && mExceptionString==null)
+		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString=="") && (mSurface.mMacro==null || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS)
 			return;
 		
 		float right = mGraphics.getScreenRight()-mDebugOffsetX;
@@ -182,7 +195,7 @@ public class GFXDebug implements PrintInterface {
 		
 		if(mExceptionString==null) {
 			if(mTempPrintString.mMarker!=0) {
-				if(mRefreshCount%mRefreshEvery==0) {
+				if(mRefreshCount%mRefreshFPSEvery==0) {
 					mPolygonCount = mTranslator.mPolygonCount;
 					mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
 					mBatchPolygonCount = mTranslator.mBatchPolygonCount;
@@ -199,6 +212,42 @@ public class GFXDebug implements PrintInterface {
 		}else{
 			mGraphics.setColor(FloatColor.RED);
 			mExceptionString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+		}
+		
+		if(DebugYang.DRAW_POINTERS) {
+			YangEventQueue events = mSurface.mEventQueue;
+			mGraphics.mTranslator.bindTexture(mPointerTexture);
+			int l = events.mCurPointerDownCount;
+			for(int i=0;i<events.mPointerTrackers.length;i++) {
+				double time = events.getTime();
+				PointerTracker tracker = events.mPointerTrackers[i];
+				if(tracker.mLastMovement<0)
+					continue;
+				
+				final float ANIM_TIME = 0.5f;
+				float x = tracker.mPosX;
+				float y = tracker.mPosY;
+				float f;
+				if(i<l)
+					f = 2;
+				else if(time-tracker.mLastMovement>ANIM_TIME)
+					continue;
+				else 
+					f = (float)(2-(time-tracker.mLastTouch)*2/ANIM_TIME);
+
+				if(f<0.6f)
+					f = 0.6f;
+
+				float d = f*mPointerSize*0.5f;
+				if(mDrawPointerContours) {
+					float c = d*1.2f;
+					mGraphics.setColor(FloatColor.BLACK);
+					mGraphics.drawQuad(x,y-c, x+c,y, x-c,y, x,y+c, TextureCoordinatesQuad.FULL_TEXTURE);
+				}
+				mGraphics.setColor(mPointerColors[i%mPointerColors.length]);
+				mGraphics.drawQuad(x,y-d, x+d,y, x-d,y, x,y+d, TextureCoordinatesQuad.FULL_TEXTURE);
+			}
+			assert mGraphics.mTranslator.checkErrorInst("Draw pointers");
 		}
 		
 		prevDrawer.activate();

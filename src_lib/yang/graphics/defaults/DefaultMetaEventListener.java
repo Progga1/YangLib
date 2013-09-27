@@ -84,6 +84,10 @@ public class DefaultMetaEventListener implements YangEventListener {
 		if(code==Keys.F7) {
 			mSurface.proceed();
 		}
+		if(code==Keys.F8) {
+			if(mSurface.mGFXDebug!=null)
+				DebugYang.DRAW_POINTERS ^= true;
+		}
 		if(code==Keys.F11) {
 			if(!mRecording) {
 				mRecording = true;

@@ -302,12 +302,14 @@ public abstract class YangSurface implements EventQueueHolder {
 	}
 
 	private void handleEvents() {
+		assert mGraphics.preCheck("Handle events");
 		if(mEventListener!=null) {
 			if(!mPaused && mLoadingState>=mStartupSteps)
 				mEventQueue.handleEvents(mEventListener);
 			else
 				mEventQueue.clearEvents();
 		}
+		assert mGraphics.checkErrorInst("Handle events");
 	}
 
 	protected void catchUp() {
@@ -410,6 +412,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	private final void drawContent() {
 		mGraphics.clear(0,0,0);
 		try{
+			assert mGraphics.preCheck("Draw content");
 			if(mMetaEventListener!=null)
 				mEventQueue.handleMetaEvents(mMetaEventListener);
 
@@ -436,16 +439,21 @@ public abstract class YangSurface implements EventQueueHolder {
 					mGraphics.mCurDrawListener.onRestartGraphics();
 			}
 
+			assert mGraphics.preCheck("Catchup");
 			if(mUpdateMode==UpdateMode.SYNCHRONOUS)
 				catchUp();
-
+			assert mGraphics.checkErrorInst("Catchup");
+			
 			if(mLoadingState>=mStartupSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+				assert mGraphics.preCheck("Debug values");
 				mGFXDebug.reset();
 				if(DebugYang.DRAW_GFX_VALUES)
 					mGFXDebug.printGFXDebugValues();
+				assert mGraphics.checkErrorInst("Debug values");
 			}
 			mGraphics.beginFrame();
 			if(mLoadingState>=mStartupSteps) {
+				assert mGraphics.preCheck("Draw call");
 				draw();
 				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 					mGFXDebug.draw();

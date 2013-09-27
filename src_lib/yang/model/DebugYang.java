@@ -13,6 +13,7 @@ public class DebugYang {
 	public static boolean showStart = false;
 	public static boolean drawTails = true;
 	public static boolean DRAW_GFX_VALUES = false;
+	public static boolean DRAW_POINTERS = false;
 	public static String PLAY_MACRO_FILENAME = null;
 	
 	public static String stateString = null;

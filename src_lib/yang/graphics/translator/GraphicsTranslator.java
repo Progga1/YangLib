@@ -159,7 +159,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(mThreadId!=Thread.currentThread().getId()) {
 			throw new RuntimeException("Non-GL-thread");
 		}
-		return checkErrorInst(message,false);
+		return checkErrorInst(message,true);
 	}
 	
 	public boolean checkErrorInst(String message) {
@@ -570,21 +570,25 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public final void clear(float r, float g, float b) {
+		assert preCheck("clear");
 		setClearColor(r,g,b,1);
 		clear(GLMasks.COLOR_BUFFER_BIT);
 	}
 	
 	public final void clear(float r, float g, float b,float a,int additionalMask) {
+		assert preCheck("clear");
 		setClearColor(r,g,b,a);
 		clear(GLMasks.COLOR_BUFFER_BIT | additionalMask);
 	}
 	
 	public final void clear(float r, float g, float b,int additionalMask) {
+		assert preCheck("clear");
 		setClearColor(r,g,b,1);
 		clear(GLMasks.COLOR_BUFFER_BIT | additionalMask);
 	}
 	
 	public void clear(FloatColor color,int additionalMask) {
+		assert preCheck("clear");
 		clear(color.mValues[0], color.mValues[1], color.mValues[2],color.mValues[3],additionalMask);
 	}
 

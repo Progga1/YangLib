@@ -109,6 +109,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	
 	@Override
 	public void step(float deltaTime) {
+		assert mGraphics.preCheck("update GUI");
 		mGUI.step(deltaTime);
 	}
 

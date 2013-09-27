@@ -71,6 +71,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	}
 	
 	public void drawFrame() {
+		assert mGraphics.preCheck("draw state frame");
 		if(mFirstFrame) {
 			initGraphics();
 			mRestartCount = mGraphics.mRestartCount;

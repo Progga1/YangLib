@@ -85,14 +85,14 @@ public class YangEventQueue {
 			return;
 		}
 		mQueue[mQueueId++] = event;
+		event.onPut();
 		if(mQueueId>=mMaxEvents) 
 			mQueueId = 0;
-		event.onPut();
-		
 	}
 	
 	public synchronized void putEvent(YangEvent event) {
 		mQueue[mQueueId++] = event;
+		event.onPut();
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
 	}
@@ -262,6 +262,10 @@ public class YangEventQueue {
 			for(MacroWriter writer:mMacroWriters)
 				writer.close();
 		}
+	}
+
+	public double getTime() {
+		return System.currentTimeMillis()*0.001;
 	}
 	
 }

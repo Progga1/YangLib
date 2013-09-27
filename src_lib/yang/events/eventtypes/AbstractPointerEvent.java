@@ -52,6 +52,9 @@ public abstract class AbstractPointerEvent extends YangEvent {
 		PointerTracker pointer = mEventQueue.mPointerTrackers[mId];
 		mDeltaX = mX - pointer.mPosX;
 		mDeltaY = mY - pointer.mPosY;
+		pointer.mLastMovement = mEventQueue.getTime();
+		if(mAction!=ACTION_POINTERMOVE)
+			pointer.mLastTouch = mEventQueue.getTime();
 		pointer.mPosX = mX;
 		pointer.mPosY = mY;
 		if(mAction==ACTION_POINTERDOWN) {
@@ -60,7 +63,7 @@ public abstract class AbstractPointerEvent extends YangEvent {
 		}
 		if(mAction==ACTION_POINTERUP)
 			mEventQueue.mCurPointerDownCount--;
-		if(mEventQueue.mTriggerZooming && mEventQueue.mCurPointerDownCount==2 && mAction==ACTION_POINTERDRAG) {//DebugYang.stateString(mEventQueue.mPointerTrackers[0]+"\n"+mEventQueue.mPointerTrackers[1]);
+		if(mEventQueue.mTriggerZooming && mEventQueue.mCurPointerDownCount==2 && mAction==ACTION_POINTERDRAG) {
 			float dist = mEventQueue.mPointerTrackers[0].getDistance(mEventQueue.mPointerTrackers[1]);
 			if(mEventQueue.mPointerDistance>=0) {
 				float deltaDist = dist-mEventQueue.mPointerDistance;
