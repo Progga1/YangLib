@@ -372,10 +372,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	// ---PUT-POSITIONS---
 	
 	public void putTransformedPositionRect(YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,mCurrentZ, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,mCurrentZ, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,mCurrentZ, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,mCurrentZ, transform.mMatrix);
 	}
 	
 	public void putPosition(float x, float y) {
