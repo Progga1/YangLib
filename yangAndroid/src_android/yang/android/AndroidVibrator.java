@@ -19,7 +19,7 @@ public class AndroidVibrator extends AbstractVibrator {
 
 		if (mVibrator != null) {
 			try {
-				mVibrator.vibrate(1);
+				mVibrator.vibrate(0);
 				mHasVibrator = true;
 			} catch (Exception e) {
 				System.out.println("no vibrator found");
