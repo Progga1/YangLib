@@ -34,16 +34,16 @@ public class AndroidVibrator extends AbstractVibrator {
 
 	@Override
 	public void vibrate(long milliseconds) {
-		if (mHasVibrator) mVibrator.vibrate(milliseconds);
+		if (mHasVibrator && mEnabled) mVibrator.vibrate(milliseconds);
 	}
 
 	@Override
 	public void vibrate(long[] pattern, int repeat) {
-		if (mHasVibrator) mVibrator.vibrate(pattern, repeat);
+		if (mHasVibrator && mEnabled) mVibrator.vibrate(pattern, repeat);
 	}
 
 	@Override
 	public void cancel() {
-		if (mHasVibrator) mVibrator.cancel();
+		if (mHasVibrator && mEnabled) mVibrator.cancel();
 	}
 }
