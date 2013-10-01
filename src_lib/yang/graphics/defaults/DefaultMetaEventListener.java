@@ -88,6 +88,12 @@ public class DefaultMetaEventListener implements YangEventListener {
 			if(mSurface.mGFXDebug!=null)
 				DebugYang.DRAW_POINTERS ^= true;
 		}
+		if(code==Keys.F9) {
+			if(mSurface.isStereoVision())
+				mSurface.setStereoVision(0);
+			else
+				mSurface.setStereoVision(1024);
+		}
 		if(code==Keys.F11) {
 			if(!mRecording) {
 				mRecording = true;

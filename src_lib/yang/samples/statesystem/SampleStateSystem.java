@@ -3,6 +3,7 @@ package yang.samples.statesystem;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
 import yang.graphics.translator.Texture;
+import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
 import yang.util.statesystem.YangProgramStateSystem;
 
@@ -15,6 +16,8 @@ public class SampleStateSystem extends YangProgramStateSystem {
 	public SampleStateSystem() {
 		super(true, true);
 		super.setUpdateMode(UpdateMode.SYNCHRONOUS);
+		if(isStereoVision())
+			DebugYang.DRAW_POINTERS = true;
 	}
 	
 	public void postInitGraphics() {

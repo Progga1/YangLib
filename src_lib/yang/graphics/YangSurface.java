@@ -28,7 +28,7 @@ import yang.util.Util;
 public abstract class YangSurface implements EventQueueHolder {
 
 	public static boolean CATCH_EXCEPTIONS = true;
-	public static int ALWAYS_STEREO_VISION = 0;
+	public static int ALWAYS_STEREO_VISION = 1024;
 
 	public final static int RUNTIME_STATE_RUNNING = 0;
 	public final static int RUNTIME_STATE_PAUSED = 1;
@@ -106,8 +106,16 @@ public abstract class YangSurface implements EventQueueHolder {
 	}
 	
 	public void setStereoVision(int resolution) {
-		mUseStereoVision = true;
-		mStereoResolution = resolution;
+		int widthFac = mUseStereoVision?2:1;
+		if(resolution==0) {
+			mUseStereoVision = false;
+		}else{
+			mUseStereoVision = true;
+			mStereoResolution = resolution;
+		}
+		if(mGraphics!=null)
+			this.onSurfaceChanged(mGraphics.mScreenWidth*widthFac, mGraphics.mScreenHeight);
+		
 	}
 
 	protected void setStartupSteps(int loadingSteps,int initSteps) {
