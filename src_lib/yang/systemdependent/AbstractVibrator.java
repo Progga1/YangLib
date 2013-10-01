@@ -2,6 +2,8 @@ package yang.systemdependent;
 
 public abstract class AbstractVibrator {
 
+	protected boolean mEnabled;
+
 	public boolean hasVibrator() {
 		return false;
 	}
@@ -16,5 +18,13 @@ public abstract class AbstractVibrator {
 
 	public void cancel() {
 
+	}
+
+	public boolean isEnabled() {
+		return mEnabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		mEnabled = enabled;
 	}
 }

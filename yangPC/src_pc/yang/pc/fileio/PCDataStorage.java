@@ -20,7 +20,7 @@ public class PCDataStorage extends AbstractDataStorage {
 				f.createNewFile();
 			}
 
-			FileInputStream fis = new FileInputStream(FILENAME); 
+			FileInputStream fis = new FileInputStream(FILENAME);
 			props.load(fis);
 			fis.close();
 		} catch (Exception e) {
@@ -65,9 +65,16 @@ public class PCDataStorage extends AbstractDataStorage {
 	}
 
 	@Override
+	public void putString(String key, String value) {
+		Properties props = load();
+		props.put(key, value);
+		save(props);
+	}
+
+	@Override
 	public float getFloat(String key, float defaultValue) {
 		Properties props = load();
-		float toReturn = defaultValue; 
+		float toReturn = defaultValue;
 		try {
 			toReturn = Float.parseFloat(props.getProperty(key));
 		} catch (Exception e) {}
@@ -77,7 +84,7 @@ public class PCDataStorage extends AbstractDataStorage {
 	@Override
 	public int getInt(String key, int defaultValue) {
 		Properties props = load();
-		int toReturn = defaultValue; 
+		int toReturn = defaultValue;
 		try {
 			toReturn = Integer.parseInt(props.getProperty(key));
 		} catch (Exception e) {}
@@ -87,11 +94,22 @@ public class PCDataStorage extends AbstractDataStorage {
 	@Override
 	public boolean getBoolean(String key, boolean defaultValue) {
 		Properties props = load();
-		boolean toReturn = defaultValue; 
+		boolean toReturn = defaultValue;
 		try {
 			toReturn = Boolean.parseBoolean(props.getProperty(key));
 		} catch (Exception e) {}
 		return toReturn;
 	}
 
+	@Override
+	public String getString(String key, String defaultValue) {
+		Properties props = load();
+		String toReturn = defaultValue;
+		try {
+			String value = props.getProperty(key);
+			//need a null check here to deliver defaultValue if not existing
+			if (value != null) toReturn = value;
+		} catch (Exception e) {}
+		return toReturn;
+	}
 }
