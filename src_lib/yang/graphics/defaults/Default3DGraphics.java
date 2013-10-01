@@ -44,6 +44,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
 	protected boolean mBillboardMode;
 	public YangMatrixCameraOps mCameraMatrix;
+	public YangMatrixCameraOps mOriginalCameraMatrix;
 	private YangMatrix mInterMatrix;
 	public YangMatrix mSavedCamera;
 	public YangMatrix mSavedProjection;
@@ -74,12 +75,14 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		super(translator,3);
 		mCurrentZ = 0;
 		mCameraMatrix = new YangMatrixCameraOps();
+		mOriginalCameraMatrix = new YangMatrixCameraOps();
 		mInterMatrix = mTranslator.createTransformationMatrix();
 		mCameraMatrix.set(3,3,1);
 		mDefaultTerrainCreator = new TerrainCreator(this);
 		mSphereCreator = new SphereCreator(this);
 		mBillboardMode = false;
 		mLineDrawer = new LineDrawer3D(this);
+		refreshCamera();
 	}
 	
 	@Override
@@ -195,9 +198,17 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawRectZ(x1,y1,x2,y2,z,mTexIdentity);
 	}
 	
+	private void refreshCamera() {
+		mOriginalCameraMatrix.set(mCameraMatrix);
+		if(mTranslator.mStereo && mTranslator.getRenderTargetStackLevel()<=0) {
+			mCameraMatrix.translate(-mTranslator.mCameraShiftX, 0);
+		}
+	}
+	
 	public void setCameraLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
 		mTranslator.flush();
 		mCameraMatrix.setLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, upX,upY,upZ);
+		refreshCamera();
 	}
 
 	public void setCameraLookAt(float eyeX,float eyeY, float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
@@ -211,6 +222,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
 		mTranslator.flush();
 		mCameraMatrix.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
+		refreshCamera();
 	}
 	
 	public void setCameraAlphaBeta(float alpha, float beta, float distance) {

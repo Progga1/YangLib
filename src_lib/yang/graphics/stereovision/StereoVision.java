@@ -25,6 +25,7 @@ public class StereoVision {
 	public IndexedVertexBuffer mStereoVertexBuffer = null;
 	public TextureRenderTarget mStereoLeftRenderTarget = null;
 	public TextureRenderTarget mStereoRightRenderTarget = null;
+	public float mInterOcularDistance = 0.064f;
 	
 	public void setLensParameters(float x,float y,float z,float w) {
 		mLensDistortionShader.mLensParameters[0] = x;

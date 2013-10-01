@@ -15,6 +15,7 @@ import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.stereovision.StereoVision;
 import yang.graphics.translator.AbstractGFXLoader;
+import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.model.App;
 import yang.model.DebugYang;
@@ -401,10 +402,12 @@ public abstract class YangSurface implements EventQueueHolder {
 				mStereoVision.init(mGraphics,mStereoResolution);
 			}
 			try{
-				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
+				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
+				mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
 				drawContent();
 				mGraphics.leaveTextureRenderTarget();
-				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
+				mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
+				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
 				drawContent();
 			}finally{
 				mGraphics.leaveTextureRenderTarget();

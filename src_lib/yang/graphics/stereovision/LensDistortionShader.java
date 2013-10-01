@@ -7,9 +7,11 @@ public class LensDistortionShader extends MinimumTexShader {
 	
 	public int mLensParametersHandle;
 	public int mScaleHandle;
+	public int mScaleToLensHandle;
 	//public float[] mLensParameters = new float[]{1.5f,1,1,1};
-	public float mScaleX = 0.3f,mScaleY = 0.35f;
-	public float[] mLensParameters = new float[]{1,0.22f,0.24f,1};
+	public float mScaleX = 0.35f,mScaleY = 0.35f;
+	public float mScaleToLensX = 2,mScaleToLensY = 2;
+	public float[] mLensParameters = new float[]{1,0.22f,0.24f,0};
 	
 	public final static String VERTEX_SHADER = 
 			"attribute vec4 vPosition;\r\n" +
@@ -26,16 +28,17 @@ public class LensDistortionShader extends MinimumTexShader {
 			"const vec2 lensCenter = vec2(0.5,0.5);\r\n" +
 			"const float sampleDist = 1.5/2048.0;\r\n"+
 			"uniform vec2 scale;\r\n" +
+			"uniform vec2 scaleToLens;\r\n" +
 			"uniform sampler2D texSampler;\r\n" +
 			"uniform vec4 lensParameters;\r\n" +
 			"varying vec2 texCoord;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
-			"	vec2 theta = (texCoord - lensCenter) * 2.0;\r\n" +
+			"	vec2 theta = (texCoord - lensCenter) * scaleToLens;\r\n" +
 			"   float rSq = theta.x * theta.x + theta.y * theta.y;\r\n" +
 			"   vec2 rvector = theta * (lensParameters.x + lensParameters.y*rSq + lensParameters.z*rSq*rSq + lensParameters.w*rSq*rSq*rSq);\r\n" +
 			"   vec2 resCoord = lensCenter + scale*rvector;\r\n" +
-			"if(resCoord.x<0.0 || resCoord.y<0.0 || resCoord.x>1.0 || resCoord.y>1.0) gl_FragColor = vec4(0.0,0.0,0.0,1.0); else \r\n" +
+			"if(resCoord.x<0.0 || resCoord.y<0.0 || resCoord.x>1.0 || resCoord.y>1.0) discard; else \r\n" +
 			"	gl_FragColor = texture2D(texSampler, resCoord);\r\n" +
 //			"	gl_FragColor = texture2D(texSampler, resCoord)*0.3 + (texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y-sampleDist))+texture2D(texSampler, vec2(resCoord.x-sampleDist,resCoord.y+sampleDist))+texture2D(texSampler, vec2(resCoord.x+sampleDist,resCoord.y+sampleDist)))*0.7*0.25;\r\n" +
 			"}\r\n";
@@ -44,6 +47,7 @@ public class LensDistortionShader extends MinimumTexShader {
 		super.initHandles();
 		mLensParametersHandle = mProgram.getUniformLocation("lensParameters");
 		mScaleHandle = mProgram.getUniformLocation("scale");
+		mScaleToLensHandle = mProgram.getUniformLocation("scaleToLens");
 	}
 	
 	@Override
@@ -60,6 +64,7 @@ public class LensDistortionShader extends MinimumTexShader {
 		super.activate();
 		mProgram.setUniform4f(mLensParametersHandle, mLensParameters);
 		mProgram.setUniform2f(mScaleHandle, mScaleX, mScaleY);
+		mProgram.setUniform2f(mScaleToLensHandle, mScaleToLensX, mScaleToLensY);
 	}
 
 }

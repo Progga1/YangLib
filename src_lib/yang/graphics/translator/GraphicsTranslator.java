@@ -54,7 +54,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mMinRatioX = 1;
 	public float mMaxTime = 60;
 	private int mMaxTextureId = -1;
-	private boolean mStereo = false;
+	public boolean mStereo = false;
 	
 	//State
 	protected Texture[] mCurrentTextures;
@@ -76,6 +76,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private long mTargetTime = 0;
 	private TextureRenderTarget[] mRenderTargetStack = new TextureRenderTarget[MAX_NESTED_RENDERTARGETS];
 	private int mRenderTargetStackPos = -1;
+	public float mCameraShiftX = 0;
 	
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
@@ -830,6 +831,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	public void bindBuffers() {
 		mCurDrawListener.bindBuffers();
+	}
+	
+	public int getRenderTargetStackLevel() {
+		return mRenderTargetStackPos;
 	}
 	
 }
