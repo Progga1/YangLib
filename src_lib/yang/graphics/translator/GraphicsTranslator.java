@@ -114,7 +114,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
 	protected abstract void genTextures(int[] target,int count);
-	public abstract void setTextureData(int texId,int width,int height,int channels, ByteBuffer buffer);
+	public abstract void setTextureData(int texId,int width,int height,int channels, ByteBuffer data);
+	public abstract void setTextureRectData(int texId,int level,int offsetX,int offsetY,int width,int height,int channels, ByteBuffer data);
 	public abstract void setTextureParameter(int pName,int param);
 	public abstract void deleteTextures(int[] ids);
 	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, ShortBuffer indexBuffer);

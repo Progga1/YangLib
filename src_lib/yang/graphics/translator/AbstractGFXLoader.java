@@ -104,6 +104,11 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public TextureData loadImageData(String name) {
 		return loadImageData(name,false);
 	}
+	
+	public void loadIntoTexture(Texture target,String filename,int x,int y) {
+		TextureData imageData = loadImageData(filename,target.mProperties.mChannels>3);
+		target.updateRect(x,y,imageData);
+	}
 
 	private void enqueue(String key,Texture tex) {
 		mTexQueue[mTexQueueId++] = key;

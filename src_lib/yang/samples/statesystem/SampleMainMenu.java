@@ -20,7 +20,7 @@ import yang.samples.statesystem.states.SoundSampleState;
 import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.StrokeDrawerSampleState;
 import yang.samples.statesystem.states.TailSampleState;
-import yang.samples.statesystem.states.TexAtlasSampleState;
+import yang.samples.statesystem.states.TextureAtlasSampleState;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
@@ -61,7 +61,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
 		addMenuItem("Particles", new ParticleSampleState());
-		addMenuItem("Texture Atlas", new TexAtlasSampleState());
+		addMenuItem("Texture Atlas", new TextureAtlasSampleState());
 		addMenuItem("Nested Render targets", new NestedTextureRenderTargetsSampleState());
 		addMenuItem("Shader permutations", new ShaderPermutationsSampleState());
 		addMenuItem("Obj loader", new OBJSampleState());

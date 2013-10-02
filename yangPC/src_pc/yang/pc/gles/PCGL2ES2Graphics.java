@@ -174,17 +174,23 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 	
 	@Override
-	public void setTextureData(int texId,int width,int height,int channels, ByteBuffer buffer) {
+	public void setTextureData(int texId,int width,int height,int channels, ByteBuffer data) {
 		assert preCheck("Init texture");
 		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
 		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);
 		gles2.glPixelStorei(GL2ES2.GL_UNPACK_ALIGNMENT, GL2ES2.GL_TRUE);
 		assert checkErrorInst("Bind new texture");
 		
-		
 		int format = channelsToConst(channels);
-		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL2ES2.GL_UNSIGNED_BYTE, buffer);
+		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL2ES2.GL_UNSIGNED_BYTE, data);
 		assert checkErrorInst("Pass texture data with "+channels+" channels");
+	}
+	
+	@Override
+	public void setTextureRectData(int texId,int level,int offsetX,int offsetY,int width,int height,int channels, ByteBuffer data) {
+		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
+		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);
+		gles2.glTexSubImage2D(GL2ES2.GL_TEXTURE_2D, level, offsetX,offsetY,width,height, channelsToConst(channels), GL2ES2.GL_UNSIGNED_BYTE, data);
 	}
 
 	@Override

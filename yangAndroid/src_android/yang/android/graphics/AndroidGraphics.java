@@ -6,7 +6,6 @@ import java.nio.ShortBuffer;
 import yang.android.io.AndroidGFXLoader;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
-import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
@@ -131,6 +130,13 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, width, height, 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
 		assert checkError("Pass texture data");
 
+	}
+	
+	@Override
+	public void setTextureRectData(int texId,int level,int offsetX,int offsetY,int width,int height,int channels, ByteBuffer data) {
+		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
+		GLES20.glTexSubImage2D(GLES20.GL_TEXTURE_2D, level, offsetX,offsetY,width,height, channelsToConst(channels), GLES20.GL_UNSIGNED_BYTE, data);
 	}
 
 	@Override

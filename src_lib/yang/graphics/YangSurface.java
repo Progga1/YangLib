@@ -102,8 +102,7 @@ public abstract class YangSurface implements EventQueueHolder {
 		setUpdatesPerSecond(120);
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
 		mMacroFilename = null;
-		if(ALWAYS_STEREO_VISION>0)
-			setStereoVision(ALWAYS_STEREO_VISION);
+		setStereoVision(ALWAYS_STEREO_VISION);
 	}
 	
 	public void setStereoVision(int resolution) {
