@@ -463,6 +463,9 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	@Override
 	public void setWhite() {
 		setColor(1,1,1,1);
+	}
+	
+	public void setFactorWhite() {
 		setColorFactor(1,1,1,1);
 	}
 	
