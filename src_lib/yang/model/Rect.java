@@ -29,7 +29,7 @@ public class Rect {
 	}
 	
 	public float getHeight() {
-		return mBottom-mTop;
+		return mTop-mBottom;
 	}
 	
 	public void set(float left,float top,float right, float bottom) {

@@ -2,7 +2,6 @@ package yang.graphics.textures;
 
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.model.DebugYang;
 import yang.util.NonConcurrentList;
 
 public abstract class TextureCoordinateSet {
