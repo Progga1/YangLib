@@ -132,8 +132,8 @@ public class Tail {
 		}
 	}
 	
-	public void debugOut() {
-		System.out.println(Util.arrayToString(mCounts, ";", 0));
+	public String debugOut() {
+		return Util.arrayToString(mCounts, ";", 0);
 	}
 	
 	private void addNode(float dist,float x,float y,float forceDirX,float forceDirY) {
@@ -312,6 +312,7 @@ public class Tail {
 			putPos = mCapacity-1;
 		}
 		mCurColor[3] = mGlobAlpha * alpha;
+		//mCurColor[3] = 1;
 		if(scale==0) {
 			mStrips.continueStripSinglePoint(mPosX[putPos], mPosY[putPos]);
 			if(mTexXRepeat==0)
@@ -366,9 +367,10 @@ public class Tail {
 			float alpha;
 			float scale;
 			while(true) {
-				if(c>=tSize)
+				if(c>=tSize-1)
 					break;
 				int curCount = mCounts[countPos];
+
 				if(curCount<0) {
 					skipTailVertices();
 					count++;

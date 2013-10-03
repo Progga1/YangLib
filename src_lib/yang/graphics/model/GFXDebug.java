@@ -32,7 +32,7 @@ public class GFXDebug implements PrintInterface {
 	public float mDebugOffsetX=0.025f,mDebugOffsetY=0.025f;
 	public float mDebugColumnWidth=0.1f,mDebugLineHeight=0.05f;
 	public FloatColor mFontColor = FloatColor.WHITE;
-	public FloatColor mStateColor = new FloatColor(1,0.8f,0);
+	public FloatColor mStateStringColor = new FloatColor(1,0.8f,0);
 	public float mFontSize = 0.08f;
 	public int mMinKeyChars = 10;
 	public int mRefreshFPSEvery = 2;
@@ -182,7 +182,7 @@ public class GFXDebug implements PrintInterface {
 		}
 		
 		if(DebugYang.stateString!=null && DebugYang.stateString!="") {
-			mGraphics.setColor(mStateColor);
+			mGraphics.setColor(mStateStringColor);
 			String uString = DebugYang.stateString;
 			int c = mStateString.mCapacity;
 			if(uString.endsWith("\n"))

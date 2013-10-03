@@ -1,6 +1,5 @@
 package yang.graphics.skeletons.animations;
 
-import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.interpolation.ConstantInterpolation;
 import yang.graphics.skeletons.animations.interpolation.Interpolation;
 import yang.graphics.skeletons.pose.Posture;
@@ -40,7 +39,7 @@ public class Animation<CarrierType> {
 	
 	public Animation() {
 		mAutoAnimate = true;
-		mWrap = WrapMode.LOOP;
+		mWrap = DEFAULT_WRAP_MODE;
 		mFramesPerSecond = 1;
 		mInterpolation = ConstantInterpolation.INSTANCE;
 		mFrameCount = -1;
@@ -97,14 +96,14 @@ public class Animation<CarrierType> {
 		}
 	}
 	
-	protected void setFrames(WrapMode clampMode,KeyFrame... frames) {
+	protected void setFrames(WrapMode wrapMode,KeyFrame... frames) {
 		mKeyFrames = frames;
-		mWrap = clampMode;
+		mWrap = wrapMode;
 		refreshKeyFrames();
 	}
 	
 	protected void setFrames(KeyFrame... frames) {
-		setFrames(DEFAULT_WRAP_MODE,frames);
+		setFrames(mWrap,frames);
 	}
 	
 	protected void setFrames(Posture[] frames,WrapMode clampMode) {
