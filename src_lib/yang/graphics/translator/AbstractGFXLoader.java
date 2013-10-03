@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
+import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
@@ -105,9 +106,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return loadImageData(name,false);
 	}
 	
-	public void loadIntoTexture(Texture target,String filename,int x,int y) {
+	public TextureCoordBounds loadIntoTexture(Texture target,String filename,int x,int y) {
 		TextureData imageData = loadImageData(filename,target.mProperties.mChannels>3);
 		target.updateRect(x,y,imageData);
+		return new TextureCoordBounds(target, x,y,imageData.mWidth,imageData.mHeight);
 	}
 
 	private void enqueue(String key,Texture tex) {

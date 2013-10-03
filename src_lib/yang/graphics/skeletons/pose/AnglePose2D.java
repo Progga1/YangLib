@@ -3,7 +3,6 @@ package yang.graphics.skeletons.pose;
 import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.math.Geometry;
 import yang.math.MathConst;
-import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointNormalConstraint;
 import yang.util.Util;
@@ -61,22 +60,32 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 					if(joint.mAnimate) {
 						float angle;
 						if(c>=mAngles.length)
-							angle = skeleton.mRotation;
+							angle = 0;
 						else
-							angle = mAngles[c]+skeleton.mRotation;
+							angle = mAngles[c];
+						while(angle>PI)
+							angle -= 2*PI;
+						while(angle<-PI)
+							angle += 2*PI;
 						if(weight!=1) {
 							float prevAngle = interpolationPose.mAngles[c];
-							if(Math.abs(prevAngle-angle)>MathConst.PI) {
+							while(prevAngle>PI)
+								prevAngle -= 2*PI;
+							while(prevAngle<-PI)
+								prevAngle += 2*PI;
+							if(Math.abs(prevAngle-angle)>PI) {
 								float diff;
 								if(prevAngle>angle) {
-									diff = 2*MathConst.PI-(prevAngle-angle);
-								}else
-									diff = 2*MathConst.PI-(angle-prevAngle);
+									diff = -2*PI+prevAngle-angle;
+								}else{
+									diff = 2*PI+prevAngle-angle;
+								}	
 								angle = angle + (diff)*dWeight;
+
 							}else
 								angle = angle*weight + prevAngle*dWeight;
 						}
-						joint.setPosByAngle(angle);
+						joint.setPosByAngle(angle+skeleton.mRotation);
 					}
 					c++;
 				}
@@ -139,7 +148,7 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 	
 	@Override
 	public String getClassName() {
-		return "AnglePose";
+		return "AnglePose2D";
 	}
 	
 }

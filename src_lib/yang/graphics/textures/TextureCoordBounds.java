@@ -1,5 +1,6 @@
 package yang.graphics.textures;
 
+import yang.graphics.translator.Texture;
 import yang.math.objects.Quadruple;
 
 public class TextureCoordBounds extends Quadruple{
@@ -10,6 +11,10 @@ public class TextureCoordBounds extends Quadruple{
 	
 	public TextureCoordBounds(float left,float top,float width,float height) {
 		super(left,top,width,height);
+	}
+	
+	public TextureCoordBounds(Texture texture, float rectLeft,float rectTop,float rectWidth,float rectHeight) {
+		this(rectLeft/texture.mWidth,rectTop/texture.mHeight,rectWidth/texture.mWidth,rectHeight/texture.mHeight);
 	}
 	
 	public TextureCoordBounds initBiased(int left,int top,int width,int height,int texWidth,int texHeight, float bias) {

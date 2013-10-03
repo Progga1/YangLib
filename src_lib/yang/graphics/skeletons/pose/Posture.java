@@ -1,12 +1,16 @@
 package yang.graphics.skeletons.pose;
 
 import yang.graphics.skeletons.CartoonSkeleton2D;
+import yang.math.MathConst;
 import yang.physics.massaggregation.MassAggregation;
 import yang.util.Util;
 
 @SuppressWarnings("rawtypes")
 public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType extends MassAggregation> {
 
+	public static float PI = MathConst.PI;
+	public static float PI_HALF = MathConst.PI_HALF;
+	
 	protected int mPoseId;
 	
 	public Posture() {

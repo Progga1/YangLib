@@ -63,5 +63,9 @@ public class Skeleton2D extends MassAggregation {
 		}
 		
 	}
+
+	public Joint getJoint(int id) {
+		return mJoints.get(id);
+	}
 	
 }

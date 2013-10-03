@@ -93,6 +93,9 @@ public class Animator implements YangEventListener {
 		mGraphics.bindTexture(null);
 		mGraphics2D.setColor(0.5f);
 		mGraphics2D.drawRect(mGraphics2D.normToGameX(mGraphics2D.getScreenLeft()), 0, mGraphics2D.normToGameX(mGraphics2D.getScreenRight()), mGraphics2D.normToGameY(mGraphics2D.getScreenBottom()));
+		mGraphics2D.setColor(0.2f);
+		mGraphics2D.drawLine(-100, 1, 100, 1, 0.01f);
+		mGraphics2D.drawLine(-100, 2, 100, 2, 0.01f);
 		mGraphics2D.setColor(0.3f);
 		mGraphics2D.drawLine(0, 0, 0, 100, 0.01f);
 		
@@ -172,6 +175,7 @@ public class Animator implements YangEventListener {
 	
 	public void selectSkeleton(int index) {
 		mCurSkeleton = mSkeletons.get(index);
+		mCurSkeleton.mScale = 1;
 		mCurCarrier = mCurSkeleton.mCarrier;
 		mCurAnimationSystem = mAnimationSystems.get(index);
 		mCurAnimationPlayer = mAnimationPlayers.get(index);
@@ -182,6 +186,7 @@ public class Animator implements YangEventListener {
 	
 	public void selectAnimation(int index) {
 		mCurAnimation = mCurAnimationSystem.mAnimations.get(index);
+		mCurAnimation.mAutoAnimate = true;
 		mCurAnimationPlayer.mLockedAnimation = false;
 		mCurAnimationPlayer.setAnimation(mCurAnimation);
 		mAnimationIndex = index;
