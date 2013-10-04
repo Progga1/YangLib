@@ -3,13 +3,8 @@ package yang.graphics.skeletons;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.textures.TextureHolder;
-import yang.graphics.textures.TextureProperties;
-import yang.graphics.textures.enums.TextureFilter;
-import yang.graphics.textures.enums.TextureWrap;
+import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.translator.Texture;
-import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.Skeleton2D;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
@@ -23,8 +18,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	public boolean mDrawFill;
 	
 	//Persistent
-	public TextureHolder mTextureHolder;
-	public TextureHolder mContourTextureHolder;
 	private boolean mInitialized;
 	public GraphicsTranslator mTranslator;
 	public DefaultGraphics<?> mGraphics;
@@ -37,6 +30,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	protected float[] mContourColor;
 	protected float[] mSuppData;
 	public NonConcurrentList<NonConcurrentList<CartoonBone>> mLayersList;
+	public CartoonBone[] mCartoonBones;
 	public CartoonBone[][] mLayers;
 	public CartoonBone[][] mFrontToBackLayers;
 	
@@ -49,8 +43,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	public CartoonSkeleton2D() {
 		super();
 		mLayersList = new NonConcurrentList<NonConcurrentList<CartoonBone>>();
-		mTextureHolder = null;
-		mContourTextureHolder = null;
 		mSkeletonColor = new float[4];
 		mContourColor = new float[4];
 		mSuppData = new float[4];
@@ -64,7 +56,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	
 	public void init(DefaultGraphics<?> graphics,SkeletonCarrier carrier) {
 		if(mInitialized)
-			throw new RuntimeException("Already initialized");
+			return;
 		mCarrier = carrier;
 
 		mGraphics = graphics;
@@ -87,20 +79,29 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		super.drawEditing(mGraphics,skeletonEditing);
 	}
 	
+	public void texCoordsIntoRect(float rectLeft,float rectTop,float rectWidth,float rectHeight) {
+		for(JointConnection bone:mBones) {
+			if(bone instanceof CartoonBone)
+				((CartoonBone)bone).texCoordsIntoRect(rectLeft,rectTop,rectWidth,rectHeight);
+		}
+	}
+	
+	public void texCoordsIntoRect(TextureCoordBounds bounds) {
+		texCoordsIntoRect(bounds.mValues[0],bounds.mValues[1],bounds.mValues[2],bounds.mValues[3]);
+	}
+	
 	public boolean isInitialized() {
 		return mInitialized;
 	}
 	
 	public void setBonesVisible(boolean visible) {
-		for(CartoonBone[] layer:mLayers)
-			for(CartoonBone bone:layer)
-				bone.mVisible = visible;
+		for(CartoonBone bone:mCartoonBones)
+			bone.mVisible = visible;
 	}
 	
 	public void refreshVisualData() {
-		for(CartoonBone[] layer:mLayers)
-			for(CartoonBone bone:layer)
-				bone.refreshVisualVars();
+		for(CartoonBone bone:mCartoonBones)
+			bone.refreshVisualVars();
 	}
 	
 	public <ConnectionType extends JointConnection> ConnectionType addSpringBone(ConnectionType bone,int layer,float constraintDistanceStrength) {
@@ -237,8 +238,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				}
 			}
 		}
-
-		mGraphics.bindTextureInHolder(mTextureHolder);
 		
 		mMesh.draw();
 		
@@ -307,24 +306,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mUpdateColor = true;
 	}
 	
-	public void setTexture(TextureHolder texture) {
-		mTextureHolder = texture;
-		mContourTextureHolder = texture;
-	}
-	
-	public void setTexture(String filename,TextureFilter filter) {
-		setTexture(filename,new TextureProperties(TextureWrap.CLAMP,filter));
-	}
-	
-	public void setTexture(String filename,TextureProperties settings) {
-		setTexture(new TextureHolder(filename,settings));
-	}
-	
-	public void loadTexture() {
-		mTextureHolder.getTexture(mTranslator.mGFXLoader);
-		mContourTextureHolder.getTexture(mTranslator.mGFXLoader);
-	}
-	
 	public void updatedTextureCoords() {
 		this.mUpdateTexCoords = true;
 	}
@@ -348,13 +329,17 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		int l = mLayersList.size();
 		mLayers = new CartoonBone[l][];
 		mFrontToBackLayers = new CartoonBone[l][];
+		mCartoonBones = new CartoonBone[mBones.size()];
 		int k=0;
+		int i=0;
 		for(NonConcurrentList<CartoonBone> layer:mLayersList) {
 			CartoonBone[] layerArray = new CartoonBone[layer.size()];
 			int c=0;
 			for(CartoonBone bone:layer) {
 				layerArray[c] = bone;
+				mCartoonBones[i] = bone;
 				c++;
+				i++;
 			}
 			mLayers[k] = layerArray;
 			mFrontToBackLayers[l-1-k] = layerArray;

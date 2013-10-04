@@ -73,39 +73,39 @@ public class OrthoStrokeLine extends Point2f {
 	}
 
 	public float getEndX() {
-		return mPosX+mDeltaX;
+		return mX+mDeltaX;
 	}
 	
 	public float getEndY() {
-		return mPosY+mDeltaY;
+		return mY+mDeltaY;
 	}
 
 	public float getLeft() {
 		if(mDeltaX>=0)
-			return mPosX;
+			return mX;
 		else
-			return mPosX+mDeltaX;
+			return mX+mDeltaX;
 	}
 	
 	public float getRight() {
 		if(mDeltaX>=0)
-			return mPosX+mDeltaX;
+			return mX+mDeltaX;
 		else
-			return mPosX;
+			return mX;
 	}
 	
 	public float getTop() {
 		if(mDeltaY>=0)
-			return mPosY;
+			return mY;
 		else
-			return mPosY+mDeltaY;
+			return mY+mDeltaY;
 	}
 	
 	public float getBottom() {
 		if(mDeltaY>=0)
-			return mPosY+mDeltaY;
+			return mY+mDeltaY;
 		else
-			return mPosY;
+			return mY;
 	}
 	
 }

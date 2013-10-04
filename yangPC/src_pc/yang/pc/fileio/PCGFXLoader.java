@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import yang.graphics.textures.TextureData;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.math.objects.Dimensions2i;
 import yang.model.PathSpecs;
 
 public class PCGFXLoader extends AbstractGFXLoader {
@@ -20,12 +21,22 @@ public class PCGFXLoader extends AbstractGFXLoader {
 	}
 
 	@Override
+	public void getImageDimensions(String filename,Dimensions2i result) {
+		
+		String path = PathSpecs.ASSET_PATH + filename;
+		try {
+			BufferedImage image = ImageIO.read(new File(path));
+			result.set(image.getWidth(),image.getHeight());
+		} catch (IOException e) {
+			throw new RuntimeException("Image not found: "+path);
+		}
+	}
+	
+	@Override
 	public TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
 		ByteBuffer buffer = null;
-		int width = 0;
-		int height = 0;
 		BufferedImage image = null;
-
+		
 		String path = PathSpecs.ASSET_PATH + filename;
 		try {
 			image = ImageIO.read(new File(path));
@@ -33,8 +44,8 @@ public class PCGFXLoader extends AbstractGFXLoader {
 			throw new RuntimeException("Image not found: "+path);
 		}
 		
-		width = image.getWidth();
-		height = image.getHeight();
+		int width = image.getWidth();
+		int height = image.getHeight();
 
 		WritableRaster alphaBuffer = image.getAlphaRaster();
 		int channels = alphaBuffer!=null || forceRGBA?4:3;

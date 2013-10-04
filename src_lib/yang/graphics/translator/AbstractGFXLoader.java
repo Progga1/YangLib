@@ -13,6 +13,7 @@ import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
+import yang.math.objects.Dimensions2i;
 import yang.model.DebugYang;
 import yang.systemdependent.AbstractResourceManager;
 
@@ -44,6 +45,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public AbstractResourceManager mResources;
 
 	protected abstract TextureData derivedLoadImageData(String filename,boolean forceRGBA);
+	protected abstract void getImageDimensions(String filename,Dimensions2i result);
 	
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
 		mTexQueue = new String[MAX_TEXTURES];

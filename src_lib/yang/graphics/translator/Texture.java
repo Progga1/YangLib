@@ -115,8 +115,8 @@ public class Texture {
 	 * @param data
 	 */
 	public void updateRect(int x, int y, int width, int height, ByteBuffer data) {
-		assert mGraphics.preCheck("Update rect");//System.out.println(x+" "+y+" "+width+" "+height+ " "+mWidth+" "+mHeight);
-		if(x<0 || y<0 || x+width>=mWidth || y+height>=mHeight)
+		assert mGraphics.preCheck("Update rect");
+		if(x<0 || y<0 || x+width>mWidth || y+height>mHeight)
 			throw new RuntimeException("Texture rect values out of bounds: Rect x,y,w,h="+x+","+y+","+width+","+height+"; Texture w,h="+mWidth+","+mHeight);
 		mGraphics.setTextureRectData(this.mId, 0, x,y, width,height, mProperties.mChannels, data);
 		assert mGraphics.checkErrorInst("Update rect");

@@ -225,8 +225,8 @@ public class GFXDebug implements PrintInterface {
 					continue;
 				
 				final float ANIM_TIME = 0.5f;
-				float x = tracker.mPosX;
-				float y = tracker.mPosY;
+				float x = tracker.mX;
+				float y = tracker.mY;
 				float f;
 				if(i<l)
 					f = 2;

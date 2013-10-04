@@ -50,13 +50,13 @@ public abstract class AbstractPointerEvent extends YangEvent {
 	@Override
 	public void onPut() {
 		PointerTracker pointer = mEventQueue.mPointerTrackers[mId];
-		mDeltaX = mX - pointer.mPosX;
-		mDeltaY = mY - pointer.mPosY;
+		mDeltaX = mX - pointer.mX;
+		mDeltaY = mY - pointer.mY;
 		pointer.mLastMovement = mEventQueue.getTime();
 		if(mAction!=ACTION_POINTERMOVE)
 			pointer.mLastTouch = mEventQueue.getTime();
-		pointer.mPosX = mX;
-		pointer.mPosY = mY;
+		pointer.mX = mX;
+		pointer.mY = mY;
 		if(mAction==ACTION_POINTERDOWN) {
 			mEventQueue.mPointerDistance = -1;
 			mEventQueue.mCurPointerDownCount++;

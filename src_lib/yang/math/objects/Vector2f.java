@@ -11,11 +11,11 @@ public class Vector2f extends Point2f{
 	}
 	
 	public float dot(Vector2f vector) {
-		return mPosX*vector.mPosX + mPosY*vector.mPosY;
+		return mX*vector.mX + mY*vector.mY;
 	}
 	
 	public float getMagnitude() {
-		return (float)Math.sqrt(mPosX*mPosX+mPosY*mPosY);
+		return (float)Math.sqrt(mX*mX+mY*mY);
 	}
 	
 }

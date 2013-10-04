@@ -135,9 +135,6 @@ public class TextureCoordinatesQuad {
 				mAppliedCoordinates[7] = mAppliedCoordinates[3];
 				mAppliedCoordinates[2] = cx;
 				mAppliedCoordinates[3] = cy;
-				float h = mWidth;
-				mWidth = mHeight;
-				mHeight = h;
 			}
 		}
 	}

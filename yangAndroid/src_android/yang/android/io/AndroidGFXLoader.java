@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import yang.android.graphics.AndroidGraphics;
 import yang.graphics.textures.TextureData;
 import yang.graphics.translator.AbstractGFXLoader;
+import yang.math.objects.Dimensions2i;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -20,6 +21,14 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 	public AndroidGFXLoader(AndroidGraphics graphics,Context context) {
 		super(graphics,new AndroidResourceManager(context));
 		mContext = context;
+	}
+	
+	@Override
+	protected void getImageDimensions(String filename,Dimensions2i result) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		Bitmap bmp = BitmapFactory.decodeFile(filename);
+		result.set(bmp.getWidth(),bmp.getHeight());
 	}
 	
 	@Override

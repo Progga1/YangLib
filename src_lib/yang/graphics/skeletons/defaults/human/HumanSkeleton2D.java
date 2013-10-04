@@ -259,6 +259,10 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 		mBreastJoint.mFixed = true;
 	}
 	
+	public void multTexCoords(float factorX,float factorY) {
+		this.texCoordsIntoRect(0,0, factorX,factorY);
+	}
+	
 	protected void buildDefaultLayers() {
 		super.addBone(mRightLowerArmBone,1);
 		super.addBone(mRightUpperArmBone,1);

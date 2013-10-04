@@ -52,7 +52,7 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 		float w = area*0.5f;
 		for(int i=0;i<mPatchCount;i++) {
 			OrthoStrokePatch patch = mPatches[i];
-			if(x>=patch.mPosX-w && x<=patch.mPosX+w && y>=patch.mPosY-w && y<=patch.mPosY+w)
+			if(x>=patch.mX-w && x<=patch.mX+w && y>=patch.mY-w && y<=patch.mY+w)
 				return patch;
 		}
 		return null;
@@ -73,15 +73,15 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 			if(!line.mDeleted) {
 				if(line.mDeltaX!=0) {
 					float prevEnd = line.getEndX();
-					if(MathFunc.equals(line.mPosY,patch.mPosY,SNAP_TOLERANCE) && ((line.mPosX<patch.mPosX-w && prevEnd>patch.mPosX+w) || (line.mPosX>patch.mPosX+w && prevEnd<patch.mPosX-w))) {
-						splitLine(line,patch.mPosX-line.mPosX);
+					if(MathFunc.equals(line.mY,patch.mY,SNAP_TOLERANCE) && ((line.mX<patch.mX-w && prevEnd>patch.mX+w) || (line.mX>patch.mX+w && prevEnd<patch.mX-w))) {
+						splitLine(line,patch.mX-line.mX);
 						patch.mInterLines |= OrthoStrokeProperties.LEFT | OrthoStrokeProperties.RIGHT;
 					}
 				}
 				if(line.mDeltaY!=0) {
 					float prevEnd = line.getEndY();
-					if(MathFunc.equals(line.mPosX,patch.mPosX,SNAP_TOLERANCE) && ((line.mPosY<patch.mPosY-w && prevEnd>patch.mPosY+w) || (line.mPosY>patch.mPosY+w && prevEnd<patch.mPosY-w))) {
-						splitLine(line,patch.mPosY-line.mPosY);
+					if(MathFunc.equals(line.mX,patch.mX,SNAP_TOLERANCE) && ((line.mY<patch.mY-w && prevEnd>patch.mY+w) || (line.mY>patch.mY+w && prevEnd<patch.mY-w))) {
+						splitLine(line,patch.mY-line.mY);
 						patch.mInterLines |= OrthoStrokeProperties.UP | OrthoStrokeProperties.DOWN;
 					}
 				}
@@ -96,12 +96,12 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 			OrthoStrokeLine otherLine = mLines[i];
 			if(!otherLine.mDeleted && line!=otherLine) {
 				if(line.mDeltaX!=0) {
-					if(otherLine.mDeltaX!=0 && MathFunc.equals(line.mPosY,otherLine.mPosY,BIAS) && line.getLeft()>=otherLine.getLeft()-BIAS && line.getRight()<=otherLine.getRight()+BIAS) {
+					if(otherLine.mDeltaX!=0 && MathFunc.equals(line.mY,otherLine.mY,BIAS) && line.getLeft()>=otherLine.getLeft()-BIAS && line.getRight()<=otherLine.getRight()+BIAS) {
 						line.mDeleted = true;
 					}
 				}
 				if(line.mDeltaY!=0) {
-					if(otherLine.mDeltaY!=0 && MathFunc.equals(line.mPosX,otherLine.mPosX,BIAS) && line.getBottom()>=otherLine.getBottom()-BIAS && line.getTop()<=otherLine.getTop()+BIAS) {
+					if(otherLine.mDeltaY!=0 && MathFunc.equals(line.mX,otherLine.mX,BIAS) && line.getBottom()>=otherLine.getBottom()-BIAS && line.getTop()<=otherLine.getTop()+BIAS) {
 						line.mDeleted = true;
 					}
 				}
@@ -111,11 +111,11 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	
 	protected void splitLine(OrthoStrokeLine line, float newDelta) {
 		if(line.mDeltaX!=0) {
-			addLineX(line.mPosX+newDelta,line.mPosY,line.mDeltaX-newDelta,false);
+			addLineX(line.mX+newDelta,line.mY,line.mDeltaX-newDelta,false);
 			line.mDeltaX = newDelta;
 		}
 		if(line.mDeltaY!=0) {
-			addLineY(line.mPosX,line.mPosY+newDelta,line.mDeltaY-newDelta,false);
+			addLineY(line.mX,line.mY+newDelta,line.mDeltaY-newDelta,false);
 			line.mDeltaY = newDelta;
 		}
 	}
@@ -136,9 +136,9 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 		if(!updatePatches)
 			return !line.mDeleted;
 	
-		OrthoStrokePatch patch1 = pickOrAddPatch(line.mPosX,line.mPosY,SNAP_TOLERANCE);
+		OrthoStrokePatch patch1 = pickOrAddPatch(line.mX,line.mY,SNAP_TOLERANCE);
 		patch1.mInterLines |= line.getStartPointMask();
-		OrthoStrokePatch patch2 = pickOrAddPatch(line.mPosX+line.mDeltaX,line.mPosY+line.mDeltaY,SNAP_TOLERANCE*0.01f);
+		OrthoStrokePatch patch2 = pickOrAddPatch(line.mX+line.mDeltaX,line.mY+line.mDeltaY,SNAP_TOLERANCE*0.01f);
 		patch2.mInterLines |= line.getEndPointMask();
 		
 		if(mHandleLineIntersections) {
@@ -146,19 +146,19 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 			for(int i=0;i<mLineCount;i++) {
 				OrthoStrokeLine oldLine = mLines[i];
 				if(!oldLine.mDeleted && oldLine!=line) {
-					float deltaX = line.mPosX-oldLine.mPosX;
-					float deltaY = line.mPosY-oldLine.mPosY;
+					float deltaX = line.mX-oldLine.mX;
+					float deltaY = line.mY-oldLine.mY;
 					if(line.mDeltaX!=0) {
 						if(oldLine.mDeltaY!=0 && deltaY*oldLine.mDeltaY>=0 && Math.abs(deltaY)<Math.abs(oldLine.mDeltaY)) {
-							if((line.mPosX<oldLine.mPosX && line.mPosX+line.mDeltaX>oldLine.mPosX) || (line.mPosX>oldLine.mPosX && line.mPosX+line.mDeltaX<oldLine.mPosX)) {
-								pickOrAddPatch(line.mPosX-deltaX,line.mPosY,SNAP_TOLERANCE);
+							if((line.mX<oldLine.mX && line.mX+line.mDeltaX>oldLine.mX) || (line.mX>oldLine.mX && line.mX+line.mDeltaX<oldLine.mX)) {
+								pickOrAddPatch(line.mX-deltaX,line.mY,SNAP_TOLERANCE);
 							}
 						}
 					}
 					if(line.mDeltaY!=0) {
 						if(oldLine.mDeltaX!=0 && deltaX*oldLine.mDeltaX>=0 && Math.abs(deltaX)<Math.abs(oldLine.mDeltaX)) {
-							if((line.mPosY<oldLine.mPosY && line.mPosY+line.mDeltaY>oldLine.mPosY) || (line.mPosY>oldLine.mPosY && line.mPosY+line.mDeltaY<oldLine.mPosY)) {
-								pickOrAddPatch(line.mPosX,line.mPosY-deltaY,SNAP_TOLERANCE);
+							if((line.mY<oldLine.mY && line.mY+line.mDeltaY>oldLine.mY) || (line.mY>oldLine.mY && line.mY+line.mDeltaY<oldLine.mY)) {
+								pickOrAddPatch(line.mX,line.mY-deltaY,SNAP_TOLERANCE);
 							}
 						}
 					}
@@ -202,11 +202,11 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	public void drawDebugOutput(float lineWidth) {
 		for(int i=0;i<mPatchCount;i++) {
 			OrthoStrokePatch patch = mPatches[i];
-			mGraphics.drawRectCentered(patch.mPosX, patch.mPosY, mProperties.mWidth);
+			mGraphics.drawRectCentered(patch.mX, patch.mY, mProperties.mWidth);
 		}
 		for(int i=0;i<mLineCount;i++) {
 			OrthoStrokeLine line = mLines[i];
-			mGraphics.drawLine(line.mPosX, line.mPosY, line.mPosX+line.mDeltaX, line.mPosY+line.mDeltaY, lineWidth);
+			mGraphics.drawLine(line.mX, line.mY, line.mX+line.mDeltaX, line.mY+line.mDeltaY, lineWidth);
 		}
 	}
 	
@@ -249,30 +249,30 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 				vertexBuffer.beginQuad(false);
 				if(line.mDeltaX!=0) {
 					if(line.mDeltaX>0) {
-						mGraphics.putPosition(line.mPosX+w, line.mPosY-lineW);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY-lineW);
-						mGraphics.putPosition(line.mPosX+w, line.mPosY+lineW);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX-w, line.mPosY+lineW);
+						mGraphics.putPosition(line.mX+w, line.mY-lineW);
+						mGraphics.putPosition(line.mX+line.mDeltaX-w, line.mY-lineW);
+						mGraphics.putPosition(line.mX+w, line.mY+lineW);
+						mGraphics.putPosition(line.mX+line.mDeltaX-w, line.mY+lineW);
 						putTexRect(line.mDeltaX, mProperties.mLineTexCoords[1]);
 					}else{
-						mGraphics.putPosition(line.mPosX-w, line.mPosY+lineW);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY+lineW);
-						mGraphics.putPosition(line.mPosX-w, line.mPosY-lineW);
-						mGraphics.putPosition(line.mPosX+line.mDeltaX+w, line.mPosY-lineW);
+						mGraphics.putPosition(line.mX-w, line.mY+lineW);
+						mGraphics.putPosition(line.mX+line.mDeltaX+w, line.mY+lineW);
+						mGraphics.putPosition(line.mX-w, line.mY-lineW);
+						mGraphics.putPosition(line.mX+line.mDeltaX+w, line.mY-lineW);
 						putTexRect(line.mDeltaX, mProperties.mLineTexCoords[3]);
 					}
 				}else {
 					if(line.mDeltaY>0) {
-						mGraphics.putPosition(line.mPosX+lineW, line.mPosY+w);
-						mGraphics.putPosition(line.mPosX+lineW, line.mPosY+line.mDeltaY-w);
-						mGraphics.putPosition(line.mPosX-lineW, line.mPosY+w);
-						mGraphics.putPosition(line.mPosX-lineW, line.mPosY+line.mDeltaY-w);
+						mGraphics.putPosition(line.mX+lineW, line.mY+w);
+						mGraphics.putPosition(line.mX+lineW, line.mY+line.mDeltaY-w);
+						mGraphics.putPosition(line.mX-lineW, line.mY+w);
+						mGraphics.putPosition(line.mX-lineW, line.mY+line.mDeltaY-w);
 						putTexRect(line.mDeltaY, mProperties.mLineTexCoords[0]);
 					}else if(line.mDeltaY<0) {
-						mGraphics.putPosition(line.mPosX-lineW, line.mPosY-w);
-						mGraphics.putPosition(line.mPosX-lineW, line.mPosY+line.mDeltaY+w);
-						mGraphics.putPosition(line.mPosX+lineW, line.mPosY-w);
-						mGraphics.putPosition(line.mPosX+lineW, line.mPosY+line.mDeltaY+w);
+						mGraphics.putPosition(line.mX-lineW, line.mY-w);
+						mGraphics.putPosition(line.mX-lineW, line.mY+line.mDeltaY+w);
+						mGraphics.putPosition(line.mX+lineW, line.mY-w);
+						mGraphics.putPosition(line.mX+lineW, line.mY+line.mDeltaY+w);
 						putTexRect(line.mDeltaY, mProperties.mLineTexCoords[2]);
 					}
 				}
@@ -282,10 +282,10 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 			OrthoStrokePatch patch = mPatches[i];
 			vertexBuffer.beginQuad(false);
 			vertexBuffer.putVec12(DefaultGraphics.ID_POSITIONS,
-					patch.mPosX-w, patch.mPosY-w, mGraphics.mCurrentZ,
-					patch.mPosX+w, patch.mPosY-w, mGraphics.mCurrentZ,
-					patch.mPosX-w, patch.mPosY+w, mGraphics.mCurrentZ,
-					patch.mPosX+w, patch.mPosY+w, mGraphics.mCurrentZ
+					patch.mX-w, patch.mY-w, mGraphics.mCurrentZ,
+					patch.mX+w, patch.mY-w, mGraphics.mCurrentZ,
+					patch.mX-w, patch.mY+w, mGraphics.mCurrentZ,
+					patch.mX+w, patch.mY+w, mGraphics.mCurrentZ
 					);
 			vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mProperties.mTexCoordTable[patch.mInterLines].mAppliedCoordinates);
 		}

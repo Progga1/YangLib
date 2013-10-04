@@ -235,5 +235,11 @@ public class CartoonBone extends JointConnection {
 		mContourY3 = val;
 		mContourY4 = val;
 	}
+
+	public void texCoordsIntoRect(float rectLeft, float rectTop, float rectWidth, float rectHeight) {
+		for(TextureCoordinatesQuad texCoords:mTexCoords) {
+			texCoords.intoRect(rectLeft, rectTop, rectWidth, rectHeight);
+		}
+	}
 	
 }
