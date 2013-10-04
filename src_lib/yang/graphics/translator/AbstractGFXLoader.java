@@ -39,6 +39,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public boolean mEnqueueMode = false;
 	protected int mQueueBytes = 0;
 	public int mMaxQueueLoadingBytes = -1;
+	private Dimensions2i mTempDim = new Dimensions2i();
 	
 	public int mDefaultApproxTextureSize = 256;
 	
@@ -143,11 +144,13 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		}
 	}
 	
-	private Texture loadTexture(String filename,TextureProperties textureProperties,int approxWidth,int approxHeight,boolean alphaMap) {
+	private Texture loadTexture(String filename,TextureProperties textureProperties,boolean alphaMap) {
 		if(mEnqueueMode) {
 			Texture result = new Texture(mGraphics,textureProperties).generate();
-			result.mWidth = approxWidth;
-			result.mHeight = approxHeight;
+			this.getImageDimensions(filename, mTempDim);
+			//mTempDim.set(512, 512);
+			result.mWidth = mTempDim.mWidth;
+			result.mHeight = mTempDim.mHeight;
 			if(alphaMap)
 				result.mIsAlphaMap = true;
 			enqueue(filename,result);
@@ -162,7 +165,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		}
 	}
 	
-	public synchronized Texture getImage(String name,TextureProperties textureProperties,int approxWidth,int approxHeight,boolean alphaMap) {
+	public synchronized Texture getImage(String name,TextureProperties textureProperties,boolean alphaMap) {
 		String filename = createExistingFilename(name);
 		Texture texture = mTextures.get(filename);
 		
@@ -177,19 +180,15 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		if(textureProperties==null)
 			textureProperties = new TextureProperties();
 
-		texture = loadTexture(filename, textureProperties,approxWidth,approxHeight,alphaMap);
+		texture = loadTexture(filename, textureProperties,alphaMap);
 		mTextures.put(filename, texture);
 		mGraphics.rebindTexture(0);
 		
 		return texture;
 	}
 	
-	public synchronized Texture getImage(String name,TextureProperties textureProperties,int approxWidth,int approxHeight) {
-		return getImage(name,textureProperties,approxWidth,approxHeight,false);
-	}
-	
 	public synchronized Texture getImage(String name,TextureProperties textureProperties) {
-		return getImage(name,textureProperties,mDefaultApproxTextureSize,mDefaultApproxTextureSize,false);
+		return getImage(name,textureProperties,false);
 	}
 	
 	public void freeTexture(String name) {
@@ -216,7 +215,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	public Texture getAlphaMap(String name,TextureProperties textureProperties) {
-		return getImage(name,textureProperties,mDefaultApproxTextureSize,mDefaultApproxTextureSize,true);
+		return getImage(name,textureProperties,true);
 	}
 	
 	public Texture getAlphaMap(String name) {

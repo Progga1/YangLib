@@ -27,8 +27,16 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 	protected void getImageDimensions(String filename,Dimensions2i result) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		Bitmap bmp = BitmapFactory.decodeFile(filename);
-		result.set(bmp.getWidth(),bmp.getHeight());
+		AssetManager mgr = mContext.getAssets();
+		InputStream is = null;
+
+		try {
+			is = mgr.open(filename);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		BitmapFactory.decodeStream(is,null,options);
+		result.set(options.outWidth,options.outHeight);
 	}
 	
 	@Override

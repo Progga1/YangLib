@@ -87,6 +87,8 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	}
 	
 	public void texCoordsIntoRect(TextureCoordBounds bounds) {
+		if(bounds==null)
+			return;
 		texCoordsIntoRect(bounds.mValues[0],bounds.mValues[1],bounds.mValues[2],bounds.mValues[3]);
 	}
 	

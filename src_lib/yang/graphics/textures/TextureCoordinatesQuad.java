@@ -233,10 +233,14 @@ public class TextureCoordinatesQuad {
 	}
 	
 	public TextureCoordinatesQuad intoRect(float[] values) {
+		if(values==null)
+			return this;
 		return intoRect(values[0],values[1],values[2],values[3]);
 	}
 	
 	public TextureCoordinatesQuad intoRect(TextureCoordBounds bounds) {
+		if(bounds==null)
+			return this;
 		return intoRect(bounds.mValues);
 	}
 	
