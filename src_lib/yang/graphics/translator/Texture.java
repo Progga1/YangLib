@@ -14,25 +14,25 @@ public class Texture extends AbstractTexture {
 	public int mId;
 	public TextureProperties mProperties;
 	public boolean mIsAlphaMap;
-	public boolean mFreed = false;
 	
-	public Texture(GraphicsTranslator graphics) {
+	protected Texture(GraphicsTranslator graphics) {
 		mGraphics = graphics;
 		mIsAlphaMap = false;
 	}
 	
-	public Texture(GraphicsTranslator graphics,TextureProperties properties) {
+	protected Texture(GraphicsTranslator graphics,TextureProperties properties) {
 		this(graphics);
 		mProperties = properties;
 	}
 	
-	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties properties) {
-		this(graphics);
-		initCompletely(source, width, height, properties);
-	}
+//	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties properties) {
+//		this(graphics);
+//		initCompletely(source, width, height, properties);
+//	}
 	
 	public Texture generate() {
 		mId = mGraphics.genTexture();
+		mStatus = STATUS_GENERATED;
 		return this;
 	}
 
@@ -61,7 +61,7 @@ public class Texture extends AbstractTexture {
 	}
 
 	public void free() {
-		mFreed = true;
+		mStatus = STATUS_FREED;
 		mGraphics.deleteTexture(mId);
 	}
 
@@ -97,15 +97,15 @@ public class Texture extends AbstractTexture {
 	}
 	
 	@Override
-	public Texture finish() {
+	public void finish() {
+		super.finish();
 		if(mProperties.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mProperties.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
 			mGraphics.generateMipMap();
 		}
-		return this;
 	}
 	
 	public void finalize() {
-		assert mFreed:"Texture garbage collected, but still in video memory";
+		assert (mStatus>=STATUS_GENERATED && mStatus<STATUS_FREED):"Texture garbage collected, but still in video memory";
 	}
 
 	public int getByteCount() {

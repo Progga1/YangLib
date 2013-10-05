@@ -42,13 +42,5 @@ public class SubTexture extends AbstractTexture {
 	public void updateRect(int x, int y, int width, int height, ByteBuffer data) {
 		mTexture.updateRect(x+mLeft, y+mTop, width,height, data);
 	}
-
-	@Override
-	public Texture finish() {
-		refreshBoundaries();
-		return mTexture.finish();
-	}
-
-	
 	
 }

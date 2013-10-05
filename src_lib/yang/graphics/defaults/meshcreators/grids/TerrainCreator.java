@@ -91,7 +91,7 @@ public class TerrainCreator extends Grid3DCreator {
 	
 	public Texture createCoastTexture(float[][] heightValues, float waterLevel, KernelFunction kernel, TextureProperties textureSettings,float zeroWeight,float factor) {
 		float[][] coast = createCoastArray(heightValues,waterLevel,kernel,zeroWeight,factor);
-		return mTranslator.createTexture(TextureCreator.createGrayScaleTexture(coast,4), textureSettings);
+		return mTranslator.createAndInitTexture(TextureCreator.createGrayScaleTexture(coast,4), textureSettings);
 	}
 	
 }

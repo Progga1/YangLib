@@ -14,7 +14,9 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.math.objects.Dimensions2i;
+import yang.model.Pair;
 import yang.systemdependent.AbstractResourceManager;
+import yang.util.NonConcurrentList;
 
 
 
@@ -29,6 +31,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 	
 	public HashMap<String, Texture> mTextures;
+	protected NonConcurrentList<Pair<String, SubTexture>> mSubTextures;
 	protected HashMap<String, String> mShaders;
 	protected HashMap<String, YangMaterialSet> mMaterials;
 	protected GraphicsTranslator mGraphics;
@@ -51,6 +54,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		mTexQueue = new String[MAX_TEXTURES];
 		mTexQueueId = 0;
 		mTextures = new HashMap<String, Texture>();
+		mSubTextures = new NonConcurrentList<Pair<String, SubTexture>>();
 		mShaders = new HashMap<String, String>();
 		mMaterials = new HashMap<String, YangMaterialSet>();
 		mGraphics = graphics;
@@ -138,14 +142,13 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 				System.err.println("Image not found: "+texKey);
 			if(tex.mIsAlphaMap)
 				data.redToAlpha();
-			tex.generate();
 			tex.update(data);
 		}
 	}
 	
 	private Texture loadTexture(String filename,TextureProperties textureProperties,boolean alphaMap) {
 		if(mEnqueueMode) {
-			Texture result = new Texture(mGraphics,textureProperties).generate();
+			Texture result = mGraphics.createTexture(textureProperties).generate();
 			this.getImageDimensions(filename, mTempDim);
 			//mTempDim.set(512, 512);
 			result.mWidth = mTempDim.mWidth;
@@ -158,9 +161,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			TextureData data = derivedLoadImageData(filename,alphaMap);
 			if(alphaMap)
 				data.redToAlpha();
-			Texture result = mGraphics.createTexture(data,textureProperties);
+			Texture result = mGraphics.createAndInitTexture(data,textureProperties);
 			result.mIsAlphaMap = alphaMap;
-			return result.finish();
+			result.finish();
+			return result;
 		}
 	}
 	
@@ -233,7 +237,6 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		TextureAtlas result = new TextureAtlas();
 		result.init(width,height,properties);
 		return result;
-		
 	}
 
 	public String getShader(String name) {
@@ -252,6 +255,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			entry.getValue().free();
 		}
 		mTextures.clear();
+		mSubTextures.clear();
 		mQueueBytes = 0;
 	}
 
@@ -292,6 +296,20 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
 			enqueue(entry.getKey(),entry.getValue());
 		}
+	}
+	
+	public String filenamesToString() {
+		StringBuilder result = new StringBuilder(320);
+		for(String key:mTextures.keySet()) {
+			result.append(key+"\n");
+		}
+		if(!mSubTextures.isEmpty()) {
+			result.append("\nSUB TEXTURES:\n");
+			for(Pair<String,SubTexture> pair:mSubTextures) {
+				result.append(pair.mFirst+"\n");
+			}
+		}
+		return result.toString();
 	}
 	
 }

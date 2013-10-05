@@ -99,6 +99,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
 	private NonConcurrentList<TextureRenderTarget> mRenderTargets;
+	private NonConcurrentList<Texture> mRegisteredTextures;
 	private NonConcurrentList<AbstractProgram> mPrograms;
 	private ShortBuffer mWireFrameIndexBuffer;
 	private int mMaxFPS;
@@ -199,6 +200,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mNoTexture = new Texture(this);
 		mScreenListeners = new NonConcurrentList<SurfaceListener>();
 		mRenderTargets = new NonConcurrentList<TextureRenderTarget>();
+		mRegisteredTextures = new NonConcurrentList<Texture>();
 		setMaxFPS(0);
 	}
 	
@@ -220,9 +222,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(int i=0;i<BYTES;i++)
 			buf.put((byte)255);
 		if(mWhiteTexture==null)
-			mWhiteTexture = createTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
+			mWhiteTexture = createAndInitTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
 		else{
-			mWhiteTexture.generate();
 			mWhiteTexture.update(buf);
 		}
 		buf = ByteBuffer.allocateDirect(BYTES);
@@ -232,9 +233,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			else
 				buf.put((byte)0);
 		if(mBlackTexture==null)
-			mBlackTexture = createTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
+			mBlackTexture = createAndInitTexture(buf, DIM,DIM, new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST));
 		else{
-			mBlackTexture.generate();
 			mBlackTexture.update(buf);
 		}
 		assert checkErrorInst("Create def textures");
@@ -254,13 +254,15 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public void restart() {
-		start();
 		for(AbstractProgram program:mPrograms) {
 			program.restart();
 		}
+		for(Texture texture:mRegisteredTextures) {
+			texture.generate();
+			texture.resetData();
+		}
+		start();
 		for(TextureRenderTarget renderTarget:mRenderTargets) {
-			renderTarget.mTargetTexture.generate();
-			renderTarget.mTargetTexture.setEmpty();
 			derivedCreateRenderTarget(renderTarget.mTargetTexture);
 		}
 		mRestartCount++;
@@ -412,7 +414,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public Texture createSingleColorTexture(int width,int height,TextureProperties texProperties,FloatColor fillColor) {
-		Texture texture = new Texture(this);
+		Texture texture = createTexture();
 		if(fillColor==null) {
 			texture.initCompletely(null, width, height, texProperties);
 		}else{
@@ -423,7 +425,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 	
 	public Texture createEmptyTexture(int width,int height,TextureProperties texProperties) {
-		Texture texture = new Texture(this);
+		Texture texture = createTexture();
 		texture.initCompletely(null, width,height, texProperties);
 		return texture;
 	}
@@ -432,19 +434,35 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return createSingleColorTexture(2,2,new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST),color);
 	}
 	
-	public Texture createTexture() {
-		return new Texture(this);
+	public void registerTexture(Texture texture) {
+		if(!mRegisteredTextures.contains(texture))
+			mRegisteredTextures.add(texture);
 	}
 	
-	public Texture createTexture(ByteBuffer source, int width, int height, TextureProperties settings) {
-		source.rewind();
-		Texture result = new Texture(this,source,width,height,settings);
+	public void unregisterTexture(Texture texture) {
+		mRegisteredTextures.remove(texture);
+	}
+	
+	public Texture createTexture(TextureProperties properties) {
+		Texture result = new Texture(this,properties);
+		registerTexture(result);
 		return result;
 	}
 	
-	public Texture createTexture(TextureData textureData, TextureProperties settings) {
-		settings.mChannels = textureData.mChannels;
-		return createTexture(textureData.mData,textureData.mWidth,textureData.mHeight,settings);
+	public Texture createTexture() {
+		return createTexture(null);
+	}
+	
+	public Texture createAndInitTexture(ByteBuffer source, int width, int height, TextureProperties settings) {
+		source.rewind();
+		Texture result = createTexture();
+		result.initCompletely(source,width,height,settings);
+		return result;
+	}
+	
+	public Texture createAndInitTexture(TextureData textureData, TextureProperties properties) {
+		properties.mChannels = textureData.mChannels;
+		return createAndInitTexture(textureData.mData,textureData.mWidth,textureData.mHeight,properties);
 	}
 	
 	public void setDrawListener(DrawListener drawListener) {
