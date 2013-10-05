@@ -1,7 +1,9 @@
 package yang.graphics.textures;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.enums.TextureWrap;
 
 public class TextureData {
@@ -187,7 +189,7 @@ public class TextureData {
 			}
 		}
 
-		return new TextureCoordBounds().initBiased(left, top, width, height, mWidth, mHeight, 0);
+		return new TextureCoordBounds().setBiased(left, top, width, height, mWidth, mHeight, 0);
 	}
 	
 	public TextureCoordBounds createBiasBorder(int left,int top,int width,int height, int border, TextureWrap wrapX,TextureWrap wrapY) {
@@ -209,6 +211,17 @@ public class TextureData {
 	
 	public TextureCoordBounds copyWithRepeatMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale) {
 		return copyWithMargin(left,top,destWidth,destHeight,source,downScale,TextureWrap.REPEAT,TextureWrap.REPEAT);
+	}
+
+	public static ByteBuffer createSingleColorBuffer(int width,int height,TextureProperties texProperties,FloatColor color) {
+		int channels = texProperties.mChannels;
+		int bytes = width*height;
+		ByteBuffer buf = ByteBuffer.allocateDirect(bytes*channels).order(ByteOrder.nativeOrder());
+		for(int i=0;i<bytes;i++) {
+			for(int j=0;j<channels;j++)
+				buf.put((byte)(color.mValues[j]*255));
+		}
+		return buf;
 	}
 	
 }

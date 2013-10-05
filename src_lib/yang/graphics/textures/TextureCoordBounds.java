@@ -19,10 +19,15 @@ public class TextureCoordBounds extends Quadruple{
 		this(rectLeft/texture.mWidth,rectTop/texture.mHeight,rectWidth/texture.mWidth,rectHeight/texture.mHeight);
 	}
 	
-	public TextureCoordBounds initBiased(int left,int top,int width,int height,int texWidth,int texHeight, float bias) {
+	public TextureCoordBounds setBiased(int left,int top,int width,int height,int texWidth,int texHeight, float bias) {
 		set((float)(left+bias)/texWidth,(float)(top+bias)/texHeight,(float)(width-bias*2)/texWidth,(float)(height-bias*2)/texHeight);
 		return this;
 	}
+	
+	public void set(Texture texture, float rectLeft,float rectTop,float rectWidth,float rectHeight) {
+		set(rectLeft/texture.mWidth,rectTop/texture.mHeight,rectWidth/texture.mWidth,rectHeight/texture.mHeight);
+	}
+	
 
 	public float getWidth() {
 		return mValues[2];

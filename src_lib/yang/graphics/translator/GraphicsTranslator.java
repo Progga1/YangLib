@@ -416,14 +416,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(fillColor==null) {
 			texture.initCompletely(null, width, height, texProperties);
 		}else{
-			int channels = texProperties.mChannels;
-			int bytes = width*height;
-			ByteBuffer buf = ByteBuffer.allocateDirect(bytes*channels).order(ByteOrder.nativeOrder());
-			for(int i=0;i<bytes;i++) {
-				for(int j=0;j<channels;j++)
-					buf.put((byte)(fillColor.mValues[j]*255));
-			}
-			texture.initCompletely(buf, width, height, texProperties);
+			texture.initCompletely(TextureData.createSingleColorBuffer(width,height,texProperties,fillColor), width, height, texProperties);
 		}
 
 		return texture;

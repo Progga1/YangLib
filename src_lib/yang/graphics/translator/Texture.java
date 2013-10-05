@@ -3,17 +3,14 @@ package yang.graphics.translator;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 
-
-
-public class Texture {
+public class Texture extends AbstractTexture {
 
 	protected GraphicsTranslator mGraphics;
-	public int mWidth;
-	public int mHeight;
 	public int mId;
 	public TextureProperties mProperties;
 	public boolean mIsAlphaMap;
@@ -22,7 +19,6 @@ public class Texture {
 	public Texture(GraphicsTranslator graphics) {
 		mGraphics = graphics;
 		mIsAlphaMap = false;
-		
 	}
 	
 	public Texture(GraphicsTranslator graphics,TextureProperties properties) {
@@ -56,18 +52,6 @@ public class Texture {
 			finish();
 	}
 	
-//	public void updateRegion(ByteBuffer source, int left,int top, int width,int height) {
-//		mGraphics.updateTexture(this, source, left,top, width,height);
-//	}
-
-	public int getWidth() {
-		return mWidth;
-	}
-
-	public int getHeight() {
-		return mHeight;
-	}
-	
 	public int getId() {
 		return mId;
 	}
@@ -80,14 +64,8 @@ public class Texture {
 		mFreed = true;
 		mGraphics.deleteTexture(mId);
 	}
-	
-//	public void update(ByteBuffer source) {
-//		mGraphics.deleteTexture(mId);
-//		if(source!=null)
-//			source.rewind();
-//		mGraphics.initTexture(this, source, mSettings);
-//	}
 
+	@Override
 	public void update(ByteBuffer source,int width,int height) {
 		if(source!=null)
 			source.rewind();
@@ -96,14 +74,6 @@ public class Texture {
 		mHeight = height;
 		if(source!=null)
 			finish();
-	}
-	
-	public void update(ByteBuffer source) {
-		update(source,mWidth,mHeight);
-	}
-	
-	public void update(TextureData data) {
-		update(data.mData, data.mWidth,data.mHeight);
 	}
 	
 	/**
@@ -122,20 +92,11 @@ public class Texture {
 		assert mGraphics.checkErrorInst("Update rect");
 	}
 	
-	/**
-	 * No mipmaps are generated
-	 * @param x
-	 * @param y
-	 * @param data
-	 */
-	public void updateRect(int x, int y, TextureData data) {
-		updateRect(x,y,data.mWidth,data.mHeight,data.mData);
+	public void fillWithColor(FloatColor color) {
+		this.update(TextureData.createSingleColorBuffer(mWidth,mHeight, mProperties, color));
 	}
 	
-	public void setEmpty() {
-		update(null,mWidth,mHeight);
-	}
-	
+	@Override
 	public Texture finish() {
 		if(mProperties.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mProperties.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
 			mGraphics.generateMipMap();
@@ -144,7 +105,7 @@ public class Texture {
 	}
 	
 	public void finalize() {
-		assert mFreed;
+		assert mFreed:"Texture garbage collected, but still in video memory";
 	}
 
 	public int getByteCount() {

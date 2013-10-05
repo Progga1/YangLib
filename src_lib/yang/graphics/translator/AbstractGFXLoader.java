@@ -14,7 +14,6 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.math.objects.Dimensions2i;
-import yang.model.DebugYang;
 import yang.systemdependent.AbstractResourceManager;
 
 
@@ -229,6 +228,13 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public Texture getAlphaMap(String name, TextureWrap wrapX, TextureWrap wrapY, TextureFilter textureFilter) {
 		return getAlphaMap(name,new TextureProperties(wrapX,wrapY,textureFilter));
 	}
+	
+	public TextureAtlas createTextureAtlas(int width,int height,TextureProperties properties) {
+		TextureAtlas result = new TextureAtlas();
+		result.init(width,height,properties);
+		return result;
+		
+	}
 
 	public String getShader(String name) {
 		String shader = mShaders.get(name);
@@ -258,8 +264,6 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		BitmapFont result = new BitmapFont();
 		return result.init(texture,fontDataFilename,mResources);
 	}
-
-
 	
 	public void deleteTextures() {
 		for(Entry<String,Texture> entry:mTextures.entrySet()) {
@@ -277,18 +281,6 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		else
 			mMaxQueueLoadingBytes = mQueueBytes/steps;
 	}
-	
-	//TODO handling same filenames with different texture settings
-//	public void reloadTextures() {
-//		for(Entry<String,Texture> entry:mTextures.entrySet()) {
-//			TextureData data = loadImageData(entry.getKey());
-//			Texture tex = entry.getValue();
-//			if(tex.mIsAlphaMap)
-//				data.redToAlpha();
-//			tex.update(data.mData);
-//			data = null;
-//		}
-//	}
 	
 	public void clearQueue() {
 		mQueueBytes = 0;
