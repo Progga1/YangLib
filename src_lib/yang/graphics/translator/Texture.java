@@ -13,7 +13,7 @@ public class Texture extends AbstractTexture {
 	public static final int STATUS_UNINITIALIZED = 0;
 	public static final int STATUS_GENERATED = 1;
 	public static final int STATUS_FINISHED = 2;
-	public static final int STATUS_FREED = 3;
+	public static final int STATUS_FREE = 3;
 	
 	protected GraphicsTranslator mGraphics;
 	public int mId;
@@ -66,7 +66,7 @@ public class Texture extends AbstractTexture {
 	}
 
 	public void free() {
-		mStatus = STATUS_FREED;
+		mStatus = STATUS_FREE;
 		mGraphics.deleteTexture(mId);
 	}
 
@@ -112,7 +112,7 @@ public class Texture extends AbstractTexture {
 	}
 	
 	public void finalize() {
-		assert (mStatus>=STATUS_GENERATED && mStatus<STATUS_FREED):"Texture garbage collected, but still in video memory";
+		assert (mStatus>=STATUS_GENERATED && mStatus<STATUS_FREE):"Texture garbage collected, but still in video memory";
 	}
 
 	@Override
@@ -127,7 +127,22 @@ public class Texture extends AbstractTexture {
 
 	@Override
 	public boolean isFreed() {
-		return mStatus==STATUS_FREED;
+		return mStatus==STATUS_FREE;
+	}
+	
+	public String statusToString() {
+		switch(mStatus) {
+		case STATUS_UNINITIALIZED: return "Uninitialized";
+		case STATUS_GENERATED: return "Generated";
+		case STATUS_FINISHED: return "Finished";
+		case STATUS_FREE: return "Free";
+		default: return "<undefined>";
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return "STATUS="+statusToString()+", PROPS=("+mProperties.toString()+"), ALPHAMAP="+mIsAlphaMap;
 	}
 	
 }

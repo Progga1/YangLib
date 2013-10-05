@@ -174,29 +174,21 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public synchronized Texture getImage(String name,TextureProperties textureProperties,boolean alphaMap) {
 		String filename = createExistingFilename(name);
 		NonConcurrentList<Texture> texList = mTextures.get(filename);
-		Texture texture;
-		if(texList==null)
-			texture = null;
-		else
-			texture = texList.get(0);
-		
-		if (texture != null) {
-			if((textureProperties==null || texture.mProperties.equals(textureProperties)))
-				return texture;
-			else{
-				System.out.println("double loaded texture: "+filename+" "+textureProperties+" != "+texture.mProperties);
-				//DebugYang.showStackTrace();
-			}
-		}
-		if(textureProperties==null)
-			textureProperties = new TextureProperties();
-
-		texture = loadTexture(filename, textureProperties,alphaMap);
-		texList = mTextures.get(filename);
 		if(texList==null) {
 			texList = new NonConcurrentList<Texture>();
 			mTextures.put(filename, texList);
 		}
+		
+		for(Texture tex:texList) {
+			if((textureProperties==null || tex.mProperties.equals(textureProperties)) && alphaMap==tex.mIsAlphaMap) {
+				return tex;
+			}
+		}
+		
+		if(textureProperties==null)
+			textureProperties = new TextureProperties();
+
+		Texture texture = loadTexture(filename, textureProperties,alphaMap);
 		texList.add(texture);
 		mGraphics.rebindTexture(0);
 		
@@ -315,10 +307,18 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		}
 	}
 	
-	public String filenamesToString() {
+	public String texturesToString() {
 		StringBuilder result = new StringBuilder(320);
-		for(String key:mTextures.keySet()) {
-			result.append(key+"\n");
+		for(Entry<String,NonConcurrentList<Texture>> entry:mTextures.entrySet()) {
+			result.append(entry.getKey()+": ");
+			boolean fst = true;
+			for(Texture tex:entry.getValue()) {
+				if(!fst)
+					result.append("; ");
+				result.append(tex.toString());
+				fst = false;
+			}
+			result.append("\n");
 		}
 		if(!mSubTextures.isEmpty()) {
 			result.append("\nSUB TEXTURES:\n");
@@ -327,6 +327,11 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			}
 		}
 		return result.toString();
+	}
+	
+	@Override
+	public String toString() {
+		return texturesToString();
 	}
 	
 }
