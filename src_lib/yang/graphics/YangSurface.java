@@ -528,13 +528,6 @@ public abstract class YangSurface implements EventQueueHolder {
 	/**
 	 * Non-GL-Thread!
 	 */
-	public void destroy() {
-		mGraphics.mGFXLoader.deleteTextures();
-	}
-
-	/**
-	 * Non-GL-Thread!
-	 */
 	public void resume() {
 //		if(mUpdateThread!=null && mUpdateThread.isAlive())
 //			synchronized (mUpdateThread) {

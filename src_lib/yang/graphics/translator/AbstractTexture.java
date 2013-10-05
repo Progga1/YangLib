@@ -2,23 +2,19 @@ package yang.graphics.translator;
 
 import java.nio.ByteBuffer;
 
-import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureData;
 
 public abstract class AbstractTexture {
-
-	public static final int STATUS_UNINITIALIZED = 0;
-	public static final int STATUS_INITIALIZED = 1;
-	public static final int STATUS_GENERATED = 2;
-	public static final int STATUS_FINISHED = 3;
-	public static final int STATUS_FREED = 4;
 	
 	public int mWidth;
 	public int mHeight;
-	public int mStatus = STATUS_UNINITIALIZED;
+	public boolean mIsAlphaMap = false;
 	
 	public abstract void update(ByteBuffer source,int width,int height);
 	public abstract void updateRect(int x, int y, int width, int height, ByteBuffer data);
+	public abstract int getChannels();
+	public abstract boolean isFinished();
+	public abstract boolean isFreed();
 	
 	public void update(ByteBuffer source) {
 		update(source,mWidth,mHeight);
@@ -40,8 +36,6 @@ public abstract class AbstractTexture {
 	
 	public void resetData() {
 		update(null,mWidth,mHeight);
-		if(mStatus>STATUS_GENERATED)
-			mStatus = STATUS_GENERATED;
 	}
 	
 	public int getWidth() {
@@ -52,9 +46,8 @@ public abstract class AbstractTexture {
 		return mHeight;
 	}
 	
-	public void finish() {
-		if(mStatus<STATUS_FINISHED)
-			mStatus = STATUS_FINISHED;
+	public int getByteCount() {
+		return mWidth*mHeight*getChannels();
 	}
 	
 }

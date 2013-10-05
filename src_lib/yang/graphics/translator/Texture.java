@@ -10,10 +10,15 @@ import yang.graphics.textures.enums.TextureFilter;
 
 public class Texture extends AbstractTexture {
 
+	public static final int STATUS_UNINITIALIZED = 0;
+	public static final int STATUS_GENERATED = 1;
+	public static final int STATUS_FINISHED = 2;
+	public static final int STATUS_FREED = 3;
+	
 	protected GraphicsTranslator mGraphics;
 	public int mId;
 	public TextureProperties mProperties;
-	public boolean mIsAlphaMap;
+	public int mStatus = STATUS_UNINITIALIZED;
 	
 	protected Texture(GraphicsTranslator graphics) {
 		mGraphics = graphics;
@@ -74,6 +79,8 @@ public class Texture extends AbstractTexture {
 		mHeight = height;
 		if(source!=null)
 			finish();
+		else
+			mStatus = STATUS_GENERATED;
 	}
 	
 	/**
@@ -96,20 +103,31 @@ public class Texture extends AbstractTexture {
 		this.update(TextureData.createSingleColorBuffer(mWidth,mHeight, mProperties, color));
 	}
 	
-	@Override
 	public void finish() {
-		super.finish();
 		if(mProperties.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mProperties.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
 			mGraphics.generateMipMap();
 		}
+		if(mStatus<STATUS_FINISHED)
+			mStatus = STATUS_FINISHED;
 	}
 	
 	public void finalize() {
 		assert (mStatus>=STATUS_GENERATED && mStatus<STATUS_FREED):"Texture garbage collected, but still in video memory";
 	}
 
-	public int getByteCount() {
-		return mWidth*mHeight*mProperties.mChannels;
+	@Override
+	public int getChannels() {
+		return mProperties.mChannels;
+	}
+
+	@Override
+	public boolean isFinished() {
+		return mStatus==STATUS_FINISHED;
+	}
+
+	@Override
+	public boolean isFreed() {
+		return mStatus==STATUS_FREED;
 	}
 	
 }
