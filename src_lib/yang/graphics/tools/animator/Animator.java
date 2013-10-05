@@ -13,6 +13,7 @@ import yang.graphics.skeletons.animations.AnimationPlayer;
 import yang.graphics.skeletons.animations.AnimationSystem;
 import yang.graphics.skeletons.animations.KeyFrame;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.Texture;
 import yang.graphics.util.Camera2D;
 import yang.model.Rect;
 import yang.physics.massaggregation.elements.Joint;
@@ -25,12 +26,14 @@ public class Animator implements YangEventListener {
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
 	protected CartoonSkeleton2D mCurSkeleton;
+	protected Texture mCurTexture;
 	protected SkeletonCarrier mCurCarrier;
 	@SuppressWarnings("rawtypes")
 	public AnimationPlayer mCurAnimationPlayer;
 	private Camera2D mCamera;
 	private SkeletonEditing mSkeletonEditing;
 	public NonConcurrentList<CartoonSkeleton2D> mSkeletons;
+	public NonConcurrentList<Texture> mTextures;
 	public NonConcurrentList<AnimationSystem<?,?>> mAnimationSystems;
 	public NonConcurrentList<AnimationPlayer<?>> mAnimationPlayers;
 	public AnimationSystem<?,?> mCurAnimationSystem;
@@ -60,8 +63,10 @@ public class Animator implements YangEventListener {
 		mCamera = new Camera2D();
 		mCamera.mAdaption = 0.2f;
 		mSkeletons = new NonConcurrentList<CartoonSkeleton2D>();
+		mTextures = new NonConcurrentList<Texture>();
 		mAnimationPlayers = new NonConcurrentList<AnimationPlayer<?>>();
 		mSkeletonIndex = -1;
+		mCurTexture = null;
 		mSkeletonEditing = new SkeletonEditing();
 		CartoonSkeleton2D.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
 		mAnimationSystems = new NonConcurrentList<AnimationSystem<?,?>>();
@@ -84,6 +89,10 @@ public class Animator implements YangEventListener {
 	}
 	
 	public void draw() {
+		while(mTextures.size()<mSkeletons.size()) {
+			mTextures.add(mSkeletons.get(mTextures.size()).getDefaultTexture(mGraphics.mGFXLoader));
+		}
+		
 		float gray = 0.1f;
 		mGraphics.clear(gray, gray, gray);
 		mGraphics2D.switchGameCoordinates(true);
@@ -101,6 +110,7 @@ public class Animator implements YangEventListener {
 		
 		if(mCurSkeleton!=null) {
 			mCurSkeleton.refreshVisualData();
+			mGraphics.bindTexture(mTextures.get(mSkeletonIndex));
 			mCurSkeleton.draw();
 			if(mDrawSkeleton) {
 				//mCurSkeleton.mCarrier.drawCollision();
@@ -158,6 +168,10 @@ public class Animator implements YangEventListener {
 		if(mSkeletons.size()==1) {
 			selectSkeleton(0);
 		}
+	}
+	
+	public void addSkeleton(CartoonSkeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
+		addSkeleton(skeleton,animationSystem,null);
 	}
 	
 	public void addSkeleton(Class<? extends CartoonSkeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {

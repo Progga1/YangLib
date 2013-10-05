@@ -4,7 +4,9 @@ import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordBounds;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.Skeleton2D;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
@@ -348,4 +350,9 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			k++;
 		}
 	}
+	
+	public Texture getDefaultTexture(AbstractGFXLoader gfxLoader) {
+		return null;
+	}
+	
 }

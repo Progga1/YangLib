@@ -2,6 +2,7 @@ package yang.physics.massaggregation;
 
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.SkeletonEditing;
+import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.elements.Joint;

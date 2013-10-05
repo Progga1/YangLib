@@ -4,6 +4,8 @@ import yang.graphics.skeletons.CartoonBone;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
 import yang.graphics.skeletons.pose.Posture;
+import yang.graphics.translator.AbstractGFXLoader;
+import yang.graphics.translator.Texture;
 import yang.model.Rect;
 import yang.physics.massaggregation.constraints.Constraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
