@@ -105,6 +105,7 @@ public class Texture extends AbstractTexture {
 	
 	public void finish() {
 		if(mProperties.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mProperties.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
+			mGraphics.bindTexture(this);
 			mGraphics.generateMipMap();
 		}
 		if(mStatus<STATUS_FINISHED)
@@ -122,7 +123,7 @@ public class Texture extends AbstractTexture {
 
 	@Override
 	public boolean isFinished() {
-		return mStatus==STATUS_FINISHED;
+		return mStatus>=STATUS_FINISHED;
 	}
 
 	@Override

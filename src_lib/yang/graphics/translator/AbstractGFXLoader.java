@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
-import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
@@ -22,6 +21,20 @@ import yang.util.NonConcurrentList;
 
 public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
+	private class ResourceEntry {
+		
+		public NonConcurrentList<Texture> mTextures = new NonConcurrentList<Texture>();
+		public NonConcurrentList<SubTexture> mSubTextures = new NonConcurrentList<SubTexture>();
+		
+		public void clear() {
+			for(Texture tex:mTextures)
+				tex.free();
+			mTextures.clear();
+			mSubTextures.clear();
+		}
+		
+	}
+	
 	public static int MAX_TEXTURES = 512;
 	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg"};
 	public static final String SHADER_EXT	= ".txt";
@@ -30,10 +43,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	protected String[] IMAGE_PATH		= new String[]{"","textures"+File.separatorChar,"models"+File.separatorChar};
 	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 	
-	public HashMap<String, NonConcurrentList<Texture>> mTextures;
-	protected NonConcurrentList<Pair<String, SubTexture>> mSubTextures;
+	public HashMap<String, ResourceEntry> mTextures;
 	protected HashMap<String, String> mShaders;
 	protected HashMap<String, YangMaterialSet> mMaterials;
+	protected NonConcurrentList<Texture> mAtlasses;
 	protected GraphicsTranslator mGraphics;
 	
 	public String[] mTexKeyQueue;
@@ -55,10 +68,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		mTexKeyQueue = new String[MAX_TEXTURES];
 		mTexQueue = new AbstractTexture[MAX_TEXTURES];
 		mTexQueueId = 0;
-		mTextures = new HashMap<String, NonConcurrentList<Texture>>();
-		mSubTextures = new NonConcurrentList<Pair<String, SubTexture>>();
+		mTextures = new HashMap<String, ResourceEntry>();
 		mShaders = new HashMap<String, String>();
 		mMaterials = new HashMap<String, YangMaterialSet>();
+		mAtlasses = new NonConcurrentList<Texture>();
 		mGraphics = graphics;
 		mResources = resources;
 	}
@@ -114,13 +127,28 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return loadImageData(name,false);
 	}
 	
-	public TextureCoordBounds loadIntoTexture(Texture target,String filename,int x,int y) {
-		TextureData imageData = loadImageData(filename,target.mProperties.mChannels>3);
-		target.updateRect(x,y,imageData);
-		return new TextureCoordBounds(target, x,y,imageData.mWidth,imageData.mHeight);
+	public SubTexture loadIntoTexture(Texture target,String name,int x,int y) {
+		SubTexture result = new SubTexture(target);
+		result.setPosition(x,y);
+		String filename = createExistingFilename(name);
+		ResourceEntry resource = mTextures.get(filename);
+		if(resource==null) {
+			resource = new ResourceEntry();
+			mTextures.put(filename, resource);
+		}
+		if(mEnqueueMode) {
+			getImageDimensions(filename, mTempDim);
+			result.setExtents(mTempDim.mWidth,mTempDim.mHeight);
+			enqueue(filename,result);
+		}else{
+			TextureData imageData = loadImageData(filename,target.mProperties.mChannels>3);
+			result.update(imageData);
+		}
+		resource.mSubTextures.add(result);
+		return result;
 	}
 
-	private void enqueue(String key,Texture tex) {
+	private void enqueue(String key,AbstractTexture tex) {
 		mTexQueue[mTexQueueId] = tex;
 		mTexKeyQueue[mTexQueueId++] = key;
 		mQueueBytes += tex.getByteCount();
@@ -140,12 +168,20 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		int minBytes = mMaxQueueLoadingBytes>0?mQueueBytes - mMaxQueueLoadingBytes:-1;
 		while(mQueueBytes>minBytes && (texKey=pollQueue())!=null) {
 			AbstractTexture tex = mTexQueue[mTexQueueId];
+			if(tex.isFinished())
+				continue;
 			TextureData data = loadImageData(texKey,tex.getChannels()>3);
 			if(data==null)
 				System.err.println("Image not found: "+texKey);
 			if(tex.mIsAlphaMap)
 				data.redToAlpha();
 			tex.update(data);
+		}
+	}
+	
+	public void finishLoading() {
+		for(Texture atlas:mAtlasses) {
+			atlas.finish();
 		}
 	}
 	
@@ -173,13 +209,13 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public synchronized Texture getImage(String name,TextureProperties textureProperties,boolean alphaMap) {
 		String filename = createExistingFilename(name);
-		NonConcurrentList<Texture> texList = mTextures.get(filename);
-		if(texList==null) {
-			texList = new NonConcurrentList<Texture>();
-			mTextures.put(filename, texList);
+		ResourceEntry entry = mTextures.get(filename);
+		if(entry==null) {
+			entry = new ResourceEntry();
+			mTextures.put(filename, entry);
 		}
 		
-		for(Texture tex:texList) {
+		for(Texture tex:entry.mTextures) {
 			if((textureProperties==null || tex.mProperties.equals(textureProperties)) && alphaMap==tex.mIsAlphaMap) {
 				return tex;
 			}
@@ -189,7 +225,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			textureProperties = new TextureProperties();
 
 		Texture texture = loadTexture(filename, textureProperties,alphaMap);
-		texList.add(texture);
+		entry.mTextures.add(texture);
 		mGraphics.rebindTexture(0);
 		
 		return texture;
@@ -201,10 +237,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public void freeTexture(String name) {
 		String filename = createExistingFilename(name);
-		NonConcurrentList<Texture> texList = mTextures.get(filename);
-		if(texList==null)
+		ResourceEntry entry = mTextures.get(filename);
+		if(entry==null)
 			return;
-		for(Texture tex:texList) {
+		for(Texture tex:entry.mTextures) {
 			if(tex!=null)
 				tex.free();
 		}
@@ -220,9 +256,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 	
 	public Texture getImage(String name) {
-		NonConcurrentList<Texture> texList = mTextures.get(name);
-		if (texList != null)
-			return texList.get(0);
+		ResourceEntry entry = mTextures.get(name);
+		if (entry != null)
+			return entry.mTextures.get(0);
 		else
 			return getImage(name,new TextureProperties());
 	}
@@ -243,9 +279,15 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return getAlphaMap(name,new TextureProperties(wrapX,wrapY,textureFilter));
 	}
 	
-	public TextureAtlas createTextureAtlas(int width,int height,TextureProperties properties) {
-		TextureAtlas result = new TextureAtlas();
-		result.init(width,height,properties);
+//	public Texture createTextureAtlas(int width,int height,TextureProperties properties) {
+//		TextureAtlas result = new TextureAtlas();
+//		result.init(width,height,properties);
+//		return result;
+//	}
+	
+	public Texture createTextureAtlas(int width,int height,TextureProperties properties) {
+		Texture result = mGraphics.createEmptyTexture(width, height, properties);
+		mAtlasses.add(result);
 		return result;
 	}
 
@@ -261,13 +303,14 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 
 	public void clear() {
-		for(Entry<String,NonConcurrentList<Texture>> entry:mTextures.entrySet()) {
-			for(Texture tex:entry.getValue())
-				tex.free();
+		for(Entry<String,ResourceEntry> entry:mTextures.entrySet()) {
 			entry.getValue().clear();
 		}
+		for(Texture atlas:mAtlasses) {
+			atlas.free();
+		}
 		mTextures.clear();
-		mSubTextures.clear();
+		mAtlasses.clear();
 		mQueueBytes = 0;
 	}
 
@@ -299,8 +342,12 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	public void reenqueueTextures() {
 		clearQueue();
-		for(Entry<String,NonConcurrentList<Texture>> entry:mTextures.entrySet()) {
-			for(Texture tex:entry.getValue()) {
+		for(Entry<String,ResourceEntry> entry:mTextures.entrySet()) {
+			for(Texture tex:entry.getValue().mTextures) {
+				if(!tex.isFinished())
+					enqueue(entry.getKey(),tex);
+			}
+			for(SubTexture tex:entry.getValue().mSubTextures) {
 				if(!tex.isFinished())
 					enqueue(entry.getKey(),tex);
 			}
@@ -309,23 +356,30 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public String texturesToString() {
 		StringBuilder result = new StringBuilder(320);
-		for(Entry<String,NonConcurrentList<Texture>> entry:mTextures.entrySet()) {
+		for(Entry<String,ResourceEntry> entry:mTextures.entrySet()) {
+			ResourceEntry res = entry.getValue();
 			result.append(entry.getKey()+": ");
 			boolean fst = true;
-			for(Texture tex:entry.getValue()) {
+			for(Texture tex:res.mTextures) {
 				if(!fst)
 					result.append("; ");
 				result.append(tex.toString());
 				fst = false;
 			}
+			
+			if(res.mSubTextures.size()>0) {
+				result.append(" SUB TEXTURES: ");
+				fst = true;
+				for(SubTexture tex:res.mSubTextures) {
+					if(!fst)
+						result.append("; ");
+					result.append(tex.toString());
+					fst = false;
+				}
+			}
 			result.append("\n");
 		}
-		if(!mSubTextures.isEmpty()) {
-			result.append("\nSUB TEXTURES:\n");
-			for(Pair<String,SubTexture> pair:mSubTextures) {
-				result.append(pair.mFirst+"\n");
-			}
-		}
+	
 		return result.toString();
 	}
 	

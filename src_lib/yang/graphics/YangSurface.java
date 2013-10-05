@@ -376,8 +376,6 @@ public abstract class YangSurface implements EventQueueHolder {
 	protected void loadAssets(int loadState,boolean resuming) {
 		if(loadState>0 || mStartupSteps==1)
 			mGFXLoader.loadEnqueuedTextures();
-
-		mGraphics.unbindTextures();
 	}
 
 	protected void initializeAssets(int initStep,boolean resuming) {
@@ -476,6 +474,8 @@ public abstract class YangSurface implements EventQueueHolder {
 				else
 					loadAssets(mLoadingState,mResuming);
 				if(mLoadingState==mStartupSteps-1) {
+					mGFXLoader.finishLoading();
+					mGraphics.unbindTextures();
 					onLoadingFinished(mResuming);
 					mLoadedOnce = true;
 					mEventQueue.clearEvents();

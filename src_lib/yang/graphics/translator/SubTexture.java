@@ -8,13 +8,12 @@ public class SubTexture extends AbstractTexture {
 
 	public int mLeft,mTop;
 	public TextureCoordBounds mCoordBounds;
-	public TextureAtlas mAtlas;
+//	public TextureAtlas mAtlas;
 	public Texture mTexture;
 	public boolean mFinished;
 	
-	public SubTexture(TextureAtlas atlas) {
-		mAtlas = atlas;
-		mTexture = atlas.mMainTexture;
+	protected SubTexture(Texture atlas) {
+		mTexture = atlas;
 		mCoordBounds = new TextureCoordBounds();
 	}
 	
@@ -37,6 +36,11 @@ public class SubTexture extends AbstractTexture {
 	@Override
 	public void update(ByteBuffer source, int width, int height) {
 		mTexture.updateRect(mLeft, mTop, width, height, source);
+		if(mWidth!=width || mHeight!=height) {
+			mWidth = width;
+			mHeight = height;
+			refreshBoundaries();
+		}
 	}
 
 	@Override
@@ -57,6 +61,11 @@ public class SubTexture extends AbstractTexture {
 	@Override
 	public boolean isFreed() {
 		return mTexture.isFreed();
+	}
+	
+	@Override
+	public String toString() {
+		return "l,t,w,h="+mLeft+","+mTop+","+mWidth+","+mHeight;
 	}
 	
 }
