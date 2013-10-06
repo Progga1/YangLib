@@ -26,6 +26,7 @@ public class StereoVision {
 	public TextureRenderTarget mStereoLeftRenderTarget = null;
 	public TextureRenderTarget mStereoRightRenderTarget = null;
 	public float mInterOcularDistance = 0.064f;
+	public float mLensShift = 0.04f;
 	
 	public void setLensParameters(float x,float y,float z,float w) {
 		mLensDistortionShader.mLensParameters[0] = x;
@@ -79,7 +80,11 @@ public class StereoVision {
 		//Draw
 		mGraphics.clear(0,0,0, GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics.bindTextureNoFlush(mStereoLeftRenderTarget.mTargetTexture, 0);
+		if(LENS_DISTORTION)
+			mLensDistortionShader.setShiftX(-mLensShift);
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 0,6, GraphicsTranslator.T_TRIANGLES);
+		if(LENS_DISTORTION)
+			mLensDistortionShader.setShiftX(mLensShift);
 		mGraphics.bindTextureNoFlush(mStereoRightRenderTarget.mTargetTexture, 0);
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 6,6, GraphicsTranslator.T_TRIANGLES);
 		

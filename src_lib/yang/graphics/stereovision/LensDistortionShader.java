@@ -8,6 +8,7 @@ public class LensDistortionShader extends MinimumTexShader {
 	public int mLensParametersHandle;
 	public int mScaleHandle;
 	public int mScaleToLensHandle;
+	public int mShiftHandle;
 	//public float[] mLensParameters = new float[]{1.5f,1,1,1};
 	public float mScaleX = 0.35f,mScaleY = 0.35f;
 	public float mScaleToLensX = 2,mScaleToLensY = 2;
@@ -29,12 +30,13 @@ public class LensDistortionShader extends MinimumTexShader {
 			"const float sampleDist = 1.5/2048.0;\r\n"+
 			"uniform vec2 scale;\r\n" +
 			"uniform vec2 scaleToLens;\r\n" +
+			"uniform vec2 shift;\r\n" +
 			"uniform sampler2D texSampler;\r\n" +
 			"uniform vec4 lensParameters;\r\n" +
 			"varying vec2 texCoord;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
-			"	vec2 theta = (texCoord - lensCenter) * scaleToLens;\r\n" +
+			"	vec2 theta = (texCoord - lensCenter) * scaleToLens + shift;\r\n" +
 			"   float rSq = theta.x * theta.x + theta.y * theta.y;\r\n" +
 			"   vec2 rvector = theta * (lensParameters.x + lensParameters.y*rSq + lensParameters.z*rSq*rSq + lensParameters.w*rSq*rSq*rSq);\r\n" +
 			"   vec2 resCoord = lensCenter + scale*rvector;\r\n" +
@@ -48,6 +50,7 @@ public class LensDistortionShader extends MinimumTexShader {
 		mLensParametersHandle = mProgram.getUniformLocation("lensParameters");
 		mScaleHandle = mProgram.getUniformLocation("scale");
 		mScaleToLensHandle = mProgram.getUniformLocation("scaleToLens");
+		mShiftHandle = mProgram.getUniformLocation("shift");
 	}
 	
 	@Override
@@ -65,6 +68,14 @@ public class LensDistortionShader extends MinimumTexShader {
 		mProgram.setUniform4f(mLensParametersHandle, mLensParameters);
 		mProgram.setUniform2f(mScaleHandle, mScaleX, mScaleY);
 		mProgram.setUniform2f(mScaleToLensHandle, mScaleToLensX, mScaleToLensY);
+	}
+	
+	public void setShiftX(float shift) {
+		mProgram.setUniform2f(mShiftHandle, shift,0);
+	}
+	
+	public void setShift(float shiftX,float shiftY) {
+		mProgram.setUniform2f(mShiftHandle, shiftX,shiftY);
 	}
 
 }
