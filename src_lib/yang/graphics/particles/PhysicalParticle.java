@@ -60,8 +60,8 @@ public class PhysicalParticle extends Particle {
 	}
 	
 	public float setSpeedRange2D(float minSpeed, float maxSpeed, float minAngle, float maxAngle) {
-		float a = MathFunc.random(minAngle, maxAngle);
-		float v = MathFunc.random(minSpeed, maxSpeed);
+		float a = MathFunc.randomF(minAngle, maxAngle);
+		float v = MathFunc.randomF(minSpeed, maxSpeed);
 		mVelX = (float)(Math.cos(a)*v)*YangSurface.deltaTimeSeconds;;
 		mVelY = (float)(Math.sin(a)*v)*YangSurface.deltaTimeSeconds;;
 		return a;

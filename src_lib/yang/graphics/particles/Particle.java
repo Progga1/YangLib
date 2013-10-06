@@ -33,7 +33,7 @@ public class Particle {
 	}
 	
 	public void setScaleLifeTimeFactor(float minFactor,float maxFactor) {
-		mScaleLifeTimeFactor = MathFunc.random(minFactor, maxFactor);
+		mScaleLifeTimeFactor = MathFunc.randomF(minFactor, maxFactor);
 	}
 	
 	public void setPosition(float x, float y, float z) {
@@ -72,16 +72,16 @@ public class Particle {
 	}
 	
 	public void setScale(float minScale, float maxScale) {
-		mScaleX = MathFunc.random(minScale, maxScale);
+		mScaleX = MathFunc.randomF(minScale, maxScale);
 		mScaleY = mScaleX;
 	}
 	
 	public void setScaleX(float minScale, float maxScale) {
-		mScaleX = MathFunc.random(minScale, maxScale);
+		mScaleX = MathFunc.randomF(minScale, maxScale);
 	}
 	
 	public void setScaleY(float minScale, float maxScale) {
-		mScaleY = MathFunc.random(minScale, maxScale);
+		mScaleY = MathFunc.randomF(minScale, maxScale);
 	}
 	
 	public void setLifeTime(float lifeTime) {
@@ -89,12 +89,12 @@ public class Particle {
 	}
 	
 	public void setLifeTime(float minLifeTime,float maxLifeTime) {
-		mLifeTimeNormFactor = 1/MathFunc.random(minLifeTime, maxLifeTime);
+		mLifeTimeNormFactor = 1/MathFunc.randomF(minLifeTime, maxLifeTime);
 	}
 	
 	public float shiftPosition2D(float minRadius, float maxRadius, float minAngle, float maxAngle) {
-		float a = MathFunc.random(minAngle, maxAngle); 
-		float r = MathFunc.random(minRadius, maxRadius);
+		float a = MathFunc.randomF(minAngle, maxAngle); 
+		float r = MathFunc.randomF(minRadius, maxRadius);
 		mPosX += (float)(Math.cos(a)*r);
 		mPosY += (float)(Math.sin(a)*r);
 		return a;

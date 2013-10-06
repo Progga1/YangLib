@@ -11,11 +11,11 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
 import yang.math.MathConst;
 import yang.math.MathFunc;
-import yang.samples.statesystem.SampleState;
+import yang.samples.statesystem.SampleStateCameraControl;
 import yang.util.Cursor3D;
 import yang.util.DefaultFunctions;
 
-public class Particle3DSampleState extends SampleState {
+public class Particle3DSampleState extends SampleStateCameraControl {
 
 	private static final int PARTICLES_PER_FRAME = 1;
 	
@@ -25,38 +25,43 @@ public class Particle3DSampleState extends SampleState {
 	private TextureCoordinatesQuad[] mTexCoords;
 	private Cursor3D mCursor = new Cursor3D();
 	private float mSmokeScale = 0.4f;
-	private float mParticleSpeed = 0.4f;
-	private float mCamAlpha=0,mCamBeta=0.5f;
-	private float mZoom = 2;
-	
-	
+	private float mParticleSpeed = 0.1f;
+	private int mFrameCount = 0;
 	
 	@Override
 	protected void initGraphics() {
+		mCursor.set(-1000,0,0);
 		mParticles = new Particles3D<EffectParticle>(EffectParticle.class).init(mGraphics3D, 320);
-		mParticles.setScaleFunction(DefaultFunctions.EXP_GROWING_SQR_SHRINKING);
-		mParticleTexture = mGFXLoader.getImage("cube",TextureFilter.LINEAR_MIP_LINEAR);
+		//mParticles.setScaleFunction(DefaultFunctions.EXP_GROWING_SQR_SHRINKING);
+		mParticleTexture = mGFXLoader.getAlphaMap("smoke");
 		mParticles.mTexture = mParticleTexture;
-		mTexCoords = TextureCoordinateSet.createTexCoordSequencePixelsBias(mParticleTexture,0, 0, 64,64, 4, 2,2);
+		mParticles.mAlphaSpeed = 1;
+		mParticles.mScaleSpeed = -1;
+		//mTexCoords = TextureCoordinateSet.createTexCoordSequencePixelsBias(mParticleTexture,0, 0, 64,64, 4, 2,2);
 		EffectParticleProperties props = new EffectParticleProperties();
 		props.setScale(0.1f);
 		props.setSpeed(1f,2f);
 		props.setVelocityDirection(0, 1, 0, true);
-		mWeather.init(new Particles3D<EffectParticle>(EffectParticle.class).init(mGraphics3D, 1000), props);
+		Particles3D<EffectParticle> particles = new Particles3D<EffectParticle>(EffectParticle.class);
+		particles.mTexture = mGFXLoader.getAlphaMap("light_alpha");
+		mWeather.init(particles.init(mGraphics3D, 1000), props);
 		mWeather.mBoundaries.set(-6,6, -16,9, -6,6);
 		mWeather.createRandomParticles(1000);
+		mOrthogonalProjection = false;
 	}
 	
 	@Override
 	protected void step(float deltaTime) {
-		for(int i=0;i<PARTICLES_PER_FRAME;i++) {
-			
-			EffectParticle particle = mParticles.spawnParticle(mCursor.mX,mCursor.mY,mCursor.mZ, mTexCoords[MathFunc.random(4)]);
+		super.step(deltaTime);
+		if(mFrameCount++ % 1==0) {
+			EffectParticle particle = mParticles.spawnParticle(mCursor.mX,mCursor.mY,mCursor.mZ, TextureCoordinatesQuad.FULL_TEXTURE);
 			particle.mFriction = 0.995f;
 			particle.setSpeedRangeSpread2D(5.2f*mParticleSpeed,6.0f*mParticleSpeed, 1.2f, 0.5f);
-			particle.setLifeTime(0.7f,0.9f);
+			particle.mVelZ = mParticleSpeed*(MathFunc.randomF(-1, 1))*0.01f;
+			particle.setLifeTime(0.2f/mParticleSpeed,0.3f/mParticleSpeed);
+			particle.setColor(1, 1, 1, 0.15f);
 			particle.setScale(1*mSmokeScale, 1.2f*mSmokeScale);
-			particle.shiftPosition2D(0.05f, 0.08f, 0, 2*MathConst.PI);
+			particle.shiftPosition2D(0.001f, 0.002f, 0, 2*MathConst.PI);
 			particle.setRotationSpeedRange(1, 1.5f, true);
 			particle.setAcceleration(-0.00001f*mParticleSpeed, 0.000005f*mParticleSpeed);
 		}
@@ -68,10 +73,9 @@ public class Particle3DSampleState extends SampleState {
 
 	@Override
 	protected void draw() {
-		mGraphics.clear(0.3f, 0.3f, 0.6f);
+		mGraphics.clear(0.03f, 0.03f, 0.1f);
 		mGraphics3D.activate();
-		mGraphics3D.setPerspectiveProjection(10);
-		mGraphics3D.setCameraAlphaBeta(0,0,0, mCamAlpha,mCamBeta, mZoom);
+		setCamera();
 
 		synchronized(mParticles) {
 			mParticles.draw();
@@ -81,30 +85,24 @@ public class Particle3DSampleState extends SampleState {
 
 	@Override
 	public void pointerDown(float x,float y,YangPointerEvent event) {
-		mCursor.jump(x,y,0);
+		super.pointerDown(x,y, event);
 	}
 	
 	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
-		if(event.mButton==YangPointerEvent.BUTTON_MIDDLE || event.mId>0) {
-			mCamAlpha -= event.mDeltaX;
-			mCamBeta -= event.mDeltaY;
-			if(mCamBeta>PI/2*0.99f)
-				mCamBeta = PI/2*0.99f;
-			if(mCamBeta<-PI/2*0.99f)
-				mCamBeta = -PI/2*0.99f;
-		}else
-			mCursor.set(x, 0, y);
+		super.pointerDragged(x, y, event);
+		if(event.mButton==YangPointerEvent.BUTTON_LEFT && event.mId==0)
+			mCursor.set(x, 0, -y);
 	}
 	
 	@Override
 	public void pointerMoved(float x,float y,YangPointerEvent event) {
-		//mCursor.set(x, 0, y);
+		super.pointerMoved(x, y, event);
 	}
 	
 	@Override
 	public void zoom(float value) {
-		mZoom += value;
+		super.zoom(value);
 	}
 	
 }

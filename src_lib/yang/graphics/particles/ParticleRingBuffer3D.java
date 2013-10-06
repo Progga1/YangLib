@@ -21,14 +21,32 @@ public abstract class ParticleRingBuffer3D<ParticleType extends Particle>  exten
 		mBillboardsCreator.begin();
 		for(ParticleType particle:mParticles) {
 			if(particle.mExists) {
-				mGraphics.setColor(particle.mColor);
+				if(mAlphaSpeed==0) {
+					mGraphics.setColor(particle.mColor);
+				}else{
+					if(mAlphaLookUp!=null) {
+						mGraphics.setColor(particle.mColor[0],particle.mColor[1],particle.mColor[2],particle.mColor[3]*mAlphaLookUp.get(particle.mNormLifeTime*mAlphaSpeed));
+					}else{
+						mGraphics.setColor(particle.mColor[0],particle.mColor[1],particle.mColor[2],particle.mColor[3]*(1-particle.mNormLifeTime*mAlphaSpeed));
+					}
+				}
+
 				float uScale;
-				if(mScaleLookUp!=null)
-					uScale = mScaleLookUp.get(particle.mNormLifeTime);
-				else
-					uScale = (1-particle.mNormLifeTime);
+				if(mScaleSpeed==0) {
+					uScale = 1;
+				}else{
+					if(mScaleLookUp!=null)
+						uScale = mScaleLookUp.get(particle.mNormLifeTime*mScaleSpeed);
+					else{
+						if(mScaleSpeed<0)
+							uScale = (-particle.mNormLifeTime*mScaleSpeed);
+						else
+							uScale = (1-particle.mNormLifeTime*mScaleSpeed);
+					}
+				}
 				mBillboardsCreator.putBillboardPositionsUniScale(particle.mPosX, particle.mPosY, particle.mPosZ, uScale*particle.mScaleX, particle.mRotation);//TODO include scale Y
 				mBillboardsCreator.putTextureCoords(particle.mTextureCoordinates);
+				mGraphics.putColorRect(mGraphics.mCurColor);
 			}
 		}
 		

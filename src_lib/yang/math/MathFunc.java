@@ -36,19 +36,19 @@ public class MathFunc {
 			return -1;
 	}
 	
-	public static float random(float minX,float maxX) {
+	public static float randomF(float minX,float maxX) {
 		return (float)(minX+Math.random()*(maxX-minX));
 	}
 	
-	public static double random(double minX,double maxX) {
+	public static double randomD(double minX,double maxX) {
 		return minX+Math.random()*(maxX-minX);
 	}
 	
-	public static int random(int upperBound) {
+	public static int randomI(int upperBound) {
 		return (int)(Math.random()*upperBound);
 	}
 	
-	public static int random(int lowerBound,int upperBound) {
+	public static int randomI(int lowerBound,int upperBound) {
 		return (int)(Math.random()*(upperBound-lowerBound)+lowerBound);
 	}
 

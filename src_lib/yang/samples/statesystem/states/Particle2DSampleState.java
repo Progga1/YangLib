@@ -40,7 +40,7 @@ public class Particle2DSampleState extends SampleState {
 		for(int i=0;i<PARTICLES_PER_FRAME;i++) {
 			mDelayedPntX += (mCurPntX-mDelayedPntX)*0.2f;
 			mDelayedPntY += (mCurPntY-mDelayedPntY)*0.2f;
-			EffectParticle particle = mParticles.spawnParticle(mDelayedPntX, mDelayedPntY, mTexCoords[MathFunc.random(4)]);
+			EffectParticle particle = mParticles.spawnParticle(mDelayedPntX, mDelayedPntY, mTexCoords[MathFunc.randomI(4)]);
 			particle.mFriction = 0.995f;
 			particle.setSpeedRangeSpread2D(5.2f*mParticleSpeed,6.0f*mParticleSpeed, 1.2f, 0.5f);
 			particle.setLifeTime(0.7f,0.9f);

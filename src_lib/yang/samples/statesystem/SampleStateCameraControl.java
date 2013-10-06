@@ -1,7 +1,6 @@
 package yang.samples.statesystem;
 
 import yang.events.eventtypes.YangPointerEvent;
-import yang.graphics.util.Camera3D;
 import yang.graphics.util.Camera3DControllable;
 import yang.math.objects.Vector3f;
 
@@ -37,7 +36,6 @@ public abstract class SampleStateCameraControl extends SampleState {
 	@Override
 	public void pointerDragged(float x,float y,YangPointerEvent event) {
 		mCamera.pointerDragged(event);
-		refreshCamera();
 	}
 	
 	@Override
@@ -48,7 +46,6 @@ public abstract class SampleStateCameraControl extends SampleState {
 	@Override
 	public void zoom(float value) {
 		mCamera.zoom(value);
-		refreshCamera();
 	}
 	
 	@Override

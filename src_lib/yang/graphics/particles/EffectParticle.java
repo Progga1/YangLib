@@ -24,7 +24,7 @@ public class EffectParticle extends PhysicalParticle {
 	}
 	
 	public void setRotationSpeedRange(float minSpeed,float maxSpeed,boolean mirror) {
-		mRotV = MathFunc.random(minSpeed, maxSpeed)*YangSurface.deltaTimeSeconds;
+		mRotV = MathFunc.randomF(minSpeed, maxSpeed)*YangSurface.deltaTimeSeconds;
 		if(mirror && Math.random()>=0.5f) {
 			mRotV = -mRotV;
 		}
