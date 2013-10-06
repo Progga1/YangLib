@@ -10,6 +10,8 @@ public abstract class SampleStateCameraControl extends SampleState {
 	protected Vector3f mCamRight = new Vector3f();
 	protected Vector3f mCamUp = new Vector3f();
 	protected Camera3DControllable mCamera = new Camera3DControllable();
+	protected char mSwitchPerspectiveKey = 'p';
+	protected char mInvertViewKey = 'v';
 	
 	protected void refreshCamera() {
 		if(mOrthogonalProjection)
@@ -52,6 +54,10 @@ public abstract class SampleStateCameraControl extends SampleState {
 	public void keyDown(int code) {
 		super.keyDown(code);
 		mCamera.keyDown(code);
+		if(code==mSwitchPerspectiveKey)
+			mOrthogonalProjection ^= true;
+		if(code==mInvertViewKey)
+			mCamera.mInvertView ^= true;
 	}
 	
 	@Override

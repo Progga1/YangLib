@@ -7,13 +7,17 @@ public class Camera3DAlphaBeta {
 	public float mViewAlpha,mViewBeta;
 	public float mZoom;
 	public float mFocusX,mFocusY,mFocusZ;
+	public boolean 	mInvertView = false;
 	
 	public Camera3DAlphaBeta() {
 		mCamera = new Camera3D();
 	}
 	
 	public Camera3D getUpdatedCamera() {
-		mCamera.setAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+		if(mInvertView)
+			mCamera.setOutwardsAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+		else
+			mCamera.setAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
 		return mCamera;
 	}
 	

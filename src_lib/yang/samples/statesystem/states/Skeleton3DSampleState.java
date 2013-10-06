@@ -104,7 +104,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	public void keyDown(int code) {
 		super.keyDown(code);
-		if(code=='p') {
+		if(code=='s') {
 			mSkeleton.mConstantForceY = -0.025f;
 		}
 		if(code=='l') {
