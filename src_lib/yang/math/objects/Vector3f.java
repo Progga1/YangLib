@@ -31,6 +31,11 @@ public class Vector3f extends Point3f{
 		mZ = z;
 	}
 	
+	public void set(float x,float y) {
+		mX = x;
+		mY = y;
+	}
+	
 	public void setNormalized(float x,float y,float z) {
 		float dist = (float)Math.sqrt(x*x+y*y+z*z);
 		if(dist==0) {

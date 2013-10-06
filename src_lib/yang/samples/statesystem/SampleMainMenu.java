@@ -4,14 +4,14 @@ import java.util.HashMap;
 
 import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
-import yang.model.DebugYang;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.MatrixStackSampleState;
 import yang.samples.statesystem.states.MemorySampleState;
 import yang.samples.statesystem.states.NestedTextureRenderTargetsSampleState;
 import yang.samples.statesystem.states.OBJSampleState;
-import yang.samples.statesystem.states.ParticleSampleState;
+import yang.samples.statesystem.states.Particle2DSampleState;
+import yang.samples.statesystem.states.Particle3DSampleState;
 import yang.samples.statesystem.states.PolygonSampleState;
 import yang.samples.statesystem.states.Rotations3DSampleState;
 import yang.samples.statesystem.states.ShaderPermutationsSampleState;
@@ -60,9 +60,10 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Stroke", new StrokeDrawerSampleState());
 		addMenuItem("Icy terrain", new IcyTerrainState());
 		addMenuItem("Polygon", new PolygonSampleState());
-		addMenuItem("Particles", new ParticleSampleState());
 		addMenuItem("Texture Atlas", new TextureAtlasSampleState());
 		addMenuItem("Nested Render targets", new NestedTextureRenderTargetsSampleState());
+		addMenuItem("Particles 2D", new Particle2DSampleState());
+		addMenuItem("Particles 3D", new Particle3DSampleState());
 		addMenuItem("Shader permutations", new ShaderPermutationsSampleState());
 		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("3D skeleton", new Skeleton3DSampleState());
@@ -80,7 +81,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 //			}
 //		}else{
 		float x;
-		if(false && mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
+		if(mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
 			x = mGUI.getGUICenterX()-1f;
 		else 
 			x = mGUI.getGUICenterX()-0.5f;

@@ -64,15 +64,15 @@ public class EffectParticleProperties {
 		return this;
 	}
 	
-	public EffectParticleProperties setSpeed(float speedX) {
-		mMinSpeed = speedX;
-		mMaxSpeed = speedX;
+	public EffectParticleProperties setSpeed(float speed) {
+		mMinSpeed = speed;
+		mMaxSpeed = speed;
 		return this;
 	}
 	
-	public EffectParticleProperties setSpeed(float minSpeedX,float maxSpeedY) {
-		mMinSpeed = minSpeedX;
-		mMaxSpeed = maxSpeedY;
+	public EffectParticleProperties setSpeed(float minSpeed,float maxSpeed) {
+		mMinSpeed = minSpeed;
+		mMaxSpeed = maxSpeed;
 		return this;
 	}
 	
