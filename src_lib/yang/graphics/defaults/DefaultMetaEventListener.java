@@ -9,6 +9,7 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.YangSurface;
+import yang.graphics.stereovision.LensDistortionShader;
 import yang.model.DebugYang;
 
 public class DefaultMetaEventListener implements YangEventListener {
@@ -107,6 +108,27 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 		if(code==Keys.F12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
 			mSurface.playMacro("macro.ym");
+		
+		
+		if(mSurface.mStereoVision!=null) {
+			LensDistortionShader stereoShader = mSurface.mStereoVision.mLensDistortionShader;
+			final float STEPS = 0.01f;
+			if(code=='q')
+				stereoShader.mScale += STEPS;
+			if(code=='w')
+				stereoShader.mScale -= STEPS;
+			if(code=='a')
+				stereoShader.mScaleToLens += STEPS;
+			if(code=='s')
+				stereoShader.mScaleToLens -= STEPS;
+			if(code=='y')
+				mSurface.mStereoVision.mLensShift -= 0.01f;
+			if(code=='x')
+				mSurface.mStereoVision.mLensShift += 0.01f;
+			if(code=='p')
+				System.out.println("scale="+stereoShader.mScale+", scaleToLens="+stereoShader.mScaleToLens+", shift="+mSurface.mStereoVision.mLensShift);
+				
+		}
 	}
 
 	@Override

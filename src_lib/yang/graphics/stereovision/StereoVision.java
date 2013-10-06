@@ -21,7 +21,7 @@ public class StereoVision {
 	public int mResolution;
 	private GraphicsTranslator mGraphics;
 	private MinimumTexShader mMinimumShader;
-	private LensDistortionShader mLensDistortionShader;
+	public LensDistortionShader mLensDistortionShader;
 	public IndexedVertexBuffer mStereoVertexBuffer = null;
 	public TextureRenderTarget mStereoLeftRenderTarget = null;
 	public TextureRenderTarget mStereoRightRenderTarget = null;

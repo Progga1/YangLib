@@ -75,7 +75,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	private boolean mLoadedOnce = false;
 
 	private boolean mUseStereoVision = false;
-	private StereoVision mStereoVision = null;
+	public StereoVision mStereoVision = null;
 	private int mStereoResolution = 1024;
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
