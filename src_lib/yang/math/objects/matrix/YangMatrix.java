@@ -146,6 +146,17 @@ public class YangMatrix {
 	public final void translate(Point3f translationVector) {
 		translate(translationVector.mX,translationVector.mY,translationVector.mZ);
 	}
+	
+	public final void postTranslate(float x,float y,float z) {
+		mMatrix[12] += x;
+		mMatrix[13] += y;
+		mMatrix[14] += z;
+	}
+	
+	public final void postTranslate(float x,float y) {
+		mMatrix[12] += x;
+		mMatrix[13] += y;
+	}
 
 	public void setTranslation(float x,float y,float z) {
 		System.arraycopy(MatrixOps.IDENTITY, 0, mMatrix, 0, 16);

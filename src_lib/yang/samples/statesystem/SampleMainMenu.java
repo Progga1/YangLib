@@ -17,6 +17,7 @@ import yang.samples.statesystem.states.Rotations3DSampleState;
 import yang.samples.statesystem.states.ShaderPermutationsSampleState;
 import yang.samples.statesystem.states.Skeleton3DSampleState;
 import yang.samples.statesystem.states.SoundSampleState;
+import yang.samples.statesystem.states.StereoCalibrationState;
 import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.StrokeDrawerSampleState;
 import yang.samples.statesystem.states.TailSampleState;
@@ -67,6 +68,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Shader permutations", new ShaderPermutationsSampleState());
 		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("3D skeleton", new Skeleton3DSampleState());
+		addMenuItem("Stereo calibration",new StereoCalibrationState());
 		refreshLayout();
 	}
 	

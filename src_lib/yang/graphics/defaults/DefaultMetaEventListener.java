@@ -113,20 +113,28 @@ public class DefaultMetaEventListener implements YangEventListener {
 		if(mSurface.mStereoVision!=null) {
 			LensDistortionShader stereoShader = mSurface.mStereoVision.mLensDistortionShader;
 			final float STEPS = 0.01f;
-			if(code=='q')
-				stereoShader.mScale += STEPS;
-			if(code=='w')
-				stereoShader.mScale -= STEPS;
 			if(code=='a')
-				stereoShader.mScaleToLens += STEPS;
+				stereoShader.mScaleX += STEPS;
+			if(code=='d')
+				stereoShader.mScaleX -= STEPS;
 			if(code=='s')
+				stereoShader.mScaleY += STEPS;
+			if(code=='w')
+				stereoShader.mScaleY -= STEPS;
+			if(code=='q')
+				stereoShader.mScaleToLens += STEPS;
+			if(code=='e')
 				stereoShader.mScaleToLens -= STEPS;
 			if(code=='y')
 				mSurface.mStereoVision.mLensShift -= 0.01f;
 			if(code=='x')
 				mSurface.mStereoVision.mLensShift += 0.01f;
+			if(code=='t')
+				mSurface.mStereoVision.mInterOcularDistance += 0.002f;
+			if(code=='r')
+				mSurface.mStereoVision.mInterOcularDistance -= 0.002f;
 			if(code=='p')
-				System.out.println("scale="+stereoShader.mScale+", scaleToLens="+stereoShader.mScaleToLens+", shift="+mSurface.mStereoVision.mLensShift);
+				System.out.println("scale="+stereoShader.mScaleX+":"+stereoShader.mScaleY+", scaleToLens="+stereoShader.mScaleToLens+", shift="+mSurface.mStereoVision.mLensShift+", distance="+mSurface.mStereoVision.mInterOcularDistance);
 				
 		}
 	}

@@ -40,6 +40,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public YangMatrix mCurProjTransform;
 	public float[] mNormalTransform;
 	protected float[] invGameProjection;
+	protected YangMatrix mStereoScreenTransform;
 	
 	//State
 	protected boolean mBatchRecording;
@@ -48,6 +49,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	protected float mBold;
 	public float[] mCurColor;
 	public float[] mCurSuppData;
+	public float mStereoScreenDistance = 0.15f;
 	
 	//Persistent attributes
 	public GraphicsTranslator mTranslator;
@@ -81,6 +83,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mInterTransf2 = new YangMatrixRectOps();
 		mWorldTransform = new YangMatrix();
 		mWorldTransform.loadIdentity();
+		mStereoScreenTransform = new YangMatrix();
 		mCameraProjectionMatrix = new YangMatrix();
 		mResultTransformationMatrix = new YangMatrix();
 		mNormalTransform = new float[9];
@@ -209,7 +212,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		flush();
 		if(enable) {
 			mCurProjTransform = mProjectionTransform;
-		}else{
+		}else{	
 			mCurProjTransform = mTranslator.mProjScreenTransform;
 		}
 	}
@@ -404,6 +407,10 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	@Override
 	public void onSurfaceSizeChanged(int width, int height) {
 		
+	}
+	
+	protected float get2DStereoShift(float eyeDistance) {
+		return (1f/(eyeDistance+1))*mTranslator.mCameraShiftX;
 	}
 	
 }

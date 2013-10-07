@@ -10,7 +10,7 @@ public class LensDistortionShader extends MinimumTexShader {
 	public int mScaleToLensHandle;
 	public int mShiftHandle;
 	//public float[] mLensParameters = new float[]{1.5f,1,1,1};
-	public float mScale = 0.35f;
+	public float mScaleX = 0.5f,mScaleY = 0.63f;
 	public float mScaleToLens = 2;
 	public float[] mLensParameters = new float[]{1,0.22f,0.24f,0};
 	
@@ -66,7 +66,7 @@ public class LensDistortionShader extends MinimumTexShader {
 	public void activate() {
 		super.activate();
 		mProgram.setUniform4f(mLensParametersHandle, mLensParameters);
-		mProgram.setUniform2f(mScaleHandle, mScale, mScale);
+		mProgram.setUniform2f(mScaleHandle, mScaleX, mScaleY);
 		mProgram.setUniform2f(mScaleToLensHandle, mScaleToLens, mScaleToLens);
 	}
 	

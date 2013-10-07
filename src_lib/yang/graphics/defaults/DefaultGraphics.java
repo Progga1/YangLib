@@ -102,7 +102,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void bindBuffers() {
-		assert mTranslator.checkErrorInst("PRE bind buffers 2D");
+		assert mTranslator.preCheck("bind buffers 2D");
 		mTranslator.setAttributeBuffer(mCurrentProgram.mPositionHandle, DefaultGraphics.ID_POSITIONS);
 		if (mCurrentProgram.mHasTextureCoords)
 			mTranslator.setAttributeBuffer(mCurrentProgram.mTextureHandle, DefaultGraphics.ID_TEXTURES);
@@ -151,7 +151,13 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		assert mTranslator.preCheck("Set program projection");
 		BasicProgram program = mCurrentProgram;
 		if (program != null) {
-			refreshViewTransform();
+			if(mCurProjTransform == mTranslator.mProjScreenTransform) {
+				mCameraProjectionMatrix.set(mTranslator.mProjScreenTransform);
+				if(mTranslator.mStereo) {
+					mCameraProjectionMatrix.postTranslate(-get2DStereoShift(mStereoScreenDistance),0);
+				}
+			}else
+				refreshViewTransform();
 			if (mWorldTransformEnabled) {
 				if (program.mHasWorldTransform) {
 					program.setWorldTransform(mWorldTransform.mMatrix);
@@ -275,10 +281,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 	
 	public void drawLineRect(float worldX1, float worldY1, float worldX2, float worldY2, float width, TextureCoordinatesQuad texCoordinates) {
-		drawLine(worldX1,worldY1, worldX2,worldY1, width, texCoordinates);
-		drawLine(worldX2,worldY1, worldX2,worldY2, width, texCoordinates);
-		drawLine(worldX2,worldY2, worldX1,worldY2, width, texCoordinates);
-		drawLine(worldX1,worldY2, worldX1,worldY1, width, texCoordinates);
+		drawLine(worldX1,worldY1, worldX2+width*0.5f,worldY1, width, texCoordinates);
+		drawLine(worldX2,worldY1, worldX2,worldY2+width*0.5f, width, texCoordinates);
+		drawLine(worldX2,worldY2, worldX1-width*0.5f,worldY2, width, texCoordinates);
+		drawLine(worldX1,worldY2, worldX1,worldY1-width*0.5f, width, texCoordinates);
 	}
 	
 	public void drawLineRect(float worldX1, float worldY1, float worldX2, float worldY2, float width) {

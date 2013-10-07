@@ -35,6 +35,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	protected float mOrthoBottom;
 	private int mOrthoWidth;
 	private int mOrthoHeight;
+	public float mStereoGameDistance = 2;
 	public float mGameNear = YangMatrixCameraOps.DEFAULT_NEAR;
 	public float mGameFar = YangMatrixCameraOps.DEFAULT_FAR;
 	
@@ -193,8 +194,9 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	protected void refreshCamera() {
 		float ratioX = mTranslator.mCurrentScreen.getSurfaceRatioX();
 		float ratioY = mTranslator.mCurrentScreen.getSurfaceRatioY();
-		mOrthoLeft = -ratioX * mZoom + mCamX;
-		mOrthoRight = ratioX * mZoom + mCamX;
+		float shift = 0*get2DStereoShift(mStereoGameDistance);
+		mOrthoLeft = -ratioX * mZoom + mCamX + shift;
+		mOrthoRight = ratioX * mZoom + mCamX + shift;
 		mOrthoTop = ratioY * mZoom + mCamY;
 		mOrthoBottom = -ratioY * mZoom + mCamY;
 		if(mCamRot==0) {
