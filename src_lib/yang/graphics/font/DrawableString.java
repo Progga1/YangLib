@@ -456,6 +456,11 @@ public class DrawableString extends FixedString {
 		draw(interMatrix2);
 	}
 
+	public void draw() {
+		interMatrix2.loadIdentity();
+		draw(interMatrix2);
+	}
+	
 	public StringProperties cloneProperties(boolean forceClone) {
 		if(forceClone || !mPropertiesCloned) {
 			mProperties = mProperties.clone();

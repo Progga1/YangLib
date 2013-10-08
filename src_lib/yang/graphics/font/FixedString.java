@@ -121,6 +121,10 @@ public class FixedString {
 					mChars[i] = '%';
 				if(formatString.charAt(c)=='\\')
 					mChars[i] = '\\';
+				if(formatString.charAt(c)=='n')
+					mChars[i] = '\n';
+				if(formatString.charAt(c)=='t')
+					mChars[i] = '\t';
 				c++;
 				i++;
 			}else{
@@ -135,6 +139,9 @@ public class FixedString {
 						while(++c<formatString.length() && isDigit(formatString.charAt(c)));
 					}else if(formatString.charAt(c)=='[') {
 						int p = formatString.indexOf("]", c+1);
+						if(p<0) {
+							break;
+						}
 						if(p<=c)
 							p = formatString.length()-1;
 						String macro = formatString.substring(c+1,p);

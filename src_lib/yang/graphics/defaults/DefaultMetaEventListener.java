@@ -10,12 +10,15 @@ import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.YangSurface;
 import yang.graphics.stereovision.LensDistortionShader;
+import yang.graphics.util.HeadMovement;
 import yang.model.DebugYang;
 
 public class DefaultMetaEventListener implements YangEventListener {
 
 	public YangSurface mSurface;
 	private boolean mRecording = false;
+	private boolean mShiftPressed = false;
+	private HeadMovement mHead = new HeadMovement();
 	
 	public DefaultMetaEventListener(YangSurface surface) {
 		mSurface = surface;
@@ -44,7 +47,12 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void pointerDragged(float x, float y, YangPointerEvent event) {
-		
+		if(mShiftPressed) {
+			mSurface.mGraphics.mUseCameraPostMatrix = true;
+			mHead.mPitch += event.mDeltaX;
+			mHead.mYaw += event.mDeltaY;
+			mSurface.mGraphics.mPostCameraMatrix.set(mHead.getUpdatedMatrix());
+		}
 	}
 
 	@Override
@@ -54,6 +62,8 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void keyDown(int code) {
+		if(code==Keys.SHIFT)
+			mShiftPressed = true;
 		if(code==Keys.F1) {
 			if(mSurface.isInactive())
 				mSurface.simulateResume();
@@ -141,7 +151,8 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void keyUp(int code) {
-		
+		if(code==Keys.SHIFT)
+			mShiftPressed = false;
 	}
 
 	@Override
