@@ -41,6 +41,7 @@ public class DrawableString extends FixedString {
 	public float mHorizontalAnchor;
 	public StringProperties mProperties;
 	public float mMaxLineWidth = Float.MAX_VALUE;
+	public float mShiftZ = 0;
 	
 	//String attributes
 	public int mRecentCharCount = 0;
@@ -271,19 +272,19 @@ public class DrawableString extends FixedString {
 									positionTarget[c++] = uX;
 									positionTarget[c++] = uY;
 									if(mProperties.mHasZComponent)
-										positionTarget[c++] = 0;
+										positionTarget[c++] = mShiftZ;
 									positionTarget[c++] = uX + w;
 									positionTarget[c++] = uY;
 									if(mProperties.mHasZComponent)
-										positionTarget[c++] = 0;
+										positionTarget[c++] = mShiftZ;
 									positionTarget[c++] = uX;
 									positionTarget[c++] = uY + h;
 									if(mProperties.mHasZComponent)
-										positionTarget[c++] = 0;
+										positionTarget[c++] = mShiftZ;
 									positionTarget[c++] = uX + w;
 									positionTarget[c++] = uY + h;
 									if(mProperties.mHasZComponent)
-										positionTarget[c++] = 0;
+										positionTarget[c++] = mShiftZ;
 								}
 								if(offsetsTarget!=null) {
 									offsetsTarget[o] = uX;
