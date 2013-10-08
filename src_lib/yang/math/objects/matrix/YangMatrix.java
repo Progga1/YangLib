@@ -583,22 +583,62 @@ public class YangMatrix {
 	}
 	
 	public void fromEulerAngles(float yaw,float pitch,float roll) {
-		float s1 = (float)Math.sin(yaw);
-		float c1 = (float)Math.cos(yaw);
+		loadIdentity();
+		rotateY(yaw);
+		rotateX(pitch);
+		rotateZ(roll);
+		if(true)
+			return;
+		float s1 = (float)Math.sin(roll);
+		float c1 = (float)Math.cos(roll);
 		float s2 = (float)Math.sin(pitch);
 		float c2 = (float)Math.cos(pitch);
-		float s3 = (float)Math.sin(roll);
-		float c3 = (float)Math.cos(roll);
-		mMatrix[0] = c2*c3;
-		mMatrix[1] = c1*s3 + c3*s1*s2;
-		mMatrix[2] = s1*s3-c1*c3*s2;
+		float s3 = (float)Math.sin(yaw);
+		float c3 = (float)Math.cos(yaw);
+//		mMatrix[0] = c2*c3;
+//		mMatrix[1] = c1*s3 + c3*s1*s2;
+//		mMatrix[2] = s1*s3-c1*c3*s2;
+//		mMatrix[3] = 0;
+//		mMatrix[4] = -c2*s3;
+//		mMatrix[5] = c1*c3-s1*s2*s3;
+//		mMatrix[6] = c3*s1+c1*s2*s3;
+//		mMatrix[7] = 0;
+//		mMatrix[8] = s2;
+//		mMatrix[9] = -c2*s1;
+//		mMatrix[10] = c1*c2;
+//		mMatrix[11] = 0;
+//		mMatrix[12] = 0;
+//		mMatrix[13] = 0;
+//		mMatrix[14] = 0;
+//		mMatrix[15] = 1;
+		
+//		mMatrix[0] = c1*c2;
+//		mMatrix[1] = c2*s1;
+//		mMatrix[2] = -s2;
+//		mMatrix[3] = 0;
+//		mMatrix[4] = c1*s2*s3-c3*s1;
+//		mMatrix[5] = c1*c3+s1*s2*s3;
+//		mMatrix[6] = c2*s3;
+//		mMatrix[7] = 0;
+//		mMatrix[8] = s1*s3+c1*c3*s2;
+//		mMatrix[9] = c3*s1*s2-c1*s3;
+//		mMatrix[10] = c2*c3;
+//		mMatrix[11] = 0;
+//		mMatrix[12] = 0;
+//		mMatrix[13] = 0;
+//		mMatrix[14] = 0;
+//		mMatrix[15] = 1;
+		
+		mMatrix[0] = c1*c3 + s1*s2*s3;
+		mMatrix[1] = c2*s3;
+		mMatrix[2] = c1*s2*s3-c3*s1;
 		mMatrix[3] = 0;
-		mMatrix[4] = -c2*s3;
-		mMatrix[5] = c1*c3-s1*s2*s3;
-		mMatrix[6] = c3*s1+c1*s2*s3;
+		mMatrix[4] = c1*s1*s2-c1*s3;
+		mMatrix[5] = c2*c3;
+		mMatrix[6] = s1*s3+c1*c3*s2;
 		mMatrix[7] = 0;
-		mMatrix[8] = s2;
-		mMatrix[9] = -c2*s1;
+		mMatrix[8] = c2*s1;
+		mMatrix[9] = -s2;
 		mMatrix[10] = c1*c2;
 		mMatrix[11] = 0;
 		mMatrix[12] = 0;

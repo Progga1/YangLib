@@ -146,7 +146,9 @@ public class FixedString {
 							p = formatString.length()-1;
 						String macro = formatString.substring(c+1,p);
 						
-						i = handleMacro(macro,i,lstMacro);
+						int m = handleMacro(macro,i,lstMacro);
+						if(m!=-1)
+							i = m;
 						c = p+1;
 						lstMacro = i;
 					}else{

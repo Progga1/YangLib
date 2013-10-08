@@ -17,6 +17,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	public YangSurface mSurface;
 	private boolean mRecording = false;
+	private boolean mCtrlPressed = false;
 	private boolean mShiftPressed = false;
 	private HeadMovement mHead = new HeadMovement();
 	
@@ -37,7 +38,13 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void pointerDown(float x, float y, YangPointerEvent event) {
-		
+		if(mCtrlPressed) {
+			if(event.mButton==YangPointerEvent.BUTTON_MIDDLE) {
+				mSurface.mGraphics.mUseCameraPostMatrix = false;
+				mHead.reset();
+			}
+				
+		}
 	}
 
 	@Override
@@ -47,10 +54,16 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void pointerDragged(float x, float y, YangPointerEvent event) {
-		if(mShiftPressed) {
+		if(mCtrlPressed) {
 			mSurface.mGraphics.mUseCameraPostMatrix = true;
-			mHead.mPitch += event.mDeltaX;
-			mHead.mYaw += event.mDeltaY;
+			if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
+				mHead.mYaw += event.mDeltaX;
+				mHead.mPitch += event.mDeltaY;
+			}
+			if(event.mButton==YangPointerEvent.BUTTON_RIGHT) {
+				mHead.mRoll += event.mDeltaX;
+				mHead.mPitch += event.mDeltaY;
+			}
 			mSurface.mGraphics.mPostCameraMatrix.set(mHead.getUpdatedMatrix());
 		}
 	}
@@ -64,6 +77,9 @@ public class DefaultMetaEventListener implements YangEventListener {
 	public void keyDown(int code) {
 		if(code==Keys.SHIFT)
 			mShiftPressed = true;
+		if(code==Keys.CTRL)
+			mCtrlPressed = true;
+		
 		if(code==Keys.F1) {
 			if(mSurface.isInactive())
 				mSurface.simulateResume();
@@ -153,6 +169,8 @@ public class DefaultMetaEventListener implements YangEventListener {
 	public void keyUp(int code) {
 		if(code==Keys.SHIFT)
 			mShiftPressed = false;
+		if(code==Keys.CTRL)
+			mCtrlPressed = false;
 	}
 
 	@Override

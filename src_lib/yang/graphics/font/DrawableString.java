@@ -488,8 +488,13 @@ public class DrawableString extends FixedString {
 		mChars[pos] = CHAR_MACRO;
 		if(macro.equals("\\"))
 			mChars[pos+1] = 0;
-		else
-			mChars[pos+1] = mProperties.mStyle.mColorHash.get(macro);
+		else{
+			Integer clIndex = mProperties.mStyle.mColorHash.get(macro);
+			if(clIndex==null)
+				return -1;
+			else
+				mChars[pos+1] = clIndex;
+		}
 		if(mWorkingColors==null)
 			allocLetterColors();
 		return pos+2;
