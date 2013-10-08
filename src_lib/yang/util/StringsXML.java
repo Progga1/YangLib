@@ -16,6 +16,7 @@ import yang.graphics.font.DrawableAnchoredLines;
 //TODO xml comments not working
 public class StringsXML {
 	
+	public static final String UNKNOWN_KEY = "<>";
 	private HashMap<String, String> mStrings;
 	
 	public StringsXML(InputStream xmlStream) {
@@ -47,7 +48,7 @@ public class StringsXML {
 		String toReturn = mStrings.get(name);
 		if (toReturn == null) {
 			System.err.println("string:" +name +" not found");
-			return "<>";
+			return UNKNOWN_KEY;
 		}
 		else return toReturn;
 	}
