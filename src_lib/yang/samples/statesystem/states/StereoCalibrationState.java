@@ -79,5 +79,10 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 //		if(code=='d')
 //			mDrawCube ^= true;
 	}
+	
+	@Override
+	public void stop() {
+		mGraphics3D.switchGameCoordinates(true);
+	}
 
 }

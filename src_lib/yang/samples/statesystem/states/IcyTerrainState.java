@@ -39,11 +39,12 @@ public class IcyTerrainState extends SampleState {
 	private static boolean STATIC_SHADOWS = false;
 	private static boolean USE_LIGHTMAPS = true;
 	private static boolean ENVIRONMENT_MAPPING = true;
-	private static TextureProperties TEXTURE_SETTINGS = new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR);
+	private static TextureProperties TEXTURE_PROPERTIES = new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR);
 	
 	private Texture grass;
 	private Texture ice;
 	private Texture sky;
+	private Texture spark;
 	private Texture waterTex;
 	private Texture waterNormal;
 	private Texture mCubeTex;
@@ -97,12 +98,13 @@ public class IcyTerrainState extends SampleState {
 
 	@Override
 	public void initGraphics() {
-		grass = mGraphics.mGFXLoader.getImage("grass",TEXTURE_SETTINGS);
-		waterNormal = mGraphics.mGFXLoader.getImage("water_normal",TEXTURE_SETTINGS);
-		mCubeTex = mGraphics.mGFXLoader.getImage("cube",TEXTURE_SETTINGS);
-		ice = mGraphics.mGFXLoader.getImage("ice1",TEXTURE_SETTINGS);
-		waterTex = mGraphics.mGFXLoader.getImage("sky",TEXTURE_SETTINGS);
-		sky = mGraphics.mGFXLoader.getImage("sky",TEXTURE_SETTINGS);
+		grass = mGraphics.mGFXLoader.getImage("grass",TEXTURE_PROPERTIES);
+		waterNormal = mGraphics.mGFXLoader.getImage("water_normal",TEXTURE_PROPERTIES);
+		mCubeTex = mGraphics.mGFXLoader.getImage("cube",TEXTURE_PROPERTIES);
+		spark = mGraphics.mGFXLoader.getAlphaMap("light_alpha",TEXTURE_PROPERTIES);
+		ice = mGraphics.mGFXLoader.getImage("ice1",TEXTURE_PROPERTIES);
+		waterTex = mGraphics.mGFXLoader.getImage("sky",TEXTURE_PROPERTIES);
+		sky = mGraphics.mGFXLoader.getImage("sky",TEXTURE_PROPERTIES);
 		mGraphics3D.setOrthogonalProjection(-1, 10);
 		transfMatrix = mGraphics.createTransformationMatrix();
 		cullMatrix = mGraphics.createTransformationMatrix();
@@ -126,18 +128,27 @@ public class IcyTerrainState extends SampleState {
 		particleProperties.setVelocityDirection(0, -1, 0, true);
 		DefaultParticles3D particles3D = new DefaultParticles3D();
 		particles3D.init(mGraphics3D,320);
-		particles3D.mTexture = mCubeTex;
+		particles3D.mTexture = spark;
 		mWeather.init(particles3D,particleProperties);
 		mWeather.createRandomParticles(50);
 	}
 	
 	private void drawShadCube() {
 		mGraphics.bindTexture(mCubeTex);
-		mGraphics3D.setColor(1, 1, 1, 0.65f);
+		mGraphics3D.setColor(1, 1, 1, 0.5f);
 		float r = 0.5f;
 		double t = STATIC_SHADOWS?0:mStateTimer;
+		mGraphics.switchCulling(true);
+		mGraphics.setCullMode(true);
 		mGraphics3D.drawCubeCentered((float)Math.sin(t)*r, 1, (float)Math.sin(2*t)*r, 0.5f);
 		mGraphics3D.fillNormals(0);
+		mGraphics3D.flush();
+		mGraphics.setCullMode(false);
+		mGraphics3D.drawCubeCentered((float)Math.sin(t)*r, 1, (float)Math.sin(2*t)*r, 0.5f);
+		mGraphics3D.fillNormals(0);
+		mGraphics3D.flush();
+		mGraphics.setCullMode(false);
+		mGraphics.switchCulling(true);
 	}
 
 	private void renderDepthImage() {
@@ -216,10 +227,12 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	private void drawWeather() {
-		mGraphics.bindTexture(mCubeTex);
 		mGraphics3D.setDefaultProgram();
+		mGraphics.switchZWriting(false);
 		mGraphics.switchCulling(false);
 		mWeather.draw();
+		mGraphics.flush();
+		mGraphics.switchZWriting(true);
 	}
 	
 	@Override
