@@ -79,11 +79,11 @@ public class DrawableString extends FixedString {
 	
 	public DrawableString(int capacity) {
 		this();
-		allocString(capacity);
+		alloc(capacity);
 	}
 	
-	public DrawableString allocString(int capacity) {
-		super.allocString(capacity);
+	public DrawableString alloc(int capacity) {
+		super.alloc(capacity);
 		mTexCoords = new TextureCoordinatesQuad[capacity];
 		mLetters = new int[capacity];
 		return this;

@@ -21,19 +21,21 @@ public class FixedString {
 	}
 	
 	public FixedString(int capacity) {
-		allocString(capacity);
+		alloc(capacity);
 	}
 	
-	public FixedString allocString(int capacity) {
-		mCapacity = capacity;
-		mChars = new int[capacity];
+	public FixedString alloc(int capacity) {
+		if(capacity>mCapacity) {
+			mCapacity = capacity;
+			mChars = new int[capacity];
+		}
 		mMarker = 0;
 		mLength = 0;
 		return this;
 	}
 	
 	public FixedString allocString(String initialString, int capacity) {
-		allocString(capacity);
+		alloc(capacity);
 		appendString(initialString);
 		return this;
 	}
@@ -107,7 +109,7 @@ public class FixedString {
 			c++;
 		}
 
-		allocString(charCount);
+		alloc(charCount);
 		
 		int markInfoIndex = 0;
 		int lstMacro = -1;
@@ -179,11 +181,10 @@ public class FixedString {
 	public void setString(String string) {
 		if(string.length()>mCapacity) {
 			allocString(string);
-		}else{
-			mMarker = 0;
-			appendString(string);
-			truncAtMarker();
 		}
+		mMarker = 0;
+		appendString(string);
+		truncAtMarker();
 	}
 	
 	public void setInt(int value) {
@@ -373,6 +374,13 @@ public class FixedString {
 	
 	public String toString() {
 		return "Mark/Len/Cap="+mMarker+"/"+mLength+"/"+mCapacity+"; String="+createRawString();
+	}
+	
+	public FixedString truncAt(int index) {
+		if(index<mCapacity)
+			mChars[index] = 0;
+		mLength = index;
+		return this;
 	}
 	
 	public FixedString truncAtMarker() {
