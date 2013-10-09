@@ -341,8 +341,9 @@ public class DrawableString extends FixedString {
 	}
 
 	public DrawableString setConstant() {
-		if(mConstantPositions==null)
-			mConstantPositions = new float[mCapacity*(mProperties.mPosDim)*4];
+		int len = mCapacity*(mProperties.mPosDim)*4;
+		if(mConstantPositions==null || mConstantPositions.length<len)
+			mConstantPositions = new float[len];
 		createStringPositions(mConstantPositions,null);
 		applyAnchors(mHorizontalAnchor,mVerticalAnchor,mConstantPositions);
 		return this;
