@@ -19,9 +19,17 @@ public class StringsXML {
 	public static final String UNKNOWN_KEY = "<>";
 	private HashMap<String, String> mStrings;
 	
-	public StringsXML(InputStream xmlStream) {
+	public StringsXML() {
 		mStrings = new HashMap<String ,String>();
-		
+	}
+	
+	public StringsXML(InputStream xmlStream) {
+		this();
+		load(xmlStream);
+	}
+	
+	public StringsXML load(InputStream xmlStream) {
+		mStrings.clear();
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
@@ -42,6 +50,7 @@ public class StringsXML {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return this;
 	}
 	
 	public String getRawString(String name) {
