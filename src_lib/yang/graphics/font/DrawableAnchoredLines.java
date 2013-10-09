@@ -50,9 +50,11 @@ public class DrawableAnchoredLines extends DrawableString{
 		}
 	}
 	
+	@Override
 	public DrawableAnchoredLines setConstant() {
-		if(mConstantPositions==null)
-			mConstantPositions = new float[mCapacity*(mProperties.mPosDim)*4];
+		int len = mCapacity*(mProperties.mPosDim)*4;
+		if(mConstantPositions==null || mConstantPositions.length<len)
+			mConstantPositions = new float[len];
 		createStringPositions(null,staticOffsets);
 		offsetsToPositions(staticOffsets,mConstantPositions);
 		applyAnchors(0,mVerticalAnchor,mConstantPositions);

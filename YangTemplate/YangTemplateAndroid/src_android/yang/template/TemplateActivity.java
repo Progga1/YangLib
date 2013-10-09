@@ -1,7 +1,6 @@
 package yang.template;
 
 import samplesurface.SampleSurface;
-import yang.android.graphics.YangActivity;
 import android.os.Bundle;
 
 public class TemplateActivity  extends YangActivity {

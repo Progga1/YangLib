@@ -34,12 +34,12 @@
 		<link>
 			<name>src_yanglib</name>
 			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/yanglib/src_lib</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/yangLib/src_lib</locationURI>
 		</link>
 		<link>
 			<name>src_yangpc</name>
 			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/yanglib/yangPC/src_pc</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/yangLib/yangPC/src_pc</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

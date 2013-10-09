@@ -103,10 +103,10 @@ public class FixedString {
 		}
 		
 		mFormatStringMarks = new MarkInfo[markerCount];
-		int c=0;
+		int formatPos=0;
 		for(MarkInfo markInfo:markList) {
-			mFormatStringMarks[c] = markInfo;
-			c++;
+			mFormatStringMarks[formatPos] = markInfo;
+			formatPos++;
 		}
 
 		alloc(charCount);
@@ -114,57 +114,57 @@ public class FixedString {
 		int markInfoIndex = 0;
 		int lstMacro = -1;
 		startFormatStringParse();
-		c=0;
-		int charPos = 0;
-		for(int i=0;i<charCount;) {
+		int l = formatString.length();
+		int bufPos = 0;
+		for(formatPos=0;formatPos<l;) {
 			if(escaped) {
 				escaped = false;
-				if(formatString.charAt(c)=='%')
-					mChars[i] = '%';
-				if(formatString.charAt(c)=='\\')
-					mChars[i] = '\\';
-				if(formatString.charAt(c)=='n')
-					mChars[i] = '\n';
-				if(formatString.charAt(c)=='t')
-					mChars[i] = '\t';
-				c++;
-				i++;
+				if(formatString.charAt(formatPos)=='%')
+					mChars[bufPos] = '%';
+				if(formatString.charAt(formatPos)=='\\')
+					mChars[bufPos] = '\\';
+				if(formatString.charAt(formatPos)=='n')
+					mChars[bufPos] = '\n';
+				if(formatString.charAt(formatPos)=='t')
+					mChars[bufPos] = '\t';
+				formatPos++;
+				bufPos++;
 			}else{
-				if(formatString.charAt(c)=='\\'){
+				if(formatString.charAt(formatPos)=='\\'){
 					escaped = true;
-					c++;
+					formatPos++;
 				}else{
-					if(formatString.charAt(c)=='%') {
+					if(formatString.charAt(formatPos)=='%') {
 						int count = mFormatStringMarks[markInfoIndex++].mLength;
 						for(int k=0;k<count;k++)
-							mChars[i++] = 0;
-						while(++c<formatString.length() && isDigit(formatString.charAt(c)));
-					}else if(formatString.charAt(c)=='[') {
-						int p = formatString.indexOf("]", c+1);
+							mChars[bufPos++] = 0;
+						while(++formatPos<formatString.length() && isDigit(formatString.charAt(formatPos)));
+					}else if(formatString.charAt(formatPos)=='[') {
+						int p = formatString.indexOf("]", formatPos+1);
 						if(p<0) {
 							break;
 						}
-						if(p<=c)
+						if(p<=formatPos)
 							p = formatString.length()-1;
-						String macro = formatString.substring(c+1,p);
+						String macro = formatString.substring(formatPos+1,p);
 						
-						int m = handleMacro(macro,i,lstMacro);
+						int m = handleMacro(macro,bufPos,lstMacro);
 						if(m!=-1)
-							i = m;
-						c = p+1;
-						lstMacro = i;
+							bufPos = m;
+						formatPos = p+1;
+						lstMacro = bufPos;
 					}else{
-						char ch = formatString.charAt(c++);
-						mChars[i] = ch;
+						char ch = formatString.charAt(formatPos++);
+						mChars[bufPos] = ch;
 //						if(ch!=' ' && ch!='\t' && ch!='\n')
 //							charPos++;
-						i++;
+						bufPos++;
 					}
 					
 				}
 			}
 		}
-		mLength = charCount;
+		mLength = bufPos;
 		mMarker = mLength;
 		
 		endFormatStringParse(charCount,lstMacro);
