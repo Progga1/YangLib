@@ -177,9 +177,13 @@ public class FixedString {
 	}
 	
 	public void setString(String string) {
-		mMarker = 0;
-		appendString(string);
-		truncAtMarker();
+		if(string.length()>mCapacity) {
+			allocString(string);
+		}else{
+			mMarker = 0;
+			appendString(string);
+			truncAtMarker();
+		}
 	}
 	
 	public void setInt(int value) {
