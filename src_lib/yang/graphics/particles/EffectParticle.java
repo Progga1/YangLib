@@ -1,7 +1,7 @@
 package yang.graphics.particles;
 
-import yang.graphics.YangSurface;
 import yang.math.MathFunc;
+import yang.surface.YangSurface;
 
 public class EffectParticle extends PhysicalParticle {
 

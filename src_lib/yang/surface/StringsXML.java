@@ -1,4 +1,4 @@
-package yang.util;
+package yang.surface;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public class StringsXML {
 	public static final String UNKNOWN_KEY = "<>";
 	private HashMap<String, String> mStrings;
 	
-	public StringsXML() {
+	StringsXML() {
 		mStrings = new HashMap<String ,String>();
 	}
 	

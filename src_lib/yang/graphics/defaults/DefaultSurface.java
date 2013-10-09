@@ -4,8 +4,8 @@ import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
-import yang.graphics.YangSurface;
 import yang.graphics.font.BitmapFont;
+import yang.surface.YangSurface;
 
 public abstract class DefaultSurface extends YangSurface implements YangEventListener{
 

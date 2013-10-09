@@ -15,7 +15,6 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.awt.GLJPanel;
 
 import yang.events.EventQueueHolder;
-import yang.graphics.YangSurface;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
@@ -25,6 +24,7 @@ import yang.model.enums.ByteFormat;
 import yang.pc.PCEventHandler;
 import yang.pc.PCGraphics;
 import yang.pc.fileio.PCGFXLoader;
+import yang.surface.YangSurface;
 
 import com.jogamp.opengl.util.Animator;
 

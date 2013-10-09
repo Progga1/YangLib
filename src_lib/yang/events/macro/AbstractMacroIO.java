@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.YangEvent;
-import yang.graphics.YangSurface;
+import yang.surface.YangSurface;
 
 public abstract class AbstractMacroIO {
 

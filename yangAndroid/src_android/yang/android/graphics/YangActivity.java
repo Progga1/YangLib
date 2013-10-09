@@ -1,8 +1,8 @@
 package yang.android.graphics;
 
-import yang.graphics.YangSurface;
 import yang.model.DebugYang;
 import yang.model.ExitCallback;
+import yang.surface.YangSurface;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.media.AudioManager;

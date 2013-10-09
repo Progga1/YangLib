@@ -3,10 +3,10 @@ package yang.pc.gles;
 import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
-import yang.graphics.YangSurface;
 import yang.model.DebugYang;
 import yang.pc.PCEventHandler;
 import yang.pc.PCFrame;
+import yang.surface.YangSurface;
 
 public class YangGLESFrame extends PCFrame{
 

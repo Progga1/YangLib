@@ -1,4 +1,4 @@
-package yang.graphics;
+package yang.surface;
 
 import java.io.FileNotFoundException;
 
@@ -23,7 +23,6 @@ import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
 import yang.systemdependent.AbstractResourceManager;
 import yang.systemdependent.AbstractVibrator;
-import yang.util.StringsXML;
 import yang.util.Util;
 
 public abstract class YangSurface implements EventQueueHolder {
@@ -99,6 +98,7 @@ public abstract class YangSurface implements EventQueueHolder {
 		mInitializedNotifier = new Object();
 		mCatchUpTime = 0;
 		mEventQueue = new YangEventQueue(getMaxEventCount());
+		mStrings = new StringsXML();
 		setUpdatesPerSecond(120);
 		mUpdateMode = UpdateMode.SYNCHRONOUS;
 		mMacroFilename = null;
@@ -207,7 +207,7 @@ public abstract class YangSurface implements EventQueueHolder {
 		mSounds = App.soundManager;
 		mEventQueue.setGraphics(mGraphics);
 		if(mResources.fileExists("strings/strings.xml"))
-			mStrings = new StringsXML(mResources.getInputStream("strings/strings.xml"));
+			mStrings.load(mResources.getInputStream("strings/strings.xml"));
 		try{
 			initGraphics();
 

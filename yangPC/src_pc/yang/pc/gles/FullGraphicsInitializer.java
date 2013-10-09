@@ -1,11 +1,11 @@
 package yang.pc.gles;
 
-import yang.graphics.YangSurface;
 import yang.model.App;
 import yang.pc.PCVibrator;
 import yang.pc.fileio.PCDataStorage;
 import yang.pc.fileio.PCResourceManager;
 import yang.pc.fileio.PCSoundManager;
+import yang.surface.YangSurface;
 
 public class FullGraphicsInitializer {
 

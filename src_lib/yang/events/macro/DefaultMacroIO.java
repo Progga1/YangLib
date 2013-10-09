@@ -8,7 +8,7 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.YangZoomEvent;
-import yang.graphics.YangSurface;
+import yang.surface.YangSurface;
 
 public class DefaultMacroIO extends AbstractMacroIO {
 

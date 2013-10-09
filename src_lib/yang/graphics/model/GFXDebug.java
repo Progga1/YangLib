@@ -2,7 +2,6 @@ package yang.graphics.model;
 
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.PointerTracker;
-import yang.graphics.YangSurface;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
@@ -13,6 +12,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.DebugYang;
 import yang.model.PrintInterface;
+import yang.surface.YangSurface;
 
 public class GFXDebug implements PrintInterface {
 

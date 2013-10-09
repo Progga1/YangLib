@@ -3,8 +3,8 @@ package yang.android.graphics;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import yang.graphics.YangSurface;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.surface.YangSurface;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 

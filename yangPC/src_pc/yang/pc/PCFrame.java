@@ -8,8 +8,8 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import yang.graphics.YangSurface;
 import yang.pc.fileio.PCSoundManager;
+import yang.surface.YangSurface;
 
 public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 	

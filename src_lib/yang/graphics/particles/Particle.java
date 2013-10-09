@@ -1,8 +1,8 @@
 package yang.graphics.particles;
 
-import yang.graphics.YangSurface;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.MathFunc;
+import yang.surface.YangSurface;
 
 public class Particle {
 	

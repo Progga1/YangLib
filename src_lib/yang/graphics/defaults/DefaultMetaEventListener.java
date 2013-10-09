@@ -8,10 +8,10 @@ import yang.events.YangEventQueue;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.YangEventListener;
-import yang.graphics.YangSurface;
 import yang.graphics.stereovision.LensDistortionShader;
 import yang.graphics.util.HeadMovement;
 import yang.model.DebugYang;
+import yang.surface.YangSurface;
 
 public class DefaultMetaEventListener implements YangEventListener {
 

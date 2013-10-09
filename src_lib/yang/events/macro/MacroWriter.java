@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import yang.events.eventtypes.YangEvent;
-import yang.graphics.YangSurface;
 import yang.model.DebugYang;
+import yang.surface.YangSurface;
 
 public class MacroWriter {
 

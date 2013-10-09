@@ -8,8 +8,8 @@ import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.sound.AbstractSoundManager;
+import yang.surface.StringsXML;
 import yang.systemdependent.AbstractResourceManager;
-import yang.util.StringsXML;
 
 public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener {
 
