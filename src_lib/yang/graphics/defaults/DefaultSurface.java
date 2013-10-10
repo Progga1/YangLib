@@ -7,6 +7,7 @@ import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.font.BitmapFont;
 import yang.math.objects.matrix.YangMatrix;
+import yang.model.DebugYang;
 import yang.surface.YangSurface;
 import yang.systemdependent.YangSensor;
 
@@ -86,10 +87,30 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 	
 	public void sensorChanged(YangSensorEvent event) {
 		if(event.mType==YangSensor.TYPE_GYROSCOPE) {
-			tempMat.fromEulerAngles(event.mX, event.mY, event.mZ);
 			mGraphics.mUseCameraPostMatrix = true;
-			mGraphics.mPostCameraMatrix.set(tempMat);
+			//tempMat.fromEulerAngles(event.mX, event.mY, event.mZ);
+			//mGraphics.mPostCameraMatrix.set(tempMat);
+//			mGraphics.mPostCameraMatrix.rotateX(event.mY);
+//			mGraphics.mPostCameraMatrix.rotateZ(event.mZ);
+//			mGraphics.mPostCameraMatrix.rotateY(event.mX);
+			YangMatrix mat = mGraphics.mPostCameraMatrix;
+			mat.rotateZ(-event.mZ);
+			mat.rotateY(event.mY);
+			mat.rotateX(-event.mX);
 		}
+		if(event.mType==YangSensor.TYPE_ROTATION_VECTOR) {
+			mGraphics.mUseCameraPostMatrix = true;
+			//float magn = Geometry.getDistance(event.mX,event.mY,event.mZ);
+//			mGraphics.mPostCameraMatrix.fromQuaternion(event.mX,event.mY,event.mZ,1-event.mX*event.mX-event.mY*event.mY-event.mZ*event.mZ);
+//			mGraphics.mPostCameraMatrix.invert();
+			mGraphics.mDebugMatrix.fromQuaternion(event.mX,event.mY,event.mZ,(float)Math.sqrt(1-event.mX*event.mX-event.mY*event.mY-event.mZ*event.mZ));
+		}
+//		if(event.mType==YangSensor.TYPE_GRAVITY) {
+//			DebugYang.clearState();
+//			DebugYang.appendStateLn(event.mX);
+//			DebugYang.appendStateLn(event.mY);
+//			DebugYang.appendStateLn(event.mZ);
+//		}
 	}
 
 }

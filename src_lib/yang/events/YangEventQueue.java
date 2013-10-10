@@ -194,7 +194,7 @@ public class YangEventQueue {
 		putRuntimeEvent(newEvent);
 	}
 	
-	public void putSensorEvent(int eventType,float[] values) {
+	public void putSensorEvent(int eventType,float[] values,float[] mat) {
 		YangSensorEvent newEvent = mSensorEventQueue[mSensorEventId++];
 		if(mSensorEventId>=mMaxEvents)
 			mSensorEventId = 0;
@@ -202,6 +202,9 @@ public class YangEventQueue {
 		newEvent.mX = values[0];
 		newEvent.mY = values[1];
 		newEvent.mZ = values[2];
+		if(values.length>3)
+			newEvent.mW = values[3];
+		newEvent.mMatrix = mat;
 		putRuntimeEvent(newEvent);
 	}
 	

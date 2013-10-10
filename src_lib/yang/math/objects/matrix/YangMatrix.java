@@ -296,6 +296,10 @@ public class YangMatrix {
 		System.arraycopy(src.mMatrix,0, this.mMatrix,0, 16);
 	}
 	
+	public void set(float[] src) {
+		System.arraycopy(src,0, this.mMatrix,0, 16);
+	}
+	
 	public boolean asInverted(float[] target) {
 		return MatrixOps.invert(target,mMatrix,mTempMat1,mTempMat2);
 	}
@@ -438,8 +442,12 @@ public class YangMatrix {
 		multiplyLeft(mTempMat1);
 	}
 	
-	public void setFromQuaternion(Quaternion quaternion) {
+	public void fromQuaternion(Quaternion quaternion) {
 		quaternion.toRotationMatrix(mMatrix);
+	}
+	
+	public void fromQuaternion(float quatX,float quatY,float quatZ,float quatW) {
+		Quaternion.toRotationMatrix(quatX, quatY, quatZ, quatW, mMatrix);
 	}
 
 	public void multiplyRight(YangMatrix rhsMatrix) {

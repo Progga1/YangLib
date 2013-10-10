@@ -12,7 +12,7 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 	public float mBorder = 0.1f;
 	public float mCrossSize = 0.1f;
 	//public boolean mDrawCube = true;
-	public boolean mDrawCross = true;
+	public boolean mDrawCross = false;
 	public YangMatrix mTransform = new YangMatrix();
 	public Texture mCubeTex;
 	
@@ -46,7 +46,7 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 		mGraphics3D.setWhite();
 		mGraphics.bindTexture(mCubeTex);
 		if(!mDrawCross)
-			mGraphics3D.drawCubeCentered(mTransform);
+			mGraphics3D.drawCubeCentered(mGraphics.mDebugMatrix);
 		mGraphics3D.flush();
 		mGraphics.switchZBuffer(false);
 		

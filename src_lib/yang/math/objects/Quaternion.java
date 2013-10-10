@@ -9,6 +9,25 @@ public class Quaternion {
 	
 	public float mX,mY,mZ,mW;
 	
+	public static void toRotationMatrix(float quatX,float quatY,float quatZ,float quatW,float[] target) {
+		target[0] = 1 - 2*quatY*quatY - 2*quatZ*quatZ;
+		target[1] = 2*quatX*quatY - 2*quatZ*quatW;
+		target[2] = 2*quatX*quatZ + 2*quatY*quatW;
+		target[3] = 0;
+		target[4] = 2*quatX*quatY+ 2*quatZ*quatW;
+		target[5] = 1 - 2*quatX*quatX - 2*quatZ*quatZ;
+		target[6] = 2*quatY*quatZ - 2*quatX*quatW;
+		target[7] = 0;
+		target[8] = 2*quatX*quatZ - 2*quatY*quatW;
+		target[9] = 2*quatY*quatZ + 2*quatX*quatW;
+		target[10] = 1 - 2*quatX*quatX - 2*quatY*quatY;
+		target[11] = 0;
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
+	}
+	
 	public Quaternion() {
 		set(0,0,0,1);
 	}

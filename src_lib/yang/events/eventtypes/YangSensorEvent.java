@@ -6,8 +6,9 @@ import yang.systemdependent.YangSensor;
 
 public class YangSensorEvent extends YangEvent {
 	
-	public float mX,mY,mZ;
+	public float mX,mY,mZ,mW = 1;
 	public int mType;
+	public float[] mMatrix;
 	
 	@Override
 	public void handle(RawEventListener listener) {
@@ -31,7 +32,7 @@ public class YangSensorEvent extends YangEvent {
 	
 	@Override
 	public String toString() {
-		return typeToString()+": "+mX+","+mY+","+mZ;
+		return typeToString()+": "+mX+","+mY+","+mZ+(mW!=1?","+mW:"");
 	}
 	
 }

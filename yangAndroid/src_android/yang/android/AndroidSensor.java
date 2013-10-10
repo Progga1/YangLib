@@ -20,6 +20,7 @@ public class AndroidSensor extends YangSensor implements SensorEventListener{
 //	private Sensor mAccSensor;
 	private Sensor[] mSensors;
 	private YangActivity mActivity;
+	private long mTimeStamp;
 
 	public AndroidSensor(YangActivity activity) {
 		mActivity = activity;
@@ -71,17 +72,28 @@ public class AndroidSensor extends YangSensor implements SensorEventListener{
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		
 		int type = -1;
 		switch(event.sensor.getType()) {
 		case Sensor.TYPE_ACCELEROMETER: type = YangSensor.TYPE_ACCELEROMETER;break;
 		case Sensor.TYPE_LINEAR_ACCELERATION: type = YangSensor.TYPE_LINEAR_ACCELERATION;break;
 		case Sensor.TYPE_GRAVITY: type = YangSensor.TYPE_GRAVITY;break;
-		case Sensor.TYPE_GYROSCOPE: type = YangSensor.TYPE_GYROSCOPE;break;
+		case Sensor.TYPE_GYROSCOPE: 
+			type = YangSensor.TYPE_GYROSCOPE;
+			long time = System.nanoTime();
+			float deltaTime = (float)((System.nanoTime()-mTimeStamp)*0.000000001);
+			mTimeStamp = time;
+			mEvents.putSensorEvent(type, event.values[0]*deltaTime,event.values[1]*deltaTime,event.values[2]*deltaTime);
+			return;
 		case Sensor.TYPE_ROTATION_VECTOR: type = YangSensor.TYPE_ROTATION_VECTOR;break;
 		}
 		if(type<0)
 			return;
-		mEvents.putSensorEvent(type, event.values);
+//		float[] mat = new float[16];
+//		SensorManager.getRotationMatrixFromVector(mat, event.values);
+//		
+//		SensorManager.getOrientation(mat, event.values);
+		mEvents.putSensorEvent(type, event.values,null);
 	}
 
 }

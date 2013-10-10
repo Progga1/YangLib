@@ -112,6 +112,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public int mRestartCount = 0;
 	public AbstractProgram mCurrentProgram = null;
 	public boolean mUseCameraPostMatrix = false;
+	public YangMatrix mDebugMatrix = new YangMatrix();
 	
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
