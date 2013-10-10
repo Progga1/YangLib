@@ -2,6 +2,7 @@ package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.Default3DGraphics;
@@ -136,6 +137,11 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 
 	@Override
 	public void zoom(float factor) {
+		
+	}
+	
+	@Override
+	public void sensorChanged(YangSensorEvent event) {
 		
 	}
 	

@@ -4,6 +4,7 @@ import yang.events.eventtypes.PointerTracker;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangSensorEvent;
 import yang.events.eventtypes.YangZoomEvent;
 import yang.events.listeners.YangEventListener;
 import yang.events.macro.MacroWriter;
@@ -16,6 +17,7 @@ public class YangEventQueue {
 	public static final int ID_POINTER_EVENT = 0;
 	public static final int ID_KEY_EVENT = 1;
 	public static final int ID_ZOOM_EVENT = 2;
+	public static final int ID_SENSOR_EVENT = 3;
 	
 	public PointerTracker mPointerTrackers[] = new PointerTracker[MAX_POINTERS];
 	public float mPointerDistance = -1;
@@ -24,12 +26,14 @@ public class YangEventQueue {
 	private YangPointerEvent[] mPointerEventQueue;
 	private YangKeyEvent[] mKeyEventQueue;
 	private YangZoomEvent[] mZoomEventQueue;
+	private YangSensorEvent[] mSensorEventQueue;
 	public YangEvent[][] mQueuePools;
 	private YangEvent[] mQueue;
 	private YangEvent[] mMetaEventQueue;
 	private int mPointerEventId;
 	private int mKeyEventId;
 	private int mZoomEventId;
+	private int mSensorEventId;
 	private int mQueueId;
 	private int mMetaEventQueueId;
 	private int mQueueFirst;
@@ -47,6 +51,7 @@ public class YangEventQueue {
 		mKeyEventId = 0;
 		mQueueId = 0;
 		mMetaEventQueueId = 0;
+		mSensorEventId = 0;
 		mQueueFirst = 0;
 		mMetaEventQueueFirst = 0;
 		mQueue = new YangEvent[maxEvents];
@@ -54,6 +59,7 @@ public class YangEventQueue {
 		mPointerEventQueue = new YangPointerEvent[maxEvents];
 		mKeyEventQueue = new YangKeyEvent[maxEvents];
 		mZoomEventQueue = new YangZoomEvent[maxEvents];
+		mSensorEventQueue = new YangSensorEvent[maxEvents];
 		for(int i=0;i<maxEvents;i++) {
 			mPointerEventQueue[i] = new YangPointerEvent();
 			mPointerEventQueue[i].mEventQueue = this;
@@ -61,6 +67,8 @@ public class YangEventQueue {
 			mKeyEventQueue[i].mEventQueue = this;
 			mZoomEventQueue[i] = new YangZoomEvent();
 			mZoomEventQueue[i].mEventQueue = this;
+			mSensorEventQueue[i] = new YangSensorEvent();
+			mSensorEventQueue[i].mEventQueue = this;
 		}
 		mMetaKeys = new boolean[512];
 		for(int i=0;i<mMetaKeys.length;i++) {
@@ -73,10 +81,11 @@ public class YangEventQueue {
 		mQueuePools[ID_POINTER_EVENT] = mPointerEventQueue;
 		mQueuePools[ID_KEY_EVENT] = mKeyEventQueue;
 		mQueuePools[ID_ZOOM_EVENT] = mZoomEventQueue;
+		mQueuePools[ID_SENSOR_EVENT] = mSensorEventQueue;
 	}
 	
 	public YangEventQueue(int maxEvents) {
-		this(maxEvents,3);
+		this(maxEvents,4);
 	}
 	
 	public synchronized void putRuntimeEvent(YangEvent event) {
@@ -171,6 +180,28 @@ public class YangEventQueue {
 		if(mZoomEventId>=mMaxEvents)
 			mZoomEventId = 0;
 		newEvent.mValue = value;
+		putRuntimeEvent(newEvent);
+	}
+	
+	public void putSensorEvent(int eventType,float x,float y,float z) {
+		YangSensorEvent newEvent = mSensorEventQueue[mSensorEventId++];
+		if(mSensorEventId>=mMaxEvents)
+			mSensorEventId = 0;
+		newEvent.mType = eventType;
+		newEvent.mX = x;
+		newEvent.mY = y;
+		newEvent.mZ = z;
+		putRuntimeEvent(newEvent);
+	}
+	
+	public void putSensorEvent(int eventType,float[] values) {
+		YangSensorEvent newEvent = mSensorEventQueue[mSensorEventId++];
+		if(mSensorEventId>=mMaxEvents)
+			mSensorEventId = 0;
+		newEvent.mType = eventType;
+		newEvent.mX = values[0];
+		newEvent.mY = values[1];
+		newEvent.mZ = values[2];
 		putRuntimeEvent(newEvent);
 	}
 	

@@ -22,6 +22,7 @@ import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
 import yang.systemdependent.AbstractResourceManager;
+import yang.systemdependent.YangSensor;
 import yang.systemdependent.AbstractVibrator;
 import yang.util.Util;
 
@@ -40,6 +41,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	public AbstractGFXLoader mGFXLoader;
 	public AbstractSoundManager mSounds;
 	public AbstractVibrator mVibrator;
+	public YangSensor mSensor;
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 
@@ -205,6 +207,8 @@ public abstract class YangSurface implements EventQueueHolder {
 		mGFXLoader = mGraphics.mGFXLoader;
 		mResources = mGraphics.mGFXLoader.mResources;
 		mSounds = App.soundManager;
+		mSensor = App.sensor;
+		mSensor.init(this);
 		mEventQueue.setGraphics(mGraphics);
 		if(mResources.fileExists("strings/strings.xml"))
 			mStrings.load(mResources.getInputStream("strings/strings.xml"));
@@ -523,6 +527,8 @@ public abstract class YangSurface implements EventQueueHolder {
 		}
 		if(mResuming)
 			onLoadingInterrupted(true);
+		if(mSensor!=null)
+			mSensor.pause();
 	}
 
 	/**
@@ -537,6 +543,8 @@ public abstract class YangSurface implements EventQueueHolder {
 		mCatchUpTime = 0;
 		mResuming = false;
 		mLoadingState = 0;
+		if(mSensor!=null)
+			mSensor.resume();
 	}
 
 	public void setPaused(boolean paused) {

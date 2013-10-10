@@ -1,6 +1,7 @@
 package yang.pc.gles;
 
 import yang.model.App;
+import yang.pc.PCSensorFrame;
 import yang.pc.PCVibrator;
 import yang.pc.fileio.PCDataStorage;
 import yang.pc.fileio.PCResourceManager;
@@ -19,6 +20,7 @@ public class FullGraphicsInitializer {
 		mTranslator = new PCGL2ES2Graphics(resolutionX,resolutionY);
 
 		App.soundManager = new PCSoundManager();
+		App.sensor = new PCSensorFrame();
 		App.storage = new PCDataStorage();
 		App.gfxLoader = mTranslator.mGFXLoader;
 		App.resourceManager = new PCResourceManager();

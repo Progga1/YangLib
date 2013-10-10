@@ -7,6 +7,7 @@ import yang.events.Keys;
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.stereovision.LensDistortionShader;
 import yang.graphics.util.HeadMovement;
@@ -175,6 +176,11 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void zoom(float factor) {
+		
+	}
+
+	@Override
+	public void sensorChanged(YangSensorEvent event) {
 		
 	}
 

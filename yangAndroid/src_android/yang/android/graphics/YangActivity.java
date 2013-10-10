@@ -1,5 +1,7 @@
 package yang.android.graphics;
 
+import yang.android.AndroidSensor;
+import yang.model.App;
 import yang.model.DebugYang;
 import yang.model.ExitCallback;
 import yang.surface.YangSurface;
@@ -35,6 +37,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 	}
 
 	protected void setSurface(YangSurface yangSurface) {
+		App.sensor = new AndroidSensor(this);
 		if(DebugYang.PLAY_MACRO_FILENAME!=null)
 			yangSurface.setMacroFilename(DebugYang.PLAY_MACRO_FILENAME);
 		mGLView.setSurface(yangSurface);

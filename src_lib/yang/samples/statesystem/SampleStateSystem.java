@@ -5,6 +5,7 @@ import yang.graphics.font.StringProperties;
 import yang.graphics.translator.Texture;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
+import yang.systemdependent.YangSensor;
 import yang.util.statesystem.YangProgramStateSystem;
 
 public class SampleStateSystem extends YangProgramStateSystem {
@@ -21,6 +22,8 @@ public class SampleStateSystem extends YangProgramStateSystem {
 	}
 	
 	public void postInitGraphics() {
+		super.mSensor.startSensor(YangSensor.TYPE_GYROSCOPE);
+		super.mSensor.startSensor(YangSensor.TYPE_GRAVITY);
 		DrawableString.DEFAULT_PROPERTIES = new StringProperties(mGraphics2D,mGFXLoader.loadFont("arial"));
 		super.initDebugOutput(DrawableString.DEFAULT_PROPERTIES.mFont);
 		mMainMenu = (SampleMainMenu)new SampleMainMenu().init(this);

@@ -2,6 +2,7 @@ package yang.graphics.tools.animator;
 
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultAnimationPlayer;
@@ -399,5 +400,10 @@ public class Animator implements YangEventListener {
 
 	public Animation<?> getCurrentAnimation() {
 		return mCurAnimation;
+	}
+
+	@Override
+	public void sensorChanged(YangSensorEvent event) {
+		
 	}
 }

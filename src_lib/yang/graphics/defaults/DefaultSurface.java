@@ -3,9 +3,12 @@ package yang.graphics.defaults;
 import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.font.BitmapFont;
+import yang.math.objects.matrix.YangMatrix;
 import yang.surface.YangSurface;
+import yang.systemdependent.YangSensor;
 
 public abstract class DefaultSurface extends YangSurface implements YangEventListener{
 
@@ -77,6 +80,16 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 
 	public void zoom(float factor) {
 
+	}
+	
+	private YangMatrix tempMat = new YangMatrix();
+	
+	public void sensorChanged(YangSensorEvent event) {
+		if(event.mType==YangSensor.TYPE_GYROSCOPE) {
+			tempMat.fromEulerAngles(event.mX, event.mY, event.mZ);
+			mGraphics.mUseCameraPostMatrix = true;
+			mGraphics.mPostCameraMatrix.set(tempMat);
+		}
 	}
 
 }
