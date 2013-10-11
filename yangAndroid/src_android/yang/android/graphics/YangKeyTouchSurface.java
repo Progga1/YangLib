@@ -46,6 +46,7 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 			//enter and such
 			switch (keyCode) {
 				case KeyEvent.KEYCODE_DEL: mEventQueue.putKeyEvent(Keys.BACKSPACE,action);	break;
+				case KeyEvent.KEYCODE_ENTER: mEventQueue.putKeyEvent(Keys.ENTER,action);	break;
 				//TODO more events
 			}
 		}
