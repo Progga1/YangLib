@@ -103,6 +103,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 			//float magn = Geometry.getDistance(event.mX,event.mY,event.mZ);
 //			mGraphics.mPostCameraMatrix.fromQuaternion(event.mX,event.mY,event.mZ,1-event.mX*event.mX-event.mY*event.mY-event.mZ*event.mZ);
 //			mGraphics.mPostCameraMatrix.invert();
+
 			mGraphics.mDebugMatrix.fromQuaternion(event.mX,event.mY,event.mZ,(float)Math.sqrt(1-event.mX*event.mX-event.mY*event.mY-event.mZ*event.mZ));
 		}
 //		if(event.mType==YangSensor.TYPE_GRAVITY) {

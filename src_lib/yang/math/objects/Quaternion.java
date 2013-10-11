@@ -61,6 +61,19 @@ public class Quaternion {
 		mW = 1;
 	}
 	
+	public void setFromEuler(float yaw,float pitch,float roll) {
+		float s1 = (float)Math.sin(yaw);
+		float c1 = (float)Math.cos(yaw);
+		float s2 = (float)Math.sin(pitch);
+		float c2 = (float)Math.cos(pitch);
+		float s3 = (float)Math.sin(roll);
+		float c3 = (float)Math.cos(roll);
+		mW = c1*c2*c3 - s1*s2*s3;
+		mX = s1*s2*c3 + c1*c2*s3;
+		mY = s1*c2*c3 + c1*s2*s3;
+		mZ = c1*s2*c3 - s1*c2*s3;
+	}
+	
 	public void setFromAxis(Vector3f axis,float angle) {
 		float sinA = (float)Math.sin(angle*0.5f);
 		float cosA = (float)Math.cos(angle*0.5f);

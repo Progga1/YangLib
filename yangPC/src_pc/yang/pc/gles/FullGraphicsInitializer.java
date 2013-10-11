@@ -20,7 +20,8 @@ public class FullGraphicsInitializer {
 		mTranslator = new PCGL2ES2Graphics(resolutionX,resolutionY);
 
 		App.soundManager = new PCSoundManager();
-		App.sensor = new PCSensorFrame();
+		if(App.sensor==null)
+			App.sensor = new PCSensorFrame();
 		App.storage = new PCDataStorage();
 		App.gfxLoader = mTranslator.mGFXLoader;
 		App.resourceManager = new PCResourceManager();

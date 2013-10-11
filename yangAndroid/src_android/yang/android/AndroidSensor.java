@@ -70,6 +70,8 @@ public class AndroidSensor extends YangSensor implements SensorEventListener{
 		
 	}
 
+	//float angX,angY,angZ;
+	
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		
@@ -83,7 +85,11 @@ public class AndroidSensor extends YangSensor implements SensorEventListener{
 			long time = System.nanoTime();
 			float deltaTime = (float)((System.nanoTime()-mTimeStamp)*0.000000001);
 			mTimeStamp = time;
+//			angX += event.values[0]*deltaTime;
+//			angY += event.values[1]*deltaTime;
+//			angZ += event.values[2]*deltaTime;
 			mEvents.putSensorEvent(type, event.values[0]*deltaTime,event.values[1]*deltaTime,event.values[2]*deltaTime);
+			//mEvents.putSensorEvent(type, angX,angY,angZ);
 			return;
 		case Sensor.TYPE_ROTATION_VECTOR: type = YangSensor.TYPE_ROTATION_VECTOR;break;
 		}
