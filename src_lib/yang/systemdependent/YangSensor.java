@@ -20,7 +20,7 @@ public abstract class YangSensor {
 	
 	protected int mActiveSensorsCount = 0;
 	protected boolean[] mSensorActive = new boolean[SENSOR_COUNT];
-	private int[] mSpeed = new int[SENSOR_COUNT];
+	protected int[] mSpeed = new int[SENSOR_COUNT];
 	protected YangSurface mSurface;
 	protected YangEventQueue mEvents;
 	private boolean mPaused = false;

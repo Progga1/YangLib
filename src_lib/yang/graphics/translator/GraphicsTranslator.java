@@ -12,6 +12,7 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.programs.GLProgramFactory;
+import yang.graphics.stereovision.StereoVision;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureProperties;
@@ -677,17 +678,21 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mStereo = stereo;
 		setViewPort(width,height);
 		if(stereo)
-			width /= 2;
+			width = width/2;
 		this.mScreenWidth = width;
 		this.mScreenHeight = height;
 		this.mRatioX = (float) width / height;
+
 		if(mRatioX<mMinRatioX){
 			this.mRatioY = 1/mRatioX;
 			mRatioX = 1;
 		}else
 			mRatioY = 1;
+		if(stereo)
+			mRatioX *= StereoVision.RATIO_FAC;
 		mInvRatioX = 1/mRatioX;
 		mInvRatioY = 1/mRatioY;
+		
 		mProjScreenTransform.setOrthogonalProjection(-mRatioX,mRatioX, mRatioY,-mRatioY, -1,1);
 		mProjScreenTransform.refreshInverted();
 		

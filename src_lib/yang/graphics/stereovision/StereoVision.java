@@ -15,9 +15,10 @@ import yang.model.ScreenInfo;
 
 public class StereoVision {
 
+	public static float RATIO_FAC = 1.5f;
 	public static TextureWrap WRAP_MODE = TextureWrap.CLAMP;
 	public static boolean LENS_DISTORTION = true;
-			
+		
 	public int mResolution;
 	private GraphicsTranslator mGraphics;
 	private MinimumTexShader mMinimumShader;

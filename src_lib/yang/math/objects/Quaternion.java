@@ -28,6 +28,10 @@ public class Quaternion {
 		target[15] = 1;
 	}
 	
+	public static void toRotationMatrix(float quatX,float quatY,float quatZ,float[] target) {
+		toRotationMatrix(quatX,quatY,quatZ,(float)Math.sqrt(1-quatX*quatX-quatY*quatY-quatZ*quatZ),target);
+	}
+	
 	public Quaternion() {
 		set(0,0,0,1);
 	}
@@ -64,10 +68,10 @@ public class Quaternion {
 	public void setFromEuler(float yaw,float pitch,float roll) {
 		float s1 = (float)Math.sin(yaw);
 		float c1 = (float)Math.cos(yaw);
-		float s2 = (float)Math.sin(pitch);
-		float c2 = (float)Math.cos(pitch);
-		float s3 = (float)Math.sin(roll);
-		float c3 = (float)Math.cos(roll);
+		float s2 = (float)Math.sin(roll);
+		float c2 = (float)Math.cos(roll);
+		float s3 = (float)Math.sin(pitch);
+		float c3 = (float)Math.cos(pitch);
 		mW = c1*c2*c3 - s1*s2*s3;
 		mX = s1*s2*c3 + c1*c2*s3;
 		mY = s1*c2*c3 + c1*s2*s3;

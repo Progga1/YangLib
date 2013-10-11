@@ -449,6 +449,10 @@ public class YangMatrix {
 	public void fromQuaternion(float quatX,float quatY,float quatZ,float quatW) {
 		Quaternion.toRotationMatrix(quatX, quatY, quatZ, quatW, mMatrix);
 	}
+	
+	public void fromQuaternion(float quatX,float quatY,float quatZ) {
+		Quaternion.toRotationMatrix(quatX,quatY,quatZ,mMatrix);
+	}
 
 	public void multiplyRight(YangMatrix rhsMatrix) {
 		multiplyRight(rhsMatrix.mMatrix);

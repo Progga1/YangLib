@@ -15,6 +15,7 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 	public boolean mDrawCross = false;
 	public YangMatrix mTransform = new YangMatrix();
 	public Texture mCubeTex;
+	public boolean mUseDebugTransform = false;
 	
 	public StereoCalibrationState() {
 		
@@ -46,7 +47,7 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 		mGraphics3D.setWhite();
 		mGraphics.bindTexture(mCubeTex);
 		if(!mDrawCross)
-			mGraphics3D.drawCubeCentered(mGraphics.mDebugMatrix);
+			mGraphics3D.drawCubeCentered(mUseDebugTransform?mGraphics.mDebugMatrix:mTransform);
 		mGraphics3D.flush();
 		mGraphics.switchZBuffer(false);
 		

@@ -83,16 +83,9 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 
 	}
 	
-	private YangMatrix tempMat = new YangMatrix();
-	
 	public void sensorChanged(YangSensorEvent event) {
 		if(event.mType==YangSensor.TYPE_GYROSCOPE) {
 			mGraphics.mUseCameraPostMatrix = true;
-			//tempMat.fromEulerAngles(event.mX, event.mY, event.mZ);
-			//mGraphics.mPostCameraMatrix.set(tempMat);
-//			mGraphics.mPostCameraMatrix.rotateX(event.mY);
-//			mGraphics.mPostCameraMatrix.rotateZ(event.mZ);
-//			mGraphics.mPostCameraMatrix.rotateY(event.mX);
 			YangMatrix mat = mGraphics.mPostCameraMatrix;
 			mat.rotateZ(-event.mZ);
 			mat.rotateY(event.mY);
@@ -100,18 +93,9 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 		}
 		if(event.mType==YangSensor.TYPE_ROTATION_VECTOR) {
 			mGraphics.mUseCameraPostMatrix = true;
-			//float magn = Geometry.getDistance(event.mX,event.mY,event.mZ);
-//			mGraphics.mPostCameraMatrix.fromQuaternion(event.mX,event.mY,event.mZ,1-event.mX*event.mX-event.mY*event.mY-event.mZ*event.mZ);
-//			mGraphics.mPostCameraMatrix.invert();
-
-			mGraphics.mDebugMatrix.fromQuaternion(event.mX,event.mY,event.mZ,(float)Math.sqrt(1-event.mX*event.mX-event.mY*event.mY-event.mZ*event.mZ));
+			YangMatrix mat = mGraphics.mPostCameraMatrix;
+			mat.fromQuaternion(event.mX,event.mY,event.mZ);
 		}
-//		if(event.mType==YangSensor.TYPE_GRAVITY) {
-//			DebugYang.clearState();
-//			DebugYang.appendStateLn(event.mX);
-//			DebugYang.appendStateLn(event.mY);
-//			DebugYang.appendStateLn(event.mZ);
-//		}
 	}
 
 }
