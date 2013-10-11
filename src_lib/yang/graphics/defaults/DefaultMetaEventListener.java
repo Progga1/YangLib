@@ -41,7 +41,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 	public void pointerDown(float x, float y, YangPointerEvent event) {
 		if(mCtrlPressed) {
 			if(event.mButton==YangPointerEvent.BUTTON_MIDDLE) {
-				mSurface.mGraphics.mUseCameraPostMatrix = false;
+				mSurface.mGraphics.mStereoCameraMatrixEnabled = false;
 				mHead.reset();
 			}
 				
@@ -56,7 +56,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 	@Override
 	public void pointerDragged(float x, float y, YangPointerEvent event) {
 		if(mCtrlPressed) {
-			mSurface.mGraphics.mUseCameraPostMatrix = true;
+			mSurface.mGraphics.mStereoCameraMatrixEnabled = true;
 			if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
 				mHead.mYaw += event.mDeltaX;
 				mHead.mPitch += event.mDeltaY;
@@ -65,7 +65,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 				mHead.mRoll += event.mDeltaX;
 				mHead.mPitch += event.mDeltaY;
 			}
-			mSurface.mGraphics.mPostCameraMatrix.set(mHead.getUpdatedMatrix());
+			mSurface.mGraphics.mStereoCameraMatrix.set(mHead.getUpdatedMatrix());
 		}
 	}
 

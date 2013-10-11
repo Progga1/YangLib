@@ -56,7 +56,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mMaxTime = 60;
 	private int mMaxTextureId = -1;
 	public boolean mStereo = false;
-	public YangMatrix mPostCameraMatrix;
+	public YangMatrix mStereoCameraMatrix;
+	public boolean mForceStereo = false;
 	
 	//State
 	protected Texture[] mCurrentTextures;
@@ -112,7 +113,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected final int[] mTempIntArray = new int[128];
 	public int mRestartCount = 0;
 	public AbstractProgram mCurrentProgram = null;
-	public boolean mUseCameraPostMatrix = false;
+	public boolean mStereoCameraMatrixEnabled = false;
 	public YangMatrix mDebugMatrix = new YangMatrix();
 	
 	public abstract void setClearColor(float r, float g, float b,float a);
@@ -189,7 +190,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		INSTANCE = this;
 		mCurrentTextures = new Texture[MAX_TEXTURES];
 		mProjScreenTransform = new YangMatrixCameraOps();
-		mPostCameraMatrix = new YangMatrix();
+		mStereoCameraMatrix = new YangMatrix();
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
 		mFlushDisabled = false;

@@ -85,15 +85,15 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 	
 	public void sensorChanged(YangSensorEvent event) {
 		if(event.mType==YangSensor.TYPE_GYROSCOPE) {
-			mGraphics.mUseCameraPostMatrix = true;
-			YangMatrix mat = mGraphics.mPostCameraMatrix;
+			mGraphics.mStereoCameraMatrixEnabled = true;
+			YangMatrix mat = mGraphics.mStereoCameraMatrix;
 			mat.rotateZ(-event.mZ);
 			mat.rotateY(event.mY);
 			mat.rotateX(-event.mX);
 		}
 		if(event.mType==YangSensor.TYPE_ROTATION_VECTOR) {
-			mGraphics.mUseCameraPostMatrix = true;
-			YangMatrix mat = mGraphics.mPostCameraMatrix;
+			mGraphics.mStereoCameraMatrixEnabled = true;
+			YangMatrix mat = mGraphics.mStereoCameraMatrix;
 			mat.fromQuaternion(event.mX,event.mY,event.mZ);
 		}
 	}

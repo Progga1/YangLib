@@ -10,41 +10,56 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.JWindow;
 
+import yang.math.objects.Quaternion;
 import yang.systemdependent.YangSensor;
 
 public class PCSensorFrame extends YangSensor implements MouseListener,MouseMotionListener,MouseWheelListener {
 
 	public static boolean ENABLED = true;
+	public static float GRAVITY = 9.81f;
 	
 	public Color CL_RUN = Color.LIGHT_GRAY;
 	public Color CL_PAUSED = Color.GRAY;
 	public JWindow mSensorFrame;
 	public int mCurX,mCurY;
-	public float mLinAccX,mLinAccY,mLinAccZ;
-	public float mRotX,mRotY,mRotZ;
+	private float mGravX,mGravY,mGravZ;
+	public float mCurYaw,mCurPitch,mCurRoll;
 	public float mSensitivity = 0.01f;
 	public int mCurButton;
+	
+	private Quaternion tempQuat = new Quaternion();
 	
 	public PCSensorFrame() {
 		
 	}
 	
-	private void accUpdated() {
-		final float GRAVITY = 9.81f;
-		float gravX = (float)(Math.sin(mRotX)*Math.sin(mRotY))*GRAVITY;
-		float gravY = -GRAVITY;
-		float gravZ = 0;
-		if(mSensorActive[YangSensor.TYPE_ACCELEROMETER])
-			mEvents.putSensorEvent(YangSensor.TYPE_ACCELEROMETER, mLinAccX+gravX,mLinAccY+gravY,mLinAccZ+gravZ);
-		if(mSensorActive[YangSensor.TYPE_LINEAR_ACCELERATION])
-			mEvents.putSensorEvent(YangSensor.TYPE_LINEAR_ACCELERATION, mLinAccX,mLinAccY,mLinAccZ);
-		if(mSensorActive[YangSensor.TYPE_GRAVITY])
-			mEvents.putSensorEvent(YangSensor.TYPE_GRAVITY, gravX,gravY,gravZ);
+	private void turn(float yaw,float pitch,float roll) {
+		mCurYaw += yaw;
+		mCurPitch += pitch;
+		mCurRoll += roll;
 		if(mSensorActive[YangSensor.TYPE_GYROSCOPE])
-			mEvents.putSensorEvent(YangSensor.TYPE_GYROSCOPE, mRotX,mRotY,mRotZ);
-		mLinAccX = 0;
-		mLinAccY = 0;
-		mLinAccZ = 0;
+			mEvents.putSensorEvent(YangSensor.TYPE_GYROSCOPE, yaw,pitch,roll);
+		if(mSensorActive[YangSensor.TYPE_ROTATION_VECTOR]) {
+			tempQuat.setFromEuler(mCurYaw, mCurPitch, mCurRoll); //TODO: Local rotation!
+			mEvents.putSensorEvent(YangSensor.TYPE_ROTATION_VECTOR,tempQuat.mX,tempQuat.mY,tempQuat.mZ);
+		}
+	}
+	
+	private void accelerate(float x,float y,float z) {
+		if(mSensorActive[YangSensor.TYPE_ACCELEROMETER])
+			mEvents.putSensorEvent(YangSensor.TYPE_ACCELEROMETER, x+mGravX,y+mGravY,z+mGravZ);
+		if(mSensorActive[YangSensor.TYPE_LINEAR_ACCELERATION])
+			mEvents.putSensorEvent(YangSensor.TYPE_LINEAR_ACCELERATION, x,y,z);
+	}
+	
+	private void accUpdated() {
+		
+		
+		mGravX = 0;
+		mGravY = -GRAVITY;
+		mGravZ = 0;
+		if(mSensorActive[YangSensor.TYPE_GRAVITY])
+			mEvents.putSensorEvent(YangSensor.TYPE_GRAVITY, mGravX,mGravY,mGravZ);
 	}
 	
 	@Override
@@ -77,19 +92,13 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 		mCurX = ev.getX();
 		mCurY = ev.getY();
 		if(mCurButton==MouseEvent.BUTTON1) {
-			mLinAccX = deltaX;
-			mLinAccY = deltaY;
-			accUpdated();
+			accelerate(deltaX,deltaY,0);
 		}
 		if(mCurButton==MouseEvent.BUTTON2) {
-			mRotX += deltaX;
-			mRotY += deltaY;
-			accUpdated();
+			turn(deltaX,deltaY,0);
 		}
 		if(mCurButton==MouseEvent.BUTTON3) {
-			mRotZ += deltaX;
-			mRotY += deltaY;
-			accUpdated();
+			turn(0,deltaY,deltaX);
 		}
 	}
 
@@ -127,8 +136,7 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent ev) {
-		mLinAccZ = ev.getWheelRotation()*mSensitivity;
-		accUpdated();
+		accelerate(0,0,ev.getWheelRotation()*mSensitivity);
 	}
 
 	@Override

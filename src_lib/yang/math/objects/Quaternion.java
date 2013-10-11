@@ -303,6 +303,32 @@ public class Quaternion {
 		}
 	}
 	
+	public void setFromToRotation(float fromX,float fromY,float fromZ, float toX,float toY,float toZ) {
+		float dot = fromX*toX + fromY*toY + fromZ*toZ;
+		if(dot<=-0.99999) {
+			mX = 1;
+			mY = 0;
+			mZ = 0;
+			mW = 0;
+		}else{
+			float crossX = toY*fromZ - toZ*fromY;
+			float crossY = toZ*fromX - toX*fromZ;
+			float crossZ = toX*fromY - toY*fromX;
+			mX = crossX * 0.5f;
+			mY = crossY * 0.5f;
+			mZ = crossZ * 0.5f;
+			mW = dot * 0.5f + 0.5f;
+			float magn = (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ + mW*mW);
+			if(magn!=0) {
+				magn = 1/magn;
+				mX *= magn;
+				mY *= magn;
+				mZ *= magn;
+				mW *= magn;
+			}
+		}
+	}
+	
 	@Override
 	public Quaternion clone() {
 		return new Quaternion(mX,mY,mZ,mW);

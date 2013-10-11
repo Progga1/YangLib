@@ -12,12 +12,6 @@ import android.hardware.SensorManager;
 public class AndroidSensor extends YangSensor implements SensorEventListener{
 
 	private SensorManager mSensorManager;
-//	private Sensor mSensorAcc;
-//	private Sensor mSensorLinAcc;
-//	private Sensor mSensorGrav;
-//	private Sensor mSensorGyro;
-//	private Sensor mSensorRotVec;
-//	private Sensor mAccSensor;
 	private Sensor[] mSensors;
 	private YangActivity mActivity;
 	private long mTimeStamp;
@@ -69,8 +63,6 @@ public class AndroidSensor extends YangSensor implements SensorEventListener{
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		
 	}
-
-	//float angX,angY,angZ;
 	
 	@Override
 	public void onSensorChanged(SensorEvent event) {
@@ -85,21 +77,16 @@ public class AndroidSensor extends YangSensor implements SensorEventListener{
 			long time = System.nanoTime();
 			float deltaTime = (float)((System.nanoTime()-mTimeStamp)*0.000000001);
 			mTimeStamp = time;
-//			angX += event.values[0]*deltaTime;
-//			angY += event.values[1]*deltaTime;
-//			angZ += event.values[2]*deltaTime;
+
 			mEvents.putSensorEvent(type, event.values[0]*deltaTime,event.values[1]*deltaTime,event.values[2]*deltaTime);
-			//mEvents.putSensorEvent(type, angX,angY,angZ);
+
 			return;
 		case Sensor.TYPE_ROTATION_VECTOR: type = YangSensor.TYPE_ROTATION_VECTOR;break;
 		}
 		if(type<0)
 			return;
-//		float[] mat = new float[16];
-//		SensorManager.getRotationMatrixFromVector(mat, event.values);
-//		
-//		SensorManager.getOrientation(mat, event.values);
-		mEvents.putSensorEvent(type, event.values,null);
+
+		mEvents.putSensorEvent(type, event.values);
 	}
 
 }
