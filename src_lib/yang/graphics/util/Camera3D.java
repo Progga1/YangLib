@@ -1,7 +1,7 @@
 package yang.graphics.util;
 
 import yang.math.Geometry;
-import yang.math.objects.Quaternion;
+import yang.math.MatrixOps;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
@@ -133,26 +133,6 @@ public class Camera3D {
 		target.mY = y-mEyeY;
 		target.mZ = z-mEyeZ;
 		target.normalize();
-	}
-	
-	private Vector3f tempVec1,tempVec2,tempVec3;
-
-	public void mirrorAtPlane(YangMatrix target, float nx,float ny,float nz, float tx,float ty,float tz) {
-		if(tempVec1 == null) {
-			tempVec1 = new Vector3f();
-			tempVec2 = new Vector3f();
-			tempVec3 = new Vector3f();
-		}
-		tempVec1.set(nx,ny,nz);
-		tempVec2.set(-mLookDirection[0],-mLookDirection[1],-mLookDirection[2]);
-		//tempVec3.cross(-mLookDirection[0],-mLookDirection[1],-mLookDirection[2], nx,ny,nz);
-		//target.rotateAround(crossX, crossY, crossZ, 0);
-		Quaternion tempQuat1 = new Quaternion();
-		Quaternion tempQuat2 = new Quaternion();
-		tempQuat1.setFromToRotation(tempVec2.mX,tempVec2.mY,tempVec2.mZ, -tempVec2.mX,-tempVec2.mY,-tempVec2.mZ);
-		tempQuat2.setFromToRotation(tempVec1,tempVec2);
-		tempQuat1.multRight(tempQuat2);
-		tempQuat1.toRotationMatrix(target.mMatrix);
 	}
 	
 }

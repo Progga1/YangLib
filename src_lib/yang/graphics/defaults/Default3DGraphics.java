@@ -77,7 +77,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mCameraMatrix = new YangMatrixCameraOps();
 		mOriginalCameraMatrix = new YangMatrixCameraOps();
 		mInterMatrix = mTranslator.createTransformationMatrix();
-		mCameraMatrix.set(3,3,1);
+		mCameraMatrix.set(3,3, 1);
 		mDefaultTerrainCreator = new TerrainCreator(this);
 		mSphereCreator = new SphereCreator(this);
 		mBillboardMode = false;

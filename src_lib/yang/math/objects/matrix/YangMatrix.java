@@ -175,6 +175,13 @@ public class YangMatrix {
 		setTranslation(translation.mX,translation.mY,translation.mZ);
 	}
 	
+	public void setScale(int x, int y, int z) {
+		loadIdentity();
+		mMatrix[0] = x;
+		mMatrix[5] = y;
+		mMatrix[10] = z;
+	}
+	
 	public void scale(float x, float y, float z) {
 		for(int i=0;i<4;i++) {
 			mMatrix[i] *= x;
@@ -235,7 +242,7 @@ public class YangMatrix {
 		rotateY(angle);
 		multiplyRightTransposed(mTempMat2);
 		
-		//Not working (Game physics engine development p. 169
+		//Not working (Game physics engine development p. 169)
 //		float c = (float)Math.cos(angle);
 //		float s = (float)Math.sin(angle);
 //		float t = 1.0f-c;
@@ -255,6 +262,17 @@ public class YangMatrix {
 //		mMatrix[13] = 0;
 //		mMatrix[14] = 0;
 //		mMatrix[15] = 1;
+	}
+
+	public void mirrorAtPlane(float nx,float ny,float nz, Vector3f offset) {
+		MatrixOps.createDirectionTrafo(mTempMat1, nx,ny,nz);
+		if(offset!=null)
+			translate(offset);
+		multiplyRight(mTempMat1);
+		scale(1,-1,1);
+		multiplyRightTransposed(mTempMat1);
+		if(offset!=null)
+			translate(-offset.mX,-offset.mY,-offset.mZ);
 	}
 	
 	public void rotateAround(Vector3f rotationVector, float angle) {

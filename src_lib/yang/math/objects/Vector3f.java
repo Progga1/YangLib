@@ -113,5 +113,15 @@ public class Vector3f extends Point3f{
 	public void applyQuaternion(Quaternion quaternion, Vector3f vector) {
 		quaternion.applyToVector(this,vector);
 	}
+
+	public void setZero() {
+		mX = 0;
+		mY = 0;
+		mZ = 0;
+	}
+
+	public boolean isZero() {
+		return mX==0 && mY==0 && mZ==0;
+	}
 	
 }

@@ -50,7 +50,7 @@ void main()
 
 	lgt *= clamp((1.0-lightFac*0.1),0.8,1.0);
 
-	vec4 texValue = texture2D(texSampler, vec2((screenPos.x+waterNorm.x*fracFac)/screenPos.w*0.5+0.5,1.0-((screenPos.y+waterNorm.y*fracFac)/screenPos.w*0.5+0.5)));
+	vec4 texValue = texture2D(texSampler, vec2((screenPos.x+waterNorm.x*fracFac)/screenPos.w*0.5+0.5,((screenPos.y+waterNorm.y*fracFac)/screenPos.w*0.5+0.5)));
 	
 	gl_FragColor = vec4(min(1.0,texValue.r+specular)*lgt,min(1.0,texValue.g+specular)*lgt,min(1.0,texValue.b+specular)*lgt,texValue.a);
 }

@@ -16,13 +16,14 @@ import yang.graphics.defaults.programs.helpers.PlanarLightmapHelper;
 import yang.graphics.defaults.programs.helpers.ShadowHelper;
 import yang.graphics.particles.EffectParticleProperties;
 import yang.graphics.particles.Weather3D;
-import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.TextureProperties;
+import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.Camera3D;
+import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.model.Boundaries3D;
 import yang.samples.statesystem.SampleState;
@@ -76,6 +77,10 @@ public class IcyTerrainState extends SampleState {
 	private DrawBatch mSkyBoxBatch = null;
 	
 	private Camera3D mCamera = new Camera3D();
+	private float mWorldAngle = 0;
+	private Vector3f mWorldShift = new Vector3f();
+	private float mCubeTop = 1;
+	private float mCubeShiftX = 0;
 	
 	float terrainDimX = 3.5f;
 	float terrainDimY = 4.7f;
@@ -135,16 +140,17 @@ public class IcyTerrainState extends SampleState {
 	
 	private void drawShadCube() {
 		mGraphics.bindTexture(mCubeTex);
-		mGraphics3D.setColor(1, 1, 1, 0.5f);
 		float r = 0.5f;
 		double t = STATIC_SHADOWS?0:mStateTimer;
 		mGraphics.switchCulling(true);
 		mGraphics.setCullMode(true);
-		mGraphics3D.drawCubeCentered((float)Math.sin(t)*r, 1, (float)Math.sin(2*t)*r, 0.5f);
+		mGraphics3D.setColor(1, 1, 1, 0.3f);
+		mGraphics3D.drawCubeCentered((float)Math.sin(t)*r+mCubeShiftX, mCubeTop, (float)Math.sin(2*t)*r, 0.5f);
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.flush();
 		mGraphics.setCullMode(false);
-		mGraphics3D.drawCubeCentered((float)Math.sin(t)*r, 1, (float)Math.sin(2*t)*r, 0.5f);
+		mGraphics3D.setColor(1, 1, 1, 0.5f);
+		mGraphics3D.drawCubeCentered((float)Math.sin(t)*r+mCubeShiftX, mCubeTop, (float)Math.sin(2*t)*r, 0.5f);
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.flush();
 		mGraphics.setCullMode(false);
@@ -156,14 +162,16 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.switchZBuffer(true);
 		mGraphics3D.setOrthogonalProjection(0, 7, 3.5f);
 		mShadowHelper.setLightSource(-1.5f*(float)Math.sin(mStateTimer*0.1f),2.0f-(float)Math.sin(mStateTimer*0.1f),1.5f*(float)Math.cos(mStateTimer*0.1f), 0,0.5f,0, true);
-		mTerrainBatchLowPoly.draw();
+		if(terrainEnabled())
+			mTerrainBatchLowPoly.draw();
 		drawShadCube();
 		mShadowHelper.endDepthRendering();
 	}
 	
 	private void createLightmap() {
 		mLightmapHelper.beginRender();
-		mTerrainBatch.draw();
+		if(terrainEnabled())
+			mTerrainBatch.draw();
 		mWaterBatch.draw();
 		mLightmapHelper.finishRender();
 	}
@@ -179,7 +187,13 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.switchCulling(true);
 	}
 	
+	private boolean terrainEnabled() {
+		return mWorldAngle==0 && mWorldShift.isZero();
+	}
+	
 	private void drawTerrain() {
+		if(!terrainEnabled())
+			return;
 		mGraphics3D.setShaderProgram(mShadowProgram);
 		mShadowHelper.setShadowShaderProperties(mShadowProgram);
 		mGraphics.bindTexture(grass,ShadowProgram.COLOR_TEXTURE_LEVEL);
@@ -188,6 +202,8 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	private void drawTerrainLightmap() {
+		if(!terrainEnabled())
+			return;
 		mGraphics3D.setShaderProgram(mLightmapProgram);
 		mGraphics.bindTexture(grass,LightmapProgram.COLOR_TEXTURE_LEVEL);
 		mGraphics.bindTexture(mLightmapHelper.mLightMap.mTargetTexture, LightmapProgram.LIGHT_TEXTURE_LEVEL);
@@ -196,6 +212,8 @@ public class IcyTerrainState extends SampleState {
 	}
 	
 	private void drawTerrainSpecular() {
+		if(!terrainEnabled())
+			return;
 		mGraphics3D.setShaderProgram(mSpecularProgram);
 		mSpecularProgram.setCamera(mCamera);
 		mShadowHelper.setLightShaderProperties(mSpecularProgram);
@@ -212,7 +230,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.bindTexture(waterTex,WaterProgram.COLOR_TEXTURE_LEVEL);
 		mGraphics.bindTexture(waterNormal, WaterProgram.NORMAL_TEXTURE_LEVEL);
 		mGraphics.bindTexture(mShadowHelper.getDepthMap(),WaterProgram.DEPTH_TEXTURE_LEVEL);
-		mGraphics.bindTexture(mHeightTexture, WaterProgram.HEIGHT_TEXTURE_LEVEL);
+		mGraphics.bindTexture(terrainEnabled()?mHeightTexture:mGraphics.mBlackTexture, WaterProgram.HEIGHT_TEXTURE_LEVEL);
 		mWaterProgram.setTime(mGraphics.mShaderTimer);
 		mGraphics.checkErrorInst("Set water textures");
 		mWaterProgram.setDepthMapProjection(mShadowHelper.mDepthTransformation.mMatrix);
@@ -223,7 +241,12 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.checkErrorInst("Set light properties");
 		mWaterProgram.setCameraVector(-pX, -pY, -pZ, true);
 		mGraphics.checkErrorInst("Set camera vector");
+		mGraphics3D.mWorldTransform.loadIdentity();
+		mGraphics3D.mWorldTransform.translate(mWorldShift);
+		mGraphics3D.mWorldTransform.rotateZ(mWorldAngle);
+		mGraphics3D.setGlobalTransformEnabled(true);
 		mWaterBatch.draw();
+		mGraphics3D.mWorldTransform.loadIdentity();
 	}
 	
 	private void drawWeather() {
@@ -306,12 +329,10 @@ public class IcyTerrainState extends SampleState {
 			mGraphics.setTextureRenderTarget(mEnvironmentMap);
 			mGraphics.mForceStereo = true;
 			mGraphics.clear(0,0,0,1,GLMasks.DEPTH_BUFFER_BIT);
-			mCamera.set(pX,-pY,pZ, 0,0,0, 0,1,0);
+
 			mGraphics3D.setCamera(mCamera);
-			YangMatrix postCam = new YangMatrix();
-			mCamera.mirrorAtPlane(postCam, 0,1,0, 0,0,0);
-			mGraphics3D.mCameraMatrix.multiplyLeft(postCam);
-			
+			mGraphics3D.mCameraMatrix.mirrorAtPlane(-(float)Math.sin(mWorldAngle),(float)Math.cos(mWorldAngle),0, mWorldShift);
+
 			drawSky();
 			
 			mGraphics3D.setShaderProgram(mShadowProgram);
@@ -319,17 +340,21 @@ public class IcyTerrainState extends SampleState {
 			mGraphics.bindTexture(ice);
 			mGraphics.switchCulling(true);
 			mGraphics.switchZBuffer(true);
-			mTerrainBatch.draw();
+
+			if(terrainEnabled())
+				mTerrainBatch.draw();
 			
 			mGraphics3D.setDefaultProgram();
 			drawShadCube();
 
-			//drawWeather();
+			drawWeather();
 			
 			mGraphics.leaveTextureRenderTarget();
 			mGraphics.mForceStereo = false;
 			waterTex = mEnvironmentMap.mTargetTexture;
 			mGraphics.checkErrorInst("Post environment mapping");
+			
+			mGraphics3D.mCameraMatrix.loadIdentity();
 		}
 		
 		//Begin real drawing
@@ -390,4 +415,30 @@ public class IcyTerrainState extends SampleState {
 		mGraphics3D.resetProjection();
 	}
 
+	@Override
+	public void keyDown(int code) {
+		if(code=='a')
+			mWorldAngle += 0.05f;
+		if(code=='r')
+			mWorldShift.mY -= 0.01f;
+		if(code=='t')
+			mWorldShift.mY += 0.01f;
+		if(code=='f')
+			mWorldShift.mX -= 0.01f;
+		if(code=='g')
+			mWorldShift.mX += 0.01f;
+		if(code=='u')
+			mCubeTop -= 0.01f;
+		if(code=='i')
+			mCubeTop += 0.01f;
+		if(code=='j')
+			mCubeShiftX -= 0.01f;
+		if(code=='k')
+			mCubeShiftX += 0.01f;
+		if(code=='x') {
+			mWorldAngle = 0;
+			mWorldShift.setZero();
+		}
+	}
+	
 }
