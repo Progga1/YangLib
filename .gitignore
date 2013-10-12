@@ -13,6 +13,10 @@ libs/
 org.eclipse.jdt.ui.prefs
 org.eclipse.jdt.core.prefs
 
+# bin
+.jar
+.dll
+
 # android lint
 lint.xml
 
