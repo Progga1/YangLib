@@ -1,10 +1,17 @@
 package yang.graphics.buffers;
 
 import yang.model.Rect;
+import yang.util.NonConcurrentList;
 
 
 public abstract class AbstractVertexBuffer {
 
+	protected class BufferLink {
+		public int mBufferId;
+		public AbstractVertexBuffer mVertexBuffer;
+		public int mLinkedBufferId;
+	}
+	
 	public static final int VERTICESPERQUAD = 4;
 	public static final float HALF_ANGLE_SCALE = 1.4f*0.5f;
 	public static final float PI = 3.1415926535f;
@@ -16,8 +23,10 @@ public abstract class AbstractVertexBuffer {
 	public int mFloatBufferCount;
 	public int[] mFloatBufferElementSizes;
 	public float[][] mNeutralElements;
+	public NonConcurrentList<BufferLink> mLinkedBuffers;
 	
-	public abstract void initBuffers();
+	protected abstract void allocBuffers();
+	protected abstract void initBuffer(int bufId);
 	public abstract void setDataPosition(int bufId,int pos);
 	public abstract void reset();
 	public abstract int getCurrentVertexWriteCount();
@@ -43,6 +52,13 @@ public abstract class AbstractVertexBuffer {
 		mMaxVertexCount = maxVertices;
 	}
 	
+	public final void initBuffers() {
+		allocBuffers();
+		for(int i=0;i<mFloatBufferCount;i++) {
+			initBuffer(i);
+		}
+	}
+	
 	public void init(int[] floatBufferElementSizes,float[][] neutralElements) {
 		mFloatBufferElementSizes = floatBufferElementSizes;
 		mFloatBufferCount = floatBufferElementSizes.length;
@@ -65,6 +81,17 @@ public abstract class AbstractVertexBuffer {
 				bufPos++;
 			}
 		}
+	}
+	
+	/**
+	 * Must be called before initBuffers.
+	 */
+	public void linkBuffer(int bufferId, AbstractVertexBuffer vertexBuffer, int linkedBufferId) {
+		BufferLink link = new BufferLink(); 
+		link.mBufferId = bufferId;
+		link.mVertexBuffer = vertexBuffer;
+		link.mLinkedBufferId = linkedBufferId;
+		mLinkedBuffers.add(link);
 	}
 	
 	public void setDataPosition(int pos) {

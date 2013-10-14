@@ -17,8 +17,13 @@ public class VertexBufferVBO extends UniversalVertexBuffer{
 	}
 	
 	@Override
-	public void initBuffers() {
-		super.initBuffers();
+	protected void initBuffer(int bufId) {
+		
+	}
+	
+	@Override
+	protected void allocBuffers() {
+		super.allocBuffers();
 		
 		bufferIndices = new int[mFloatBufferCount];
 		mGl.glGenBuffers(mFloatBufferCount, bufferIndices, 0);

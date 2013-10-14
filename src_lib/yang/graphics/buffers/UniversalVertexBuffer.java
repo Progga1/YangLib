@@ -13,16 +13,20 @@ public class UniversalVertexBuffer extends IndexedVertexBuffer{
 		super(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
 	}
 	
-	@Override
-	public void initBuffers() {
-		super.initBuffers();
+	protected void initBuffer(int bufId) {
+		mByteBuffers[bufId] = ByteBuffer.allocateDirect(mMaxVertexCount * mFloatBufferElementSizes[bufId] * 4).order(ByteOrder.nativeOrder());
+		mFloatBuffers[bufId] = mByteBuffers[bufId].asFloatBuffer();
+	}
+	
+	protected void linkBuffer(BufferLink link) {
 		
+	}
+	
+	@Override
+	protected void allocBuffers() {
+		super.allocBuffers();
 		mFloatBuffers = new FloatBuffer[mFloatBufferCount];
 		mByteBuffers = new ByteBuffer[mFloatBufferCount];
-		for(int i=0;i<mFloatBufferCount;i++) {
-			mByteBuffers[i] = ByteBuffer.allocateDirect(mMaxVertexCount * mFloatBufferElementSizes[i] * 4).order(ByteOrder.nativeOrder());
-			mFloatBuffers[i] = mByteBuffers[i].asFloatBuffer();
-		}
 	}
 	
 	@Override

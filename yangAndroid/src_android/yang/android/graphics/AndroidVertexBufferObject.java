@@ -15,8 +15,13 @@ public class AndroidVertexBufferObject extends UniversalVertexBuffer{
 	}
 	
 	@Override
-	public void initBuffers() {
-		super.initBuffers();
+	protected void initBuffer(int bufId) {
+		
+	}
+	
+	@Override
+	protected void allocBuffers() {
+		super.allocBuffers();
 		
 		bufferIndices = new int[mFloatBufferCount];
 		GLES20.glGenBuffers(mFloatBufferCount, bufferIndices, 0);

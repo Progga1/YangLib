@@ -18,7 +18,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		mMaxIndexCount = maxIndices;
 	}
 	
-	public void initBuffers() {
+	protected void allocBuffers() {
 		mIndexBuffer = ByteBuffer.allocateDirect(mMaxIndexCount*2).order(ByteOrder.nativeOrder()).asShortBuffer();
 	}
 	
