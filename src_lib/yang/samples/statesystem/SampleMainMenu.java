@@ -36,16 +36,16 @@ import yang.util.statesystem.YangProgramStateSystem;
 public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> implements GUIActionListener {
 
 	public static float SCALE = 1.16f;
-	
+
 	protected BasicGUI mGUI;
 	protected NonConcurrentList<DefaultRectButton> mButtons;
 	protected HashMap<GUIComponent,YangProgramState<?>> mProgramStates;
-	
+
 	public SampleMainMenu() {
 		mButtons = new NonConcurrentList<DefaultRectButton>();
 		mProgramStates = new HashMap<GUIComponent,YangProgramState<?>>(16);
 	}
-	
+
 	@Override
 	public void initGraphics() {
 		mGUI = new BasicGUI(mGraphics2D,GUICoordinatesMode.SCREEN,true,4);
@@ -71,7 +71,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Stereo calibration",new StereoCalibrationState());
 		refreshLayout();
 	}
-	
+
 	private void refreshLayout() {
 		//mGUI.refreshCoordinateSystem();
 		final float topY = mGUI.getGUITop()+0.13f*SCALE;
@@ -85,10 +85,10 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		float x;
 		if(mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
 			x = mGUI.getGUICenterX()-1f;
-		else 
+		else
 			x = mGUI.getGUICenterX()-0.5f;
 			float y = topY;
-			for(DefaultRectButton button:mButtons) {
+			for(final DefaultRectButton button:mButtons) {
 				button.setPosCentered(x, y);
 				y += 0.2f*SCALE;
 				if(y>=mGUI.getGUIBottom()-0.2f) {
@@ -98,9 +98,9 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 			}
 //		}
 	}
-	
+
 	public void addMenuItem(String caption, YangProgramState<?> state) {
-		DefaultRectButton newButton = new DefaultRectButton();
+		final DefaultRectButton newButton = new DefaultRectButton();
 		newButton.getPass(GUICaptionDrawer.class).createCaption(caption);
 		newButton.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 		//In normalized coordinates: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);
@@ -109,7 +109,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		mButtons.add(newButton);
 		mProgramStates.put(newButton, state);
 	}
-	
+
 	@Override
 	public void step(float deltaTime) {
 		assert mGraphics.preCheck("update GUI");
@@ -118,11 +118,12 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 
 	@Override
 	public void draw() {
+		mGraphics2D.switchGameCoordinates(false);
 		mGraphics2D.activate();
 		mGraphics.clear(0, 0, 0.1f);
 		mGUI.draw();
 	}
-	
+
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		if(mGUI!=null)
@@ -133,11 +134,11 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 
 	@Override
 	public void onGUIAction(GUIComponent sender) {
-		YangProgramState<?> state = mProgramStates.get(sender);
+		final YangProgramState<?> state = mProgramStates.get(sender);
 		if(state!=null)
 			mStateSystem.setState(state);
 	}
-	
+
 	@Override
 	public void keyUp(int code) {
 		if(code==Keys.ESC)
@@ -149,5 +150,5 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		mGUI.refreshCoordinateSystem();
 		refreshLayout();
 	}
-	
+
 }

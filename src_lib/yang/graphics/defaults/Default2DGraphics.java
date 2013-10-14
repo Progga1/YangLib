@@ -9,21 +9,21 @@ import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.model.Rect;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
-	
+
 	public LegacyAbstractFont mLegacyDefaultFont;
-	
+
 	public static final float[] RECT = {
 		0.0f, 0.0f, 0,
 		1.0f, 0.0f, 0,
 		0.0f, 1.0f, 0,
 		1.0f, 1.0f, 0,
 	};
-	
+
 	private BasicProgram mDefaultProgram;
-	
+
 	//State
 	protected LegacyAbstractFont mCurrentLegacyFont;
-	
+
 	//Camera
 	private float mCamX;
 	private float mCamY;
@@ -35,14 +35,14 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	protected float mOrthoBottom;
 	private int mOrthoWidth;
 	private int mOrthoHeight;
-	public float mStereoGameDistance = 2;
+	protected float mStereoGameDistance = 1.2f;
 	public float mGameNear = YangMatrixCameraOps.DEFAULT_NEAR;
 	public float mGameFar = YangMatrixCameraOps.DEFAULT_FAR;
-	
+
 	public Default2DGraphics(GraphicsTranslator graphics) {
 		super(graphics,3);
 	}
-	
+
 	@Override
 	protected void derivedInit() {
 		super.derivedInit();
@@ -53,7 +53,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mZoom = 1;
 		mCamRot = 0;
 	}
-	
+
 	public boolean inScreen2D(float posX,float posY,float width, float height) {
 		if(mWorldTransformEnabled) {
 			posX += mWorldTransform.get(12);
@@ -64,18 +64,25 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		else
 			return posX<=mTranslator.mRatioX && posY<=mTranslator.mRatioY && (posX>=-mTranslator.mRatioX-width) && (posY>=-mTranslator.mRatioY-height);
 	}
-	
+
+	public void setStereoZDistance(float distance) {
+		flush();
+		mStereoGameDistance = distance;
+		refreshCamera();
+	}
+
 	@Override
 	public BasicProgram getDefaultProgram() {
 		return mDefaultProgram;
 	}
 
+	@Deprecated
 	private float drawChar(float x, float lineHeight, int c) {
-		float charWidth = mCurrentLegacyFont.getFontW(c);
-		float charHeight = mCurrentLegacyFont.getFontHeight();
-		float sWidth = charWidth * lineHeight / charHeight;
+		final float charWidth = mCurrentLegacyFont.getFontW(c);
+		final float charHeight = mCurrentLegacyFont.getFontHeight();
+		final float sWidth = charWidth * lineHeight / charHeight;
 		//TODO GC!!!!!!
-		float fix[] = {
+		final float fix[] = {
 			mCurrentLegacyFont.getFontFix(c, 0) * lineHeight / charHeight,
 			mCurrentLegacyFont.getFontFix(c, 1) * lineHeight / charHeight,
 			mCurrentLegacyFont.getFontFix(c, 2) * lineHeight / charHeight,
@@ -90,13 +97,13 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 
 	@Deprecated
 	private void drawStringLegacy(float lineHeight, float anchorX, float anchorY, float angle, float charDistance,String s) {
-		int sLength = s.length();
+		final int sLength = s.length();
 		if (angle != 0.0f)
 			mInterTransf1.rotateZ(angle);
 		mInterTransf1.translate((-(anchorX + 1) * 0.5f) * stringWidth(lineHeight, charDistance, s), (-(anchorY + 1) * 0.5f) * lineHeight);
-		
+
 		mTranslator.bindTexture(mCurrentLegacyFont.getTexture(),0);
-		
+
 		float x = 0;
 		for (int i = 0; i < sLength; ++i) {
 			if(charDistance<0)
@@ -111,7 +118,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	@Deprecated
 	/**
 	 * Draw a String left justified in game coordinates.
-	 * 
+	 *
 	 * @param lineHeight
 	 *            vertical space between the baselines of two consecutive lines
 	 *            of text
@@ -125,21 +132,21 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mInterTransf1.translate(x, y);
 		drawStringLegacy(lineHeight, anchorX, anchorY, angle, charDistance, s);
 	}
-	
+
 	@Deprecated
 	public void drawTextLegacy(float x, float y, float lineHeight, float lineDistance, float anchorX, float anchorY, String[] text) {
 		float yPos = y;
-		for(String s:text) {
+		for(final String s:text) {
 			drawStringLegacy(x,yPos,lineHeight,anchorX,anchorY,0,-1,s);
 			yPos -= lineDistance;
 		}
 	}
-	
+
 	@Deprecated
 	public void drawTextLegacy(float x, float y, float lineHeight, float anchorX, float anchorY, String[] text) {
 		drawTextLegacy(x,y,lineHeight,lineHeight*1.2f,anchorX,anchorY,text);
 	}
-	
+
 	@Deprecated
 	public void drawStringLegacy(float x, float y, float lineHeight, float anchorX, float anchorY, float angle, String s) {
 		drawStringLegacy(x,y,lineHeight,anchorX,anchorY,angle,-1,s);
@@ -176,13 +183,13 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		y = y * lineHeight - 1.0f;
 		drawStringLegacyL(x, y, lineHeight, s);
 	}
-	
+
 	@Deprecated
 	/** Calculate width of a String. */
 	public float stringWidth(float lineHeight, String s) {
 		return mCurrentLegacyFont.stringWidth(lineHeight, s);
 	}
-	
+
 	@Deprecated
 	public float stringWidth(float lineHeight, float charDistance, String s) {
 		if(charDistance<0)
@@ -192,9 +199,9 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	protected void refreshCamera() {
-		float ratioX = mTranslator.mCurrentScreen.getSurfaceRatioX();
-		float ratioY = mTranslator.mCurrentScreen.getSurfaceRatioY();
-		float shift = 0*get2DStereoShift(mStereoGameDistance);
+		final float ratioX = mTranslator.mCurrentScreen.getSurfaceRatioX();
+		final float ratioY = mTranslator.mCurrentScreen.getSurfaceRatioY();
+		final float shift = get2DStereoShift(mStereoGameDistance);
 		mOrthoLeft = -ratioX * mZoom + mCamX + shift;
 		mOrthoRight = ratioX * mZoom + mCamX + shift;
 		mOrthoTop = ratioY * mZoom + mCamY;
@@ -202,7 +209,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		if(mCamRot==0) {
 			mOrthoWidth = (int)(Math.ceil(mOrthoRight - mOrthoLeft));
 			mOrthoHeight = (int)(Math.ceil(mOrthoTop - mOrthoBottom));
-	
+
 			mProjectionTransform.setOrthogonalProjection(mOrthoLeft, mOrthoRight, mOrthoTop, mOrthoBottom, mGameFar, mGameNear);
 		}else{
 			mProjectionTransform.setOrthogonalProjection(
@@ -214,11 +221,11 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		}
 		mProjectionTransform.asInverted(invGameProjection);
 	}
-	
+
 	public int getOrthoWidth() {
-		return mOrthoWidth; 
+		return mOrthoWidth;
 	}
-	
+
 	public int getOrthoHeight() {
 		return mOrthoHeight;
 	}
@@ -232,31 +239,31 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mCamRot = rotation;
 		refreshCamera();
 	}
-	
+
 	public void setCamera(float x, float y, float zoom) {
 		setCamera(x,y,zoom,mCamRot);
 	}
-	
+
 	public void setCamera(Camera2D camera) {
 		setCamera(camera.getX(),camera.getY(),camera.getZoom(),camera.getRotation());
 	}
-	
+
 	public float normToScreenX(float x) {
 		return x;
 	}
-	
+
 	public float normToScreenY(float y) {
 		return y;
 	}
-	
+
 	public float normToGameX(float x,float y) {
 		return invGameProjection[0] * mTranslator.mInvRatioX * x + invGameProjection[4] * y + invGameProjection[12];
 	}
-	
+
 	public float normToGameY(float x,float y) {
 		return invGameProjection[1] * mTranslator.mInvRatioY * x + invGameProjection[5] * y + invGameProjection[13];
 	}
-	
+
 	/**
 	 * Only for non-rotating cam!
 	 * @param x
@@ -265,7 +272,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public float normToGameX(float x) {
 		return invGameProjection[0] * mTranslator.mInvRatioX * x + invGameProjection[12];
 	}
-	
+
 	/**
 	 * Only for non-rotating cam!
 	 * @param x
@@ -274,37 +281,37 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public float normToGameY(float y) {
 		return invGameProjection[5] * mTranslator.mInvRatioY * y + invGameProjection[13];
 	}
-	
+
 	public int projScreenX(float gameX,float gameY) {
-		float x = MatrixOps.applyFloatMatrixX2D(mCurProjTransform.mMatrix, gameX, gameY);
+		final float x = MatrixOps.applyFloatMatrixX2D(mCurProjTransform.mMatrix, gameX, gameY);
 		return (int)((x+1)*mTranslator.mScreenWidth*0.5f);
 	}
-	
+
 	public int projScreenY(float gameX,float gameY) {
-		float y = MatrixOps.applyFloatMatrixY2D(mCurProjTransform.mMatrix, gameX, gameY);
+		final float y = MatrixOps.applyFloatMatrixY2D(mCurProjTransform.mMatrix, gameX, gameY);
 		return (int)((-y+1)*mTranslator.mScreenHeight*0.5f);
 	}
-	
+
 	public float screenLeftToGameX() {
 		return mOrthoLeft;
 	}
-	
+
 	public float screenRightToGameX() {
 		return mOrthoRight;
 	}
-	
+
 	public float screenTopToGameY() {
 		return mOrthoTop;
 	}
-	
+
 	public float screenBottomToGameY() {
 		return mOrthoBottom;
 	}
-	
+
 	public float screenCenterToGameY() {
 		return (mOrthoBottom+mOrthoTop)/2f;
 	}
-	
+
 	public float screenCenterToGameX() {
 		return (mOrthoLeft+mOrthoRight)/2f;
 	}
@@ -312,11 +319,11 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public float applyWorldTransformX(float x,float y) {
 		return x;
 	}
-	
+
 	public float applyWorldTransformY(float x,float y) {
 		return y;
 	}
-	
+
 	@Override
 	public void refreshViewTransform() {
 		mCameraProjectionMatrix.set(mCurProjTransform);
@@ -333,12 +340,12 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public void beginQuad(boolean wireFrames) {
 		mCurrentVertexBuffer.beginQuad(wireFrames);
 	}
-	
+
 	@Deprecated
 	public void setLegacyFont(LegacyAbstractFont newFont) {
 		mCurrentLegacyFont = newFont;
 	}
-	
+
 	@Deprecated
 	public void setDefaultLegacyFont() {
 		setLegacyFont(mLegacyDefaultFont);
@@ -352,5 +359,5 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	public void resetCamera() {
 		setCamera(0,0,1);
 	}
-	
+
 }
