@@ -2,6 +2,7 @@ package yang.graphics.buffers;
 
 import yang.model.Rect;
 import yang.util.NonConcurrentList;
+import yang.util.Util;
 
 
 public abstract class AbstractVertexBuffer {
@@ -27,6 +28,7 @@ public abstract class AbstractVertexBuffer {
 	
 	protected abstract void allocBuffers();
 	protected abstract void initBuffer(int bufId);
+	protected abstract void linkBuffer(int bufId,BufferLink link);
 	public abstract void setDataPosition(int bufId,int pos);
 	public abstract void reset();
 	public abstract int getCurrentVertexWriteCount();
@@ -50,13 +52,33 @@ public abstract class AbstractVertexBuffer {
 	public AbstractVertexBuffer(boolean dynamicVertices,int maxVertices) {
 		mDynamicVertices = dynamicVertices;
 		mMaxVertexCount = maxVertices;
+		mLinkedBuffers = new NonConcurrentList<BufferLink>();
+	}
+	
+	protected final void initBuffers(BufferLink[] links) {
+		if(mLinkedBuffers!=null) {
+			int max = 0;
+			for(BufferLink link:mLinkedBuffers) {
+				if(link.mBufferId>max)
+					max = link.mBufferId;
+			}
+			if(links==null || links.length<max)
+				links = Util.resizeArray(links,new BufferLink[Math.max(max,mFloatBufferCount)]);
+			for(BufferLink link:mLinkedBuffers) {
+				links[link.mBufferId] = link;
+			}
+		}
+		allocBuffers();
+		for(int i=0;i<mFloatBufferCount;i++) {
+			if(links!=null && links[i]!=null)
+				linkBuffer(i,links[i]);
+			else
+				initBuffer(i);
+		}
 	}
 	
 	public final void initBuffers() {
-		allocBuffers();
-		for(int i=0;i<mFloatBufferCount;i++) {
-			initBuffer(i);
-		}
+		initBuffers(null);
 	}
 	
 	public void init(int[] floatBufferElementSizes,float[][] neutralElements) {

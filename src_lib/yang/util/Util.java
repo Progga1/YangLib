@@ -241,5 +241,14 @@ public class Util {
 			return -1;
 			
 	}
+
+	public static <ElementType> ElementType[] resizeArray(ElementType[] array, ElementType[] newArray) {
+		if(array==null)
+			return newArray;
+		else{
+			System.arraycopy(array, 0, newArray, 0, Math.min(array.length,newArray.length));
+			return newArray;
+		}
+	}
 	
 }

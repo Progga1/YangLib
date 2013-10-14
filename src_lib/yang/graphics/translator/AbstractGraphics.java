@@ -54,22 +54,38 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	//Persistent attributes
 	public GraphicsTranslator mTranslator;
 	public boolean mAutoUpdateAmbientColor = true;
+	private int[] mBufferElementSizes;
+	private float[][] mNeutralBufferElements;
 	
 	//Counters
 	protected float mTime;
 	
 	//Buffers
-	public IndexedVertexBuffer mDynamicSpriteVertexBuffer;
+	public IndexedVertexBuffer mDynamicVertexBuffer;
 	public IndexedVertexBuffer mCurrentVertexBuffer;	//Always the same reference as mTranslator.mCurrentVertexBuffer but generic type
 	
-	protected abstract IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices,boolean dynamicIndices,int maxIndices,int maxVertices);
-	protected void derivedInit() { }
+	//Abstract methods
 	public abstract ShaderType getDefaultProgram();
+	protected abstract int[] getBufferElementSizes();
+	protected abstract float[][] getNeutralBufferElements();
+	
+	//Optional methods
+	protected void derivedInit() { }
 	
 	public AbstractGraphics(GraphicsTranslator translator) {
 		if (DebugYang.showStart) DebugYang.showStackTrace("4", 1);
 		mTranslator = translator;
 		mTranslator.addScreenListener(this);
+		mDynamicVertexBuffer = null;
+		
+	}
+	
+	/**
+	 * Use only, if dynamic buffer should be initialized before calling init()
+	 */
+	public void initDynamicBuffer() {
+		if(mDynamicVertexBuffer==null)
+			mDynamicVertexBuffer = mTranslator.createUninitializedVertexBuffer(true,true,MAX_DYNAMIC_VERTICES*6/4,MAX_DYNAMIC_VERTICES);
 	}
 	
 	public void init() {
@@ -100,13 +116,22 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mCurSuppData = new float[4];
 		mTime = 0;
 		mBold = 0;
-		mDynamicSpriteVertexBuffer = createVertexBuffer(true,true,MAX_DYNAMIC_VERTICES*6/4,MAX_DYNAMIC_VERTICES);
+		mBufferElementSizes = getBufferElementSizes();
+		mNeutralBufferElements = getNeutralBufferElements();
+		//mDynamicSpriteVertexBuffer = createVertexBuffer(true,true,MAX_DYNAMIC_VERTICES*6/4,MAX_DYNAMIC_VERTICES);
+		initDynamicBuffer();
+		mDynamicVertexBuffer.init(mBufferElementSizes, mNeutralBufferElements);
 		mBatchRecording = false;
 		
 		derivedInit();
 		restart();
 	}
-
+	
+	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices,int maxVertices) {
+		IndexedVertexBuffer vertexBuffer = mTranslator.createUninitializedVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
+		vertexBuffer.init(mBufferElementSizes,mNeutralBufferElements);
+		return vertexBuffer;
+	}
 	
 	public void restart() {
 		setColor(1,1,1);
@@ -132,7 +157,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 			disableBuffers();
 			mCurrentProgram = null;
 		}
-		setVertexBuffer(mDynamicSpriteVertexBuffer);
+		setVertexBuffer(mDynamicVertexBuffer);
 		setDefaultProgram();
 		mTranslator.rebindTexture(0);
 		assert mTranslator.checkErrorInst("Activate");
@@ -180,7 +205,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 	
 	public void resetVertexBuffer() {
-		setVertexBuffer(mDynamicSpriteVertexBuffer);
+		setVertexBuffer(mDynamicVertexBuffer);
 	}
 	
 	public void startBatchRecording(int maxIndices,int maxVertices,boolean dynamicIndices,boolean dynamicVertices) {

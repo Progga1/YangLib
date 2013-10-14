@@ -5,6 +5,7 @@ package yang.graphics.defaults;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import yang.graphics.buffers.AbstractVertexBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.meshcreators.LineDrawer3D;
 import yang.graphics.defaults.meshcreators.SphereCreator;
@@ -19,12 +20,10 @@ import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
-import yang.model.DebugYang;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
-	
-	public static final float[][] NEUTRAL_ELEMENTS = {{0,0,0},{0,0},{1,1,1,1},{0,0,0,0},{0,1,0}};
+
 	private static final int NORMAL_ELEM_SIZE = 3;
 	private static final int POSITION_ELEM_SIZE = 3;
 	public static final float[] ZERO_FLOAT_3 = {0,0,0};
@@ -108,13 +107,13 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			mTranslator.disableAttributePointer(mCurrentProgram.mNormalHandle);
 		assert mTranslator.checkErrorInst("Disable buffers 3D");
 	}
-
 	
-	@Override
-	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices,int maxVertices) {
-		IndexedVertexBuffer vertexBuffer = mTranslator.createUninitializedVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
-		vertexBuffer.init(new int[]{POSITION_ELEM_SIZE,2,4,4,NORMAL_ELEM_SIZE},NEUTRAL_ELEMENTS);
-		return vertexBuffer;
+	protected int[] getBufferElementSizes() {
+		return new int[]{POSITION_ELEM_SIZE,2,4,4,NORMAL_ELEM_SIZE};
+	}
+	
+	protected float[][] getNeutralBufferElements() {
+		return new float[][]{{0,0,0},{0,0},{1,1,1,1},{0,0,0,0},{0,1,0}};
 	}
 	
 	@Override

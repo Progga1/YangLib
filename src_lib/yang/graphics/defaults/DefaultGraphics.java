@@ -70,6 +70,14 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	
 	protected abstract void refreshViewTransform();
 
+	public void shareBuffers(DefaultGraphics<?> graphics) {
+		initDynamicBuffer();
+		mDynamicVertexBuffer.linkBuffer(ID_POSITIONS, graphics.mDynamicVertexBuffer, ID_POSITIONS);
+		mDynamicVertexBuffer.linkBuffer(ID_TEXTURES, graphics.mDynamicVertexBuffer, ID_TEXTURES);
+		mDynamicVertexBuffer.linkBuffer(ID_COLORS, graphics.mDynamicVertexBuffer, ID_COLORS);
+		mDynamicVertexBuffer.linkBuffer(ID_SUPPDATA, graphics.mDynamicVertexBuffer, ID_SUPPDATA);
+	}
+	
 	public DefaultGraphics(GraphicsTranslator translator, int positionBytes) {
 		super(translator);
 		mPositionDimension = positionBytes;
@@ -87,18 +95,15 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	protected void derivedInit() {
 		setColorFactor(1);
 	}
-
-	public static IndexedVertexBuffer createVertexBuffer(GraphicsTranslator graphics,boolean dynamicVertices, boolean dynamicIndices, int maxIndices, int maxVertices) {
-		assert graphics.preCheck("create vertex buffer");
-		IndexedVertexBuffer vertexBuffer = graphics.createUninitializedVertexBuffer(dynamicVertices, dynamicIndices, maxIndices, maxVertices);
-		vertexBuffer.init(new int[] { 3, 2, 4, 4 }, DEFAULT_NEUTRAL_ELEMENTS);
-		assert graphics.checkErrorInst("Create vertex buffer");
-		return vertexBuffer;
+	
+	@Override
+	protected int[] getBufferElementSizes() {
+		return new int[] { 3, 2, 4, 4 };
 	}
 	
 	@Override
-	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices, int maxVertices) {
-		return createVertexBuffer(mTranslator,dynamicVertices,dynamicIndices,maxIndices,maxVertices);
+	protected float[][] getNeutralBufferElements() {
+		return DEFAULT_NEUTRAL_ELEMENTS;
 	}
 
 	public void bindBuffers() {

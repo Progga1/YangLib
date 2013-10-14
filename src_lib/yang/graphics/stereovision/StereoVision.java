@@ -40,14 +40,15 @@ public class StereoVision {
 		mGraphics = graphics;
 		mMinimumShader = mGraphics.addProgram(new MinimumTexShader());
 		mLensDistortionShader = mGraphics.addProgram(new LensDistortionShader());
-		mStereoVertexBuffer = DefaultGraphics.createVertexBuffer(graphics,true,true, 2*6, 2*4);
+		mStereoVertexBuffer = mGraphics.createUninitializedVertexBuffer(true, true, 2*6, 2*4);
+		mStereoVertexBuffer.init(new int[]{3,2}, null);
 		mStereoVertexBuffer.putQuadIndicesMultiple(2);
 
 		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, -1,-1, 0,1, 0);
 		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, 0,-1, 1,1, 0);
 		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_TEXTURES, DefaultGraphics.RECT_TEXTURECOORDS_INV,2);
-		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, FloatColor.WHITE.mValues,2*4);
-		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, FloatColor.WHITE.mValues,2*4);
+//		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, FloatColor.WHITE.mValues,2*4);
+//		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, FloatColor.WHITE.mValues,2*4);
 		mStereoVertexBuffer.finishUpdate();
 		
 		mStereoLeftRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(WRAP_MODE,TextureFilter.LINEAR));

@@ -38,6 +38,8 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 		}
 		if(mInit3DGraphics) {
 			mGraphics3D = new Default3DGraphics(mGraphics);
+			if(mInit2DGraphics)
+				mGraphics3D.shareBuffers(mGraphics2D);
 			mGraphics3D.init();
 			if(!mInit2DGraphics) {
 				mGraphics3D.activate();
