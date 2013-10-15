@@ -15,67 +15,76 @@ import yang.graphics.font.DrawableAnchoredLines;
 
 //TODO xml comments not working
 public class StringsXML {
-	
+
 	public static final String UNKNOWN_KEY = "<>";
-	private HashMap<String, String> mStrings;
-	
+	private final HashMap<String, String> mStrings;
+	private StringsXML mFallbackStringsXML = null;
+
 	StringsXML() {
 		mStrings = new HashMap<String ,String>();
 	}
-	
-	public StringsXML(InputStream xmlStream) {
+
+	public StringsXML(InputStream xmlStream,StringsXML fallbackStrings) {
 		this();
+		mFallbackStringsXML = fallbackStrings;
 		load(xmlStream);
 	}
-	
+
+	public StringsXML(InputStream xmlStream) {
+		this(xmlStream,null);
+	}
+
 	public StringsXML load(InputStream xmlStream) {
 		mStrings.clear();
 		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(xmlStream);
-			
-			Element root = doc.getDocumentElement();
-			NodeList strings = root.getElementsByTagName("string");
-			int amount = strings.getLength();
-			
+			final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			final DocumentBuilder db = dbf.newDocumentBuilder();
+			final Document doc = db.parse(xmlStream);
+
+			final Element root = doc.getDocumentElement();
+			final NodeList strings = root.getElementsByTagName("string");
+			final int amount = strings.getLength();
+
 			for (int i = 0; i < amount; ++i) {
-				Node node = strings.item(i);
-				String string = node.getTextContent().trim().replace("\n", "\0").replace("\t", "\0").replace("\\n", "\n").replace("\\t", "\t").replace("\\'", "'");
-				String key = node.getAttributes().getNamedItem("name").getTextContent();			
+				final Node node = strings.item(i);
+				final String string = node.getTextContent().trim().replace("\n", "\0").replace("\t", "\0").replace("\\n", "\n").replace("\\t", "\t").replace("\\'", "'");
+				final String key = node.getAttributes().getNamedItem("name").getTextContent();
 				mStrings.put(key, string);
 			}
-			
+
 			xmlStream.close();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		return this;
 	}
-	
+
 	public String getRawString(String name) {
-		String toReturn = mStrings.get(name);
+		final String toReturn = mStrings.get(name);
 		if (toReturn == null) {
-			System.err.println("string:" +name +" not found");
+			if(mFallbackStringsXML==null)
+				System.err.println("string:" +name +" not found");
+			else
+				return mFallbackStringsXML.getRawString(name);
 			return UNKNOWN_KEY;
 		}
 		else return toReturn;
 	}
-	
+
 	public DrawableAnchoredLines createDrawableString(String name,float horizontalAnchor) {
 		return (DrawableAnchoredLines)new DrawableAnchoredLines(getRawString(name)).setHorizontalAnchor(horizontalAnchor).setConstant();
 	}
-	
+
 	public DrawableAnchoredLines createDrawableString(String name) {
 		return new DrawableAnchoredLines(getRawString(name)).setConstant();
 	}
-	
+
 	public DrawableAnchoredLines createDrawableFormatString(String name) {
 		return (DrawableAnchoredLines)new DrawableAnchoredLines().allocFormatString(getRawString(name));
 	}
-	
+
 	public DrawableAnchoredLines createDrawableFormatString(String name,float anchor) {
 		return (DrawableAnchoredLines)new DrawableAnchoredLines().setHorizontalAnchor(anchor).allocFormatString(getRawString(name));
 	}
-	
+
 }
