@@ -34,6 +34,11 @@ public class StringsXML {
 		this(xmlStream,null);
 	}
 
+	public StringsXML(StringsXML fallbackStrings) {
+		this();
+		mFallbackStringsXML = fallbackStrings;
+	}
+
 	public StringsXML load(InputStream xmlStream) {
 		mStrings.clear();
 		try {
