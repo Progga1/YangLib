@@ -92,4 +92,8 @@ public class StringsXML {
 		return (DrawableAnchoredLines)new DrawableAnchoredLines().setHorizontalAnchor(anchor).allocFormatString(getRawString(name));
 	}
 
+	public void clear() {
+		mStrings.clear();
+	}
+
 }
