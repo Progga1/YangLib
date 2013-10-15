@@ -84,10 +84,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			return result;
 		result = new YangMaterialSet(this);
 		String filename = MATERIAL_PATH+name;
-		if(!mResources.fileExists(filename))
+		if(!mResources.assetExists(filename))
 			return null;
 		try {
-			result.loadFromStream(mResources.getInputStream(filename));
+			result.loadFromStream(mResources.getAssetInputStream(filename));
 		} catch (IOException e) {
 			return null;
 		}
@@ -97,7 +97,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public TextureData loadImageData(String path,String name,String ext,boolean forceRGBA) {
 		String filename = path + File.separatorChar+name+"."+ext;
-		if(!mResources.fileExists(filename))
+		if(!mResources.assetExists(filename))
 			return null;
 		else
 			return derivedLoadImageData(filename,forceRGBA);
@@ -105,10 +105,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	
 	public String createExistingFilename(String name) {
 		for(String path:IMAGE_PATH) {
-			if(mResources.fileExists(path+name))
+			if(mResources.assetExists(path+name))
 				return path+name;
 			for(String ext:IMAGE_EXT) {
-				if(mResources.fileExists(path+name+ext))
+				if(mResources.assetExists(path+name+ext))
 					return path+name+ext;
 			}
 		}

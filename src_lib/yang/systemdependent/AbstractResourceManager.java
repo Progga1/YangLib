@@ -1,7 +1,10 @@
 package yang.systemdependent;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,25 +14,27 @@ import java.util.Properties;
 public abstract class AbstractResourceManager {
 
 	public abstract String[] getFileList(String directory) throws IOException;
-	public abstract InputStream getInputStream(String filename);
+	public abstract InputStream getAssetInputStream(String filename);
+	public abstract File getSystemFile(String filename);
+	public abstract File getExternalFile(String filename);
 
-	public boolean fileExists(String filename) {
-		return getInputStream(filename)!=null;
+	public boolean assetExists(String filename) {
+		return getAssetInputStream(filename)!=null;
 	}
 
-	public BufferedReader loadTextFile(String filename) {
-		InputStream stream = getInputStream(filename);
+	public BufferedReader loadAssetTextFile(String filename) {
+		final InputStream stream = getAssetInputStream(filename);
 		return new BufferedReader(new InputStreamReader(stream));
 	}
 
 	public StringBuilder textFileToStringBuilder(String filename) {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		String line;
 		try {
-			BufferedReader reader = loadTextFile(filename);
+			final BufferedReader reader = loadAssetTextFile(filename);
 			while((line = reader.readLine())!=null)
 				result.append(line).append('\n');
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException("Error reading resource: '"+filename+"'");
 		}
 		return result;
@@ -40,51 +45,83 @@ public abstract class AbstractResourceManager {
 	}
 
 	public Properties loadPropertiesFile(String filename) {
-		Properties props = new Properties();
+		final Properties props = new Properties();
 		try {
-			props.load(getInputStream(filename));
-		} catch (Exception e) {
+			props.load(getAssetInputStream(filename));
+		} catch (final Exception e) {
 			System.err.println("prop: '"+filename+"' not found");
 			e.printStackTrace();
 		}
 		return props;
 	}
 
-	public OutputStream getOutputStream(String filename) throws FileNotFoundException {
-		throw new RuntimeException("Output stream not supported");
-	}
-
-	public OutputStream getFileSystemOutputStream(String filename) throws FileNotFoundException {
-		throw new RuntimeException("File system output stream not supported");
-	}
-
-	public boolean deleteFile(String filename) {
-		throw new RuntimeException("Delete file not supported");
-	}
-
-	public void savePropertiesFile(String filename, Properties props) {
-		throw new RuntimeException("Save properties not supported");
-	}
-
-	public InputStream getFileSystemInputStream(String filename) throws FileNotFoundException {
-		throw new RuntimeException("File system input stream not supported");
-	}
-
 	public boolean fileExistsInFileSystem(String filename) {
-		return false;
-	}
-
-	public OutputStream getExternalFileSystemOutputStream(String filename) throws FileNotFoundException {
-		throw new RuntimeException("External file system output stream not supported");
-	}
-
-	public InputStream getExteralFileSystemInputStream(String filename) throws FileNotFoundException {
-		throw new RuntimeException("External file system input stream not supported");
+		return getSystemFile(filename).exists();
 	}
 
 	public boolean fileExistsInExternalFileSystem(String filename) {
-		return false;
+		return getExternalFile(filename).exists();
 	}
 
+	public InputStream getSystemInputStream(String filename) {
+		final File file = getSystemFile(filename);
+		if(!file.exists())
+			return null;
+		else
+			try {
+				return new FileInputStream(file);
+			} catch (final FileNotFoundException e) {
+				return null;
+			}
+	}
+
+	public OutputStream getSystemOutputStream(String filename) {
+		final File newFile = getSystemFile(filename);
+		newFile.mkdirs();
+		try {
+			return new FileOutputStream(newFile);
+		} catch (final FileNotFoundException e) {
+			return null;
+		}
+	}
+
+	public OutputStream getExternalOutputStream(String filename) {
+		final File file = getExternalFile(filename);
+		final File parent = file.getParentFile();
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
+		try {
+			return new FileOutputStream(file);
+		}  catch (final FileNotFoundException e) {
+			return null;
+		}
+	}
+
+	public InputStream getExternalInputStream(String filename) {
+		final File file = getExternalFile(filename);
+		if(file==null)
+			return null;
+		else
+			try {
+				return new FileInputStream(file);
+			} catch (final FileNotFoundException e) {
+				return null;
+			}
+	}
+
+	public boolean deleteExternalFile(String filename) {
+		final File f = getExternalFile(filename);
+		return f.delete();
+	}
+
+	public boolean deleteSystemFile(String filename) {
+		final File f = getSystemFile(filename);
+		return f.delete();
+	}
+
+	public OutputStream getAssetOutputStream(String filename) {
+		throw new RuntimeException("Asset output stream not supported.");
+	}
 
 }

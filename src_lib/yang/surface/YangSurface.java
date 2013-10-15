@@ -1,6 +1,7 @@
 package yang.surface;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import yang.events.EventQueueHolder;
 import yang.events.YangEventQueue;
@@ -22,8 +23,8 @@ import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
 import yang.systemdependent.AbstractResourceManager;
-import yang.systemdependent.YangSensor;
 import yang.systemdependent.AbstractVibrator;
+import yang.systemdependent.YangSensor;
 import yang.util.Util;
 
 public abstract class YangSurface implements EventQueueHolder {
@@ -80,7 +81,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	private int mStereoResolution = 1024;
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
-	
+
 	/**
 	 * GL-Thread
 	 */
@@ -106,9 +107,9 @@ public abstract class YangSurface implements EventQueueHolder {
 		mMacroFilename = null;
 		setStereoVision(ALWAYS_STEREO_VISION);
 	}
-	
+
 	public void setStereoVision(int resolution) {
-		int widthFac = mUseStereoVision?2:1;
+		final int widthFac = mUseStereoVision?2:1;
 		if(resolution==0) {
 			mUseStereoVision = false;
 		}else{
@@ -117,7 +118,7 @@ public abstract class YangSurface implements EventQueueHolder {
 		}
 		if(mGraphics!=null)
 			this.onSurfaceChanged(mGraphics.mScreenWidth*widthFac, mGraphics.mScreenHeight);
-		
+
 	}
 
 	protected void setStartupSteps(int loadingSteps,int initSteps) {
@@ -135,7 +136,7 @@ public abstract class YangSurface implements EventQueueHolder {
 			mEventQueue.close();
 			if(mMacro!=null)
 				mMacro.close();
-		}catch(Exception ex2) {
+		}catch(final Exception ex2) {
 
 		}
 		onException(ex);
@@ -175,7 +176,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	}
 
 	public void recordMacro(String filename,AbstractMacroIO macroIO) throws FileNotFoundException {
-		MacroWriter writer = new MacroWriter(mResources.getFileSystemOutputStream(filename), mDefaultMacroIO);
+		final MacroWriter writer = new MacroWriter(mResources.getSystemOutputStream(filename), mDefaultMacroIO);
 		mEventQueue.registerEventWriter(writer);
 	}
 
@@ -184,11 +185,10 @@ public abstract class YangSurface implements EventQueueHolder {
 	}
 
 	public void playMacro(String filename,AbstractMacroIO macroIO) {
-		try {
-			mMacro = new MacroExecuter(mResources.getFileSystemInputStream(filename), macroIO);
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+		final InputStream is = mResources.getSystemInputStream(filename);
+		if(is==null)
+			throw new RuntimeException("File not found: "+filename);
+		mMacro = new MacroExecuter(is, macroIO);
 	}
 
 	public void playMacro(String filename) {
@@ -210,8 +210,8 @@ public abstract class YangSurface implements EventQueueHolder {
 		mSensor = App.sensor;
 		mSensor.init(this);
 		mEventQueue.setGraphics(mGraphics);
-		if(mResources.fileExists("strings/strings.xml"))
-			mStrings.load(mResources.getInputStream("strings/strings.xml"));
+		if(mResources.assetExists("strings/strings.xml"))
+			mStrings.load(mResources.getAssetInputStream("strings/strings.xml"));
 		try{
 			initGraphics();
 
@@ -219,10 +219,10 @@ public abstract class YangSurface implements EventQueueHolder {
 			if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
 				playMacro(mMacroFilename);
 			if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
-				String filename = "run.ym";
+				final String filename = "run.ym";
 				try {
 					recordMacro(filename);
-				} catch (FileNotFoundException e) {
+				} catch (final FileNotFoundException e) {
 					DebugYang.printerr("Could not create '"+filename+"'");
 				}
 			}
@@ -239,7 +239,7 @@ public abstract class YangSurface implements EventQueueHolder {
 
 			if(mUpdateMode == UpdateMode.ASYNCHRONOUS)
 				mUpdateThread.start();
-		}catch(Exception ex) {
+		}catch(final Exception ex) {
 			exceptionOccurred(ex);
 		}
 
@@ -249,7 +249,7 @@ public abstract class YangSurface implements EventQueueHolder {
 		synchronized(mInitializedNotifier) {
 			try {
 				mInitializedNotifier.wait();
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
@@ -262,7 +262,7 @@ public abstract class YangSurface implements EventQueueHolder {
 				mGFXDebug.surfaceChanged();
 			if(mStereoVision!=null)
 				mStereoVision.surfaceChanged(mGraphics);
-		}catch(Exception ex) {
+		}catch(final Exception ex) {
 			exceptionOccurred(ex);
 		}
 	}
@@ -294,7 +294,7 @@ public abstract class YangSurface implements EventQueueHolder {
 								continue;
 							}else
 								Thread.sleep(mUpdateWaitMillis);
-						} catch (InterruptedException e) {
+						} catch (final InterruptedException e) {
 							e.printStackTrace();
 						}
 						catchUp();
@@ -359,7 +359,7 @@ public abstract class YangSurface implements EventQueueHolder {
 					mProgramTime += deltaTimeSeconds;
 					step(deltaTimeSeconds);
 				}
-			}catch(Exception ex){
+			}catch(final Exception ex){
 				exceptionOccurred(ex);
 			}
 		}
@@ -394,7 +394,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	protected void onLoadingFinished(boolean resuming) {
 
 	}
-	
+
 	public final void drawFrame() {
 		if(mUseStereoVision) {
 			//STEREO VISION
@@ -413,14 +413,14 @@ public abstract class YangSurface implements EventQueueHolder {
 			}finally{
 				mGraphics.leaveTextureRenderTarget();
 			}
-			
+
 			mStereoVision.draw();
 		}else{
 			drawContent();
 		}
 
 	}
-	
+
 	private final void drawContent() {
 		mGraphics.clear(0,0,0);
 		try{
@@ -455,7 +455,7 @@ public abstract class YangSurface implements EventQueueHolder {
 			if(mUpdateMode==UpdateMode.SYNCHRONOUS)
 				catchUp();
 			assert mGraphics.checkErrorInst("Catchup");
-			
+
 			if(mLoadingState>=mStartupSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 				assert mGraphics.preCheck("Debug values");
 				mGFXDebug.reset();
@@ -499,7 +499,7 @@ public abstract class YangSurface implements EventQueueHolder {
 			}
 			mGraphics.endFrame();
 
-		}catch(Exception ex){
+		}catch(final Exception ex){
 			exceptionOccurred(ex);
 		}
 	}
@@ -580,11 +580,11 @@ public abstract class YangSurface implements EventQueueHolder {
 		if(mInactive)
 			resume();
 	}
-	
+
 	public boolean isInactive() {
 		return mInactive;
 	}
-	
+
 	public boolean isStereoVision() {
 		return mUseStereoVision;
 	}

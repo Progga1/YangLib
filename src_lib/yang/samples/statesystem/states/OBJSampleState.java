@@ -67,12 +67,12 @@ public class OBJSampleState extends SampleState {
 			transform.loadIdentity();
 			transform.scale(0.1f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
+			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.5f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
-			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform,true,true);
+			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.translate(0, 0.3f);
@@ -80,19 +80,19 @@ public class OBJSampleState extends SampleState {
 			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/SuperMario.obj"),mGFXLoader,transform,true,true);
+			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),mGFXLoader,transform,true,true);
 			
 			transform.loadIdentity();
 			transform.scale(0.42f);	
 			transform.translate(0, -0.85f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
+			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
 			
 			transform.loadIdentity();
 			transform.scale(1.2f);
 			transform.translate(0, -0.0f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
+			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
 			
 //			transform.loadIdentity();
 //			transform.scale(0.5f);
