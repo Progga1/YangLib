@@ -1,7 +1,7 @@
 package yang.graphics.util;
 
 import yang.events.Keys;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.math.MathConst;
 import yang.math.objects.Vector3f;
 
@@ -16,15 +16,15 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	//Settings
 	public float mMinZoom = 0.3f;
 	public float mMaxZoom = 10f;
-	public int mMoveCameraButton = YangPointerEvent.BUTTON_MIDDLE;
-	public int mMoveCameraAlternativeButton = YangPointerEvent.BUTTON_RIGHT;
+	public int mMoveCameraButton = SurfacePointerEvent.BUTTON_MIDDLE;
+	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;
 	
 	//Temp
 	private Vector3f mCamRight = new Vector3f();
 	private Vector3f mCamUp = new Vector3f();
 	
-	public void pointerDown(YangPointerEvent event) {
+	public void pointerDown(SurfacePointerEvent event) {
 		mCurPointerDownCount++;
 		if(event.mId!=0)
 			return;
@@ -39,7 +39,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 		mTargetZoom = zoom;
 	}
 	
-	public void pointerDragged(YangPointerEvent event) {
+	public void pointerDragged(SurfacePointerEvent event) {
 		if(event.mId==0) {
 			if((mCurPointerDownCount==2 || mCurPointerDownCount==3) || event.mButton==mMoveCameraButton || event.mButton==mMoveCameraAlternativeButton) {
 				if(mShiftMode || mCurPointerDownCount==2) {
@@ -60,7 +60,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 		}
 	}
 	
-	public void pointerUp(YangPointerEvent event) {
+	public void pointerUp(SurfacePointerEvent event) {
 		mCurPointerDownCount--;
 		if(event.mId>3)
 			return;

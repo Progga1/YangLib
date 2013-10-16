@@ -1,7 +1,7 @@
 package yang.graphics.util.clippedrect;
 
 import yang.events.eventtypes.YangEvent;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.listeners.PointerEventListener;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Bounds;
@@ -38,18 +38,18 @@ public class ClippedRect implements PointerEventListener{
 	}
 
 	@Override
-	public void pointerDown(float x, float y, YangPointerEvent event) {
+	public void pointerDown(float x, float y, SurfacePointerEvent event) {
 		mDragX = x;
 		mDragY = y;
 	}
 
 	@Override
-	public void pointerMoved(float x, float y, YangPointerEvent event) {
+	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
 		
 	}
 
 	@Override
-	public void pointerDragged(float x, float y, YangPointerEvent event) {
+	public void pointerDragged(float x, float y, SurfacePointerEvent event) {
 		float deltaX = mDragX-x;
 		float deltaY = mDragY-y;
 		mShiftX += deltaX;
@@ -57,7 +57,7 @@ public class ClippedRect implements PointerEventListener{
 	}
 
 	@Override
-	public void pointerUp(float x, float y, YangPointerEvent event) {
+	public void pointerUp(float x, float y, SurfacePointerEvent event) {
 		
 	}
 	

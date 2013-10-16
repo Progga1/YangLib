@@ -6,8 +6,8 @@ import yang.android.sound.AndroidSoundManager;
 import yang.events.EventQueueHolder;
 import yang.events.Keys;
 import yang.events.YangEventQueue;
-import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangKeyEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.model.App;
 import yang.model.DebugYang;
 import yang.surface.YangSurface;
@@ -31,7 +31,7 @@ public class YangTouchSurface extends GLSurfaceView{
 	}
 
 	protected void initGL(Context context) {
-		super.setEGLContextClientVersion(2); 
+		super.setEGLContextClientVersion(2);
 		super.setEGLConfigChooser(8,8,8,0, 16,0);
 		//HTC working: RGBA_8888
 		super.getHolder().setFormat(PixelFormat.RGBA_8888);
@@ -56,7 +56,7 @@ public class YangTouchSurface extends GLSurfaceView{
 		mSceneRenderer.setSurface(surface);
 
 		if (surface instanceof EventQueueHolder)
-			setEventListener((EventQueueHolder)surface);
+			setEventListener(surface);
 	}
 
 	public void setEventListener(EventQueueHolder eventQueue) {
@@ -67,28 +67,28 @@ public class YangTouchSurface extends GLSurfaceView{
 	public boolean onTouchEvent(MotionEvent event) {
 		if(mEventQueue==null)
 			return false;
-		int action = event.getActionMasked();
-		int idx = (event.getAction() & MotionEvent.ACTION_POINTER_ID_MASK) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
-		int id = event.getPointerId(idx);
+		final int action = event.getActionMasked();
+		final int idx = (event.getAction() & MotionEvent.ACTION_POINTER_ID_MASK) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
+		final int id = event.getPointerId(idx);
 
-		int x = (int)event.getX(idx);
-		int y = (int)event.getY(idx);
+		final int x = (int)event.getX(idx);
+		final int y = (int)event.getY(idx);
 
 		switch (action){
 		case MotionEvent.ACTION_DOWN:
 		case MotionEvent.ACTION_POINTER_DOWN:
-			mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDOWN, x, y, AbstractPointerEvent.BUTTON_LEFT, id);
+			mEventQueue.putPointerEvent(YangPointerEvent.ACTION_POINTERDOWN, x, y, YangPointerEvent.BUTTON_LEFT, id);
 			break;
 
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
-			mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERUP, x, y, AbstractPointerEvent.BUTTON_LEFT, id);
+			mEventQueue.putPointerEvent(YangPointerEvent.ACTION_POINTERUP, x, y, YangPointerEvent.BUTTON_LEFT, id);
 			break;
 
 		case MotionEvent.ACTION_MOVE:
 
 			for(int i = 0; i < event.getPointerCount(); i++){
-				mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDRAG, (int)event.getX(i), (int)event.getY(i), AbstractPointerEvent.BUTTON_LEFT, event.getPointerId(i));
+				mEventQueue.putPointerEvent(YangPointerEvent.ACTION_POINTERDRAG, (int)event.getX(i), (int)event.getY(i), YangPointerEvent.BUTTON_LEFT, event.getPointerId(i));
 			}
 
 //			mEventQueue.putPointerEvent(AbstractPointerEvent.ACTION_POINTERDRAG, x, y, AbstractPointerEvent.BUTTON_LEFT, id);

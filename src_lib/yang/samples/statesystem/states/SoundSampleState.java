@@ -1,6 +1,6 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.samples.statesystem.SampleState;
 import yang.sound.AbstractSound;
 
@@ -26,12 +26,12 @@ public class SoundSampleState extends SampleState {
 	}
 
 	@Override
-	public void pointerDown(float x,float y,YangPointerEvent event) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 //		mSound.play();
 		mLoopSound.playLoop();
 	}
 
-	public void pointerUp(float x,float y, YangPointerEvent event) {
+	public void pointerUp(float x,float y, SurfacePointerEvent event) {
 		mLoopSound.stop();
 	}
 

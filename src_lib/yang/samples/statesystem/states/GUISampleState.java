@@ -1,8 +1,8 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.AbstractPointerEvent;
-import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.DrawableString;
 import yang.graphics.model.FloatColor;
@@ -153,10 +153,10 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 	
 	//Always triggered when clicking on the surface (independent of GUI)
 	@Override
-	public void pointerUp(float x,float y,YangPointerEvent event) {
+	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 //		if(event.mButton==AbstractPointerEvent.BUTTON_RIGHT)
 //			mPanel.setPosition(mGUI.normToGUIX(x), mGUI.normToGUIY(y));
-		if(event.mButton==AbstractPointerEvent.BUTTON_MIDDLE)
+		if(event.mButton==YangPointerEvent.BUTTON_MIDDLE)
 			mPanel.mVisible = !mPanel.mVisible;
 	}
 	

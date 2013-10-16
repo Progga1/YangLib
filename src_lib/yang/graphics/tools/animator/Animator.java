@@ -1,7 +1,7 @@
 package yang.graphics.tools.animator;
 
 import yang.events.eventtypes.YangEvent;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
@@ -307,11 +307,11 @@ public class Animator implements YangEventListener {
 		return false;
 	}
 
-	public void pointerMoved(float x, float y, YangPointerEvent event) {
+	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
 		
 	}
 	
-	public void pointerDown(float x,float y,YangPointerEvent event) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		mCurPntX = mGraphics2D.normToGameX(x,y);
 		mCurPntY = mGraphics2D.normToGameY(x,y);
 		mPrevPntX = mCurPntX;
@@ -319,15 +319,15 @@ public class Animator implements YangEventListener {
 		mPrevSX = x;
 		mPrevSY = y;
 		switch(event.mButton) {
-		case YangPointerEvent.BUTTON_LEFT:
+		case SurfacePointerEvent.BUTTON_LEFT:
 			mSkeletonEditing.mMainMarkedJoint = mCurSkeleton.pickJoint2D(mCurPntX, mCurPntY);
 			if(mSkeletonEditing.mMainMarkedJoint!=null)
 				mSkeletonEditing.mMainMarkedJoint.startDrag();
 			break;
-		case YangPointerEvent.BUTTON_MIDDLE:
+		case SurfacePointerEvent.BUTTON_MIDDLE:
 			
 			break;
-		case YangPointerEvent.BUTTON_RIGHT:
+		case SurfacePointerEvent.BUTTON_RIGHT:
 			Joint pick = mCurSkeleton.pickJoint2D(mCurPntX, mCurPntY);
 			if(pick!=null)
 				pick.mFixed ^= true;
@@ -335,7 +335,7 @@ public class Animator implements YangEventListener {
 		}
 	}
 	
-	public void pointerDragged(float x,float y,YangPointerEvent event) {
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		
 		mPrevPntX = mCurPntX;
 		mPrevPntY = mCurPntY;
@@ -345,13 +345,13 @@ public class Animator implements YangEventListener {
 		float deltaY = mCurPntY-mPrevPntY;
 		
 		switch(event.mButton) {
-			case YangPointerEvent.BUTTON_LEFT:
+			case SurfacePointerEvent.BUTTON_LEFT:
 				if(mSkeletonEditing.mMainMarkedJoint!=null) {
 					mSkeletonEditing.mMainMarkedJoint.drag(deltaX, deltaY);
 					mPoseChanged = true;
 				}
 				break;
-			case YangPointerEvent.BUTTON_MIDDLE:
+			case SurfacePointerEvent.BUTTON_MIDDLE:
 				mCamera.move((mPrevSX-x)*mCamera.getZoom(),(mPrevSY-y)*mCamera.getZoom());
 				break;
 		}
@@ -360,7 +360,7 @@ public class Animator implements YangEventListener {
 		mPrevSY = y;
 	}
 	
-	public void pointerUp(float x,float y,YangPointerEvent event) {
+	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		if(mSkeletonEditing.mMainMarkedJoint!=null) {
 			mSkeletonEditing.mMainMarkedJoint.endDrag();
 			if(mSkeletonEditing.mMainMarkedJoint.mFixed)

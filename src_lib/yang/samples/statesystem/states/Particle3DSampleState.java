@@ -1,6 +1,6 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.particles.EffectParticle;
 import yang.graphics.particles.EffectParticleProperties;
 import yang.graphics.particles.Particles3D;
@@ -84,19 +84,19 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 	}
 
 	@Override
-	public void pointerDown(float x,float y,YangPointerEvent event) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		super.pointerDown(x,y, event);
 	}
 	
 	@Override
-	public void pointerDragged(float x,float y,YangPointerEvent event) {
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		super.pointerDragged(x, y, event);
-		if(event.mButton==YangPointerEvent.BUTTON_LEFT && event.mId==0)
+		if(event.mButton==SurfacePointerEvent.BUTTON_LEFT && event.mId==0)
 			mCursor.set(x, 0, -y);
 	}
 	
 	@Override
-	public void pointerMoved(float x,float y,YangPointerEvent event) {
+	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
 		super.pointerMoved(x, y, event);
 	}
 	

@@ -1,7 +1,8 @@
 package yang.util.gui;
 
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.listeners.RawEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
@@ -12,21 +13,23 @@ import yang.util.gui.components.GUIInteractiveComponent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
-public class BasicGUI {
+public class BasicGUI implements RawEventListener {
 
 	public static GUIPointerEvent[] mGUIEventPool = createEventPool(512);
 	public static int mComponentPoolPos;
-	
+
 	public boolean mAutoUpdateProjections = true;
-	
+
 	private GUICoordinatesMode mCoordinatesMode;
-	
+
 	private boolean mFirstFrame = true;
 	public GUIContainer2D mMainContainer;
-	
+
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
 	public float mGUILeft,mGUIBottom,mGUIRight,mGUITop;
+	public boolean mDimensionsBySurface = true;
+	public float mWidth,mHeight;
 	public float mProjShiftX;
 	public float mProjShiftY;
 	public float mProjWidthFactor,mProjHeightFactor;
@@ -35,16 +38,16 @@ public class BasicGUI {
 	public float mCurrentTime;
 	public GUIInteractiveComponent mPressedComponent;
 	public NonConcurrentList<Texture> mPassTextures;
-	
+
 	protected static GUIPointerEvent[] createEventPool(int capacity) {
-		GUIPointerEvent[] result = new GUIPointerEvent[capacity];
+		final GUIPointerEvent[] result = new GUIPointerEvent[capacity];
 		for(int i=0;i<capacity;i++) {
 			result[i] = new GUIPointerEvent();
 		}
 		mComponentPoolPos = 0;
 		return result;
 	}
-	
+
 	public BasicGUI(Default2DGraphics graphics2D,GUICoordinatesMode coordinatesMode,boolean autoUpdateProjections,int maxPasses) {
 		mGraphics2D = graphics2D;
 		mGraphics = graphics2D.mTranslator;
@@ -56,47 +59,53 @@ public class BasicGUI {
 		setPassTexture(0,mGraphics.mWhiteTexture);
 		setPassTexture(maxPasses,null);
 	}
-	
+
 	public BasicGUI(Default2DGraphics graphics2D,int maxPasses) {
 		this(graphics2D,GUICoordinatesMode.SCREEN,true,maxPasses);
 	}
-	
+
 	public BasicGUI(Default2DGraphics graphics2D) {
 		this(graphics2D,5);
 	}
-	
+
 	public void setPassTexture(int pass,Texture texture) {
 		while(mPassTextures.size()<=pass)
 			mPassTextures.add(null);
 		mPassTextures.set(pass,texture);
 	}
-	
+
 //	private void addGUILayer() {
 //	GUILayer newLayer = new GUILayer();
 //	newLayer.mMainContainer = new GUIContainer2D();
 //	newLayer.mMainContainer.setGUI(this);
 //	mLayers.add(newLayer);
 //}
-	
+
 	public GUICoordinatesMode getCoordinatesMode() {
 		return mCoordinatesMode;
 	}
-	
+
 	private void setCoordinatesMode(GUICoordinatesMode mode) {
 		mCoordinatesMode = mode;
+		if(mDimensionsBySurface) {
+			mWidth = mGraphics.mRatioX*2;
+			mHeight = mGraphics.mRatioY*2;
+		}
+		final float w = mWidth*0.5f;
+		final float h = mHeight*0.5f;
 		switch(mode) {
 		case SCREEN:
-			mProjShiftX = -mGraphics.mRatioX;
-			mProjShiftY = mGraphics.mRatioY;
+			mProjShiftX = -w;
+			mProjShiftY = h;
 			mProjWidthFactor = 1;
 			mProjHeightFactor = 1;
 			mProjXFactor = 1;
 			mProjYFactor = -1;
 			mProjShiftYFactor = -1;
 			mGUILeft = 0;
-			mGUIRight = mGraphics.mRatioX*2;
+			mGUIRight = w*2;
 			mGUITop = 0;
-			mGUIBottom = mGraphics.mRatioY*2;
+			mGUIBottom = h*2;
 			break;
 		case NORMALIZED:
 			mProjShiftX = 0;
@@ -106,23 +115,23 @@ public class BasicGUI {
 			mProjXFactor = 1;
 			mProjYFactor = 1;
 			mProjShiftYFactor = 0;
-			mGUILeft = -mGraphics.mRatioX;
-			mGUIRight = mGraphics.mRatioX;
-			mGUITop = mGraphics.mRatioY;
-			mGUIBottom = -mGraphics.mRatioY;
+			mGUILeft = -w;
+			mGUIRight = w;
+			mGUITop = h;
+			mGUIBottom = -h;
 			break;
 		}
-		
+
 	}
 
 	public void setDefaultActionListener(GUIActionListener actionListener) {
 		mMainContainer.mActionListener = actionListener;
 	}
-	
+
 	public void setDefaultPointerListener(GUIPointerListener pointerListener) {
 		mMainContainer.addPointerListener(pointerListener);
 	}
-	
+
 	public void draw() {
 		if(mFirstFrame) {
 			refreshProjections();
@@ -131,89 +140,89 @@ public class BasicGUI {
 			refreshProjections();
 		mGraphics2D.mTranslator.switchZBuffer(false);
 		int pass=0;
-		for(Texture texture:mPassTextures) {
+		for(final Texture texture:mPassTextures) {
 			if(texture!=null)
 				mGraphics.bindTexture(texture);
 			mMainContainer.draw(pass);
 			pass++;
 		}
 	}
-	
+
 	public void step(float deltaTime) {
 		mCurrentTime += deltaTime;
 	}
-	
+
 	public GUIComponent handleEvent(YangEvent event) {
-		boolean handled = false;
-		if(event instanceof YangPointerEvent) {
-			YangPointerEvent pointerEvent = (YangPointerEvent)event;
-			
+		final boolean handled = false;
+		if(event instanceof SurfacePointerEvent) {
+			final SurfacePointerEvent pointerEvent = (SurfacePointerEvent)event;
+
 			int index = mComponentPoolPos++;
 			if(mComponentPoolPos>=mGUIEventPool.length) {
 				mComponentPoolPos = 0;
 				index=0;
 			}
-			GUIPointerEvent guiEvent = mGUIEventPool[index];
-			guiEvent.createFromPointerEvent((YangPointerEvent)event, mMainContainer);
+			final GUIPointerEvent guiEvent = mGUIEventPool[index];
+			guiEvent.createFromPointerEvent((SurfacePointerEvent)event, mMainContainer);
 			guiEvent.mX = (guiEvent.mX - mProjShiftX)*mProjXFactor;
 			guiEvent.mY = (guiEvent.mY - mProjShiftY)*mProjYFactor;
-			
-			if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDRAG && mPressedComponent!=null) {
-				GUIPointerEvent dragEvent = BasicGUI.mGUIEventPool[BasicGUI.mComponentPoolPos++];
+
+			if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDRAG && mPressedComponent!=null) {
+				final GUIPointerEvent dragEvent = BasicGUI.mGUIEventPool[BasicGUI.mComponentPoolPos++];
 				if(BasicGUI.mComponentPoolPos>BasicGUI.mGUIEventPool.length)
 					BasicGUI.mComponentPoolPos = 0;
 				dragEvent.createFromPointerEvent(pointerEvent,mPressedComponent);
 				mPressedComponent.guiFocusedDrag(dragEvent);
 				return mPressedComponent;
 			}else{
-			
-				GUIComponent result =  mMainContainer.rawPointerEvent(guiEvent);
-				
-				if(mPressedComponent!=null && pointerEvent.mAction==YangPointerEvent.ACTION_POINTERUP) {
+
+				final GUIComponent result =  mMainContainer.rawPointerEvent(guiEvent);
+
+				if(mPressedComponent!=null && pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
 					mPressedComponent.mPressedTime = -mCurrentTime;
 					mPressedComponent = null;
 				}
-						
+
 				return result;
 			}
-			
+
 
 		}
 		return null;
 	}
-	
+
 	public float getGUILeft() {
 		return mGUILeft;
 	}
-	
+
 	public float getGUITop() {
 		return mGUITop;
 	}
-	
+
 	public float getGUIRight() {
 		return mGUIRight;
 	}
-	
+
 	public float getGUIBottom() {
 		return mGUIBottom;
 	}
-	
+
 	public float getGUICenterX() {
 		return (mGUILeft+mGUIRight)*0.5f;
 	}
-	
+
 	public float getGUICenterY() {
 		return (mGUITop+mGUIBottom)*0.5f;
 	}
-	
+
 	public float getGUIWidth() {
-		return mGraphics.mRatioX*2;
+		return mWidth;
 	}
-	
+
 	public float getGUIHeight() {
-		return mGraphics.mRatioY*2;
+		return mHeight;
 	}
-	
+
 	public void refreshProjections() {
 		mMainContainer.refreshProjections(0,0);
 	}
@@ -221,11 +230,11 @@ public class BasicGUI {
 	public <ComponentType extends GUIComponent> ComponentType addComponent(ComponentType component) {
 		return mMainContainer.addComponent(component);
 	}
-	
+
 	public <ComponentType extends GUIComponent> ComponentType addComponent(Class<ComponentType> component) {
 		return mMainContainer.addComponent(component);
 	}
-	
+
 	public void setGlobalShift(float shiftX,float shiftY) {
 		mMainContainer.mPosX = shiftX;
 		mMainContainer.mPosY = shiftY;
@@ -234,7 +243,7 @@ public class BasicGUI {
 	public float normToGUIX(float x) {
 		return (x - mProjShiftX)*mProjXFactor;
 	}
-	
+
 	public float normToGUIY(float y) {
 		return (y - mProjShiftY)*mProjYFactor;
 	}
@@ -246,9 +255,21 @@ public class BasicGUI {
 		else
 			mPressedComponent.mPressedTime = 1;
 	}
-	
+
+	public void setDimensions(float width,float height) {
+		mWidth = width;
+		mHeight = height;
+		mDimensionsBySurface = false;
+		refreshCoordinateSystem();
+	}
+
 	public void refreshCoordinateSystem() {
 		setCoordinatesMode(mCoordinatesMode);
 	}
-	
+
+	@Override
+	public boolean rawEvent(YangEvent event) {
+		return handleEvent(event)!=null;
+	}
+
 }

@@ -1,48 +1,118 @@
 package yang.events.eventtypes;
 
-import yang.events.listeners.PointerEventListener;
-import yang.events.listeners.RawEventListener;
 
-public class YangPointerEvent extends AbstractPointerEvent {
-	
-	@Override
-	public void handle(RawEventListener listener) {
-		if(listener.rawEvent(this))
-			return;
-		if(!(listener instanceof PointerEventListener))
-			return;
-		PointerEventListener pointerListener = (PointerEventListener)listener;
-		
+public abstract class YangPointerEvent extends YangEvent {
+
+	public int mAction;
+	public static final int BUTTON_NONE = -1;
+	public static final int BUTTON_LEFT = 0;
+	public static final int BUTTON_MIDDLE = 2;
+	public static final int BUTTON_RIGHT = 1;
+
+	public static final int ACTION_POINTERDOWN = 0;
+	public static final int ACTION_POINTERMOVE = 1;
+	public static final int ACTION_POINTERDRAG = 2;
+	public static final int ACTION_POINTERUP = 3;
+
+	public int mButton;
+	public float mX;
+	public float mY;
+	public float mZ;
+	public float mDeltaX,mDeltaY,mDeltaZ;
+	public int mId;
+
+	protected String actionToString() {
 		switch(mAction) {
 		case ACTION_POINTERDOWN:
-			pointerListener.pointerDown(mX, mY, this);
-			break;
+			return "Down";
 		case ACTION_POINTERMOVE:
-			pointerListener.pointerMoved(mX, mY, this);
-			break;
+			return "Move";
 		case ACTION_POINTERDRAG:
-			pointerListener.pointerDragged(mX, mY, this);
-			break;
+			return "Drag";
 		case ACTION_POINTERUP:
-			pointerListener.pointerUp(mX, mY, this);
-			break;
+			return "Up";
+		default: return "<UndefAction>";
 		}
 	}
 
-//	@Override
-//	public int getID() {
-//		return YangEventQueue.ID_POINTER_EVENT;
+	public boolean isLeftButton() {
+		return mButton == BUTTON_LEFT;
+	}
+
+	public boolean isMiddleButton() {
+		return mButton == BUTTON_MIDDLE;
+	}
+
+	public boolean isRightButton() {
+		return mButton == BUTTON_RIGHT;
+	}
+
+	@Override
+	public void onPut() {
+		final PointerTracker pointer = mEventQueue.mPointerTrackers[mId];
+		mDeltaX = mX - pointer.mX;
+		mDeltaY = mY - pointer.mY;
+		mDeltaZ = mZ - pointer.mZ;
+		pointer.mLastMovement = mEventQueue.getTime();
+		if(mAction!=ACTION_POINTERMOVE)
+			pointer.mLastTouch = mEventQueue.getTime();
+		pointer.mX = mX;
+		pointer.mY = mY;
+		pointer.mZ = mZ;
+		if(mAction==ACTION_POINTERDOWN) {
+			mEventQueue.mPointerDistance = -1;
+			mEventQueue.mCurPointerDownCount++;
+		}
+		if(mAction==ACTION_POINTERUP)
+			mEventQueue.mCurPointerDownCount--;
+		if(mEventQueue.mTriggerZooming && mEventQueue.mCurPointerDownCount==2 && mAction==ACTION_POINTERDRAG) {
+			final float dist = mEventQueue.mPointerTrackers[0].getDistance(mEventQueue.mPointerTrackers[1]);
+			if(mEventQueue.mPointerDistance>=0) {
+				final float deltaDist = dist-mEventQueue.mPointerDistance;
+				mEventQueue.putZoomEvent(-deltaDist);
+			}
+			mEventQueue.mPointerDistance = dist;
+		}
+	}
+
+	public PointerTracker getTrackingData() {
+		return mEventQueue.mPointerTrackers[mId];
+	}
+
+//	public float getDeltaX() {
+//		return mEventQueue.mPointerTrackers[mId].mDeltaX;
 //	}
 //
-//	@Override
-//	public void writeToStream(DataOutputStream outStream) throws IOException {
-//		
+//	public float getDeltaY() {
+//		return mEventQueue.mPointerTrackers[mId].mDeltaY;
 //	}
 //
-//	@Override
-//	public void readFromStream(DataInputStream inStream) throws IOException {
-//		// TODO Auto-generated method stub
-//		
+//	public float getCurrentX() {
+//		return mEventQueue.mPointerTrackers[mId].mX;
 //	}
-	
+//
+//	public float getCurrentY() {
+//		return mEventQueue.mPointerTrackers[mId].mY;
+//	}
+
+	@Override
+	public String toString() {
+		final String action = actionToString();
+		String button;
+		switch(mButton) {
+		case BUTTON_LEFT:
+			button = "Left";
+			break;
+		case BUTTON_MIDDLE:
+			button = "Middle";
+			break;
+		case BUTTON_RIGHT:
+			button = "Right";
+			break;
+		default: button = "";
+		}
+
+		return button+action+"(x,y,z="+mX+","+mY+","+mZ+"; Id="+mId+")";
+	}
+
 }

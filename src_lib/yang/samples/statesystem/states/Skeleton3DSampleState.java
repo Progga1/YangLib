@@ -1,7 +1,7 @@
 package yang.samples.statesystem.states;
 
 import yang.events.Keys;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
 import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
 import yang.graphics.defaults.programs.subshaders.ColorFactorSubShader;
@@ -122,8 +122,8 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	}
 	
 	@Override
-	public void pointerDown(float x,float y,YangPointerEvent event) {
-		if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
+		if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
 			Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1.75f);
 			if(pJoint!=null) {
 				mSkeleton3D.setJointSelected(pJoint,event.mId);
@@ -134,19 +134,19 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	}
 
 	@Override
-	public void pointerMoved(float x,float y,YangPointerEvent event) {
+	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
 		Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1);
 		mSkeleton3D.mHoverJoint = pJoint;
 	}
 	
 	@Override
-	public void pointerDragged(float x,float y,YangPointerEvent event) {
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		
 		mSkeleton3D.mHoverJoint = null;
 		//Joint pJoint = mSkeleton3D.pickJoint(x,y,mZoom);
 
 		if(mSkeleton3D.getSelectionCount()>0) {
-			if(event.mButton == YangPointerEvent.BUTTON_LEFT) {
+			if(event.mButton == SurfacePointerEvent.BUTTON_LEFT) {
 				float dragX = event.mDeltaX*mCamera.mZoom;
 				float dragY = event.mDeltaY*mCamera.mZoom;
 				mGraphics3D.getCameraRightVector(mCamRight);
@@ -163,7 +163,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	}
 	
 	@Override
-	public void pointerUp(float x,float y,YangPointerEvent event) {
+	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		super.pointerUp(x,y,event);
 		if(!mMultiSelect)
 			mSkeleton3D.unselectJoint(event.mId);

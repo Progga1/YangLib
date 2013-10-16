@@ -3,7 +3,7 @@ package yang.events;
 import yang.events.eventtypes.PointerTracker;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangKeyEvent;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.eventtypes.YangZoomEvent;
 import yang.events.listeners.YangEventListener;
@@ -23,7 +23,7 @@ public class YangEventQueue {
 	public float mPointerDistance = -1;
 	public int mCurPointerDownCount = 0;
 	private int mMaxEvents;
-	private YangPointerEvent[] mPointerEventQueue;
+	private SurfacePointerEvent[] mPointerEventQueue;
 	private YangKeyEvent[] mKeyEventQueue;
 	private YangZoomEvent[] mZoomEventQueue;
 	private YangSensorEvent[] mSensorEventQueue;
@@ -56,12 +56,12 @@ public class YangEventQueue {
 		mMetaEventQueueFirst = 0;
 		mQueue = new YangEvent[maxEvents];
 		mMetaEventQueue = new YangEvent[maxEvents];
-		mPointerEventQueue = new YangPointerEvent[maxEvents];
+		mPointerEventQueue = new SurfacePointerEvent[maxEvents];
 		mKeyEventQueue = new YangKeyEvent[maxEvents];
 		mZoomEventQueue = new YangZoomEvent[maxEvents];
 		mSensorEventQueue = new YangSensorEvent[maxEvents];
 		for(int i=0;i<maxEvents;i++) {
-			mPointerEventQueue[i] = new YangPointerEvent();
+			mPointerEventQueue[i] = new SurfacePointerEvent();
 			mPointerEventQueue[i].mEventQueue = this;
 			mKeyEventQueue[i] = new YangKeyEvent();
 			mKeyEventQueue[i].mEventQueue = this;
@@ -128,8 +128,8 @@ public class YangEventQueue {
 		mMetaKeys[code] = true;
 	}
 	
-	public synchronized YangPointerEvent newPointerEvent() {
-		YangPointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
+	public synchronized SurfacePointerEvent newPointerEvent() {
+		SurfacePointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
 		if(mPointerEventId>=mMaxEvents)
 			mPointerEventId = 0;
 		return newEvent;
@@ -152,7 +152,7 @@ public class YangEventQueue {
 	public synchronized void putPointerEvent(int action, int x,int y, int button, int id) {
 		if(mGraphics==null)
 			return;
-		YangPointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
+		SurfacePointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
 		if(mPointerEventId>=mMaxEvents)
 			mPointerEventId = 0;
 		newEvent.mButton = button;

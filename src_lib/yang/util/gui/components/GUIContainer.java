@@ -1,6 +1,6 @@
 package yang.util.gui.components;
 
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
@@ -35,17 +35,17 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 					GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];
 					guiEvent.createFromPointerEvent(pointerEvent, component);
 					GUIComponent result;
-					if(mGUI.mPressedComponent==null || pointerEvent.mAction!=YangPointerEvent.ACTION_POINTERDRAG)
+					if(mGUI.mPressedComponent==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG)
 						result = component.rawPointerEvent(guiEvent);
 					else
 						result = null;
 					
-					if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERUP) {
+					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
 						if(mGUI.mPressedComponent==component)
 							component.guiClick(guiEvent);
 					}
 					
-					if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDOWN) {
+					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDOWN) {
 						if(component.isPressable()) {
 							mGUI.setPressedComponent(component);
 							return component;

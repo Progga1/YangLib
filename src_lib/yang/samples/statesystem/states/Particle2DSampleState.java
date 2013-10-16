@@ -1,6 +1,6 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.particles.EffectParticle;
 import yang.graphics.particles.Particles2D;
 import yang.graphics.textures.TextureCoordinateSet;
@@ -63,7 +63,7 @@ public class Particle2DSampleState extends SampleState {
 	}
 
 	@Override
-	public void pointerDown(float x,float y,YangPointerEvent event) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		mCurPntX = x;
 		mCurPntY = y;
 		mDelayedPntX = x;
@@ -71,13 +71,13 @@ public class Particle2DSampleState extends SampleState {
 	}
 	
 	@Override
-	public void pointerDragged(float x,float y,YangPointerEvent event) {
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		mCurPntX = x;
 		mCurPntY = y;
 	}
 	
 	@Override
-	public void pointerMoved(float x,float y,YangPointerEvent event) {
+	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
 		mCurPntX = x;
 		mCurPntY = y;
 	}

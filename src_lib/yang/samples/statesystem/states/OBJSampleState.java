@@ -3,7 +3,7 @@ package yang.samples.statesystem.states;
 import java.io.IOException;
 
 import yang.events.Keys;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
 import yang.graphics.defaults.meshcreators.loaders.ObjMaterialHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
@@ -142,7 +142,7 @@ public class OBJSampleState extends SampleState {
 	}
 
 	@Override
-	public void pointerUp(float x,float y,YangPointerEvent event) {
+	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		mCurObjIndex = (mCurObjIndex+1)%mObjCount;
 	}
 	

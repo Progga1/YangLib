@@ -1,6 +1,6 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeCreator;
 import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeDefaultProperties;
 import yang.graphics.textures.enums.TextureFilter;
@@ -55,10 +55,10 @@ public class StrokeDrawerSampleState extends SampleState {
 	}
 	
 	@Override
-	public void pointerDown(float x,float y,YangPointerEvent event) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		x = (int)((x+mStrokeProperties.mWidth*0.5f*MathFunc.sign(x))/mStrokeProperties.mWidth)*mStrokeProperties.mWidth;
 		y = (int)((y+mStrokeProperties.mWidth*0.5f*MathFunc.sign(y))/mStrokeProperties.mWidth)*mStrokeProperties.mWidth;
-		if(mLstX==Float.MIN_VALUE || event.mButton==YangPointerEvent.BUTTON_RIGHT) {
+		if(mLstX==Float.MIN_VALUE || event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
 			mStroke.startStroke(x, y);
 			mLstX = x;
 			mLstY = y;

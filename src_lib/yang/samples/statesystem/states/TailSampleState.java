@@ -1,6 +1,6 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.tail.Tail;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
@@ -65,13 +65,13 @@ public class TailSampleState extends SampleState {
 	}
 	
 	@Override
-	public void pointerDragged(float x,float y,YangPointerEvent event) {
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		//mTail.refreshFront(x, y);
 		mCurX = x;
 		mCurY = y;
 	}
 	
-	public void pointerUp(float x,float y,YangPointerEvent event) {
+	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		mCurX = Float.MAX_VALUE;
 	}
 	

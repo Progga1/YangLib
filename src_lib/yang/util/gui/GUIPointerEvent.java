@@ -1,12 +1,12 @@
 package yang.util.gui;
 
-import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.listeners.RawEventListener;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.interfaces.GUIPointerListener;
 
-public class GUIPointerEvent extends YangPointerEvent {
+public class GUIPointerEvent extends SurfacePointerEvent {
 
 	public final static int ACTION_CLICK = 4;
 	public GUIComponent mSender;
@@ -35,7 +35,7 @@ public class GUIPointerEvent extends YangPointerEvent {
 		}
 	}
 	
-	public void createFromPointerEvent(AbstractPointerEvent pointerEvent,GUIComponent sender) {
+	public void createFromPointerEvent(YangPointerEvent pointerEvent,GUIComponent sender) {
 		mX = pointerEvent.mX-sender.mPosX;
 		mY = pointerEvent.mY-sender.mPosY;
 		mButton = pointerEvent.mButton;

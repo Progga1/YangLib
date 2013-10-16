@@ -12,7 +12,7 @@ import yang.events.EventQueueHolder;
 import yang.events.YangEventQueue;
 import yang.events.Keys;
 import yang.events.eventtypes.YangKeyEvent;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 
 public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 	
@@ -78,37 +78,37 @@ public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionL
 
 	public void putPointerEvent(int action,MouseEvent event) {
 		int button;
-		if(action==YangPointerEvent.ACTION_POINTERMOVE) {
-			button = YangPointerEvent.BUTTON_NONE;
+		if(action==SurfacePointerEvent.ACTION_POINTERMOVE) {
+			button = SurfacePointerEvent.BUTTON_NONE;
 		}else{
 			if((event.getModifiers() & MouseEvent.BUTTON3_MASK) != 0)
-				button = YangPointerEvent.BUTTON_RIGHT;
+				button = SurfacePointerEvent.BUTTON_RIGHT;
 			else if((event.getModifiers() & MouseEvent.BUTTON2_MASK) != 0)
-				button = YangPointerEvent.BUTTON_MIDDLE;
+				button = SurfacePointerEvent.BUTTON_MIDDLE;
 			else
-				button = YangPointerEvent.BUTTON_LEFT;
+				button = SurfacePointerEvent.BUTTON_LEFT;
 		}
 		mEventQueue.putPointerEvent(action, event.getX(), event.getY(), button, 0);
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent event) {
-		putPointerEvent(YangPointerEvent.ACTION_POINTERDOWN,event);
+		putPointerEvent(SurfacePointerEvent.ACTION_POINTERDOWN,event);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent event) {
-		putPointerEvent(YangPointerEvent.ACTION_POINTERUP,event);
+		putPointerEvent(SurfacePointerEvent.ACTION_POINTERUP,event);
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent event) {
-		putPointerEvent(YangPointerEvent.ACTION_POINTERDRAG,event);
+		putPointerEvent(SurfacePointerEvent.ACTION_POINTERDRAG,event);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
-		putPointerEvent(YangPointerEvent.ACTION_POINTERMOVE,event);
+		putPointerEvent(SurfacePointerEvent.ACTION_POINTERMOVE,event);
 	}
 
 	@Override

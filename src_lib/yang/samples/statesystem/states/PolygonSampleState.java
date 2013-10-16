@@ -1,7 +1,7 @@
 package yang.samples.statesystem.states;
 
-import yang.events.eventtypes.AbstractPointerEvent;
 import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.defaults.meshcreators.PolygonCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.translator.Texture;
@@ -59,8 +59,8 @@ public class PolygonSampleState extends SampleState {
 	}
 
 	@Override
-	public void pointerDown(float x,float y,YangPointerEvent event) {
-		if(event.mButton == AbstractPointerEvent.BUTTON_RIGHT) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
+		if(event.mButton == YangPointerEvent.BUTTON_RIGHT) {
 			mPickedPoint = mPolygon.pickPoint(x,y,0.03f);
 		}else{
 			int pick = mPolygon.pickPoint(x,y,0.025f);
@@ -74,12 +74,12 @@ public class PolygonSampleState extends SampleState {
 	}
 	
 	@Override
-	public void pointerMoved(float x,float y,YangPointerEvent event) {
+	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
 		mIntersects = mPolygon.interpenetrates(x, y);
 	}
 	
 	@Override
-	public void pointerDragged(float x,float y,YangPointerEvent event) {
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		if(mPickedPoint>=0) {
 			mPolygon.triangulate();
 			//mPolygon.setPointPos(mPickedPoint, (int)(x/grid)*grid, (int)(y/grid)*grid);
@@ -88,7 +88,7 @@ public class PolygonSampleState extends SampleState {
 	}
 	
 	@Override
-	public void pointerUp(float x,float y,YangPointerEvent event) {
+	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		if(mPickedPoint>=0)
 			mPolygon.triangulate();
 		mPickedPoint = -1;

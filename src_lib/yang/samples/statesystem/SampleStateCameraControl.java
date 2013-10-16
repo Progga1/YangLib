@@ -1,6 +1,6 @@
 package yang.samples.statesystem;
 
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.util.Camera3DControllable;
 import yang.math.objects.Vector3f;
 
@@ -31,17 +31,17 @@ public abstract class SampleStateCameraControl extends SampleState {
 	}
 	
 	@Override
-	public void pointerDown(float x,float y,YangPointerEvent event) {
+	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		mCamera.pointerDown(event);
 	}
 	
 	@Override
-	public void pointerDragged(float x,float y,YangPointerEvent event) {
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		mCamera.pointerDragged(event);
 	}
 	
 	@Override
-	public void pointerUp(float x,float y,YangPointerEvent event) {
+	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		mCamera.pointerUp(event);
 	}
 	

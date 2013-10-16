@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import yang.events.Keys;
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.YangEvent;
-import yang.events.eventtypes.YangPointerEvent;
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.stereovision.LensDistortionShader;
@@ -38,9 +38,9 @@ public class DefaultMetaEventListener implements YangEventListener {
 	}
 
 	@Override
-	public void pointerDown(float x, float y, YangPointerEvent event) {
+	public void pointerDown(float x, float y, SurfacePointerEvent event) {
 		if(mCtrlPressed) {
-			if(event.mButton==YangPointerEvent.BUTTON_MIDDLE) {
+			if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
 				mSurface.mGraphics.mStereoCameraMatrixEnabled = false;
 				mHead.reset();
 			}
@@ -49,19 +49,19 @@ public class DefaultMetaEventListener implements YangEventListener {
 	}
 
 	@Override
-	public void pointerMoved(float x, float y, YangPointerEvent event) {
+	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
 		
 	}
 
 	@Override
-	public void pointerDragged(float x, float y, YangPointerEvent event) {
+	public void pointerDragged(float x, float y, SurfacePointerEvent event) {
 		if(mCtrlPressed) {
 			mSurface.mGraphics.mStereoCameraMatrixEnabled = true;
-			if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
+			if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
 				mHead.mYaw += event.mDeltaX;
 				mHead.mPitch += event.mDeltaY;
 			}
-			if(event.mButton==YangPointerEvent.BUTTON_RIGHT) {
+			if(event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
 				mHead.mRoll += event.mDeltaX;
 				mHead.mPitch += event.mDeltaY;
 			}
@@ -70,7 +70,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 	}
 
 	@Override
-	public void pointerUp(float x, float y, YangPointerEvent event) {
+	public void pointerUp(float x, float y, SurfacePointerEvent event) {
 		
 	}
 
