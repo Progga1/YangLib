@@ -29,9 +29,11 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 
 	public void draw() {
 		prepareDraw();
+		mGraphics.setGlobalTransformEnabled(true);
 		mGraphics.mWorldTransform.stackPush();
 		mGraphics.mWorldTransform.set(mTransform);
 		mInternalObject.draw();
+		mGraphics.mTranslator.flush();
 		mGraphics.mWorldTransform.stackPop();
 	}
 

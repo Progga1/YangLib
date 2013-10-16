@@ -161,6 +161,12 @@ public class YangMatrix {
 		mValues[13] += y;
 	}
 
+	public void postTranslate(Point3f vector) {
+		mValues[12] += vector.mX;
+		mValues[13] += vector.mY;
+		mValues[14] += vector.mZ;
+	}
+
 	public void setTranslation(float x,float y,float z) {
 		System.arraycopy(MatrixOps.IDENTITY, 0, mValues, 0, 16);
 		mValues[12] = x;
@@ -587,11 +593,11 @@ public class YangMatrix {
 		target[15] = 1;
 	}
 
-	public void setPointTo(Vector3f direction) {
+	public void setPointToDirection(Vector3f direction) {
 		MatrixOps.createDirectionTrafo(mValues, direction.mX,direction.mY,direction.mZ);
 	}
 
-	public void setPointTo(float dirX,float dirY,float dirZ) {
+	public void setPointToDirection(float dirX,float dirY,float dirZ) {
 		MatrixOps.createDirectionTrafo(mValues, dirX,dirY,dirZ);
 	}
 
@@ -600,9 +606,24 @@ public class YangMatrix {
 		multiplyRight(mTempMat1);
 	}
 
-	public void pointTo(float dirX,float dirY,float dirZ) {
+	public void pointToDirection(float dirX,float dirY,float dirZ) {
 		MatrixOps.createDirectionTrafo(mTempMat1, dirX,dirY,dirZ);
 		multiplyRight(mTempMat1);
+	}
+
+	public void setPointToDirection(float dirX,float dirY,float dirZ, float upX,float upY,float upZ) {
+		MatrixOps.createDirectionTrafo(mValues, dirX,dirY,dirZ, upX,upY,upZ);
+	}
+
+	public void setPointFromTo(Point3f fromPoint, Point3f toPoint, Vector3f upVector) {
+		float dx = toPoint.mX - fromPoint.mX;
+		float dy = toPoint.mY - fromPoint.mY;
+		float dz = toPoint.mZ - fromPoint.mZ;
+		final float rMagn = 1/(float)Math.sqrt(dx*dx + dy*dy + dz*dz);
+		dx *= rMagn;
+		dy *= rMagn;
+		dz *= rMagn;
+		MatrixOps.createDirectionTrafo(mValues, dx,dy,dz, upVector.mX,upVector.mY,upVector.mZ);
 	}
 
 	public void setBase(Vector3f vec1, Vector3f vec2, Vector3f vec3) {

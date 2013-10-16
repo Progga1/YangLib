@@ -45,6 +45,9 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		mWindow1 = new YangBillboardWindow<BasicGUI>(mGUI1,mGraphics3D);
 
 		super.mOrthogonalProjection = false;
+		super.mCamera.mInvertView = true;
+		super.mCamera.mFocusZ = 1;
+		super.mCamera.mViewAlpha = PI;
 	}
 
 	@Override
@@ -64,14 +67,21 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		mGraphics3D.activate();
 		mGraphics3D.setDefaultProgram();
 		mGraphics3D.setWhite();
+
+		mGraphics.switchCulling(true);
+		mGraphics.switchZBuffer(true);
+		mGraphics3D.setColor(0.7f);
+		mGraphics.bindTexture(this.mStateSystem.mCubeTexture);
+		mGraphics3D.drawCubeCentered(0,3.5f,0, -8);
+		mGraphics3D.flush();
 		mGraphics.switchCulling(false);
 		mGraphics.switchZBuffer(false);
+		mWindow1.mPosition.set(0,-0.05f,(float)Math.cos(mStateTimer)*0.1f);
+		mWindow1.setLookAtPoint(mCamera.mFocusX, mCamera.mFocusY, mCamera.mFocusZ);
+		mWindow1.setScale(0.5f);
 		setCamera();
 		mWindow1.draw();
 		mGraphics3D.fillBuffers();
-//		mGraphics3D.setColor(0.7f);
-//		mGraphics.bindTexture(null);
-//		mGraphics3D.drawCubeCentered(0, 0, 0, 1);
 	}
 
 	@Override

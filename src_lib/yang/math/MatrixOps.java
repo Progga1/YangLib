@@ -23,26 +23,26 @@ public class MatrixOps {
 	public static final int M31 = 7;
 	public static final int M32 = 11;
 	public static final int M33 = 15;
-	
-	public static final float[] IDENTITY = 
+
+	public static final float[] IDENTITY =
 		{
 			1,0,0,0,
 			0,1,0,0,
 			0,0,1,0,
 			0,0,0,1
 		};
-	
+
 	public static void setIdentity(float[] target) {
 		System.arraycopy(IDENTITY, 0, target, 0, 16);
 	}
-	
+
 	public static void setTranslation(float[] target,float x,float y,float z) {
 		System.arraycopy(IDENTITY, 0, target, 0, 16);
 		target[M03] = x;
 		target[M13] = y;
 		target[M23] = z;
 	}
-	
+
 	public static void setScale(float[] target,float x,float y,float z) {
 		Arrays.fill(target,0,16,0);
 		target[M00] = x;
@@ -50,41 +50,41 @@ public class MatrixOps {
 		target[M22] = z;
 		target[M33] = 1;
 	}
-	
+
 	public static void setRotationX(float[] target,float angle) {
 		System.arraycopy(IDENTITY, 0, target, 0, 16);
-		float sinA = (float)Math.sin(angle);
-		float cosA = (float)Math.cos(angle);
+		final float sinA = (float)Math.sin(angle);
+		final float cosA = (float)Math.cos(angle);
 		target[M11] = cosA;
 		target[M12] = -sinA;
 		target[M21] = sinA;
 		target[M22] = cosA;
 	}
-	
+
 	public static void setRotationY(float[] target,float angle) {
 		System.arraycopy(IDENTITY, 0, target, 0, 16);
-		float sinA = (float)Math.sin(angle);
-		float cosA = (float)Math.cos(angle);
+		final float sinA = (float)Math.sin(angle);
+		final float cosA = (float)Math.cos(angle);
 		target[M00] = cosA;
 		target[M20] = sinA;
 		target[M02] = -sinA;
 		target[M22] = cosA;
 	}
-	
+
 	public static void setRotationZ(float[] target,float angle) {
 		System.arraycopy(IDENTITY, 0, target, 0, 16);
-		float sinA = (float)Math.sin(angle);
-		float cosA = (float)Math.cos(angle);
+		final float sinA = (float)Math.sin(angle);
+		final float cosA = (float)Math.cos(angle);
 		target[M00] = cosA;
 		target[M01] = -sinA;
 		target[M10] = sinA;
 		target[M11] = cosA;
 	}
-	
+
 	public static void multiply(float[] target,float[] lhsMatrix,float[] rhsMatrix) {
 		for(int i=0;i<4;i++) {
 			for(int j=0;j<4;j++) {
-				target[i+j*4] = 
+				target[i+j*4] =
 						 lhsMatrix[i]*rhsMatrix[j*4]
 						+lhsMatrix[i+4]*rhsMatrix[1+j*4]
 						+lhsMatrix[i+8]*rhsMatrix[2+j*4]
@@ -92,11 +92,11 @@ public class MatrixOps {
 			}
 		}
 	}
-	
+
 	public static void multiplyRightTransposed(float[] target,float[] lhsMatrix,float[] rhsMatrix) {
 		for(int i=0;i<4;i++) {
 			for(int j=0;j<4;j++) {
-				target[i+j*4] = 
+				target[i+j*4] =
 						 lhsMatrix[i]*rhsMatrix[j]
 						+lhsMatrix[i+4]*rhsMatrix[j+4]
 						+lhsMatrix[i+8]*rhsMatrix[j+8]
@@ -104,7 +104,7 @@ public class MatrixOps {
 			}
 		}
 	}
-	
+
 	public static void transpose(float[] target,float[] matrix) {
 		target[M00] = matrix[M00];
 		target[M01] = matrix[M10];
@@ -123,7 +123,7 @@ public class MatrixOps {
 		target[M32] = matrix[M23];
 		target[M33] = matrix[M33];
 	}
-	
+
 	/**
 	 * From android.opengl.matrix, license: http://www.apache.org/licenses/LICENSE-2.0
 	 */
@@ -131,7 +131,7 @@ public class MatrixOps {
         // Invert a 4 x 4 matrix using Cramer's Rule
 
         // transpose matrix
-		float[] transposed = target;
+		final float[] transposed = target;
 		transpose(transposed, matrix);
 
         // calculate pairs for first 8 elements (cofactors)
@@ -212,12 +212,12 @@ public class MatrixOps {
 
         return true;
 	}
-	
+
 	public static final void createDirectionTrafo(float[] target, float dirX,float dirY,float dirZ) {
 		float rX,rY,rZ;
-		float absX = dirX<0?-dirX:dirX;
-		float absY = dirY<0?-dirY:dirY;
-		float absZ = dirZ<0?-dirZ:dirZ;
+		final float absX = dirX<0?-dirX:dirX;
+		final float absY = dirY<0?-dirY:dirY;
+		final float absZ = dirZ<0?-dirZ:dirZ;
 		if(absX<=absY && absX<=absZ) {
 			rX = 0;
 			rY = -dirZ;
@@ -231,13 +231,13 @@ public class MatrixOps {
 			rY = dirX;
 			rZ = 0;
 		}
-		float rMagn = 1/(float)Math.sqrt(rX*rX + rY*rY + rZ*rZ);
+		final float rMagn = 1/(float)Math.sqrt(rX*rX + rY*rY + rZ*rZ);
 		rX *= rMagn;
 		rY *= rMagn;
 		rZ *= rMagn;
-		float crossX = dirY*rZ - dirZ*rY;
-		float crossY = dirZ*rX - dirX*rZ;
-		float crossZ = dirX*rY - dirY*rX;
+		final float crossX = dirY*rZ - dirZ*rY;
+		final float crossY = dirZ*rX - dirX*rZ;
+		final float crossZ = dirX*rY - dirY*rX;
 		target[0] = rX;
 		target[1] = rY;
 		target[2] = rZ;
@@ -255,27 +255,58 @@ public class MatrixOps {
 		target[14] = 0;
 		target[15] = 1;
 	}
-	
+
+	public static final void createDirectionTrafo(float[] target, float dirX,float dirY,float dirZ, float upX,float upY,float upZ) {
+
+		float rightX = dirZ*upY - dirY*upZ;
+		float rightY = dirX*upZ - dirZ*upX;
+		float rightZ = dirY*upX - dirX*upY;
+		final float rMagn = 1/(float)Math.sqrt(rightX*rightX + rightY*rightY + rightZ*rightZ);
+		rightX *= rMagn;
+		rightY *= rMagn;
+		rightZ *= rMagn;
+		final float rUpX = dirY*rightZ - dirZ*rightY;
+		final float rUpY = dirZ*rightX - dirX*rightZ;
+		final float rUpZ = dirX*rightY - dirY*rightX;
+
+		target[0] = rightX;
+		target[1] = rightY;
+		target[2] = rightZ;
+		target[3] = 0;
+		target[4] = rUpX;
+		target[5] = rUpY;
+		target[6] = rUpZ;
+		target[7] = 0;
+		target[8] = dirX;
+		target[9] = dirY;
+		target[10] = dirZ;
+		target[11] = 0;
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
+	}
+
 	public static final float applyFloatMatrixX2D(float[] matrix, float x, float y) {
 		return matrix[0] * x + matrix[4] * y + matrix[12];
 	}
-	
+
 	public static final float applyFloatMatrixY2D(float[] matrix, float x, float y) {
 		return matrix[1] * x + matrix[5] * y + matrix[13];
 	}
-	
+
 	public static final float applyFloatMatrixX3D(float[] matrix, float x, float y, float z) {
 		return matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
 	}
-	
+
 	public static final float applyFloatMatrixY3D(float[] matrix, float x, float y, float z) {
 		return matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
 	}
-	
+
 	public static final float applyFloatMatrixZ3D(float[] matrix, float x, float y, float z) {
 		return matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
 	}
-	
+
 	public static final float applyFloatMatrixW3D(float[] matrix, float x, float y, float z) {
 		return matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
 	}
@@ -284,7 +315,7 @@ public class MatrixOps {
 		targetVector[targetOffset] = applyFloatMatrixX2D(matrix,x,y);
 		targetVector[targetOffset+1] = applyFloatMatrixY2D(matrix,x,y);
 	}
-	
+
 	public static final void applyFloatMatrix3D(float[] matrix, float x, float y, float z, float[] targetVector, int targetOffset) {
 		targetVector[targetOffset] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
 		targetVector[targetOffset+1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
@@ -293,7 +324,7 @@ public class MatrixOps {
 			targetVector[targetOffset+3] = applyFloatMatrixW3D(matrix,x,y,z);
 		}
 	}
-	
+
 	public static final void applyFloatMatrix3D(float[] matrix, float x, float y, float z, Vector3f targetVector) {
 		targetVector.mX = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
 		targetVector.mY = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
@@ -306,24 +337,24 @@ public class MatrixOps {
 			targetVector.mZ *= w;
 		}
 	}
-	
+
 	public static final void applyFloatMatrix3DNormalized(float[] matrix, float x, float y, float z, float[] target, int targetOffset) {
-		float w = 1f/applyFloatMatrixW3D(matrix,x,y,z);
+		final float w = 1f/applyFloatMatrixW3D(matrix,x,y,z);
 		target[targetOffset] = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*w;
 		target[targetOffset+1] = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*w;
-		target[targetOffset+2] = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*w;	
+		target[targetOffset+2] = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*w;
 	}
-	
+
 	public static final float[] createMatrixCopy(float[] src) {
-		float[] result = new float[16];
+		final float[] result = new float[16];
 		System.arraycopy(src, 0, result, 0, 16);
 		return result;
 	}
-	
+
 	public static final void copyMatrix(float[] dest, float[] src) {
 		System.arraycopy(src, 0, dest, 0, 16);
 	}
-	
+
 	public static final String matToString(float[] matrix) {
 		String result = "";
 		for(int i=0;i<4;i++){
@@ -332,11 +363,11 @@ public class MatrixOps {
 					result+=" ";
 				result += matrix[j*4+i];
 			}
-			result += "\r\n";
+			result += "\n";
 		}
 		return result;
 	}
-	
+
 	public static final String matToStringLinear(float[] matrix) {
 		String result = "";
 		for(int i=0;i<16;i++){
@@ -346,5 +377,5 @@ public class MatrixOps {
 			}
 		return result;
 	}
-	
+
 }

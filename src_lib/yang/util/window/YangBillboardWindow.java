@@ -9,7 +9,7 @@ import yang.model.callback.Drawable;
 public class YangBillboardWindow<InternalType extends RawEventListener & Drawable> extends YangWindow<InternalType> {
 
 	private Point3f mLookAtPoint;
-	private final Point3f mPosition = new Point3f();
+	public Point3f mPosition = new Point3f();
 	private final Vector3f mScale = new Vector3f(1,1,1);
 
 	public YangBillboardWindow(InternalType internalObject,DefaultGraphics<?> graphics) {
@@ -18,9 +18,9 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 
 	@Override
 	protected void prepareDraw() {
-		mTransform.loadIdentity();
-		mTransform.translate(mPosition);
+		mTransform.setPointFromTo(mPosition,mLookAtPoint,Vector3f.UP);
 		mTransform.scale(mScale);
+		mTransform.postTranslate(mPosition);
 	}
 
 	public void setLookAtPointReference(Point3f point) {

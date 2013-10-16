@@ -2,6 +2,7 @@ package yang.samples.statesystem;
 
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
+import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
@@ -12,6 +13,7 @@ public class SampleStateSystem extends YangProgramStateSystem {
 	public SampleMainMenu mMainMenu;
 
 	public Texture mCircleTexture;
+	public Texture mCubeTexture;
 
 	public SampleStateSystem() {
 		super(true, true);
@@ -28,6 +30,7 @@ public class SampleStateSystem extends YangProgramStateSystem {
 		super.initDebugOutput(DrawableString.DEFAULT_PROPERTIES.mFont);
 		mMainMenu = (SampleMainMenu)new SampleMainMenu().init(this);
 		mCircleTexture = mGFXLoader.getImage("circle");
+		mCubeTexture = mGFXLoader.getImage("cube",TextureFilter.LINEAR_MIP_LINEAR);
 		super.setState(mMainMenu);
 	}
 
