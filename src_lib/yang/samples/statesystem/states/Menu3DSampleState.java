@@ -1,6 +1,8 @@
 package yang.samples.statesystem.states;
 
 import yang.events.eventtypes.YangEvent;
+import yang.graphics.font.DrawableString;
+import yang.graphics.font.StringProperties;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.samples.statesystem.SampleStateCameraControl;
 import yang.util.gui.BasicGUI;
@@ -18,24 +20,31 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 
 	@Override
 	protected void postInit() {
+
+		final StringProperties properties = new StringProperties(DrawableString.DEFAULT_PROPERTIES.mFont);
+		properties.mGraphics = mGraphics3D;
+		DrawableString.DEFAULT_HORIZONTAL_ANCHOR = DrawableString.ANCHOR_CENTER;
+		DrawableString.DEFAULT_VERTICAL_ANCHOR = DrawableString.ANCHOR_MIDDLE;
+
 		super.postInit();
 		mGUI1 = new BasicGUI(mGraphics3D,GUICoordinatesMode.NORMALIZED,true,4);
 
 		mGUI1.setDimensions(2, 2);
 		mGUI1.setDefaultActionListener(this);
 
-
 		final DefaultRectButton button1 = mGUI1.addComponent(DefaultRectButton.class);
 		button1.setPosAndExtents(-0.5f, 0.5f, 1, 0.2f);
-		button1.createCaption("Button 1");
+		button1.setCaption(new DrawableString("Button 1").setProperties(properties));
 		button1.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 
 		final DefaultRectButton button2 = mGUI1.addComponent(DefaultRectButton.class);
 		button2.setPosAndExtents(-0.5f,0.2f, 1, 0.2f);
-		button2.createCaption("Button 2");
+		button2.setCaption(new DrawableString("Button 2").setProperties(properties));
 		button2.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 
 		mWindow1 = new YangBillboardWindow<BasicGUI>(mGUI1,mGraphics3D);
+
+		super.mOrthogonalProjection = false;
 	}
 
 	@Override
@@ -56,7 +65,7 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		mGraphics3D.setDefaultProgram();
 		mGraphics3D.setWhite();
 		mGraphics.switchCulling(false);
-		mGraphics.switchZBuffer(true);
+		mGraphics.switchZBuffer(false);
 		setCamera();
 		mWindow1.draw();
 		mGraphics3D.fillBuffers();
@@ -68,11 +77,6 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 	@Override
 	public void onGUIAction(GUIComponent sender) {
 		System.out.println("Clicked: "+sender);
-	}
-
-	@Override
-	public void keyDown(int code) {
-		System.out.println("fff");
 	}
 
 	@Override

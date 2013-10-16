@@ -20,10 +20,10 @@ public class GUIRectDrawer extends GUIComponentDrawPass<GUIInteractiveRectCompon
 	public void draw(DefaultGraphics<?> graphics,GUIInteractiveRectComponent component) {
 		if(mBorderSize>0) {
 			graphics.setColor(mBorderColor);
-			graphics.mCurrentZ = component.mProjZ-0.01f;
+			//graphics.mCurrentZ = component.mProjZ-0.05f;
 			graphics.drawRect(component.mProjLeft, component.mProjBottom, component.mProjLeft+component.mProjWidth, component.mProjBottom+component.mProjHeight);
 		}
-		graphics.mCurrentZ = component.mProjZ;
+		//graphics.mCurrentZ = component.mProjZ;
 		graphics.setColor(component.mIndividualColor!=null?component.mIndividualColor:mColor);
 		graphics.drawRect(component.mProjLeft+mBorderSize, component.mProjBottom+mBorderSize, component.mProjLeft+component.mProjWidth-mBorderSize, component.mProjBottom+component.mProjHeight-mBorderSize);
 	}

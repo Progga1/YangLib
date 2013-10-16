@@ -24,7 +24,7 @@ public class GUICaptionDrawer extends GUIComponentDrawPass<GUIMultipassComponent
 	@Override
 	public void draw(DefaultGraphics<?> graphics, GUIMultipassComponent component) {
 		if(mCaption!=null) {
-			graphics.mCurrentZ = component.mProjZ+0.01f;
+			//mCaption.mShiftZ = 0.02f;
 			if(mColorId>=0 && component.mColors!=null)
 				graphics.setColor(component.mColors[mColorId]);
 			else
