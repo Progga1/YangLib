@@ -165,14 +165,14 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 				refreshViewTransform();
 			if (mWorldTransformEnabled) {
 				if (program.mHasWorldTransform) {
-					program.setWorldTransform(mWorldTransform.mMatrix);
-					program.setProjection(mCameraProjectionMatrix.mMatrix);
+					program.setWorldTransform(mWorldTransform.mValues);
+					program.setProjection(mCameraProjectionMatrix.mValues);
 				} else {
 					mResultTransformationMatrix.multiply(mCameraProjectionMatrix, mWorldTransform);
-					program.setProjection(mResultTransformationMatrix.mMatrix);
+					program.setProjection(mResultTransformationMatrix.mValues);
 				}
 			} else {
-				program.setProjection(mCameraProjectionMatrix.mMatrix);
+				program.setProjection(mCameraProjectionMatrix.mValues);
 				if (program.mHasWorldTransform)
 					program.setWorldTransform(MatrixOps.IDENTITY);
 			}
@@ -383,10 +383,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	// ---PUT-POSITIONS---
 	
 	public void putTransformedPositionRect(YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,mCurrentZ, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,mCurrentZ, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,mCurrentZ, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,mCurrentZ, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,0,mCurrentZ, transform.mValues);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,0,mCurrentZ, transform.mValues);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,0,1,mCurrentZ, transform.mValues);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS,1,1,mCurrentZ, transform.mValues);
 	}
 	
 	public void putPosition(float x, float y) {
@@ -394,7 +394,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 	
 	public void putPosition(float x, float y,YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS, x, y, mCurrentZ, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed3D(ID_POSITIONS, x, y, mCurrentZ, transform.mValues);
 	}
 	
 	public void putPosition(float x, float y,float z) {
@@ -463,10 +463,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void putTransformedTextureRect(YangMatrix transform) {
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,1, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,1, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,0, transform.mMatrix);
-		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,0, transform.mMatrix);
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,1, transform.mValues);
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,1, transform.mValues);
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,0,0, transform.mValues);
+		mCurrentVertexBuffer.putTransformed2D(ID_TEXTURES,1,0, transform.mValues);
 	}
 
 	// ---PUT-COLORS---

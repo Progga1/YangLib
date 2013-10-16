@@ -29,7 +29,7 @@ import yang.util.Util;
 
 public abstract class YangSurface implements EventQueueHolder {
 
-	public static boolean CATCH_EXCEPTIONS = true;
+	public static boolean CATCH_EXCEPTIONS = false;
 	public static int ALWAYS_STEREO_VISION = 0;
 
 	public final static int RUNTIME_STATE_RUNNING = 0;

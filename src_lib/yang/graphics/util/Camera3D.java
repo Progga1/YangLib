@@ -61,7 +61,7 @@ public class Camera3D {
 	}
 	
 	public Vector3f getRightVector(Vector3f target) {
-		float[] mat = mViewMatrix.mMatrix;
+		float[] mat = mViewMatrix.mValues;
 		target.mX = mat[0];
 		target.mY = mat[4];
 		target.mZ = mat[8];
@@ -69,7 +69,7 @@ public class Camera3D {
 	}
 	
 	public Vector3f getUpVector(Vector3f target) {
-		float[] mat = mViewMatrix.mMatrix;
+		float[] mat = mViewMatrix.mValues;
 		target.mX = mat[1];
 		target.mY = mat[5];
 		target.mZ = mat[9];
@@ -77,7 +77,7 @@ public class Camera3D {
 	}
 	
 	public Vector3f getForwardVector(Vector3f target) {
-		float[] mat = mViewMatrix.mMatrix;
+		float[] mat = mViewMatrix.mValues;
 		target.mX = mat[2];
 		target.mY = mat[6];
 		target.mZ = mat[10];

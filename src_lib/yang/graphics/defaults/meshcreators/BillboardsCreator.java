@@ -17,7 +17,7 @@ public class BillboardsCreator extends MeshCreator<Default3DGraphics>{
 	}
 	
 	public void begin() {
-		mCameraMatrix = mGraphics.mCameraMatrix.mMatrix;
+		mCameraMatrix = mGraphics.mCameraMatrix.mValues;
 		mVertexBuffer = mGraphics.getCurrentVertexBuffer();
 	}
 	

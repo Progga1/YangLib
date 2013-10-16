@@ -437,9 +437,9 @@ public class DrawableString extends FixedString {
 		putVertexProperties();
 
 		if(mProperties.mGraphics.mPositionDimension==2)
-			vertexBuffer.putTransformedArray2D(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,resultTransf.mMatrix);
+			vertexBuffer.putTransformedArray2D(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,resultTransf.mValues);
 		else
-			vertexBuffer.putTransformedArray3D(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,resultTransf.mMatrix);
+			vertexBuffer.putTransformedArray3D(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,resultTransf.mValues);
 	}
 	
 	public void draw(float x,float y,float lineHeight) {

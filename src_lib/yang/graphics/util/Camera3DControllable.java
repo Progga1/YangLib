@@ -19,33 +19,37 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	public int mMoveCameraButton = SurfacePointerEvent.BUTTON_MIDDLE;
 	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;
-	
+
 	//Temp
-	private Vector3f mCamRight = new Vector3f();
-	private Vector3f mCamUp = new Vector3f();
-	
+	private final Vector3f mCamRight = new Vector3f();
+	private final Vector3f mCamUp = new Vector3f();
+
+	public Camera3DControllable() {
+		setZoom(1);
+	}
+
 	public void pointerDown(SurfacePointerEvent event) {
 		mCurPointerDownCount++;
 		if(event.mId!=0)
 			return;
 	}
-	
+
 	public void step() {
 		mZoom += (mTargetZoom-mZoom)*0.1f;
 	}
-	
+
 	public void setZoom(float zoom) {
 		mZoom = zoom;
 		mTargetZoom = zoom;
 	}
-	
+
 	public void pointerDragged(SurfacePointerEvent event) {
 		if(event.mId==0) {
 			if((mCurPointerDownCount==2 || mCurPointerDownCount==3) || event.mButton==mMoveCameraButton || event.mButton==mMoveCameraAlternativeButton) {
 				if(mShiftMode || mCurPointerDownCount==2) {
 					mCamera.getRightVector(mCamRight);
 					mCamera.getUpVector(mCamUp);
-					float fac = -mZoom;
+					final float fac = -mZoom;
 					shiftFocus(fac*(mCamRight.mX*event.mDeltaX+mCamUp.mX*event.mDeltaY), fac*(mCamRight.mY*event.mDeltaX+mCamUp.mY*event.mDeltaY), fac*(mCamRight.mZ*event.mDeltaX+mCamUp.mZ*event.mDeltaY));
 				}else{
 					mViewAlpha -= event.mDeltaX*2;
@@ -59,7 +63,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 			}
 		}
 	}
-	
+
 	public void pointerUp(SurfacePointerEvent event) {
 		mCurPointerDownCount--;
 		if(event.mId>3)
@@ -73,17 +77,17 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 		if(mTargetZoom>mMaxZoom)
 			mTargetZoom = mMaxZoom;
 	}
-	
+
 	public void keyDown(int code) {
 		if(code == mShiftKey) {
 			mShiftMode = true;
 		}
 	}
-	
+
 	public void keyUp(int code) {
 		if(code == mShiftKey) {
 			mShiftMode = false;
 		}
 	}
-	
+
 }

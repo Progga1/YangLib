@@ -3,7 +3,7 @@ package yang.android.graphics;
 import yang.android.AndroidSensor;
 import yang.model.App;
 import yang.model.DebugYang;
-import yang.model.ExitCallback;
+import yang.model.callback.ExitCallback;
 import yang.surface.YangSurface;
 import android.app.Activity;
 import android.content.res.Configuration;
@@ -108,6 +108,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 		mGLView.onBackPressed();
 	}
 
+	@Override
 	public void exit() {
 		activityOut("EXIT");
 		finish();

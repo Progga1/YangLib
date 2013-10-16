@@ -258,7 +258,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		if(transform==null)
 			mCurrentVertexBuffer.putArray(ID_POSITIONS,array);
 		else
-			mCurrentVertexBuffer.putTransformedArray3D(ID_POSITIONS,array,4,transform.mMatrix);
+			mCurrentVertexBuffer.putTransformedArray3D(ID_POSITIONS,array,4,transform.mValues);
 		putTextureArray(RECT_TEXTURECOORDS);
 		putColorRect(mCurColor);
 		putSuppDataRect(mCurSuppData);
@@ -434,14 +434,14 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void getCameraRightVector(Vector3f target) {
-		final float[] mat = this.mCameraMatrix.mMatrix;
+		final float[] mat = this.mCameraMatrix.mValues;
 		target.mX = mat[0];
 		target.mY = mat[4];
 		target.mZ = mat[8];
 	}
 
 	public void getCameraUpVector(Vector3f target) {
-		final float[] mat = this.mCameraMatrix.mMatrix;
+		final float[] mat = this.mCameraMatrix.mValues;
 		target.mX = mat[1];
 		target.mY = mat[5];
 		target.mZ = mat[9];

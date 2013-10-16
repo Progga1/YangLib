@@ -14,7 +14,7 @@ import yang.graphics.skeletons.animations.AnimationSystem;
 import yang.graphics.tools.animator.Animator;
 import yang.graphics.tools.animator.DefaultAnimatorSurface;
 import yang.model.App;
-import yang.model.ExitCallback;
+import yang.model.callback.ExitCallback;
 import yang.pc.PCGraphics;
 import yang.pc.fileio.PCDataStorage;
 import yang.pc.fileio.PCResourceManager;

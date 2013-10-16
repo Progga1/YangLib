@@ -27,9 +27,9 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 //				while((component=iter.previous())!=null) {
 			for(GUIInteractiveComponent component:mInteractiveComponents) {
 				if(component.mVisible && component.mEnabled && component.inArea(x, y)) {
-					int poolPos = BasicGUI.mComponentPoolPos++;
-					if(BasicGUI.mComponentPoolPos>=BasicGUI.mGUIEventPool.length) {
-						BasicGUI.mComponentPoolPos = 0;
+					int poolPos = BasicGUI.componentPoolPos++;
+					if(BasicGUI.componentPoolPos>=BasicGUI.mGUIEventPool.length) {
+						BasicGUI.componentPoolPos = 0;
 						poolPos = 0;
 					}
 					GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];

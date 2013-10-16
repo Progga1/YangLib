@@ -8,21 +8,21 @@ public class GUIMultipassComponent extends GUIComponent {
 
 	protected GUIComponentDrawPass[] mPasses;
 	public FloatColor[] mColors = null;
-	
-	
+
+
 	public GUIMultipassComponent setPasses(GUIComponentDrawPass... passes) {
 		mPasses = passes;
 		return this;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void draw(int passId) {
 		if(mPasses==null || passId>=mPasses.length || mPasses[passId]==null)
 			return;
-		mPasses[passId].draw(mGUI.mGraphics2D, this);
+		mPasses[passId].draw(mGUI.mGraphics, this);
 	}
-	
+
 	protected void initColors(int count) {
 		if(mColors!=null && mColors.length>=count)
 			return;
@@ -35,21 +35,25 @@ public class GUIMultipassComponent extends GUIComponent {
 	public float getProjCenterX() {
 		return mProjLeft;
 	}
-	
+
 	public float getProjCenterY() {
 		return mProjBottom;
 	}
-	
+
+	public float getProjZ() {
+		return mProjZ;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <PassType extends GUIComponentDrawPass> PassType getPass(Class<PassType> passClass) {
-		for(GUIComponentDrawPass pass:mPasses)
+		for(final GUIComponentDrawPass pass:mPasses)
 			if(pass!=null && pass.getClass() == passClass)
 				return (PassType)pass;
 		return null;
 	}
-	
+
 	public GUIMultipassComponent cloneSwallow(boolean ownPassesArray) {
-		GUIMultipassComponent instance = (GUIMultipassComponent)super.cloneSwallow();
+		final GUIMultipassComponent instance = (GUIMultipassComponent)super.cloneSwallow();
 		if(ownPassesArray) {
 			instance.mPasses = new GUIComponentDrawPass[mPasses.length];
 			for(int i=0;i<mPasses.length;i++)
@@ -58,9 +62,10 @@ public class GUIMultipassComponent extends GUIComponent {
 			instance.mPasses = mPasses;
 		return instance;
 	}
-	
+
+	@Override
 	public GUIMultipassComponent cloneSwallow() {
 		return cloneSwallow(true);
 	}
-	
+
 }

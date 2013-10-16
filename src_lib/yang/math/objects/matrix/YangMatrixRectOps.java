@@ -76,7 +76,7 @@ public class YangMatrixRectOps extends YangMatrix {
 	
 	
 	public void applyToRect2D(float[] target) {
-		float[] matrix = mMatrix;
+		float[] matrix = mValues;
 		MatrixOps.applyFloatMatrix2D(matrix,0,0,target,0);
 		MatrixOps.applyFloatMatrix2D(matrix,1,0,target,2);
 		MatrixOps.applyFloatMatrix2D(matrix,0,1,target,4);
@@ -84,7 +84,7 @@ public class YangMatrixRectOps extends YangMatrix {
 	}
 	
 	public void applyToRect2DInvertY(float[] target) {
-		float[] matrix = mMatrix;
+		float[] matrix = mValues;
 		MatrixOps.applyFloatMatrix2D(matrix,0,1,target,0);
 		MatrixOps.applyFloatMatrix2D(matrix,1,1,target,2);
 		MatrixOps.applyFloatMatrix2D(matrix,0,0,target,4);
@@ -92,7 +92,7 @@ public class YangMatrixRectOps extends YangMatrix {
 	}
 	
 	public void applyToRect3D(float[] target) {
-		float[] matrix = mMatrix;
+		float[] matrix = mValues;
 		MatrixOps.applyFloatMatrix3D(matrix,0,0,0,target,0);
 		MatrixOps.applyFloatMatrix3D(matrix,1,0,0,target,3);
 		MatrixOps.applyFloatMatrix3D(matrix,0,1,0,target,6);

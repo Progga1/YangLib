@@ -25,8 +25,8 @@ public class CylinderCreator extends MeshCreator<Default3DGraphics> {
 		for(int i=0;i<mSamples;i++) {
 			float x = (float)Math.sin(alpha);
 			float z = (float)Math.cos(alpha);
-			vertexBuffer.putTransformed3D(DefaultGraphics.ID_POSITIONS, x*bottomRadius, 0, z*bottomRadius, transform.mMatrix);
-			vertexBuffer.putTransformed3D(DefaultGraphics.ID_POSITIONS, x*topRadius, 1, z*topRadius, transform.mMatrix);
+			vertexBuffer.putTransformed3D(DefaultGraphics.ID_POSITIONS, x*bottomRadius, 0, z*bottomRadius, transform.mValues);
+			vertexBuffer.putTransformed3D(DefaultGraphics.ID_POSITIONS, x*topRadius, 1, z*topRadius, transform.mValues);
 			if(i>0) {
 				int i2 = startVertex+2*i;
 				//vertexBuffer.putRectIndices(2*i-2,(i2%mSamples),i2-1,(i2+1)%mSamples);

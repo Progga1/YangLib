@@ -96,7 +96,7 @@ public class DrawableAnchoredLines extends DrawableString{
 
 		putVertexProperties();
 
-		mProperties.mGraphics.mCurrentVertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mProperties.mGraphics.mPositionDimension,resultTransf.mMatrix, 0,0,0);
+		mProperties.mGraphics.mCurrentVertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mProperties.mGraphics.mPositionDimension,resultTransf.mValues, 0,0,0);
 	}
 	
 }

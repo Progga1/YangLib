@@ -32,7 +32,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 		SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
 				new LightSubShader(mLightProperties),new DiffuseLightSubShader(),
-				new CameraVectorSubShader(mGraphics3D.mCameraMatrix.mMatrix),new SpecularLightSubShader(mSpecularProperties),
+				new CameraVectorSubShader(mGraphics3D.mCameraMatrix.mValues),new SpecularLightSubShader(mSpecularProperties),
 				new AmbientSubShader(mAmbientColor)
 				};
 

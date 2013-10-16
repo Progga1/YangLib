@@ -79,7 +79,7 @@ public class ShadowHelper {
 	
 	public void setShadowShaderProperties(ShadowInterface shadowShader) {
 		setLightShaderProperties(shadowShader);
-		shadowShader.setDepthMapProjection(mDepthTransformation.mMatrix);
+		shadowShader.setDepthMapProjection(mDepthTransformation.mValues);
 		mGraphics.bindTexture(getDepthMap(),ShadowProgram.DEPTH_TEXTURE_LEVEL);
 	}
 	

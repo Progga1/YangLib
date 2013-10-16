@@ -12,44 +12,44 @@ public abstract class SampleStateCameraControl extends SampleState {
 	protected Camera3DControllable mCamera = new Camera3DControllable();
 	protected char mSwitchPerspectiveKey = 'p';
 	protected char mInvertViewKey = 'v';
-	
+
 	protected void refreshCamera() {
 		if(mOrthogonalProjection)
 			mGraphics3D.setOrthogonalProjection(-2, 20, mCamera.mZoom);
 		else
 			mGraphics3D.setPerspectiveProjection(20);
 	}
-	
+
 	@Override
 	protected void step(float deltaTime) {
 		mCamera.step();
 	}
-	
+
 	protected void setCamera() {
 		refreshCamera();
 		mGraphics3D.setCamera(mCamera.getUpdatedCamera());
 	}
-	
+
 	@Override
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		mCamera.pointerDown(event);
 	}
-	
+
 	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		mCamera.pointerDragged(event);
 	}
-	
+
 	@Override
 	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		mCamera.pointerUp(event);
 	}
-	
+
 	@Override
 	public void zoom(float value) {
 		mCamera.zoom(value);
 	}
-	
+
 	@Override
 	public void keyDown(int code) {
 		super.keyDown(code);
@@ -59,7 +59,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 		if(code==mInvertViewKey)
 			mCamera.mInvertView ^= true;
 	}
-	
+
 	@Override
 	public void keyUp(int code) {
 		super.keyUp(code);

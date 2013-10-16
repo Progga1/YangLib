@@ -4,8 +4,10 @@ import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.listeners.RawEventListener;
 import yang.graphics.defaults.Default2DGraphics;
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
+import yang.model.callback.Drawable;
 import yang.util.NonConcurrentList;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.GUIContainer2D;
@@ -13,10 +15,10 @@ import yang.util.gui.components.GUIInteractiveComponent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
-public class BasicGUI implements RawEventListener {
+public class BasicGUI implements RawEventListener,Drawable {
 
 	public static GUIPointerEvent[] mGUIEventPool = createEventPool(512);
-	public static int mComponentPoolPos;
+	public static int componentPoolPos;
 
 	public boolean mAutoUpdateProjections = true;
 
@@ -25,8 +27,8 @@ public class BasicGUI implements RawEventListener {
 	private boolean mFirstFrame = true;
 	public GUIContainer2D mMainContainer;
 
-	public GraphicsTranslator mGraphics;
-	public Default2DGraphics mGraphics2D;
+	public GraphicsTranslator mTranslator;
+	public DefaultGraphics<?> mGraphics;
 	public float mGUILeft,mGUIBottom,mGUIRight,mGUITop;
 	public boolean mDimensionsBySurface = true;
 	public float mWidth,mHeight;
@@ -44,19 +46,19 @@ public class BasicGUI implements RawEventListener {
 		for(int i=0;i<capacity;i++) {
 			result[i] = new GUIPointerEvent();
 		}
-		mComponentPoolPos = 0;
+		componentPoolPos = 0;
 		return result;
 	}
 
-	public BasicGUI(Default2DGraphics graphics2D,GUICoordinatesMode coordinatesMode,boolean autoUpdateProjections,int maxPasses) {
-		mGraphics2D = graphics2D;
-		mGraphics = graphics2D.mTranslator;
+	public BasicGUI(DefaultGraphics<?> graphics,GUICoordinatesMode coordinatesMode,boolean autoUpdateProjections,int maxPasses) {
+		mGraphics = graphics;
+		mTranslator = graphics.mTranslator;
 		mMainContainer = new GUIContainer2D();
 		mMainContainer.init(this);
 		mAutoUpdateProjections = autoUpdateProjections;
 		setCoordinatesMode(coordinatesMode);
 		mPassTextures = new NonConcurrentList<Texture>();
-		setPassTexture(0,mGraphics.mWhiteTexture);
+		setPassTexture(0,mTranslator.mWhiteTexture);
 		setPassTexture(maxPasses,null);
 	}
 
@@ -88,8 +90,8 @@ public class BasicGUI implements RawEventListener {
 	private void setCoordinatesMode(GUICoordinatesMode mode) {
 		mCoordinatesMode = mode;
 		if(mDimensionsBySurface) {
-			mWidth = mGraphics.mRatioX*2;
-			mHeight = mGraphics.mRatioY*2;
+			mWidth = mTranslator.mRatioX*2;
+			mHeight = mTranslator.mRatioY*2;
 		}
 		final float w = mWidth*0.5f;
 		final float h = mHeight*0.5f;
@@ -132,17 +134,17 @@ public class BasicGUI implements RawEventListener {
 		mMainContainer.addPointerListener(pointerListener);
 	}
 
+	@Override
 	public void draw() {
 		if(mFirstFrame) {
 			refreshProjections();
 			mFirstFrame = false;
 		}else if(mAutoUpdateProjections)
 			refreshProjections();
-		mGraphics2D.mTranslator.switchZBuffer(false);
 		int pass=0;
 		for(final Texture texture:mPassTextures) {
 			if(texture!=null)
-				mGraphics.bindTexture(texture);
+				mTranslator.bindTexture(texture);
 			mMainContainer.draw(pass);
 			pass++;
 		}
@@ -157,9 +159,9 @@ public class BasicGUI implements RawEventListener {
 		if(event instanceof SurfacePointerEvent) {
 			final SurfacePointerEvent pointerEvent = (SurfacePointerEvent)event;
 
-			int index = mComponentPoolPos++;
-			if(mComponentPoolPos>=mGUIEventPool.length) {
-				mComponentPoolPos = 0;
+			int index = componentPoolPos++;
+			if(componentPoolPos>=mGUIEventPool.length) {
+				componentPoolPos = 0;
 				index=0;
 			}
 			final GUIPointerEvent guiEvent = mGUIEventPool[index];
@@ -168,9 +170,9 @@ public class BasicGUI implements RawEventListener {
 			guiEvent.mY = (guiEvent.mY - mProjShiftY)*mProjYFactor;
 
 			if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDRAG && mPressedComponent!=null) {
-				final GUIPointerEvent dragEvent = BasicGUI.mGUIEventPool[BasicGUI.mComponentPoolPos++];
-				if(BasicGUI.mComponentPoolPos>BasicGUI.mGUIEventPool.length)
-					BasicGUI.mComponentPoolPos = 0;
+				final GUIPointerEvent dragEvent = BasicGUI.mGUIEventPool[BasicGUI.componentPoolPos++];
+				if(BasicGUI.componentPoolPos>BasicGUI.mGUIEventPool.length)
+					BasicGUI.componentPoolPos = 0;
 				dragEvent.createFromPointerEvent(pointerEvent,mPressedComponent);
 				mPressedComponent.guiFocusedDrag(dragEvent);
 				return mPressedComponent;

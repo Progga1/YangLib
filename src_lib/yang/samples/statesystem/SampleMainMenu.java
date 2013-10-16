@@ -8,6 +8,7 @@ import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.MatrixStackSampleState;
 import yang.samples.statesystem.states.MemorySampleState;
+import yang.samples.statesystem.states.Menu3DSampleState;
 import yang.samples.statesystem.states.NestedTextureRenderTargetsSampleState;
 import yang.samples.statesystem.states.OBJSampleState;
 import yang.samples.statesystem.states.Particle2DSampleState;
@@ -69,6 +70,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("3D skeleton", new Skeleton3DSampleState());
 		addMenuItem("Stereo calibration",new StereoCalibrationState());
+		addMenuItem("3D Menu",new Menu3DSampleState());
 		refreshLayout();
 	}
 
@@ -118,8 +120,10 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 
 	@Override
 	public void draw() {
-		mGraphics2D.switchGameCoordinates(false);
+		mGraphics.switchZBuffer(false);
 		mGraphics2D.activate();
+		mGraphics2D.setColorFactor(1);
+		mGraphics2D.switchGameCoordinates(false);
 		mGraphics.clear(0, 0, 0.1f);
 		mGUI.draw();
 	}

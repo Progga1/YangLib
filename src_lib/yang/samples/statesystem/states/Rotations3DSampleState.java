@@ -89,7 +89,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		
 		mEulerMatrix.loadIdentity();
 		mEulerMatrix.rotateY(time);
-		mTempQuaternion1.setFromMatrix(mEulerMatrix.mMatrix);
+		mTempQuaternion1.setFromMatrix(mEulerMatrix.mValues);
 		mTrafo.setTranslation(0, -1, 0);
 		mTrafo.multiplyQuaternionRight(mTempQuaternion1);
 		mTrafo.scale(0.5f, 0.8f, 0.6f);

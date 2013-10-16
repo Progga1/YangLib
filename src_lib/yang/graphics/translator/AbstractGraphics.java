@@ -5,7 +5,6 @@ import javax.vecmath.Vector4f;
 
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.listeners.DrawListener;
 import yang.graphics.listeners.SurfaceListener;
 import yang.graphics.model.FloatColor;
@@ -26,7 +25,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public final static float PI = 3.1415926535f;
 	public static float METERS_PER_UNIT = 1;
 	public static int MAX_DYNAMIC_VERTICES = 100000;
-	
+
 	//Matrices
 	public YangMatrixRectOps mInterTransf1;
 	public YangMatrixRectOps mInterTransf2;
@@ -41,7 +40,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public float[] mNormalTransform;
 	protected float[] invGameProjection;
 	protected YangMatrix mStereoScreenTransform;
-	
+
 	//State
 	protected boolean mBatchRecording;
 	protected boolean mWorldTransformEnabled;
@@ -50,36 +49,36 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public float[] mCurColor;
 	public float[] mCurSuppData;
 	public float mStereoScreenDistance = 0.15f;
-	
+
 	//Persistent attributes
 	public GraphicsTranslator mTranslator;
 	public boolean mAutoUpdateAmbientColor = true;
 	private int[] mBufferElementSizes;
 	private float[][] mNeutralBufferElements;
-	
+
 	//Counters
 	protected float mTime;
-	
+
 	//Buffers
 	public IndexedVertexBuffer mDynamicVertexBuffer;
 	public IndexedVertexBuffer mCurrentVertexBuffer;	//Always the same reference as mTranslator.mCurrentVertexBuffer but generic type
-	
+
 	//Abstract methods
 	public abstract ShaderType getDefaultProgram();
 	protected abstract int[] getBufferElementSizes();
 	protected abstract float[][] getNeutralBufferElements();
-	
+
 	//Optional methods
 	protected void derivedInit() { }
-	
+
 	public AbstractGraphics(GraphicsTranslator translator) {
 		if (DebugYang.showStart) DebugYang.showStackTrace("4", 1);
 		mTranslator = translator;
 		mTranslator.addScreenListener(this);
 		mDynamicVertexBuffer = null;
-		
+
 	}
-	
+
 	/**
 	 * Use only, if dynamic buffer should be initialized before calling init()
 	 */
@@ -87,12 +86,12 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		if(mDynamicVertexBuffer==null)
 			mDynamicVertexBuffer = mTranslator.createUninitializedVertexBuffer(true,true,MAX_DYNAMIC_VERTICES*6/4,MAX_DYNAMIC_VERTICES);
 	}
-	
+
 	public void init() {
-		
+
 		mTranslator.preCheck("Init");
 		if (DebugYang.showStart) DebugYang.showStackTrace("5", 1);
-		
+
 		mWorldTransformEnabled = false;
 		mProjectionTransform = new YangMatrixCameraOps();
 		mInterTransf1 = new YangMatrixRectOps();
@@ -122,31 +121,33 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		initDynamicBuffer();
 		mDynamicVertexBuffer.init(mBufferElementSizes, mNeutralBufferElements);
 		mBatchRecording = false;
-		
+
 		derivedInit();
 		restart();
 	}
-	
+
 	public IndexedVertexBuffer createVertexBuffer(boolean dynamicVertices, boolean dynamicIndices, int maxIndices,int maxVertices) {
-		IndexedVertexBuffer vertexBuffer = mTranslator.createUninitializedVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
+		final IndexedVertexBuffer vertexBuffer = mTranslator.createUninitializedVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
 		vertexBuffer.init(mBufferElementSizes,mNeutralBufferElements);
 		return vertexBuffer;
 	}
-	
+
 	public void restart() {
 		setColor(1,1,1);
 		setSuppData(0,0,0);
 	}
-	
+
+	@Override
 	public void onRestartGraphics() {
 		if(mCurrentProgram!=null) {
-			ShaderType program = mCurrentProgram;
+			final ShaderType program = mCurrentProgram;
 			mCurrentProgram = null;
 			setShaderProgram(program);
 		}
-			
+
 	}
-	
+
+	@Override
 	public final void activate() {
 		assert mTranslator.preCheck("activate");
 		if(mTranslator.mCurDrawListener==this)
@@ -166,7 +167,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public void bindTextureInHolder(TextureHolder textureHolder) {
 		mTranslator.bindTextureInHolder(textureHolder);
 	}
-	
+
 	public boolean refreshNormalTransform() {
 		if(mWorldTransformEnabled) {
 			if(!mWorldTransform.asNormalTransform3f(mNormalTransform))
@@ -176,26 +177,27 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		}
 		return true;
 	}
-	
+
 	public boolean setShaderProgram(ShaderType program) {
 		if(program!=mCurrentProgram) {
-			flush();
-			if(mCurrentProgram!=null)
+			if(mCurrentProgram!=null) {
+				flush();
 				disableBuffers();
+			}
 			mCurrentProgram = program;
 			mTranslator.mShaderSwitchCount++;
 			program.activate();
 			enableBuffers();
-				
+
 			return true;
 		}else
 			return false;
 	}
-	
+
 	public void setDefaultProgram() {
 		setShaderProgram(getDefaultProgram());
 	}
-	
+
 	public void setVertexBuffer(IndexedVertexBuffer vertexBuffer) {
 		assert mTranslator.preCheck("Set vertex buffer");
 		flush();
@@ -203,45 +205,45 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mTranslator.setVertexBuffer(vertexBuffer);
 		assert mTranslator.checkErrorInst("Set vertex buffer");
 	}
-	
+
 	public void resetVertexBuffer() {
 		setVertexBuffer(mDynamicVertexBuffer);
 	}
-	
+
 	public void startBatchRecording(int maxIndices,int maxVertices,boolean dynamicIndices,boolean dynamicVertices) {
 		mBatchRecording = true;
 		mTranslator.mFlushDisabled = true;
 		setVertexBuffer(createVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices));
 	}
-	
+
 	public void startBatchRecording(int maxIndices, int maxVertices) {
 		startBatchRecording(maxIndices,maxVertices,false,false);
 	}
-	
+
 	public void startBatchRecording(int maxIndices) {
 		startBatchRecording(maxIndices,maxIndices);
 	}
-	
+
 	public DrawBatch finishBatchRecording() {
 		mTranslator.mCurrentVertexBuffer.finishUpdate();
-		DrawBatch result = new DrawBatch(this,mCurrentVertexBuffer);
+		final DrawBatch result = new DrawBatch(this,mCurrentVertexBuffer);
 		resetVertexBuffer();
 		mBatchRecording = false;
 		mTranslator.mFlushDisabled = false;
 		return result;
 	}
-	
+
 	public void switchGameCoordinates(boolean enable) {
 		if((enable && mCurProjTransform == mProjectionTransform) || (!enable && mCurProjTransform == mTranslator.mProjScreenTransform))
 			return;
 		flush();
 		if(enable) {
 			mCurProjTransform = mProjectionTransform;
-		}else{	
+		}else{
 			mCurProjTransform = mTranslator.mProjScreenTransform;
 		}
 	}
-	
+
 	//---Color---
 	public void setColor(float r, float g, float b) {
 		mCurColor[0] = r;
@@ -256,72 +258,72 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mCurColor[2] = b;
 		mCurColor[3] = a;
 	}
-	
+
 	public void setColor(float brightness) {
 		mCurColor[0] = brightness;
 		mCurColor[1] = brightness;
 		mCurColor[2] = brightness;
 		mCurColor[3] = 1;
 	}
-	
+
 	public void setColor(float[] color) {
 		mCurColor[0] = color[0];
 		mCurColor[1] = color[1];
 		mCurColor[2] = color[2];
 		mCurColor[3] = color[3];
 	}
-	
+
 	public float[] getCurrentColor(){
 		return mCurColor;
 	}
-	
+
 	public void setColor(Vector3f color) {
 		mCurColor[0] = color.x;
 		mCurColor[1] = color.y;
 		mCurColor[2] = color.z;
 		mCurColor[3] = 1;
 	}
-	
+
 	public void setColor(Vector3f color, float a) {
 		mCurColor[0] = color.x;
 		mCurColor[1] = color.y;
 		mCurColor[2] = color.z;
 		mCurColor[3] = a;
 	}
-	
+
 	public void setColor(Vector4f color) {
 		mCurColor[0] = color.x;
 		mCurColor[1] = color.y;
 		mCurColor[2] = color.z;
 		mCurColor[3] = color.w;
 	}
-	
+
 	public void setColor(FloatColor color) {
 		mCurColor[0] = color.mValues[0];
 		mCurColor[1] = color.mValues[1];
 		mCurColor[2] = color.mValues[2];
 		mCurColor[3] = color.mValues[3];
 	}
-	
+
 	public void setColor(Quadruple color) {
 		mCurColor[0] = color.mValues[0];
 		mCurColor[1] = color.mValues[1];
 		mCurColor[2] = color.mValues[2];
 		mCurColor[3] = color.mValues[3];
 	}
-	
+
 	/**
 	 * weight=0 => color1
 	 * weight=1 => color2
 	 */
 	public void setColorWeighted(FloatColor color1,FloatColor color2,float weight) {
-		float dWeight = 1-weight;
+		final float dWeight = 1-weight;
 		mCurColor[0] = color1.mValues[0]*dWeight + color2.mValues[0]*weight;
 		mCurColor[1] = color1.mValues[1]*dWeight + color2.mValues[1]*weight;
 		mCurColor[2] = color1.mValues[2]*dWeight + color2.mValues[2]*weight;
 		mCurColor[3] = color1.mValues[3]*dWeight + color2.mValues[3]*weight;
 	}
-	
+
 	//---Add-Color---
 	public void setSuppData(float r, float g, float b) {
 		mCurSuppData[0] = r;
@@ -336,35 +338,35 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mCurSuppData[2] = b;
 		mCurSuppData[3] = a;
 	}
-	
+
 	public void setSuppData(float[] data) {
 		mCurSuppData[0] = data[0];
 		mCurSuppData[1] = data[1];
 		mCurSuppData[2] = data[2];
 		mCurSuppData[3] = data[3];
 	}
-	
+
 	public void setSuppData(Quadruple data) {
 		mCurSuppData[0] = data.mValues[0];
 		mCurSuppData[1] = data.mValues[1];
 		mCurSuppData[2] = data.mValues[2];
 		mCurSuppData[3] = data.mValues[3];
 	}
-	
+
 	public float[] getCurrentSuppData(){
 		return mCurSuppData;
 	}
-	
-	
+
+
 	//---Screen-data---
 	public float getScreenRight() {
 		return mTranslator.mRatioX;
 	}
-	
+
 	public float getScreenBottom() {
 		return -mTranslator.mRatioY;
 	}
-	
+
 	public float getScreenLeft() {
 		return -mTranslator.mRatioX;
 	}
@@ -372,20 +374,20 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public float getScreenTop() {
 		return mTranslator.mRatioY;
 	}
-	
+
 	public float getScreenCenterX() {
 		return 0;
 	}
-	
+
 	public float getScreenCenterY() {
 		return 0;
 	}
-	
+
 	public void switchWireFrames(boolean enabled) {
 		flush();
 		mTranslator.mWireFrames = enabled;
 	}
-	
+
 	public float getTime() {
 		return mTime;
 	}
@@ -393,15 +395,15 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public void setWhite() {
 		setColor(1,1,1,1);
 	}
-	
+
 	public void setBlack() {
 		setColor(0,0,0,1);
 	}
-	
+
 	public void setAddBlack() {
 		setSuppData(0,0,0,0);
 	}
-	
+
 	public void setGlobalTransformEnabled(boolean enabled) {
 		mTranslator.flush();
 		mWorldTransformEnabled = enabled;
@@ -411,31 +413,31 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mTranslator.flush();
 		mWorldTransform.loadIdentity();
 	}
-	
+
 	public boolean isActivated() {
 		return mTranslator.mCurDrawListener == this;
 	}
-	
+
 	public IndexedVertexBuffer getCurrentVertexBuffer() {
 		assert isActivated() : "Graphics not activated";
 		return mCurrentVertexBuffer;
 	}
-	
+
 	public void flush() {
 		mTranslator.flush();
 	}
-	
+
 	public void fillBuffers() {
 		mCurrentVertexBuffer.fillBuffers();
 	}
-	
+
 	@Override
 	public void onSurfaceSizeChanged(int width, int height) {
-		
+
 	}
-	
+
 	protected float get2DStereoShift(float eyeDistance) {
 		return (1f/(eyeDistance+1))*mTranslator.mCameraShiftX;
 	}
-	
+
 }

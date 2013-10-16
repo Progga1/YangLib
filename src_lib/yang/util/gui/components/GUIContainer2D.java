@@ -10,7 +10,7 @@ public class GUIContainer2D extends GUIContainer {
 	@Override
 	public void init(BasicGUI gui) {
 		super.init(gui);
-		mGraphics = gui.mGraphics2D;
+		mGraphics = gui.mGraphics;
 	}
 	
 }

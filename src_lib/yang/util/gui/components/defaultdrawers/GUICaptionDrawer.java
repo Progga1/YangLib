@@ -15,15 +15,16 @@ public class GUICaptionDrawer extends GUIComponentDrawPass<GUIMultipassComponent
 	public FloatColor mDisabledFontColor;
 	public float mFontSize = 0.1f;
 	public int mColorId = -1;
-	
+
 	public GUICaptionDrawer() {
 		mFontColor = FloatColor.BLACK.clone();
 		mDisabledFontColor = FloatColor.GRAY.clone();
 	}
-	
+
 	@Override
 	public void draw(DefaultGraphics<?> graphics, GUIMultipassComponent component) {
 		if(mCaption!=null) {
+			graphics.mCurrentZ = component.mProjZ+0.01f;
 			if(mColorId>=0 && component.mColors!=null)
 				graphics.setColor(component.mColors[mColorId]);
 			else
@@ -36,21 +37,21 @@ public class GUICaptionDrawer extends GUIComponentDrawPass<GUIMultipassComponent
 	public String toString() {
 		return "caption="+mCaption.createRawString()+"; fontColor="+Util.arrayToString(mFontColor.mValues,",",0);
 	}
-	
+
 	public GUICaptionDrawer setCaption(DrawableString caption) {
 		mCaption = caption;
 		return this;
 	}
-	
+
 	public GUICaptionDrawer createCaption(String caption) {
 		mCaption = new DrawableAnchoredLines(caption).setAnchors(DrawableString.ANCHOR_CENTER, DrawableString.ANCHOR_MIDDLE);
 		mCaption.setConstant();
 		return this;
 	}
-	
+
 	public GUICaptionDrawer setAnchors(float horizontalAnchor,float verticalAnchor) {
 		mCaption.setAnchors(horizontalAnchor,verticalAnchor);
 		return this;
 	}
-	
+
 }
