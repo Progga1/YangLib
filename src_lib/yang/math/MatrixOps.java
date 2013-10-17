@@ -2,7 +2,7 @@ package yang.math;
 
 import java.util.Arrays;
 
-import yang.math.objects.Vector3f;
+import yang.math.objects.Point3f;
 
 public class MatrixOps {
 
@@ -325,7 +325,7 @@ public class MatrixOps {
 		}
 	}
 
-	public static final void applyFloatMatrix3D(float[] matrix, float x, float y, float z, Vector3f targetVector) {
+	public static final void applyFloatMatrix3D(float[] matrix, float x, float y, float z, Point3f targetVector) {
 		targetVector.mX = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
 		targetVector.mY = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
 		targetVector.mZ = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
@@ -336,6 +336,10 @@ public class MatrixOps {
 			targetVector.mY *= w;
 			targetVector.mZ *= w;
 		}
+	}
+
+	public static final void applyFloatMatrix3D(float[] matrix, Point3f point, Point3f targetVector) {
+		applyFloatMatrix3D(matrix,point,targetVector);
 	}
 
 	public static final void applyFloatMatrix3DNormalized(float[] matrix, float x, float y, float z, float[] target, int targetOffset) {

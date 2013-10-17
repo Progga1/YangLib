@@ -8,34 +8,35 @@ public class Vector3f extends Point3f{
 	public final static Vector3f DOWN = new Vector3f(0,-1,0);
 	public final static Vector3f FORWARD = new Vector3f(0,0,1);
 	public final static Vector3f BACKWARD = new Vector3f(0,0,-1);
-	
+
 	public Vector3f() {
 		set(0,0,0);
 	}
-	
+
 	public Vector3f(float x,float y,float z) {
 		set(x,y,z);
 	}
-	
+
 	public float magn() {
 		return (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ);
 	}
-	
+
 	public float sqrMagn() {
 		return mX*mX + mY*mY + mZ*mZ;
 	}
-	
+
+	@Override
 	public void set(float x,float y,float z) {
 		mX = x;
 		mY = y;
 		mZ = z;
 	}
-	
+
 	public void set(float x,float y) {
 		mX = x;
 		mY = y;
 	}
-	
+
 	public void setNormalized(float x,float y,float z) {
 		float dist = (float)Math.sqrt(x*x+y*y+z*z);
 		if(dist==0) {
@@ -49,42 +50,42 @@ public class Vector3f extends Point3f{
 			mZ = z*dist;
 		}
 	}
-	
+
 	public void scale(float scalar) {
 		mX *= scalar;
 		mY *= scalar;
 		mZ *= scalar;
 	}
-	
+
 	public void normalize() {
-		float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
+		final float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
 		if(d!=0) {
 			mX /= d;
 			mY /= d;
 			mZ /= d;
 		}
 	}
-	
+
 	public float dot(Vector3f vector) {
 		return mX*vector.mX + mY*vector.mY + mZ*vector.mZ;
 	}
-	
+
 	public float dot(float x,float y,float z) {
 		return mX*x + mY*y + mZ*z;
 	}
-	
+
 	public void cross(Vector3f lhsVector,Vector3f rhsVector) {
 		mX = lhsVector.mY*rhsVector.mZ - lhsVector.mZ*rhsVector.mY;
 		mY = lhsVector.mZ*rhsVector.mX - lhsVector.mX*rhsVector.mZ;
 		mZ = lhsVector.mX*rhsVector.mY - lhsVector.mY*rhsVector.mX;
 	}
-	
+
 	public void cross(float lhsX,float lhsY,float lhsZ, float rhsX,float rhsY,float rhsZ) {
 		mX = lhsY*rhsZ - lhsZ*rhsY;
 		mY = lhsZ*rhsX - lhsX*rhsZ;
 		mZ = lhsX*rhsY - lhsY*rhsX;
 	}
-	
+
 	@Override
 	public Vector3f clone() {
 		return new Vector3f(mX,mY,mZ);
@@ -98,9 +99,9 @@ public class Vector3f extends Point3f{
 	}
 
 	public void createOrthoVec(Vector3f ortho) {
-		float absX = Math.abs(ortho.mX);
-		float absY = Math.abs(ortho.mY);
-		float absZ = Math.abs(ortho.mZ);
+		final float absX = Math.abs(ortho.mX);
+		final float absY = Math.abs(ortho.mY);
+		final float absZ = Math.abs(ortho.mZ);
 		if(absX<=absY && absX<=absZ) {
 			setNormalized(0,-ortho.mZ,ortho.mY);
 		}else if(absY<=absX && absY<=absZ) {
@@ -114,14 +115,14 @@ public class Vector3f extends Point3f{
 		quaternion.applyToVector(this,vector);
 	}
 
-	public void setZero() {
-		mX = 0;
-		mY = 0;
-		mZ = 0;
-	}
-
 	public boolean isZero() {
 		return mX==0 && mY==0 && mZ==0;
 	}
-	
+
+	public void setOne() {
+		mX = 1;
+		mY = 1;
+		mZ = 1;
+	}
+
 }

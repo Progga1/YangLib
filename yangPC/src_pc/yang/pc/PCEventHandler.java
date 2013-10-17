@@ -88,7 +88,7 @@ public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionL
 			else
 				button = SurfacePointerEvent.BUTTON_LEFT;
 		}
-		mEventQueue.putPointerEvent(action, event.getX(), event.getY(), button, 0);
+		mEventQueue.putSurfacePointerEvent(action, event.getX(), event.getY(), button, 0);
 	}
 	
 	@Override

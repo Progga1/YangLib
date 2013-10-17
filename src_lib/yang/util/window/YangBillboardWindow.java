@@ -16,11 +16,16 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 		super(internalObject,graphics);
 	}
 
-	@Override
-	protected void prepareDraw() {
+	public void step(float deltaTime) {
 		mTransform.setPointFromTo(mPosition,mLookAtPoint,Vector3f.UP);
 		mTransform.scale(mScale);
 		mTransform.postTranslate(mPosition);
+		updateTransform();
+	}
+
+	@Override
+	protected void prepareDraw() {
+
 	}
 
 	public void setLookAtPointReference(Point3f point) {

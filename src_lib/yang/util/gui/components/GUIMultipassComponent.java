@@ -1,6 +1,7 @@
 package yang.util.gui.components;
 
 import yang.graphics.model.FloatColor;
+import yang.util.Util;
 
 
 @SuppressWarnings("rawtypes")
@@ -66,6 +67,23 @@ public class GUIMultipassComponent extends GUIComponent {
 	@Override
 	public GUIMultipassComponent cloneSwallow() {
 		return cloneSwallow(true);
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder result = new StringBuilder(50);
+		result.append(Util.getClassName(this));
+		result.append(": ");
+		boolean first = true;
+		for(final GUIComponentDrawPass pass:mPasses) {
+			if(pass!=null) {
+				if(!first)
+					result.append("; ");
+				first = false;
+				result.append(pass.toString());
+			}
+		}
+		return result.toString();
 	}
 
 }

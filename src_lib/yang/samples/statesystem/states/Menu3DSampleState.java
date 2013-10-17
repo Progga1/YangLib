@@ -1,9 +1,13 @@
 package yang.samples.statesystem.states;
 
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
+import yang.graphics.model.FloatColor;
 import yang.graphics.translator.glconsts.GLMasks;
+import yang.math.objects.Point3f;
+import yang.math.objects.matrix.YangMatrix;
 import yang.samples.statesystem.SampleStateCameraControl;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
@@ -17,6 +21,8 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 
 	public BasicGUI mGUI1;
 	public YangBillboardWindow<BasicGUI> mWindow1;
+	public Point3f mCursPos = new Point3f();
+	private final YangMatrix mTransform = new YangMatrix();
 
 	@Override
 	protected void postInit() {
@@ -47,17 +53,19 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		super.mOrthogonalProjection = false;
 		super.mCamera.mInvertView = true;
 		super.mCamera.mFocusZ = 1;
-		super.mCamera.mViewAlpha = PI;
 	}
 
 	@Override
 	protected void step(float deltaTime) {
 		super.step(deltaTime);
+		mWindow1.step(deltaTime);
 	}
 
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		super.rawEvent(event);
+		if(mWindow1==null)
+			return false;
 		return mWindow1.rawEvent(event);
 	}
 
@@ -82,6 +90,32 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		setCamera();
 		mWindow1.draw();
 		mGraphics3D.fillBuffers();
+
+		mGraphics.switchCulling(true);
+		mGraphics.switchZBuffer(true);
+		mGraphics.bindTexture(null);
+		mGraphics3D.setColor(FloatColor.YELLOW);
+		mTransform.setTranslation(mCursPos);
+		mTransform.scale(0.07f);
+		mGraphics3D.drawSphere(16, 16, mTransform, 2, 2);
+	}
+
+	@Override
+	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
+		super.pointerDragged(x, y, event);
+		mCursPos.set(event.mX,event.mY,event.mZ);
+	}
+
+	@Override
+	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
+		super.pointerMoved(x, y, event);
+		mCursPos.set(event.mX,event.mY,event.mZ);
+	}
+
+	@Override
+	public void zoom(float value) {
+		mStateSystem.mEventQueue.mSurfacePointerZ += value*0.2f;
+
 	}
 
 	@Override

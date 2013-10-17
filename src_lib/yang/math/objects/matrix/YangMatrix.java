@@ -513,8 +513,12 @@ public class YangMatrix {
 		MatrixOps.applyFloatMatrix3D(mValues,x,y,z,target,targetOffset);
 	}
 
-	public void apply3D(float x, float y, float z,Vector3f target) {
+	public void apply3D(float x, float y, float z,Point3f target) {
 		MatrixOps.applyFloatMatrix3D(mValues, x, y, z, target);
+	}
+
+	public void apply3D(Point3f point,Point3f target) {
+		MatrixOps.applyFloatMatrix3D(mValues, point.mX,point.mY,point.mZ, target);
 	}
 
 	public void apply3DNormalized(float x, float y, float z, float[] target, int targetOffset) {

@@ -1,5 +1,7 @@
 package yang.graphics.util;
 
+import yang.math.MathConst;
+
 public class Camera3DAlphaBeta {
 
 	protected Camera3D mCamera;
@@ -15,7 +17,7 @@ public class Camera3DAlphaBeta {
 
 	public Camera3D getUpdatedCamera() {
 		if(mInvertView)
-			mCamera.setOutwardsAlphaBeta(mViewAlpha,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+			mCamera.setOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
 		else
 			mCamera.setAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
 		return mCamera;
