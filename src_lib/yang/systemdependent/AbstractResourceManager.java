@@ -76,10 +76,11 @@ public abstract class AbstractResourceManager {
 	}
 
 	public OutputStream getSystemOutputStream(String filename) {
-		final File newFile = getSystemFile(filename);
-		newFile.mkdirs();
+		final File file = getSystemFile(filename);
+		final File parent = file.getParentFile();
+		if (parent != null && !parent.exists()) parent.mkdirs();
 		try {
-			return new FileOutputStream(newFile);
+			return new FileOutputStream(file);
 		} catch (final FileNotFoundException e) {
 			return null;
 		}
@@ -88,9 +89,7 @@ public abstract class AbstractResourceManager {
 	public OutputStream getExternalOutputStream(String filename) {
 		final File file = getExternalFile(filename);
 		final File parent = file.getParentFile();
-		if (!parent.exists()) {
-			parent.mkdirs();
-		}
+		if (parent != null && !parent.exists()) parent.mkdirs();
 		try {
 			return new FileOutputStream(file);
 		}  catch (final FileNotFoundException e) {
