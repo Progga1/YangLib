@@ -449,28 +449,43 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public static float DEBUG_AXIS_WIDTH = 0.03f;
 
-	public void drawDebugVector(float baseX,float baseY,float baseZ, float vecX,float vecY,float vecZ,FloatColor color,float alpha) {
+	private final Vector3f mTempVec1 = new Vector3f();
+	private final Vector3f mTempVec2 = new Vector3f();
+
+	public void drawDebugVector(float baseX,float baseY,float baseZ, float vecX,float vecY,float vecZ,FloatColor color,float alpha,YangMatrix transform) {
 		color.copyToArray(mTemp4f);
 		mTemp4f[3] = alpha;
 		final int vertexCount = mLineDrawer.getLineVertexCount();
-		mLineDrawer.drawLine(baseX,baseY,baseZ, baseX+vecX,baseY+vecY,baseZ+vecZ, DEBUG_AXIS_WIDTH,0);
+		if(transform==null) {
+			mTempVec1.set(baseX,baseY,baseZ);
+			mTempVec2.set(baseX+vecX,baseY+vecY,baseZ+vecZ);
+		}else{
+			transform.apply3D(baseX,baseY,baseZ, mTempVec1);
+			transform.apply3D(baseX+vecX,baseY+vecY,baseZ+vecZ, mTempVec2);
+		}
+		mLineDrawer.drawLine(mTempVec1, mTempVec2, DEBUG_AXIS_WIDTH,0);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount);
 	}
 
-	public void drawDebugVector(float baseX,float baseY,float baseZ, Vector3f vector,FloatColor color,float scale,float alpha) {
-		drawDebugVector(baseX,baseY,baseZ,vector.mX*scale,vector.mY*scale,vector.mZ*scale,color,alpha);
+	public void drawDebugVector(float baseX,float baseY,float baseZ, Vector3f vector,FloatColor color,float scale,float alpha,YangMatrix transform) {
+		drawDebugVector(baseX,baseY,baseZ,vector.mX*scale,vector.mY*scale,vector.mZ*scale,color,alpha,transform);
 	}
 
-	public void drawDebugVector(Point3f base, Vector3f vector,FloatColor color,float scale,float alpha) {
-		drawDebugVector(base.mX,base.mY,base.mZ,vector.mX*scale,vector.mY*scale,vector.mZ*scale,color,alpha);
+	public void drawDebugVector(Point3f base, Vector3f vector,FloatColor color,float scale,float alpha,YangMatrix transform) {
+		drawDebugVector(base.mX,base.mY,base.mZ,vector.mX*scale,vector.mY*scale,vector.mZ*scale,color,alpha,transform);
+	}
+
+	public void drawDebugCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha,YangMatrix transform) {
+		mTranslator.flush();
+		mTranslator.switchCulling(true);
+		drawDebugVector(0,0,0, scale,0,0, xColor,alpha,transform);
+		drawDebugVector(0,0,0, 0,scale,0, yColor,alpha,transform);
+		drawDebugVector(0,0,0, 0,0,scale, zColor,alpha,transform);
 	}
 
 	public void drawDebugCoordinateAxes(FloatColor xColor,FloatColor yColor,FloatColor zColor,float scale,float alpha) {
-		mTranslator.switchCulling(true);
-		drawDebugVector(0,0,0, scale,0,0, xColor,alpha);
-		drawDebugVector(0,0,0, 0,scale,0, yColor,alpha);
-		drawDebugVector(0,0,0, 0,0,scale, zColor,alpha);
+		drawDebugCoordinateAxes(xColor,yColor,zColor,scale,alpha,null);
 	}
 
 	public void drawDebugCoordinateAxes() {

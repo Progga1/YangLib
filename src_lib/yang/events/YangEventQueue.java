@@ -11,6 +11,8 @@ import yang.events.macro.MacroWriter;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.util.NonConcurrentList;
 
+//TODO split meta and runtime, esp. pointerTrackers/keyStates
+
 public class YangEventQueue {
 
 	public static final int MAX_POINTERS = 10;
@@ -20,6 +22,7 @@ public class YangEventQueue {
 	public static final int ID_SENSOR_EVENT = 3;
 
 	public PointerTracker mPointerTrackers[] = new PointerTracker[MAX_POINTERS];
+	public boolean mKeyStates[] = new boolean[256];
 	public float mPointerDistance = -1;
 	public int mCurPointerDownCount = 0;
 	private final int mMaxEvents;
@@ -78,6 +81,9 @@ public class YangEventQueue {
 		for(int i=0;i<MAX_POINTERS;i++) {
 			mPointerTrackers[i] = new PointerTracker();
 		}
+		for(int i=0;i<256;i++) {
+			mKeyStates[i] = false;
+		}
 		mQueuePools = new YangEvent[eventTypes][];
 		mQueuePools[ID_POINTER_EVENT] = mPointerEventQueue;
 		mQueuePools[ID_KEY_EVENT] = mKeyEventQueue;
@@ -95,21 +101,21 @@ public class YangEventQueue {
 			return;
 		}
 		mQueue[mQueueId++] = event;
-		event.onPut();
+//		event.onPoll();
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
 	}
 
 	public synchronized void putEvent(YangEvent event) {
 		mQueue[mQueueId++] = event;
-		event.onPut();
+//		event.onPoll();
 		if(mQueueId>=mMaxEvents)
 			mQueueId = 0;
 	}
 
 	public synchronized void putMetaEvent(YangEvent event) {
 		mMetaEventQueue[mMetaEventQueueId++] = event;
-		event.onPut();
+//		event.onPoll();
 		if(mMetaEventQueueId>=mMaxEvents)
 			mMetaEventQueueId = 0;
 	}
@@ -232,6 +238,7 @@ public class YangEventQueue {
 		if(result==null)
 			return null;
 		else{
+			result.onPoll();
 			mQueueFirst++;
 			if(mQueueFirst>=mMaxEvents)
 				mQueueFirst = 0;
@@ -244,6 +251,7 @@ public class YangEventQueue {
 		if(result==null)
 			return null;
 		else{
+			result.onPoll();
 			mMetaEventQueueFirst++;
 			if(mMetaEventQueueFirst>=mMaxEvents)
 				mMetaEventQueueFirst = 0;
@@ -305,6 +313,10 @@ public class YangEventQueue {
 
 	public double getTime() {
 		return System.currentTimeMillis()*0.001;
+	}
+
+	public boolean isKeyDown(char code) {
+		return mKeyStates[code];
 	}
 
 }

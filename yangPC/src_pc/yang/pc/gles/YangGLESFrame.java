@@ -34,7 +34,7 @@ public class YangGLESFrame extends PCFrame{
 			frameDecorator = false;
 		}
 		setUndecorated(!frameDecorator);
-		FullGraphicsInitializer initializer = new FullGraphicsInitializer();
+		final FullGraphicsInitializer initializer = new FullGraphicsInitializer();
 		initializer.init(width, height);
 		mGraphics = initializer.mTranslator;
 		mGraphics.setMaxFPS(DEFAULT_MAX_FPS);
@@ -67,12 +67,12 @@ public class YangGLESFrame extends PCFrame{
 		mGraphics.setSurface(mSurface);
 
 		if(surface instanceof EventQueueHolder)
-			this.setEventListener((EventQueueHolder)surface);
+			this.setEventListener(surface);
 	}
 
 	public void setEventListener(EventQueueHolder eventListener) {
 		if(mEventListener==null) {
-			PCEventHandler eventHandler = mGraphics.setMouseEventListener(eventListener);
+			final PCEventHandler eventHandler = mGraphics.setMouseEventListener(eventListener);
 			addKeyListener(eventHandler);
 			mGraphics.getPanel().addKeyListener(eventHandler);
 			mGraphics.getPanel().addFocusListener(this);

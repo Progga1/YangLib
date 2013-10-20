@@ -223,7 +223,7 @@ public class GFXDebug implements PrintInterface {
 			for(int i=0;i<events.mPointerTrackers.length;i++) {
 				final double time = events.getTime();
 				final PointerTracker tracker = events.mPointerTrackers[i];
-				if(tracker.mLastMovement<0)
+				if(tracker.mLastMovementRealtime<0)
 					continue;
 
 				final float ANIM_TIME = 0.5f;
@@ -232,10 +232,10 @@ public class GFXDebug implements PrintInterface {
 				float f;
 				if(i<l)
 					f = 2;
-				else if(time-tracker.mLastMovement>ANIM_TIME)
+				else if(time-tracker.mLastMovementRealtime>ANIM_TIME)
 					continue;
 				else
-					f = (float)(2-(time-tracker.mLastTouch)*2/ANIM_TIME);
+					f = (float)(2-(time-tracker.mLastTouchRealtime)*2/ANIM_TIME);
 
 				if(f<0.6f)
 					f = 0.6f;

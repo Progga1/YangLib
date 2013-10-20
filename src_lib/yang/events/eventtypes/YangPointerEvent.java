@@ -48,14 +48,14 @@ public abstract class YangPointerEvent extends YangEvent {
 	}
 
 	@Override
-	public void onPut() {
+	public void onPoll() {
 		final PointerTracker pointer = mEventQueue.mPointerTrackers[mId];
 		mDeltaX = mX - pointer.mX;
 		mDeltaY = mY - pointer.mY;
 		mDeltaZ = mZ - pointer.mZ;
-		pointer.mLastMovement = mEventQueue.getTime();
+		pointer.mLastMovementRealtime = mEventQueue.getTime();
 		if(mAction!=ACTION_POINTERMOVE)
-			pointer.mLastTouch = mEventQueue.getTime();
+			pointer.mLastTouchRealtime = mEventQueue.getTime();
 		pointer.mX = mX;
 		pointer.mY = mY;
 		pointer.mZ = mZ;

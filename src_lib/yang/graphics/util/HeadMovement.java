@@ -9,7 +9,7 @@ public class HeadMovement {
 	public float mYaw,mPitch,mRoll;
 
 	public YangMatrix getUpdatedMatrix() {
-		mMatrix.fromEulerAngles(-mYaw,-mPitch,mRoll);
+		mMatrix.setFromEulerAngles(-mYaw,-mPitch,mRoll);
 		return mMatrix;
 	}
 	

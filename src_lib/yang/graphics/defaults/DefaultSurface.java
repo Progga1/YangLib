@@ -96,7 +96,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 		if(event.mType==YangSensor.TYPE_ROTATION_VECTOR) {
 			mGraphics.mStereoCameraMatrixEnabled = true;
 			YangMatrix mat = mGraphics.mStereoCameraMatrix;
-			mat.fromQuaternion(event.mX,event.mY,event.mZ);
+			mat.setFromQuaternion(event.mX,event.mY,event.mZ);
 		}
 	}
 

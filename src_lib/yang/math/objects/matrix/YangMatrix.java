@@ -473,15 +473,15 @@ public class YangMatrix {
 		multiplyLeft(mTempMat1);
 	}
 
-	public void fromQuaternion(Quaternion quaternion) {
+	public void setFromQuaternion(Quaternion quaternion) {
 		quaternion.toRotationMatrix(mValues);
 	}
 
-	public void fromQuaternion(float quatX,float quatY,float quatZ,float quatW) {
+	public void setFromQuaternion(float quatX,float quatY,float quatZ,float quatW) {
 		Quaternion.toRotationMatrix(quatX, quatY, quatZ, quatW, mValues);
 	}
 
-	public void fromQuaternion(float quatX,float quatY,float quatZ) {
+	public void setFromQuaternion(float quatX,float quatY,float quatZ) {
 		Quaternion.toRotationMatrix(quatX,quatY,quatZ,mValues);
 	}
 
@@ -644,7 +644,7 @@ public class YangMatrix {
 		multiplyLeft(mTempMat1);
 	}
 
-	public void fromEulerAngles(float yaw,float pitch,float roll) {
+	public void setFromEulerAngles(float yaw,float pitch,float roll) {
 		loadIdentity();
 		rotateY(yaw);
 		rotateX(pitch);
