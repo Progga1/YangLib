@@ -65,6 +65,7 @@ public class Quaternion {
 		mW = 1;
 	}
 
+	//TODO define rotation order
 	public void setFromEuler(float yaw,float pitch,float roll) {
 		final float s1 = (float)Math.sin(yaw);
 		final float c1 = (float)Math.cos(yaw);
@@ -336,7 +337,7 @@ public class Quaternion {
 
 	@Override
 	public String toString() {
-		return "("+mX+","+mY+","+mZ+", "+mW+")";
+		return "(x,y,z,w)=("+mX+","+mY+","+mZ+", "+mW+")";
 	}
 
 	public void setZero() {

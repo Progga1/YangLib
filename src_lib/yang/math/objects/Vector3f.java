@@ -8,6 +8,8 @@ public class Vector3f extends Point3f{
 	public final static Vector3f DOWN = new Vector3f(0,-1,0);
 	public final static Vector3f FORWARD = new Vector3f(0,0,1);
 	public final static Vector3f BACKWARD = new Vector3f(0,0,-1);
+	public static final Vector3f POSITIVE_Z = new Vector3f(0,0,1);
+	public static final Vector3f NEGATIVE_Z = new Vector3f(0,0,-1);
 
 	public Vector3f() {
 		set(0,0,0);

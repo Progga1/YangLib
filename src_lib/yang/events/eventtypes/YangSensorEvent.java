@@ -5,11 +5,11 @@ import yang.events.listeners.YangSensorListener;
 import yang.systemdependent.YangSensor;
 
 public class YangSensorEvent extends YangEvent {
-	
+
 	public float mX,mY,mZ,mW = 1;
 	public int mType;
 	public float[] mMatrix;
-	
+
 	@Override
 	public void handle(RawEventListener listener) {
 		super.handle(listener);
@@ -17,8 +17,8 @@ public class YangSensorEvent extends YangEvent {
 			((YangSensorListener)listener).sensorChanged(this);
 		}
 	}
-	
-	
+
+
 	public String typeToString() {
 		switch(mType) {
 		case YangSensor.TYPE_ACCELEROMETER: return "Accelerometer";
@@ -26,13 +26,14 @@ public class YangSensorEvent extends YangEvent {
 		case YangSensor.TYPE_GYROSCOPE: return "Gyroscope";
 		case YangSensor.TYPE_LINEAR_ACCELERATION: return "Linear Acceleration";
 		case YangSensor.TYPE_ROTATION_VECTOR: return "Rotation vector";
+		case YangSensor.TYPE_EULER_ANGLES: return "Euler angles";
 		default: return "<undefined>";
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return typeToString()+": "+mX+","+mY+","+mZ+(mW!=1?","+mW:"");
 	}
-	
+
 }

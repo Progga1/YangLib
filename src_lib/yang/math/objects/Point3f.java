@@ -45,6 +45,12 @@ public class Point3f {
 		mZ += vector.mZ;
 	}
 
+	public void add(Vector3f vector,float factor) {
+		mX += vector.mX*factor;
+		mY += vector.mY*factor;
+		mZ += vector.mZ*factor;
+	}
+
 	public void sub(float x,float y,float z) {
 		mX -= x;
 		mY -= y;

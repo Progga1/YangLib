@@ -17,7 +17,7 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 
 	public static boolean ENABLED = true;
 	public static float GRAVITY = 9.81f;
-	
+
 	public Color CL_RUN = Color.LIGHT_GRAY;
 	public Color CL_PAUSED = Color.GRAY;
 	public JWindow mSensorFrame;
@@ -26,42 +26,35 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 	public float mCurYaw,mCurPitch,mCurRoll;
 	public float mSensitivity = 0.01f;
 	public int mCurButton;
-	
-	private Quaternion tempQuat = new Quaternion();
-	
+
+	private final Quaternion tempQuat = new Quaternion();
+
 	public PCSensorFrame() {
-		
+
 	}
-	
+
 	private void turn(float yaw,float pitch,float roll) {
 		mCurYaw += yaw;
 		mCurPitch += pitch;
 		mCurRoll += roll;
 		if(mSensorActive[YangSensor.TYPE_GYROSCOPE])
-			mEvents.putSensorEvent(YangSensor.TYPE_GYROSCOPE, yaw,pitch,roll);
+			mEvents.putSensorEvent(YangSensor.TYPE_GYROSCOPE, yaw,pitch,roll); //TODO: no proper axis rotations!
 		if(mSensorActive[YangSensor.TYPE_ROTATION_VECTOR]) {
 			tempQuat.setFromEuler(mCurYaw, mCurPitch, mCurRoll); //TODO: Local rotation!
 			mEvents.putSensorEvent(YangSensor.TYPE_ROTATION_VECTOR,tempQuat.mX,tempQuat.mY,tempQuat.mZ);
 		}
+		if(mSensorActive[YangSensor.TYPE_EULER_ANGLES]) {
+			mEvents.putSensorEvent(YangSensor.TYPE_EULER_ANGLES, mCurYaw,mCurPitch,mCurRoll);
+		}
 	}
-	
+
 	private void accelerate(float x,float y,float z) {
 		if(mSensorActive[YangSensor.TYPE_ACCELEROMETER])
 			mEvents.putSensorEvent(YangSensor.TYPE_ACCELEROMETER, x+mGravX,y+mGravY,z+mGravZ);
 		if(mSensorActive[YangSensor.TYPE_LINEAR_ACCELERATION])
 			mEvents.putSensorEvent(YangSensor.TYPE_LINEAR_ACCELERATION, x,y,z);
 	}
-	
-	private void accUpdated() {
-		
-		
-		mGravX = 0;
-		mGravY = -GRAVITY;
-		mGravZ = 0;
-		if(mSensorActive[YangSensor.TYPE_GRAVITY])
-			mEvents.putSensorEvent(YangSensor.TYPE_GRAVITY, mGravX,mGravY,mGravZ);
-	}
-	
+
 	@Override
 	public void derivedStartSensor(int type,int speed) {
 		if(!ENABLED)
@@ -84,42 +77,44 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 		if(!isAnySensorActive())
 			mSensorFrame.setVisible(false);
 	}
-	
+
 	@Override
 	public void mouseDragged(MouseEvent ev) {
-		float deltaX = (ev.getX()-mCurX)*mSensitivity;
-		float deltaY = (ev.getY()-mCurY)*mSensitivity;
+		final float deltaX = (ev.getX()-mCurX)*mSensitivity;
+		final float deltaY = (ev.getY()-mCurY)*mSensitivity;
 		mCurX = ev.getX();
 		mCurY = ev.getY();
 		if(mCurButton==MouseEvent.BUTTON1) {
 			accelerate(deltaX,deltaY,0);
 		}
 		if(mCurButton==MouseEvent.BUTTON2) {
-			turn(deltaX,deltaY,0);
+			turn(deltaX,-deltaY,0);
 		}
 		if(mCurButton==MouseEvent.BUTTON3) {
-			turn(0,deltaY,deltaX);
+			turn(0,-deltaY,-deltaX);
 		}
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent ev) {
-		
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent ev) {
-		
+		if(ev.getClickCount()==2) {
+			turn(-mCurYaw,-mCurPitch,-mCurRoll);
+		}
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent ev) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent ev) {
-		
+
 	}
 
 	@Override
@@ -131,7 +126,7 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 
 	@Override
 	public void mouseReleased(MouseEvent ev) {
-		
+
 	}
 
 	@Override
@@ -150,5 +145,5 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 		if(mSensorFrame!=null)
 			mSensorFrame.setBackground(CL_RUN);
 	}
-	
+
 }
