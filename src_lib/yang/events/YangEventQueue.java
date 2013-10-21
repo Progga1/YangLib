@@ -15,6 +15,8 @@ import yang.util.NonConcurrentList;
 
 public class YangEventQueue {
 
+	public static final int MAX_KEY_INDICES = 512;
+
 	public static final int MAX_POINTERS = 10;
 	public static final int ID_POINTER_EVENT = 0;
 	public static final int ID_KEY_EVENT = 1;
@@ -22,7 +24,7 @@ public class YangEventQueue {
 	public static final int ID_SENSOR_EVENT = 3;
 
 	public PointerTracker mPointerTrackers[] = new PointerTracker[MAX_POINTERS];
-	public boolean mKeyStates[] = new boolean[256];
+	public boolean mKeyStates[] = new boolean[MAX_KEY_INDICES];
 	public float mPointerDistance = -1;
 	public int mCurPointerDownCount = 0;
 	private final int mMaxEvents;
@@ -74,14 +76,14 @@ public class YangEventQueue {
 			mSensorEventQueue[i] = new YangSensorEvent();
 			mSensorEventQueue[i].mEventQueue = this;
 		}
-		mMetaKeys = new boolean[512];
+		mMetaKeys = new boolean[MAX_KEY_INDICES];
 		for(int i=0;i<mMetaKeys.length;i++) {
 			mMetaKeys[i] = false;
 		}
 		for(int i=0;i<MAX_POINTERS;i++) {
 			mPointerTrackers[i] = new PointerTracker();
 		}
-		for(int i=0;i<256;i++) {
+		for(int i=0;i<MAX_KEY_INDICES;i++) {
 			mKeyStates[i] = false;
 		}
 		mQueuePools = new YangEvent[eventTypes][];
@@ -181,7 +183,7 @@ public class YangEventQueue {
 			mKeyEventId = 0;
 		newEvent.mKey = key;
 		newEvent.mAction = action;
-		if(key<512 && mMetaKeys[key])
+		if(key<MAX_KEY_INDICES && mMetaKeys[key])
 			putMetaEvent(newEvent);
 		else
 			putRuntimeEvent(newEvent);
@@ -315,7 +317,9 @@ public class YangEventQueue {
 		return System.currentTimeMillis()*0.001;
 	}
 
-	public boolean isKeyDown(char code) {
+	public boolean isKeyDown(int code) {
+		if(code>=MAX_KEY_INDICES || code<0)
+			return false;
 		return mKeyStates[code];
 	}
 

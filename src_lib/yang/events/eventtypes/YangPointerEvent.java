@@ -1,5 +1,7 @@
 package yang.events.eventtypes;
 
+import yang.math.objects.Point3f;
+
 
 public abstract class YangPointerEvent extends YangEvent {
 
@@ -113,6 +115,19 @@ public abstract class YangPointerEvent extends YangEvent {
 		}
 
 		return button+action+"(x,y,z="+mX+","+mY+","+mZ+"; Id="+mId+")";
+	}
+
+	public void setPos(float x,float y,float z) {
+		mDeltaX = x-mX;
+		mDeltaY = y-mY;
+		mDeltaZ = z-mZ;
+		mX = x;
+		mY = y;
+		mZ = z;
+	}
+
+	public void setPos(Point3f position) {
+		setPos(position.mX,position.mY,position.mZ);
 	}
 
 }

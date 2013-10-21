@@ -39,6 +39,8 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	}
 
 	public void setZoom(float zoom) {
+		if(mInvertView)
+			return;
 		mZoom = zoom;
 		mTargetZoom = zoom;
 	}

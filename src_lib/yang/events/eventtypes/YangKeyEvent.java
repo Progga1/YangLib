@@ -1,5 +1,6 @@
 package yang.events.eventtypes;
 
+import yang.events.YangEventQueue;
 import yang.events.listeners.KeyEventListener;
 import yang.events.listeners.RawEventListener;
 
@@ -25,7 +26,7 @@ public class YangKeyEvent extends YangEvent {
 
 	@Override
 	public void onPoll() {
-		if(mKey>=0 && mKey<256) {
+		if(mKey>=0 && mKey<YangEventQueue.MAX_KEY_INDICES) {
 			if(mAction==ACTION_KEYDOWN)
 				mEventQueue.mKeyStates[mKey] = true;
 			else

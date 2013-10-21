@@ -8,7 +8,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import javax.swing.JWindow;
+import javax.swing.JDialog;
 
 import yang.math.objects.Quaternion;
 import yang.systemdependent.YangSensor;
@@ -20,7 +20,7 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 
 	public Color CL_RUN = Color.LIGHT_GRAY;
 	public Color CL_PAUSED = Color.GRAY;
-	public JWindow mSensorFrame;
+	public JDialog mSensorFrame;
 	public int mCurX,mCurY;
 	private float mGravX,mGravY,mGravZ;
 	public float mCurYaw,mCurPitch,mCurRoll;
@@ -60,9 +60,11 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 		if(!ENABLED)
 			return;
 		if(mSensorFrame==null) {
-			mSensorFrame = new JWindow();
+			mSensorFrame = new JDialog();
+			mSensorFrame.setTitle("Fake sensor");
+			mSensorFrame.setUndecorated(false);
 			mSensorFrame.setFocusable(false);
-			mSensorFrame.setSize(new Dimension(320,240));
+			mSensorFrame.setSize(new Dimension(160,160));
 			mSensorFrame.addMouseListener(this);
 			mSensorFrame.addMouseMotionListener(this);
 			mSensorFrame.addMouseWheelListener(this);

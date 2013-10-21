@@ -17,8 +17,10 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	protected YangMatrix mTransform = new YangMatrix();
 	protected YangMatrix mInvertedTransform = new YangMatrix();
 	protected DefaultGraphics<?> mGraphics;
+	protected boolean[] mActiveCursors;
 	protected Point3f[] mCursorPositions;
 	private final Point3f mTempPoint = new Point3f();
+	public boolean mDrawDebugPoints = false;
 
 	protected void prepareDraw() {
 
@@ -28,8 +30,11 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 		mInternalObject = internalObject;
 		mGraphics = graphics;
 		mCursorPositions = new Point3f[MAX_POINTERS];
-		for(int i=0;i<MAX_POINTERS;i++)
+		mActiveCursors = new boolean[MAX_POINTERS];
+		for(int i=0;i<MAX_POINTERS;i++) {
 			mCursorPositions[i] = new Point3f();
+			mActiveCursors[i] = false;
+		}
 
 	}
 
@@ -48,7 +53,10 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 		//mGraphics.mWorldTransform.apply3D(mCursorPositions[0], mTempPoint);
 		mGraphics.mTranslator.bindTexture(null);
 		mGraphics.setColor(FloatColor.YELLOW);
-		mGraphics.drawRectCentered(mCursorPositions[0].mX,mCursorPositions[0].mY, 0.1f);
+		for(int i=0;i<MAX_POINTERS;i++) {
+			if(mActiveCursors[i])
+				mGraphics.drawRectCentered(mCursorPositions[i].mX,mCursorPositions[i].mY, 0.1f);
+		}
 
 		mGraphics.mTranslator.flush();
 
@@ -64,6 +72,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 			final float y = pointerEvent.mY;
 			final float z = pointerEvent.mZ;
 			final float w = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
+			mActiveCursors[pointerEvent.mId] = true;
 			mCursorPositions[pointerEvent.mId].set(x,y,z);
 			pointerEvent.mX = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])/w;
 			pointerEvent.mY = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])/w;
