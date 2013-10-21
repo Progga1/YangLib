@@ -47,6 +47,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public YangMatrix mSavedCamera;
 	public YangMatrix mSavedProjection;
 	public float[] mSavedInvGameProjection;
+	public float mDebugAxisWidthFactor = 1;
 
 	private Basic3DProgram mDefaultProgram;
 	private final TerrainCreator mDefaultTerrainCreator;
@@ -463,7 +464,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			transform.apply3D(baseX,baseY,baseZ, mTempVec1);
 			transform.apply3D(baseX+vecX,baseY+vecY,baseZ+vecZ, mTempVec2);
 		}
-		mLineDrawer.drawLine(mTempVec1, mTempVec2, DEBUG_AXIS_WIDTH,0);
+		mLineDrawer.drawLine(mTempVec1, mTempVec2, DEBUG_AXIS_WIDTH*mDebugAxisWidthFactor,0);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount);
 	}

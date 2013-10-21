@@ -3,7 +3,6 @@ package yang.util.gui;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.listeners.RawEventListener;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
@@ -62,12 +61,12 @@ public class BasicGUI implements RawEventListener,Drawable {
 		setPassTexture(maxPasses,null);
 	}
 
-	public BasicGUI(Default2DGraphics graphics2D,int maxPasses) {
-		this(graphics2D,GUICoordinatesMode.SCREEN,true,maxPasses);
+	public BasicGUI(DefaultGraphics<?> graphics,int maxPasses) {
+		this(graphics,GUICoordinatesMode.SCREEN,true,maxPasses);
 	}
 
-	public BasicGUI(Default2DGraphics graphics2D) {
-		this(graphics2D,5);
+	public BasicGUI(DefaultGraphics<?> graphics) {
+		this(graphics,5);
 	}
 
 	public void setPassTexture(int pass,Texture texture) {
