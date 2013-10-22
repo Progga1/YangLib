@@ -24,7 +24,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	protected boolean[] mActiveCursors;
 	protected Point3f[] mCursorPositions;
 	private final Point3f mTempPoint = new Point3f();
-	public boolean mDrawDebugPoints = false;
+	public float mDebugPointsAlpha = 0;
 
 	protected void prepareDraw() {
 
@@ -54,12 +54,12 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 		mInternalObject.draw();
 		mGraphics.mTranslator.flush();
 
-		if(mDrawDebugPoints) {
+		if(mDebugPointsAlpha>0) {
 			mGraphics.mTranslator.bindTexture(debugPointerTexture);
-			mGraphics.setColor(FloatColor.YELLOW);
 			for(int i=0;i<MAX_POINTERS;i++) {
 				if(mActiveCursors[i]) {
 					mGraphics.setColor(mDebugColorPalette[i%mDebugColorPalette.length]);
+					mGraphics.mCurColor[3] *= mDebugPointsAlpha;
 					mGraphics.drawRectCentered(mCursorPositions[i].mX,mCursorPositions[i].mY, 0.1f);
 				}
 			}
