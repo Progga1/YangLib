@@ -14,39 +14,39 @@ public class Texture extends AbstractTexture {
 	public static final int STATUS_GENERATED = 1;
 	public static final int STATUS_FINISHED = 2;
 	public static final int STATUS_FREE = 3;
-	
+
 	protected GraphicsTranslator mGraphics;
 	public int mId;
 	public TextureProperties mProperties;
 	public int mStatus = STATUS_UNINITIALIZED;
-	
+
 	protected Texture(GraphicsTranslator graphics) {
 		mGraphics = graphics;
 		mIsAlphaMap = false;
 	}
-	
+
 	protected Texture(GraphicsTranslator graphics,TextureProperties properties) {
 		this(graphics);
 		mProperties = properties;
 	}
-	
+
 //	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties properties) {
 //		this(graphics);
 //		initCompletely(source, width, height, properties);
 //	}
-	
+
 	public Texture generate() {
 		mId = mGraphics.genTexture();
 		mStatus = STATUS_GENERATED;
 		return this;
 	}
 
-	public void initCompletely(ByteBuffer source, int width, int height, TextureProperties settings) {
+	public void initCompletely(ByteBuffer source, int width, int height, TextureProperties properties) {
 		mWidth = width;
 		mHeight = height;
-		mProperties = settings;
-		if(settings==null)
-			settings = new TextureProperties();
+		if(properties==null)
+			properties = new TextureProperties();
+		mProperties = properties;
 		generate();
 		if(source!=null) {
 			source.order(ByteOrder.nativeOrder());
@@ -56,11 +56,15 @@ public class Texture extends AbstractTexture {
 		if(source!=null)
 			finish();
 	}
-	
+
+	public void initCompletely(TextureData source, TextureProperties properties) {
+		initCompletely(source.mData,source.mWidth,source.mHeight,properties);
+	}
+
 	public int getId() {
 		return mId;
 	}
-	
+
 	public void setId(int id) {
 		this.mId = id;
 	}
@@ -82,7 +86,7 @@ public class Texture extends AbstractTexture {
 		else
 			mStatus = STATUS_GENERATED;
 	}
-	
+
 	/**
 	 * No mipmaps are generated
 	 * @param x
@@ -91,6 +95,7 @@ public class Texture extends AbstractTexture {
 	 * @param height
 	 * @param data
 	 */
+	@Override
 	public void updateRect(int x, int y, int width, int height, ByteBuffer data) {
 		assert mGraphics.preCheck("Update rect");
 		if(x<0 || y<0 || x+width>mWidth || y+height>mHeight)
@@ -98,11 +103,11 @@ public class Texture extends AbstractTexture {
 		mGraphics.setTextureRectData(this.mId, 0, x,y, width,height, mProperties.mChannels, data);
 		assert mGraphics.checkErrorInst("Update rect");
 	}
-	
+
 	public void fillWithColor(FloatColor color) {
 		this.update(TextureData.createSingleColorBuffer(mWidth,mHeight, mProperties, color));
 	}
-	
+
 	public void finish() {
 		if(mProperties.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mProperties.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
 			mGraphics.bindTexture(this);
@@ -111,7 +116,8 @@ public class Texture extends AbstractTexture {
 		if(mStatus<STATUS_FINISHED)
 			mStatus = STATUS_FINISHED;
 	}
-	
+
+	@Override
 	public void finalize() {
 		assert (mStatus>=STATUS_GENERATED && mStatus<STATUS_FREE):"Texture garbage collected, but still in video memory";
 	}
@@ -130,7 +136,7 @@ public class Texture extends AbstractTexture {
 	public boolean isFreed() {
 		return mStatus==STATUS_FREE;
 	}
-	
+
 	public String statusToString() {
 		switch(mStatus) {
 		case STATUS_UNINITIALIZED: return "Uninitialized";
@@ -140,10 +146,10 @@ public class Texture extends AbstractTexture {
 		default: return "<undefined>";
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "STATUS="+statusToString()+", PROPS=("+mProperties.toString()+"), ALPHAMAP="+mIsAlphaMap;
 	}
-	
+
 }

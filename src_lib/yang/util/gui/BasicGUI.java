@@ -1,5 +1,6 @@
 package yang.util.gui;
 
+import yang.events.YangEventQueue;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.listeners.RawEventListener;
@@ -37,7 +38,7 @@ public class BasicGUI implements RawEventListener,Drawable {
 	public float mProjShiftYFactor;
 	public float mProjXFactor,mProjYFactor;
 	public float mCurrentTime;
-	public GUIInteractiveComponent mPressedComponent;
+	public GUIInteractiveComponent[] mPressedComponent = new GUIInteractiveComponent[YangEventQueue.MAX_POINTERS];
 	public NonConcurrentList<Texture> mPassTextures;
 
 	protected static GUIPointerEvent[] createEventPool(int capacity) {
@@ -162,7 +163,6 @@ public class BasicGUI implements RawEventListener,Drawable {
 	}
 
 	public GUIComponent handleEvent(YangEvent event) {
-		final boolean handled = false;
 		if(event instanceof SurfacePointerEvent) {
 			final SurfacePointerEvent pointerEvent = (SurfacePointerEvent)event;
 
@@ -175,21 +175,22 @@ public class BasicGUI implements RawEventListener,Drawable {
 			guiEvent.createFromPointerEvent((SurfacePointerEvent)event, mMainContainer);
 			guiEvent.mX = (guiEvent.mX - mProjShiftX)*mProjXFactor;
 			guiEvent.mY = (guiEvent.mY - mProjShiftY)*mProjYFactor;
+			final int id = pointerEvent.mId;
 
-			if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDRAG && mPressedComponent!=null) {
+			if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDRAG && mPressedComponent[id]!=null) {
 				final GUIPointerEvent dragEvent = BasicGUI.mGUIEventPool[BasicGUI.componentPoolPos++];
 				if(BasicGUI.componentPoolPos>BasicGUI.mGUIEventPool.length)
 					BasicGUI.componentPoolPos = 0;
-				dragEvent.createFromPointerEvent(pointerEvent,mPressedComponent);
-				mPressedComponent.guiFocusedDrag(dragEvent);
-				return mPressedComponent;
+				dragEvent.createFromPointerEvent(pointerEvent,mPressedComponent[id]);
+				mPressedComponent[id].guiFocusedDrag(dragEvent);
+				return mPressedComponent[id];
 			}else{
 
 				final GUIComponent result =  mMainContainer.rawPointerEvent(guiEvent);
 
-				if(mPressedComponent!=null && pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
-					mPressedComponent.mPressedTime = -mCurrentTime;
-					mPressedComponent = null;
+				if(mPressedComponent[id]!=null && pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
+					mPressedComponent[id].mPressedTime = -mCurrentTime;
+					mPressedComponent[id] = null;
 				}
 
 				return result;
@@ -257,12 +258,12 @@ public class BasicGUI implements RawEventListener,Drawable {
 		return (y - mProjShiftY)*mProjYFactor;
 	}
 
-	public void setPressedComponent(GUIInteractiveComponent component) {
-		mPressedComponent = component;
+	public void setPressedComponent(int id,GUIInteractiveComponent component) {
+		mPressedComponent[id] = component;
 		if(mCurrentTime!=0)
-			mPressedComponent.mPressedTime = mCurrentTime;
+			mPressedComponent[id].mPressedTime = mCurrentTime;
 		else
-			mPressedComponent.mPressedTime = 1;
+			mPressedComponent[id].mPressedTime = 1;
 	}
 
 	public void setDimensions(float width,float height) {

@@ -16,6 +16,8 @@ import yang.surface.YangSurface;
 
 public class GFXDebug implements PrintInterface {
 
+	public static final FloatColor[] DEFAULT_PALETTE = {FloatColor.YELLOW,FloatColor.GREEN,FloatColor.RED,FloatColor.WHITE,new FloatColor(1,0.5f,0),new FloatColor(1,0,1),new FloatColor(0,1,1),new FloatColor(1,0.8f,0.4f),new FloatColor(0.5f,0.5f,1),new FloatColor(0.5f,0.5f,0.5f)};
+
 	public static int FPS = 0;
 	public static int SPS = 1<<1;
 	public static int POLYGON_COUNT = 1<<2;
@@ -39,7 +41,7 @@ public class GFXDebug implements PrintInterface {
 	public Texture mPointerTexture = null;
 	public boolean mDrawPointerContours = true;
 	public float mPointerSize = 0.06f;
-	public FloatColor[] mPointerColors = {FloatColor.YELLOW,FloatColor.GREEN,FloatColor.RED,FloatColor.WHITE,new FloatColor(1,0.5f,0),new FloatColor(1,0,1),new FloatColor(0,1,1),new FloatColor(1,0.8f,0.4f),new FloatColor(0.5f,0.5f,1),new FloatColor(0.5f,0.5f,0.5f)};
+	public FloatColor[] mPointerColors = DEFAULT_PALETTE;
 
 	//Object
 	public YangSurface mSurface;

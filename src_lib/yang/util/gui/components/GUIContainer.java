@@ -9,7 +9,7 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 
 	protected NonConcurrentList<GUIComponent> mAllComponents;
 	protected NonConcurrentList<GUIInteractiveComponent> mInteractiveComponents;
-	
+
 	public GUIContainer() {
 		super();
 		mWidth = 1024;
@@ -17,41 +17,42 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 		mInteractiveComponents = new NonConcurrentList<GUIInteractiveComponent>();
 		mAllComponents = new NonConcurrentList<GUIComponent>();
 	}
-	
+
+	@Override
 	public GUIComponent rawPointerEvent(GUIPointerEvent pointerEvent) {
 
-			float x = pointerEvent.mX;
-			float y = pointerEvent.mY;
+			final float x = pointerEvent.mX;
+			final float y = pointerEvent.mY;
 //				ListIterator<InteractiveGUIComponent> iter = mInteractiveComponents.listIterator(mInteractiveComponents.size()-1);
 //				InteractiveGUIComponent component;
 //				while((component=iter.previous())!=null) {
-			for(GUIInteractiveComponent component:mInteractiveComponents) {
+			for(final GUIInteractiveComponent component:mInteractiveComponents) {
 				if(component.mVisible && component.mEnabled && component.inArea(x, y)) {
 					int poolPos = BasicGUI.componentPoolPos++;
 					if(BasicGUI.componentPoolPos>=BasicGUI.mGUIEventPool.length) {
 						BasicGUI.componentPoolPos = 0;
 						poolPos = 0;
 					}
-					GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];
+					final GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];
 					guiEvent.createFromPointerEvent(pointerEvent, component);
 					GUIComponent result;
-					if(mGUI.mPressedComponent==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG)
+					if(mGUI.mPressedComponent[pointerEvent.mId]==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG)
 						result = component.rawPointerEvent(guiEvent);
 					else
 						result = null;
-					
+
 					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
-						if(mGUI.mPressedComponent==component)
+						if(mGUI.mPressedComponent[pointerEvent.mId]==this)
 							component.guiClick(guiEvent);
 					}
-					
+
 					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDOWN) {
 						if(component.isPressable()) {
-							mGUI.setPressedComponent(component);
+							mGUI.setPressedComponent(pointerEvent.mId,component);
 							return component;
 						}
 					}
-					
+
 					return result;
 				}
 			}
@@ -60,28 +61,28 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 			else
 				return null;
 	}
-	
+
 	@Override
 	public void refreshProjections(float offsetX,float offsetY) {
 		super.refreshProjections(offsetX,offsetY);
-		for(GUIComponent component:mAllComponents) {
+		for(final GUIComponent component:mAllComponents) {
 			component.refreshProjections(mPosX+offsetX, mPosY+offsetY);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void draw(int layer) {
 		super.draw(layer);
-		for(GUIComponent component:mAllComponents) {
+		for(final GUIComponent component:mAllComponents) {
 			if(component.mVisible)
 				component.draw(layer);
 		}
 	}
-	
+
 	public <ComponentType extends GUIComponent> ComponentType addComponent(ComponentType component) {
 		if(component instanceof GUIInteractiveComponent) {
-			GUIInteractiveComponent interComponent = (GUIInteractiveComponent)component;
+			final GUIInteractiveComponent interComponent = (GUIInteractiveComponent)component;
 			mInteractiveComponents.add(interComponent);
 			if(mActionListener!=null)
 				interComponent.setActionListener(mActionListener);
@@ -92,18 +93,18 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 		component.init(mGUI);
 		return component;
 	}
-	
+
 	public <ComponentType extends GUIComponent> ComponentType addComponent(Class<ComponentType> componentClass) {
-		 
+
 		try {
-			ComponentType instance = componentClass.newInstance();
+			final ComponentType instance = componentClass.newInstance();
 			return addComponent(instance);
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 	}
-	
+
 }

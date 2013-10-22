@@ -9,14 +9,14 @@ import yang.graphics.textures.enums.TextureWrap;
 public class TextureData {
 
 	public static boolean USE_PREMULTIPLICATION = true;
-	
+
 	public ByteBuffer mData;
 	private ByteBuffer mTemp;
 	public int mWidth;
 	public int mHeight;
 	public int mChannels;
-	private byte mInterColors[] = new byte[4];
-	
+	private final byte mInterColors[] = new byte[4];
+
 	public TextureData(ByteBuffer data,int width,int height,int channels) {
 		mData = data;
 		mTemp = data.duplicate();
@@ -24,20 +24,20 @@ public class TextureData {
 		mHeight = height;
 		mChannels = channels;
 	}
-	
+
 	public TextureData(int width,int height,int channels) {
 		mData = ByteBuffer.allocateDirect(width*height*channels);
 		mWidth = width;
 		mHeight = height;
 		mChannels = channels;
 	}
-	
+
 	public TextureData(int width,int height) {
 		this(width,height,4);
 	}
-	
+
 	public void copyRect(int left,int top,int width,int height, ByteBuffer source, int sourceChannels,int sourceLeft,int sourceTop,int sourceBufferWidth, int downScale) {
-		
+
 		if(downScale==1 && sourceChannels==mChannels) {
 			//Fast version for matching formats
 			for(int i=0;i<height;i++) {
@@ -57,7 +57,7 @@ public class TextureData {
 			mInterColors[3] = 0;
 			width/=downScale;
 			height/=downScale;
-			
+
 			for(int i=0;i<height;i++) {
 				mData.position(((top+i)*mWidth+left)*mChannels);
 				source.position((sourceTop+i*downScale)*sourceBufferWidth*sourceChannels);
@@ -73,29 +73,29 @@ public class TextureData {
 			}
 		}
 	}
-	
+
 	public int getIndex(int x,int y) {
 		return ((y*mWidth+x)*mChannels);
 	}
-	
+
 	public void setPosition(int x,int y) {
 		mData.position(getIndex(x,y));
 	}
-	
+
 	private void copyFromWorkingBuffer(int pixels) {
 		mTemp.limit(mTemp.position()+pixels*mChannels);
 		mData.put(mTemp);
 		mTemp.limit(mTemp.capacity());
 	}
-	
+
 	public void copyRect(int left,int top, TextureData source, int downScale) {
 		copyRect(left,top,source.mWidth,source.mHeight,source.mData,source.mChannels,0,0,source.mWidth,downScale);
 	}
-	
+
 	public void copyRect(int left,int top, int targetWidth, TextureData source) {
 		copyRect(left,top,source,source.mWidth/targetWidth);
 	}
-	
+
 	public TextureData redToAlpha() {
 		mData.rewind();
 		if(USE_PREMULTIPLICATION) {
@@ -103,7 +103,7 @@ public class TextureData {
 				int alpha = mData.get();
 				alpha = alpha<0?alpha+255:alpha;
 				mData.position(i*4);
-				byte b = (byte)(alpha);
+				final byte b = (byte)(alpha);
 				mData.put(b);
 				mData.put(b);
 				mData.put(b);
@@ -123,16 +123,16 @@ public class TextureData {
 		mData.rewind();
 		return this;
 	}
-	
+
 	private static byte[] tempArray = new byte[4];
-	
+
 	public TextureCoordBounds createBiasBorder(int left,int top,int width,int height, int borderX, int borderY, TextureWrap wrapX,TextureWrap wrapY) {
 		left += borderX;
 		top += borderY;
 		width -= borderX*2;
 		height -= borderY*2;
-		int right = left+width-1;
-		int bottom = top+height-1;
+		final int right = left+width-1;
+		final int bottom = top+height-1;
 		if(wrapX==TextureWrap.MIRROR)
 			wrapX = TextureWrap.CLAMP;
 		if(wrapY==TextureWrap.MIRROR)
@@ -157,10 +157,10 @@ public class TextureData {
 				mTemp.position(getIndex(left,bottom-i-1));
 			copyFromWorkingBuffer(width);
 		}
-		
+
 		//LEFT
 		for(int i=-borderY;i<height+borderY;i++) {
-			int y = top+i;
+			final int y = top+i;
 			if(wrapX==TextureWrap.REPEAT) {
 				//left
 				mData.position(getIndex(left-borderX,y));
@@ -191,37 +191,50 @@ public class TextureData {
 
 		return new TextureCoordBounds().setBiased(left, top, width, height, mWidth, mHeight, 0);
 	}
-	
+
 	public TextureCoordBounds createBiasBorder(int left,int top,int width,int height, int border, TextureWrap wrapX,TextureWrap wrapY) {
 		return createBiasBorder(left,top,width,height,border,border,wrapX,wrapY);
 	}
-	
+
 	public TextureCoordBounds createBiasRepeatBorder(int left,int top,int width,int height, int border) {
 		return createBiasBorder(left,top,width,height,border,TextureWrap.REPEAT,TextureWrap.REPEAT);
 	}
-	
+
 	public TextureCoordBounds copyWithMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale,TextureWrap wrapX,TextureWrap wrapY) {
-		int sourceW = source.mWidth/downScale;
-		int sourceH = source.mHeight/downScale;
-		int borderX = (destWidth-sourceW)/2;
-		int borderY = (destHeight-sourceH)/2;
+		final int sourceW = source.mWidth/downScale;
+		final int sourceH = source.mHeight/downScale;
+		final int borderX = (destWidth-sourceW)/2;
+		final int borderY = (destHeight-sourceH)/2;
 		copyRect(left+borderX,top+borderY,source,downScale);
 		return createBiasBorder(left,top,destWidth,destHeight,borderX,borderY,wrapX,wrapY);
 	}
-	
+
 	public TextureCoordBounds copyWithRepeatMargin(int left,int top,int destWidth,int destHeight,TextureData source,int downScale) {
 		return copyWithMargin(left,top,destWidth,destHeight,source,downScale,TextureWrap.REPEAT,TextureWrap.REPEAT);
 	}
 
 	public static ByteBuffer createSingleColorBuffer(int width,int height,TextureProperties texProperties,FloatColor color) {
-		int channels = texProperties.mChannels;
-		int bytes = width*height;
-		ByteBuffer buf = ByteBuffer.allocateDirect(bytes*channels).order(ByteOrder.nativeOrder());
+		final int channels = texProperties.mChannels;
+		final int bytes = width*height;
+		final ByteBuffer buf = ByteBuffer.allocateDirect(bytes*channels).order(ByteOrder.nativeOrder());
 		for(int i=0;i<bytes;i++) {
 			for(int j=0;j<channels;j++)
 				buf.put((byte)(color.mValues[j]*255));
 		}
 		return buf;
 	}
-	
+
+	public void multAlpha(TextureData alphaData) {
+		final ByteBuffer buf = alphaData.mData;
+		buf.rewind();
+		mData.rewind();
+		for(int i=0;i<mWidth*mHeight;i++) {
+			buf.position(i*alphaData.mChannels);
+			int alpha = buf.get();
+			alpha = alpha<0?alpha+255:alpha;
+			mData.position(i*4+3);
+			mData.put((byte)(alpha));
+		}
+	}
+
 }

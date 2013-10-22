@@ -5,6 +5,8 @@ import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.RawEventListener;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.model.FloatColor;
+import yang.graphics.model.GFXDebug;
+import yang.graphics.translator.Texture;
 import yang.math.objects.Point3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.model.callback.Drawable;
@@ -12,10 +14,12 @@ import yang.model.callback.Drawable;
 public class YangWindow<InternalType extends RawEventListener & Drawable> implements RawEventListener {
 
 	public static int MAX_POINTERS = 16;
+	public static Texture debugPointerTexture;
 
 	protected InternalType mInternalObject;
 	protected YangMatrix mTransform = new YangMatrix();
 	protected YangMatrix mInvertedTransform = new YangMatrix();
+	protected FloatColor[] mDebugColorPalette = GFXDebug.DEFAULT_PALETTE;
 	protected DefaultGraphics<?> mGraphics;
 	protected boolean[] mActiveCursors;
 	protected Point3f[] mCursorPositions;
@@ -50,12 +54,15 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 		mInternalObject.draw();
 		mGraphics.mTranslator.flush();
 
-		//mGraphics.mWorldTransform.apply3D(mCursorPositions[0], mTempPoint);
-		mGraphics.mTranslator.bindTexture(null);
-		mGraphics.setColor(FloatColor.YELLOW);
-		for(int i=0;i<MAX_POINTERS;i++) {
-			if(mActiveCursors[i])
-				mGraphics.drawRectCentered(mCursorPositions[i].mX,mCursorPositions[i].mY, 0.1f);
+		if(mDrawDebugPoints) {
+			mGraphics.mTranslator.bindTexture(debugPointerTexture);
+			mGraphics.setColor(FloatColor.YELLOW);
+			for(int i=0;i<MAX_POINTERS;i++) {
+				if(mActiveCursors[i]) {
+					mGraphics.setColor(mDebugColorPalette[i%mDebugColorPalette.length]);
+					mGraphics.drawRectCentered(mCursorPositions[i].mX,mCursorPositions[i].mY, 0.1f);
+				}
+			}
 		}
 
 		mGraphics.mTranslator.flush();

@@ -17,7 +17,7 @@ public class YangEventQueue {
 
 	public static final int MAX_KEY_INDICES = 512;
 
-	public static final int MAX_POINTERS = 10;
+	public static int MAX_POINTERS = 10;
 	public static final int ID_POINTER_EVENT = 0;
 	public static final int ID_KEY_EVENT = 1;
 	public static final int ID_ZOOM_EVENT = 2;
