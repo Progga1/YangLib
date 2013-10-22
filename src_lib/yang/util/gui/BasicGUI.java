@@ -125,6 +125,14 @@ public class BasicGUI implements RawEventListener,Drawable {
 
 	}
 
+	public float projX(float guiX) {
+		return mProjShiftX+guiX*mProjXFactor;
+	}
+
+	public float projY(float guiY) {
+		return mProjShiftY+guiY*mProjYFactor;
+	}
+
 	public void setDefaultActionListener(GUIActionListener actionListener) {
 		mMainContainer.mActionListener = actionListener;
 	}
