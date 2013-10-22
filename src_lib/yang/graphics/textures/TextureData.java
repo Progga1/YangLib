@@ -254,10 +254,6 @@ public class TextureData {
 				mData.put((byte)(green*srcAlphaNorm));
 				mData.put((byte)(blue*srcAlphaNorm));
 				mData.put((byte)(alpha*srcAlphaNorm));
-//				mData.put((byte)(red));
-//				mData.put((byte)(green));
-//				mData.put((byte)(blue));
-//				mData.put((byte)(alpha));
 			}else{
 				mData.position(i*4+3);
 				final float alpha = mData.get()*d255;
