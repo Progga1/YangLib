@@ -29,6 +29,7 @@ public class LineDrawer3D extends MeshCreator<Default3DGraphics> {
 	private final Vector3f vec3 = new Vector3f();
 
 	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ, float startWidth,float endWidth) {
+
 		transform.loadIdentity();
 		vec1.set(endX-startX, endY-startY, endZ-startZ);
 		vec2.createOrthoVec(vec1);
