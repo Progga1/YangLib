@@ -3,17 +3,23 @@ package yang.graphics.programs.permutations;
 import yang.graphics.programs.GLProgram;
 
 public class BasicSubShader extends SubShader {
-	
-	private boolean mWorldTransform;
-	private boolean mUseTexture;
-	private boolean mUseColor;
-	
-	public BasicSubShader(boolean useWorldTransform,boolean useTexture,boolean useColor) {
+
+	private final boolean mWorldTransform;
+	private final boolean mUseTexture;
+	private final boolean mUseColor;
+	public boolean mPassScreenPos;
+
+	public BasicSubShader(boolean useWorldTransform,boolean useTexture,boolean useColor,boolean passScreenPos) {
 		mWorldTransform = useWorldTransform;
 		mUseTexture = useTexture;
 		mUseColor = useColor;
+		mPassScreenPos = passScreenPos;
 	}
-	
+
+	public BasicSubShader(boolean useWorldTransform,boolean useTexture,boolean useColor) {
+		this(useWorldTransform,useTexture,useColor,false);
+	}
+
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
 		vsDecl.addUniform("mat4","projTransform");
@@ -42,6 +48,10 @@ public class BasicSubShader extends SubShader {
 			shaderParser.appendVertexMain("worldPosition = vPosition");
 			shaderParser.appendVertexMain("gl_Position = projTransform * vPosition");
 		}
+		if(mPassScreenPos) {
+			shaderParser.addVarying("vec4", "screenPos");
+			shaderParser.appendVertexMain("screenPos = gl_Position");
+		}
 	}
 
 	@Override
@@ -49,6 +59,6 @@ public class BasicSubShader extends SubShader {
 		program.nextTextureLevel();
 	}
 
-	
-	
+
+
 }

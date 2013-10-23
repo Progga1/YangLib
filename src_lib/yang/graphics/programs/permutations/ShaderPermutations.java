@@ -76,9 +76,18 @@ public class ShaderPermutations extends Basic3DProgram {
 		result.append(parser.getVariable(SubShader.VAR_FRAGCOLOR,"vec4(1.0,1.0,1.0,1.0)"));
 		result.append(LINE_END);
 		result.append("}\r\n");
-		mFSSource = result.toString();System.out.println(mVSSource+" \n\n"+mFSSource);
+		mFSSource = result.toString();
 
 		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <SubShaderType extends SubShader> SubShaderType getSubShader(Class<SubShaderType> shaderClass) {
+		for(final SubShader subShader:mLinearSubShaderList) {
+			if(subShader.getClass()==shaderClass)
+				return (SubShaderType)subShader;
+		}
+		return null;
 	}
 
 	private void linearize(SubShader[] subShaders) {
