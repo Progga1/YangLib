@@ -15,8 +15,8 @@ public class SampleHeadTrackingMain {
 		frame.mSurface.handleArgs(args,0);
 		frame.run();
 		frame.mSurface.waitUntilInitialized();
-		frame.mSurface.mSensor.startSensor(YangSensor.TYPE_ROTATION_VECTOR);
-		//frame.mSurface.mSensor.startSensor(YangSensor.TYPE_EULER_ANGLES);
+//		frame.mSurface.mSensor.startSensor(YangSensor.TYPE_ROTATION_VECTOR);
+		frame.mSurface.mSensor.startSensor(YangSensor.TYPE_EULER_ANGLES);
 	}
 
 }

@@ -34,6 +34,7 @@ public class Vector3f extends Point3f{
 		mZ = z;
 	}
 
+	@Override
 	public void set(float x,float y) {
 		mX = x;
 		mY = y;
@@ -139,8 +140,8 @@ public class Vector3f extends Point3f{
 	public void rotateY(float angle) {
 		final float sinA = (float)Math.sin(angle);
 		final float cosA = (float)Math.cos(angle);
-		final float x = cosA*mX - sinA*mZ;
-		final float z = sinA*mX + cosA*mZ;
+		final float x = cosA*mX + sinA*mZ;
+		final float z = -sinA*mX + cosA*mZ;
 		mX = x;
 		mZ = z;
 	}
