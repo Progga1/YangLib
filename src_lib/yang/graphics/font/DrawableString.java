@@ -82,6 +82,15 @@ public class DrawableString extends FixedString {
 		alloc(capacity);
 	}
 
+	public DrawableString(String text, boolean formated) {
+		this();
+		if(formated) {
+			allocFormatString(text);
+		} else {
+			allocString(text);
+		}
+	}
+
 	@Override
 	public DrawableString alloc(int capacity) {
 		super.alloc(capacity);
