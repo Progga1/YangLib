@@ -1,5 +1,6 @@
 package yang.events.eventtypes;
 
+import yang.events.Keys;
 import yang.events.YangEventQueue;
 import yang.events.listeners.KeyEventListener;
 import yang.events.listeners.RawEventListener;
@@ -26,12 +27,10 @@ public class YangKeyEvent extends YangEvent {
 
 	@Override
 	public void onPoll() {
-		if(mKey>=0 && mKey<YangEventQueue.MAX_KEY_INDICES) {
-			if(mAction==ACTION_KEYDOWN)
-				mEventQueue.mKeyStates[mKey] = true;
-			else
-				mEventQueue.mKeyStates[mKey] = false;
-		}
+		if(mKey==Keys.SHIFT)
+			mEventQueue.mShiftDown = mAction==ACTION_KEYDOWN;
+		else if(mKey>=0 && mKey<YangEventQueue.MAX_KEY_INDICES)
+			mEventQueue.mKeyStates[mKey] = mAction==ACTION_KEYDOWN;
 	}
 
 //	@Override

@@ -31,6 +31,8 @@ public class Skeleton3DEditing {
 	public Joint mHoverJoint = null;
 	private DrawBatch mSphereBatch;
 
+	public float mAlpha = 1;
+
 	public Skeleton3DEditing(Default3DGraphics graphics3D,MassAggregation skeleton) {
 		mGraphics3D = graphics3D;
 		mSkeleton = skeleton;
@@ -69,6 +71,7 @@ public class Skeleton3DEditing {
 //			mLineDrawer.drawLine(joint1.mPosX,joint1.mPosY,joint1.mPosZ, joint2.mPosX,joint2.mPosY,joint2.mPosZ);
 //		}
 		mGraphics3D.setWhite();
+		mGraphics3D.mColorFactor[3] *= mAlpha;
 		for(final Joint joint:mSkeleton.mJoints)
 			if(joint.mEnabled && joint.mAngleParent!=null){
 				final Joint parent = joint.mAngleParent;
@@ -88,6 +91,7 @@ public class Skeleton3DEditing {
 			else
 				mGraphics3D.setColor(jointColor);
 			mGraphics3D.setColorFactor(mGraphics3D.getCurrentColor());
+			mGraphics3D.mColorFactor[3] *= mAlpha;
 			mGraphics3D.mWorldTransform.loadIdentity();
 			mGraphics3D.mWorldTransform.translate(joint.mPosX,joint.mPosY,joint.mPosZ);
 			mGraphics3D.mWorldTransform.scale(joint.getOutputRadius());

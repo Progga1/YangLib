@@ -50,6 +50,8 @@ public class YangEventQueue {
 	public boolean mTriggerZooming = true;
 	public float mSurfacePointerZ = 0;
 
+	public boolean mShiftDown = false;
+
 	public YangEventQueue(int maxEvents,int eventTypes) {
 		mGraphics = null;
 		mMaxEvents = maxEvents;
@@ -318,6 +320,8 @@ public class YangEventQueue {
 	}
 
 	public boolean isKeyDown(int code) {
+		if(code==Keys.SHIFT)
+			return mShiftDown;
 		if(code>=MAX_KEY_INDICES || code<0)
 			return false;
 		return mKeyStates[code];
