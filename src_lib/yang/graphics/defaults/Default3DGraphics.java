@@ -48,6 +48,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public YangMatrix mSavedProjection;
 	public float[] mSavedInvGameProjection;
 	public float mDebugAxisWidthFactor = 1;
+	private final Point3f mCameraPosition = new Point3f();
 
 	private Basic3DProgram mDefaultProgram;
 	private final TerrainCreator mDefaultTerrainCreator;
@@ -222,6 +223,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void setCameraLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
 		mTranslator.flush();
+		mCameraPosition.set(eyeX,eyeY,eyeZ);
 		mCameraMatrix.setLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, upX,upY,upZ);
 		refreshCamera();
 	}
@@ -236,7 +238,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
 		mTranslator.flush();
-		mCameraMatrix.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
+		mCameraMatrix.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance, mCameraPosition);
 		refreshCamera();
 	}
 
@@ -245,6 +247,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setCameraByTransform(YangMatrix cameraTransform) {
+		cameraTransform.getTranslation(mCameraPosition);
 		cameraTransform.asInverted(mCameraMatrix.mValues);
 		refreshCamera();
 	}
@@ -451,6 +454,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		target.mX = mat[1];
 		target.mY = mat[5];
 		target.mZ = mat[9];
+	}
+
+	public Point3f getCameraPosition() {
+		return mCameraPosition;
 	}
 
 	public static float DEBUG_AXIS_WIDTH = 0.03f;

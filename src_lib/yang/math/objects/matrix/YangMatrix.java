@@ -710,4 +710,10 @@ public class YangMatrix {
 		mValues[15] = 1;
 	}
 
+	public void getTranslation(Point3f target) {
+		target.mX = mValues[12];
+		target.mY = mValues[13];
+		target.mZ = mValues[14];
+	}
+
 }

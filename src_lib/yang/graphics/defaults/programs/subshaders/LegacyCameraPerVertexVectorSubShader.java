@@ -1,25 +1,20 @@
 package yang.graphics.defaults.programs.subshaders;
 
-import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
 import yang.graphics.programs.permutations.SubShader;
-import yang.math.objects.Point3f;
+import yang.graphics.util.Camera3D;
 
-public class CameraPerVertexVectorSubShader extends SubShader {
+public class LegacyCameraPerVertexVectorSubShader extends SubShader {
 
-	public Point3f mCameraPosition;
+	public Camera3D mCamera;
 	public int mCamPosHandle;
-
-	public CameraPerVertexVectorSubShader(Point3f cameraPosReference) {
-		mCameraPosition = cameraPosReference;
+	
+	public LegacyCameraPerVertexVectorSubShader(Camera3D camera) {
+		mCamera = camera;
 	}
-
-	public CameraPerVertexVectorSubShader(Default3DGraphics graphics3D) {
-		this(graphics3D.getCameraPosition());
-	}
-
+	
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
 		vsDecl.addUniform("vec3", "camPos");
@@ -34,12 +29,12 @@ public class CameraPerVertexVectorSubShader extends SubShader {
 
 	@Override
 	public void passData(GLProgram program) {
-		program.setUniform3f(mCamPosHandle, mCameraPosition);
+		program.setUniform3f(mCamPosHandle, mCamera.mEyeX,mCamera.mEyeY,mCamera.mEyeZ);
 	}
 
 	@Override
 	public boolean passesData() {
-		return mCameraPosition!=null;
+		return mCamera!=null;
 	}
-
+	
 }

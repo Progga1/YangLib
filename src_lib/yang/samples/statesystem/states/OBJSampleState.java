@@ -29,51 +29,51 @@ import yang.samples.statesystem.SampleState;
 
 public class OBJSampleState extends SampleState {
 
-	private OBJLoader[] mObj = new OBJLoader[8];
+	private final OBJLoader[] mObj = new OBJLoader[8];
 	private LightProgram mLightProgram;
 	private DefaultObjShader mActiveShader;
 	private DefaultObjShader mObjProgram;
 	private DefaultObjShader mToonObjProgram;
 	private LightProperties mLightProperties;
 	private int mCurObjIndex = 0;
-	private Camera3D mCamera = new Camera3D();
+	private final Camera3D mCamera = new Camera3D();
 	private int mObjCount = 0;
 	private ObjMaterialHandles mMatHandles;
 	private Texture mToonRamp1;
 	private Texture mToonRamp2;
 	private ToonRampSubShader mToonRampShader;
-	
+
 	@Override
 	protected void initGraphics() {
 		mLightProgram = mGraphics.addProgram(LightProgram.class);
-		
+
 		mLightProperties = new LightProperties();
-		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mCamera,mLightProperties,new FloatColor(0.3f)));
+		mObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mLightProperties,new FloatColor(0.3f)));
 		mToonRamp1 = mGFXLoader.getImage("toon_ramp1",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR));
 		mToonRamp2 = mGFXLoader.getImage("toon_ramp2",new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR_MIP_LINEAR));
 		mToonRampShader = new ToonRampSubShader(mToonRamp1);
-		SubShader toonShader = new ToonDiffuseSubShader();
-		SubShader emisShader = new EmissiveSubShader(null);
-		SubShader[] additionalShaders = new SubShader[]{mToonRampShader,toonShader,new CameraPerVertexVectorSubShader(mCamera),new ToonSpecularLightSubShader(null),emisShader,new ToonOutlineSubShader(new FloatWrapper(0.3f))};
+		final SubShader toonShader = new ToonDiffuseSubShader();
+		final SubShader emisShader = new EmissiveSubShader(null);
+		final SubShader[] additionalShaders = new SubShader[]{mToonRampShader,toonShader,new CameraPerVertexVectorSubShader(mGraphics3D),new ToonSpecularLightSubShader(null),emisShader,new ToonOutlineSubShader(new FloatWrapper(0.3f))};
 		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mLightProperties,new FloatColor(0.4f),additionalShaders));
 		mActiveShader = mObjProgram;
-		
+
 		try {
-			YangMatrix transform = new YangMatrix();
-			
+			final YangMatrix transform = new YangMatrix();
+
 			mMatHandles = new ObjMaterialHandles(mObjProgram);
 			mObjCount = -1;
-			
+
 			transform.loadIdentity();
 			transform.scale(0.1f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
-			
+
 			transform.loadIdentity();
 			transform.scale(0.5f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
 			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform,true,true);
-			
+
 			transform.loadIdentity();
 			transform.translate(0, 0.3f);
 			transform.rotateY((float)Math.PI/2);
@@ -81,19 +81,19 @@ public class OBJSampleState extends SampleState {
 			transform.scale(0.2f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),mGFXLoader,transform,true,true);
-			
+
 			transform.loadIdentity();
-			transform.scale(0.42f);	
+			transform.scale(0.42f);
 			transform.translate(0, -0.85f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
-			
+
 			transform.loadIdentity();
 			transform.scale(1.2f);
 			transform.translate(0, -0.0f);
 			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
 			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
-			
+
 //			transform.loadIdentity();
 //			transform.scale(0.5f);
 //			transform.translate(-0.5f, -0.5f);
@@ -101,19 +101,19 @@ public class OBJSampleState extends SampleState {
 //			mObj[0].loadOBJ(mResources.getInputStream("models/cubetest.obj"),mGFXLoader,transform);
 
 			mObjCount++;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	@Override
 	public void start() {
-		
+
 	}
 	@Override
 	protected void step(float deltaTime) {
-		
+
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
-		mGraphics3D.setCamera(mCamera.setAlphaBeta((float)(0*0.05f),0.4f,2));
+		mGraphics3D.setCamera(mCamera.setAlphaBeta(0*0.05f,0.4f,2));
 		if(false) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);
@@ -145,7 +145,7 @@ public class OBJSampleState extends SampleState {
 	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		mCurObjIndex = (mCurObjIndex+1)%mObjCount;
 	}
-	
+
 	@Override
 	public void keyUp(int code) {
 		super.keyUp(code);
@@ -169,12 +169,12 @@ public class OBJSampleState extends SampleState {
 				mToonRampShader.mRampTex = mToonRamp1;
 		}
 	}
-	
+
 	@Override
 	public void stop() {
 		mGraphics3D.resetGlobalTransform();
 		mGraphics3D.setGlobalTransformEnabled(false);
 		mGraphics3D.setColorFactor(1);
 	}
-	
+
 }
