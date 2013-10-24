@@ -244,6 +244,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		setCameraAlphaBeta(0,0,0, alpha,beta, distance);
 	}
 
+	public void setCameraByTransform(YangMatrix cameraTransform) {
+		cameraTransform.asInverted(mCameraMatrix.mValues);
+	}
+
 	@Override
 	public void refreshViewTransform() {
 		if(mBillboardMode) {

@@ -127,4 +127,31 @@ public class Vector3f extends Point3f{
 		mZ = 1;
 	}
 
+	public void rotateX(float angle) {
+		final float sinA = (float)Math.sin(angle);
+		final float cosA = (float)Math.cos(angle);
+		final float y = cosA*mY - sinA*mZ;
+		final float z = sinA*mY + cosA*mZ;
+		mY = y;
+		mZ = z;
+	}
+
+	public void rotateY(float angle) {
+		final float sinA = (float)Math.sin(angle);
+		final float cosA = (float)Math.cos(angle);
+		final float x = cosA*mX - sinA*mZ;
+		final float z = sinA*mX + cosA*mZ;
+		mX = x;
+		mZ = z;
+	}
+
+	public void rotateZ(float angle) {
+		final float sinA = (float)Math.sin(angle);
+		final float cosA = (float)Math.cos(angle);
+		final float x = cosA*mX - sinA*mY;
+		final float y = sinA*mX + cosA*mY;
+		mX = x;
+		mY = y;
+	}
+
 }

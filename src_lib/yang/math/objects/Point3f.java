@@ -21,6 +21,11 @@ public class Point3f {
 		mZ = z;
 	}
 
+	public void set(float x,float y) {
+		mX = x;
+		mY = y;
+	}
+
 	public void set(float[] array) {
 		mX = array[0];
 		mY = array[1];

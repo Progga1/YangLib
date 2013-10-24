@@ -95,7 +95,6 @@ public class Skeleton3DEditing {
 		}
 		mGraphics3D.setGlobalTransformEnabled(false);
 		mGraphics3D.setColorFactor(1);
-
 	}
 
 	public Skeleton3DEditing initLines() {

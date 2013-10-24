@@ -9,6 +9,7 @@ import yang.graphics.textures.enums.TextureWrap;
 public class TextureData {
 
 	public static boolean USE_PREMULTIPLICATION = true;
+	public final static float d255 = 1/255f;
 
 	public ByteBuffer mData;
 	private ByteBuffer mTemp;
@@ -230,10 +231,35 @@ public class TextureData {
 		mData.rewind();
 		for(int i=0;i<mWidth*mHeight;i++) {
 			buf.position(i*alphaData.mChannels);
-			int alpha = buf.get();
-			alpha = alpha<0?alpha+255:alpha;
-			mData.position(i*4+3);
-			mData.put((byte)(alpha));
+			int srcAlpha = buf.get();
+			srcAlpha = srcAlpha<0?srcAlpha+255:srcAlpha;
+			final float srcAlphaNorm = srcAlpha*d255;
+
+			if(USE_PREMULTIPLICATION) {
+				mData.position(i*4);
+				int red = mData.get();
+				if(red<0)
+					red += 255;
+				int green = mData.get();
+				if(green<0)
+					green += 255;
+				int blue = mData.get();
+				if(blue<0)
+					blue += 255;
+				int alpha = mData.get();
+				if(alpha<0)
+					alpha += 255;
+				mData.position(i*4);
+				mData.put((byte)(red*srcAlphaNorm));
+				mData.put((byte)(green*srcAlphaNorm));
+				mData.put((byte)(blue*srcAlphaNorm));
+				mData.put((byte)(alpha*srcAlphaNorm));
+			}else{
+				mData.position(i*4+3);
+				final float alpha = mData.get()*d255;
+				mData.position(i*4+3);
+				mData.put((byte)(srcAlpha*alpha));
+			}
 		}
 	}
 

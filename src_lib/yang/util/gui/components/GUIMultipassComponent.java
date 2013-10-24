@@ -75,14 +75,15 @@ public class GUIMultipassComponent extends GUIComponent {
 		result.append(Util.getClassName(this));
 		result.append(": ");
 		boolean first = true;
-		for(final GUIComponentDrawPass pass:mPasses) {
-			if(pass!=null) {
-				if(!first)
-					result.append("; ");
-				first = false;
-				result.append(pass.toString());
+		if(mPasses!=null)
+			for(final GUIComponentDrawPass pass:mPasses) {
+				if(pass!=null) {
+					if(!first)
+						result.append("; ");
+					first = false;
+					result.append(pass.toString());
+				}
 			}
-		}
 		return result.toString();
 	}
 

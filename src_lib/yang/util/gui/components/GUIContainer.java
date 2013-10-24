@@ -42,7 +42,7 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 						result = null;
 
 					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
-						if(mGUI.mPressedComponent[pointerEvent.mId]==this)
+						if(mGUI.mPressedComponent[pointerEvent.mId]==result)
 							component.guiClick(guiEvent);
 					}
 
@@ -56,7 +56,7 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 					return result;
 				}
 			}
-			if(mGUI.mPressedComponent==null)
+			if(mGUI.mPressedComponent[pointerEvent.mId]==null)
 				return super.rawPointerEvent(pointerEvent);
 			else
 				return null;

@@ -4,22 +4,25 @@ import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.meshcreators.BillboardsCreator;
 
 public abstract class ParticleRingBuffer3D<ParticleType extends Particle>  extends AbstractParticleRingBuffer<Default3DGraphics,ParticleType> {
-	
+
 	public BillboardsCreator mBillboardsCreator;
-	
+
+	@Override
 	public ParticleRingBuffer3D<ParticleType> init(Default3DGraphics graphics,int maxParticleCount) {
 		super.init(graphics,maxParticleCount);
 		mBillboardsCreator = new BillboardsCreator(graphics);
 		return this;
 	}
-	
+
+	@Override
 	protected abstract ParticleType createParticle();
-	
+
+	@Override
 	protected void drawParticles() {
 		mGraphics.setBlack();
-		
-		mBillboardsCreator.begin();
-		for(ParticleType particle:mParticles) {
+
+		//mBillboardsCreator.begin();
+		for(final ParticleType particle:mParticles) {
 			if(particle.mExists) {
 				if(mAlphaSpeed==0) {
 					mGraphics.setColor(particle.mColor);
@@ -49,8 +52,8 @@ public abstract class ParticleRingBuffer3D<ParticleType extends Particle>  exten
 				mGraphics.putColorRect(mGraphics.mCurColor);
 			}
 		}
-		
+
 		mBillboardsCreator.finish();
 	}
-	
+
 }
