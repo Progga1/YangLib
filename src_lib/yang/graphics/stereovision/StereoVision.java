@@ -18,6 +18,8 @@ public class StereoVision {
 	public static TextureWrap WRAP_MODE = TextureWrap.CLAMP;
 	public static boolean LENS_DISTORTION = true;
 
+	public static float DEFAULT_INTEROCULAR_DISTANCE = 0.064f;
+
 	public int mResolution;
 	private GraphicsTranslator mGraphics;
 	private MinimumTexShader mMinimumShader;
@@ -25,7 +27,7 @@ public class StereoVision {
 	public IndexedVertexBuffer mStereoVertexBuffer = null;
 	public TextureRenderTarget mStereoLeftRenderTarget = null;
 	public TextureRenderTarget mStereoRightRenderTarget = null;
-	public float mInterOcularDistance = 0.064f;
+	public float mInterOcularDistance = DEFAULT_INTEROCULAR_DISTANCE;
 	public float mLensShift = 0.16f;
 
 	public void setLensParameters(float x,float y,float z,float w) {

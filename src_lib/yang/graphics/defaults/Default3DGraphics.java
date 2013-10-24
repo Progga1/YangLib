@@ -246,6 +246,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void setCameraByTransform(YangMatrix cameraTransform) {
 		cameraTransform.asInverted(mCameraMatrix.mValues);
+		refreshCamera();
 	}
 
 	@Override
