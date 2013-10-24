@@ -12,10 +12,10 @@ public class Util {
 		public static final long MILLISEC	= 1000L * MICROSEC;
 		public static final long SEC		= 1000L * MILLISEC;
 	}
-	
+
 	public static String bufferToString(ByteBuffer byteBuffer,int size) {
 		String res = "";
-		int savePos = byteBuffer.position();
+		final int savePos = byteBuffer.position();
 		byteBuffer.position(0);
 		for(int i=0;i<size;i++) {
 			if(i>0)
@@ -25,14 +25,14 @@ public class Util {
 		byteBuffer.position(savePos);
 		return res;
 	}
-	
+
 	public static String bufferToString(ByteBuffer byteBuffer) {
 		return bufferToString(byteBuffer,byteBuffer.capacity());
 	}
-	
+
 	public static String bufferToString(FloatBuffer floatBuffer,int size) {
 		String res = "";
-		int savePos = floatBuffer.position();
+		final int savePos = floatBuffer.position();
 		floatBuffer.position(0);
 		for(int i=0;i<size;i++) {
 			if(i>0)
@@ -42,14 +42,14 @@ public class Util {
 		floatBuffer.position(savePos);
 		return res;
 	}
-	
+
 	public static String bufferToString(FloatBuffer floatBuffer) {
 		return bufferToString(floatBuffer,floatBuffer.position());
 	}
-	
+
 	public static String bufferToString(IntBuffer intBuffer,int size) {
 		String res = "";
-		int savePos = intBuffer.position();
+		final int savePos = intBuffer.position();
 		intBuffer.position(0);
 		for(int i=0;i<size;i++) {
 			if(i>0)
@@ -59,14 +59,14 @@ public class Util {
 		intBuffer.position(savePos);
 		return res;
 	}
-	
+
 	public static String bufferToString(IntBuffer intBuffer) {
 		return bufferToString(intBuffer,intBuffer.position());
 	}
-	
+
 	public static String bufferToString(ShortBuffer shortBuffer,int size) {
 		String res = "";
-		int savePos = shortBuffer.position();
+		final int savePos = shortBuffer.position();
 		shortBuffer.position(0);
 		for(int i=0;i<size;i++) {
 			if(i>0)
@@ -76,11 +76,11 @@ public class Util {
 		shortBuffer.position(savePos);
 		return res;
 	}
-	
+
 	public static String bufferToString(ShortBuffer shortBuffer) {
 		return bufferToString(shortBuffer,shortBuffer.position());
 	}
-	
+
 	public static String intArrayToString(int[] array) {
 		String res = "";
 		for(int i=0;i<array.length;i++){
@@ -90,7 +90,7 @@ public class Util {
 		}
 		return res;
 	}
-	
+
 	public static float round(float value,int factor) {
 		return ((int)(value*factor))/(float)factor;
 	}
@@ -101,23 +101,23 @@ public class Util {
 		if(array==null)
 			return "NULL_ARRAY";
 		String result="";
-		for(T t:array) {
+		for(final T t:array) {
 			if(result!="")
 				result += separator;
 			result += t;
 		}
 		return result;
 	}
-	
+
 	public static <T> String arrayToString(T[] array) {
 		return arrayToString(array,"\n");
 	}
-	
+
 	public static String arrayToString(float[] array,String separator,int spaceEvery) {
 		//String result = "length="+array.length;
 		int c = 0;
 		String result="";
-		for(float t:array) {
+		for(final float t:array) {
 			if(result!="") {
 				result += separator;
 				if(spaceEvery>0 && (c%spaceEvery==0))
@@ -128,12 +128,12 @@ public class Util {
 		}
 		return result;
 	}
-	
+
 	public static String arrayToString(short[] array,String separator,int spaceEvery) {
 		//String result = "length="+array.length;
 		int c = 0;
 		String result="";
-		for(short t:array) {
+		for(final short t:array) {
 			if(result!="") {
 				result += separator;
 				if(spaceEvery>0 && (c%spaceEvery==0))
@@ -144,14 +144,14 @@ public class Util {
 		}
 		return result;
 	}
-	
+
 	public static String arrayToString(float[][] array,String separator,int spaceEvery) {
 		//String result = "length="+array.length;
 		String result="";
-		for(float[] row:array) {
+		for(final float[] row:array) {
 			int c = 0;
 			String line = "";
-			for(float f:row) {
+			for(final float f:row) {
 				if(line!="") {
 					line += separator;
 					if(spaceEvery>0 && (c%spaceEvery==0))
@@ -167,16 +167,16 @@ public class Util {
 		}
 		return result;
 	}
-	
+
 	public static String arrayToString(float[][] array) {
 		return arrayToString(array," ",0);
 	}
-	
+
 	public static String arrayToString(int[] array,String separator,int spaceEvery) {
 		//String result = "length="+array.length;
 		int c = 0;
 		String result="";
-		for(float t:array) {
+		for(final float t:array) {
 			if(result!="") {
 				result += separator;
 				if(spaceEvery>0 && (c%spaceEvery==0))
@@ -187,10 +187,10 @@ public class Util {
 		}
 		return result;
 	}
-	
+
 	public static String getClassName(Object object,String ignoreEnding) {
-		String name = object.getClass().getName();
-		int start = name.lastIndexOf(".")+1;
+		final String name = object.getClass().getName();
+		final int start = name.lastIndexOf(".")+1;
 		int end = name.indexOf("$");
 		if(end<0)
 			end = name.length();
@@ -201,14 +201,14 @@ public class Util {
 	}
 
 	public static String getClassName(Object object) {
-		String name = object.getClass().getName();
-		int start = name.lastIndexOf(".")+1;
+		final String name = object.getClass().getName();
+		final int start = name.lastIndexOf(".")+1;
 		int end = name.indexOf("$");
 		if(end<0)
 			end = name.length();
 		return name.substring(start,end);
 	}
-	
+
 	public static String minLengthString(String string,int minChars,char fillChar) {
 		while(string.length()<minChars)
 			string = fillChar+string;
@@ -216,7 +216,7 @@ public class Util {
 	}
 
 	public static String stringToLineNumbersString(String[] lines) {
-		StringBuilder result = new StringBuilder();
+		final StringBuilder result = new StringBuilder();
 		for(int i=0;i<lines.length;i++) {
 			result.append(minLengthString(""+i,3,' '));
 			result.append(": ");
@@ -225,11 +225,11 @@ public class Util {
 		}
 		return result.toString();
 	}
-	
+
 	public static String stringToLineNumbersString(String string) {
 		return stringToLineNumbersString(string.split("\n"));
 	}
-	
+
 	public static int hexCharToInt(char hexChar) {
 		if(hexChar>='0' && hexChar<='9')
 			return hexChar-'0';
@@ -239,7 +239,7 @@ public class Util {
 			return hexChar-'a'+10;
 		else
 			return -1;
-			
+
 	}
 
 	public static <ElementType> ElementType[] resizeArray(ElementType[] array, ElementType[] newArray) {
@@ -250,5 +250,24 @@ public class Util {
 			return newArray;
 		}
 	}
-	
+
+	//TODO very inefficient
+	public static float wrapValueRepeat(float value, float minValue, float maxValue) {
+		final float delta = maxValue-minValue;
+		while(value>maxValue)
+			value -= delta;
+		while(value<minValue)
+			value += delta;
+		return value;
+	}
+
+	public static float wrapValueClamp(float value, float minValue, float maxValue) {
+		if(value>maxValue)
+			return maxValue;
+		if(value<minValue)
+			return minValue;
+		else
+			return value;
+	}
+
 }

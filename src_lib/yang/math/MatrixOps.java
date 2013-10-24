@@ -66,8 +66,8 @@ public class MatrixOps {
 		final float sinA = (float)Math.sin(angle);
 		final float cosA = (float)Math.cos(angle);
 		target[M00] = cosA;
-		target[M20] = sinA;
-		target[M02] = -sinA;
+		target[M20] = -sinA;
+		target[M02] = sinA;
 		target[M22] = cosA;
 	}
 

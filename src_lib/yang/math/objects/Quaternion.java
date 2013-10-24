@@ -2,9 +2,14 @@ package yang.math.objects;
 
 import yang.math.MathConst;
 import yang.math.objects.matrix.YangMatrix;
+import yang.model.DebugYang;
+import yang.util.Util;
 
 public class Quaternion {
 
+	public static final float PI = MathConst.PI;
+	public static final float PI2 = 2*MathConst.PI;
+	public static final float PI_HALF = 0.5f*MathConst.PI;
 	public static final Quaternion IDENTITY = new Quaternion(0,0,0,1);
 
 	public float mX,mY,mZ,mW;
@@ -68,8 +73,53 @@ public class Quaternion {
 	/**
 	 * Order: YXZ
 	 */
+	public void setFromEulerLegacy(float yaw,float pitch,float roll) {
+		DebugYang.stateString(yaw+"\n");
+		DebugYang.appendStateLn(pitch);
+		DebugYang.appendStateLn(roll);
+		yaw = Util.wrapValueClamp(yaw,-PI,PI)*0.5f;
+		pitch = Util.wrapValueClamp(pitch,-PI,PI)*0.5f;
+		roll = Util.wrapValueClamp(roll,-PI,PI)*0.5f;
+		DebugYang.appendStateLn(yaw);
+		DebugYang.appendStateLn(pitch);
+		DebugYang.appendStateLn(roll);
+		final float s1 = (float)Math.sin(pitch);
+		final float c1 = (float)Math.cos(pitch);
+		final float s2 = (float)Math.sin(yaw);
+		final float c2 = (float)Math.cos(yaw);
+		final float s3 = (float)Math.sin(roll);
+		final float c3 = (float)Math.cos(roll);
+		mW = c1*c2*c3 - s1*s2*s3;
+		mX = s1*c2*c3 - c1*s2*s3;
+		mY = c1*s2*c3 + s1*c2*s3;
+		mZ = c1*c2*s3 - s1*s2*c3;
+		DebugYang.appendStateLn();
+		DebugYang.appendStateLn(mW);
+		DebugYang.appendStateLn(mX);
+		DebugYang.appendStateLn(mY);
+		DebugYang.appendStateLn(mZ);
+	}
+
+
 	public void setFromEuler(float yaw,float pitch,float roll) {
-		yaw *= 0.5f;
+		yaw *= -0.5f;
+		pitch *= -0.5f;
+		roll *= -0.5f;
+		final float s1 = (float)Math.sin(pitch);
+		final float c1 = (float)Math.cos(pitch);
+		final float s2 = (float)Math.sin(yaw);
+		final float c2 = (float)Math.cos(yaw);
+		final float s3 = (float)Math.sin(roll);
+		final float c3 = (float)Math.cos(roll);
+		this.setIdentity();
+		this.multRight(0,0,s3,c3);
+		this.multRight(s1,0,0,c1);
+		this.multRight(0,s2,0,c2);
+
+	}
+
+	public void setFromEuler3(float yaw,float pitch,float roll) {
+		yaw *= -0.5f;
 		pitch *= -0.5f;
 		roll *= -0.5f;
 		final float s1 = (float)Math.sin(pitch);
@@ -219,6 +269,16 @@ public class Quaternion {
 		mY = mW*rhq.mY - x*rhq.mZ + y*rhq.mW + z*rhq.mX;
 		mZ = mW*rhq.mZ + x*rhq.mY - y*rhq.mX + z*rhq.mW;
 		mW = mW*rhq.mW - x*rhq.mX - y*rhq.mY - z*rhq.mZ;
+	}
+
+	public void multRight(float rhqX,float rhqY,float rhqZ,float rhqW) {
+		final float x = mX;
+		final float y = mY;
+		final float z = mZ;
+		mX = mW*rhqX + x*rhqW + y*rhqZ - z*rhqY;
+		mY = mW*rhqY - x*rhqZ + y*rhqW + z*rhqX;
+		mZ = mW*rhqZ + x*rhqY - y*rhqX + z*rhqW;
+		mW = mW*rhqW - x*rhqX - y*rhqY - z*rhqZ;
 	}
 
 	public void toRotationMatrix(float[] target) {

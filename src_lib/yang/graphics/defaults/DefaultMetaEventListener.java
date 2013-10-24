@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 
 import yang.events.Keys;
 import yang.events.YangEventQueue;
-import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.SurfacePointerEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.stereovision.LensDistortionShader;
@@ -20,18 +20,18 @@ public class DefaultMetaEventListener implements YangEventListener {
 	private boolean mRecording = false;
 	private boolean mCtrlPressed = false;
 	private boolean mShiftPressed = false;
-	private HeadMovement mHead = new HeadMovement();
-	
+	private final HeadMovement mHead = new HeadMovement();
+
 	public DefaultMetaEventListener(YangSurface surface) {
 		mSurface = surface;
 		initMetaKeys();
 	}
-	
+
 	protected void initMetaKeys() {
-		YangEventQueue eventQueue = mSurface.mEventQueue;
+		final YangEventQueue eventQueue = mSurface.mEventQueue;
 		eventQueue.setMetaKeys(Keys.F1,12);
 	}
-	
+
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		return false;
@@ -41,37 +41,37 @@ public class DefaultMetaEventListener implements YangEventListener {
 	public void pointerDown(float x, float y, SurfacePointerEvent event) {
 		if(mCtrlPressed) {
 			if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
-				mSurface.mGraphics.mStereoCameraMatrixEnabled = false;
+				mSurface.mGraphics.mSensorCameraEnabled = false;
 				mHead.reset();
 			}
-				
+
 		}
 	}
 
 	@Override
 	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
-		
+
 	}
 
 	@Override
 	public void pointerDragged(float x, float y, SurfacePointerEvent event) {
-		if(mCtrlPressed) {
-			mSurface.mGraphics.mStereoCameraMatrixEnabled = true;
-			if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
-				mHead.mYaw += event.mDeltaX;
-				mHead.mPitch += event.mDeltaY;
-			}
-			if(event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
-				mHead.mRoll += event.mDeltaX;
-				mHead.mPitch += event.mDeltaY;
-			}
-			mSurface.mGraphics.mStereoCameraMatrix.set(mHead.getUpdatedMatrix());
-		}
+//		if(mCtrlPressed) {
+//			mSurface.mGraphics.mSensorCameraEnabled = true;
+//			if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
+//				mHead.mYaw += event.mDeltaX;
+//				mHead.mPitch += event.mDeltaY;
+//			}
+//			if(event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
+//				mHead.mRoll += event.mDeltaX;
+//				mHead.mPitch += event.mDeltaY;
+//			}
+//			mSurface.mGraphics.mStereoCameraMatrix.set(mHead.getUpdatedMatrix());
+//		}
 	}
 
 	@Override
 	public void pointerUp(float x, float y, SurfacePointerEvent event) {
-		
+
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 			mShiftPressed = true;
 		if(code==Keys.CTRL)
 			mCtrlPressed = true;
-		
+
 		if(code==Keys.F1) {
 			if(mSurface.isInactive())
 				mSurface.simulateResume();
@@ -127,7 +127,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 				mRecording = true;
 				try {
 					mSurface.recordMacro("macro.ym");
-				} catch (FileNotFoundException e) {
+				} catch (final FileNotFoundException e) {
 					DebugYang.exception(e);
 				}
 			}
@@ -135,10 +135,10 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 		if(code==Keys.F12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
 			mSurface.playMacro("macro.ym");
-		
-		
+
+
 		if(mSurface.mStereoVision!=null) {
-			LensDistortionShader stereoShader = mSurface.mStereoVision.mLensDistortionShader;
+			final LensDistortionShader stereoShader = mSurface.mStereoVision.mLensDistortionShader;
 			final float STEPS = 0.01f;
 			if(code=='a')
 				stereoShader.mScaleX += STEPS;
@@ -162,7 +162,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 				mSurface.mStereoVision.mInterOcularDistance -= 0.002f;
 			if(code=='p')
 				System.out.println("scale="+stereoShader.mScaleX+":"+stereoShader.mScaleY+", scaleToLens="+stereoShader.mScaleToLens+", shift="+mSurface.mStereoVision.mLensShift+", distance="+mSurface.mStereoVision.mInterOcularDistance);
-				
+
 		}
 	}
 
@@ -176,12 +176,12 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void zoom(float factor) {
-		
+
 	}
 
 	@Override
 	public void sensorChanged(YangSensorEvent event) {
-		
+
 	}
 
 }

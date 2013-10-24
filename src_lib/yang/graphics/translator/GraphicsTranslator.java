@@ -41,7 +41,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public static GraphicsTranslator INSTANCE;
 	public static GraphicsTranslator appInstance;
 	public static int FPS_REFRESH_FRAMES = 20;
-	
+
 	//Properties
 	public String mDriverKey;
 	public int mScreenWidth;
@@ -51,14 +51,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mInvRatioX;
 	public float mInvRatioY;
 	public long mThreadId;
-	private NonConcurrentList<SurfaceListener> mScreenListeners;
+	private final NonConcurrentList<SurfaceListener> mScreenListeners;
 	public float mMinRatioX = 1;
 	public float mMaxTime = 60;
 	private int mMaxTextureId = -1;
 	public boolean mStereo = false;
-	public YangMatrix mStereoCameraMatrix;
+	public YangMatrix mSensorCameraMatrix;
 	public boolean mForceStereo = false;
-	
+
 	//State
 	protected Texture[] mCurrentTextures;
 	public IndexedVertexBuffer mCurrentVertexBuffer;
@@ -77,14 +77,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public boolean mForceWireFrames = false;
 	private GraphicsState mSavedState;
 	private long mTargetTime = 0;
-	private TextureRenderTarget[] mRenderTargetStack = new TextureRenderTarget[MAX_NESTED_RENDERTARGETS];
+	private final TextureRenderTarget[] mRenderTargetStack = new TextureRenderTarget[MAX_NESTED_RENDERTARGETS];
 	private int mRenderTargetStackPos = -1;
 	public float mCameraShiftX = 0;
-	
+
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
-	
+
 	//Counters
 	public int mPolygonCount;
 	public int mDynamicPolygonCount;
@@ -94,28 +94,28 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public int mBatchCount;
 	public int mTexBindCount;
 	public int mShaderSwitchCount;
-	
+
 	//Persistent
 	public Texture mWhiteTexture;
 	public Texture mBlackTexture;
-	private Texture mNoTexture;
+	private final Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
-	private NonConcurrentList<TextureRenderTarget> mRenderTargets;
-	private NonConcurrentList<Texture> mRegisteredTextures;
-	private NonConcurrentList<AbstractProgram> mPrograms;
+	private final NonConcurrentList<TextureRenderTarget> mRenderTargets;
+	private final NonConcurrentList<Texture> mRegisteredTextures;
+	private final NonConcurrentList<AbstractProgram> mPrograms;
 	private ShortBuffer mWireFrameIndexBuffer;
 	private int mMaxFPS;
 	private long mMinDrawFrameIntervalNanos;
-	
+
 	//Helpers
 	protected final int[] mTempInt = new int[1];
 	protected final int[] mTempInt2 = new int[1];
 	protected final int[] mTempIntArray = new int[128];
 	public int mRestartCount = 0;
 	public AbstractProgram mCurrentProgram = null;
-	public boolean mStereoCameraMatrixEnabled = false;
-	public YangMatrix mDebugMatrix = new YangMatrix();
-	
+	public boolean mSensorCameraEnabled = false;
+	public YangMatrix mSensorOrientationMatrix = new YangMatrix();
+
 	public abstract void setClearColor(float r, float g, float b,float a);
 	public abstract void clear(int mask);
 	protected abstract void genTextures(int[] target,int count);
@@ -144,11 +144,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void disable(int glConstant);
 	public abstract void setScissorRectI(int x,int y,int width,int height);
 	public abstract void switchZWriting(boolean enable);
-	
+
 	protected void postInit() { }
-	
+
 	//TODO: glColorMask
-	
+
 	public static String errorCodeToString(int code) {
 		switch(code) {
 		case 1280: return "GL_INVALID_ENUM";
@@ -161,21 +161,21 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		default: return "CODE: "+code+"/0x" + Integer.toHexString(code);
 		}
 	}
-	
+
 	public boolean preCheck(String message) {
 		if(mThreadId!=Thread.currentThread().getId()) {
 			throw new RuntimeException("Non-GL-thread");
 		}
 		return checkErrorInst(message,true);
 	}
-	
+
 	public boolean checkErrorInst(String message) {
 		if(mThreadId!=Thread.currentThread().getId()) {
 			throw new RuntimeException("Non-GL-thread");
 		}
 		return checkErrorInst(message,false);
 	}
-	
+
 	public static int byteFormatBytes(ByteFormat byteFormat) {
 		switch(byteFormat) {
 		case BYTE: return 1;
@@ -185,12 +185,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		default: return 1;
 		}
 	}
-	
+
 	public GraphicsTranslator() {
 		INSTANCE = this;
 		mCurrentTextures = new Texture[MAX_TEXTURES];
 		mProjScreenTransform = new YangMatrixCameraOps();
-		mStereoCameraMatrix = new YangMatrix();
+		mSensorCameraMatrix = new YangMatrix();
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
 		mFlushDisabled = false;
@@ -208,15 +208,16 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mRegisteredTextures = new NonConcurrentList<Texture>();
 		setMaxFPS(0);
 	}
-	
+
 	public void addScreenListener(SurfaceListener listener) {
 		mScreenListeners.add(listener);
 	}
-	
+
+	@Override
 	public YangMatrix createTransformationMatrix() {
 		return new YangMatrix();
 	}
-	
+
 	private void start() {
 		mRenderTargetStackPos = -1;
 		mThreadId = Thread.currentThread().getId();
@@ -243,51 +244,51 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mBlackTexture.update(buf);
 		}
 		assert checkErrorInst("Create def textures");
-		
+
 		enable(GLOps.BLEND);
 		setBlendFunction(GLBlendFuncs.ONE,GLBlendFuncs.ONE_MINUS_SRC_ALPHA);
 		switchCulling(false);
 		setCullMode(false);
 		mLstTimestamp = -1;
 	}
-	
+
 	public final void init() {
 		start();
-		
+
 		postInit();
 		assert checkErrorInst("Start graphics translator");
 	}
-	
+
 	public void restart() {
-		for(AbstractProgram program:mPrograms) {
+		for(final AbstractProgram program:mPrograms) {
 			program.restart();
 		}
-		for(Texture texture:mRegisteredTextures) {
+		for(final Texture texture:mRegisteredTextures) {
 			texture.generate();
 			texture.resetData();
 		}
 		start();
-		for(TextureRenderTarget renderTarget:mRenderTargets) {
+		for(final TextureRenderTarget renderTarget:mRenderTargets) {
 			derivedCreateRenderTarget(renderTarget.mTargetTexture);
 		}
 		mRestartCount++;
 	}
-	
-	
+
+
 	public int genTexture() {
 		genTextures(mTempInt,1);
 		if(mTempInt[0]>mMaxTextureId)
 			mMaxTextureId = mTempInt[0];
 		return mTempInt[0];
 	}
-	
+
 	public int getMaxTexId() {
 		return mMaxTextureId;
 	}
-	
+
 	public void setTextureData(int texId,int width,int height, ByteBuffer buffer, TextureProperties textureProperties) {
 		setTextureData(texId,width,height,textureProperties.mChannels,buffer);
-		
+
 		switch(textureProperties.mWrapX) {
 		case CLAMP: setTextureParameter(GLTex.GL_TEXTURE_WRAP_S, GLTex.GL_CLAMP_TO_EDGE); break;
 		case REPEAT: setTextureParameter(GLTex.GL_TEXTURE_WRAP_S, GLTex.GL_REPEAT); break;
@@ -299,12 +300,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		case MIRROR: setTextureParameter(GLTex.GL_TEXTURE_WRAP_T, GLTex.GL_MIRRORED_REPEAT); break;
 		}
 		assert checkErrorInst("Set texture wrap");
-		
+
 		switch(textureProperties.mFilter) {
 		case NEAREST:
 			setTextureParameter(GLTex.GL_TEXTURE_MAG_FILTER, GLTex.GL_NEAREST);
 			setTextureParameter(GLTex.GL_TEXTURE_MIN_FILTER, GLTex.GL_NEAREST);
-			break;		
+			break;
 		default:
 			setTextureParameter(GLTex.GL_TEXTURE_MAG_FILTER, GLTex.GL_LINEAR);
 			setTextureParameter(GLTex.GL_TEXTURE_MIN_FILTER, GLTex.GL_LINEAR);
@@ -320,11 +321,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		assert checkErrorInst("Set texture filter ("+textureProperties.mFilter+")");
 	}
-	
+
 	public void setTextureData(Texture targetTexture,ByteBuffer data) {
 		setTextureData(targetTexture.getId(),targetTexture.getWidth(),targetTexture.getHeight(),data,targetTexture.mProperties);
 	}
-	
+
 	public final void bindTexture(Texture texture,int level) {
 		assert checkErrorInst("PRE bind texture");
 		if(texture!=mCurrentTextures[level] && (texture!=null || mCurrentTextures[level]!=mWhiteTexture)) {
@@ -337,7 +338,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		assert checkErrorInst("bind texture");
 	}
-	
+
 	public final void bindTextureNoFlush(Texture texture,int level) {
 		assert checkErrorInst("PRE bind texture");
 		if(texture!=mCurrentTextures[level] && (texture!=null || mCurrentTextures[level]!=mWhiteTexture)) {
@@ -349,25 +350,25 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		assert checkErrorInst("bind texture");
 	}
-	
+
 	public final void bindTexture(Texture texture) {
 		bindTexture(texture,0);
 	}
-	
+
 	public void bindTextureInHolder(TextureHolder textureHolder) {
 		if(textureHolder==null)
 			bindTexture(null);
 		else
 			bindTexture(textureHolder.getTexture(mGFXLoader));
 	}
-	
+
 	public final void rebindTexture(int level) {
 		if(mCurrentTextures[level]==null)
 			mCurrentTextures[level] = mWhiteTexture;
 		mTexBindCount++;
 		bindTexture(mCurrentTextures[level].getId(),0);
 	}
-	
+
 	public final void rebindTextures() {
 		for(int i=0;i<MAX_TEXTURES;i++) {
 			if(mCurrentTextures[i]==null)
@@ -376,50 +377,54 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			bindTexture(mCurrentTextures[i].getId(),0);
 		}
 	}
-	
+
 	public void unbindTexture(int level) {
 		mCurrentTextures[level] = mNoTexture;
 	}
-	
+
 	public void unbindTextures() {
 		for(int i=0;i<MAX_TEXTURES;i++) {
 			if(mCurrentTextures[i]==null)
 				return;
 			mCurrentTextures[i] = mNoTexture;
-			
+
 		}
 	}
-	
+
+	@Override
 	public int getSurfaceWidth() {
 		return mScreenWidth;
 	}
-	
+
+	@Override
 	public int getSurfaceHeight() {
 		return mScreenHeight;
 	}
-	
+
+	@Override
 	public float getSurfaceRatioX() {
 		return mRatioX;
 	}
-	
+
+	@Override
 	public float getSurfaceRatioY() {
 		return mRatioY;
 	}
-	
+
 	public float toNormX(float x) {
 		return (x - mScreenWidth / 2) / mScreenWidth * 2 * mRatioX;
 	}
-	
+
 	public float toNormY(float y) {
 		return -(y - mScreenHeight / 2) / mScreenHeight * 2 * mRatioY;
 	}
-	
+
 	public IndexedVertexBuffer createUninitializedVertexBuffer(boolean dynamicVertices,boolean dynamicIndices,int maxIndices,int maxVertices) {
 		return new UniversalVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices);
 	}
-	
+
 	public Texture createSingleColorTexture(int width,int height,TextureProperties texProperties,FloatColor fillColor) {
-		Texture texture = createTexture();
+		final Texture texture = createTexture();
 		if(fillColor==null) {
 			texture.initCompletely(null, width, height, texProperties);
 		}else{
@@ -428,52 +433,52 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 		return texture;
 	}
-	
+
 	public Texture createEmptyTexture(int width,int height,TextureProperties texProperties) {
-		Texture texture = createTexture();
+		final Texture texture = createTexture();
 		texture.initCompletely(null, width,height, texProperties);
 		return texture;
 	}
-	
+
 	public Texture createSingleColorTexture(FloatColor color) {
 		return createSingleColorTexture(2,2,new TextureProperties(TextureWrap.CLAMP,TextureFilter.NEAREST),color);
 	}
-	
+
 	public void registerTexture(Texture texture) {
 		if(!mRegisteredTextures.contains(texture))
 			mRegisteredTextures.add(texture);
 	}
-	
+
 	public void unregisterTexture(Texture texture) {
 		mRegisteredTextures.remove(texture);
 	}
-	
+
 	public Texture createTexture(TextureProperties properties) {
-		Texture result = new Texture(this,properties);
+		final Texture result = new Texture(this,properties);
 		registerTexture(result);
 		return result;
 	}
-	
+
 	public Texture createTexture() {
 		return createTexture(null);
 	}
-	
+
 	public Texture createAndInitTexture(ByteBuffer source, int width, int height, TextureProperties settings) {
 		source.rewind();
-		Texture result = createTexture();
+		final Texture result = createTexture();
 		result.initCompletely(source,width,height,settings);
 		return result;
 	}
-	
+
 	public Texture createAndInitTexture(TextureData textureData, TextureProperties properties) {
 		properties.mChannels = textureData.mChannels;
 		return createAndInitTexture(textureData.mData,textureData.mWidth,textureData.mHeight,properties);
 	}
-	
+
 	public void setDrawListener(DrawListener drawListener) {
 		mCurDrawListener = drawListener;
 	}
-	
+
 	public <ShaderType extends AbstractProgram> ShaderType addProgram(ShaderType program) {
 		assert preCheck("Add program");
 		program.init(this);
@@ -481,23 +486,23 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		assert checkErrorInst("Add program");
 		return program;
 	}
-	
+
 	public <ShaderType extends BasicProgram> ShaderType addProgram(Class<ShaderType> program) {
-		
+
 		try {
 			return addProgram(program.newInstance());
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void flush() {
 		assert checkErrorInst("PRE flush");
 		if(mFlushDisabled || mCurrentVertexBuffer==null)
 			return;
-		int vertexCount = mCurrentVertexBuffer.getCurrentIndexWriteCount();
+		final int vertexCount = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		if(vertexCount>0) {
 			prepareDraw();
 			assert preCheck("Prepare draw");
@@ -509,7 +514,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		assert checkErrorInst("Flush");
 	}
-	
+
 	public void prepareDraw() {
 		assert preCheck("Prepare draw vertices");
 		mCurDrawListener.onPreDraw();
@@ -517,14 +522,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mCurrentVertexBuffer.reset();
 		mCurDrawListener.bindBuffers();
 	}
-	
+
 	public void setMaxFPS(int fps) {
 		if(fps<=0)
 			fps = Integer.MAX_VALUE;
 		mMaxFPS = fps;
 		mMinDrawFrameIntervalNanos = 1000000000/fps;
 	}
-	
+
 	public final void measureTime() {
 		mTargetTime += mMinDrawFrameIntervalNanos;
 		long curTime = System.nanoTime();
@@ -534,14 +539,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			else{
 				try {
 					Thread.sleep((long) ((mTargetTime-curTime)*0.000001));
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					e.printStackTrace();
 				}
 				curTime = System.nanoTime();
 			}
-				
+
 			final float TO_SEC = 0.000000001f;
-		
+
 			mCurFrameDeltaTime = (curTime-mLstTimestamp)*TO_SEC;
 //			if(mCurFrameDeltaTime<mMinDrawFrameInterval) {
 //				try {
@@ -569,7 +574,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		mLstTimestamp = curTime;
 	}
-	
+
 	public void beginFrame() {
 		mFrameCount++;
 		measureTime();
@@ -582,29 +587,29 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mTexBindCount = 0;
 		mShaderSwitchCount = 0;
 	}
-	
+
 	public void endFrame() {
 		flush();
 	}
-	
+
 	public final void clear(float r, float g, float b) {
 		assert preCheck("clear");
 		setClearColor(r,g,b,1);
 		clear(GLMasks.COLOR_BUFFER_BIT);
 	}
-	
+
 	public final void clear(float r, float g, float b,float a,int additionalMask) {
 		assert preCheck("clear");
 		setClearColor(r,g,b,a);
 		clear(GLMasks.COLOR_BUFFER_BIT | additionalMask);
 	}
-	
+
 	public final void clear(float r, float g, float b,int additionalMask) {
 		assert preCheck("clear");
 		setClearColor(r,g,b,1);
 		clear(GLMasks.COLOR_BUFFER_BIT | additionalMask);
 	}
-	
+
 	public void clear(FloatColor color,int additionalMask) {
 		assert preCheck("clear");
 		clear(color.mValues[0], color.mValues[1], color.mValues[2],color.mValues[3],additionalMask);
@@ -615,21 +620,21 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			derivedSetAttributeBuffer(handle,bufferIndex,mCurrentVertexBuffer);
 		}
 	}
-	
+
 	public void drawVertices(int bufferStart, int vertexCount,int mode) {
 		assert preCheck("Draw vertices");
 		mPolygonCount += vertexCount/3;
 		mDrawCount++;
 		ShortBuffer indexBuffer = mCurrentVertexBuffer.mIndexBuffer;
-		indexBuffer.position(bufferStart);	
+		indexBuffer.position(bufferStart);
 
 		if(mForceWireFrames) {
-			int cap = indexBuffer.capacity();
+			final int cap = indexBuffer.capacity();
 			if(mWireFrameIndexBuffer==null || mWireFrameIndexBuffer.capacity()<cap*2)
 				mWireFrameIndexBuffer = ByteBuffer.allocateDirect(cap*2*2).order(ByteOrder.nativeOrder()).asShortBuffer();
 			mWireFrameIndexBuffer.position(0);
 			for(int i=0;i<vertexCount;i+=3) {
-				short first = indexBuffer.get();
+				final short first = indexBuffer.get();
 				mWireFrameIndexBuffer.put(first);
 				short to =  indexBuffer.get();
 				mWireFrameIndexBuffer.put(to);
@@ -649,32 +654,32 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			drawDefaultVertices(bufferStart,vertexCount,mForceWireFrames,indexBuffer);
 		}
 	}
-	
+
 	public void drawBuffer(IndexedVertexBuffer buffer,int bufferStart,int vertexCount,int mode) {
-		IndexedVertexBuffer prevBuffer = mCurrentVertexBuffer;
+		final IndexedVertexBuffer prevBuffer = mCurrentVertexBuffer;
 		setVertexBuffer(buffer);
 		prepareDraw();
 		drawVertices(bufferStart,vertexCount,mode);
 		setVertexBuffer(prevBuffer);
 	}
-	
+
 	public void drawBufferDirectly(IndexedVertexBuffer buffer,int bufferStart,int vertexCount,int mode) {
-		IndexedVertexBuffer prevBuffer = mCurrentVertexBuffer;
+		final IndexedVertexBuffer prevBuffer = mCurrentVertexBuffer;
 		mCurrentVertexBuffer = buffer;
 		drawVertices(bufferStart,vertexCount,mode);
 		mCurrentVertexBuffer = prevBuffer;
 	}
-	
+
 	public void drawBuffer(IndexedVertexBuffer buffer) {
 		drawBuffer(buffer,0,buffer.getIndexCount(),T_TRIANGLES);
 	}
-	
+
 	public void setVertexBuffer(IndexedVertexBuffer vertexBuffer) {
 		assert preCheck("Set vertex buffer");
 		mCurrentVertexBuffer = vertexBuffer;
 		vertexBuffer.setAsCurrent();
 	}
-	
+
 	public void setSurfaceSize(int width, int height, boolean stereo) {
 		mStereo = stereo;
 		setViewPort(width,height);
@@ -693,44 +698,44 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mRatioX *= StereoVision.RATIO_FAC;
 		mInvRatioX = 1/mRatioX;
 		mInvRatioY = 1/mRatioY;
-		
+
 		mProjScreenTransform.setOrthogonalProjection(-mRatioX,mRatioX, mRatioY,-mRatioY, -1,1);
 		mProjScreenTransform.refreshInverted();
-		
-		for(SurfaceListener surfaceListener:mScreenListeners) {
+
+		for(final SurfaceListener surfaceListener:mScreenListeners) {
 			surfaceListener.onSurfaceSizeChanged(width, height);
 		}
 	}
-	
+
 	public static YangMatrix newTransformationMatrix() {
 		return appInstance.createTransformationMatrix();
 	}
-	
+
 	protected void updateTexture(Texture texture, ByteBuffer source, int left,int top, int width,int height) {
-		
+
 	}
-	
+
 	public void deleteTexture(int id) {
 		assert preCheck("Delete texture");
 		mTempInt[0] = id;
 		deleteTextures(mTempInt);
 		assert checkErrorInst("Delete texture");
 	}
-	
+
 	public void deleteAllTextures() {
 		for(int i=0;i<=mMaxTextureId;i++) {
 			//setTextureData(i, 2, 2, buf, new TextureProperties());
 			deleteTexture(i);
 		}
 	}
-	
+
 	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {
-		Texture texture = createEmptyTexture(width,height,textureSettings);
-		TextureRenderTarget result = derivedCreateRenderTarget(texture);
+		final Texture texture = createEmptyTexture(width,height,textureSettings);
+		final TextureRenderTarget result = derivedCreateRenderTarget(texture);
 		mRenderTargets.add(result);
 		return result;
 	}
-	
+
 	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {
 		flush();
 		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;
@@ -740,7 +745,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		unbindTextures();
 		assert checkErrorInst("Set texture render target");
 	}
-	
+
 	public void leaveTextureRenderTarget() {
 		flush();
 		if(mRenderTargetStackPos>0) {
@@ -758,7 +763,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			assert checkErrorInst("Set screen render target");
 		}
 	}
-	
+
 	/**
 	 * Ignores the render target stack and sets the screen as render target. Call only, if absolutely necessary!
 	 */
@@ -766,26 +771,26 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mRenderTargetStackPos = 0;
 		leaveTextureRenderTarget();
 	}
-	
+
 	public YangMatrix getStaticTransformation() {
 		mStaticTransformation.loadIdentity();
 		return mStaticTransformation;
 	}
-	
+
 	public void readPixels(ByteBuffer pixels,int channels,ByteFormat byteFormat) {
 		readPixels(0,0,mScreenWidth,mScreenHeight,channels,byteFormat,pixels);
 	}
-	
+
 	public void readPixels(ByteBuffer pixels) {
 		readPixels(0,0,mScreenWidth,mScreenHeight,4,ByteFormat.BYTE,pixels);
 	}
-	
+
 	public ByteBuffer makeScreenshot(int channels,ByteFormat byteFormat) {
-		ByteBuffer screenData = ByteBuffer.allocateDirect(mScreenWidth*mScreenHeight*channels*byteFormatBytes(byteFormat));
+		final ByteBuffer screenData = ByteBuffer.allocateDirect(mScreenWidth*mScreenHeight*channels*byteFormatBytes(byteFormat));
 		readPixels(screenData,channels,byteFormat);
 		return screenData;
 	}
-	
+
 	public ByteBuffer makeScreenshot() {
 		return makeScreenshot(4,ByteFormat.UNSIGNED_BYTE);
 	}
@@ -795,20 +800,20 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mShaderTimer = 0;
 		mLstTimestamp = -1;
 	}
-	
+
 	public void setScissorRectNormalized(float x,float y,float width,float height) {
 		x = x*0.5f*mInvRatioX+0.5f;
 		y = y*0.5f*mInvRatioY+0.5f;
 		setScissorRectI((int)(x*mScreenWidth),(int)(y*mScreenHeight),(int)(width*0.5f*mInvRatioX*mScreenWidth),(int)(height*0.5f*mInvRatioY*mScreenHeight));
 		enable(GLOps.SCISSOR_TEST);
 	}
-	
+
 	public void setScissorRectNormalized(Bounds mBounds) {
 		assert preCheck("Set scissor");
 		setScissorRectNormalized(mBounds.mValues[0],mBounds.mValues[1],mBounds.mValues[2]-mBounds.mValues[0],mBounds.mValues[3]-mBounds.mValues[1]);
 		assert checkErrorInst("Set scissor");
 	}
-	
+
 	public void switchScissor(boolean enabled) {
 		assert preCheck("Switch scissor");
 		if(enabled)
@@ -817,45 +822,45 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			disable(GLOps.SCISSOR_TEST);
 		assert checkErrorInst("Switch scissor");
 	}
-	
+
 	public void switchZBuffer(boolean enabled) {
 		if(enabled)
 			enable(GLOps.DEPTH_TEST);
 		else
 			disable(GLOps.DEPTH_TEST);
 	}
-	
+
 	public void switchCulling(boolean enabled) {
 		if(enabled)
 			enable(GLOps.CULL_FACE);
 		else
 			disable(GLOps.CULL_FACE);
 	}
-	
+
 	public void switchStencilTest(boolean enabled) {
 		if(enabled)
 			enable(GLOps.STENCIL_TEST);
 		else
 			disable(GLOps.STENCIL_TEST);
 	}
-	
+
 	public boolean isScreenRenderTarget() {
 		return mRenderTargetStackPos==-1;
 	}
-	
+
 	public void disableBuffers() {
 		mCurDrawListener.disableBuffers();
 	}
-	
+
 	public void enableBuffers() {
 		mCurDrawListener.enableBuffers();
 	}
 	public void bindBuffers() {
 		mCurDrawListener.bindBuffers();
 	}
-	
+
 	public int getRenderTargetStackLevel() {
 		return mRenderTargetStackPos;
 	}
-	
+
 }

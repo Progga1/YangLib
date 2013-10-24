@@ -645,6 +645,7 @@ public class YangMatrix {
 	}
 
 	public void setFromEulerAngles(float yaw,float pitch,float roll) {
+		//TODO properly
 		loadIdentity();
 		rotateY(yaw);
 		rotateX(pitch);

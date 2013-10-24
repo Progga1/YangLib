@@ -17,7 +17,6 @@ import javax.media.opengl.awt.GLJPanel;
 import yang.events.EventQueueHolder;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
-import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.Texture;
 import yang.model.enums.ByteFormat;
@@ -37,14 +36,14 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public static boolean DEFAULT_USE_GLPANEL = false;
 	public static boolean USE_DISPLAY = false;
 	public boolean mStereo = false;
-	
+
 	public static final boolean clearError(GL2ES2 gl2) {
 		gl2.glGetError();
 		return true;
 	}
-	
+
 	public static final boolean checkError(GL2ES2 gl2,String message,boolean pre) {
-		int error = gl2.glGetError();
+		final int error = gl2.glGetError();
 		if (error != 0) {
 			if(pre)
 				System.err.println("----!GLES-ERROR!---- [PRE] " + message);
@@ -55,24 +54,24 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 			return true;
 		}
 	}
-	
+
 	public static final boolean checkError(GL2ES2 gl2,String message) {
 		return checkError(gl2,message,false);
 	}
-	
+
 	@Override
 	public boolean checkErrorInst(String message,boolean pre) {
 		return checkError(gles2,message,pre);
 	}
-	
+
 	public PCGL2ES2Graphics(int resolutionX,int resolutionY,boolean useGLPanel) {
 		super();
 		mDriverKey = "PC_GLES20";
 		mGFXLoader = new PCGFXLoader(this);
-		
-		GLProfile glProfile = GLProfile.getDefault();
 
-		GLCapabilities glCapabilities = new GLCapabilities(glProfile);
+		final GLProfile glProfile = GLProfile.getDefault();
+
+		final GLCapabilities glCapabilities = new GLCapabilities(glProfile);
 		glCapabilities.setDoubleBuffered(true);
 		glCapabilities.setHardwareAccelerated(true);
 		glCapabilities.setOnscreen(true);
@@ -92,18 +91,18 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	//
 	//	    Animator anim = new Animator(canvas);
 	//	    anim.start();
-	
+
 			mPanel.setPreferredSize(new Dimension(resolutionX,resolutionY));
 		}else{
 
 		}
-		
+
 	}
-	
+
 	public PCGL2ES2Graphics(int resolutionX,int resolutionY) {
 		this(resolutionX,resolutionY,DEFAULT_USE_GLPANEL);
 	}
-	
+
 	public static int channelsToConst(int channels) {
 		//int c = GL2ES2.GL_SCISSOR_TEST;
 		switch(channels) {
@@ -116,7 +115,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 			default: throw new RuntimeException(channels + " channels not supported.");
 		}
 	}
-	
+
 	public static int byteFormatToConst(ByteFormat byteFormat) {
 		switch(byteFormat) {
 		case BYTE: return GL2ES2.GL_BYTE;
@@ -138,14 +137,14 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		while(mSurface==null)
 			try {
 				Thread.sleep(50);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 				break;
 			}
 		gles2 = glAutoDrawable.getGL().getGL2();
 		gles2.glEnable(GL2.GL_TEXTURE_2D);
 		mSurface.onSurfaceCreated();
 	}
-	
+
 	public void setSurface(YangSurface surface) {
 		mSurface = surface;
 		mSurface.mPlatformKey = "PC";
@@ -162,17 +161,19 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		gles2 = glAutoDrawable.getGL().getGL2();
 		mSurface.drawFrame();
 	}
-	
+
+	@Override
 	public void genTextures(int[] target,int count) {
 		assert checkErrorInst("PRE create texture");
 		gles2.glGenTextures(count, target, 0);
 		assert checkErrorInst("Generate texture");
 	}
 
+	@Override
 	public void setTextureParameter(int pName,int param) {
 		gles2.glTexParameteri(GL2ES2.GL_TEXTURE_2D, pName, param);
 	}
-	
+
 	@Override
 	public void setTextureData(int texId,int width,int height,int channels, ByteBuffer data) {
 		assert preCheck("Init texture");
@@ -180,12 +181,12 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);
 		gles2.glPixelStorei(GL2ES2.GL_UNPACK_ALIGNMENT, GL2ES2.GL_TRUE);
 		assert checkErrorInst("Bind new texture");
-		
-		int format = channelsToConst(channels);
+
+		final int format = channelsToConst(channels);
 		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL2ES2.GL_UNSIGNED_BYTE, data);
 		assert checkErrorInst("Pass texture data with "+channels+" channels");
 	}
-	
+
 	@Override
 	public void setTextureRectData(int texId,int level,int offsetX,int offsetY,int width,int height,int channels, ByteBuffer data) {
 		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
@@ -200,17 +201,17 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		else
 			gles2.glDrawElements(GL2ES2.GL_TRIANGLES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
 	}
-	
+
 	@Override
 	public void enableAttributePointer(int handle) {
 		gles2.glEnableVertexAttribArray(handle);
 	}
-	
+
 	@Override
 	public void disableAttributePointer(int handle) {
 		gles2.glDisableVertexAttribArray(handle);
 	}
-	
+
 	@Override
 	public void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer) {
 		gles2.glVertexAttribPointer(handle, vertexBuffer.mFloatBufferElementSizes[bufferIndex], GL2ES2.GL_FLOAT, false, 0, vertexBuffer.getByteBuffer(bufferIndex));
@@ -225,7 +226,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public void enable(int glConstant) {
 		gles2.glEnable(glConstant);
 	}
-	
+
 	@Override
 	public void disable(int glConstant) {
 		gles2.glDisable(glConstant);
@@ -235,7 +236,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public void setClearColor(float r,float g,float b,float a) {
 		gles2.glClearColor(r,g,b,a);
 	}
-	
+
 	@Override
 	public void clear(int mask) {
 		gles2.glClear(mask);
@@ -245,7 +246,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	protected void setViewPort(int width, int height) {
 		gles2.glViewport(0, 0, width, height);
 	}
-	
+
 	public void run() {
 //		if(mUseGLPanel) {
 			mGLAnimator = new Animator((GLAutoDrawable)mPanel);
@@ -261,17 +262,18 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 //			}.start();
 //		}
 	}
-	
+
 	public void stop() {
 		mGLAnimator.stop();
 	}
 
+	@Override
 	public Component getPanel() {
 		return mPanel;
 	}
 
 	public PCEventHandler setMouseEventListener(EventQueueHolder eventListener) {
-		PCEventHandler eventHandler = new PCEventHandler(eventListener);
+		final PCEventHandler eventHandler = new PCEventHandler(eventListener);
 		mPanel.addMouseListener(eventHandler);
 		mPanel.addMouseMotionListener(eventHandler);
 		mPanel.addMouseWheelListener(eventHandler);
@@ -285,11 +287,11 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		else
 			gles2.glCullFace(GL2ES2.GL_BACK);
 	}
-	
+
 	@Override
 	protected void updateTexture(Texture texture, ByteBuffer source, int left,int top, int width,int height) {
 		bindTexture(texture);
-		
+
 		//gles2.glTexSubImage2D(GL2ES2.GL_TEXTURE_2D, 0, 0, 0, left, top, width, height, GL2ES2.GL_RGBA, GL2ES2.GL_UNSIGNED_BYTE,source);
 	}
 
@@ -302,16 +304,16 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public void derivedSetScreenRenderTarget() {
 		gles2.glBindFramebuffer(GL2ES2.GL_FRAMEBUFFER, 0);
 	}
-	
+
 	@Override
 	public TextureRenderTarget derivedCreateRenderTarget(Texture texture) {
 		assert preCheck("Create render target");
 		gles2.glGenFramebuffers(1, mTempInt, 0);
 		gles2.glGenRenderbuffers(1, mTempInt2, 0);
-		int frameId = mTempInt[0];
-		int depthId = mTempInt2[0];
+		final int frameId = mTempInt[0];
+		final int depthId = mTempInt2[0];
 		gles2.glBindRenderbuffer(GL2ES2.GL_RENDERBUFFER, depthId);
-		gles2.glRenderbufferStorage(GL2ES2.GL_RENDERBUFFER, GL2ES2.GL_DEPTH_COMPONENT16, texture.getWidth(), texture.getHeight());
+		gles2.glRenderbufferStorage(GL2ES2.GL_RENDERBUFFER, GL2ES2.GL_DEPTH_COMPONENT32, texture.getWidth(), texture.getHeight());
 		assert checkErrorInst("Create render target");
 		return new TextureRenderTarget(texture,frameId,depthId);
 	}
@@ -344,7 +346,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0 + level);
 		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);
 	}
-	
+
 	@Override
 	public void readPixels(int x, int y, int width, int height, int channels, ByteFormat byteFormat, ByteBuffer target) {
 		gles2.glReadPixels(x, y, width, height, channelsToConst(channels), byteFormatToConst(byteFormat), target);
@@ -370,7 +372,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public void setScissorRectI(int x, int y, int width, int height) {
 		gles2.glScissor(x, y, width, height);
 	}
-	
+
 	@Override
 	public void switchZWriting(boolean enabled) {
 		gles2.glDepthMask(enabled);

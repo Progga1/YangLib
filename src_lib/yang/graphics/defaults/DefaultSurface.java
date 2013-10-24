@@ -6,7 +6,7 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.font.BitmapFont;
-import yang.math.MatrixOps;
+import yang.math.objects.matrix.YangMatrix;
 import yang.surface.YangSurface;
 import yang.systemdependent.YangSensor;
 
@@ -95,8 +95,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 
 	@Override
 	public void sensorChanged(YangSensorEvent event) {
-		if(!mAutoApplySensorToCamera)
-			return;
+
 //		if(event.mType==YangSensor.TYPE_GYROSCOPE) {
 //			mGraphics.mStereoCameraMatrixEnabled = true;
 //			final YangMatrix mat = mGraphics.mStereoCameraMatrix;
@@ -104,18 +103,19 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 //			mat.rotateY(event.mY);
 //			mat.rotateX(-event.mX);
 //		}
-//		if(event.mType==YangSensor.TYPE_ROTATION_VECTOR) {
-//			mGraphics.mStereoCameraMatrixEnabled = true;
-//			mGraphics.mStereoCameraMatrix.setFromQuaternion(-event.mX,-event.mY,-event.mZ);
-//		}
-		if(event.mType==YangSensor.TYPE_EULER_ANGLES) {
-			mGraphics.mStereoCameraMatrixEnabled = true;
-//			mGraphics.mStereoCameraMatrix.setFromEulerAngles(event.mX,event.mY,event.mZ);
-//			mGraphics.mStereoCameraMatrix.invert();
-			MatrixOps.setRotationZ(mGraphics.mStereoCameraMatrix.mValues,-event.mZ);
-			mGraphics.mStereoCameraMatrix.rotateX(-event.mY);
-			mGraphics.mStereoCameraMatrix.rotateY(-event.mX);
+		final YangMatrix uMat = mGraphics.mSensorOrientationMatrix;
+
+		if(event.mType==YangSensor.TYPE_ROTATION_VECTOR) {
+			uMat.setFromQuaternion(event.mX,event.mY,event.mZ,event.mW);
+		}else if(event.mType==YangSensor.TYPE_EULER_ANGLES) {
+			uMat.setFromEulerAngles(event.mX,event.mY,event.mZ);
+		}else
+			return;
+		if(mAutoApplySensorToCamera) {
+			mGraphics.mSensorCameraEnabled = true;
+			mGraphics.mSensorOrientationMatrix.asInverted(mGraphics.mSensorCameraMatrix.mValues);
 		}
+
 	}
 
 }

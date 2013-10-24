@@ -208,9 +208,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private void refreshCamera() {
 		mOriginalCameraMatrix.set(mCameraMatrix);
 		if(mTranslator.mForceStereo || mTranslator.getRenderTargetStackLevel()<=(mTranslator.mStereo?0:-1)) {
-			if(mTranslator.mStereoCameraMatrixEnabled) {
+			if(mTranslator.mSensorCameraEnabled) {
 				mCameraMatrix.postTranslate(0, 0, mCurNear);
-				mCameraMatrix.multiplyLeft(mTranslator.mStereoCameraMatrix);
+				mCameraMatrix.multiplyLeft(mTranslator.mSensorCameraMatrix);
 				mCameraMatrix.postTranslate(0, 0, -mCurNear);
 
 			}

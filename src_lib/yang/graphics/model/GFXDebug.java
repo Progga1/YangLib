@@ -16,7 +16,7 @@ import yang.surface.YangSurface;
 
 public class GFXDebug implements PrintInterface {
 
-	public static final FloatColor[] DEFAULT_PALETTE = {FloatColor.YELLOW,FloatColor.GREEN,FloatColor.RED,FloatColor.WHITE,new FloatColor(1,0.5f,0),new FloatColor(1,0,1),new FloatColor(0,1,1),new FloatColor(1,0.8f,0.4f),new FloatColor(0.5f,0.5f,1),new FloatColor(0.5f,0.5f,0.5f)};
+	public static final FloatColor[] DEFAULT_PALETTE = {FloatColor.YELLOW,FloatColor.GREEN,FloatColor.BLUE,FloatColor.RED,new FloatColor(1,0.5f,0),new FloatColor(1,0,1),new FloatColor(0,1,1),new FloatColor(1,0.8f,0.4f),new FloatColor(0.5f,0.5f,1),new FloatColor(0.5f,0.5f,0.5f)};
 
 	public static int FPS = 0;
 	public static int SPS = 1<<1;

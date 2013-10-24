@@ -40,8 +40,8 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 		if(mSensorActive[YangSensor.TYPE_GYROSCOPE])
 			mEvents.putSensorEvent(YangSensor.TYPE_GYROSCOPE, yaw,pitch,roll); //TODO: no proper axis rotations!
 		if(mSensorActive[YangSensor.TYPE_ROTATION_VECTOR]) {
-			tempQuat.setFromEuler(mCurYaw, mCurPitch, mCurRoll); //TODO: Local rotation!
-			mEvents.putSensorEvent(YangSensor.TYPE_ROTATION_VECTOR,tempQuat.mX,tempQuat.mY,tempQuat.mZ);
+			tempQuat.setFromEuler(mCurYaw, mCurPitch, mCurRoll);
+			mEvents.putSensorEvent(YangSensor.TYPE_ROTATION_VECTOR,tempQuat.mX,tempQuat.mY,tempQuat.mZ,tempQuat.mW);
 		}
 		if(mSensorActive[YangSensor.TYPE_EULER_ANGLES]) {
 			mEvents.putSensorEvent(YangSensor.TYPE_EULER_ANGLES, mCurYaw,mCurPitch,mCurRoll);
@@ -90,7 +90,7 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 			accelerate(deltaX,deltaY,0);
 		}
 		if(mCurButton==MouseEvent.BUTTON2) {
-			turn(deltaX,-deltaY,0);
+			turn(-deltaX,-deltaY,0);
 		}
 		if(mCurButton==MouseEvent.BUTTON3) {
 			turn(0,-deltaY,-deltaX);

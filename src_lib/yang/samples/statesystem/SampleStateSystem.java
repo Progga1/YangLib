@@ -24,8 +24,6 @@ public class SampleStateSystem extends YangProgramStateSystem {
 
 	@Override
 	public void postInitGraphics() {
-//		super.mSensor.startSensor(YangSensor.TYPE_ROTATION_VECTOR);
-//		super.mSensor.startSensor(YangSensor.TYPE_GRAVITY);
 		DrawableString.DEFAULT_PROPERTIES = new StringProperties(mGraphics2D,mGFXLoader.loadFont("arial"));
 		super.initDebugOutput(DrawableString.DEFAULT_PROPERTIES.mFont);
 		mMainMenu = (SampleMainMenu)new SampleMainMenu().init(this);
