@@ -155,4 +155,10 @@ public class Vector3f extends Point3f{
 		mY = y;
 	}
 
+	public void rotateEuler(float yaw, float pitch, float roll) {
+		rotateZ(roll);
+		rotateX(pitch);
+		rotateY(yaw);
+	}
+
 }
