@@ -6,14 +6,14 @@ import yang.events.listeners.ZoomEventListener;
 public class YangZoomEvent extends YangEvent {
 
 	public float mValue;
-	
+
 	@Override
-	public void handle(RawEventListener listener) {
-		super.handle(listener);
+	public boolean handle(RawEventListener listener) {
 		if(listener.rawEvent(this))
-			return;
+			return true;
 		if(!(listener instanceof ZoomEventListener))
-			return;
+			return false;
 		((ZoomEventListener)listener).zoom(mValue);
+		return true;
 	}
 }

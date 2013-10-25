@@ -12,11 +12,11 @@ public class GUIPointerEvent extends SurfacePointerEvent {
 	public GUIComponent mSender;
 
 	@Override
-	public void handle(RawEventListener eventInterface) {
+	public boolean handle(RawEventListener eventInterface) {
 //		if(eventInterface.rawEvent(this))
 //			return;
 		if(!(eventInterface instanceof GUIPointerListener))
-			return;
+			return false;
 		final GUIPointerListener pointerListener = (GUIPointerListener)eventInterface;
 
 		switch(mAction) {
@@ -33,6 +33,7 @@ public class GUIPointerEvent extends SurfacePointerEvent {
 			pointerListener.guiPointerUp(mX, mY, this);
 			break;
 		}
+		return true;
 	}
 
 	public void createFromPointerEvent(YangPointerEvent pointerEvent,GUIComponent sender) {

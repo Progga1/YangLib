@@ -87,6 +87,8 @@ public class YangMatrix {
 
 	public void initStack(int capacity) {
 		mStack = new float[capacity][16];
+		mStackPointer = -1;
+		//MatrixOps.setIdentity(mStack[0]);
 	}
 
 	public void stackClear() {
@@ -98,15 +100,17 @@ public class YangMatrix {
 	}
 
 	public void stackDecPointer(int dec) {
-		mStackPointer-=dec;
+		mStackPointer -= dec;
 	}
 
 	public void stackIncPointer(int dec) {
-		mStackPointer+=dec;
+		mStackPointer += dec;
 	}
 
 	public void stackPush() {
-		if(mStack==null || mStackPointer>=mStack.length)
+		if(mStack==null)
+			initStack(8);
+		else if(mStackPointer>=mStack.length)
 			mStack = Util.resizeArray(mStack,new float[mStackPointer+2][16]);
 		System.arraycopy(mValues,0,mStack[++mStackPointer],0,16);
 	}

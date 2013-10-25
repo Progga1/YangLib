@@ -9,8 +9,8 @@ public abstract class YangEvent {
 
 	//handle potentially called multiple times, poll only once
 
-	public void handle(RawEventListener eventInterface) {
-		eventInterface.rawEvent(this);
+	public boolean handle(RawEventListener eventInterface) {
+		return eventInterface.rawEvent(this);
 	}
 
 	public void onPoll() {

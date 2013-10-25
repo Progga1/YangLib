@@ -14,15 +14,16 @@ public class YangKeyEvent extends YangEvent {
 	public int mAction;
 
 	@Override
-	public void handle(RawEventListener listener) {
+	public boolean handle(RawEventListener listener) {
 		if(listener.rawEvent(this))
-			return;
+			return true;
 		if(!(listener instanceof KeyEventListener))
-			return;
+			return false;
 		if(mAction==ACTION_KEYDOWN)
 			((KeyEventListener)listener).keyDown(mKey);
 		else
 			((KeyEventListener)listener).keyUp(mKey);
+		return true;
 	}
 
 	@Override

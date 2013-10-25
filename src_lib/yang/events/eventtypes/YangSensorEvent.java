@@ -11,11 +11,13 @@ public class YangSensorEvent extends YangEvent {
 	public float[] mMatrix;
 
 	@Override
-	public void handle(RawEventListener listener) {
-		super.handle(listener);
+	public boolean handle(RawEventListener listener) {
+		if(listener.rawEvent(this))
+			return true;
 		if(listener instanceof YangSensorListener) {
 			((YangSensorListener)listener).sensorChanged(this);
 		}
+		return true;
 	}
 
 

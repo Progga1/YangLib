@@ -25,8 +25,14 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	protected Point3f[] mCursorPositions;
 	private final Point3f mTempPoint = new Point3f();
 	public float mDebugPointsAlpha = 0;
+	public boolean mVisible = true;
+	public float mMaxEventZ = 1,mMinEventZ = -1;
 
 	protected void prepareDraw() {
+
+	}
+
+	public void step(float deltaTime) {
 
 	}
 
@@ -47,6 +53,8 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	}
 
 	public void draw() {
+		if(!mVisible)
+			return;
 		prepareDraw();
 		mGraphics.setGlobalTransformEnabled(true);
 		mGraphics.mWorldTransform.stackPush();

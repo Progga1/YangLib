@@ -6,11 +6,11 @@ import yang.events.listeners.RawEventListener;
 public class SurfacePointerEvent extends YangPointerEvent {
 
 	@Override
-	public void handle(RawEventListener listener) {
+	public boolean handle(RawEventListener listener) {
 		if(listener.rawEvent(this))
-			return;
+			return true;
 		if(!(listener instanceof PointerEventListener))
-			return;
+			return false;
 		final PointerEventListener pointerListener = (PointerEventListener)listener;
 
 		switch(mAction) {
@@ -27,6 +27,7 @@ public class SurfacePointerEvent extends YangPointerEvent {
 			pointerListener.pointerUp(mX, mY, this);
 			break;
 		}
+		return true;
 	}
 
 //	@Override
