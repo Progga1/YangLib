@@ -3,6 +3,7 @@ package yang.physics.massaggregation.elements;
 import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.math.Geometry;
 import yang.math.objects.Point3f;
+import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.MassAggregation;
 import yang.util.NonConcurrentList;
 
@@ -11,7 +12,7 @@ public class Joint {
 	public static float DEFAULT_FRICTION = 0.9998f;
 	public static float TOWARDS_FACTOR = 50;
 	public static float AWAY_FACTOR = 1000;
-	
+
 	//Properties
 	public int mId;
 	public String mName;
@@ -30,7 +31,7 @@ public class Joint {
 	public boolean mAnimate;
 	public boolean mEnabled;
 	public float mInitialX,mInitialY,mInitialZ;
-	
+
 	//State
 	public float mForceX,mForceY,mForceZ;
 	public float mVelX,mVelY,mVelZ;
@@ -39,7 +40,7 @@ public class Joint {
 	public Point3f mDragTo = new Point3f();
 	public boolean mDragging;
 	public float mParentCurAngle;
-	
+
 	public Joint(String name,Joint parent,float posX,float posY,float radius,MassAggregation skeleton) {
 		mName = name;
 		mFixed = false;
@@ -62,24 +63,24 @@ public class Joint {
 		refreshParentAngle();
 		mEnabled = true;
 	}
-	
+
 	public Joint setName(String name) {
 		mName = name;
 		return this;
 	}
-	
+
 	public Joint setRadius(float radius) {
 		mRadius = radius;
 		return this;
 	}
-	
+
 	public void setInitials() {
 		mInitialX = mPosX;
 		mInitialY = mPosY;
 		mInitialZ = mPosZ;
 		mInitialMass = mMass;
 	}
-	
+
 	public void reset() {
 		mPosX = mInitialX;
 		mPosY = mInitialY;
@@ -89,21 +90,21 @@ public class Joint {
 		mVelY = 0;
 		mVelZ = 0;
 	}
-	
+
 	public void setParent(Joint parent) {
 		mAngleParent = parent;
 		mParentDistance = getDistance(parent);
 		if(parent!=null)
 			parent.mChildren.add(this);
 	}
-	
+
 	public void refreshParentAngle() {
 		if(mAngleParent==null)
 			mParentCurAngle = 0;
 		else
 			mParentCurAngle = getAngle(mAngleParent);
 	}
-	
+
 	/**
 	 * -1 no child
 	 * 0 self
@@ -121,36 +122,36 @@ public class Joint {
 		else
 			return count;
 	}
-	
+
 	public float getWorldX() {
 		return mSkeleton.getJointWorldX(this);
 	}
-	
+
 	public float getWorldY() {
 		return mSkeleton.getJointWorldY(this);
 	}
-	
+
 	public boolean isSubChildOf(Joint joint) {
 		return childDistance(joint)>=0;
 	}
-	
+
 	public float getDistance(Joint joint) {
 		if(joint==null)
 			return -1;
 		else
 			return Geometry.getDistance(mPosX,mPosY,joint.mPosX,joint.mPosY);
 	}
-	
+
 	public void setSpeed(Joint preface) {
 		mVelX = preface.mVelX;
 		mVelY = preface.mVelY;
 	}
-	
+
 	public void addPositionForce(float posX,float posY,float posZ,float factor) {
-		float dX = posX - mPosX;
-		float dY = posY - mPosY;
-		float dZ = posZ - mPosZ;
-		float dist = (float)Math.sqrt(dX*dX + dY*dY + dZ*dZ);
+		final float dX = posX - mPosX;
+		final float dY = posY - mPosY;
+		final float dZ = posZ - mPosZ;
+		final float dist = (float)Math.sqrt(dX*dX + dY*dY + dZ*dZ);
 		if(dist>0) {
 			float fac;
 			if(mSkeleton.m3D)
@@ -162,18 +163,18 @@ public class Joint {
 			mForceZ += fac * dZ;
 		}
 	}
-	
+
 	public void addPositionForce(float posX,float posY,float factor) {
 		addPositionForce(posX,posY,0,factor);
 	}
-	
+
 	/**
 	 * Zero degrees: downwards, CCW
 	 */
 	public float getAngle(Joint joint) {
 		return Geometry.getAngleDown(joint.mPosX,joint.mPosY,mPosX,mPosY);
 	}
-	
+
 	/**
 	 * Zero degrees: downwards, CCW
 	 */
@@ -182,66 +183,70 @@ public class Joint {
 		mPosX = relativeJoint.mPosX + (float)(distance*Math.sin(angle));
 		mPosY = relativeJoint.mPosY - (float)(distance*Math.cos(angle));//System.out.println(angle+" "+getAngle(relativeJoint));
 	}
-	
+
 	public void setPosByAngle(Joint relativeJoint,JointConnection connectingBone,float angle) {
 		setPosByAngle(relativeJoint,connectingBone.mDistance,angle);
 	}
-	
+
 	public void setPosByAngle(float angle) {
 		setPosByAngle(mAngleParent,mParentDistance,angle);
 	}
-	
+
 	public void rotate(float angle) {
 		setPosByAngle(mParentCurAngle+angle);
 	}
-	
+
 	public void physicalStep(float deltaTime) {
-		
+
 		if(mEnabled) {
 			if(mFixed) {
 				mForceX = 0;
 				mForceY = 0;
 				mForceZ = 0;
 			}
-			
+
 			if(mDragging) {
 				mDragDelay.lerp(mDragTo,0.02f);
 				addPositionForce(mDragDelay.mX,mDragDelay.mY,mDragDelay.mZ,1);
 			}
-			
+
 			mVelX += mForceX/mMass * mForceFactor * deltaTime;
 			mVelY += mForceY/mMass * mForceFactor * deltaTime;
 			mVelZ += mForceZ/mMass * mForceFactor * deltaTime;
-			
+
 			mVelX *= mFriction;
 			mVelY *= mFriction;
 			mVelZ *= mFriction;
-			
+
 			mPosX += mVelX * deltaTime;
 			mPosY += mVelY * deltaTime;
 			mPosZ += mVelZ * deltaTime;
 		}
 	}
-	
+
 	public void startDrag() {
 		mDragDelay.set(mPosX,mPosY,mPosZ);
 		mDragTo.set(mDragDelay);
 		mDragging = true;
 	}
-	
+
 	public void drag(float deltaX,float deltaY,float deltaZ) {
-		float fac = 1f/mSkeleton.mCarrier.getScale();
+		final float fac = 1f/mSkeleton.mCarrier.getScale();
 		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
 	}
-	
+
 	public void drag(float deltaX,float deltaY) {
 		drag(deltaX,deltaY,0);
 	}
-	
+
+	public void drag(Vector3f vector) {
+		drag(vector.mX,vector.mY,vector.mZ);
+	}
+
 	public void endDrag() {
 		mDragging = false;
 	}
-	
+
 	public float getOutputRadius() {
 		//return Math.max(0.01f,Math.min(0.1f,mRadius));
 		return Math.max(0.01f,mRadius);
@@ -251,20 +256,20 @@ public class Joint {
 		this.mForceX += fX;
 		this.mForceY += fY;
 	}
-	
+
 	public void addForce(float fX,float fY,float fZ) {
 		this.mForceX += fX;
 		this.mForceY += fY;
 		this.mForceZ += fZ;
 	}
-	
+
 	public void applyConstraint() { }
 
 	public void setNormalDirection(float worldX, float worldY,Joint parent,float distance,boolean ortho,boolean invert,float xOffset,float yOffset) {
 		if(parent == null)
 			return;
-		float baseX = parent.mPosX;
-		float baseY = parent.mPosY;
+		final float baseX = parent.mPosX;
+		final float baseY = parent.mPosY;
 		float deltaX = mSkeleton.toJointX(worldX)-baseX;
 		float deltaY = mSkeleton.toJointY(worldY)-baseY;
 		if(invert) {
@@ -292,11 +297,11 @@ public class Joint {
 		mPosX = baseX + nX*distance;
 		mPosY = baseY + nY*distance;
 	}
-	
+
 	public void setNormalDirection(float worldX, float worldY,Joint parent,float distance,boolean ortho,float xOffset,float yOffset) {
 		setNormalDirection(worldX,worldY,parent,distance,ortho,false,xOffset,yOffset);
 	}
-	
+
 	public void setNormalDirection(float worldX, float worldY,boolean ortho,float xOffset,float yOffset) {
 		setNormalDirection(worldX,worldY,mAngleParent,mParentDistance,ortho,xOffset,yOffset);
 	}
@@ -309,7 +314,7 @@ public class Joint {
 		mPosX = x;
 		mPosY = y;
 	}
-	
+
 	public void setPos(Joint joint) {
 		mPosX = joint.mPosX;
 		mPosY = joint.mPosY;
@@ -318,14 +323,14 @@ public class Joint {
 	public void setPosIK(float posX, float posY) {
 		mPosX = posX;
 		mPosY = posY;
-		
-		float baseX = mAngleParent.mAngleParent.mPosX;
-		float baseY = mAngleParent.mAngleParent.mPosY;
+
+		final float baseX = mAngleParent.mAngleParent.mPosX;
+		final float baseY = mAngleParent.mAngleParent.mPosY;
 
 		float deltaX = posX - baseX;
 		float deltaY = posY - baseY;
 		float dist = Geometry.getDistance(deltaX, deltaY);
-		float limDist = mParentDistance*2-0.001f;
+		final float limDist = mParentDistance*2-0.001f;
 		if(dist>limDist) {
 			deltaX = deltaX/dist * limDist;
 			deltaY = deltaY/dist * limDist;
@@ -339,9 +344,9 @@ public class Joint {
 			shiftX = 0;
 			shiftY = this.mAngleParent.mParentDistance;
 		}else{
-			float shift = (float)Math.sqrt(mParentDistance*mParentDistance - dist*dist*0.25f);
-			float nX = deltaX/dist;
-			float nY = deltaY/dist;
+			final float shift = (float)Math.sqrt(mParentDistance*mParentDistance - dist*dist*0.25f);
+			final float nX = deltaX/dist;
+			final float nY = deltaY/dist;
 			shiftX = nY*shift;
 			shiftY = -nX*shift;
 		}
@@ -352,25 +357,25 @@ public class Joint {
 	}
 
 	public void setNormalDirectionIK(float relativeX, float relativeY, CartoonSkeleton2D skeleton, float straight, float orthoOffset) {
-		float shoulderX = skeleton.getJointWorldX(mAngleParent.mAngleParent);
-		float shoulderY = skeleton.getJointWorldY(mAngleParent.mAngleParent);
+		final float shoulderX = skeleton.getJointWorldX(mAngleParent.mAngleParent);
+		final float shoulderY = skeleton.getJointWorldY(mAngleParent.mAngleParent);
 		float dirX = relativeX - shoulderX;
 		float dirY = relativeY - shoulderY;
-		float dist = Geometry.getDistance(dirX, dirY);
-		
+		final float dist = Geometry.getDistance(dirX, dirY);
+
 		if(dist==0)
 			return;
 
 		if(orthoOffset!=0) {
-			float x = dirX;
+			final float x = dirX;
 			dirX += dirY*orthoOffset;
 			dirY += -x*orthoOffset;
 		}
-		
-		float normX = dirX/dist;
-		float normY = dirY/dist;
-		float armLength = mParentDistance*2*straight;
-		
+
+		final float normX = dirX/dist;
+		final float normY = dirY/dist;
+		final float armLength = mParentDistance*2*straight;
+
 		this.setPosIK(mAngleParent.mAngleParent.mPosX+normX*armLength, mAngleParent.mAngleParent.mPosY+normY*armLength);
 	}
 
@@ -386,20 +391,20 @@ public class Joint {
 		mVelX = velX;
 		mVelY = velY;
 	}
-	
+
 	public void addVelocity(float velX, float velY) {
 		mVelX += velX;
 		mVelY += velY;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "JOINT:"+this.mName;
 	}
 
 	public float getWorldDistance(float worldX, float worldY) {
-		float dx = worldX-mSkeleton.getJointWorldX(this);
-		float dy = worldY-mSkeleton.getJointWorldY(this);
+		final float dx = worldX-mSkeleton.getJointWorldX(this);
+		final float dy = worldY-mSkeleton.getJointWorldY(this);
 		return (float)Math.sqrt(dx*dx + dy*dy);
 	}
 

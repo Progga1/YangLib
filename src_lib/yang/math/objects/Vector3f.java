@@ -161,4 +161,17 @@ public class Vector3f extends Point3f{
 		rotateY(yaw);
 	}
 
+	public void setFromTo(Point3f fromPoint,Point3f toPoint) {
+		mX = toPoint.mX-fromPoint.mX;
+		mY = toPoint.mY-fromPoint.mY;
+		mZ = toPoint.mZ-fromPoint.mZ;
+	}
+
+	public void setFromToDirection(Point3f fromPoint, Point3f toPoint) {
+		mX = toPoint.mX-fromPoint.mX;
+		mY = toPoint.mY-fromPoint.mY;
+		mZ = toPoint.mZ-fromPoint.mZ;
+		normalize();
+	}
+
 }

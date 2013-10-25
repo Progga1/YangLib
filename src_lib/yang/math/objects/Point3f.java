@@ -106,6 +106,13 @@ public class Point3f {
 		return (float)Math.sqrt(dX*dX+dY*dY+dZ*dZ);
 	}
 
+	public float getDistance(float x,float y,float z) {
+		final float dX = mX-x;
+		final float dY = mY-y;
+		final float dZ = mZ-z;
+		return (float)Math.sqrt(dX*dX+dY*dY+dZ*dZ);
+	}
+
 	public void lerp(Point3f target, float weight) {
 		mX += (target.mX-mX)*weight;
 		mY += (target.mY-mY)*weight;

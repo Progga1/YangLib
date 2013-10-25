@@ -6,6 +6,7 @@ import yang.graphics.defaults.meshcreators.LineDrawer3D;
 import yang.graphics.defaults.meshcreators.SphereCreator;
 import yang.graphics.model.FloatColor;
 import yang.math.Geometry;
+import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
@@ -105,7 +106,20 @@ public class Skeleton3DEditing {
 		return initLines(16,0.03f);
 	}
 
-	public Joint pickJoint(float x,float y,float zoom,float radiusFactor) {
+	public Joint pickJoint3D(Point3f pickPos,float radiusFactor) {
+		Joint result = null;
+		float minDist = Float.MAX_VALUE;
+		for(final Joint joint:mSkeleton.mJoints) {
+			final float dist = pickPos.getDistance(joint.mPosX,joint.mPosY,joint.mPosZ);
+			if(dist<minDist && dist<joint.getOutputRadius()*radiusFactor) {
+				minDist = dist;
+				result = joint;
+			}
+		}
+		return result;
+	}
+
+	public Joint pickJoint2D(float x,float y,float zoom,float radiusFactor) {
 		mGraphics3D.prepareProjection();
 		float minDist = Float.MAX_VALUE;
 

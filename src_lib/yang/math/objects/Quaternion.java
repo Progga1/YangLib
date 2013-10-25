@@ -2,7 +2,6 @@ package yang.math.objects;
 
 import yang.math.MathConst;
 import yang.math.objects.matrix.YangMatrix;
-import yang.model.DebugYang;
 import yang.util.Util;
 
 public class Quaternion {
@@ -74,15 +73,9 @@ public class Quaternion {
 	 * Order: YXZ
 	 */
 	public void setFromEulerLegacy(float yaw,float pitch,float roll) {
-		DebugYang.stateString(yaw+"\n");
-		DebugYang.appendStateLn(pitch);
-		DebugYang.appendStateLn(roll);
 		yaw = Util.wrapValueClamp(yaw,-PI,PI)*0.5f;
 		pitch = Util.wrapValueClamp(pitch,-PI,PI)*0.5f;
 		roll = Util.wrapValueClamp(roll,-PI,PI)*0.5f;
-		DebugYang.appendStateLn(yaw);
-		DebugYang.appendStateLn(pitch);
-		DebugYang.appendStateLn(roll);
 		final float s1 = (float)Math.sin(pitch);
 		final float c1 = (float)Math.cos(pitch);
 		final float s2 = (float)Math.sin(yaw);
@@ -93,45 +86,49 @@ public class Quaternion {
 		mX = s1*c2*c3 - c1*s2*s3;
 		mY = c1*s2*c3 + s1*c2*s3;
 		mZ = c1*c2*s3 - s1*s2*c3;
-		DebugYang.appendStateLn();
-		DebugYang.appendStateLn(mW);
-		DebugYang.appendStateLn(mX);
-		DebugYang.appendStateLn(mY);
-		DebugYang.appendStateLn(mZ);
 	}
 
+	public void rotateX(float angle) {
+		final float rhqX = -(float)Math.sin(angle*0.5f);
+		final float rhqW = (float)Math.cos(angle*0.5f);
+		final float x = mX;
+		final float y = mY;
+		final float z = mZ;
+		mX = mW*rhqX + x*rhqW;
+		mY = y*rhqW + z*rhqX;
+		mZ = -y*rhqX + z*rhqW;
+		mW = mW*rhqW - x*rhqX;
+	}
+
+	public void rotateY(float angle) {
+		final float rhqY = -(float)Math.sin(angle*0.5f);
+		final float rhqW = (float)Math.cos(angle*0.5f);
+		final float x = mX;
+		final float y = mY;
+		final float z = mZ;
+		mX = x*rhqW - z*rhqY;
+		mY = mW*rhqY + y*rhqW;
+		mZ = x*rhqY + z*rhqW;
+		mW = mW*rhqW - y*rhqY;
+	}
+
+	public void rotateZ(float angle) {
+		final float rhqZ = -(float)Math.sin(angle*0.5f);
+		final float rhqW = (float)Math.cos(angle*0.5f);
+		final float x = mX;
+		final float y = mY;
+		final float z = mZ;
+		mX = x*rhqW + y*rhqZ;
+		mY = -x*rhqZ + y*rhqW;
+		mZ = mW*rhqZ + z*rhqW;
+		mW = mW*rhqW - z*rhqZ;
+	}
 
 	public void setFromEuler(float yaw,float pitch,float roll) {
-		yaw *= -0.5f;
-		pitch *= -0.5f;
-		roll *= -0.5f;
-		final float s1 = (float)Math.sin(pitch);
-		final float c1 = (float)Math.cos(pitch);
-		final float s2 = (float)Math.sin(yaw);
-		final float c2 = (float)Math.cos(yaw);
-		final float s3 = (float)Math.sin(roll);
-		final float c3 = (float)Math.cos(roll);
-		this.setIdentity();
-		this.multRight(0,0,s3,c3);
-		this.multRight(s1,0,0,c1);
-		this.multRight(0,s2,0,c2);
-
-	}
-
-	public void setFromEuler3(float yaw,float pitch,float roll) {
-		yaw *= -0.5f;
-		pitch *= -0.5f;
-		roll *= -0.5f;
-		final float s1 = (float)Math.sin(pitch);
-		final float c1 = (float)Math.cos(pitch);
-		final float s2 = (float)Math.sin(yaw);
-		final float c2 = (float)Math.cos(yaw);
-		final float s3 = (float)Math.sin(roll);
-		final float c3 = (float)Math.cos(roll);
-		mW = c1*c2*c3 - s1*s2*s3;
-		mX = s1*c2*c3 - c1*s2*s3;
-		mY = c1*s2*c3 - s1*c2*s3;
-		mZ = c1*c2*s3 + s1*s2*c3;
+		setIdentity();
+		rotateZ(roll);
+		rotateX(pitch);
+		rotateY(yaw);
 	}
 
 	public void setFromAxis(Vector3f axis,float angle) {

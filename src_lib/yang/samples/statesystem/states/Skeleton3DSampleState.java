@@ -124,7 +124,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
-			final Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1.75f);
+			final Joint pJoint = mSkeleton3D.pickJoint2D(x,y,mCamera.mZoom,1.75f);
 			if(pJoint!=null) {
 				mSkeleton3D.setJointSelected(pJoint,event.mId);
 				pJoint.startDrag();
@@ -135,7 +135,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	@Override
 	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
-		final Joint pJoint = mSkeleton3D.pickJoint(x,y,mCamera.mZoom,1);
+		final Joint pJoint = mSkeleton3D.pickJoint2D(x,y,mCamera.mZoom,1);
 		mSkeleton3D.mHoverJoint = pJoint;
 	}
 
