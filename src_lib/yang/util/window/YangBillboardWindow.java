@@ -8,7 +8,7 @@ import yang.model.callback.Drawable;
 
 public class YangBillboardWindow<InternalType extends RawEventListener & Drawable> extends YangWindow<InternalType> {
 
-	private Point3f mLookAtPoint;
+	private Point3f mLookAtPoint = new Point3f();
 	public Point3f mPosition = new Point3f();
 	private final Vector3f mScale = new Vector3f(1,1,1);
 
@@ -16,6 +16,7 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 		super(internalObject,graphics);
 	}
 
+	@Override
 	public void step(float deltaTime) {
 		mTransform.setPointFromTo(mPosition,mLookAtPoint,Vector3f.UP);
 		mTransform.scale(mScale);

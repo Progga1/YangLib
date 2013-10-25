@@ -144,6 +144,7 @@ public class BasicGUI implements RawEventListener,Drawable {
 
 	@Override
 	public void draw() {
+		mGraphics.setWhite();
 		if(mFirstFrame) {
 			refreshProjections();
 			mFirstFrame = false;

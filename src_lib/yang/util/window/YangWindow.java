@@ -1,5 +1,6 @@
 package yang.util.window;
 
+import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.listeners.RawEventListener;
@@ -27,6 +28,8 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	public float mDebugPointsAlpha = 0;
 	public boolean mVisible = true;
 	public float mMaxEventZ = 1,mMinEventZ = -1;
+
+	private final SurfacePointerEvent mTempPointerEvent = new SurfacePointerEvent();
 
 	protected void prepareDraw() {
 
@@ -81,6 +84,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		if(event instanceof YangPointerEvent) {
+			//final YangPointerEvent srcPointerEvent = (YangPointerEvent)event;
 			final YangPointerEvent pointerEvent = (YangPointerEvent)event;
 			final float[] matrix = mInvertedTransform.mValues;
 			final float x = pointerEvent.mX;
@@ -92,8 +96,15 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 			pointerEvent.mX = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])/w;
 			pointerEvent.mY = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])/w;
 			pointerEvent.mZ = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])/w;
+//			pointerEvent.mId = pointerEvent.mId;
+//			pointerEvent.mAction = srcPointerEvent.mAction;
+//			pointerEvent.mButton = srcPointerEvent.mButton;
 			mCursorPositions[pointerEvent.mId].set(pointerEvent.mX,pointerEvent.mY,pointerEvent.mZ);
 			pointerEvent.handle(mInternalObject);
+			pointerEvent.mX = x;
+			pointerEvent.mY = y;
+			pointerEvent.mZ = z;
+
 		}
 
 		return false;
