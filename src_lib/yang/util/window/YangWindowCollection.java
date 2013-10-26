@@ -56,17 +56,23 @@ public class YangWindowCollection {
 		return false;
 	}
 
-	public void draw() {
+	public void draw(int drawPass) {
 		for(final YangWindow<?> window:mWindows) {
 			if(!window.mVisible)
 				continue;
-			window.draw();
+			window.draw(drawPass);
 		}
 
 		mGraphics.mTranslator.flush();
 		mGraphics.setColorFactor(1);
 		mGraphics.setWhite();
 		mGraphics.mTranslator.switchZWriting(true);
+	}
+
+	public void draw() {
+		draw(YangWindow.PASS_BACKGROUND);
+		draw(YangWindow.PASS_MAIN);
+		draw(YangWindow.PASS_DEBUG);
 	}
 
 	public void setDebugAlpha(float alpha) {

@@ -22,7 +22,7 @@ public class ShaderDeclarations {
 		return mLocalDeclarations.containsKey(name);
 	}
 
-	public void declareLocal(String type,String name,String initValue) {
+	public void localDeclare(String type,String name,String initValue) {
 		if(mLocalDeclarations.containsKey(name))
 			throw new RuntimeException("Local variable already exists: "+name);
 		mLocalDeclarations.put(name,type);
@@ -32,14 +32,14 @@ public class ShaderDeclarations {
 			mParser.appendLn(mParserKey, type+" "+name+" = "+initValue);
 	}
 
-	public void declareLocal(String type,String name) {
-		declareLocal(type,name);
+	public void localDeclare(String type,String name) {
+		localDeclare(type,name);
 	}
 
-	public void declareOrChangeLocal(String type,String name,String op,String value) {
-		final String prevType = mLocalDeclarations.get(type);
+	public void localDeclareOrChange(String type,String name,String op,String value) {
+		final String prevType = mLocalDeclarations.get(name);
 		if(prevType==null)
-			declareLocal(type,name,value);
+			localDeclare(type,name,value);
 		else{
 			if(!prevType.equals(type))
 				throw new RuntimeException("Usage of local var with different types: "+name+" ("+prevType+"!="+type+")");
@@ -47,16 +47,31 @@ public class ShaderDeclarations {
 		}
 	}
 
-	public void declareOrAssignLocal(String type,String name,String value) {
-		declareOrChangeLocal(type,name,"=",value);
+	public void localChange(String name,String op,String value) {
+		final String prevType = mLocalDeclarations.get(name);
+		if(prevType==null)
+			throw new RuntimeException("Local variable does not exist: "+name);
+		mParser.appendLn(mParserKey, name+" "+op+" "+value);
 	}
 
-	public void declareOrAddLocal(String type,String name,String value) {
-		declareOrChangeLocal(type,name,"+=",value);
+	public void localDeclareOrAssign(String type,String name,String value) {
+		localDeclareOrChange(type,name,"=",value);
 	}
 
-	public void declareOrMultLocal(String type,String name,String value) {
-		declareOrChangeLocal(type,name,"*=",value);
+	public void localDeclareOrAdd(String type,String name,String value) {
+		localDeclareOrChange(type,name,"+=",value);
+	}
+
+	public void localDeclareOrMult(String type,String name,String value) {
+		localDeclareOrChange(type,name,"*=",value);
+	}
+
+	public void localAdd(String name,String value) {
+		localChange(name,"+=",value);
+	}
+
+	public void localMult(String name,String value) {
+		localChange(name,"*=",value);
 	}
 
 	public String getLocalVariableType(String name) {

@@ -62,7 +62,10 @@ public class PCGLProgram extends DefaultPCGLProgram {
 			System.err.println(errorString + "\n");
 			System.exit(0);
 		}else{
-			System.out.println("----" + shaderName + " COMPILE WARNING in "+Util.getClassName(sender)+"----\n" + errorString + "\n");
+			System.out.println("----" + shaderName + " COMPILE WARNING in "+Util.getClassName(sender)+"----");
+			System.out.println(Util.stringToLineNumbersString(shaderCode));
+			System.out.println();
+			System.out.println(errorString + "\n");
 		}
 	}
 

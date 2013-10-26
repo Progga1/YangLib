@@ -10,23 +10,25 @@ public class BlendColorSubShader extends SubShader {
 
 	public int mPropertiesHandle;
 	public Quadruple mProperties;
+	public String mBlendInputColor;
 
-	public BlendColorSubShader(Quadruple properties) {
+	public BlendColorSubShader(String blendInputColor,Quadruple properties) {
+		mBlendInputColor = blendInputColor;
 		if(properties==null)
 			properties = new Quadruple(1,1,1,1);
 		mProperties = properties;
 	}
 
-	public BlendColorSubShader() {
-		this(null);
+	public BlendColorSubShader(String blendInputColor) {
+		this(blendInputColor,null);
 	}
 
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("vec4", "blendProperties");
-		shaderParser.appendLn(VAR_FS_MAIN, "float blendAlpha = screenTexCl.a*blendProperties[0]");
+		shaderParser.appendLn(VAR_FS_MAIN, "float blendAlpha = "+mBlendInputColor+".a*blendProperties[0]");
 		shaderParser.appendOp(VAR_FRAGCOLOR, "(1.0-blendAlpha)", "*");
-		shaderParser.appendOp(VAR_FRAGCOLOR, "screenTexCl*blendAlpha", "+");
+		shaderParser.appendOp(VAR_FRAGCOLOR, mBlendInputColor+"*blendAlpha", "+");
 	}
 
 	@Override

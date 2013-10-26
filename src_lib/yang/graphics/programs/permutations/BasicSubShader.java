@@ -51,6 +51,7 @@ public class BasicSubShader extends SubShader {
 		if(mPassScreenPos) {
 			shaderParser.addVarying("vec4", "screenPos");
 			shaderParser.appendVertexMain("screenPos = gl_Position");
+			fsDecl.localDeclare("vec2", "screenTexCoords", "vec2(screenPos.x/screenPos.w*0.5+0.5,screenPos.y/screenPos.w*0.5+0.5)");
 		}
 	}
 

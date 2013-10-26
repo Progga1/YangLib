@@ -30,7 +30,7 @@ public class ShadowSubShader extends SubShader {
 		shaderParser.appendLn(VAR_FS_MAIN,"vec4 depthValue = texture2D(depthSampler, vec2(depthMapPosition.x,depthMapPosition.y))");
 		final String shad = "vec4(shadowProperties[0],shadowProperties[0],shadowProperties[0],1.0)";
 		if(!fsDecl.localVariableExists("lgt"))
-			fsDecl.declareLocal("vec4","shad","vec4(1.0,1.0,1.0,1.0)");
+			fsDecl.localDeclare("vec4","shad","vec4(1.0,1.0,1.0,1.0)");
 		shaderParser.append(VAR_FS_MAIN,"if(depthMapPosition.z < depthValue.r) {\n");
 		if(fsDecl.localVariableExists("lgt")) {
 			shaderParser.appendLn(VAR_FS_MAIN, "lgt = min(lgt,"+shad+")");
