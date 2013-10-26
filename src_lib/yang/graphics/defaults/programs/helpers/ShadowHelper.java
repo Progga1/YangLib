@@ -6,6 +6,7 @@ import yang.graphics.defaults.programs.LightInterface;
 import yang.graphics.defaults.programs.ShadowInterface;
 import yang.graphics.defaults.programs.ShadowProgram;
 import yang.graphics.defaults.programs.subshaders.realistic.ShadowSubShader;
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
@@ -95,9 +96,12 @@ public class ShadowHelper {
 		mGraphics = graphics3D.mTranslator;
 		mSize = size;
 		mDepthMap = mGraphics.createRenderTarget(mSize, mSize, defaultTextureSettings);
+		mDepthMap.mTargetTexture.fillWithColor(FloatColor.BLACK);	//TODO necessary?
 		getDepthProgram();
 		getDepthTrafoCorrection();
 		mDepthTransformation = mGraphics.createTransformationMatrix();
+		mDepthTransformation.setTranslation(0,0,-50);
+		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
 	}
 
 	public void beginDepthRendering() {

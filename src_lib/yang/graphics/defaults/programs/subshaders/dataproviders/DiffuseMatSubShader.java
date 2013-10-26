@@ -1,4 +1,4 @@
-package yang.graphics.defaults.programs.subshaders;
+package yang.graphics.defaults.programs.subshaders.dataproviders;
 
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.GLProgram;
@@ -6,12 +6,12 @@ import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
 import yang.graphics.programs.permutations.SubShader;
 
-public class MtDiffuseSubShader extends SubShader{
+public class DiffuseMatSubShader extends SubShader{
 
 	public FloatColor mColor;
 	public int mDiffuseColorHandle;
 	
-	public MtDiffuseSubShader(FloatColor color) {
+	public DiffuseMatSubShader(FloatColor color) {
 		mColor = color;
 	}
 	

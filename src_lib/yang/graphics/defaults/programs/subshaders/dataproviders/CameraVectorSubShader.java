@@ -1,4 +1,4 @@
-package yang.graphics.defaults.programs.subshaders;
+package yang.graphics.defaults.programs.subshaders.dataproviders;
 
 import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;

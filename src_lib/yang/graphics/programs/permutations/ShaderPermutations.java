@@ -4,7 +4,6 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.util.NonConcurrentList;
-import yang.util.Util;
 
 public class ShaderPermutations extends Basic3DProgram {
 
@@ -133,11 +132,6 @@ public class ShaderPermutations extends Basic3DProgram {
 	@Override
 	public String getFragmentShader(AbstractGFXLoader gfxLoader) {
 		return mFSSource;
-	}
-
-	@Override
-	public String toString() {
-		return "--------VERTEX-SHADER--------\n\n"+Util.stringToLineNumbersString(mVSSource)+"\n\n--------FRAGMENT-SHADER--------\n\n"+Util.stringToLineNumbersString(mFSSource)+"\n";
 	}
 
 }

@@ -10,11 +10,11 @@ public class AmbientSubShader extends SubShader {
 
 	public FloatColor mColor;
 	public int mAmbientColorHandle;
-	
+
 	public AmbientSubShader(FloatColor color) {
 		mColor = color;
 	}
-	
+
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("vec4", "ambientColor");
@@ -36,5 +36,5 @@ public class AmbientSubShader extends SubShader {
 	public boolean passesData() {
 		return mColor!=null;
 	}
-	
+
 }

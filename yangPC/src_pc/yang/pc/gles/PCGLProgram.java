@@ -37,7 +37,7 @@ public class PCGLProgram extends DefaultPCGLProgram {
 		return result;
 	}
 
-	protected void printCompileMessage(boolean error,int shaderType,ByteBuffer message,int length,Object sender) {
+	protected void printCompileMessage(boolean error,int shaderType,String shaderCode,ByteBuffer message,int length,Object sender) {
 		final byte[] errorBytes = new byte[length];
 		message.get(errorBytes);
 		final String errorString = new String(errorBytes);
@@ -56,7 +56,10 @@ public class PCGLProgram extends DefaultPCGLProgram {
 			shaderName = "SHADER";
 		}
 		if(error) {
-			System.err.println("---!" + shaderName + " COMPILE ERROR in "+Util.getClassName(sender)+"!---\n" + errorString + "\n");
+			System.err.println("---!" + shaderName + " COMPILE ERROR in "+Util.getClassName(sender)+"!---");
+			System.out.println(Util.stringToLineNumbersString(shaderCode));
+			System.out.println();
+			System.err.println(errorString + "\n");
 			System.exit(0);
 		}else{
 			System.out.println("----" + shaderName + " COMPILE WARNING in "+Util.getClassName(sender)+"----\n" + errorString + "\n");
@@ -81,7 +84,7 @@ public class PCGLProgram extends DefaultPCGLProgram {
 		if (logLength>1) {
 			final ByteBuffer errorLog = ByteBuffer.allocateDirect(logLength);
 			gl2.glGetShaderInfoLog(shaderId, logLength, null, errorLog);
-			printCompileMessage(isError,shaderType,errorLog,logLength,sender);
+			printCompileMessage(isError,shaderType,shaderCode,errorLog,logLength,sender);
 		}
 
 		if(isError)

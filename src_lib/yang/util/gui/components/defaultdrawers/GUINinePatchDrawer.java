@@ -14,7 +14,7 @@ public class GUINinePatchDrawer extends GUIComponentDrawPass<GUIInteractiveRectC
 	public float mMargin = 0;
 	public FloatColor mDefaultColor = FloatColor.WHITE.clone();
 	public int mColorIndex = -1;
-	
+
 	public GUINinePatchDrawer setNinePatch(NinePatchGrid ninePatch) {
 		mNinePatch = ninePatch;
 		if(mNinePatchPressed==null)
@@ -23,22 +23,22 @@ public class GUINinePatchDrawer extends GUIComponentDrawPass<GUIInteractiveRectC
 			mNinePatchDisabled = ninePatch;
 		return this;
 	}
-	
+
 	public GUINinePatchDrawer setNinePatchPressed(NinePatchGrid ninePatch) {
 		mNinePatchPressed = ninePatch;
 		return this;
 	}
-	
+
 	public GUINinePatchDrawer setNinePatchDisabled(NinePatchGrid ninePatch) {
 		mNinePatchDisabled = ninePatch;
 		return this;
 	}
-	
+
 	public GUINinePatchDrawer setMargin(float margin) {
 		mMargin = margin;
 		return this;
 	}
-	
+
 	@Override
 	public void draw(DefaultGraphics<?> graphics, GUIInteractiveRectComponent component) {
 		NinePatchGrid uNinePatch;

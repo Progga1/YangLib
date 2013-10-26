@@ -8,12 +8,14 @@ public class ShaderPermutationsParser {
 	public HashMap<String,String> mVariables;
 	public ShaderDeclarations mVSDeclarations;
 	public ShaderDeclarations mFSDeclarations;
+	private final HashMap<String,ShaderDeclaration> mGlobalDeclarations;
 
 	public ShaderPermutationsParser(ShaderPermutations permutations) {
 		mPermutations = permutations;
 		mVariables = new HashMap<String,String>(32);
-		mVSDeclarations = new ShaderDeclarations();
-		mFSDeclarations = new ShaderDeclarations();
+		mGlobalDeclarations = new HashMap<String,ShaderDeclaration>(32);
+		mVSDeclarations = new ShaderDeclarations(this,SubShader.VAR_VS_MAIN);
+		mFSDeclarations = new ShaderDeclarations(this,SubShader.VAR_FS_MAIN);
 	}
 
 	public void setVariable(String key,String value) {
@@ -98,6 +100,24 @@ public class ShaderPermutationsParser {
 
 	public void appendFragmentMain(String string) {
 		appendLn(SubShader.VAR_FS_MAIN,string);
+	}
+
+	public void addGlobalVariable(ShaderDeclaration declaration) {
+		mGlobalDeclarations.put(declaration.mName,declaration);
+	}
+
+	public boolean hasGlobalVariable(String name) {
+		return mGlobalDeclarations.containsKey(name);
+	}
+
+	public String getFreeGlobalName(String name) {
+		String newName = name;
+		int i=0;
+		while(mGlobalDeclarations.containsKey(newName)) {
+			i++;
+			newName = name+i;
+		}
+		return newName;
 	}
 
 }

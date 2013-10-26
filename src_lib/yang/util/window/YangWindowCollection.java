@@ -16,8 +16,13 @@ public class YangWindowCollection {
 		mGraphics = graphics;
 	}
 
-	public void setLookAtReference(Point3f reference) {
+	public void setLookAtPointReference(Point3f reference) {
 		mLookAtReference = reference;
+		for(final YangWindow<?> window:mWindows) {
+			if(window instanceof YangBillboardWindow) {
+				((YangBillboardWindow<?>)window).setLookAtPointReference(reference);
+			}
+		}
 	}
 
 	public Iterable<YangWindow<?>> getWindows() {
@@ -26,6 +31,9 @@ public class YangWindowCollection {
 
 	public void addWindow(YangWindow<?> window) {
 		mWindows.add(window);
+		if(mLookAtReference!=null && (window instanceof YangBillboardWindow)) {
+			((YangBillboardWindow<?>)window).setLookAtPointReference(mLookAtReference);
+		}
 	}
 
 	public void removeWindow(YangWindow<?> window) {
@@ -59,6 +67,12 @@ public class YangWindowCollection {
 		mGraphics.setColorFactor(1);
 		mGraphics.setWhite();
 		mGraphics.mTranslator.switchZWriting(true);
+	}
+
+	public void setDebugAlpha(float alpha) {
+		for(final YangWindow<?> window:mWindows) {
+			window.mDebugPointsAlpha = alpha;
+		}
 	}
 
 }

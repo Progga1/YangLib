@@ -1,9 +1,9 @@
 package yang.samples.statesystem.states;
 
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
-import yang.graphics.defaults.programs.subshaders.CameraVectorSubShader;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
-import yang.graphics.defaults.programs.subshaders.NormalSubShader;
+import yang.graphics.defaults.programs.subshaders.dataproviders.CameraVectorSubShader;
+import yang.graphics.defaults.programs.subshaders.dataproviders.NormalSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.defaults.programs.subshaders.properties.SpecularMatProperties;
 import yang.graphics.defaults.programs.subshaders.realistic.LightSubShader;
@@ -23,13 +23,13 @@ public class ShaderPermutationsSampleState extends SampleState {
 	private SpecularMatProperties mSpecularProperties;
 	private FloatColor mAmbientColor;
 	private Texture mGrassTex,mCubeTex;
-	
+
 	@Override
 	public void initGraphics() {
 		mLightProperties = new LightProperties();
 		mSpecularProperties = new SpecularMatProperties();
 		mAmbientColor = new FloatColor(0.1f,0.1f,0.12f);
-		SubShader[] subShaders = new SubShader[]{
+		final SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
 				new LightSubShader(mLightProperties),new DiffuseLightSubShader(),
 				new CameraVectorSubShader(mGraphics3D.mCameraMatrix.mValues),new SpecularLightSubShader(mSpecularProperties),
@@ -40,10 +40,10 @@ public class ShaderPermutationsSampleState extends SampleState {
 		mCubeTex = mGFXLoader.getImage("cube");
 		mGrassTex = mGFXLoader.getImage("grass");
 	}
-	
+
 	@Override
 	protected void step(float deltaTime) {
-		
+
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ShaderPermutationsSampleState extends SampleState {
 		mGraphics3D.setCameraAlphaBeta((float)mStateTimer*0.3f, 0.4f, 2);
 		mGraphics3D.setPerspectiveProjection(100);
 		mGraphics3D.setShaderProgram(mShader1);
-		
+
 		mLightProperties.mDirection.setAlphaBeta((float)mStateTimer,0.5f);
 		mGraphics.bindTexture(mGrassTex);
 		mGraphics3D.drawSphere(32, 16, -0.5f, 0, 0, 0.65f, 2, 1);
@@ -64,6 +64,6 @@ public class ShaderPermutationsSampleState extends SampleState {
 		mGraphics3D.drawCubeCentered(0.5f, 0, 0.5f, 0.5f);
 	}
 
-	
-	
+
+
 }

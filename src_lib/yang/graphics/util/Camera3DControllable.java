@@ -15,7 +15,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 
 	//Settings
 	public float mMinZoom = 0.3f;
-	public float mMaxZoom = 10f;
+	public float mMaxZoom = 15f;
 	public int mMoveCameraButton = SurfacePointerEvent.BUTTON_MIDDLE;
 	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;

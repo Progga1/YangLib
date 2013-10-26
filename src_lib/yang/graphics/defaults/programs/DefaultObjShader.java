@@ -2,12 +2,12 @@ package yang.graphics.defaults.programs;
 
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.programs.subshaders.AmbientSubShader;
-import yang.graphics.defaults.programs.subshaders.CameraPerVertexVectorSubShader;
 import yang.graphics.defaults.programs.subshaders.ColorFactorSubShader;
 import yang.graphics.defaults.programs.subshaders.DiffuseLightSubShader;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
-import yang.graphics.defaults.programs.subshaders.MtDiffuseSubShader;
-import yang.graphics.defaults.programs.subshaders.NormalSubShader;
+import yang.graphics.defaults.programs.subshaders.dataproviders.CameraPerVertexVectorSubShader;
+import yang.graphics.defaults.programs.subshaders.dataproviders.DiffuseMatSubShader;
+import yang.graphics.defaults.programs.subshaders.dataproviders.NormalSubShader;
 import yang.graphics.defaults.programs.subshaders.properties.LightProperties;
 import yang.graphics.defaults.programs.subshaders.properties.SpecularMatProperties;
 import yang.graphics.defaults.programs.subshaders.realistic.LightSubShader;
@@ -27,7 +27,7 @@ public class DefaultObjShader extends ShaderPermutations {
 		mLightProperties = lightProperties;
 		final SubShader[] subShaders = new SubShader[]{
 				new BasicSubShader(true,true,true),new NormalSubShader(true,true),
-				new MtDiffuseSubShader(null),
+				new DiffuseMatSubShader(null),
 				new LightSubShader(lightProperties),
 				};
 		super.addSubShaders(subShaders);
