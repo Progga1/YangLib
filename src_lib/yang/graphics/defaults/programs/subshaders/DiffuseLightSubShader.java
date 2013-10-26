@@ -8,9 +8,8 @@ public class DiffuseLightSubShader extends SubShader {
 
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
-		shaderParser.appendLn(VAR_FS_MAIN, "vec4 lgt = vec4(lightIntens*lightDiffuse,1.0)");
+		fsDecl.declareOrMultLocal("vec4","lgt","vec4(lightIntens*lightDiffuse,1.0)");
 		shaderParser.appendOp(VAR_FRAGCOLOR, "lgt", "*");
-		shaderParser.mVariables.put("lgt", "");
 	}
 
 }

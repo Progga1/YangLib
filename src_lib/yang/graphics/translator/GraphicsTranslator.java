@@ -736,6 +736,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return result;
 	}
 
+	public TextureRenderTarget createRenderTarget(int width,int height) {
+		return createRenderTarget(width,height,new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR));
+	}
+
+	public TextureRenderTarget createRenderTarget(int widthAndHeight) {
+		return createRenderTarget(widthAndHeight,widthAndHeight);
+	}
+
 	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {
 		flush();
 		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;

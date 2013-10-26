@@ -22,24 +22,41 @@ public class ShaderDeclarations {
 		return mLocalDeclarations.containsKey(name);
 	}
 
-	public void declareLocal(String type,String name,String initialization) {
+	public void declareLocal(String type,String name,String initValue) {
 		if(mLocalDeclarations.containsKey(name))
 			throw new RuntimeException("Local variable already exists: "+name);
 		mLocalDeclarations.put(name,type);
-		if(initialization==null)
+		if(initValue==null)
 			mParser.appendLn(mParserKey, type+" "+name);
 		else
-			mParser.appendLn(mParserKey, type+" "+name+" = "+initialization);
+			mParser.appendLn(mParserKey, type+" "+name+" = "+initValue);
 	}
 
-	public void declareOrAssignLocal(String type,String name,String value) {
+	public void declareLocal(String type,String name) {
+		declareLocal(type,name);
+	}
+
+	public void declareOrChangeLocal(String type,String name,String op,String value) {
 		final String prevType = mLocalDeclarations.get(type);
 		if(prevType==null)
 			declareLocal(type,name,value);
 		else{
 			if(!prevType.equals(type))
 				throw new RuntimeException("Usage of local var with different types: "+name+" ("+prevType+"!="+type+")");
+			mParser.appendLn(mParserKey, name+" "+op+" "+value);
 		}
+	}
+
+	public void declareOrAssignLocal(String type,String name,String value) {
+		declareOrChangeLocal(type,name,"=",value);
+	}
+
+	public void declareOrAddLocal(String type,String name,String value) {
+		declareOrChangeLocal(type,name,"+=",value);
+	}
+
+	public void declareOrMultLocal(String type,String name,String value) {
+		declareOrChangeLocal(type,name,"*=",value);
 	}
 
 	public String getLocalVariableType(String name) {
