@@ -27,7 +27,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	private final Point3f mTempPoint = new Point3f();
 	public float mDebugPointsAlpha = 0;
 	public boolean mVisible = true;
-	public float mMaxEventZ = 1,mMinEventZ = -1;
+	public float mMaxEventZ = 1,mMinEventZ = -0.5f;
 
 	private final SurfacePointerEvent mTempPointerEvent = new SurfacePointerEvent();
 
@@ -55,6 +55,10 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 		mTransform.asInverted(mInvertedTransform.mValues);
 	}
 
+	protected boolean inRangeZ(float z) {
+		return z>=mMinEventZ && z<=mMaxEventZ;
+	}
+
 	public void draw() {
 		if(!mVisible)
 			return;
@@ -71,6 +75,8 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 				if(mActiveCursors[i]) {
 					mGraphics.setColor(mDebugColorPalette[i%mDebugColorPalette.length]);
 					mGraphics.mCurColor[3] *= mDebugPointsAlpha;
+					if(!inRangeZ(mCursorPositions[i].mZ))
+						mGraphics.mCurColor[3] *= 0.5f;
 					mGraphics.drawRectCentered(mCursorPositions[i].mX,mCursorPositions[i].mY, 0.1f);
 				}
 			}
@@ -96,15 +102,14 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 			pointerEvent.mX = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])/w;
 			pointerEvent.mY = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])/w;
 			pointerEvent.mZ = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])/w;
-//			pointerEvent.mId = pointerEvent.mId;
-//			pointerEvent.mAction = srcPointerEvent.mAction;
-//			pointerEvent.mButton = srcPointerEvent.mButton;
+			final boolean eventOK = pointerEvent.mZ>=mMinEventZ && pointerEvent.mZ<=mMaxEventZ;
 			mCursorPositions[pointerEvent.mId].set(pointerEvent.mX,pointerEvent.mY,pointerEvent.mZ);
-			pointerEvent.handle(mInternalObject);
+			if(eventOK)
+				pointerEvent.handle(mInternalObject);
 			pointerEvent.mX = x;
 			pointerEvent.mY = y;
 			pointerEvent.mZ = z;
-
+			return eventOK;
 		}
 
 		return false;
