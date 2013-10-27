@@ -45,6 +45,8 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 		mTargetZoom = zoom;
 	}
 
+	private float mLstX = Float.MAX_VALUE,mLstY;
+
 	public void pointerDragged(SurfacePointerEvent event) {
 		if(event.mId==0) {
 			if((mCurPointerDownCount==2 || mCurPointerDownCount==3) || event.mButton==mMoveCameraButton || event.mButton==mMoveCameraAlternativeButton) {
@@ -52,7 +54,19 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 					mCamera.getRightVector(mCamRight);
 					mCamera.getUpVector(mCamUp);
 					final float fac = -mZoom;
-					shiftFocus(fac*(mCamRight.mX*event.mDeltaX+mCamUp.mX*event.mDeltaY), fac*(mCamRight.mY*event.mDeltaX+mCamUp.mY*event.mDeltaY), fac*(mCamRight.mZ*event.mDeltaX+mCamUp.mZ*event.mDeltaY));
+					float deltaX = event.mDeltaX;
+					float deltaY = event.mDeltaY;
+					if(mCurPointerDownCount==2) {
+						final float x = (event.mEventQueue.mPointerTrackers[0].mX + event.mEventQueue.mPointerTrackers[1].mX)*0.5f;
+						final float y = (event.mEventQueue.mPointerTrackers[0].mY + event.mEventQueue.mPointerTrackers[2].mY)*0.5f;
+						if(mLstX!=Float.MAX_VALUE) {
+							deltaX = x-mLstX;
+							deltaY = y-mLstY;
+						}
+						mLstX = x;
+						mLstY = y;
+					}
+					shiftFocus(fac*(mCamRight.mX*deltaX+mCamUp.mX*deltaY), fac*(mCamRight.mY*deltaX+mCamUp.mY*deltaY), fac*(mCamRight.mZ*deltaX+mCamUp.mZ*deltaY));
 				}else{
 					mViewAlpha -= event.mDeltaX*2;
 					mViewBeta -= event.mDeltaY;
@@ -67,6 +81,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	}
 
 	public void pointerUp(SurfacePointerEvent event) {
+		mLstX = Float.MAX_VALUE;
 		mCurPointerDownCount--;
 		if(event.mId>3)
 			return;

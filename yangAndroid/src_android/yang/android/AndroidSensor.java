@@ -34,10 +34,6 @@ public class AndroidSensor extends YangSensor implements SensorEventListener{
 
 	@Override
 	protected void derivedStartSensor(int type,int speed) {
-		if(type<0 || type>4)
-			throw new RuntimeException("Unknown type: "+type);
-		if(speed<0 || speed>3)
-			throw new RuntimeException("Unknown speed: "+speed);
 		if(mSensorManager==null) {
 			mSensorManager = (SensorManager)mActivity.getSystemService(Context.SENSOR_SERVICE);
 			mSensors = new Sensor[SENSOR_COUNT];

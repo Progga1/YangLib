@@ -17,6 +17,10 @@ public abstract class SubShader {
 	public static final String OP_MULT = "*";
 	public static final String OP_DIV = "/";
 
+	public static final int SHADER_VERTEX = 1;
+	public static final int SHADER_FRAGMENT = 2;
+	public static final int SHADER_BOTH = 3;
+
 	protected GraphicsTranslator mGraphics;
 
 	public abstract void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl);

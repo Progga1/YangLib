@@ -38,6 +38,10 @@ public abstract class YangSensor {
 		}else
 			throw new RuntimeException("Sensor "+type+" already active");
 		mSensorActive[type] = true;
+		if(type<0 || type>5)
+			throw new RuntimeException("Unknown type: "+type);
+		if(speed<0 || speed>3)
+			throw new RuntimeException("Unknown speed: "+speed);
 		derivedStartSensor(type,speed);
 	}
 
