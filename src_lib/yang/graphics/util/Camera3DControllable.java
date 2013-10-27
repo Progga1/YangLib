@@ -11,11 +11,12 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	//State
 	public boolean mShiftMode = false;
 	protected int mCurPointerDownCount = 0;
-	public float mTargetZoom = 1;
+	public float mTargetZoom = 1,mTargetViewAlpha,mTargetViewBeta;
 
 	//Settings
 	public float mMinZoom = 0.3f;
 	public float mMaxZoom = 15f;
+	public float mZoomDelay = 0.1f,mViewDelay = 0.2f;
 	public int mMoveCameraButton = SurfacePointerEvent.BUTTON_MIDDLE;
 	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;
@@ -35,7 +36,9 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 	}
 
 	public void step() {
-		mZoom += (mTargetZoom-mZoom)*0.1f;
+		mZoom += (mTargetZoom-mZoom)*mZoomDelay;
+		mViewAlpha += (mTargetViewAlpha-mViewAlpha)*mViewDelay;
+		mViewBeta += (mTargetViewBeta-mViewBeta)*mViewDelay;
 	}
 
 	public void setZoom(float zoom) {
@@ -43,6 +46,13 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 			return;
 		mZoom = zoom;
 		mTargetZoom = zoom;
+	}
+
+	public void setViewAngle(float alpha,float beta) {
+		mViewAlpha = alpha;
+		mTargetViewAlpha = alpha;
+		mViewBeta = beta;
+		mTargetViewBeta = beta;
 	}
 
 	private float mLstX = Float.MAX_VALUE,mLstY;
@@ -68,8 +78,8 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 					}
 					shiftFocus(fac*(mCamRight.mX*deltaX+mCamUp.mX*deltaY), fac*(mCamRight.mY*deltaX+mCamUp.mY*deltaY), fac*(mCamRight.mZ*deltaX+mCamUp.mZ*deltaY));
 				}else{
-					mViewAlpha -= event.mDeltaX*2;
-					mViewBeta -= event.mDeltaY;
+					mTargetViewAlpha -= event.mDeltaX*2;
+					mTargetViewBeta -= event.mDeltaY;
 					final float MAX_BETA = MathConst.PI/2-0.01f;
 					if(mViewBeta<-MAX_BETA)
 						mViewBeta = -MAX_BETA;
