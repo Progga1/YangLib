@@ -9,9 +9,9 @@ import yang.util.Util;
 
 public class Tail {
 
-	private float[] mStdTexCoords = { 0, 0, 0, 2};
-	private float[] mDoubleTexCoords = { 0, 0, 0, 2, 0, 1};
-	
+	private final float[] mStdTexCoords = { 0, 0, 0, 2};
+	private final float[] mDoubleTexCoords = { 0, 0, 0, 2, 0, 1};
+
 	public String mName;
 	public int mCapacity;
 	private boolean mFilled;
@@ -24,7 +24,7 @@ public class Tail {
 	public int[] mCounts;
 
 	private float[] mTexCoords;
-	private float[] mCurColor;
+	private final float[] mCurColor;
 	public float mGlobAlpha;
 	private int mCountRingPos;
 	private int mUpdateCount;
@@ -35,14 +35,14 @@ public class Tail {
 	private float mCurNormX;
 	private float mCurNormY;
 	public float mWidth;
-	private int mCountLength;
+	private final int mCountLength;
 	private float mScaleFallOff;
 	public float mMinDist;
 	public float mMinScalarDist;
 	public float mMinScalar;
 	private boolean mInverted;
-	private boolean mSubTails;
-	private DefaultGraphics<?> mGraphics;
+	private final boolean mSubTails;
+	private final DefaultGraphics<?> mGraphics;
 	public float mSuppData[];
 	public int mTexXRepeat = 0;
 	protected float mTexYRepeat = 2;
@@ -51,7 +51,7 @@ public class Tail {
 	public StripCreator mStrips;
 	public StripCreator mSingleStrips,mDoubleStrips;
 	public float mMaxWidthAtCount = 5;
-	
+
 	public Tail(DefaultGraphics<?> graphics,int capacity,boolean subTails) {
 		mGraphics = graphics;
 		mSingleStrips = new StripCreator(graphics);
@@ -78,7 +78,7 @@ public class Tail {
 		mMinScalar = 0.3f;
 		clear();
 	}
-	
+
 	public void setDoubled(boolean doubled) {
 		if(doubled) {
 			mStrips = mDoubleStrips;
@@ -88,11 +88,11 @@ public class Tail {
 			mTexCoords = mStdTexCoords;
 		}
 	}
-	
+
 	public boolean isDoubled() {
 		return mStrips==mDoubleStrips;
 	}
-	
+
 	public void clear() {
 		synchronized(this) {
 			mFilled = false;
@@ -101,13 +101,13 @@ public class Tail {
 			mCountRingPos = 0;
 		}
 	}
-	
+
 	public void setTexYRepeat(float repeat) {
 		mTexYRepeat = repeat;
 		mStdTexCoords[3] = repeat;
 		mDoubleTexCoords[3] = repeat;
 	}
-	
+
 	public void setColor(float r,float g,float b,float a) {
 		mCurColor[0] = r;
 		mCurColor[1] = g;
@@ -115,61 +115,65 @@ public class Tail {
 		mCurColor[3] = a;
 		mGlobAlpha = a;
 	}
-	
+
 	public void setColor(float r,float g,float b) {
 		setColor(r,g,b,1);
 	}
-	
+
+	public void setColor(float brightness) {
+		setColor(brightness,brightness,brightness);
+	}
+
 	public void interruptTail() {
 		synchronized(this) {
 			if(mCounts[mCountRingPos]!=0) {
 				mCountRingPos++;
-				if(mCountRingPos>=mCountLength) 
+				if(mCountRingPos>=mCountLength)
 					mCountRingPos = 0;
 				mCounts[mCountRingPos] = 0;
 				mPrevIndex = -2;
 			}
 		}
 	}
-	
+
 	public String debugOut() {
 		return Util.arrayToString(mCounts, ";", 0);
 	}
-	
+
 	private void addNode(float dist,float x,float y,float forceDirX,float forceDirY) {
-		
+
 		boolean firstNode;
 		if(dist<0) {
 			firstNode = true;
 			dist=0;
 		}else
 			firstNode = false;
-		
+
 		synchronized(this) {
 			boolean newNode;
-			
+
 			if(mCreateNodeFreq>0) {
 				newNode = (mUpdateCount%mCreateNodeFreq == 0 || (!mFilled && mRingPos<=1));
 			}else
 				newNode = true;
-			
+
 			boolean addNodeOk = newNode;
 			if(newNode) {
-				int counts = mCounts[mCountRingPos];
-				
+				final int counts = mCounts[mCountRingPos];
+
 				boolean noDistCheck = false;
 				//Check scalar
 				if(mPrevIndex>-1 && counts>1 && mMinScalar>-1 && dist>mMinScalarDist && (forceDirX!=0 || forceDirY!=0)) {
-					float scalar = mDirX[mPrevIndex]*forceDirX+mDirY[mPrevIndex]*forceDirY;
+					final float scalar = mDirX[mPrevIndex]*forceDirX+mDirY[mPrevIndex]*forceDirY;
 					if(scalar<mMinScalar) {
 						mCounts[mCountRingPos]--;
 						interruptTail();
 						mCounts[mCountRingPos]+=2;
 						noDistCheck = true;
-						
+
 					}
 				}
-				
+
 				if(!noDistCheck) {
 					if(dist>mMinDist || firstNode) {
 						//Continue sub tail
@@ -177,11 +181,11 @@ public class Tail {
 							interruptTail();
 							mCounts[mCountRingPos]++;
 						}else{
-							
+
 							if(mCounts[mCountRingPos]<mCapacity)
 								mCounts[mCountRingPos]++;
-						}	
-						
+						}
+
 					}else{
 						//New sub tail
 						if(mAutoInterruptSmallDistances) {
@@ -198,16 +202,16 @@ public class Tail {
 							addNodeOk = false;
 					}
 				}
-					
-				
+
+
 			}
-			
+
 			if(addNodeOk) {
 
 				if(mPrevIndex>-1 && (forceDirX!=0 || forceDirY!=0) ) {
 					float dirX = (mDirX[mPrevIndex]+forceDirX)*0.5f;
 					float dirY = (mDirY[mPrevIndex]+forceDirY)*0.5f;
-					float dirDist = Geometry.getDistance(dirX, dirY);
+					final float dirDist = Geometry.getDistance(dirX, dirY);
 					if(dirDist!=0) {
 						dirX /= dirDist;
 						dirY /= dirDist;
@@ -217,7 +221,7 @@ public class Tail {
 //					mDirX[mPrevIndex] = (mDirX[mPrevIndex]+forceDirX)*0.5f;
 //					mDirY[mPrevIndex] = (mDirY[mPrevIndex]+forceDirY)*0.5f;
 				}
-				
+
 				if(mPrevIndex<-1)
 					mPrevIndex++;
 				else
@@ -227,21 +231,21 @@ public class Tail {
 					mRingPos = 0;
 					mFilled = true;
 				}
-				
+
 				mLastNodeX = x;
 				mLastNodeY = y;
 			}
-			
+
 			mDist[mRingPos] = dist;
 			mPosX[mRingPos] = x;
 			mPosY[mRingPos] = y;
 			mDirX[mRingPos] = forceDirX;
 			mDirY[mRingPos] = forceDirY;
-			
+
 			mUpdateCount++;
 		}
 	}
-	
+
 	private float getDistance(float x,float y) {
 		float dx;
 		float dy;
@@ -249,7 +253,7 @@ public class Tail {
 		dx = x - mLastNodeX;
 		dy = y - mLastNodeY;
 		dist = (float)Math.sqrt(dx*dx + dy*dy);
-		
+
 		if(dist!=0) {
 			mCurNormX = dx / dist;
 			mCurNormY = dy / dist;
@@ -257,56 +261,56 @@ public class Tail {
 //			mCurNormX = 0;
 //			mCurNormY = 0;
 		}
-		
+
 		return dist;
 	}
-	
+
 	public void refreshFront(float x,float y,float forceDirX,float forceDirY) {
 		addNode(getDistance(x,y),x,y,forceDirX,forceDirY);
 	}
-	
+
 	public void refreshFront() {
 		refreshFront(mPosX[mRingPos],mPosY[mRingPos]);
 	}
-	
+
 	public void refreshFront(float x,float y) {
-		
+
 		if(!mFilled && mRingPos==0) {
 			addNode(-1,x,y,0,0);
 		}else{
-			float dist = getDistance(x,y);
+			final float dist = getDistance(x,y);
 			addNode(dist,x,y,mCurNormY,-mCurNormX);
-		}	
+		}
 	}
-	
+
 	public void refreshFrontAbsolute(float x1,float y1,float x2,float y2) {
-		float dx = (x2-x1)*0.5f;
-		float dy = (y2-y1)*0.5f;
+		final float dx = (x2-x1)*0.5f;
+		final float dy = (y2-y1)*0.5f;
 		refreshFront(x1+dx,y1+dy,dx,dy);
 	}
-	
+
 	private int putPos;
 	private int countPos;
-	
+
 	public int getTailLength() {
 		if(mFilled)
 			return mCapacity;
-		else 
+		else
 			return mRingPos;
 	}
-	
+
 	protected int initTailDraw() {
-		int l = getTailLength();
+		final int l = getTailLength();
 		if(l<=1)
 			return l;
 		countPos = mCountRingPos;
 		putPos = mRingPos;
 		return getTailLength();
 	}
-	
+
 	private float curTailTexX;
 	private float tailTexXStep;
-	
+
 	protected void putTailVertices(float scale,float alpha) {
 		if(putPos<0) {
 			putPos = mCapacity-1;
@@ -341,14 +345,14 @@ public class Tail {
 		curTailTexX += tailTexXStep;
 		putPos--;
 	}
-	
+
 	protected void skipTailVertices() {
 		putPos--;
 		if(putPos<0) {
 			putPos = mCapacity-1;
 		}
 	}
-	
+
 	public void drawWholeTail() {
 		if(!DebugYang.drawTails)
 			return;
@@ -357,9 +361,9 @@ public class Tail {
 			tailTexXStep = 1f/mTexXRepeat;
 			curTailTexX = mTexXShift * tailTexXStep;
 		}
-		
+
 		synchronized(this) {
-			int tSize = initTailDraw();
+			final int tSize = initTailDraw();
 			if(tSize<=1)
 				return;
 			int c = 0;
@@ -369,7 +373,7 @@ public class Tail {
 			while(true) {
 				if(c>=tSize-1)
 					break;
-				int curCount = mCounts[countPos];
+				final int curCount = mCounts[countPos];
 
 				if(curCount<0) {
 					skipTailVertices();
@@ -399,7 +403,7 @@ public class Tail {
 							mStrips.startStrip();
 						float subFac;
 						if(mSubTails) {
-							float sqr = ((float)Math.pow(tSub,0.7f)*2-1);
+							final float sqr = ((float)Math.pow(tSub,0.7f)*2-1);
 							if(sqr*sqr>1)
 								System.err.println("sqr = "+sqr);
 							subFac = (float)Math.sqrt(1-sqr*sqr) * countFac;
@@ -407,7 +411,7 @@ public class Tail {
 							subFac = 1;
 						scale = (1 - tGlobal * mScaleFallOff) * subFac;
 						alpha = (1-tGlobal) * subFac;
-						
+
 						putTailVertices(scale*mWidth,alpha);
 					}else{
 						if(curCount>0)
@@ -449,5 +453,5 @@ public class Tail {
 	public void setTexShiftBySize() {
 		mTexXShift = -getTailLength()%mTexXRepeat;
 	}
-	
+
 }

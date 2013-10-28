@@ -15,32 +15,32 @@ import yang.util.DefaultFunctions;
 public class Particle2DSampleState extends SampleState {
 
 	private static final int PARTICLES_PER_FRAME = 1;
-	
+
 	private Particles2D<EffectParticle> mParticles;
 	private Texture mParticleTexture;
 	private TextureCoordinatesQuad[] mTexCoords;
 	private float mCurPntX=0,mCurPntY=0,mDelayedPntX=0,mDelayedPntY=0;
-	private float mSmokeScale = 0.4f;
-	private float mParticleSpeed = 0.4f;
-	
-	
-	
+	private final float mSmokeScale = 0.4f;
+	private final float mParticleSpeed = 0.4f;
+
+
+
 	@Override
 	protected void initGraphics() {
 		mParticles = new Particles2D<EffectParticle>(EffectParticle.class).init(mGraphics2D, 320);
 		mParticles.setScaleFunction(DefaultFunctions.EXP_GROWING_SQR_SHRINKING);
 		mParticleTexture = mGFXLoader.getImage("particles",TextureFilter.LINEAR_MIP_LINEAR);
 		mParticles.mTexture = mParticleTexture;
-		mParticles.mCelShading = 1.14f;
+		mParticles.setCelShading(1.14f);
 		mTexCoords = TextureCoordinateSet.createTexCoordSequencePixelsBias(mParticleTexture,0, 0, 64,64, 4, 2,2);
 	}
-	
+
 	@Override
 	protected void step(float deltaTime) {
 		for(int i=0;i<PARTICLES_PER_FRAME;i++) {
 			mDelayedPntX += (mCurPntX-mDelayedPntX)*0.2f;
 			mDelayedPntY += (mCurPntY-mDelayedPntY)*0.2f;
-			EffectParticle particle = mParticles.spawnParticle(mDelayedPntX, mDelayedPntY, mTexCoords[MathFunc.randomI(4)]);
+			final EffectParticle particle = mParticles.spawnParticle(mDelayedPntX, mDelayedPntY, mTexCoords[MathFunc.randomI(4)]);
 			particle.mFriction = 0.995f;
 			particle.setSpeedRangeSpread2D(5.2f*mParticleSpeed,6.0f*mParticleSpeed, 1.2f, 0.5f);
 			particle.setLifeTime(0.7f,0.9f);
@@ -69,17 +69,17 @@ public class Particle2DSampleState extends SampleState {
 		mDelayedPntX = x;
 		mDelayedPntY = y;
 	}
-	
+
 	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		mCurPntX = x;
 		mCurPntY = y;
 	}
-	
+
 	@Override
 	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
 		mCurPntX = x;
 		mCurPntY = y;
 	}
-	
+
 }

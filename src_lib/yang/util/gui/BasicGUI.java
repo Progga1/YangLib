@@ -39,6 +39,7 @@ public class BasicGUI implements RawEventListener,Drawable {
 	public float mProjXFactor,mProjYFactor;
 	public float mCurrentTime;
 	public GUIInteractiveComponent[] mPressedComponent = new GUIInteractiveComponent[YangEventQueue.MAX_POINTERS];
+	public GUIInteractiveComponent[] mHoverComponent = new GUIInteractiveComponent[YangEventQueue.MAX_POINTERS];
 	public NonConcurrentList<Texture> mPassTextures;
 
 	protected static GUIPointerEvent[] createEventPool(int capacity) {

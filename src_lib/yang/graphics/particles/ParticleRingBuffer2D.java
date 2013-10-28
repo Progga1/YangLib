@@ -6,50 +6,55 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.programs.BasicProgram;
-import yang.model.DebugYang;
 
 public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extends AbstractParticleRingBuffer<Default2DGraphics,ParticleType> {
 
 	public BasicProgram mProgram;
-	public float mCelShading;
-	int d = 200;
-	
+	public float mCelShadingX=1,mCelShadingY=1;
+
+	@Override
 	public ParticleRingBuffer2D<ParticleType> init(Default2DGraphics graphics,int maxParticleCount) {
 		super.init(graphics,maxParticleCount);
 		mProgram = graphics.getDefaultProgram();
 		return this;
 	}
-	
+
+	public void setCelShading(float factor) {
+		mCelShadingX = factor;
+		mCelShadingY = factor;
+	}
+
+	@Override
 	protected abstract ParticleType createParticle();
-	
+
+	@Override
 	protected void drawParticles() {
-		IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
+		final IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
 		mGraphics.setShaderProgram(mProgram);
 		mGraphics.setBlack();
-		if(mCelShading!=1) {
-			for(ParticleType particle:mParticles) {
+		if(mCelShadingX!=1 && mCelShadingY!=1) {
+			for(final ParticleType particle:mParticles) {
 				if(particle.mExists) {
 					float uScale;
 					if(mScaleSpeed==0) {
-						uScale = mCelShading;
+						uScale = 1;
 					}else{
 						if(mScaleLookUp!=null) {
-							uScale = mScaleLookUp.get(particle.mNormLifeTime*mScaleSpeed)*mCelShading;
+							uScale = mScaleLookUp.get(particle.mNormLifeTime*mScaleSpeed);
 						}else{
-							uScale = (1-particle.mNormLifeTime*mScaleSpeed)*mCelShading;
+							uScale = (1-particle.mNormLifeTime*mScaleSpeed);
 						}
 					}
-//					mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*particle.mScaleX, uScale*mCelShading*particle.mScaleY, particle.mRotation, particle.mTextureCoordinates);
 					vertexBuffer.beginQuad(false);
-					vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*particle.mScaleX, uScale*mCelShading*particle.mScaleY, particle.mPosX, particle.mPosY, 0, particle.mRotation);
+					vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*mCelShadingX*particle.mScaleX, uScale*mCelShadingY*particle.mScaleY, particle.mPosX, particle.mPosY, 0, particle.mRotation);
 					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, particle.mTextureCoordinates.mAppliedCoordinates);
 					vertexBuffer.putArray(DefaultGraphics.ID_COLORS, DefaultGraphics.RECT_BLACK);
 					vertexBuffer.putArray(DefaultGraphics.ID_SUPPDATA, DefaultGraphics.RECT_BLACK);
 				}
 			}
 		}
-		
-		ListIterator<ParticleType> iter = mParticles.listIteratorLast();
+
+		final ListIterator<ParticleType> iter = mParticles.listIteratorLast();
 		ParticleType particle;
 		while((particle=iter.previous())!=null) {
 			if(particle.mExists) {
@@ -73,16 +78,13 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 						uScale = (1-particle.mNormLifeTime*mScaleSpeed);
 					}
 				}
-//				mGraphics.drawRectCentered(particle.mPosX, particle.mPosY, uScale*particle.mScaleX, uScale*particle.mScaleY, particle.mRotation, particle.mTextureCoordinates);
 				vertexBuffer.beginQuad(false);
-				vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*particle.mScaleX, uScale*mCelShading*particle.mScaleY, particle.mPosX, particle.mPosY, 0, particle.mRotation);
+				vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*particle.mScaleX, uScale*particle.mScaleY, particle.mPosX, particle.mPosY, 0, particle.mRotation);
 				vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, particle.mTextureCoordinates.mAppliedCoordinates);
 				vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, particle.mColor, 4);
-				//vertexBuffer.putArray(DefaultGraphics.ID_COLORS, DefaultGraphics.RECT_WHITE);
 				vertexBuffer.putArray(DefaultGraphics.ID_SUPPDATA, DefaultGraphics.RECT_BLACK);
 			}
 		}
-		d --;
 	}
-	
+
 }
