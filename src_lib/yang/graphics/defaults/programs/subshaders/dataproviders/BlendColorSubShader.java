@@ -28,7 +28,7 @@ public class BlendColorSubShader extends SubShader {
 		fsDecl.addUniform("vec4", "blendProperties");
 		shaderParser.appendLn(VAR_FS_MAIN, "float blendAlpha = "+mBlendInputColor+".a*blendProperties[0]");
 		shaderParser.appendOp(VAR_FRAGCOLOR, "(1.0-blendAlpha)", "*");
-		shaderParser.appendOp(VAR_FRAGCOLOR, mBlendInputColor+"*blendAlpha", "+");
+		shaderParser.appendOp(VAR_FRAGCOLOR, mBlendInputColor+"*blendAlpha*texCl.a", "+");
 	}
 
 	@Override

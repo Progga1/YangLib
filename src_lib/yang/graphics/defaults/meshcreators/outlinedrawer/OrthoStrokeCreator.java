@@ -218,11 +218,20 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 
 		final float BIAS_X = 0.001f;
 		int fieldCount = (int)(Math.abs(distance)/mProperties.mWidth-0.5f);
+		final boolean alwaysStretch = mProperties.mOffsets==null;
 		if(fieldCount>1)
 			fieldCount *= mProperties.mStretch;
-		final float offset = mProperties.mOffsets[(fieldCount+mProperties.mOffsets.length-1)%mProperties.mOffsets.length]*mProperties.mLineTexFieldWidth;
+		float offset;
+		if(alwaysStretch)
+			offset = 0;
+		else
+			offset = mProperties.mOffsets[(fieldCount+mProperties.mOffsets.length-1)%mProperties.mOffsets.length]*mProperties.mLineTexFieldWidth;
 		final float x1 = texCoords.mLeft+offset+BIAS_X;
-		final float x2 = x1+(mProperties.mLineTexFieldWidth*fieldCount*texCoords.mWidth)-BIAS_X;
+		final float x2;
+		if(alwaysStretch)
+			x2 = texCoords.getBiasedRight();
+		else
+			x2 = x1+(mProperties.mLineTexFieldWidth*fieldCount*texCoords.mWidth)-BIAS_X;
 		final float y2 = texCoords.mTop+texCoords.mHeight;
 		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
 				x1,texCoords.mTop+mProperties.mTexBias,
