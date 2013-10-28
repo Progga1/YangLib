@@ -59,6 +59,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	protected boolean mCurIsPerspective;
 	protected float mCurNear,mCurFar,mCurFovy,mCurZoom;
+	public float mSensorZ = 0.1f;
 
 	public static float[] swapCoords(float[] original,int x,int y,int z) {
 		final float[] result = new float[12];
@@ -210,9 +211,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mOriginalCameraMatrix.set(mCameraMatrix);
 		if(mTranslator.mForceStereo || mTranslator.getRenderTargetStackLevel()<=(mTranslator.mStereo?0:-1)) {
 			if(mTranslator.mSensorCameraEnabled) {
-				mCameraMatrix.postTranslate(0, 0, mCurNear);
+				mCameraMatrix.postTranslate(0, 0, mSensorZ);
 				mCameraMatrix.multiplyLeft(mTranslator.mSensorCameraMatrix);
-				mCameraMatrix.postTranslate(0, 0, -mCurNear);
+				mCameraMatrix.postTranslate(0, 0, -mSensorZ);
 
 			}
 			if(mTranslator.mStereo) {
