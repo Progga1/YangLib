@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 
-public class NonConcurrentList<E> implements List<E> {
+public class YangList<E> implements List<E> {
 
 	private class Node {
 		E elem;
@@ -20,7 +20,7 @@ public class NonConcurrentList<E> implements List<E> {
 		}
 	}
 
-	public class NonConcurrentIterator<T> implements ListIterator<T> {
+	public class YangListIterator<T> implements ListIterator<T> {
 
 		Node current = null;
 		Node dummy = new Node(null, null, null);
@@ -38,7 +38,7 @@ public class NonConcurrentList<E> implements List<E> {
 		}
 
 		public void remove() {
-			NonConcurrentList.this.remove((Node)current, (E)current.elem);
+			YangList.this.remove((Node)current, (E)current.elem);
 		}
 
 		public void prepare(int idx) {
@@ -60,7 +60,7 @@ public class NonConcurrentList<E> implements List<E> {
 
 		@SuppressWarnings("unchecked")
 		public void add(T e) {
-			NonConcurrentList.this.add((Node)current, (E)e, false);
+			YangList.this.add((Node)current, (E)e, false);
 		}
 
 		public boolean hasPrevious() {
@@ -92,17 +92,17 @@ public class NonConcurrentList<E> implements List<E> {
 	public Node first;
 	public Node last;
 	public int defaultIteratorIndex;
-	private NonConcurrentIterator<E>[] iterators;
+	private YangListIterator<E>[] iterators;
 	private int size;
 
 	@SuppressWarnings("unchecked")
-	public NonConcurrentList(int iteratorCount) {
-		iterators = new NonConcurrentIterator[iteratorCount];
-		for (int i = 0; i < iteratorCount; i++) iterators[i] = new NonConcurrentIterator<E>();
+	public YangList(int iteratorCount) {
+		iterators = new YangListIterator[iteratorCount];
+		for (int i = 0; i < iteratorCount; i++) iterators[i] = new YangListIterator<E>();
 		defaultIteratorIndex = 0;
 	}
 
-	public NonConcurrentList() {
+	public YangList() {
 		this(2);
 	}
 
@@ -180,7 +180,7 @@ public class NonConcurrentList<E> implements List<E> {
 	}
 
 	public Iterator<E> iterator() {
-		NonConcurrentIterator<E> iterator = iterators[defaultIteratorIndex];
+		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		iterator.prepare(0);
 		return iterator;
 	}
@@ -198,7 +198,7 @@ public class NonConcurrentList<E> implements List<E> {
 	}
 
 	public ListIterator<E> listIterator() {
-		NonConcurrentIterator<E> iterator = iterators[defaultIteratorIndex];
+		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		iterator.prepare(0);
 		return iterator;
 	}
@@ -208,13 +208,13 @@ public class NonConcurrentList<E> implements List<E> {
 	}
 
 	public ListIterator<E> listIterator(Node startNode) {
-		NonConcurrentIterator<E> iterator = iterators[defaultIteratorIndex];
+		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		iterator.prepare(startNode);
 		return iterator;
 	}
 
 	public ListIterator<E> listIterator(E startElement) {
-		NonConcurrentIterator<E> iterator = iterators[defaultIteratorIndex];
+		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		Node curr = first;
 		while (curr != null) {
 			if (curr.elem.equals(startElement)) break;
@@ -228,7 +228,7 @@ public class NonConcurrentList<E> implements List<E> {
 	}
 
 	public ListIterator<E> listIterator(int startIndex) {
-		NonConcurrentIterator<E> iterator = iterators[defaultIteratorIndex];
+		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		if (validIdx(startIndex)) {
 			iterator.prepare(startIndex);
 			return iterator;

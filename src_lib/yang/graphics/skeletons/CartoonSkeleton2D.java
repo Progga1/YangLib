@@ -10,7 +10,7 @@ import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.Skeleton2D;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class CartoonSkeleton2D extends Skeleton2D {
 
@@ -31,7 +31,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	protected float[] mSkeletonColor;
 	protected float[] mContourColor;
 	protected float[] mSuppData;
-	public NonConcurrentList<NonConcurrentList<CartoonBone>> mLayersList;
+	public YangList<YangList<CartoonBone>> mLayersList;
 	public CartoonBone[] mCartoonBones;
 	public CartoonBone[][] mLayers;
 	public CartoonBone[][] mFrontToBackLayers;
@@ -44,7 +44,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 
 	public CartoonSkeleton2D() {
 		super();
-		mLayersList = new NonConcurrentList<NonConcurrentList<CartoonBone>>();
+		mLayersList = new YangList<YangList<CartoonBone>>();
 		mSkeletonColor = new float[4];
 		mContourColor = new float[4];
 		mSuppData = new float[4];
@@ -112,7 +112,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		super.addSpringBone(bone, constraintDistanceStrength);
 		if(bone instanceof CartoonBone) {
 			while(layer>mLayersList.size()-1)
-				mLayersList.add(new NonConcurrentList<CartoonBone>());
+				mLayersList.add(new YangList<CartoonBone>());
 			mLayersList.get(layer).add((CartoonBone)bone);
 		}
 		return bone;
@@ -132,7 +132,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		if(mMesh==null) {
 			//FIRST DRAW
 			mVertexCount = 0;
-			for(NonConcurrentList<CartoonBone> layer:mLayersList) {
+			for(YangList<CartoonBone> layer:mLayersList) {
 				//Contour
 				for(CartoonBone bone:layer) {
 					if(mDrawContour && bone.mCelShading)
@@ -334,7 +334,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mCartoonBones = new CartoonBone[mBones.size()];
 		int k=0;
 		int i=0;
-		for(NonConcurrentList<CartoonBone> layer:mLayersList) {
+		for(YangList<CartoonBone> layer:mLayersList) {
 			CartoonBone[] layerArray = new CartoonBone[layer.size()];
 			int c=0;
 			for(CartoonBone bone:layer) {

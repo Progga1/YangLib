@@ -1,6 +1,6 @@
 package yang.graphics.font;
 
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class FixedString {
 
@@ -63,7 +63,7 @@ public class FixedString {
 	public FixedString allocFormatString(String formatString) {
 		int markerCount = 0;
 		boolean escaped = false;
-		NonConcurrentList<MarkInfo> markList = new NonConcurrentList<MarkInfo>();
+		YangList<MarkInfo> markList = new YangList<MarkInfo>();
 		int charCount = 0;
 		mSpaceCount = 0;
 		

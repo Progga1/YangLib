@@ -9,7 +9,7 @@ import yang.physics.massaggregation.constraints.Constraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class MassAggregation {
 
@@ -33,9 +33,9 @@ public class MassAggregation {
 	public SkeletonCarrier mCarrier;
 
 	//Data
-	public NonConcurrentList<Joint> mJoints;
-	public NonConcurrentList<JointConnection> mBones;
-	public NonConcurrentList<Constraint> mConstraints;
+	public YangList<Joint> mJoints;
+	public YangList<JointConnection> mBones;
+	public YangList<Constraint> mConstraints;
 
 	//State
 	public float mShiftX = 0;
@@ -48,9 +48,9 @@ public class MassAggregation {
 
 
 	public MassAggregation() {
-		mJoints = new NonConcurrentList<Joint>();
-		mBones = new NonConcurrentList<JointConnection>();
-		mConstraints = new NonConcurrentList<Constraint>();
+		mJoints = new YangList<Joint>();
+		mBones = new YangList<JointConnection>();
+		mConstraints = new YangList<Constraint>();
 
 		mCarrier = NEUTRAL_CARRIER;
 		m3D = true;

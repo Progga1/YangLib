@@ -19,7 +19,7 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.filereader.TokenReader;
 
 public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
@@ -53,8 +53,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public short[] mIndices;
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
-	public NonConcurrentList<YangMaterialSet> mMaterialSets;
-	public NonConcurrentList<OBJMaterialSection> mMaterialSections;
+	public YangList<YangMaterialSet> mMaterialSets;
+	public YangList<OBJMaterialSection> mMaterialSections;
 	public TextureProperties mTextureProperties;
 	
 	public DrawBatch mDrawBatch;
@@ -82,8 +82,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			smoothIndices = new int[MAX_VERTICES];
 		}
 
-		mMaterialSets = new NonConcurrentList<YangMaterialSet>();
-		mMaterialSections = new NonConcurrentList<OBJMaterialSection>();
+		mMaterialSets = new YangList<YangMaterialSet>();
+		mMaterialSections = new YangList<OBJMaterialSection>();
 	}
 	
 	public OBJLoader(DefaultGraphics<?> graphics,ObjMaterialHandles handles) {

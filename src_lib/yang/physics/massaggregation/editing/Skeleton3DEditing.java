@@ -10,7 +10,7 @@ import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class Skeleton3DEditing {
 
@@ -181,7 +181,7 @@ public class Skeleton3DEditing {
 		return result;
 	}
 
-	public NonConcurrentList<Joint> getJoints() {
+	public YangList<Joint> getJoints() {
 		return mSkeleton.mJoints;
 	}
 

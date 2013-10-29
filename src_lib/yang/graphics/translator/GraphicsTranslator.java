@@ -30,7 +30,7 @@ import yang.model.ScreenInfo;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
 import yang.model.state.GraphicsState;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,ScreenInfo {
 
@@ -51,7 +51,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mInvRatioX;
 	public float mInvRatioY;
 	public long mThreadId;
-	private final NonConcurrentList<SurfaceListener> mScreenListeners;
+	private final YangList<SurfaceListener> mScreenListeners;
 	public float mMinRatioX = 1;
 	public float mMaxTime = 60;
 	private int mMaxTextureId = -1;
@@ -100,9 +100,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public Texture mBlackTexture;
 	private final Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
-	private final NonConcurrentList<TextureRenderTarget> mRenderTargets;
-	private final NonConcurrentList<Texture> mRegisteredTextures;
-	private final NonConcurrentList<AbstractProgram> mPrograms;
+	private final YangList<TextureRenderTarget> mRenderTargets;
+	private final YangList<Texture> mRegisteredTextures;
+	private final YangList<AbstractProgram> mPrograms;
 	private ShortBuffer mWireFrameIndexBuffer;
 	private int mMaxFPS;
 	private long mMinDrawFrameIntervalNanos;
@@ -198,14 +198,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mFlushCount = 0;
 		mDrawMode = T_TRIANGLES;
 		mWireFrames = false;
-		mPrograms = new NonConcurrentList<AbstractProgram>();
+		mPrograms = new YangList<AbstractProgram>();
 		mCurDrawListener = null;
 		appInstance = this;
 		mCurrentScreen = this;
 		mNoTexture = new Texture(this);
-		mScreenListeners = new NonConcurrentList<SurfaceListener>();
-		mRenderTargets = new NonConcurrentList<TextureRenderTarget>();
-		mRegisteredTextures = new NonConcurrentList<Texture>();
+		mScreenListeners = new YangList<SurfaceListener>();
+		mRenderTargets = new YangList<TextureRenderTarget>();
+		mRegisteredTextures = new YangList<Texture>();
 		setMaxFPS(0);
 	}
 

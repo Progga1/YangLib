@@ -1,7 +1,7 @@
 package yang.util.gui.components;
 
 import yang.events.eventtypes.YangEvent;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
@@ -11,7 +11,7 @@ public abstract class GUIInteractiveComponent extends GUIMultipassComponent impl
 	public float mPressedTime;
 	public float mHoverTime;
 	public GUIActionListener mActionListener;
-	public NonConcurrentList<GUIPointerListener> mPointerListeners = new NonConcurrentList<GUIPointerListener>();
+	public YangList<GUIPointerListener> mPointerListeners = new YangList<GUIPointerListener>();
 
 	public abstract boolean inArea(float x,float y);
 
@@ -26,7 +26,7 @@ public abstract class GUIInteractiveComponent extends GUIMultipassComponent impl
 		return this;
 	}
 
-	public GUIInteractiveComponent setPointerListener(NonConcurrentList<GUIPointerListener> pointerListeners) {
+	public GUIInteractiveComponent setPointerListener(YangList<GUIPointerListener> pointerListeners) {
 		for(final GUIPointerListener listener:pointerListeners)
 			mPointerListeners.add(listener);
 		return this;

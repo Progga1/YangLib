@@ -14,7 +14,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.math.objects.Dimensions2i;
 import yang.systemdependent.AbstractResourceManager;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 
 
@@ -22,8 +22,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	private class ResourceEntry {
 
-		public NonConcurrentList<Texture> mTextures = new NonConcurrentList<Texture>();
-		public NonConcurrentList<SubTexture> mSubTextures = new NonConcurrentList<SubTexture>();
+		public YangList<Texture> mTextures = new YangList<Texture>();
+		public YangList<SubTexture> mSubTextures = new YangList<SubTexture>();
 
 		public void clear() {
 			for(final Texture tex:mTextures)
@@ -45,7 +45,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public HashMap<String, ResourceEntry> mTextures;
 	protected HashMap<String, String> mShaders;
 	protected HashMap<String, YangMaterialSet> mMaterials;
-	protected NonConcurrentList<Texture> mAtlasses;
+	protected YangList<Texture> mAtlasses;
 	protected GraphicsTranslator mGraphics;
 
 	public String[] mTexKeyQueue;
@@ -70,7 +70,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		mTextures = new HashMap<String, ResourceEntry>();
 		mShaders = new HashMap<String, String>();
 		mMaterials = new HashMap<String, YangMaterialSet>();
-		mAtlasses = new NonConcurrentList<Texture>();
+		mAtlasses = new YangList<Texture>();
 		mGraphics = graphics;
 		mResources = resources;
 	}

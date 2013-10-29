@@ -2,12 +2,12 @@ package yang.graphics.textures;
 
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public abstract class TextureCoordinateSet {
 
 	public GraphicsTranslator mGraphics;
-	public NonConcurrentList<TextureCoordinatesQuad> mTexCoords;
+	public YangList<TextureCoordinatesQuad> mTexCoords;
 	protected float mTexWidth,mTexHeight;
 	protected float mDefaultBiasX=0,mDefaultBiasY=0;
 	protected float mPatchSizeX,mPatchSizeY;
@@ -44,7 +44,7 @@ public abstract class TextureCoordinateSet {
 		mPatchSizeY = patchSize;
 		mDefaultBiasX = defaultBias;
 		mDefaultBiasY = defaultBias;
-		mTexCoords = new NonConcurrentList<TextureCoordinatesQuad>();
+		mTexCoords = new YangList<TextureCoordinatesQuad>();
 	}
 	
 	public TextureCoordinateSet(GraphicsTranslator graphics) {

@@ -8,7 +8,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.callback.Drawable;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.gui.components.GUIComponent;
 import yang.util.gui.components.GUIContainer2D;
 import yang.util.gui.components.GUIInteractiveComponent;
@@ -40,7 +40,7 @@ public class BasicGUI implements RawEventListener,Drawable {
 	public float mCurrentTime;
 	public GUIInteractiveComponent[] mPressedComponent = new GUIInteractiveComponent[YangEventQueue.MAX_POINTERS];
 	public GUIInteractiveComponent[] mHoverComponent = new GUIInteractiveComponent[YangEventQueue.MAX_POINTERS];
-	public NonConcurrentList<Texture> mPassTextures;
+	public YangList<Texture> mPassTextures;
 
 	protected static GUIPointerEvent[] createEventPool(int capacity) {
 		final GUIPointerEvent[] result = new GUIPointerEvent[capacity];
@@ -58,7 +58,7 @@ public class BasicGUI implements RawEventListener,Drawable {
 		mMainContainer.init(this);
 		mAutoUpdateProjections = autoUpdateProjections;
 		setCoordinatesMode(coordinatesMode);
-		mPassTextures = new NonConcurrentList<Texture>();
+		mPassTextures = new YangList<Texture>();
 		setPassTexture(0,mTranslator.mWhiteTexture);
 		setPassTexture(maxPasses,null);
 	}

@@ -5,7 +5,7 @@ import yang.math.Geometry;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.MassAggregation;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class Joint {
 
@@ -23,7 +23,7 @@ public class Joint {
 	public MassAggregation mSkeleton;
 	public Joint mAngleParent;
 	public float mParentDistance;
-	public NonConcurrentList<Joint> mChildren;
+	public YangList<Joint> mChildren;
 	public boolean mSavePose;
 	public float mFriction;
 	public float mPositionForceFactor = 1;
@@ -57,7 +57,7 @@ public class Joint {
 		mSkeleton = skeleton;
 		mId = mSkeleton.getNextJointId();
 		mSavePose = true;
-		mChildren = new NonConcurrentList<Joint>();
+		mChildren = new YangList<Joint>();
 		mFriction = DEFAULT_FRICTION;
 		setParent(parent);
 		refreshParentAngle();

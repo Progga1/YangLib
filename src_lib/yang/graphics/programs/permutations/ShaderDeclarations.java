@@ -2,17 +2,17 @@ package yang.graphics.programs.permutations;
 
 import java.util.HashMap;
 
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class ShaderDeclarations {
 
-	public NonConcurrentList<ShaderDeclaration> mDeclarations;
+	public YangList<ShaderDeclaration> mDeclarations;
 	protected ShaderPermutationsParser mParser;
 	protected String mParserKey;
 	public HashMap<String,String> mLocalDeclarations;
 
 	public ShaderDeclarations(ShaderPermutationsParser parser,String parserKey) {
-		mDeclarations = new NonConcurrentList<ShaderDeclaration>();
+		mDeclarations = new YangList<ShaderDeclaration>();
 		mLocalDeclarations = new HashMap<String,String>(32);
 		mParserKey = parserKey;
 		mParser = parser;

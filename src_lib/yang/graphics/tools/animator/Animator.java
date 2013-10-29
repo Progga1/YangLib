@@ -19,7 +19,7 @@ import yang.graphics.util.Camera2D;
 import yang.model.Rect;
 import yang.physics.massaggregation.elements.Joint;
 import yang.sound.AbstractSoundManager;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class Animator implements YangEventListener {
 
@@ -33,10 +33,10 @@ public class Animator implements YangEventListener {
 	public AnimationPlayer mCurAnimationPlayer;
 	private Camera2D mCamera;
 	private SkeletonEditing mSkeletonEditing;
-	public NonConcurrentList<CartoonSkeleton2D> mSkeletons;
-	public NonConcurrentList<Texture> mTextures;
-	public NonConcurrentList<AnimationSystem<?,?>> mAnimationSystems;
-	public NonConcurrentList<AnimationPlayer<?>> mAnimationPlayers;
+	public YangList<CartoonSkeleton2D> mSkeletons;
+	public YangList<Texture> mTextures;
+	public YangList<AnimationSystem<?,?>> mAnimationSystems;
+	public YangList<AnimationPlayer<?>> mAnimationPlayers;
 	public AnimationSystem<?,?> mCurAnimationSystem;
 	public Animation<?> mCurAnimation;
 	public KeyFrame mCurFrame;
@@ -63,14 +63,14 @@ public class Animator implements YangEventListener {
 		mGraphics = graphics2D.mTranslator;
 		mCamera = new Camera2D();
 		mCamera.mAdaption = 0.2f;
-		mSkeletons = new NonConcurrentList<CartoonSkeleton2D>();
-		mTextures = new NonConcurrentList<Texture>();
-		mAnimationPlayers = new NonConcurrentList<AnimationPlayer<?>>();
+		mSkeletons = new YangList<CartoonSkeleton2D>();
+		mTextures = new YangList<Texture>();
+		mAnimationPlayers = new YangList<AnimationPlayer<?>>();
 		mSkeletonIndex = -1;
 		mCurTexture = null;
 		mSkeletonEditing = new SkeletonEditing();
 		CartoonSkeleton2D.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
-		mAnimationSystems = new NonConcurrentList<AnimationSystem<?,?>>();
+		mAnimationSystems = new YangList<AnimationSystem<?,?>>();
 		mPaused = false;
 		mPlaying = false;
 		mPhysicsMode = false;
