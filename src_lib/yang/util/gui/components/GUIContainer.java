@@ -36,13 +36,13 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 					final GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];
 					guiEvent.createFromPointerEvent(pointerEvent, component);
 					GUIComponent result;
-					if(mGUI.mPressedComponent[pointerEvent.mId]==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG)
+					if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG)
 						result = component.rawPointerEvent(guiEvent);
 					else
 						result = null;
 
 					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
-						if(mGUI.mPressedComponent[pointerEvent.mId]==result)
+						if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==result)
 							component.guiClick(guiEvent);
 					}
 
@@ -56,7 +56,7 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 					return result;
 				}
 			}
-			if(mGUI.mPressedComponent[pointerEvent.mId]==null)
+			if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null)
 				return super.rawPointerEvent(pointerEvent);
 			else
 				return null;

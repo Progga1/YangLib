@@ -55,6 +55,10 @@ public class Quaternion {
 		mW = w;
 	}
 
+	public void set(float x,float y,float z) {
+		set(x,y,z,(float)Math.sqrt(1-x*x-y*y-z*z));
+	}
+
 	public void set(Quaternion quaternion) {
 		mX = quaternion.mX;
 		mY = quaternion.mY;
