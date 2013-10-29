@@ -4,7 +4,7 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.lookuptable.Function;
 import yang.util.lookuptable.LookUpTable;
 
@@ -21,7 +21,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	public LookUpTable mScaleLookUp;
 	public LookUpTable mAlphaLookUp;
 	public int mParticleCount;
-	public NonConcurrentList<ParticleType> mParticles;
+	public YangList<ParticleType> mParticles;
 	public float mDefaultFriction = 0.9995f;
 	
 	protected abstract ParticleType createParticle();
@@ -41,7 +41,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		mGraphics = graphics;
 		mTranslator = graphics.mTranslator;
 		mMaxParticleCount = maxParticleCount;
-		mParticles = new NonConcurrentList<ParticleType>();
+		mParticles = new YangList<ParticleType>();
 		for(int i=0;i<maxParticleCount;i++)
 			mParticles.add(createParticle());
 		return this;

@@ -1,12 +1,12 @@
 package yang.graphics.translator;
 
 import yang.graphics.textures.TextureProperties;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class TextureAtlas {
 
 	public GraphicsTranslator mGraphics;
-	public NonConcurrentList<AbstractTexture> mSubTextures = new NonConcurrentList<AbstractTexture>();
+	public YangList<AbstractTexture> mSubTextures = new YangList<AbstractTexture>();
 	public Texture mMainTexture;
 	
 	public TextureAtlas init(Texture mainTexture) {

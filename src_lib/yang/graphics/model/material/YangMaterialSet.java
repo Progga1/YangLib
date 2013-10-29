@@ -8,14 +8,14 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.AbstractGFXLoader;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.filereader.TokenReader;
 
 public class YangMaterialSet {
 
 	private static String[] KEYWORDS = {"newmtl","Ka","Kd","Ks","Ns","Ke","map_Kd","map_Ks","map_Ke"};
 	
-	public NonConcurrentList<YangMaterial> mMaterials;
+	public YangList<YangMaterial> mMaterials;
 	
 	public static TextureProperties diffuseTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
 	public static TextureProperties specularTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
@@ -26,7 +26,7 @@ public class YangMaterialSet {
 	
 	public YangMaterialSet(AbstractGFXLoader gfxLoader) {
 		mGFXLoader = gfxLoader;
-		mMaterials = new NonConcurrentList<YangMaterial>();
+		mMaterials = new YangList<YangMaterial>();
 	}
 	
 	private void readColor(FloatColor targetColor,float defaultAlpha) throws IOException {

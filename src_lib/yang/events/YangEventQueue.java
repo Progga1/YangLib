@@ -9,7 +9,7 @@ import yang.events.eventtypes.YangZoomEvent;
 import yang.events.listeners.YangEventListener;
 import yang.events.macro.MacroWriter;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 //TODO split meta and runtime, esp. pointerTrackers/keyStates
 
@@ -46,7 +46,7 @@ public class YangEventQueue {
 	private GraphicsTranslator mGraphics;
 	private final boolean[] mMetaKeys;
 	public boolean mMetaMode = false;
-	public NonConcurrentList<MacroWriter> mMacroWriters;
+	public YangList<MacroWriter> mMacroWriters;
 	public boolean mTriggerZooming = true;
 	public float mSurfacePointerZ = 0;
 
@@ -126,7 +126,7 @@ public class YangEventQueue {
 
 	public void registerEventWriter(MacroWriter writer) {
 		if(mMacroWriters==null)
-			mMacroWriters = new NonConcurrentList<MacroWriter>();
+			mMacroWriters = new YangList<MacroWriter>();
 		mMacroWriters.add(writer);
 		writer.start();
 	}

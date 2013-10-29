@@ -44,10 +44,10 @@ public class Point3f {
 		mZ += z;
 	}
 
-	public void add(Vector3f vector) {
-		mX += vector.mX;
-		mY += vector.mY;
-		mZ += vector.mZ;
+	public void add(Point3f point) {
+		mX += point.mX;
+		mY += point.mY;
+		mZ += point.mZ;
 	}
 
 	public void add(Vector3f vector,float factor) {

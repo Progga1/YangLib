@@ -3,20 +3,20 @@ package yang.graphics.programs.permutations;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class ShaderPermutations extends Basic3DProgram {
 
 	static final String LINE_END = ";\r\n";
 
-	public NonConcurrentList<SubShader> mLinearSubShaderList;
+	public YangList<SubShader> mLinearSubShaderList;
 	public SubShader[] mDataPassingShaders;
 	public int mPassingDataCount = 0;
 	public String mVSSource,mFSSource;
 
 	public ShaderPermutations(GraphicsTranslator graphics) {
 		mGraphics = graphics;
-		mLinearSubShaderList = new NonConcurrentList<SubShader>();
+		mLinearSubShaderList = new YangList<SubShader>();
 		mPassingDataCount = 0;
 	}
 

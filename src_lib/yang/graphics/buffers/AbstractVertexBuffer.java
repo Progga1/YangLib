@@ -1,7 +1,7 @@
 package yang.graphics.buffers;
 
 import yang.model.Rect;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.Util;
 
 
@@ -24,7 +24,7 @@ public abstract class AbstractVertexBuffer {
 	public int mFloatBufferCount;
 	public int[] mFloatBufferElementSizes;
 	public float[][] mNeutralElements;
-	public NonConcurrentList<BufferLink> mLinkedBuffers;
+	public YangList<BufferLink> mLinkedBuffers;
 	
 	protected abstract void allocBuffers();
 	protected abstract void initBuffer(int bufId);
@@ -52,7 +52,7 @@ public abstract class AbstractVertexBuffer {
 	public AbstractVertexBuffer(boolean dynamicVertices,int maxVertices) {
 		mDynamicVertices = dynamicVertices;
 		mMaxVertexCount = maxVertices;
-		mLinkedBuffers = new NonConcurrentList<BufferLink>();
+		mLinkedBuffers = new YangList<BufferLink>();
 	}
 	
 	protected final void initBuffers(BufferLink[] links) {

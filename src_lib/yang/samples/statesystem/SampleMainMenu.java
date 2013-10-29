@@ -23,7 +23,7 @@ import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.StrokeDrawerSampleState;
 import yang.samples.statesystem.states.TailSampleState;
 import yang.samples.statesystem.states.TextureAtlasSampleState;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
 import yang.util.gui.components.GUIComponent;
@@ -39,11 +39,11 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	public static float SCALE = 1.16f;
 
 	protected BasicGUI mGUI;
-	protected NonConcurrentList<DefaultRectButton> mButtons;
+	protected YangList<DefaultRectButton> mButtons;
 	protected HashMap<GUIComponent,YangProgramState<?>> mProgramStates;
 
 	public SampleMainMenu() {
-		mButtons = new NonConcurrentList<DefaultRectButton>();
+		mButtons = new YangList<DefaultRectButton>();
 		mProgramStates = new HashMap<GUIComponent,YangProgramState<?>>(16);
 	}
 

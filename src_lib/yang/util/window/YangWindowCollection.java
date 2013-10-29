@@ -3,16 +3,16 @@ package yang.util.window;
 import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.math.objects.Point3f;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class YangWindowCollection {
 
-	public NonConcurrentList<YangWindow<?>> mWindows;
+	public YangList<YangWindow<?>> mWindows;
 	public Point3f mLookAtReference = null;
 	public DefaultGraphics<?> mGraphics;
 
 	public YangWindowCollection(DefaultGraphics<?> graphics) {
-		mWindows = new NonConcurrentList<YangWindow<?>>();
+		mWindows = new YangList<YangWindow<?>>();
 		mGraphics = graphics;
 	}
 

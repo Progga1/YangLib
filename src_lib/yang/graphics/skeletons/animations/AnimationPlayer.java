@@ -1,6 +1,5 @@
 package yang.graphics.skeletons.animations;
 
-import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.model.App;
 import yang.physics.massaggregation.MassAggregation;
 import yang.sound.AbstractSoundManager;
@@ -9,7 +8,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 
 	public MassAggregation mSkeleton;
 	public boolean mOnlyPhysics;
-	
+
 	protected AnimationType mStartAnimation;
 	public AnimationType mCurrentAnimation;
 	public boolean mPlaySounds;
@@ -19,7 +18,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public AbstractSoundManager mSound;
 	public float mAnimationSpeed;
 	public boolean mLockedAnimation;
-	
+
 	public AnimationPlayer(MassAggregation skeleton,AnimationType startAnimation) {
 		mSkeleton = skeleton;
 		mStartAnimation = startAnimation;
@@ -30,14 +29,14 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		mAnimationSpeed = 1;
 		mPlaySounds = true;
 	}
-	
+
 	public void setAnimationTime(float newTime) {
 		mCurrentAnimationTime = newTime;
 		if(mCurrentAnimation==null)
 			return;
-	
+
 		newTime *= mCurrentAnimation.mFramesPerSecond;
-		
+
 		if(newTime>mCurrentAnimation.mFrameCount) {
 			if(mCurrentAnimation.mWrap==WrapMode.LOOP && mCurrentAnimation.mFrameCount>0)
 				newTime -= mCurrentAnimation.mFrameCount;
@@ -64,13 +63,13 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 			}
 			mCurrentAnimationTime = newTime/mCurrentAnimation.mFramesPerSecond;
 		}
-		
+
 		if(mCurrentAnimation.mAutoAnimate) {
 			int frameId = (int)newTime;
 			if(!mCurrentAnimation.mInterpolate) {
 				mCurrentAnimation.mPreviousFrames[frameId].mPose.applyPose(mSkeleton);
 			}else{
-				
+
 				KeyFrame prevFrame = mCurrentAnimation.mPreviousFrames[frameId];
 				KeyFrame nextFrame = mCurrentAnimation.mNextFrames[frameId];
 				if(nextFrame==null)
@@ -81,13 +80,13 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public void start() {
 		setAnimation(mStartAnimation);
 	}
-	
+
 	public void setAnimation(AnimationType animation) {
 		if(mLockedAnimation)
 			return;
@@ -96,11 +95,11 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		proceed(0);
 		mLockedAnimation = mCurrentAnimation.mBlocking;
 	}
-	
+
 	public void crossAnimation(AnimationType animation) {
 		mCurrentAnimation = animation;
 	}
-	
+
 	public void proceed(float deltaTime) {
 		deltaTime *= mAnimationSpeed;
 		if(mCurrentAnimation.mAutoSetAnimationTime)
@@ -111,15 +110,15 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 //				mSkeleton.reApplyPose();
 //		}
 	}
-	
+
 	public void stopNode() {
-		
+
 	}
-	
+
 	public void interruptAnimation() {
 		mLockedAnimation = false;
 	}
-	
+
 	public void setNormalizedAnimationTime(float normalAnimationTime) {
 		setAnimationTime(normalAnimationTime*mCurrentAnimation.mTotalDuration);
 	}
@@ -130,5 +129,5 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		else
 			return mCurrentAnimationTime/mCurrentAnimation.mTotalDuration;
 	}
-	
+
 }

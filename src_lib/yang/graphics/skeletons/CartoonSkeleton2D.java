@@ -10,7 +10,7 @@ import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.Skeleton2D;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 
 public class CartoonSkeleton2D extends Skeleton2D {
 
@@ -18,33 +18,33 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	public float mContourFactor = 0.015f;
 	public boolean mDrawContour;
 	public boolean mDrawFill;
-	
+
 	//Persistent
 	private boolean mInitialized;
 	public GraphicsTranslator mTranslator;
 	public DefaultGraphics<?> mGraphics;
-	
-	
+
+
 	//GFX data
 	public DrawBatch mMesh;
 	protected IndexedVertexBuffer mVertexBuffer;
 	protected float[] mSkeletonColor;
 	protected float[] mContourColor;
 	protected float[] mSuppData;
-	public NonConcurrentList<NonConcurrentList<CartoonBone>> mLayersList;
+	public YangList<YangList<CartoonBone>> mLayersList;
 	public CartoonBone[] mCartoonBones;
 	public CartoonBone[][] mLayers;
 	public CartoonBone[][] mFrontToBackLayers;
-	
+
 	//State
 	protected boolean mUpdateColor;
 	protected boolean mUpdateTexCoords;
 	protected int mVertexCount;
 	protected float[] mInterColor;
-	
+
 	public CartoonSkeleton2D() {
 		super();
-		mLayersList = new NonConcurrentList<NonConcurrentList<CartoonBone>>();
+		mLayersList = new YangList<YangList<CartoonBone>>();
 		mSkeletonColor = new float[4];
 		mContourColor = new float[4];
 		mSuppData = new float[4];
@@ -53,9 +53,9 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mDrawContour = true;
 		mDrawFill = true;
 		mInitialized = false;
-		
+
 	}
-	
+
 	public void init(DefaultGraphics<?> graphics,SkeletonCarrier carrier) {
 		if(mInitialized)
 			return;
@@ -63,76 +63,76 @@ public class CartoonSkeleton2D extends Skeleton2D {
 
 		mGraphics = graphics;
 		mTranslator = mGraphics.mTranslator;
-		
+
 		mCurJointId = 0;
 		build();
-		
+
 		finishUpdate();
 		refreshVisualData();
-		
+
 		mInitialized = true;
 	}
-	
+
 	public void init(DefaultGraphics<?> graphics) {
 		init(graphics,NEUTRAL_CARRIER);
 	}
-	
+
 	public void drawEditing(SkeletonEditing skeletonEditing) {
 		super.drawEditing(mGraphics,skeletonEditing);
 	}
-	
+
 	public void texCoordsIntoRect(float rectLeft,float rectTop,float rectWidth,float rectHeight) {
 		for(JointConnection bone:mBones) {
 			if(bone instanceof CartoonBone)
 				((CartoonBone)bone).texCoordsIntoRect(rectLeft,rectTop,rectWidth,rectHeight);
 		}
 	}
-	
+
 	public void texCoordsIntoRect(TextureCoordBounds bounds) {
 		if(bounds==null)
 			return;
 		texCoordsIntoRect(bounds.mValues[0],bounds.mValues[1],bounds.mValues[2],bounds.mValues[3]);
 	}
-	
+
 	public boolean isInitialized() {
 		return mInitialized;
 	}
-	
+
 	public void setBonesVisible(boolean visible) {
 		for(CartoonBone bone:mCartoonBones)
 			bone.mVisible = visible;
 	}
-	
+
 	public void refreshVisualData() {
 		for(CartoonBone bone:mCartoonBones)
 			bone.refreshVisualVars();
 	}
-	
+
 	public <ConnectionType extends JointConnection> ConnectionType addSpringBone(ConnectionType bone,int layer,float constraintDistanceStrength) {
 		super.addSpringBone(bone, constraintDistanceStrength);
 		if(bone instanceof CartoonBone) {
 			while(layer>mLayersList.size()-1)
-				mLayersList.add(new NonConcurrentList<CartoonBone>());
+				mLayersList.add(new YangList<CartoonBone>());
 			mLayersList.get(layer).add((CartoonBone)bone);
 		}
 		return bone;
 	}
-	
+
 	public <ConnectionType extends JointConnection> ConnectionType addBone(ConnectionType bone,int layer) {
 		return addSpringBone(bone,layer,mDefaultBoneSpring);
 	}
-	
+
 	@Override
 	public <ConnectionType extends JointConnection> ConnectionType addSpringBone(ConnectionType bone) {
 		return addSpringBone(bone,0,mDefaultBoneSpring);
 	}
-	
+
 	public void draw() {
 
 		if(mMesh==null) {
 			//FIRST DRAW
 			mVertexCount = 0;
-			for(NonConcurrentList<CartoonBone> layer:mLayersList) {
+			for(YangList<CartoonBone> layer:mLayersList) {
 				//Contour
 				for(CartoonBone bone:layer) {
 					if(mDrawContour && bone.mCelShading)
@@ -156,10 +156,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 //		System.arraycopy(mSuppData, 0, mInterColor, 0, 4);
 //		mInterColor[3] = 0;
 //		final float zInc = 0.01f;
-		
+
 		//--UPDATE COLOR--
 		if(mUpdateColor) {
-			
+
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_COLORS,0);
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SUPPDATA, 0);
 			for(CartoonBone[] layer:mLayers) {
@@ -172,16 +172,14 @@ public class CartoonSkeleton2D extends Skeleton2D {
 						}
 					}
 				//Fill
-				for(CartoonBone _:layer) {
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4);
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4);
-					//mInterColor[3] += zInc;
-				}
+				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4*layer.length);
+				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4*layer.length);
+				//mInterColor[3] += zInc;
 				//mInterColor[3] += 0.05f;
 			}
 			mUpdateColor = false;
 		}
-		
+
 		//--UPDATE TEXTURE COORDINATES--
 		if(mUpdateTexCoords) {
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_TEXTURES, 0);
@@ -201,14 +199,14 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			}
 			mUpdateTexCoords = false;
 		}
-		
+
 		//--UPDATE POSITIONS--
 		mVertexBuffer.setDataPosition(DefaultGraphics.ID_POSITIONS, 0);
 		float worldPosX = mCarrier.getWorldX() + mShiftX;
 		float worldPosY = mCarrier.getWorldY() + mShiftY;
 		float scale = mCarrier.getScale()*mScale;
 		int mirrorFac = mLookDirection;
-		
+
 		for(CartoonBone[] layer:mLayers) {
 			//Contour
 			if(mDrawContour) {
@@ -229,7 +227,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 					}
 				}
 			}
-			
+
 			//Fill
 			for(CartoonBone bone:layer) {
 				if(bone.mVisible) {
@@ -242,11 +240,11 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				}
 			}
 		}
-		
+
 		mMesh.draw();
-		
+
 	}
-	
+
 	public Joint pickJoint2D(float x,float y) {
 		float minDist = 1000000;
 		Joint resJoint = null;
@@ -261,7 +259,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		}
 		return resJoint;
 	}
-	
+
 	public void setFillColor(float r,float g,float b,float a) {
 		mSkeletonColor[0] = r;
 		mSkeletonColor[1] = g;
@@ -269,11 +267,11 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mSkeletonColor[3] = a;
 		mUpdateColor = true;
 	}
-	
+
 	public void setFillColor(float r,float g,float b) {
 		setFillColor(r,g,b,1);
 	}
-	
+
 	public void setFillColor(float brightness) {
 		mSkeletonColor[0] = brightness;
 		mSkeletonColor[1] = brightness;
@@ -288,14 +286,14 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mContourColor[2] = b;
 		mUpdateColor = true;
 	}
-	
+
 	public void setContourColor(float brightness) {
 		mContourColor[0] = brightness;
 		mContourColor[1] = brightness;
 		mContourColor[2] = brightness;
 		mUpdateColor = true;
 	}
-	
+
 	public void setSuppData(float r,float g,float b) {
 		mSuppData[0] = r;
 		mSuppData[1] = g;
@@ -309,21 +307,21 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mSuppData[2] = brightness;
 		mUpdateColor = true;
 	}
-	
+
 	public void updatedTextureCoords() {
 		this.mUpdateTexCoords = true;
 	}
-	
+
 	public void setRotationAnchor(float anchorX,float anchorY) {
 		mRotAnchorX = anchorX;
 		mRotAnchorY = anchorY;
 	}
-	
+
 	public void resetRotationAnchor() {
 		mRotAnchorX = 0;
 		mRotAnchorY = 0;
 	}
-	
+
 	@Override
 	public float getJointWorldX(Joint joint) {
 		return mCarrier.getWorldX() + (mShiftX + joint.mPosX*mLookDirection)*mCarrier.getScale()*mScale;
@@ -336,7 +334,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mCartoonBones = new CartoonBone[mBones.size()];
 		int k=0;
 		int i=0;
-		for(NonConcurrentList<CartoonBone> layer:mLayersList) {
+		for(YangList<CartoonBone> layer:mLayersList) {
 			CartoonBone[] layerArray = new CartoonBone[layer.size()];
 			int c=0;
 			for(CartoonBone bone:layer) {
@@ -350,9 +348,9 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			k++;
 		}
 	}
-	
+
 	public Texture getDefaultTexture(AbstractGFXLoader gfxLoader) {
 		return null;
 	}
-	
+
 }

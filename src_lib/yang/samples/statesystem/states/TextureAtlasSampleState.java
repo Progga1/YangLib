@@ -1,7 +1,6 @@
 package yang.samples.statesystem.states;
 
 import yang.graphics.defaults.programs.TextureTileRepeatProgram;
-import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureProperties;
@@ -17,15 +16,15 @@ public class TextureAtlasSampleState extends SampleState {
 	private TextureCoordBounds mGrassBounds;
 	private TextureCoordBounds mSkyBounds;
 	private TextureTileRepeatProgram mTileProgram;
-	
+
 	@Override
 	public void initGraphics() {
-		
+
 		mTileProgram = mGraphics.addProgram(TextureTileRepeatProgram.class);
-		
+
 		createAtlas();
 	}
-	
+
 	private void createAtlas() {
 		TextureData atlasData = mGFXLoader.loadImageData("atlas");
 		mGrassBounds = atlasData.createBiasBorder(0, 0, 128, 128, 8, TextureWrap.REPEAT, TextureWrap.REPEAT);
@@ -35,10 +34,10 @@ public class TextureAtlasSampleState extends SampleState {
 		mAtlasTex = mGraphics.createAndInitTexture(atlasData, new TextureProperties(TextureFilter.LINEAR));
 		//mGFXLoader.loadIntoTexture(mAtlasTex, "sky_small", 0,0);
 	}
-	
+
 	@Override
 	protected void step(float deltaTime) {
-		
+
 	}
 
 	@Override
@@ -50,24 +49,24 @@ public class TextureAtlasSampleState extends SampleState {
 		mGraphics.bindTexture(mAtlasTex);
 		//mGraphics.bindTexture(mGraphics.createTexture(mGFXLoader.loadImageData("sky_small"), new TextureSettings()));
 		mGraphics2D.setWhite();
-		
-		
+
+
 		mGraphics2D.setSuppData(mSkyBounds);
 		mGraphics2D.drawRect(mGraphics2D.getScreenLeft(),-1,mGraphics2D.getScreenRight(),1, 0,mSkyBounds.getHeight(),mSkyBounds.getWidth()*2,0);
-		
+
 		mGraphics2D.setSuppData(mGrassBounds);
 		final float SIZE = 0.5f;
 		mGraphics2D.drawRect(-SIZE,-SIZE,SIZE,SIZE, 0,2,2,0);
-		
+
 		mGraphics2D.setSuppData(Quadruple.Q0011);
 		mGraphics2D.drawRect(mGraphics2D.getScreenRight()-0.7f,mGraphics2D.getScreenTop()-0.7f,mGraphics2D.getScreenRight()-0.03f,mGraphics2D.getScreenTop()-0.03f);
 	}
-	
+
 	@Override
 	public void stop() {
 		mGraphics2D.setDefaultProgram();
 	}
-	
+
 	@Override
 	protected void restartGraphics() {
 		createAtlas();

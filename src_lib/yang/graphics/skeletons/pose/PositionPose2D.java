@@ -1,7 +1,6 @@
 package yang.graphics.skeletons.pose;
 
 import yang.graphics.skeletons.CartoonSkeleton2D;
-import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 
 public class PositionPose2D extends Posture<PositionPose2D,CartoonSkeleton2D>{
@@ -38,5 +37,5 @@ public class PositionPose2D extends Posture<PositionPose2D,CartoonSkeleton2D>{
 	public String toSourceCode() {
 		return null;
 	}
-	
+
 }

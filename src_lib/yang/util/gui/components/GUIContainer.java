@@ -2,22 +2,22 @@ package yang.util.gui.components;
 
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.SurfacePointerEvent;
-import yang.util.NonConcurrentList;
+import yang.util.YangList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.interfaces.GUIPointerListener;
 
 public class GUIContainer extends GUIInteractiveRectComponent {
 
-	protected NonConcurrentList<GUIComponent> mAllComponents;
-	protected NonConcurrentList<GUIInteractiveComponent> mInteractiveComponents;
+	protected YangList<GUIComponent> mAllComponents;
+	protected YangList<GUIInteractiveComponent> mInteractiveComponents;
 
 	public GUIContainer() {
 		super();
 		mWidth = 1024;
 		mHeight = 1024;
-		mInteractiveComponents = new NonConcurrentList<GUIInteractiveComponent>();
-		mAllComponents = new NonConcurrentList<GUIComponent>();
+		mInteractiveComponents = new YangList<GUIInteractiveComponent>();
+		mAllComponents = new YangList<GUIComponent>();
 	}
 
 	@Override
