@@ -5,20 +5,17 @@ import yang.graphics.particles.EffectParticle;
 import yang.graphics.particles.EffectParticleProperties;
 import yang.graphics.particles.Particles3D;
 import yang.graphics.particles.Weather3D;
-import yang.graphics.textures.TextureCoordinateSet;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
 import yang.math.MathConst;
 import yang.math.MathFunc;
 import yang.samples.statesystem.SampleStateCameraControl;
 import yang.util.Cursor3D;
-import yang.util.DefaultFunctions;
 
 public class Particle3DSampleState extends SampleStateCameraControl {
 
 	private static final int PARTICLES_PER_FRAME = 1;
-	
+
 	private Particles3D<EffectParticle> mParticles;
 	private Weather3D<Particles3D<EffectParticle>> mWeather = new Weather3D<Particles3D<EffectParticle>>();
 	private Texture mParticleTexture;
@@ -27,7 +24,7 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 	private float mSmokeScale = 0.4f;
 	private float mParticleSpeed = 0.1f;
 	private int mFrameCount = 0;
-	
+
 	@Override
 	protected void initGraphics() {
 		mCursor.set(-1000,0,0);
@@ -49,7 +46,7 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 		mWeather.createRandomParticles(1000);
 		mOrthogonalProjection = false;
 	}
-	
+
 	@Override
 	protected void step(float deltaTime) {
 		super.step(deltaTime);
@@ -87,22 +84,22 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		super.pointerDown(x,y, event);
 	}
-	
+
 	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		super.pointerDragged(x, y, event);
 		if(event.mButton==SurfacePointerEvent.BUTTON_LEFT && event.mId==0)
 			mCursor.set(x, 0, -y);
 	}
-	
+
 	@Override
 	public void pointerMoved(float x,float y,SurfacePointerEvent event) {
 		super.pointerMoved(x, y, event);
 	}
-	
+
 	@Override
 	public void zoom(float value) {
 		super.zoom(value);
 	}
-	
+
 }

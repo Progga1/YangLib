@@ -9,24 +9,24 @@ public class KeyFrame {
 	public int mDuration;
 	public float mTimeFactor;
 	public Posture mPose;
-	
+
 	public KeyFrame(Posture<?,?> pose, int duration) {
 		mPose = pose;
 		mDuration = duration;
 	}
-	
+
 	public KeyFrame(Posture<?,?> pose) {
 		this(pose,1);
 	}
-	
+
 	public String toSourceCode(int frameNr) {
 		String res = "public static KeyFrame frame"+frameNr+" = new KeyFrame(new "+mPose.getClassName()+"("+mPose.toSourceCode()+"),"+mDuration+");";
 		return res;
 	}
-	
+
 	@Override
 	public String toString() {
 		return ""+mId+": @"+mFirstFrame+" "+mDuration+"f";
 	}
-	
+
 }
