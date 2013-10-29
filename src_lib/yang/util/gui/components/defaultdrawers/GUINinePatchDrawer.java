@@ -9,6 +9,7 @@ import yang.util.gui.components.GUIInteractiveRectComponent;
 public class GUINinePatchDrawer extends GUIComponentDrawPass<GUIInteractiveRectComponent> {
 
 	public NinePatchGrid mNinePatch;
+	public NinePatchGrid mNinePatchHover;
 	public NinePatchGrid mNinePatchPressed;
 	public NinePatchGrid mNinePatchDisabled;
 	public float mMargin = 0;
@@ -21,6 +22,8 @@ public class GUINinePatchDrawer extends GUIComponentDrawPass<GUIInteractiveRectC
 			mNinePatchPressed = ninePatch;
 		if(mNinePatchDisabled==null)
 			mNinePatchDisabled = ninePatch;
+		if(mNinePatchHover==null)
+			mNinePatchHover = ninePatch;
 		return this;
 	}
 
@@ -34,6 +37,11 @@ public class GUINinePatchDrawer extends GUIComponentDrawPass<GUIInteractiveRectC
 		return this;
 	}
 
+	public GUINinePatchDrawer setNinePatchHover(NinePatchGrid ninePatch) {
+		mNinePatchHover = ninePatch;
+		return this;
+	}
+
 	public GUINinePatchDrawer setMargin(float margin) {
 		mMargin = margin;
 		return this;
@@ -44,8 +52,10 @@ public class GUINinePatchDrawer extends GUIComponentDrawPass<GUIInteractiveRectC
 		NinePatchGrid uNinePatch;
 		if(!component.mEnabled)
 			uNinePatch = mNinePatchDisabled;
-		else if(component.mPressedTime>0)
+		else if(component.mPressedTime>=0)
 			uNinePatch = mNinePatchPressed;
+		else if(component.mHoverTime>=0)
+			uNinePatch = mNinePatchHover;
 		else
 			uNinePatch = mNinePatch;
 		if(mColorIndex>=0 && component.mColors!=null)

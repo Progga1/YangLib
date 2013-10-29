@@ -37,7 +37,7 @@ public class BasicGUI implements RawEventListener,Drawable {
 	public float mProjWidthFactor,mProjHeightFactor;
 	public float mProjShiftYFactor;
 	public float mProjXFactor,mProjYFactor;
-	public float mCurrentTime;
+	public float mCurrentTime = 1;
 	public GUIPointerData[] mPointerData = new GUIPointerData[YangEventQueue.MAX_POINTERS];
 	public NonConcurrentList<Texture> mPassTextures;
 
@@ -197,6 +197,10 @@ public class BasicGUI implements RawEventListener,Drawable {
 				if(pressedComp!=null && pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
 					pressedComp.mPressedTime = -mCurrentTime;
 					mPointerData[id].mPressedComponent = null;
+				}
+
+				if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDRAG || pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERMOVE) {
+					mPointerData[id].mLastMovement = mCurrentTime;
 				}
 
 				return result;

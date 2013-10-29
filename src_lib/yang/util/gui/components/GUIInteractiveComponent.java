@@ -8,8 +8,9 @@ import yang.util.gui.interfaces.GUIPointerListener;
 
 public abstract class GUIInteractiveComponent extends GUIMultipassComponent implements GUIPointerListener {
 
-	public float mPressedTime;
-	public float mHoverTime;
+	public float mPressedTime = -1;
+	public float mHoverTime = -1;
+	public float mLastMovement = -Float.MAX_VALUE;
 	public GUIActionListener mActionListener;
 	public NonConcurrentList<GUIPointerListener> mPointerListeners = new NonConcurrentList<GUIPointerListener>();
 
@@ -85,6 +86,16 @@ public abstract class GUIInteractiveComponent extends GUIMultipassComponent impl
 
 	@Override
 	public void guiPointerUp(float x, float y, GUIPointerEvent event) {
+
+	}
+
+	@Override
+	public void guiEnter(GUIComponent sender) {
+
+	}
+
+	@Override
+	public void guiExit(GUIComponent sender) {
 
 	}
 

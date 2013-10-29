@@ -1,9 +1,11 @@
 package yang.util.gui.components;
 
+import yang.events.YangEventQueue;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.util.NonConcurrentList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
+import yang.util.gui.interfaces.GUIPointerListener;
 
 public class GUIContainer extends GUIInteractiveRectComponent {
 
@@ -26,6 +28,7 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 //				ListIterator<InteractiveGUIComponent> iter = mInteractiveComponents.listIterator(mInteractiveComponents.size()-1);
 //				InteractiveGUIComponent component;
 //				while((component=iter.previous())!=null) {
+			GUIComponent result = null;
 			for(final GUIInteractiveComponent component:mInteractiveComponents) {
 				if(component.mVisible && component.mEnabled && component.inArea(x, y)) {
 					int poolPos = BasicGUI.componentPoolPos++;
@@ -35,10 +38,17 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 					}
 					final GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];
 					guiEvent.createFromPointerEvent(pointerEvent, component);
-					GUIComponent result;
-					if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG)
+
+					if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG) {
+						if(component.mHoverTime<0) {
+							//Pointer enter
+							component.mHoverTime = mGUI.mCurrentTime;
+							for(final GUIPointerListener pointerListener:component.mPointerListeners)
+								pointerListener.guiEnter(component);
+						}
+						component.mLastMovement = mGUI.mCurrentTime;
 						result = component.rawPointerEvent(guiEvent);
-					else
+					}else
 						result = null;
 
 					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERUP) {
@@ -49,14 +59,28 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 					if(pointerEvent.mAction==SurfacePointerEvent.ACTION_POINTERDOWN) {
 						if(component.isPressable()) {
 							mGUI.setPressedComponent(pointerEvent.mId,component);
-							return component;
+							result = component; //result = component
 						}
 					}
-
-					return result;
+				}else{
+					if(component.mHoverTime>=0) {
+						//Pointer exit
+						boolean doExit = true;
+						for(int i=0;i<YangEventQueue.MAX_POINTERS;i++) {
+							if(mGUI.mPointerData[i].mLastMovement==component.mLastMovement)
+								doExit = false;
+						}
+						if(doExit) {
+							component.mHoverTime = -mGUI.mCurrentTime;
+							for(final GUIPointerListener pointerListener:component.mPointerListeners)
+								pointerListener.guiExit(component);
+						}
+					}
 				}
 			}
-			if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null)
+			if(result!=null)
+				return result;
+			else if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null)
 				return super.rawPointerEvent(pointerEvent);
 			else
 				return null;
