@@ -54,6 +54,11 @@ public class Camera2D {
 		mTarPos.set(x,y);
 	}
 	
+	public void setPosInstant(float x, float y) {
+		mPos.set(x,y);
+		mTarPos.set(x,y);
+	}
+	
 	public void setRotation(float rotation) {
 		mTarRotation = rotation;
 	}
