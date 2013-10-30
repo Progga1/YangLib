@@ -69,16 +69,16 @@ public class MassAggregation {
 	}
 
 	public void recalculateConstraints() {
-		for(Joint joint:mJoints) {
+		for(final Joint joint:mJoints) {
 			joint.recalculate();
 		}
-		for(Constraint constraint:mConstraints)
+		for(final Constraint constraint:mConstraints)
 			constraint.recalculate();
 	}
 
 	public void get2DBoundaries(Rect target) {
 		target.set(100000,-100000,-100000,100000);
-		for(Joint joint:mJoints) {
+		for(final Joint joint:mJoints) {
 			if(joint.mPosX<target.mLeft)
 				target.mLeft = joint.mPosX;
 			if(joint.mPosX>target.mRight)
@@ -96,7 +96,7 @@ public class MassAggregation {
 	}
 
 	public Joint addJoint(String name,Joint parent,float x,float y,float z) {
-		Joint newJoint = new Joint(name, parent, x,y, mDefaultJointRadius, this);
+		final Joint newJoint = new Joint(name, parent, x,y, mDefaultJointRadius, this);
 		newJoint.mPosZ = z;
 		return addJoint(newJoint);
 	}
@@ -126,7 +126,7 @@ public class MassAggregation {
 
 	public Joint getBoneByName(String name) {
 		name = name.toUpperCase();
-		for(Joint bone:mJoints) {
+		for(final Joint bone:mJoints) {
 			if(bone.mName.equals(name))
 				return bone;
 		}
@@ -139,6 +139,10 @@ public class MassAggregation {
 
 	public float getJointWorldY(Joint joint) {
 		return mCarrier.getWorldY() + (mShiftY + joint.mPosY)*mCarrier.getScale()*mScale;
+	}
+
+	public float getJointWorldZ(Joint joint) {
+		return mCarrier.getWorldZ() + (mShiftZ + joint.mPosZ)*mCarrier.getScale()*mScale;
 	}
 
 	public void setOffset(float x, float y) {
@@ -156,18 +160,18 @@ public class MassAggregation {
 
 	public void applyConstraints(float deltaTime) {
 
-		float uDeltaTime = deltaTime/mAccuracy;
-		float worldY = mCarrier.getWorldY();
+		final float uDeltaTime = deltaTime/mAccuracy;
+		final float worldY = mCarrier.getWorldY();
 		for(int i=0;i<mAccuracy;i++) {
 
 			//Init force
-			for(Joint joint:mJoints) {
+			for(final Joint joint:mJoints) {
 				joint.mForceX = mConstantForceX*joint.mMass;
 				joint.mForceY = mConstantForceY*joint.mMass;
 				joint.mForceZ = mConstantForceZ*joint.mMass;
 
 				if(joint.mPosY+worldY<mLowerLimit) {
-					float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
+					final float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
 					joint.mForceY += (mLowerLimit-joint.mPosY)*uForce;
 					joint.mVelX *= mFloorFriction;
 				}
@@ -175,16 +179,16 @@ public class MassAggregation {
 
 			//Apply constraints
 			if(mConstraintsActivated)
-				for(Constraint constraint:mConstraints) {
+				for(final Constraint constraint:mConstraints) {
 					constraint.apply();
 				}
 
 			if(mConstraintsActivated)
-				for(Joint joint:mJoints) {
+				for(final Joint joint:mJoints) {
 					joint.applyConstraint();
 				}
 
-			for(Joint joint:mJoints) {
+			for(final Joint joint:mJoints) {
 				joint.physicalStep(uDeltaTime);
 			}
 
@@ -199,7 +203,7 @@ public class MassAggregation {
 
 	@SuppressWarnings("unchecked")
 	public <ConstraintType extends Constraint> ConstraintType getBoneConstraint(CartoonBone bone,Class<ConstraintType> type) {
-		for(Constraint constraint:mConstraints) {
+		for(final Constraint constraint:mConstraints) {
 			if((constraint.getClass()==type) && (constraint.containsBone(bone)))
 				return (ConstraintType)constraint;
 		}
@@ -207,13 +211,13 @@ public class MassAggregation {
 	}
 
 	public void reset() {
-		for(Joint joint:mJoints) {
+		for(final Joint joint:mJoints) {
 			joint.reset();
 		}
 	}
 
 	public void setFriction(float friction) {
-		for(Joint joint:mJoints) {
+		for(final Joint joint:mJoints) {
 			joint.mFriction = friction;
 		}
 	}
@@ -227,7 +231,7 @@ public class MassAggregation {
 	}
 
 	public void refreshGeometry() {
-		for(JointConnection connection:mBones) {
+		for(final JointConnection connection:mBones) {
 			connection.refreshGeometry();
 		}
 	}

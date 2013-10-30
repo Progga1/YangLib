@@ -89,7 +89,7 @@ public class HumanSkeletonCreator3D {
 
 		mSkeleton.mDefaultBoneSpring = 10;
 		mBodyBone = mSkeleton.addSpringBone(new Bone3D("Body",mBreastJoint,mHipJoint));
-		//mHeadBone = mSkeleton.addSpringBone(new Bone3D("Head",mBreastJoint,mHeadJoint));
+		mHeadBone = mSkeleton.addSpringBone(new Bone3D("Head",mBreastJoint,mHeadJoint));
 		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftShoulder",mBreastJoint,mLeftShoulderJoint));
 		mRightUpperArmBone = mSkeleton.addSpringBone(new Bone3D("RightShoulder",mBreastJoint,mRightShoulderJoint));
 		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint));

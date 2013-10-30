@@ -15,10 +15,15 @@ public class NeutralSkeletonCarrier implements SkeletonCarrier {
 	}
 
 	@Override
+	public float getWorldZ() {
+		return 0;
+	}
+
+	@Override
 	public float getScale() {
 		return 1;
 	}
 
-	
-	
+
+
 }

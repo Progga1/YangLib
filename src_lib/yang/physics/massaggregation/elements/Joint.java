@@ -3,6 +3,7 @@ package yang.physics.massaggregation.elements;
 import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.math.Geometry;
 import yang.math.objects.Point3f;
+import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.MassAggregation;
 import yang.util.YangList;
@@ -10,8 +11,8 @@ import yang.util.YangList;
 public class Joint {
 
 	public static float DEFAULT_FRICTION = 0.9998f;
-	public static float TOWARDS_FACTOR = 100;
-	public static float AWAY_FACTOR = 200;
+	public static float TOWARDS_FACTOR = 50;
+	public static float AWAY_FACTOR = 1000;
 
 	//Properties
 	public int mId;
@@ -31,6 +32,7 @@ public class Joint {
 	public boolean mAnimate;
 	public boolean mEnabled;
 	public float mInitialX,mInitialY,mInitialZ;
+	public Quaternion mOrientation = null;
 
 	//State
 	public float mForceX,mForceY,mForceZ;
@@ -129,6 +131,10 @@ public class Joint {
 
 	public float getWorldY() {
 		return mSkeleton.getJointWorldY(this);
+	}
+
+	public float getWorldZ() {
+		return mSkeleton.getJointWorldZ(this);
 	}
 
 	public boolean isSubChildOf(Joint joint) {
@@ -406,6 +412,14 @@ public class Joint {
 		final float dx = worldX-mSkeleton.getJointWorldX(this);
 		final float dy = worldY-mSkeleton.getJointWorldY(this);
 		return (float)Math.sqrt(dx*dx + dy*dy);
+	}
+
+	public void initOrientation() {
+		mOrientation = new Quaternion();
+	}
+
+	public boolean hasOrientation() {
+		return mOrientation!=null;
 	}
 
 

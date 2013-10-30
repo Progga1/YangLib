@@ -11,9 +11,10 @@ public class DefaultSkeletonCarrier implements SkeletonCarrier {
 	public DefaultAnimationPlayer mAnimationPlayer;
 	public float mPosX;
 	public float mPosY;
+	public float mPosZ;
 	public int mLookDirection;
 	public float mScale;
-	
+
 	public DefaultSkeletonCarrier(MassAggregation skeleton) {
 		mPosX = 0;
 		mPosY = 0;
@@ -21,19 +22,27 @@ public class DefaultSkeletonCarrier implements SkeletonCarrier {
 		mLookDirection = 1;
 		setSkeleton(skeleton);
 	}
-	
+
+	@Override
 	public float getWorldX() {
 		return mPosX;
 	}
 
+	@Override
 	public float getWorldY() {
 		return mPosY;
+	}
+
+	@Override
+	public float getWorldZ() {
+		return mPosZ;
 	}
 
 	public int getLookDirection() {
 		return mLookDirection;
 	}
 
+	@Override
 	public float getScale() {
 		return mScale;
 	}
@@ -48,7 +57,7 @@ public class DefaultSkeletonCarrier implements SkeletonCarrier {
 	}
 
 	public void drawCollision() {
-		
+
 	}
 
 	public AnimationPlayer<?> getAnimationPlayer() {
