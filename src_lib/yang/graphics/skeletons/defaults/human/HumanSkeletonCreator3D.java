@@ -89,7 +89,7 @@ public class HumanSkeletonCreator3D {
 
 		mSkeleton.mDefaultBoneSpring = 10;
 		mBodyBone = mSkeleton.addSpringBone(new Bone3D("Body",mBreastJoint,mHipJoint));
-		mBodyBone = mSkeleton.addSpringBone(new Bone3D("Head",mBreastJoint,mHeadJoint));
+		//mHeadBone = mSkeleton.addSpringBone(new Bone3D("Head",mBreastJoint,mHeadJoint));
 		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftShoulder",mBreastJoint,mLeftShoulderJoint));
 		mRightUpperArmBone = mSkeleton.addSpringBone(new Bone3D("RightShoulder",mBreastJoint,mRightShoulderJoint));
 		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint));
@@ -106,6 +106,12 @@ public class HumanSkeletonCreator3D {
 		mBreastBone = mSkeleton.addSpringBone(new Bone3D("Breast",mLeftShoulderJoint,mRightShoulderJoint));
 		mHipsBone = mSkeleton.addSpringBone(new Bone3D("Hips",mLeftLegJoint,mRightLegJoint));
 
+		return mSkeleton;
+	}
+
+	public MassAggregation create(MassAggregation target, HumanSkeletonProperties properties) {
+		mSkeleton = target;
+		create(properties);
 		return mSkeleton;
 	}
 

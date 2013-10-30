@@ -10,8 +10,8 @@ import yang.util.YangList;
 public class Joint {
 
 	public static float DEFAULT_FRICTION = 0.9998f;
-	public static float TOWARDS_FACTOR = 50;
-	public static float AWAY_FACTOR = 1000;
+	public static float TOWARDS_FACTOR = 100;
+	public static float AWAY_FACTOR = 200;
 
 	//Properties
 	public int mId;
