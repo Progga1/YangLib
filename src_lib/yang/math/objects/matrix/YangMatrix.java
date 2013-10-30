@@ -188,11 +188,18 @@ public class YangMatrix {
 		setTranslation(translation.mX,translation.mY,translation.mZ);
 	}
 
-	public void setScale(int x, int y, int z) {
+	public void setScale(float x, float y, float z) {
 		loadIdentity();
 		mValues[0] = x;
 		mValues[5] = y;
 		mValues[10] = z;
+	}
+
+	public void setScale(float s) {
+		loadIdentity();
+		mValues[0] = s;
+		mValues[5] = s;
+		mValues[10] = s;
 	}
 
 	public void scale(float x, float y, float z) {
