@@ -8,6 +8,7 @@ import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.physics.massaggregation.Skeleton2D;
+import yang.physics.massaggregation.SkeletonEditing;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.YangList;
@@ -82,7 +83,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	}
 
 	public void texCoordsIntoRect(float rectLeft,float rectTop,float rectWidth,float rectHeight) {
-		for(JointConnection bone:mBones) {
+		for(final JointConnection bone:mBones) {
 			if(bone instanceof CartoonBone)
 				((CartoonBone)bone).texCoordsIntoRect(rectLeft,rectTop,rectWidth,rectHeight);
 		}
@@ -99,12 +100,12 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	}
 
 	public void setBonesVisible(boolean visible) {
-		for(CartoonBone bone:mCartoonBones)
+		for(final CartoonBone bone:mCartoonBones)
 			bone.mVisible = visible;
 	}
 
 	public void refreshVisualData() {
-		for(CartoonBone bone:mCartoonBones)
+		for(final CartoonBone bone:mCartoonBones)
 			bone.refreshVisualVars();
 	}
 
@@ -132,15 +133,15 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		if(mMesh==null) {
 			//FIRST DRAW
 			mVertexCount = 0;
-			for(YangList<CartoonBone> layer:mLayersList) {
+			for(final YangList<CartoonBone> layer:mLayersList) {
 				//Contour
-				for(CartoonBone bone:layer) {
+				for(final CartoonBone bone:layer) {
 					if(mDrawContour && bone.mCelShading)
 						mVertexCount += 4;
 					mVertexCount += 4;
 				}
 			}
-			int indexCount = mBones.size()*6*2;
+			final int indexCount = mBones.size()*6*2;
 			mVertexBuffer = mGraphics.createVertexBuffer(true, false, indexCount, mVertexCount);
 			mVertexBuffer.setIndexPosition(0);
 			for(short i=0;i<mVertexCount;i+=4)
@@ -162,10 +163,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_COLORS,0);
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_SUPPDATA, 0);
-			for(CartoonBone[] layer:mLayers) {
+			for(final CartoonBone[] layer:mLayers) {
 				//Contour
 				if(mDrawContour)
-					for(CartoonBone bone:layer) {
+					for(final CartoonBone bone:layer) {
 						if(bone.mCelShading) {
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.BLACK,4);
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mContourColor,4);
@@ -183,17 +184,17 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		//--UPDATE TEXTURE COORDINATES--
 		if(mUpdateTexCoords) {
 			mVertexBuffer.setDataPosition(DefaultGraphics.ID_TEXTURES, 0);
-			for(CartoonBone[] layer:mLayers) {
+			for(final CartoonBone[] layer:mLayers) {
 				//Contour
 				if(mDrawContour) {
-					for(CartoonBone bone:layer) {
+					for(final CartoonBone bone:layer) {
 						if(bone.mCelShading) {
 							mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
 						}
 					}
 				}
 				//Fill
-				for(CartoonBone bone:layer) {
+				for(final CartoonBone bone:layer) {
 					mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
 				}
 			}
@@ -202,21 +203,21 @@ public class CartoonSkeleton2D extends Skeleton2D {
 
 		//--UPDATE POSITIONS--
 		mVertexBuffer.setDataPosition(DefaultGraphics.ID_POSITIONS, 0);
-		float worldPosX = mCarrier.getWorldX() + mShiftX;
-		float worldPosY = mCarrier.getWorldY() + mShiftY;
-		float scale = mCarrier.getScale()*mScale;
-		int mirrorFac = mLookDirection;
+		final float worldPosX = mCarrier.getWorldX() + mShiftX;
+		final float worldPosY = mCarrier.getWorldY() + mShiftY;
+		final float scale = mCarrier.getScale()*mScale;
+		final int mirrorFac = mLookDirection;
 
-		for(CartoonBone[] layer:mLayers) {
+		for(final CartoonBone[] layer:mLayers) {
 			//Contour
 			if(mDrawContour) {
-				for(CartoonBone bone:layer) {
+				for(final CartoonBone bone:layer) {
 					if(bone.mCelShading) {
 						if(bone.mVisible) {
-							float contourOrthoX = bone.mNormDirY * mContourFactor;
-							float contourOrthoY = -bone.mNormDirX * mContourFactor;
-							float contourNormX = bone.mNormDirX * mContourFactor;
-							float contourNormY = bone.mNormDirY * mContourFactor;
+							final float contourOrthoX = bone.mNormDirY * mContourFactor;
+							final float contourOrthoY = -bone.mNormDirX * mContourFactor;
+							final float contourNormX = bone.mNormDirX * mContourFactor;
+							final float contourNormY = bone.mNormDirY * mContourFactor;
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX4*scale + contourOrthoX*bone.mContourX3 + contourNormX*bone.mContourY4) * mirrorFac, worldPosY + bone.mVertY4*scale + contourOrthoY*bone.mContourX3 + contourNormY*bone.mContourY4, mShiftZ);
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX3*scale - contourOrthoX*bone.mContourX4 + contourNormX*bone.mContourY3) * mirrorFac, worldPosY + bone.mVertY3*scale - contourOrthoY*bone.mContourX4 + contourNormY*bone.mContourY3, mShiftZ);
 							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX2*scale + contourOrthoX*bone.mContourX1 - contourNormX*bone.mContourY1) * mirrorFac, worldPosY + bone.mVertY2*scale + contourOrthoY*bone.mContourX1 - contourNormY*bone.mContourY1, mShiftZ);
@@ -229,7 +230,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			}
 
 			//Fill
-			for(CartoonBone bone:layer) {
+			for(final CartoonBone bone:layer) {
 				if(bone.mVisible) {
 					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX4*scale * mirrorFac , worldPosY + bone.mVertY4*scale, mShiftZ);
 					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX3*scale * mirrorFac , worldPosY + bone.mVertY3*scale, mShiftZ);
@@ -248,10 +249,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	public Joint pickJoint2D(float x,float y) {
 		float minDist = 1000000;
 		Joint resJoint = null;
-		for(Joint joint:mJoints) {
-			float dX = (x-this.getJointWorldX(joint));
-			float dY = (y-this.getJointWorldY(joint));
-			float dist = dX*dX + dY*dY;
+		for(final Joint joint:mJoints) {
+			final float dX = (x-this.getJointWorldX(joint));
+			final float dY = (y-this.getJointWorldY(joint));
+			final float dist = dX*dX + dY*dY;
 			if(dist < joint.getOutputRadius()*joint.getOutputRadius()*4.5f && dist<minDist) {
 				minDist = dist;
 				resJoint = joint;
@@ -328,16 +329,16 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	}
 
 	protected void finishUpdate() {
-		int l = mLayersList.size();
+		final int l = mLayersList.size();
 		mLayers = new CartoonBone[l][];
 		mFrontToBackLayers = new CartoonBone[l][];
 		mCartoonBones = new CartoonBone[mBones.size()];
 		int k=0;
 		int i=0;
-		for(YangList<CartoonBone> layer:mLayersList) {
-			CartoonBone[] layerArray = new CartoonBone[layer.size()];
+		for(final YangList<CartoonBone> layer:mLayersList) {
+			final CartoonBone[] layerArray = new CartoonBone[layer.size()];
 			int c=0;
-			for(CartoonBone bone:layer) {
+			for(final CartoonBone bone:layer) {
 				layerArray[c] = bone;
 				mCartoonBones[i] = bone;
 				c++;

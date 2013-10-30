@@ -1,14 +1,13 @@
 package yang.graphics.tools.animator;
 
-import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.SurfacePointerEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultAnimationPlayer;
 import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.graphics.skeletons.SkeletonCarrier;
-import yang.graphics.skeletons.SkeletonEditing;
 import yang.graphics.skeletons.animations.Animation;
 import yang.graphics.skeletons.animations.AnimationPlayer;
 import yang.graphics.skeletons.animations.AnimationSystem;
@@ -17,6 +16,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.Camera2D;
 import yang.model.Rect;
+import yang.physics.massaggregation.SkeletonEditing;
 import yang.physics.massaggregation.elements.Joint;
 import yang.sound.AbstractSoundManager;
 import yang.util.YangList;
@@ -31,8 +31,8 @@ public class Animator implements YangEventListener {
 	protected SkeletonCarrier mCurCarrier;
 	@SuppressWarnings("rawtypes")
 	public AnimationPlayer mCurAnimationPlayer;
-	private Camera2D mCamera;
-	private SkeletonEditing mSkeletonEditing;
+	private final Camera2D mCamera;
+	private final SkeletonEditing mSkeletonEditing;
 	public YangList<CartoonSkeleton2D> mSkeletons;
 	public YangList<Texture> mTextures;
 	public YangList<AnimationSystem<?,?>> mAnimationSystems;
@@ -56,8 +56,8 @@ public class Animator implements YangEventListener {
 	public boolean mDrawSkeleton;
 	public float mPrevSX;
 	public float mPrevSY;
-	private Rect mBoundaries;
-	
+	private final Rect mBoundaries;
+
 	public Animator(Default2DGraphics graphics2D) {
 		mGraphics2D = graphics2D;
 		mGraphics = graphics2D.mTranslator;
@@ -78,27 +78,27 @@ public class Animator implements YangEventListener {
 		mDrawSkeleton = true;
 		mBoundaries = new Rect();
 	}
-	
+
 	public void savePose() {
 		mCurFrame.mPose.copyFromSkeleton(mCurSkeleton);
 	}
-	
+
 	public void saveChangedPose() {
 		if(mPoseChanged)
 			savePose();
 		mPoseChanged = false;
 	}
-	
+
 	public void draw() {
 		while(mTextures.size()<mSkeletons.size()) {
 			mTextures.add(mSkeletons.get(mTextures.size()).getDefaultTexture(mGraphics.mGFXLoader));
 		}
-		
-		float gray = 0.1f;
+
+		final float gray = 0.1f;
 		mGraphics.clear(gray, gray, gray);
 		mGraphics2D.switchGameCoordinates(true);
 		mGraphics2D.setCamera(mCamera);
-		
+
 		//Floor
 		mGraphics.bindTexture(null);
 		mGraphics2D.setColor(0.5f);
@@ -108,7 +108,7 @@ public class Animator implements YangEventListener {
 		mGraphics2D.drawLine(-100, 2, 100, 2, 0.01f);
 		mGraphics2D.setColor(0.3f);
 		mGraphics2D.drawLine(0, 0, 0, 100, 0.01f);
-		
+
 		if(mCurSkeleton!=null) {
 			mCurSkeleton.refreshVisualData();
 			mGraphics.bindTexture(mTextures.get(mSkeletonIndex));
@@ -120,7 +120,7 @@ public class Animator implements YangEventListener {
 		}
 		mGraphics.flush();
 	}
-	
+
 	public void refreshPhysics() {
 		if(mPhysicsMode) {
 			mCurSkeleton.mConstantForceX = 0;
@@ -137,12 +137,12 @@ public class Animator implements YangEventListener {
 			mCurSkeleton.setFriction(0.98f);
 		}
 	}
-	
+
 	public void setPhysicsMode(boolean enable) {
 		mPhysicsMode = enable;
 		refreshPhysics();
 	}
-	
+
 	public void step(float deltaTime) {
 		mCamera.update();
 		if(mCurSkeleton!=null) {
@@ -152,7 +152,7 @@ public class Animator implements YangEventListener {
 				if(!mPaused)
 					mCurAnimationPlayer.proceed(deltaTime);
 			}else{
-				
+
 				mCurSkeleton.applyConstraints(deltaTime);
 			}
 		}
@@ -170,24 +170,24 @@ public class Animator implements YangEventListener {
 			selectSkeleton(0);
 		}
 	}
-	
+
 	public void addSkeleton(CartoonSkeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
 		addSkeleton(skeleton,animationSystem,null);
 	}
-	
+
 	public void addSkeleton(Class<? extends CartoonSkeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {
 		try {
-			CartoonSkeleton2D skeleton = skeletonClass.newInstance();
+			final CartoonSkeleton2D skeleton = skeletonClass.newInstance();
 			skeleton.init(mGraphics2D);
 			addSkeleton(skeleton,animationSystem,null);
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void selectSkeleton(int index) {
 		mCurSkeleton = mSkeletons.get(index);
 		mCurSkeleton.mScale = 1;
@@ -198,7 +198,7 @@ public class Animator implements YangEventListener {
 		selectAnimation(0);
 		refreshPhysics();
 	}
-	
+
 	public void selectAnimation(int index) {
 		mCurAnimation = mCurAnimationSystem.mAnimations.get(index);
 		mCurAnimation.mAutoAnimate = true;
@@ -207,28 +207,28 @@ public class Animator implements YangEventListener {
 		mAnimationIndex = index;
 		selectKeyFrame(0,true);
 	}
-	
+
 	public void selectKeyFrame(int index,boolean apply) {
 		mCurFrame = mCurAnimation.mKeyFrames[index];
 		mFrameIndex = index;
 
-		if(!apply) 
+		if(!apply)
 			mCurAnimationPlayer.mCurrentAnimationTime = (float)mCurFrame.mFirstFrame/mCurAnimation.mFrameCount*mCurAnimationPlayer.mCurrentAnimation.mTotalDuration;
 		else{
 			mCurAnimationPlayer.setNormalizedAnimationTime((float)mCurFrame.mFirstFrame/mCurAnimation.mFrameCount);
 			if(!mCurAnimationPlayer.mCurrentAnimation.mAutoAnimate)
 				mCurFrame.mPose.applyPose(mCurSkeleton);
 		}
-		
+
 	}
-	
+
 	public void reselect() {
 		selectKeyFrame(mFrameIndex,true);
 	}
-	
+
 	public boolean selectSkeleton(Class<? extends CartoonSkeleton2D> skeletonClass) {
 		int i=0;
-		for(CartoonSkeleton2D skeleton:mSkeletons) {
+		for(final CartoonSkeleton2D skeleton:mSkeletons) {
 			if(skeletonClass==skeleton.getClass()) {
 				selectSkeleton(i);
 				return true;
@@ -237,10 +237,10 @@ public class Animator implements YangEventListener {
 		}
 		return false;
 	}
-	
+
 	public boolean selectSkeleton(CartoonSkeleton2D skeleton) {
 		int i=0;
-		for(CartoonSkeleton2D skel:mSkeletons) {
+		for(final CartoonSkeleton2D skel:mSkeletons) {
 			if(skel==skeleton) {
 				selectSkeleton(i);
 				return true;
@@ -249,7 +249,7 @@ public class Animator implements YangEventListener {
 		}
 		return false;
 	}
-	
+
 	public void centerCamera() {
 		if(mCurSkeleton==null)
 			mCamera.set(0,1,1.5f);
@@ -258,7 +258,7 @@ public class Animator implements YangEventListener {
 			mCamera.set(mBoundaries.getCenterX(), mBoundaries.getCenterY(), Math.max(mBoundaries.getWidth(),mBoundaries.getHeight())*1.1f);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void play() {
 		if(mPlaying)
@@ -268,19 +268,19 @@ public class Animator implements YangEventListener {
 		mPaused = false;
 		mCurAnimationPlayer.setAnimation(mCurAnimation);
 	}
-	
+
 	public void setPaused(boolean paused) {
 		mPaused = paused;
 	}
-	
+
 	public boolean isPlaying() {
 		return mPlaying;
 	}
-	
+
 	public boolean isPaused() {
 		return mPaused;
 	}
-	
+
 	public void stop() {
 		mPlaying = false;
 		mPaused = false;
@@ -294,7 +294,7 @@ public class Animator implements YangEventListener {
 		else
 			selectKeyFrame(mFrameIndex-1,applyFrame);
 	}
-	
+
 	public void nextFrame(boolean applyFrame) {
 		saveChangedPose();
 		if(mFrameIndex>=mCurAnimation.mKeyFrames.length-1)
@@ -302,15 +302,18 @@ public class Animator implements YangEventListener {
 		else
 			selectKeyFrame(mFrameIndex+1,applyFrame);
 	}
-	
+
+	@Override
 	public boolean rawEvent(YangEvent event) {
 		return false;
 	}
 
+	@Override
 	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
-		
+
 	}
-	
+
+	@Override
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		mCurPntX = mGraphics2D.normToGameX(x,y);
 		mCurPntY = mGraphics2D.normToGameY(x,y);
@@ -325,25 +328,26 @@ public class Animator implements YangEventListener {
 				mSkeletonEditing.mMainMarkedJoint.startDrag();
 			break;
 		case SurfacePointerEvent.BUTTON_MIDDLE:
-			
+
 			break;
 		case SurfacePointerEvent.BUTTON_RIGHT:
-			Joint pick = mCurSkeleton.pickJoint2D(mCurPntX, mCurPntY);
+			final Joint pick = mCurSkeleton.pickJoint2D(mCurPntX, mCurPntY);
 			if(pick!=null)
 				pick.mFixed ^= true;
 			break;
 		}
 	}
-	
+
+	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
-		
+
 		mPrevPntX = mCurPntX;
 		mPrevPntY = mCurPntY;
 		mCurPntX = mGraphics2D.normToGameX(x,y);
 		mCurPntY = mGraphics2D.normToGameY(x,y);
-		float deltaX = mCurPntX-mPrevPntX;
-		float deltaY = mCurPntY-mPrevPntY;
-		
+		final float deltaX = mCurPntX-mPrevPntX;
+		final float deltaY = mCurPntY-mPrevPntY;
+
 		switch(event.mButton) {
 			case SurfacePointerEvent.BUTTON_LEFT:
 				if(mSkeletonEditing.mMainMarkedJoint!=null) {
@@ -355,11 +359,12 @@ public class Animator implements YangEventListener {
 				mCamera.move((mPrevSX-x)*mCamera.getZoom(),(mPrevSY-y)*mCamera.getZoom());
 				break;
 		}
-		
+
 		mPrevSX = x;
 		mPrevSY = y;
 	}
-	
+
+	@Override
 	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		if(mSkeletonEditing.mMainMarkedJoint!=null) {
 			mSkeletonEditing.mMainMarkedJoint.endDrag();
@@ -367,17 +372,20 @@ public class Animator implements YangEventListener {
 				mSkeletonEditing.mMainMarkedJoint.setVelocity(0,0);
 		}
 		mSkeletonEditing.mMainMarkedJoint = null;
-		
+
 	}
 
+	@Override
 	public void keyDown(int code) {
-		
+
 	}
 
+	@Override
 	public void keyUp(int code) {
-		
+
 	}
 
+	@Override
 	public void zoom(float factor) {
 		mCamera.zoom(factor);
 	}
@@ -385,7 +393,7 @@ public class Animator implements YangEventListener {
 	public boolean isPhysicsActive() {
 		return mPhysicsMode;
 	}
-	
+
 	public void setDrawSkeleton(boolean draw) {
 		mDrawSkeleton = draw;
 	}
@@ -404,6 +412,6 @@ public class Animator implements YangEventListener {
 
 	@Override
 	public void sensorChanged(YangSensorEvent event) {
-		
+
 	}
 }
