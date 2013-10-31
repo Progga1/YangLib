@@ -42,7 +42,7 @@ public class MacroExecuter {
 				YangEvent event = mMacroIO.readEvent(mStream);
 //				if(event instanceof YangPointerEvent && ((YangPointerEvent)event).mAction==YangPointerEvent.ACTION_POINTERDOWN)
 //					System.out.println(mNextStep+" "+mStepCount+" ");
-				mMacroIO.mEventQueue.putEvent(event);
+				mMacroIO.mEventQueue.putEventForceRuntime(event);
 				if(mStream.available()<=0) {
 					mStream.close();
 					mFinished = true;

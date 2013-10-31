@@ -3,12 +3,15 @@ package yang.events;
 import yang.events.eventtypes.PointerTracker;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangInput3DEvent;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.eventtypes.YangZoomEvent;
 import yang.events.listeners.YangEventListener;
 import yang.events.macro.MacroWriter;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.math.objects.Point3f;
+import yang.math.objects.Quaternion;
 import yang.util.YangList;
 
 //TODO split meta and runtime, esp. pointerTrackers/keyStates
@@ -22,6 +25,7 @@ public class YangEventQueue {
 	public static final int ID_KEY_EVENT = 1;
 	public static final int ID_ZOOM_EVENT = 2;
 	public static final int ID_SENSOR_EVENT = 3;
+	public static final int ID_INPUT3D_EVENT = 4;
 
 	public PointerTracker mPointerTrackers[] = new PointerTracker[MAX_POINTERS];
 	public boolean mKeyStates[] = new boolean[MAX_KEY_INDICES];
@@ -32,6 +36,7 @@ public class YangEventQueue {
 	private final YangKeyEvent[] mKeyEventQueue;
 	private final YangZoomEvent[] mZoomEventQueue;
 	private final YangSensorEvent[] mSensorEventQueue;
+	private final YangInput3DEvent[] mInput3DEventQueue;
 	public YangEvent[][] mQueuePools;
 	private final YangEvent[] mQueue;
 	private final YangEvent[] mMetaEventQueue;
@@ -39,6 +44,7 @@ public class YangEventQueue {
 	private int mKeyEventId;
 	private int mZoomEventId;
 	private int mSensorEventId;
+	private int mInput3DEventId;
 	private int mQueueId;
 	private int mMetaEventQueueId;
 	private int mQueueFirst;
@@ -62,12 +68,14 @@ public class YangEventQueue {
 		mSensorEventId = 0;
 		mQueueFirst = 0;
 		mMetaEventQueueFirst = 0;
+		mInput3DEventId = 0;
 		mQueue = new YangEvent[maxEvents];
 		mMetaEventQueue = new YangEvent[maxEvents];
 		mPointerEventQueue = new SurfacePointerEvent[maxEvents];
 		mKeyEventQueue = new YangKeyEvent[maxEvents];
 		mZoomEventQueue = new YangZoomEvent[maxEvents];
 		mSensorEventQueue = new YangSensorEvent[maxEvents];
+		mInput3DEventQueue = new YangInput3DEvent[maxEvents];
 		for(int i=0;i<maxEvents;i++) {
 			mPointerEventQueue[i] = new SurfacePointerEvent();
 			mPointerEventQueue[i].mEventQueue = this;
@@ -77,6 +85,8 @@ public class YangEventQueue {
 			mZoomEventQueue[i].mEventQueue = this;
 			mSensorEventQueue[i] = new YangSensorEvent();
 			mSensorEventQueue[i].mEventQueue = this;
+			mInput3DEventQueue[i] = new YangInput3DEvent();
+			mInput3DEventQueue[i].mEventQueue = this;
 		}
 		mMetaKeys = new boolean[MAX_KEY_INDICES];
 		for(int i=0;i<mMetaKeys.length;i++) {
@@ -93,10 +103,11 @@ public class YangEventQueue {
 		mQueuePools[ID_KEY_EVENT] = mKeyEventQueue;
 		mQueuePools[ID_ZOOM_EVENT] = mZoomEventQueue;
 		mQueuePools[ID_SENSOR_EVENT] = mSensorEventQueue;
+		mQueuePools[ID_INPUT3D_EVENT] = mInput3DEventQueue;
 	}
 
 	public YangEventQueue(int maxEvents) {
-		this(maxEvents,4);
+		this(maxEvents,5);
 	}
 
 	public synchronized void putRuntimeEvent(YangEvent event) {
@@ -110,7 +121,7 @@ public class YangEventQueue {
 			mQueueId = 0;
 	}
 
-	public synchronized void putEvent(YangEvent event) {
+	public synchronized void putEventForceRuntime(YangEvent event) {
 		mQueue[mQueueId++] = event;
 //		event.onPoll();
 		if(mQueueId>=mMaxEvents)
@@ -159,6 +170,21 @@ public class YangEventQueue {
 			mZoomEventId = 0;
 		return newEvent;
 	}
+
+	public synchronized YangSensorEvent newSensorEvent() {
+		final YangSensorEvent newEvent = mSensorEventQueue[mSensorEventId++];
+		if(mSensorEventId>=mMaxEvents)
+			mSensorEventId = 0;
+		return newEvent;
+	}
+
+	public synchronized YangInput3DEvent newInput3DEvent() {
+		final YangInput3DEvent newEvent = mInput3DEventQueue[mInput3DEventId++];
+		if(mInput3DEventId>=mMaxEvents)
+			mInput3DEventId = 0;
+		return newEvent;
+	}
+
 
 	public synchronized void putPointerEvent(int action, float x,float y,float z, int button, int id) {
 		final SurfacePointerEvent newEvent = mPointerEventQueue[mPointerEventId++];
@@ -232,6 +258,24 @@ public class YangEventQueue {
 		newEvent.mZ = values[2];
 		if(values.length>3)
 			newEvent.mW = values[3];
+		putRuntimeEvent(newEvent);
+	}
+
+	public void putInput3DEvent(float x,float y,float z, float qx,float qy,float qz,float qw) {
+		final YangInput3DEvent newEvent = mInput3DEventQueue[mInput3DEventId++];
+		if(mInput3DEventId>=mMaxEvents)
+			mInput3DEventId = 0;
+		newEvent.mPosition.set(x,y,z);
+		newEvent.mOrientation.set(qx,qy,qz,qw);
+		putRuntimeEvent(newEvent);
+	}
+
+	public void putInput3DEvent(Point3f mPosition,Quaternion mOrientation) {
+		final YangInput3DEvent newEvent = mInput3DEventQueue[mInput3DEventId++];
+		if(mInput3DEventId>=mMaxEvents)
+			mInput3DEventId = 0;
+		newEvent.mPosition.set(mPosition);
+		newEvent.mOrientation.set(mOrientation);
 		putRuntimeEvent(newEvent);
 	}
 

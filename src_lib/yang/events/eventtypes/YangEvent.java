@@ -7,7 +7,7 @@ public abstract class YangEvent {
 
 	public YangEventQueue mEventQueue;
 
-	//handle potentially called multiple times, poll only once
+	//handle() potentially called multiple times, poll() only once
 
 	public boolean handle(RawEventListener eventInterface) {
 		return eventInterface.rawEvent(this);
