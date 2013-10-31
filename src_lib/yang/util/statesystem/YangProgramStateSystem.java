@@ -6,11 +6,11 @@ import yang.graphics.defaults.DefaultSurface;
 public class YangProgramStateSystem extends DefaultSurface {
 
 	public YangProgramState<?> mCurrentState;
-	
+
 	protected YangProgramStateSystem(boolean init2dGraphics, boolean init3dGraphics) {
 		super(init2dGraphics, init3dGraphics);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <ThisType extends YangProgramStateSystem> void setState(YangProgramState<ThisType> newState) {
 		if(!newState.isInitialized())
@@ -20,31 +20,32 @@ public class YangProgramStateSystem extends DefaultSurface {
 		mCurrentState = newState;
 		mCurrentState.start();
 	}
-	
+
 	public YangProgramState<?> getCurrentState() {
 		return mCurrentState;
 	}
-	
+
 	@Override
 	public void step(float deltaTime) {
 		super.step(deltaTime);
 		if(mCurrentState!=null)
 			mCurrentState.proceed(deltaTime);
 	}
-	
+
+	@Override
 	public void draw() {
 		if(mCurrentState!=null) {
 			mCurrentState.drawFrame();
 		}
 	}
-	
+
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		if(mCurrentState!=null && !mCurrentState.mFirstFrame)
-			event.handle(mCurrentState);
-		return true;
+			return event.handle(mCurrentState);
+		return false;
 	}
-	
+
 	@Override
 	public void resume() {
 		super.resume();
@@ -52,7 +53,7 @@ public class YangProgramStateSystem extends DefaultSurface {
 			mCurrentState.resume();
 		}
 	}
-	
+
 	@Override
 	public void pause() {
 		super.pause();
@@ -60,5 +61,5 @@ public class YangProgramStateSystem extends DefaultSurface {
 			mCurrentState.pause();
 		}
 	}
-	
+
 }

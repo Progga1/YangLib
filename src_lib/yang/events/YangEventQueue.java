@@ -279,6 +279,10 @@ public class YangEventQueue {
 		putRuntimeEvent(newEvent);
 	}
 
+	public void putInput3DEvent(float x,float y,float z) {
+		putInput3DEvent(x,y,z, 0,0,0,1);
+	}
+
 	public synchronized YangEvent peekEvent() {
 		if(mQueueFirst==mQueueId)
 			return null;
