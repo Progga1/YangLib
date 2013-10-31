@@ -261,26 +261,28 @@ public class YangEventQueue {
 		putRuntimeEvent(newEvent);
 	}
 
-	public void putInput3DEvent(float x,float y,float z, float qx,float qy,float qz,float qw) {
+	public void putInput3DEvent(int id, float x,float y,float z, float qx,float qy,float qz,float qw) {
 		final YangInput3DEvent newEvent = mInput3DEventQueue[mInput3DEventId++];
 		if(mInput3DEventId>=mMaxEvents)
 			mInput3DEventId = 0;
+		newEvent.mId = id;
 		newEvent.mPosition.set(x,y,z);
 		newEvent.mOrientation.set(qx,qy,qz,qw);
 		putRuntimeEvent(newEvent);
 	}
 
-	public void putInput3DEvent(Point3f mPosition,Quaternion mOrientation) {
+	public void putInput3DEvent(int id, Point3f mPosition,Quaternion mOrientation) {
 		final YangInput3DEvent newEvent = mInput3DEventQueue[mInput3DEventId++];
 		if(mInput3DEventId>=mMaxEvents)
 			mInput3DEventId = 0;
+		newEvent.mId = id;
 		newEvent.mPosition.set(mPosition);
 		newEvent.mOrientation.set(mOrientation);
 		putRuntimeEvent(newEvent);
 	}
 
-	public void putInput3DEvent(float x,float y,float z) {
-		putInput3DEvent(x,y,z, 0,0,0,1);
+	public void putInput3DEvent(int id, float x,float y,float z) {
+		putInput3DEvent(id, x,y,z, 0,0,0,1);
 	}
 
 	public synchronized YangEvent peekEvent() {
