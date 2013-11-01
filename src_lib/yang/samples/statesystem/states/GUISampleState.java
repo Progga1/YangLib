@@ -20,7 +20,7 @@ import yang.util.gui.components.GUIInteractiveRectComponent;
 import yang.util.gui.components.defaultbuttons.DefaultIconButton;
 import yang.util.gui.components.defaultbuttons.DefaultNinePatchButton;
 import yang.util.gui.components.defaultbuttons.DefaultOutlineButton;
-import yang.util.gui.components.defaultbuttons.DefaultRectButton;
+import yang.util.gui.components.defaultbuttons.GUIButton;
 import yang.util.gui.components.defaultdrawers.GUIClippedDrawer;
 import yang.util.gui.components.defaultdrawers.GUIIconDrawer;
 import yang.util.gui.components.defaultdrawers.GUINinePatchDrawer;
@@ -35,7 +35,7 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 
 	private BasicGUI mGUI;
 	private GUIColoredPanel mPanel;
-	private DefaultRectButton mToggleButton;
+	private GUIButton mToggleButton;
 	private GUIColoredPanel mInnerPanel;
 	private DefaultNinePatchButton mNinePatchButton1;
 	private DefaultNinePatchButton mNinePatchButton2;
@@ -72,7 +72,7 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		final DrawableString caption = new DrawableString("Label").setAnchors(DrawableString.ANCHOR_LEFT,DrawableString.ANCHOR_TOP);
 		mPanel.addComponent(new GUILabel().setCaption(caption).setPosition(0.1f, 0.1f));
 
-		mToggleButton = mPanel.addComponent(new DefaultRectButton());
+		mToggleButton = mPanel.addComponent(new GUIButton());
 		mToggleButton.createCaption("Button1").setPosAndExtents(0.1f, 0.3f, mPanel.mWidth-0.2f, 0.16f);
 		mToggleButton.getPass(GUIRectDrawer.class).mColor.set(1, 0.5f, 0);
 		mToggleButton.getPass(GUIRectDrawer.class).setBorderSize(0.014f).mBorderColor.set(0.8f, 0.3f, 0);
@@ -82,9 +82,9 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		mInnerPanel.getPass(GUIRectDrawer.class).mColor.set(0.8f);
 		mInnerPanel.setPosAndExtents(0.1f, 0.5f, mPanel.mWidth-0.2f, 0.5f);
 		GUIRectDrawer.DEFAULT_BORDERSIZE = 0.01f;
-		mInnerPanel.addComponent(new DefaultRectButton().createCaption("Inner1").setPosAndExtentsCentered(mInnerPanel.mWidth/2, 0.1f, mInnerPanel.mWidth-0.12f, 0.14f));
-		mInnerPanel.addComponent(new DefaultRectButton().createCaption("Inner2").setPosAndExtentsCentered(mInnerPanel.mWidth/2, 0.25f, mInnerPanel.mWidth-0.12f, 0.14f));
-		mInnerPanel.addComponent(new DefaultRectButton().createCaption("Inner3").setPosAndExtentsCentered(mInnerPanel.mWidth/2, 0.4f, mInnerPanel.mWidth-0.12f, 0.14f));
+		mInnerPanel.addComponent(new GUIButton().createCaption("Inner1").setPosAndExtentsCentered(mInnerPanel.mWidth/2, 0.1f, mInnerPanel.mWidth-0.12f, 0.14f));
+		mInnerPanel.addComponent(new GUIButton().createCaption("Inner2").setPosAndExtentsCentered(mInnerPanel.mWidth/2, 0.25f, mInnerPanel.mWidth-0.12f, 0.14f));
+		mInnerPanel.addComponent(new GUIButton().createCaption("Inner3").setPosAndExtentsCentered(mInnerPanel.mWidth/2, 0.4f, mInnerPanel.mWidth-0.12f, 0.14f));
 		GUIRectDrawer.DEFAULT_BORDERSIZE = 0;
 
 		//Nine patch buttons
@@ -145,8 +145,8 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		if(sender==mToggleButton) {
 			mInnerPanel.mVisible = !mInnerPanel.mVisible;
 		}else{
-			if(sender instanceof DefaultRectButton)
-				System.out.println("Clicked "+((DefaultRectButton)sender).getCaption().createRawString());
+			if(sender instanceof GUIButton)
+				System.out.println("Clicked "+((GUIButton)sender).getCaption().createRawString());
 		}
 	}
 

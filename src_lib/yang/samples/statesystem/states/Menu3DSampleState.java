@@ -12,7 +12,7 @@ import yang.samples.statesystem.SampleStateCameraControl;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
 import yang.util.gui.components.GUIComponent;
-import yang.util.gui.components.defaultbuttons.DefaultRectButton;
+import yang.util.gui.components.defaultbuttons.GUIButton;
 import yang.util.gui.components.defaultdrawers.GUIRectDrawer;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.window.YangBillboardWindow;
@@ -38,12 +38,12 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		mGUI1.setDimensions(2, 2);
 		mGUI1.setDefaultActionListener(this);
 
-		final DefaultRectButton button1 = mGUI1.addComponent(DefaultRectButton.class);
+		final GUIButton button1 = mGUI1.addComponent(GUIButton.class);
 		button1.setPosAndExtents(-0.5f, 0.5f, 1, 0.2f);
 		button1.setCaption(new DrawableString("Button 1").setProperties(properties));
 		button1.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 
-		final DefaultRectButton button2 = mGUI1.addComponent(DefaultRectButton.class);
+		final GUIButton button2 = mGUI1.addComponent(GUIButton.class);
 		button2.setPosAndExtents(-0.5f,0.2f, 1, 0.2f);
 		button2.setCaption(new DrawableString("Button 2").setProperties(properties));
 		button2.getPass(GUIRectDrawer.class).setBorderSize(0.01f);

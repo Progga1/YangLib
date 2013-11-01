@@ -61,7 +61,7 @@ public class GUIComponent {
 			instance.mPosY = mPosY;
 			instance.mVisible = mVisible;
 			instance.mEnabled = mEnabled;
-			instance.mGUI = mGUI;
+			init(mGUI);
 			return instance;
 		} catch (final InstantiationException e) {
 			e.printStackTrace();

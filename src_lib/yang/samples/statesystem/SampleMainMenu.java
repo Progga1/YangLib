@@ -27,7 +27,7 @@ import yang.util.YangList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
 import yang.util.gui.components.GUIComponent;
-import yang.util.gui.components.defaultbuttons.DefaultRectButton;
+import yang.util.gui.components.defaultbuttons.GUIButton;
 import yang.util.gui.components.defaultdrawers.GUICaptionDrawer;
 import yang.util.gui.components.defaultdrawers.GUIRectDrawer;
 import yang.util.gui.interfaces.GUIActionListener;
@@ -39,11 +39,11 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	public static float SCALE = 1.16f;
 
 	protected BasicGUI mGUI;
-	protected YangList<DefaultRectButton> mButtons;
+	protected YangList<GUIButton> mButtons;
 	protected HashMap<GUIComponent,YangProgramState<?>> mProgramStates;
 
 	public SampleMainMenu() {
-		mButtons = new YangList<DefaultRectButton>();
+		mButtons = new YangList<GUIButton>();
 		mProgramStates = new HashMap<GUIComponent,YangProgramState<?>>(16);
 	}
 
@@ -90,7 +90,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		else
 			x = mGUI.getGUICenterX()-0.5f;
 			float y = topY;
-			for(final DefaultRectButton button:mButtons) {
+			for(final GUIButton button:mButtons) {
 				button.setPosCentered(x, y);
 				y += 0.2f*SCALE;
 				if(y>=mGUI.getGUIBottom()-0.2f) {
@@ -102,7 +102,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 	}
 
 	public void addMenuItem(String caption, YangProgramState<?> state) {
-		final DefaultRectButton newButton = new DefaultRectButton();
+		final GUIButton newButton = new GUIButton();
 		newButton.getPass(GUICaptionDrawer.class).createCaption(caption);
 		newButton.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 		//In normalized coordinates: newButton.setPosAndDimCentered(0, -1+(0.15f+mButtons.size()*0.24f)*SCALE,1*SCALE, 0.15f*SCALE);

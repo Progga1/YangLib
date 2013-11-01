@@ -49,6 +49,10 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 
 	}
 
+	protected void onPointerEvent(YangPointerEvent event) {
+
+	}
+
 	public void step(float deltaTime) {
 
 	}
@@ -118,6 +122,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 		if(event instanceof YangPointerEvent) {
 			//final YangPointerEvent srcPointerEvent = (YangPointerEvent)event;
 			final YangPointerEvent pointerEvent = (YangPointerEvent)event;
+			onPointerEvent(pointerEvent);
 			final float[] matrix = mInvertedTransform.mValues;
 			final float x = pointerEvent.mX;
 			final float y = pointerEvent.mY;
