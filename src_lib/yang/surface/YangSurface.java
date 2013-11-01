@@ -30,11 +30,13 @@ import yang.util.Util;
 public abstract class YangSurface implements EventQueueHolder {
 
 	public static boolean CATCH_EXCEPTIONS = true;
+	public final static boolean NO_MACRO_OVERWRITE = true;
 	public static int ALWAYS_STEREO_VISION = 0;
 
 	public final static int RUNTIME_STATE_RUNNING = 0;
 	public final static int RUNTIME_STATE_PAUSED = 1;
 	public final static int RUNTIME_STATE_STOPPED = 2;
+
 
 	public GraphicsTranslator mGraphics;
 	public StringsXML mStrings;
@@ -219,7 +221,14 @@ public abstract class YangSurface implements EventQueueHolder {
 			if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
 				playMacro(mMacroFilename);
 			if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
-				final String filename = "run.ym";
+				String filename = "run.ym";
+				if(NO_MACRO_OVERWRITE) {
+					int i=0;
+					while(mResources.fileExistsInFileSystem(filename)) {
+						filename = "run"+i+".ym";
+						i++;
+					}
+				}
 				try {
 					recordMacro(filename);
 				} catch (final FileNotFoundException e) {
