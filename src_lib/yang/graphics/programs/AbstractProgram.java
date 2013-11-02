@@ -38,9 +38,9 @@ public abstract class AbstractProgram {
 	}
 
 	public final AbstractProgram init(GraphicsTranslator graphics) {
-		mFragSource = getVertexShader(graphics.mGFXLoader);
-		mVertSource = getFragmentShader(graphics.mGFXLoader);
-		return init(graphics,mFragSource,mVertSource);
+		mVertSource = getVertexShader(graphics.mGFXLoader);
+		mFragSource = getFragmentShader(graphics.mGFXLoader);
+		return init(graphics,mVertSource,mFragSource);
 	}
 
 	public void restart() {

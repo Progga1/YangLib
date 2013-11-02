@@ -31,14 +31,16 @@ public class DefaultObjShader extends ShaderPermutations {
 				new LightSubShader(lightProperties),
 				};
 		super.addSubShaders(subShaders);
-		super.addSubShaders(additionalShaders);
+		super.addSubShaders(new SubShader[]{new DiffuseLightSubShader(),new CameraPerVertexVectorSubShader(graphics3D),new SpecularLightSubShader(null), new EmissiveSubShader(null)});
+		if(additionalShaders!=null)
+			super.addSubShaders(additionalShaders);
 		super.addSubShader(new AmbientSubShader(ambientColor));
 		super.addSubShader(new ColorFactorSubShader(graphics3D.mColorFactor));
 		super.initPermutations();
 	}
 
 	public DefaultObjShader(Default3DGraphics graphics3D,LightProperties lightProperties,FloatColor ambientColor) {
-		this(graphics3D,lightProperties,ambientColor,new SubShader[]{new DiffuseLightSubShader(),new CameraPerVertexVectorSubShader(graphics3D),new SpecularLightSubShader(null), new EmissiveSubShader(null)});
+		this(graphics3D,lightProperties,ambientColor,null);
 	}
 
 	public DefaultObjShader(Default3DGraphics graphics3D) {

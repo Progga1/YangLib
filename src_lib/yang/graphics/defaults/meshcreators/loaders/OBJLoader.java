@@ -56,6 +56,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public YangList<YangMaterialSet> mMaterialSets;
 	public YangList<OBJMaterialSection> mMaterialSections;
 	public TextureProperties mTextureProperties;
+	public boolean mUseShaders = true;
 
 	public DrawBatch mDrawBatch;
 
@@ -300,36 +301,38 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		final SpecularLightBasicSubShader specShader = mHandles.mSpecShader;
 
 		for(final OBJMaterialSection matSec:mMaterialSections) {
-			YangMaterial mat = matSec.mMaterial;
-			if(mat==null) {
-				matSec.mMaterial = new YangMaterial();
-				mat = matSec.mMaterial;
-			}
-			mTranslator.bindTexture(mat.mDiffuseTexture);
-			if(specShader!=null) {
-				if(mat.mSpecularProps.mTexture!=null) {
-					program.setUniformInt(specShader.mSpecTexSampler,specShader.mTextureLevel);
-					mTranslator.bindTextureNoFlush(mat.mSpecularProps.mTexture,specShader.mTextureLevel);
-					program.setUniformInt(specShader.mSpecUseTexHandle, 1);
-				}else{
-					program.setUniform4f(specShader.mSpecColorHandle, mat.mSpecularProps.mColor.mValues);
-					program.setUniformInt(specShader.mSpecUseTexHandle, 0);
+			if(mUseShaders) {
+				YangMaterial mat = matSec.mMaterial;
+				if(mat==null) {
+					matSec.mMaterial = new YangMaterial();
+					mat = matSec.mMaterial;
 				}
-				program.setUniformFloat(specShader.mSpecExponentHandle, mat.mSpecularProps.mExponent);
-			}
-
-			if(emisShader!=null) {
-				program.setUniform4f(emisShader.mEmisColorHandle, mat.mEmissiveProps.mColor.mValues);
-				if(mat.mEmissiveProps.mTexture!=null) {
-					program.setUniformInt(emisShader.mEmisTexSampler,emisShader.mTextureLevel);
-					mTranslator.bindTextureNoFlush(mat.mEmissiveProps.mTexture,emisShader.mTextureLevel);
-					program.setUniformInt(emisShader.mEmisUseTexHandle, 1);
-				}else{
-					program.setUniformInt(emisShader.mEmisUseTexHandle, 0);
+				mTranslator.bindTexture(mat.mDiffuseTexture);
+				if(specShader!=null) {
+					if(mat.mSpecularProps.mTexture!=null) {
+						program.setUniformInt(specShader.mSpecTexSampler,specShader.mTextureLevel);
+						mTranslator.bindTextureNoFlush(mat.mSpecularProps.mTexture,specShader.mTextureLevel);
+						program.setUniformInt(specShader.mSpecUseTexHandle, 1);
+					}else{
+						program.setUniform4f(specShader.mSpecColorHandle, mat.mSpecularProps.mColor.mValues);
+						program.setUniformInt(specShader.mSpecUseTexHandle, 0);
+					}
+					program.setUniformFloat(specShader.mSpecExponentHandle, mat.mSpecularProps.mExponent);
 				}
-			}
 
-			program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
+				if(emisShader!=null) {
+					program.setUniform4f(emisShader.mEmisColorHandle, mat.mEmissiveProps.mColor.mValues);
+					if(mat.mEmissiveProps.mTexture!=null) {
+						program.setUniformInt(emisShader.mEmisTexSampler,emisShader.mTextureLevel);
+						mTranslator.bindTextureNoFlush(mat.mEmissiveProps.mTexture,emisShader.mTextureLevel);
+						program.setUniformInt(emisShader.mEmisUseTexHandle, 1);
+					}else{
+						program.setUniformInt(emisShader.mEmisUseTexHandle, 0);
+					}
+				}
+
+				program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
+			}
 
 			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
 		}

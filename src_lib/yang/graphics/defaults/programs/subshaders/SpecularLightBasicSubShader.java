@@ -14,11 +14,11 @@ public class SpecularLightBasicSubShader extends SubShader {
 	public int mSpecTexSampler;
 	public int mSpecUseTexHandle;
 	public int mTextureLevel;
-	
+
 	public SpecularLightBasicSubShader(SpecularMatProperties properties) {
 		mProperties = properties;
 	}
-	
+
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("vec4", "mtSpecColor");
@@ -26,7 +26,7 @@ public class SpecularLightBasicSubShader extends SubShader {
 		fsDecl.addUniform("bool", "mtSpecUseTex");
 		fsDecl.addUniform("float", "mtSpecExponent");
 		shaderParser.appendLn(VAR_FS_MAIN,"vec3 specVector = reflect(camDir,normal)");
-		shaderParser.appendFragmentMain("vec4 specColor");
+		fsDecl.localDeclare("vec4", "specColor");
 		shaderParser.appendFragmentMain("if(mtSpecUseTex) {");
 		shaderParser.appendFragmentMain("specColor = texture2D(mtSpecSampler,texCoord)");
 		shaderParser.appendFragmentMain("}else{");
@@ -42,7 +42,7 @@ public class SpecularLightBasicSubShader extends SubShader {
 		mSpecTexSampler = program.getUniformLocation("mtSpecSampler");
 		mSpecUseTexHandle = program.getUniformLocation("mtSpecUseTex");
 	}
-	
+
 	@Override
 	public boolean handlesOK() {
 		return mSpecColorHandle>=0 && mSpecExponentHandle>=0 && mSpecTexSampler>=0 && mSpecUseTexHandle>=0;
@@ -60,7 +60,7 @@ public class SpecularLightBasicSubShader extends SubShader {
 		}
 		program.setUniformFloat(mSpecExponentHandle, mProperties.mExponent);
 	}
-	
+
 	@Override
 	public boolean passesData() {
 		return mProperties!=null;

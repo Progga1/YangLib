@@ -33,7 +33,7 @@ public class ShaderDeclarations {
 	}
 
 	public void localDeclare(String type,String name) {
-		localDeclare(type,name);
+		localDeclare(type,name,null);
 	}
 
 	public void localDeclareOrChange(String type,String name,String op,String value) {
@@ -64,6 +64,10 @@ public class ShaderDeclarations {
 
 	public void localDeclareOrMult(String type,String name,String value) {
 		localDeclareOrChange(type,name,"*=",value);
+	}
+
+	public void localAssign(String name,String value) {
+		localChange(name,"=",value);
 	}
 
 	public void localAdd(String name,String value) {

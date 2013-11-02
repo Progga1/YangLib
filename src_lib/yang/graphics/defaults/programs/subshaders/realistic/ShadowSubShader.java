@@ -32,6 +32,9 @@ public class ShadowSubShader extends SubShader {
 		if(!fsDecl.localVariableExists("lgt"))
 			fsDecl.localDeclare("vec4","shad","vec4(1.0,1.0,1.0,1.0)");
 		shaderParser.append(VAR_FS_MAIN,"if(depthMapPosition.z < depthValue.r) {\n");
+		if(fsDecl.localVariableExists("specColor")) {
+			fsDecl.localAssign("specColor","vec4(0.0,0.0,0.0,0.0)");
+		}
 		if(fsDecl.localVariableExists("lgt")) {
 			shaderParser.appendLn(VAR_FS_MAIN, "lgt = min(lgt,"+shad+")");
 		}else{
