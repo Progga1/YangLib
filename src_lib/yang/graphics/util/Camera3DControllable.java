@@ -7,6 +7,7 @@ import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.math.MathConst;
 import yang.math.objects.Vector3f;
+import yang.surface.YangSurface;
 
 
 public class Camera3DControllable extends Camera3DAlphaBeta implements YangEventListener {
@@ -24,11 +25,15 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;
 
+	//Objects
+	private final YangSurface mSurface;
+
 	//Temp
 	private final Vector3f mCamRight = new Vector3f();
 	private final Vector3f mCamUp = new Vector3f();
 
-	public Camera3DControllable() {
+	public Camera3DControllable(YangSurface surface) {
+		mSurface = surface;
 		setZoom(1);
 	}
 
@@ -49,6 +54,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 			return;
 		mZoom = zoom;
 		mTargetZoom = zoom;
+		checkSnap();
 	}
 
 	public void setViewAngle(float alpha,float beta) {
@@ -61,6 +67,14 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 	@Override
 	public void pointerDown(float x, float y, SurfacePointerEvent event) {
 
+	}
+
+	private void checkSnap() {
+		if(mSurface.mPlaySpeed==0 || mSurface.mPaused) {
+			mZoom = mTargetZoom;
+			mViewAlpha = mTargetViewAlpha;
+			mViewBeta = mTargetViewBeta;
+		}
 	}
 
 	private float mLstX = Float.MAX_VALUE,mLstY;
@@ -97,12 +111,14 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 				}
 			}
 		}
+		checkSnap();
 	}
 
 	@Override
 	public void pointerUp(float x, float y, SurfacePointerEvent event) {
 		mLstX = Float.MAX_VALUE;
 		mCurPointerDownCount--;
+		checkSnap();
 		if(event.mId>3)
 			return;
 	}
@@ -114,6 +130,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 			mTargetZoom = mMinZoom;
 		if(mTargetZoom>mMaxZoom)
 			mTargetZoom = mMaxZoom;
+		checkSnap();
 	}
 
 	@Override
@@ -121,6 +138,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 		if(code == mShiftKey) {
 			mShiftMode = true;
 		}
+		checkSnap();
 	}
 
 	@Override
@@ -128,6 +146,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 		if(code == mShiftKey) {
 			mShiftMode = false;
 		}
+		checkSnap();
 	}
 
 	@Override

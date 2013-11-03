@@ -39,6 +39,7 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 
 	@Override
 	public void initGraphics() {
+		super.initGraphics();
 		mRotVector1.setNormalized(1, 0.5f, 0.8f);
 		mRotVectorAround.setNormalized(1, 1, 0.1f);
 		mRotVector2.setNormalized(1, -1, 0.5f);

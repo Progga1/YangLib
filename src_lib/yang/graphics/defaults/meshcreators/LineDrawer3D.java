@@ -8,7 +8,7 @@ import yang.math.objects.matrix.YangMatrix;
 public class LineDrawer3D extends MeshCreator<Default3DGraphics> {
 
 	public float mLineWidth;
-	private final CylinderCreator mCylinder;
+	public final CylinderCreator mCylinder;
 
 
 	public LineDrawer3D(Default3DGraphics graphics) {
@@ -29,7 +29,6 @@ public class LineDrawer3D extends MeshCreator<Default3DGraphics> {
 	private final Vector3f vec3 = new Vector3f();
 
 	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ, float startWidth,float endWidth) {
-
 		transform.loadIdentity();
 		vec1.set(endX-startX, endY-startY, endZ-startZ);
 		vec2.createOrthoVec(vec1);
@@ -37,8 +36,7 @@ public class LineDrawer3D extends MeshCreator<Default3DGraphics> {
 		vec3.normalize();
 		transform.translate(startX, startY, startZ);
 		transform.multiplyBaseVectorsRight(vec2,vec1,vec3);
-		//transform.scale(width, 1, width);
-		mCylinder.drawCylinder(transform, startWidth, endWidth);
+		mCylinder.putPositions(transform, startWidth, endWidth);
 	}
 
 	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ) {

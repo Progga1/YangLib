@@ -8,7 +8,6 @@ import java.nio.ShortBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.meshcreators.LineDrawer3D;
 import yang.graphics.defaults.meshcreators.SphereCreator;
-import yang.graphics.defaults.meshcreators.grids.TerrainCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
@@ -51,15 +50,17 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private final Point3f mCameraPosition = new Point3f();
 
 	private Basic3DProgram mDefaultProgram;
-	private final TerrainCreator mDefaultTerrainCreator;
 	private final SphereCreator mSphereCreator;
-	private final LineDrawer3D mLineDrawer;
-	private final YangMatrix mTempMatrix = new YangMatrix();
-	private final float[] mTemp4f = new float[4];
+	public final LineDrawer3D mLineDrawer;
 
 	protected boolean mCurIsPerspective;
-	protected float mCurNear,mCurFar,mCurFovy,mCurZoom;
+	private float mCurNear,mCurFar,mCurFovy,mCurZoom;
 	public float mSensorZ = 0.1f;
+
+
+	//Temp vars
+	private final float[] mTemp4f = new float[4];
+
 
 	public static float[] swapCoords(float[] original,int x,int y,int z) {
 		final float[] result = new float[12];
@@ -85,7 +86,6 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mOriginalCameraMatrix = new YangMatrixCameraOps();
 		mInterMatrix = mTranslator.createTransformationMatrix();
 		mCameraMatrix.set(3,3, 1);
-		mDefaultTerrainCreator = new TerrainCreator(this);
 		mSphereCreator = new SphereCreator(this);
 		mBillboardMode = false;
 		mLineDrawer = new LineDrawer3D(this);
@@ -506,6 +506,26 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawDebugCoordinateAxes(FloatColor.RED,FloatColor.GREEN,FloatColor.BLUE,1,1);
 	}
 
+	public void drawLine3D(float fromX,float fromY,float fromZ, float toX,float toY,float toZ, float startWidth,float endWidth) {
+		final int normId = mCurrentVertexBuffer.getCurrentVertexWriteCount();
+		mLineDrawer.drawLine(fromX,fromY,fromZ, toX,toY,toZ, startWidth,endWidth);
+		mLineDrawer.mCylinder.putColor(mCurColor);
+		mLineDrawer.mCylinder.putSuppData(mCurSuppData);
+		mLineDrawer.mCylinder.putTextureCoordinates();
+		fillNormals(normId);
+	}
+
+	public void drawLine3D(float fromX,float fromY,float fromZ, float toX,float toY,float toZ) {
+		drawLine3D(fromX,fromY,fromZ, toX,toY,toZ, mLineDrawer.mLineWidth,mLineDrawer.mLineWidth);
+	}
+
+	public void drawLine3DRect(float worldX1, float worldY1, float worldX2, float worldY2, float z, float width) {
+		drawLine3D(worldX1,worldY1,z, worldX2+width*0.5f,worldY1,z, width,width);
+		drawLine3D(worldX2,worldY1,z, worldX2,worldY2+width*0.5f,z, width,width);
+		drawLine3D(worldX2,worldY2,z, worldX1-width*0.5f,worldY2,z, width,width);
+		drawLine3D(worldX1,worldY2,z, worldX1,worldY1-width*0.5f,z, width,width);
+	}
+
 	private final Vector3f tempVec1 = new Vector3f();
 	private final Vector3f tempVec2 = new Vector3f();
 	private final YangMatrixCameraOps mProjectionMatrix = new YangMatrixCameraOps();
@@ -528,6 +548,18 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void getProjectedPosition(Vector3f target, float x,float y,float z) {
 		mProjectionMatrix.apply3D(x,y,z,target);
+	}
+
+	public float getCurFovy() {
+		return mCurFovy;
+	}
+
+	public float getCurNear() {
+		return mCurNear;
+	}
+
+	public float getCurFar() {
+		return mCurFar;
 	}
 
 }

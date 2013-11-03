@@ -36,6 +36,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	@Override
 	public void initGraphics() {
+		super.initGraphics();
 		mSkeletonCreator = new HumanSkeletonCreator3D();
 		mSkeleton = mSkeletonCreator.create(new HumanSkeletonProperties());
 		mSkeleton3D = new Skeleton3DEditing(mGraphics3D,mSkeleton).initLines();

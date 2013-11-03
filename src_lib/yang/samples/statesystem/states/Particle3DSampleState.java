@@ -17,16 +17,17 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 	private static final int PARTICLES_PER_FRAME = 1;
 
 	private Particles3D<EffectParticle> mParticles;
-	private Weather3D<Particles3D<EffectParticle>> mWeather = new Weather3D<Particles3D<EffectParticle>>();
+	private final Weather3D<Particles3D<EffectParticle>> mWeather = new Weather3D<Particles3D<EffectParticle>>();
 	private Texture mParticleTexture;
 	private TextureCoordinatesQuad[] mTexCoords;
-	private Cursor3D mCursor = new Cursor3D();
-	private float mSmokeScale = 0.4f;
-	private float mParticleSpeed = 0.1f;
+	private final Cursor3D mCursor = new Cursor3D();
+	private final float mSmokeScale = 0.4f;
+	private final float mParticleSpeed = 0.1f;
 	private int mFrameCount = 0;
 
 	@Override
 	protected void initGraphics() {
+		super.initGraphics();
 		mCursor.set(-1000,0,0);
 		mParticles = new Particles3D<EffectParticle>(EffectParticle.class).init(mGraphics3D, 320);
 		//mParticles.setScaleFunction(DefaultFunctions.EXP_GROWING_SQR_SHRINKING);
@@ -35,11 +36,11 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 		mParticles.mAlphaSpeed = 1;
 		mParticles.mScaleSpeed = -1;
 		//mTexCoords = TextureCoordinateSet.createTexCoordSequencePixelsBias(mParticleTexture,0, 0, 64,64, 4, 2,2);
-		EffectParticleProperties props = new EffectParticleProperties();
+		final EffectParticleProperties props = new EffectParticleProperties();
 		props.setScale(0.1f);
 		props.setSpeed(1f,2f);
 		props.setVelocityDirection(0, 1, 0, true);
-		Particles3D<EffectParticle> particles = new Particles3D<EffectParticle>(EffectParticle.class);
+		final Particles3D<EffectParticle> particles = new Particles3D<EffectParticle>(EffectParticle.class);
 		particles.mTexture = mGFXLoader.getAlphaMap("light_alpha");
 		mWeather.init(particles.init(mGraphics3D, 1000), props);
 		mWeather.mBoundaries.set(-6,6, -16,9, -6,6);
@@ -51,7 +52,7 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 	protected void step(float deltaTime) {
 		super.step(deltaTime);
 		if(mFrameCount++ % 1==0) {
-			EffectParticle particle = mParticles.spawnParticle(mCursor.mX,mCursor.mY,mCursor.mZ, TextureCoordinatesQuad.FULL_TEXTURE);
+			final EffectParticle particle = mParticles.spawnParticle(mCursor.mX,mCursor.mY,mCursor.mZ, TextureCoordinatesQuad.FULL_TEXTURE);
 			particle.mFriction = 0.995f;
 			particle.setSpeedRangeSpread2D(5.2f*mParticleSpeed,6.0f*mParticleSpeed, 1.2f, 0.5f);
 			particle.mVelZ = mParticleSpeed*(MathFunc.randomF(-1, 1))*0.01f;

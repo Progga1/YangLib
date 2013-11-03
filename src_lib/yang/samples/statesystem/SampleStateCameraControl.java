@@ -9,9 +9,14 @@ public abstract class SampleStateCameraControl extends SampleState {
 	protected boolean mOrthogonalProjection = true;
 	protected Vector3f mCamRight = new Vector3f();
 	protected Vector3f mCamUp = new Vector3f();
-	protected Camera3DControllable mCamera = new Camera3DControllable();
+	protected Camera3DControllable mCamera;
 	protected char mSwitchPerspectiveKey = 'p';
 	protected char mInvertViewKey = 'v';
+
+	@Override
+	protected void initGraphics() {
+		mCamera = new Camera3DControllable(mStateSystem);
+	}
 
 	protected void refreshCamera() {
 		if(mOrthogonalProjection)
