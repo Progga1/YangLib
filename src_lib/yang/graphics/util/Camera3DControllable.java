@@ -2,11 +2,14 @@ package yang.graphics.util;
 
 import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
+import yang.events.eventtypes.YangEvent;
+import yang.events.eventtypes.YangSensorEvent;
+import yang.events.listeners.YangEventListener;
 import yang.math.MathConst;
 import yang.math.objects.Vector3f;
 
 
-public class Camera3DControllable extends Camera3DAlphaBeta {
+public class Camera3DControllable extends Camera3DAlphaBeta implements YangEventListener {
 
 	//State
 	public boolean mShiftMode = false;
@@ -55,9 +58,15 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 		mTargetViewBeta = beta;
 	}
 
+	@Override
+	public void pointerDown(float x, float y, SurfacePointerEvent event) {
+
+	}
+
 	private float mLstX = Float.MAX_VALUE,mLstY;
 
-	public void pointerDragged(SurfacePointerEvent event) {
+	@Override
+	public void pointerDragged(float x, float y, SurfacePointerEvent event) {
 		if(event.mId==0) {
 			if((mCurPointerDownCount==2 || mCurPointerDownCount==3) || event.mButton==mMoveCameraButton || event.mButton==mMoveCameraAlternativeButton) {
 				if(mShiftMode || mCurPointerDownCount==2) {
@@ -67,14 +76,14 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 					float deltaX = event.mDeltaX;
 					float deltaY = event.mDeltaY;
 					if(mCurPointerDownCount==2) {
-						final float x = (event.mEventQueue.mPointerTrackers[0].mX + event.mEventQueue.mPointerTrackers[1].mX)*0.5f;
-						final float y = (event.mEventQueue.mPointerTrackers[0].mY + event.mEventQueue.mPointerTrackers[2].mY)*0.5f;
+						final float ux = (event.mInputState.mPointerTrackers[0].mX + event.mInputState.mPointerTrackers[1].mX)*0.5f;
+						final float uy = (event.mInputState.mPointerTrackers[0].mY + event.mInputState.mPointerTrackers[1].mY)*0.5f;	//TODO check correctness, changed [2].mY to [1].mY
 						if(mLstX!=Float.MAX_VALUE) {
-							deltaX = x-mLstX;
-							deltaY = y-mLstY;
+							deltaX = ux-mLstX;
+							deltaY = uy-mLstY;
 						}
-						mLstX = x;
-						mLstY = y;
+						mLstX = ux;
+						mLstY = uy;
 					}
 					shiftFocus(fac*(mCamRight.mX*deltaX+mCamUp.mX*deltaY), fac*(mCamRight.mY*deltaX+mCamUp.mY*deltaY), fac*(mCamRight.mZ*deltaX+mCamUp.mZ*deltaY));
 				}else{
@@ -90,13 +99,15 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 		}
 	}
 
-	public void pointerUp(SurfacePointerEvent event) {
+	@Override
+	public void pointerUp(float x, float y, SurfacePointerEvent event) {
 		mLstX = Float.MAX_VALUE;
 		mCurPointerDownCount--;
 		if(event.mId>3)
 			return;
 	}
 
+	@Override
 	public void zoom(float value) {
 		mTargetZoom += value;
 		if(mTargetZoom<mMinZoom)
@@ -105,16 +116,33 @@ public class Camera3DControllable extends Camera3DAlphaBeta {
 			mTargetZoom = mMaxZoom;
 	}
 
+	@Override
 	public void keyDown(int code) {
 		if(code == mShiftKey) {
 			mShiftMode = true;
 		}
 	}
 
+	@Override
 	public void keyUp(int code) {
 		if(code == mShiftKey) {
 			mShiftMode = false;
 		}
+	}
+
+	@Override
+	public boolean rawEvent(YangEvent event) {
+		return false;
+	}
+
+	@Override
+	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
+
+	}
+
+	@Override
+	public void sensorChanged(YangSensorEvent event) {
+
 	}
 
 }

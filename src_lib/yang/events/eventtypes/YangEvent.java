@@ -1,11 +1,11 @@
 package yang.events.eventtypes;
 
-import yang.events.YangEventQueue;
+import yang.events.InputState;
 import yang.events.listeners.RawEventListener;
 
 public abstract class YangEvent {
 
-	public YangEventQueue mEventQueue;
+	public InputState mInputState;
 
 	//handle() potentially called multiple times, poll() only once
 

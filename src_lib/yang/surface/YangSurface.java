@@ -252,6 +252,8 @@ public abstract class YangSurface implements EventQueueHolder {
 			exceptionOccurred(ex);
 		}
 
+		refreshMetaMode();
+
 	}
 
 	public void waitUntilInitialized() {
@@ -513,6 +515,14 @@ public abstract class YangSurface implements EventQueueHolder {
 		}
 	}
 
+	protected boolean playsMacro() {
+		return mMacro!=null;
+	}
+
+	protected void refreshMetaMode() {
+		mEventQueue.mMetaMode = mPaused || mMacro!=null;
+	}
+
 	public void stop() {
 		mInactive = true;
 		mRuntimeState = 2;
@@ -558,7 +568,7 @@ public abstract class YangSurface implements EventQueueHolder {
 
 	public void setPaused(boolean paused) {
 		mPaused = paused;
-		mEventQueue.mMetaMode = paused;
+		refreshMetaMode();
 	}
 
 	public boolean isPaused() {

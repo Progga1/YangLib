@@ -37,12 +37,12 @@ public abstract class SampleStateCameraControl extends SampleState {
 
 	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
-		mCamera.pointerDragged(event);
+		mCamera.pointerDragged(x,y,event);
 	}
 
 	@Override
 	public void pointerUp(float x,float y,SurfacePointerEvent event) {
-		mCamera.pointerUp(event);
+		mCamera.pointerUp(x,y,event);
 	}
 
 	@Override

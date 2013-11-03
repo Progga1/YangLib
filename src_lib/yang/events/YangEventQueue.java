@@ -1,6 +1,5 @@
 package yang.events;
 
-import yang.events.eventtypes.PointerTracker;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangInput3DEvent;
@@ -19,18 +18,15 @@ import yang.util.YangList;
 public class YangEventQueue {
 
 	public static final int MAX_KEY_INDICES = 512;
-
 	public static int MAX_POINTERS = 10;
+
 	public static final int ID_POINTER_EVENT = 0;
 	public static final int ID_KEY_EVENT = 1;
 	public static final int ID_ZOOM_EVENT = 2;
 	public static final int ID_SENSOR_EVENT = 3;
 	public static final int ID_INPUT3D_EVENT = 4;
 
-	public PointerTracker mPointerTrackers[] = new PointerTracker[MAX_POINTERS];
-	public boolean mKeyStates[] = new boolean[MAX_KEY_INDICES];
-	public float mPointerDistance = -1;
-	public int mCurPointerDownCount = 0;
+	public InputState mInputState,mMetaInputState;
 	private final int mMaxEvents;
 	private final SurfacePointerEvent[] mPointerEventQueue;
 	private final YangKeyEvent[] mKeyEventQueue;
@@ -53,10 +49,7 @@ public class YangEventQueue {
 	private final boolean[] mMetaKeys;
 	public boolean mMetaMode = false;
 	public YangList<MacroWriter> mMacroWriters;
-	public boolean mTriggerZooming = true;
 	public float mSurfacePointerZ = 0;
-
-	public boolean mShiftDown = false;
 
 	public YangEventQueue(int maxEvents,int eventTypes) {
 		mGraphics = null;
@@ -78,26 +71,24 @@ public class YangEventQueue {
 		mInput3DEventQueue = new YangInput3DEvent[maxEvents];
 		for(int i=0;i<maxEvents;i++) {
 			mPointerEventQueue[i] = new SurfacePointerEvent();
-			mPointerEventQueue[i].mEventQueue = this;
+			//mPointerEventQueue[i].mEventStates = mInputState;
 			mKeyEventQueue[i] = new YangKeyEvent();
-			mKeyEventQueue[i].mEventQueue = this;
+			//mKeyEventQueue[i].mEventQueue = this;
 			mZoomEventQueue[i] = new YangZoomEvent();
-			mZoomEventQueue[i].mEventQueue = this;
+			//mZoomEventQueue[i].mEventQueue = this;
 			mSensorEventQueue[i] = new YangSensorEvent();
-			mSensorEventQueue[i].mEventQueue = this;
+			//mSensorEventQueue[i].mEventQueue = this;
 			mInput3DEventQueue[i] = new YangInput3DEvent();
-			mInput3DEventQueue[i].mEventQueue = this;
+			//mInput3DEventQueue[i].mEventQueue = this;
 		}
 		mMetaKeys = new boolean[MAX_KEY_INDICES];
 		for(int i=0;i<mMetaKeys.length;i++) {
 			mMetaKeys[i] = false;
 		}
-		for(int i=0;i<MAX_POINTERS;i++) {
-			mPointerTrackers[i] = new PointerTracker();
-		}
-		for(int i=0;i<MAX_KEY_INDICES;i++) {
-			mKeyStates[i] = false;
-		}
+
+		mInputState = new InputState(this);
+		mMetaInputState = new InputState(this);
+
 		mQueuePools = new YangEvent[eventTypes][];
 		mQueuePools[ID_POINTER_EVENT] = mPointerEventQueue;
 		mQueuePools[ID_KEY_EVENT] = mKeyEventQueue;
@@ -115,6 +106,7 @@ public class YangEventQueue {
 			putMetaEvent(event);
 			return;
 		}
+		event.mInputState = mInputState;
 		mQueue[mQueueId++] = event;
 //		event.onPoll();
 		if(mQueueId>=mMaxEvents)
@@ -122,6 +114,7 @@ public class YangEventQueue {
 	}
 
 	public synchronized void putEventForceRuntime(YangEvent event) {
+		event.mInputState = mInputState;
 		mQueue[mQueueId++] = event;
 //		event.onPoll();
 		if(mQueueId>=mMaxEvents)
@@ -129,6 +122,7 @@ public class YangEventQueue {
 	}
 
 	public synchronized void putMetaEvent(YangEvent event) {
+		event.mInputState = mMetaInputState;
 		mMetaEventQueue[mMetaEventQueueId++] = event;
 //		event.onPoll();
 		if(mMetaEventQueueId>=mMaxEvents)
@@ -382,11 +376,11 @@ public class YangEventQueue {
 	}
 
 	public boolean isKeyDown(int code) {
-		if(code==Keys.SHIFT)
-			return mShiftDown;
-		if(code>=MAX_KEY_INDICES || code<0)
-			return false;
-		return mKeyStates[code];
+		return mInputState.isKeyDown(code);
+	}
+
+	public boolean isMetaKeyDown(int code) {
+		return mMetaInputState.isKeyDown(code);
 	}
 
 }

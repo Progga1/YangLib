@@ -1,5 +1,6 @@
 package yang.graphics.model;
 
+import yang.events.InputState;
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.PointerTracker;
 import yang.graphics.defaults.DefaultGraphics;
@@ -220,11 +221,12 @@ public class GFXDebug implements PrintInterface {
 
 		if(DebugYang.DRAW_POINTERS) {
 			final YangEventQueue events = mSurface.mEventQueue;
+			final InputState inputState = events.mInputState;
 			mGraphics.mTranslator.bindTexture(mPointerTexture);
-			final int l = events.mCurPointerDownCount;
-			for(int i=0;i<events.mPointerTrackers.length;i++) {
+			final int l = inputState.mCurPointerDownCount;
+			for(int i=0;i<inputState.mPointerTrackers.length;i++) {
 				final double time = events.getTime();
-				final PointerTracker tracker = events.mPointerTrackers[i];
+				final PointerTracker tracker = inputState.mPointerTrackers[i];
 				if(tracker.mLastMovementRealtime<0)
 					continue;
 

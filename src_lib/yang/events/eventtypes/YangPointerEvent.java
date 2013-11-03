@@ -51,34 +51,34 @@ public abstract class YangPointerEvent extends YangEvent {
 
 	@Override
 	public void onPoll() {
-		final PointerTracker pointer = mEventQueue.mPointerTrackers[mId];
+		final PointerTracker pointer = mInputState.mPointerTrackers[mId];
 		mDeltaX = mX - pointer.mX;
 		mDeltaY = mY - pointer.mY;
 		mDeltaZ = mZ - pointer.mZ;
-		pointer.mLastMovementRealtime = mEventQueue.getTime();
+		pointer.mLastMovementRealtime = mInputState.getTime();
 		if(mAction!=ACTION_POINTERMOVE)
-			pointer.mLastTouchRealtime = mEventQueue.getTime();
+			pointer.mLastTouchRealtime = mInputState.getTime();
 		pointer.mX = mX;
 		pointer.mY = mY;
 		pointer.mZ = mZ;
 		if(mAction==ACTION_POINTERDOWN) {
-			mEventQueue.mPointerDistance = -1;
-			mEventQueue.mCurPointerDownCount++;
+			mInputState.mPointerDistance = -1;
+			mInputState.mCurPointerDownCount++;
 		}
 		if(mAction==ACTION_POINTERUP)
-			mEventQueue.mCurPointerDownCount--;
-		if(mEventQueue.mTriggerZooming && mEventQueue.mCurPointerDownCount==2 && mAction==ACTION_POINTERDRAG) {
-			final float dist = mEventQueue.mPointerTrackers[0].getDistance(mEventQueue.mPointerTrackers[1]);
-			if(mEventQueue.mPointerDistance>=0) {
-				final float deltaDist = dist-mEventQueue.mPointerDistance;
-				mEventQueue.putZoomEvent(-deltaDist);
+			mInputState.mCurPointerDownCount--;
+		if(mInputState.mTriggerZooming && mInputState.mCurPointerDownCount==2 && mAction==ACTION_POINTERDRAG) {
+			final float dist = mInputState.mPointerTrackers[0].getDistance(mInputState.mPointerTrackers[1]);
+			if(mInputState.mPointerDistance>=0) {
+				final float deltaDist = dist-mInputState.mPointerDistance;
+				mInputState.mEventQueue.putZoomEvent(-deltaDist);
 			}
-			mEventQueue.mPointerDistance = dist;
+			mInputState.mPointerDistance = dist;
 		}
 	}
 
 	public PointerTracker getTrackingData() {
-		return mEventQueue.mPointerTrackers[mId];
+		return mInputState.mPointerTrackers[mId];
 	}
 
 //	public float getDeltaX() {

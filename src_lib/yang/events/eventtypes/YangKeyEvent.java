@@ -29,9 +29,9 @@ public class YangKeyEvent extends YangEvent {
 	@Override
 	public void onPoll() {
 		if(mKey==Keys.SHIFT)
-			mEventQueue.mShiftDown = mAction==ACTION_KEYDOWN;
+			mInputState.mShiftDown = mAction==ACTION_KEYDOWN;
 		else if(mKey>=0 && mKey<YangEventQueue.MAX_KEY_INDICES)
-			mEventQueue.mKeyStates[mKey] = mAction==ACTION_KEYDOWN;
+			mInputState.mKeyStates[mKey] = mAction==ACTION_KEYDOWN;
 	}
 
 //	@Override
