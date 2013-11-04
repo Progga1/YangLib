@@ -49,7 +49,11 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		button2.getPass(GUIRectDrawer.class).setBorderSize(0.01f);
 
 		mWindow1 = new YangBillboardWindow<BasicGUI>(mGUI1,mGraphics3D);
+	}
 
+	@Override
+	protected void initGraphics() {
+		super.initGraphics();
 		super.mOrthogonalProjection = false;
 		super.mCamera.mInvertView = true;
 		super.mCamera.mFocusZ = 1;

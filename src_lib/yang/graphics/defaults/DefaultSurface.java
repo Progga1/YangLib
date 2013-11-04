@@ -12,6 +12,8 @@ import yang.systemdependent.YangSensor;
 
 public abstract class DefaultSurface extends YangSurface implements YangEventListener{
 
+	public boolean mExitOnEsc = true;
+
 	public Default2DGraphics mGraphics2D;
 	public Default3DGraphics mGraphics3D;
 	private final boolean mInit2DGraphics;
@@ -84,7 +86,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 
 	@Override
 	public void keyUp(int code) {
-		if(code==Keys.ESC)
+		if(mExitOnEsc && code==Keys.ESC)
 			exit();
 	}
 

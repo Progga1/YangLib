@@ -41,9 +41,11 @@ public class YangProgramStateSystem extends DefaultSurface {
 
 	@Override
 	public boolean rawEvent(YangEvent event) {
-		if(mCurrentState!=null && !mCurrentState.mFirstFrame)
-			return event.handle(mCurrentState);
-		return false;
+		if(mCurrentState!=null && !mCurrentState.mFirstFrame) {
+			event.handle(mCurrentState);
+			return false;
+		}else
+			return false;
 	}
 
 	@Override

@@ -130,9 +130,9 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 
 	@Override
 	public boolean rawEvent(YangEvent event) {
-		if(mGUI!=null)
+		if(mGUI!=null) {
 			return mGUI.handleEvent(event)!=null;
-		else
+		}else
 			return false;
 	}
 

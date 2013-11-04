@@ -20,6 +20,8 @@ public class SampleStateSystem extends YangProgramStateSystem {
 		super.setUpdateMode(UpdateMode.SYNCHRONOUS);
 		if(isStereoVision())
 			DebugYang.DRAW_POINTERS = true;
+		super.mExitOnEsc = false;
+		super.mAutoApplySensorToCamera = true;
 	}
 
 	@Override
