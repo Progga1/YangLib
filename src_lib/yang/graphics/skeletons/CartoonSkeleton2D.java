@@ -309,10 +309,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mUpdateColor = true;
 	}
 
-	public void updatedTextureCoords() {
-		this.mUpdateTexCoords = true;
-	}
-
 	public void setRotationAnchor(float anchorX,float anchorY) {
 		mRotAnchorX = anchorX;
 		mRotAnchorY = anchorY;
@@ -348,6 +344,14 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			mFrontToBackLayers[l-1-k] = layerArray;
 			k++;
 		}
+	}
+
+	public void updateTexCoords() {
+		mUpdateTexCoords = true;
+	}
+
+	public void updateColor() {
+		mUpdateColor = true;
 	}
 
 	public Texture getDefaultTexture(AbstractGFXLoader gfxLoader) {
