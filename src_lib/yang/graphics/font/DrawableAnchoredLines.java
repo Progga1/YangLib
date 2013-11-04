@@ -11,22 +11,22 @@ public class DrawableAnchoredLines extends DrawableString{
 	public DrawableAnchoredLines() {
 		super();
 	}
-	
+
 	public DrawableAnchoredLines(String string) {
 		allocString(string);
 	}
-	
+
 	protected void offsetsToPositions(float[] offsets,float[] positionTarget) {
 		float charY = -mProperties.mLineHeight;
 		int o = 0;
 		int c = 0;
-		int count = mRecentCharCount+mRecentLineCount-1;
+		final int count = mRecentCharCount+mRecentLineCount-1;
 		for(int i=0;i<count;i++) {
-			float charX = offsets[i];
+			final float charX = offsets[i];
 			if(charX!=LINEBREAK_FLOAT) {
-				TextureCoordinatesQuad coords = mTexCoords[o];
-				float x2 = charX+(coords.mWidth)*mProperties.mFont.mCharNormalizeFactorX;
-				float y2 = charY+(coords.mHeight)*mProperties.mFont.mCharNormalizeFactorY;
+				final TextureCoordinatesQuad coords = mTexCoords[o];
+				final float x2 = charX+(coords.mWidth)*mProperties.mFont.mCharNormalizeFactorX;
+				final float y2 = charY+(coords.mHeight)*mProperties.mFont.mCharNormalizeFactorY;
 				positionTarget[c++] = charX;
 				positionTarget[c++] = charY;
 				if(mProperties.mHasZComponent)
@@ -49,10 +49,10 @@ public class DrawableAnchoredLines extends DrawableString{
 			}
 		}
 	}
-	
+
 	@Override
 	public DrawableAnchoredLines setConstant() {
-		int len = mCapacity*(mProperties.mPosDim)*4;
+		final int len = mCapacity*(mProperties.mPosDim)*4;
 		if(mConstantPositions==null || mConstantPositions.length<len)
 			mConstantPositions = new float[len];
 		createStringPositions(null,staticOffsets);
@@ -60,16 +60,17 @@ public class DrawableAnchoredLines extends DrawableString{
 		applyAnchors(0,mVerticalAnchor,mConstantPositions);
 		return this;
 	}
-	
+
 	public DrawableAnchoredLines setConstantOffsets() {
 		if(mConstantOffsets==null)
 			mConstantOffsets = new float[mCapacity];
 		createStringPositions(null,mConstantOffsets);
 		return this;
 	}
-	
 
 
+
+	@Override
 	public void draw(YangMatrix transform) {
 		float[] positions;
 		YangMatrix resultTransf;
@@ -90,13 +91,12 @@ public class DrawableAnchoredLines extends DrawableString{
 			positions = mConstantPositions;
 			resultTransf = transform;
 		}
-		
-		
+
 		mProperties.mGraphics.mTranslator.bindTexture(mProperties.mFont.mTexture);
 
 		putVertexProperties();
 
 		mProperties.mGraphics.mCurrentVertexBuffer.putTransformedArray(DefaultGraphics.ID_POSITIONS,positions,mRecentCharCount*4,mProperties.mGraphics.mPositionDimension,resultTransf.mValues, 0,0,0);
 	}
-	
+
 }

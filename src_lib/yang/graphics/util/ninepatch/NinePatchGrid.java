@@ -1,11 +1,14 @@
 package yang.graphics.util.ninepatch;
 
+import java.nio.ShortBuffer;
+
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.AbstractGraphics;
 
 public class NinePatchGrid {
 
+	public boolean mNoFill = false;
 	public float mBorderLeft,mBorderBottom,mBorderTop,mBorderRight;
 	public NinePatchTexCoords mTexCoords;
 
@@ -27,18 +30,30 @@ public class NinePatchGrid {
 		return this;
 	}
 
-	public NinePatchGrid setTextureBorder(float left,float top,float right,float bottom) {
-		mTexCoords = new NinePatchTexCoords().init(left,top,right,bottom);
-		return this;
-	}
-
-	public void setTextureBorder(float size) {
-		this.setTextureBorder(size, size, size, size);
-	}
-
 	public void draw(AbstractGraphics<?> graphics,float left,float bottom,float right,float top) {
-		IndexedVertexBuffer vertexBuffer = graphics.mCurrentVertexBuffer;
-		vertexBuffer.putGridIndices(4, 4);
+		final IndexedVertexBuffer vertexBuffer = graphics.mCurrentVertexBuffer;
+
+		if(mNoFill) {
+			final ShortBuffer indexBuffer = vertexBuffer.mIndexBuffer;
+			short c = (short)vertexBuffer.getCurrentVertexWriteCount();
+			for(int i=0;i<3;i++) {
+				for(int j=0;j<3;j++){
+					if(i!=1 || j!=1) {
+						indexBuffer.put(c);
+						indexBuffer.put((short)(c+1));
+						indexBuffer.put((short)(c+4));
+						indexBuffer.put((short)(c+1+4));
+						indexBuffer.put((short)(c+4));
+						indexBuffer.put((short)(c+1));
+					}
+					c++;
+				}
+				c++;
+			}
+		}else{
+			vertexBuffer.putGridIndices(4, 4);
+		}
+
 		vertexBuffer.putVec12(DefaultGraphics.ID_POSITIONS,
 				left,bottom,0, left+mBorderLeft,bottom,0, right-mBorderRight,bottom,0, right,bottom,0
 				);
@@ -60,12 +75,13 @@ public class NinePatchGrid {
 	}
 
 	public NinePatchGrid cloneWithTextureOffset(float offsetX,float offsetY) {
-		NinePatchGrid result = new NinePatchGrid();
+		final NinePatchGrid result = new NinePatchGrid();
 		result.setBorderSize(mBorderLeft,mBorderTop,mBorderRight,mBorderBottom);
 		result.setTextureBorder(mTexCoords.cloneWithOffset(offsetX, offsetY));
 		return result;
 	}
 
+	@Override
 	public NinePatchGrid clone() {
 		return cloneWithTextureOffset(0,0);
 	}
