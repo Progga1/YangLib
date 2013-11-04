@@ -32,6 +32,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	public static boolean CATCH_EXCEPTIONS = true;
 	public final static boolean NO_MACRO_OVERWRITE = false;
 	public static int ALWAYS_STEREO_VISION = 0;
+	public static boolean SHOW_MACRO_SIGN = true;
 
 	public final static int RUNTIME_STATE_RUNNING = 0;
 	public final static int RUNTIME_STATE_PAUSED = 1;

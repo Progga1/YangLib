@@ -152,7 +152,7 @@ public class GFXDebug implements PrintInterface {
 
 		final float playSpeed = mSurface.mPlaySpeed;
 
-		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString.equals("")) && (mSurface.mMacro==null || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS)
+		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString.equals("")) && (mSurface.mMacro==null || !YangSurface.SHOW_MACRO_SIGN || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS)
 			return;
 
 		final float right = mGraphics.getScreenRight()-mDebugOffsetX;
@@ -166,7 +166,7 @@ public class GFXDebug implements PrintInterface {
 		mGraphics.setColor(mFontColor);
 		mGraphics.resetGlobalTransform();
 
-		if(mSurface.mMacro!=null && !mSurface.mMacro.mFinished && ((System.currentTimeMillis()/500)%2==0)) {
+		if(YangSurface.SHOW_MACRO_SIGN && mSurface.mMacro!=null && !mSurface.mMacro.mFinished && ((System.currentTimeMillis()/500)%2==0)) {
 			mExecMacroString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY-mFontSize*2, mFontSize);
 		}
 

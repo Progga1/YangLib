@@ -18,6 +18,7 @@ public class FloatColor extends Quadruple {
 	public static final FloatColor WHITE = new FloatColor(1,1,1);
 	public static final FloatColor BLACK = new FloatColor(0,0,0);
 	public static final FloatColor NULL = new FloatColor(0,0,0,0);
+	public static final FloatColor WHITE_TRANSPARENT = new FloatColor(1,1,1,0);
 	public static final FloatColor SILVER = new FloatColor(SILVERVALUE,SILVERVALUE,SILVERVALUE);
 	public static final FloatColor GRAY = new FloatColor(GRAYVALUE,GRAYVALUE,GRAYVALUE);
 	public static final FloatColor RED = new FloatColor(1,0,0);

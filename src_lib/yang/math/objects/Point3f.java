@@ -125,4 +125,11 @@ public class Point3f {
 		mZ = 0;
 	}
 
+	public void setLerp(Point3f point1, Point3f point2, float weight) {
+		final float dWeight = 1-weight;
+		mX = point1.mX*dWeight + point2.mX*weight;
+		mY = point1.mY*dWeight + point2.mY*weight;
+		mZ = point1.mZ*dWeight + point2.mZ*weight;
+	}
+
 }

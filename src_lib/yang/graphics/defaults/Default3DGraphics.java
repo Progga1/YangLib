@@ -519,6 +519,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawLine3D(fromX,fromY,fromZ, toX,toY,toZ, mLineDrawer.mLineWidth,mLineDrawer.mLineWidth);
 	}
 
+	public void drawLine3D(Point3f startPoint,Point3f endPoint, float startWidth,float endWidth) {
+		drawLine3D(startPoint.mX,startPoint.mY,startPoint.mZ, endPoint.mX,endPoint.mY,endPoint.mZ, startWidth,endWidth);
+	}
+
 	public void drawLine3DRect(float worldX1, float worldY1, float worldX2, float worldY2, float z, float width) {
 		drawLine3D(worldX1,worldY1,z, worldX2+width*0.5f,worldY1,z, width,width);
 		drawLine3D(worldX2,worldY1,z, worldX2,worldY2+width*0.5f,z, width,width);
