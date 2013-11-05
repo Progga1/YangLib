@@ -10,6 +10,8 @@ import yang.physics.massaggregation.elements.JointConnection;
 
 public class CartoonBone extends JointConnection {
 
+	public static float BIAS = 0.0035f;
+
 	//Properties
 	public GraphicsTranslator mGraphics;
 	public float strength = 0.1f;
@@ -77,7 +79,7 @@ public class CartoonBone extends JointConnection {
 	}
 
 	public void putTextureCoords(float x1,float y1,float x2,float y2,int rotation) {
-		final TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(x1,y1,x2,y2,0,0,rotation);
+		final TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(x1,y1,x2,y2,BIAS,BIAS,rotation);
 		putTextureCoords(texCoords);
 	}
 

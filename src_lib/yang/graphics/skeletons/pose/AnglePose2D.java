@@ -11,31 +11,33 @@ import yang.util.Util;
 public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 
 	public final static float PI2 = (float)Math.PI/2;
-	
+
 	public float[] mAngles;
-	
+
 	protected void init(){ };
-	
+
 	public AnglePose2D(float[] angles) {
 		mAngles = angles;
 		init();
 	}
-	
+
 	public AnglePose2D() {
 		this(null);
 	}
-	
+
 	@Override
 	public void applyPose(CartoonSkeleton2D skeleton,AnglePose2D interpolationPose,float weight) {
 		int c = 0;
-		float dWeight = 1-weight;
+		final float dWeight = 1-weight;
 		skeleton.mCurrentPose = this;
-		for(Joint joint:skeleton.mJoints) {
+		for(final Joint joint:skeleton.mJoints) {
+			if(c>=mAngles.length)
+				break;
 			//By normal constraint
 			if(joint instanceof JointNormalConstraint) {
 				((JointNormalConstraint)joint).setPosByConstraint();
 			}else{
-				Joint parent = joint.mAngleParent;
+				final Joint parent = joint.mAngleParent;
 				if(parent==null) {
 					//By position
 					if(joint.mAnimate) {
@@ -79,7 +81,7 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 									diff = -2*PI+prevAngle-angle;
 								}else{
 									diff = 2*PI+prevAngle-angle;
-								}	
+								}
 								angle = angle + (diff)*dWeight;
 
 							}else
@@ -89,7 +91,7 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 					}
 					c++;
 				}
-				
+
 			}
 
 		}
@@ -99,9 +101,9 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 	public void copyFromSkeleton(CartoonSkeleton2D skeleton) {
 		int c = 0;
 		//get array length
-		for(Joint joint:skeleton.mJoints) {
+		for(final Joint joint:skeleton.mJoints) {
 			if(!(joint instanceof JointNormalConstraint)) {
-				Joint parent = joint.mAngleParent;
+				final Joint parent = joint.mAngleParent;
 				if(parent==null) {
 					c+=2;
 				}else{
@@ -112,10 +114,10 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 		if(c!=mAngles.length)
 			mAngles = new float[c];
 		c = 0;
-		for(Joint joint:skeleton.mJoints) {
+		for(final Joint joint:skeleton.mJoints) {
 			//By normal constraint
 			if(!(joint instanceof JointNormalConstraint)) {
-				Joint parent = joint.mAngleParent;
+				final Joint parent = joint.mAngleParent;
 				if(parent==null) {
 					//By position
 					mAngles[c++] = joint.mPosX;
@@ -133,11 +135,11 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 
 		}
 	}
-	
+
 	@Override
 	public String toSourceCode() {
 		String res = "";
-		for(float angle:mAngles) {
+		for(final float angle:mAngles) {
 			if(res!="")
 				res += ",";
 			res += Util.round(angle,1000)+"f";
@@ -145,10 +147,10 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 		res = "new float[]{"+res+"}";
 		return res;
 	}
-	
+
 	@Override
 	public String getClassName() {
 		return "AnglePose2D";
 	}
-	
+
 }
