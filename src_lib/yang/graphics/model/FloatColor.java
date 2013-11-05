@@ -151,4 +151,18 @@ public class FloatColor extends Quadruple {
 		return new FloatColor(mValues[0],mValues[1],mValues[2],alpha);
 	}
 
+	public void multBrightness(float factor) {
+		if(factor<1) {
+			mValues[0] *= factor;
+			mValues[1] *= factor;
+			mValues[2] *= factor;
+		}
+		if(factor>1) {
+			final float dFactor = factor-1;
+			mValues[0] += (1-mValues[0])*dFactor;
+			mValues[1] += (1-mValues[1])*dFactor;
+			mValues[2] += (1-mValues[2])*dFactor;
+		}
+	}
+
 }
