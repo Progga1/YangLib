@@ -15,7 +15,7 @@ public class StrokeDrawerSampleState extends SampleState {
 	private Texture mStrokeTex;
 	private Texture mCircleTex;
 	private float mLstX,mLstY;
-	
+
 	@Override
 	protected void initGraphics() {
 		mStrokeTex = mGFXLoader.getImage("stroke",TextureFilter.NEAREST);
@@ -25,35 +25,35 @@ public class StrokeDrawerSampleState extends SampleState {
 		mStroke.mColor.setAlpha(0.8f);
 		reset();
 	}
-	
+
 	private void reset() {
 		mLstX = Float.MIN_VALUE;
 		mLstY = 0;
 	}
-	
+
 	@Override
 	protected void step(float deltaTime) {
-		
+
 	}
-	
+
 	@Override
 	protected void draw() {
 		mGraphics2D.activate();
 		mGraphics.clear(0,0,0);
-		
+
 		mGraphics.switchCulling(true);
 		mGraphics.bindTexture(mStrokeTex);
-		
+
 		mStroke.drawCompletely();
 		mGraphics2D.fillBuffers();
-		
+
 		if(mLstX!=Float.MIN_VALUE) {
 			mGraphics2D.setColor(0.9f,0.2f,0.2f,0.8f);
 			mGraphics.bindTexture(mCircleTex);
 			mGraphics2D.drawRectCentered(mLstX,mLstY,0.1f);
 		}
 	}
-	
+
 	@Override
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
 		x = (int)((x+mStrokeProperties.mWidth*0.5f*MathFunc.sign(x))/mStrokeProperties.mWidth)*mStrokeProperties.mWidth;
@@ -63,8 +63,8 @@ public class StrokeDrawerSampleState extends SampleState {
 			mLstX = x;
 			mLstY = y;
 		}else{
-			float deltaX = x-mLstX;
-			float deltaY = y-mLstY;
+			final float deltaX = x-mLstX;
+			final float deltaY = y-mLstY;
 			if(Math.abs(deltaX)>Math.abs(deltaY)) {
 				mStroke.marchX(deltaX);
 				mLstX = x;
@@ -74,9 +74,9 @@ public class StrokeDrawerSampleState extends SampleState {
 			}
 			mStroke.resolveIntersections();
 		}
-		
+
 	}
-	
+
 	@Override
 	public void keyDown(int code) {
 		if(code=='c') {
@@ -84,10 +84,10 @@ public class StrokeDrawerSampleState extends SampleState {
 			mLstX = Float.MIN_VALUE;
 		}
 	}
-	
+
 	@Override
 	public void stop() {
 		mGraphics.switchCulling(false);
 	}
-	
+
 }

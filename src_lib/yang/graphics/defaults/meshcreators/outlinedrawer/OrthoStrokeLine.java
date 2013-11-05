@@ -8,7 +8,7 @@ public class OrthoStrokeLine extends Point2f {
 	public float mDeltaX;
 	public float mDeltaY;
 	public boolean mDeleted;
-	
+
 	public OrthoStrokeLine setX(float x,float y,float distance) {
 		super.set(x,y);
 		mDeleted = false;
@@ -16,7 +16,7 @@ public class OrthoStrokeLine extends Point2f {
 		mDeltaY = 0;
 		return this;
 	}
-	
+
 	public OrthoStrokeLine setY(float x,float y,float distance) {
 		super.set(x,y);
 		mDeleted = false;
@@ -24,18 +24,18 @@ public class OrthoStrokeLine extends Point2f {
 		mDeltaY = distance;
 		return this;
 	}
-	
+
 	public float getDistance() {
 		if(mDeltaX!=0)
 			return mDeltaX;
 		else
 			return mDeltaY;
 	}
-	
+
 	public int getDirX() {
 		return MathFunc.signZero(mDeltaX);
 	}
-	
+
 	public int getDirY() {
 		return MathFunc.signZero(mDeltaY);
 	}
@@ -43,31 +43,31 @@ public class OrthoStrokeLine extends Point2f {
 	public int getStartPointMask() {
 		if(mDeltaX!=0) {
 			if(mDeltaX>0)
-				return OrthoStrokeProperties.RIGHT;
+				return OrthoStrokeProperties.RIGHT_OUT;
 			else
-				return OrthoStrokeProperties.LEFT;
+				return OrthoStrokeProperties.LEFT_OUT;
 		}
 		if(mDeltaY!=0) {
 			if(mDeltaY>0)
-				return OrthoStrokeProperties.UP;
+				return OrthoStrokeProperties.UP_OUT;
 			else
-				return OrthoStrokeProperties.DOWN;
+				return OrthoStrokeProperties.DOWN_OUT;
 		}
 		return 0;
 	}
-	
+
 	public int getEndPointMask() {
 		if(mDeltaX!=0) {
 			if(mDeltaX>0)
-				return OrthoStrokeProperties.LEFT;
+				return OrthoStrokeProperties.LEFT_IN;
 			else
-				return OrthoStrokeProperties.RIGHT;
+				return OrthoStrokeProperties.RIGHT_IN;
 		}
 		if(mDeltaY!=0) {
 			if(mDeltaY>0)
-				return OrthoStrokeProperties.DOWN;
+				return OrthoStrokeProperties.DOWN_IN;
 			else
-				return OrthoStrokeProperties.UP;
+				return OrthoStrokeProperties.UP_IN;
 		}
 		return 0;
 	}
@@ -75,7 +75,7 @@ public class OrthoStrokeLine extends Point2f {
 	public float getEndX() {
 		return mX+mDeltaX;
 	}
-	
+
 	public float getEndY() {
 		return mY+mDeltaY;
 	}
@@ -86,26 +86,26 @@ public class OrthoStrokeLine extends Point2f {
 		else
 			return mX+mDeltaX;
 	}
-	
+
 	public float getRight() {
 		if(mDeltaX>=0)
 			return mX+mDeltaX;
 		else
 			return mX;
 	}
-	
+
 	public float getTop() {
 		if(mDeltaY>=0)
 			return mY;
 		else
 			return mY+mDeltaY;
 	}
-	
+
 	public float getBottom() {
 		if(mDeltaY>=0)
 			return mY+mDeltaY;
 		else
 			return mY;
 	}
-	
+
 }
