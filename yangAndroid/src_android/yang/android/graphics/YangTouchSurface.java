@@ -11,9 +11,11 @@ import yang.events.eventtypes.YangPointerEvent;
 import yang.model.App;
 import yang.model.DebugYang;
 import yang.surface.YangSurface;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,11 +32,13 @@ public class YangTouchSurface extends GLSurfaceView{
 		initGL(context);
 	}
 
+	@TargetApi(11)
 	protected void initGL(Context context) {
 		super.setEGLContextClientVersion(2);
 		super.setEGLConfigChooser(8,8,8,0, 16,0);
 		//HTC working: RGBA_8888
 		super.getHolder().setFormat(PixelFormat.RGBA_8888);
+		if (Build.VERSION.SDK_INT >= 11) super.setPreserveEGLContextOnPause(true);
 		DebugYang.println("INITIALIZE OPENGL");
 
 		mSceneRenderer = new YangSceneRenderer(context);
