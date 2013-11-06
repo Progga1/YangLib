@@ -50,7 +50,7 @@ public class Animation<CarrierType> {
 	public void refreshKeyFrames() {
 		mFrameCount = 0;
 		mTotalDuration = 0;
-		boolean insertFrame = mWrap==WrapMode.LOOP || mKeyFrames.length==1;
+		final boolean insertFrame = mWrap==WrapMode.LOOP || mKeyFrames.length==1;
 		mKeyFrames[0].mId = 0;
 		for(int i=insertFrame?0:1;i<mKeyFrames.length;i++) {
 			mFrameCount += mKeyFrames[i].mDuration;
@@ -60,11 +60,11 @@ public class Animation<CarrierType> {
 		mPreviousFrames = new KeyFrame[mFrameCount+1];
 		mNextFrames = new KeyFrame[mFrameCount+1];
 		int c = 0;
-		int l = mKeyFrames.length;
+		final int l = mKeyFrames.length;
 		for(int i=0;i<l;i++) {
-			int index = i;
+			final int index = i;
 
-			KeyFrame curPrevFrame = mKeyFrames[index];
+			final KeyFrame curPrevFrame = mKeyFrames[index];
 			KeyFrame curNextFrame;
 			if(index>=mKeyFrames.length-1) {
 				curNextFrame = null;
@@ -85,7 +85,7 @@ public class Animation<CarrierType> {
 		}
 
 		if(insertFrame) {
-			KeyFrame curPrevFrame = mKeyFrames[mKeyFrames.length-1];
+			final KeyFrame curPrevFrame = mKeyFrames[mKeyFrames.length-1];
 			mNextFrames[c-1] = mKeyFrames[0];
 			for(int j=0;j<mKeyFrames[0].mDuration;j++) {
 				mPreviousFrames[c] = curPrevFrame;
@@ -106,7 +106,7 @@ public class Animation<CarrierType> {
 		setFrames(mWrap,frames);
 	}
 
-	protected void setFrames(Posture<?, ?>[] frames,WrapMode clampMode) {
+	protected void setFrames(WrapMode clampMode,Posture<?, ?>... frames) {
 		mKeyFrames = new KeyFrame[frames.length];
 		for(int i=0;i<frames.length;i++) {
 			mKeyFrames[i] = new KeyFrame(frames[i]);
@@ -114,16 +114,8 @@ public class Animation<CarrierType> {
 		setFrames(clampMode,mKeyFrames);
 	}
 
-	protected void setFrames(Posture<?, ?>[] frames) {
-		setFrames(frames,DEFAULT_WRAP_MODE);
-	}
-
-	protected void setFrame(Posture<?, ?> frame,WrapMode clampMode) {
-		setFrames(clampMode,new KeyFrame[]{new KeyFrame(frame)});
-	}
-
-	protected void setFrame(Posture<?, ?> frame) {
-		setFrames(new KeyFrame[]{new KeyFrame(frame)});
+	protected void setFrames(Posture<?, ?>... frames) {
+		setFrames(DEFAULT_WRAP_MODE,frames);
 	}
 
 	public final void start(CarrierType body) {
@@ -133,7 +125,7 @@ public class Animation<CarrierType> {
 	public String toSourceCode() {
 		String res = "";
 		int c = 0;
-		for(KeyFrame keyFrame:mKeyFrames) {
+		for(final KeyFrame keyFrame:mKeyFrames) {
 			if(res!="")
 				res += "\n";
 			res += keyFrame.toSourceCode(c);

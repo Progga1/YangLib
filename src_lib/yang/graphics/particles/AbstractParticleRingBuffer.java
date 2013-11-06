@@ -23,10 +23,11 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 	public int mParticleCount;
 	public YangList<ParticleType> mParticles;
 	public float mDefaultFriction = 0.9995f;
-	
+	public boolean mDebug = false;
+
 	protected abstract ParticleType createParticle();
 	protected abstract void drawParticles();
-	
+
 	public AbstractParticleRingBuffer() {
 		mTexture = null;
 		mDefaultScale = 1;
@@ -36,7 +37,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		mAlphaLookUp = null;
 		mParticleCount = 0;
 	}
-	
+
 	public AbstractParticleRingBuffer<GraphicsType,ParticleType> init(GraphicsType graphics,int maxParticleCount) {
 		mGraphics = graphics;
 		mTranslator = graphics.mTranslator;
@@ -47,19 +48,19 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		return this;
 	}
 
-	
+
 	public void refreshParticleCount() {
 		int particleCount = 0;
-		for(ParticleType particle:mParticles) {
+		for(final ParticleType particle:mParticles) {
 			if(particle.mExists)
 				particleCount++;
 		}
 		mParticleCount = particleCount;
 	}
-	
+
 	public void step() {
 		int particleCount = 0;
-		for(ParticleType particle:mParticles) {
+		for(final ParticleType particle:mParticles) {
 			if(particle.mExists) {
 				particle.step();
 				particleCount++;
@@ -67,7 +68,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		}
 		mParticleCount = particleCount;
 	}
-	
+
 	public final void draw() {
 		if(mParticleCount<=0)
 			return;
@@ -75,9 +76,9 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 
 		drawParticles();
 	}
-	
+
 	public ParticleType spawnParticle(float posX,float posY, float posZ, TextureCoordinatesQuad texCoords) {
-		ParticleType particle = mParticles.get(mCurParticleIndex);
+		final ParticleType particle = mParticles.get(mCurParticleIndex);
 		particle.spawn(posX, posY, posZ);
 		particle.mTextureCoordinates = texCoords;
 		particle.mScaleX = mDefaultScale;
@@ -87,41 +88,41 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 			mCurParticleIndex = 0;
 		return particle;
 	}
-	
+
 	public ParticleType spawnParticle(float posX,float posY, TextureCoordinatesQuad texCoords) {
 		return spawnParticle(posX,posY,0,texCoords);
 	}
-	
+
 	public void removeParticles(int maxAmount) {
-		for(ParticleType particle:mParticles) {
+		for(final ParticleType particle:mParticles) {
 			particle.mExists = false;
 			maxAmount--;
 			if(maxAmount<=0)
 				return;
 		}
 	}
-	
+
 	public void clear() {
-		for(ParticleType particle:mParticles) {
+		for(final ParticleType particle:mParticles) {
 			particle.mExists = false;
 		}
 		mCurParticleIndex = 0;
 	}
-	
+
 	public void setScaleFunction(Function function,float stepSize) {
 		mScaleLookUp = new LookUpTable(0,1,stepSize,function);
 	}
-	
+
 	public void setScaleFunction(Function function) {
 		setScaleFunction(function,0.001f);
 	}
-	
+
 	public void setAlphaFunction(Function function,float stepSize) {
 		mAlphaLookUp = new LookUpTable(0,1,stepSize,function);
 	}
-	
+
 	public void setAlphaFunction(Function function) {
 		setAlphaFunction(function,0.001f);
 	}
-	
+
 }

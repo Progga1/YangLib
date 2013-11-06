@@ -89,12 +89,6 @@ public class OrthoStrokeProperties {
 		return texCoords;
 	}
 
-	private void putDirection(int maskShift, TextureCoordinatesQuad texCoords) {
-		mTexCoordTable[1 << maskShift] = texCoords;
-		mTexCoordTable[1 << (maskShift+1)] = texCoords;
-		mTexCoordTable[1 << (maskShift+1) | (1 << maskShift)] = texCoords;
-	}
-
 	private TextureCoordinatesQuad createTexCoords(float texPatchX,float texPatchY, int rotation) {
 		final TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(texPatchX*mPatchSize, texPatchY*mPatchSize, mPatchSize, mTexBias);
 		texCoords.intoRect(mTexBounds);

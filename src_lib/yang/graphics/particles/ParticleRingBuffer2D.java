@@ -81,7 +81,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 				vertexBuffer.beginQuad(false);
 				vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*particle.mScaleX, uScale*particle.mScaleY, particle.mPosX, particle.mPosY, 0, particle.mRotation);
 				vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, particle.mTextureCoordinates.mAppliedCoordinates);
-				vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, particle.mColor, 4);
+				vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mGraphics.mCurColor, 4);
 				vertexBuffer.putArray(DefaultGraphics.ID_SUPPDATA, DefaultGraphics.RECT_BLACK);
 			}
 		}
