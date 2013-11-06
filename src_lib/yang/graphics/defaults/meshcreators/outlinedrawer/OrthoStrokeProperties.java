@@ -173,26 +173,27 @@ public class OrthoStrokeProperties {
 		putPatch(DOWN_OUT | RIGHT_IN, innerTurnTexPatchX, innerTurnTexPatchY, TextureCoordinatesQuad.ROTATE_CCW90);
 	}
 
-	public void putEndings(float outTexPatchX,float outTexPatchY,float inTexPatchX,float inTexPatchY) {
-		putPatch(UP_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_CW90).setFlipped(true, true);
+	private void putEndings(float outTexPatchX,float outTexPatchY,float inTexPatchX,float inTexPatchY,boolean flipOuter) {
+		putPatch(UP_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_CW90).setFlipped(flipOuter, true);
 		putPatch(UP_OUT, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_CW90);
-		putPatch(RIGHT_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_NONE).setFlipped(true, true);
+		putPatch(UP, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_CW90);
+		putPatch(RIGHT_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_NONE).setFlipped(flipOuter, true);
 		putPatch(RIGHT_OUT, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_NONE);
-		putPatch(DOWN_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_CCW90).setFlipped(true, true);
+		putPatch(RIGHT, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_NONE);
+		putPatch(DOWN_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_CCW90).setFlipped(flipOuter, true);
 		putPatch(DOWN_OUT, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_CCW90);
-		putPatch(LEFT_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_180).setFlipped(true, true);
+		putPatch(DOWN, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_CCW90);
+		putPatch(LEFT_IN, inTexPatchX,inTexPatchY, TextureCoordinatesQuad.ROTATE_180).setFlipped(flipOuter, true);
 		putPatch(LEFT_OUT, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_180);
+		putPatch(LEFT, outTexPatchX,outTexPatchY, TextureCoordinatesQuad.ROTATE_180);
+	}
+
+	public void putEndings(float outTexPatchX,float outTexPatchY,float inTexPatchX,float inTexPatchY) {
+		putEndings(outTexPatchX,outTexPatchY, inTexPatchX,inTexPatchY,true);
 	}
 
 	public void putEndings(float texPatchX,float texPatchY) {
-		putPatch(UP_IN, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_CW90).setFlipped(false,true);
-		putPatch(UP_OUT, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_CW90);
-		putPatch(RIGHT_IN, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_NONE).setFlipped(false,true);
-		putPatch(RIGHT_OUT, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_NONE);
-		putPatch(DOWN_IN, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_CCW90).setFlipped(false,true);
-		putPatch(DOWN_OUT, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_CCW90);
-		putPatch(LEFT_IN, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_180).setFlipped(false,true);
-		putPatch(LEFT_OUT, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_180);
+		putEndings(texPatchX,texPatchY, texPatchX,texPatchY,false);
 	}
 
 	public void putStraight(float texPatchX,float texPatchY) {

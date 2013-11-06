@@ -22,7 +22,7 @@ public class StrokeDrawerSampleState extends SampleState {
 		mCircleTex = mGFXLoader.getImage("circle",TextureFilter.LINEAR_MIP_LINEAR);
 		mStrokeProperties = new OrthoStrokeDefaultProperties();
 		mStroke = new OrthoStrokeCreator(mGraphics2D,256,mStrokeProperties);
-		mStroke.mColor.setAlpha(0.8f);
+		mStroke.mColor.setAlpha(0.6f);
 		reset();
 	}
 
