@@ -360,4 +360,19 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		setCamera(0,0,1);
 	}
 
+	public float getCamX() {
+		return mCamX;
+	}
+
+	public float getCamY() {
+		return mCamY;
+	}
+
+	public float getCamZoom() {
+		return mZoom;
+	}
+
+	public float getCamRot() {
+		return mCamRot;
+	}
 }
