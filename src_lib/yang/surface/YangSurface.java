@@ -25,6 +25,7 @@ import yang.sound.AbstractSoundManager;
 import yang.systemdependent.AbstractResourceManager;
 import yang.systemdependent.AbstractVibrator;
 import yang.systemdependent.YangSensor;
+import yang.systemdependent.YangSystemCalls;
 import yang.util.Util;
 
 public abstract class YangSurface implements EventQueueHolder {
@@ -38,7 +39,6 @@ public abstract class YangSurface implements EventQueueHolder {
 	public final static int RUNTIME_STATE_PAUSED = 1;
 	public final static int RUNTIME_STATE_STOPPED = 2;
 
-
 	public GraphicsTranslator mGraphics;
 	public StringsXML mStrings;
 	public AbstractResourceManager mResources;
@@ -46,6 +46,7 @@ public abstract class YangSurface implements EventQueueHolder {
 	public AbstractSoundManager mSounds;
 	public AbstractVibrator mVibrator;
 	public YangSensor mSensor;
+	public YangSystemCalls mSystemCalls;
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 
@@ -212,6 +213,7 @@ public abstract class YangSurface implements EventQueueHolder {
 		mSounds = App.soundManager;
 		mSensor = App.sensor;
 		mSensor.init(this);
+		mSystemCalls = App.systemCalls;
 		mEventQueue.setGraphics(mGraphics);
 		if(mResources.assetExists("strings/strings.xml"))
 			mStrings.load(mResources.getAssetInputStream("strings/strings.xml"));
@@ -539,9 +541,12 @@ public abstract class YangSurface implements EventQueueHolder {
 //				mUpdateThread.suspend();
 //			}
 		mInactive = true;
-		mRuntimeState = 1;
+
 		mCatchUpTime = 0;
-		mLoadingState = 0;
+		mRuntimeState = 1;
+		if(mSystemCalls.reloadAfterPause()) {
+			mLoadingState = 0;
+		}
 		if(!mLoadedOnce) {
 			onLoadingInterrupted(false);
 		}
@@ -561,8 +566,11 @@ public abstract class YangSurface implements EventQueueHolder {
 //			}
 		mInactive = false;
 		mCatchUpTime = 0;
-		mResuming = false;
-		mLoadingState = 0;
+		if(mSystemCalls==null || mRuntimeState == 2 || mSystemCalls.reloadAfterPause()) {
+			mResuming = false;
+			mLoadingState = 0;
+		}else
+			mRuntimeState = 0;
 		if(mSensor!=null)
 			mSensor.resume();
 	}
@@ -591,6 +599,10 @@ public abstract class YangSurface implements EventQueueHolder {
 	}
 
 	public void simulatePause() {
+		pause();
+	}
+
+	public void simulateStop() {
 		pause();
 		stop();
 		mGraphics.deleteAllTextures();

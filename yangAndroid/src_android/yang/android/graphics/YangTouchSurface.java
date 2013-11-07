@@ -2,6 +2,7 @@ package yang.android.graphics;
 
 import yang.android.AndroidVibrator;
 import yang.android.io.AndroidDataStorage;
+import yang.android.io.AndroidSystemCalls;
 import yang.android.sound.AndroidSoundManager;
 import yang.events.EventQueueHolder;
 import yang.events.Keys;
@@ -50,6 +51,7 @@ public class YangTouchSurface extends GLSurfaceView{
 			App.gfxLoader = mSceneRenderer.mGraphicsTranslator.mGFXLoader;
 			App.resourceManager = App.gfxLoader.mResources;
 			App.vibrator = new AndroidVibrator(context);
+			App.systemCalls = new AndroidSystemCalls(context);
 		}else{
 			DebugYang.println("App references already set");
 		}

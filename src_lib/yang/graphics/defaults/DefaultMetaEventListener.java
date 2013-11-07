@@ -85,12 +85,17 @@ public class DefaultMetaEventListener implements YangEventListener {
 			if(mSurface.isInactive())
 				mSurface.simulateResume();
 			else
-				mSurface.simulatePause();
+				mSurface.simulateStop();
 		}
 		if(code==Keys.F2)
 			DebugYang.DRAW_GFX_VALUES ^= true;
-		if(code==Keys.F3)
+		if(code==Keys.F3) {
 			mSurface.setPaused(!mSurface.isPaused());
+//			if(mSurface.isInactive())
+//				mSurface.simulateResume();
+//			else
+//				mSurface.simulatePause();
+		}
 		if(code==Keys.F4) {
 			if(mSurface.mPlaySpeed<32)
 				mSurface.mPlaySpeed *= 2;

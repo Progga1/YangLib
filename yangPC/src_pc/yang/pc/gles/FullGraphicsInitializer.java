@@ -2,6 +2,7 @@ package yang.pc.gles;
 
 import yang.model.App;
 import yang.pc.PCSensorFrame;
+import yang.pc.PCSystemCalls;
 import yang.pc.PCVibrator;
 import yang.pc.fileio.PCDataStorage;
 import yang.pc.fileio.PCResourceManager;
@@ -26,6 +27,7 @@ public class FullGraphicsInitializer {
 		App.gfxLoader = mTranslator.mGFXLoader;
 		App.resourceManager = new PCResourceManager();
 		App.vibrator = new PCVibrator();
+		App.systemCalls = new PCSystemCalls();
 		return this;
 	}
 
