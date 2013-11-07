@@ -22,7 +22,7 @@ public class DefaultObjShader extends ShaderPermutations {
 	public LightProperties mLightProperties;
 	public SpecularMatProperties mSpecMatProperties;
 
-	public DefaultObjShader(Default3DGraphics graphics3D,LightProperties lightProperties,FloatColor ambientColor,SubShader[] additionalShaders) {
+	public DefaultObjShader(Default3DGraphics graphics3D,LightProperties lightProperties,FloatColor ambientColor,boolean addDefaultLightSubShaders,SubShader[] additionalShaders) {
 		super(graphics3D.mTranslator);
 		mLightProperties = lightProperties;
 		final SubShader[] subShaders = new SubShader[]{
@@ -31,7 +31,8 @@ public class DefaultObjShader extends ShaderPermutations {
 				new LightSubShader(lightProperties),
 				};
 		super.addSubShaders(subShaders);
-		super.addSubShaders(new SubShader[]{new DiffuseLightSubShader(),new CameraPerVertexVectorSubShader(graphics3D),new SpecularLightSubShader(null), new EmissiveSubShader(null)});
+		if(addDefaultLightSubShaders)
+			super.addSubShaders(new SubShader[]{new DiffuseLightSubShader(),new CameraPerVertexVectorSubShader(graphics3D),new SpecularLightSubShader(null), new EmissiveSubShader(null)});
 		if(additionalShaders!=null)
 			super.addSubShaders(additionalShaders);
 		super.addSubShader(new AmbientSubShader(ambientColor));
@@ -40,7 +41,7 @@ public class DefaultObjShader extends ShaderPermutations {
 	}
 
 	public DefaultObjShader(Default3DGraphics graphics3D,LightProperties lightProperties,FloatColor ambientColor) {
-		this(graphics3D,lightProperties,ambientColor,null);
+		this(graphics3D,lightProperties,ambientColor,true,null);
 	}
 
 	public DefaultObjShader(Default3DGraphics graphics3D) {

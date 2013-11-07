@@ -55,7 +55,8 @@ public class OBJSampleState extends SampleState {
 		final SubShader toonShader = new ToonDiffuseSubShader();
 		final SubShader emisShader = new EmissiveSubShader(null);
 		final SubShader[] additionalShaders = new SubShader[]{mToonRampShader,toonShader,new CameraPerVertexVectorSubShader(mGraphics3D),new ToonSpecularLightSubShader(null),emisShader,new ToonOutlineSubShader(new FloatWrapper(0.3f))};
-		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mLightProperties,new FloatColor(0.4f),additionalShaders));
+		mToonObjProgram = mGraphics.addProgram(new DefaultObjShader(mGraphics3D,mLightProperties,new FloatColor(0.4f),false,additionalShaders));
+
 		mActiveShader = mObjProgram;
 
 		try {

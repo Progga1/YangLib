@@ -22,6 +22,15 @@ public class ShaderDeclarations {
 		return mLocalDeclarations.containsKey(name);
 	}
 
+	public boolean localVariableExists(String type,String name) {
+		final String t = mLocalDeclarations.get(name);
+		if(t==null)
+			return false;
+		if(t!=type)
+			throw new RuntimeException("Local variable "+name+" has different type: "+type+"!="+t);
+		return true;
+	}
+
 	public void localDeclare(String type,String name,String initValue) {
 		if(mLocalDeclarations.containsKey(name))
 			throw new RuntimeException("Local variable already exists: "+name);
