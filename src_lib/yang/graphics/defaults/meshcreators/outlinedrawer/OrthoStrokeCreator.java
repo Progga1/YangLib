@@ -35,6 +35,12 @@ public class OrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
 	}
 
 	public void reset() {
+		for(int i=0;i<mPatchId;i++) {
+			mPatches[i].reset();
+		}
+		for(int i=0;i<mLineId;i++) {
+			mLines[i].reset();
+		}
 		mPatchId = 0;
 		mLineId = 0;
 		mCurX = 0;

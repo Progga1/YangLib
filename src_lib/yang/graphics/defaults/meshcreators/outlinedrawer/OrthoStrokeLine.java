@@ -108,4 +108,8 @@ public class OrthoStrokeLine extends Point2f {
 			return mY;
 	}
 
+	public void reset() {
+		mDeleted = false;
+	}
+
 }

@@ -14,7 +14,12 @@ public class OrthoStrokePatch extends Point2f {
 
 	public OrthoStrokePatch reset(float x,float y) {
 		mInterLines = 0;
+		mDeleted = false;
 		return (OrthoStrokePatch)super.set(x,y);
+	}
+
+	public OrthoStrokePatch reset() {
+		return reset(0,0);
 	}
 
 	@Override

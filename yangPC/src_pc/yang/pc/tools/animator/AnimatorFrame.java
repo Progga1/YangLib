@@ -30,37 +30,37 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 
 	private DefaultAnimatorSurface mSurface;
 	private YangGLESFrame mFrame;
-	private String mTitle;
+	private final String mTitle;
 	private BasicProgram[] mUsedShaders;
 	public PCGraphics mGraphics;
 	private KeyMainMenu mKeyMainMenu;
 	private AnimatorSideBar mSideBar;
 	private AnimatorTimeBar mTimeBar;
-	private JPanel mCenterPanel = new JPanel();
-	
+	private final JPanel mCenterPanel = new JPanel();
+
 	private class InitCallback implements InitializationCallback {
-		
+
 		@Override
 		public void initializationFinished() {
 			if(mUsedShaders!=null)
-				for(BasicProgram program:mUsedShaders)
+				for(final BasicProgram program:mUsedShaders)
 					mSurface.mGraphics.addProgram(program);
-			
+
 			mSurface.mAnimator.centerCamera();
 		}
 	}
-	
+
 	public AnimatorFrame(String title) {
 		mTitle = title;
 	}
-	
+
 	public void init(int areaWidthAndHeight,BasicProgram[] usedShaders) {
 		mUsedShaders = usedShaders;
 		mFrame = new YangGLESFrame(mTitle);
-		AbstractSoundManager sound = new PCSoundManager();
+		final AbstractSoundManager sound = new PCSoundManager();
 		mSurface = new DefaultAnimatorSurface(sound,this);
 		mSurface.setInitializationCallback(new InitCallback());
-		
+
 		mKeyMainMenu = new KeyMainMenu(mFrame,this);
 		mKeyMainMenu.nextSubMenu("Edit");
 		mKeyMainMenu.addItem("PREVIOUSFRAME", "Next Frame").setShortCut('1');
@@ -77,7 +77,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mKeyMainMenu.addItem("PHYSICS", "Physics").setShortCut('P');
 		mKeyMainMenu.nextSubMenu("View");
 		mKeyMainMenu.addItem("DRAWSKEL", "Draw skeleton").setShortCut('B');
-		
+
 		mFrame.init(areaWidthAndHeight,areaWidthAndHeight);
 		mGraphics = mFrame.mGraphics;
 		mSideBar = new AnimatorSideBar(this);
@@ -91,19 +91,19 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mFrame.setSurface(mSurface);
 		mSideBar.mSkeletonListBox.addKeyListener(mFrame.mPCEventHandler);
 		mSideBar.mAnimationListBox.addKeyListener(mFrame.mPCEventHandler);
-		
+
 		App.soundManager = new PCSoundManager();
 		App.storage = new PCDataStorage();
 		App.gfxLoader = mGraphics.mGFXLoader;
 		App.resourceManager = new PCResourceManager();
-		
+
 		mFrame.run();
 	}
-	
+
 	public Animator getAnimator() {
 		return mSurface.mAnimator;
 	}
-	
+
 	public DefaultAnimatorSurface getAnimatorSurface() {
 		return mSurface;
 	}
@@ -115,11 +115,11 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 	public void addSkeleton(Class<? extends CartoonSkeleton2D> skeletonClass,AnimationSystem<?,?> animationSystem) {
 		mSurface.mAnimator.addSkeleton(skeletonClass,animationSystem);
 	}
-	
+
 	public void addSkeleton(CartoonSkeleton2D skeleton,AnimationSystem<?,?> animationSystem,AnimationPlayer<?> animationPlayer) {
 		mSurface.mAnimator.addSkeleton(skeleton,animationSystem,animationPlayer);
 	}
-	
+
 	public void addSkeleton(CartoonSkeleton2D skeleton,AnimationSystem<?,?> animationSystem) {
 		mSurface.mAnimator.addSkeleton(skeleton,animationSystem,null);
 	}
@@ -132,21 +132,21 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mFrame.pack();
 		mTimeBar.run();
 	}
-	
+
 	public void setChecked(String key,boolean checked) {
-		KeyItem item = mKeyMainMenu.getItem(key);
+		final KeyItem item = mKeyMainMenu.getItem(key);
 		if(item==null)
 			return;
 		item.setText("("+(checked?"x":" ")+") "+item.getCaption());
 	}
-	
+
 	public void refreshGUI() {
 		setChecked("DRAWSKEL",getAnimator().isSkeletonDrawn());
 	}
 
 	@Override
 	public void itemSelected(String key) {
-		Animator animator = getAnimator();
+		final Animator animator = getAnimator();
 		if(!animator.isPlaying()) {
 			if(key=="PREVIOUSFRAME") {
 				animator.previousFrame(true);
@@ -164,7 +164,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 			}
 		}
 		if(key=="UNFIX") {
-			for(Joint joint:animator.getCurrentSkeleton().mJoints) {
+			for(final Joint joint:animator.getCurrentSkeleton().mJoints) {
 				joint.mFixed = false;
 			}
 		}
@@ -181,7 +181,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 			animator.stop();
 		if(key=="PRINT") {
 			animator.savePose();
-			String sourceCode = animator.mCurAnimation.toSourceCode();
+			final String sourceCode = animator.mCurAnimation.toSourceCode();
 			System.out.println(sourceCode);
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(sourceCode), null);
 		}
@@ -197,7 +197,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		}
 		refreshGUI();
 	}
-	
+
 	public void start() {
 		mSideBar.start();
 	}
