@@ -10,4 +10,8 @@ public class YangSystemCalls {
 		return true;
 	}
 
+	public void throwDebugIntent() {
+
+	}
+
 }

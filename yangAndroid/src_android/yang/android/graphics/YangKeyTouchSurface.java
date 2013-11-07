@@ -11,8 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 
 public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListener {
 
-	public YangKeyTouchSurface(Context context) {
-		super(context);
+	public YangKeyTouchSurface(YangActivity activity) {
+		super(activity);
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		setOnKeyListener(this);
@@ -29,16 +29,17 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 		super.onResume();
 	}
 
+	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 
 		if ((keyCode == KeyEvent.KEYCODE_SEARCH && event.getAction() == KeyEvent.ACTION_UP) || (keyCode == KeyEvent.KEYCODE_MENU && event.isLongPress())) {
-			InputMethodManager inputMgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+			final InputMethodManager inputMgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 			inputMgr.showSoftInput(this, InputMethodManager.SHOW_FORCED);
 			return true;
 		}
 
 		//down or up
-		int action = event.getAction()==KeyEvent.ACTION_DOWN?YangKeyEvent.ACTION_KEYDOWN:YangKeyEvent.ACTION_KEYUP;
+		final int action = event.getAction()==KeyEvent.ACTION_DOWN?YangKeyEvent.ACTION_KEYDOWN:YangKeyEvent.ACTION_KEYUP;
 
 		if (event.isPrintingKey()) {
 			mEventQueue.putKeyEvent((char)event.getUnicodeChar(),action);

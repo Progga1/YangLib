@@ -25,12 +25,14 @@ public class YangTouchSurface extends GLSurfaceView{
 	public YangEventQueue mEventQueue;
 	public YangSceneRenderer mSceneRenderer;
 	public Context mContext;
+	public YangActivity mActivity;
 
-	public YangTouchSurface(Context context) {
-		super(context);
-		mContext = context;
+	public YangTouchSurface(YangActivity activity) {
+		super(activity.getApplicationContext());
+		mActivity = activity;
+		mContext = activity.getApplicationContext();
 		mEventQueue = null;
-		initGL(context);
+		initGL(mContext);
 	}
 
 	@TargetApi(11)
@@ -51,7 +53,7 @@ public class YangTouchSurface extends GLSurfaceView{
 			App.gfxLoader = mSceneRenderer.mGraphicsTranslator.mGFXLoader;
 			App.resourceManager = App.gfxLoader.mResources;
 			App.vibrator = new AndroidVibrator(context);
-			App.systemCalls = new AndroidSystemCalls(context);
+			App.systemCalls = new AndroidSystemCalls(mActivity);
 		}else{
 			DebugYang.println("App references already set");
 		}

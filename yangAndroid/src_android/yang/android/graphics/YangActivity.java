@@ -47,12 +47,12 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 		if(mGLView!=null)
 			defaultInit(mGLView);
 		else
-			defaultInit(new YangTouchSurface(super.getApplicationContext()));
+			defaultInit(new YangTouchSurface(this));
 	}
 
 	public void defaultInit(boolean useDebugEditText) {
 		if(mGLView==null && useDebugEditText)
-			defaultInit(new YangKeyTouchSurface(super.getApplicationContext()));
+			defaultInit(new YangKeyTouchSurface(this));
 		else
 			defaultInit();
 	}
