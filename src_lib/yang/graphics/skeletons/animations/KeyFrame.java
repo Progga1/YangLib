@@ -20,13 +20,23 @@ public class KeyFrame {
 	}
 
 	public String toSourceCode(int frameNr) {
-		String res = "public static KeyFrame frame"+frameNr+" = new KeyFrame(new "+mPose.getClassName()+"("+mPose.toSourceCode()+"),"+mDuration+");";
+		final String res = "public static KeyFrame frame"+frameNr+" = new KeyFrame(new "+mPose.getClassName()+"("+mPose.toSourceCode()+"),"+mDuration+");";
 		return res;
 	}
 
 	@Override
 	public String toString() {
 		return ""+mId+": @"+mFirstFrame+" "+mDuration+"f";
+	}
+
+	@Override
+	public KeyFrame clone() {
+		return new KeyFrame(mPose,mDuration);
+	}
+
+	public KeyFrame setDuration(int duration) {
+		mDuration = duration;
+		return this;
 	}
 
 }
