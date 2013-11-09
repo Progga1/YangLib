@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 import yang.events.EventQueueHolder;
 import yang.events.YangEventQueue;
+import yang.events.eventtypes.YangEvent;
+import yang.events.listeners.RawEventListener;
 import yang.events.listeners.YangEventListener;
 import yang.events.macro.AbstractMacroIO;
 import yang.events.macro.DefaultMacroIO;
@@ -28,7 +30,7 @@ import yang.systemdependent.YangSensor;
 import yang.systemdependent.YangSystemCalls;
 import yang.util.Util;
 
-public abstract class YangSurface implements EventQueueHolder {
+public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 
 	public static boolean CATCH_EXCEPTIONS = true;
 	public final static boolean NO_MACRO_OVERWRITE = false;
@@ -152,9 +154,10 @@ public abstract class YangSurface implements EventQueueHolder {
 		}
 		mException = true;
 		mPaused = true;
+		ex.printStackTrace();
 		if(mGFXDebug!=null)
 			mGFXDebug.setErrorString(ex.getClass()+": "+ex.getMessage()+"\n\n"+Util.arrayToString(ex.getStackTrace(),"\n").replace("(", " ("));
-		ex.printStackTrace();
+
 	}
 
 	public void setMacroFilename(String filename) {
@@ -199,43 +202,50 @@ public abstract class YangSurface implements EventQueueHolder {
 		playMacro(filename,mDefaultMacroIO);
 	}
 
-	public void onSurfaceCreated() {
+	public void onSurfaceCreated(boolean mainSurface) {
 		if(mInitialized) {
 			DebugYang.println("ALREADY INITIALIZED");
 			return;
 		}
 		mProgramTime = 0;
 		mStepCount = 0;
-		assert assertMessage();
-		mGraphics.init();
+		if(mainSurface) {
+			assert assertMessage();
+			mGraphics.init();
+		}
 		mGFXLoader = mGraphics.mGFXLoader;
 		mResources = mGraphics.mGFXLoader.mResources;
 		mSounds = App.soundManager;
 		mSensor = App.sensor;
-		mSensor.init(this);
+		if(mainSurface) {
+			mSensor.init(this);
+			mEventQueue.setGraphics(mGraphics);
+		}
 		mSystemCalls = App.systemCalls;
-		mEventQueue.setGraphics(mGraphics);
+
 		if(mResources.assetExists("strings/strings.xml"))
 			mStrings.load(mResources.getAssetInputStream("strings/strings.xml"));
 		try{
 			initGraphics();
 
 			mDefaultMacroIO = new DefaultMacroIO(this);
-			if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
-				playMacro(mMacroFilename);
-			if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
-				String filename = "run.ym";
-				if(NO_MACRO_OVERWRITE) {
-					int i=0;
-					while(mResources.fileExistsInFileSystem(filename)) {
-						filename = "run"+i+".ym";
-						i++;
+			if(mainSurface) {
+				if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
+					playMacro(mMacroFilename);
+				if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
+					String filename = "run.ym";
+					if(NO_MACRO_OVERWRITE) {
+						int i=0;
+						while(mResources.fileExistsInFileSystem(filename)) {
+							filename = "run"+i+".ym";
+							i++;
+						}
 					}
-				}
-				try {
-					recordMacro(filename);
-				} catch (final FileNotFoundException e) {
-					DebugYang.printerr("Could not create '"+filename+"'");
+					try {
+						recordMacro(filename);
+					} catch (final FileNotFoundException e) {
+						DebugYang.printerr("Could not create '"+filename+"'");
+					}
 				}
 			}
 
@@ -409,6 +419,10 @@ public abstract class YangSurface implements EventQueueHolder {
 
 	}
 
+	protected void preDraw() {
+
+	}
+
 	public final void drawFrame() {
 		if(mUseStereoVision) {
 			//STEREO VISION
@@ -419,23 +433,23 @@ public abstract class YangSurface implements EventQueueHolder {
 			try{
 				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
 				mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
-				drawContent();
+				drawContent(true);
 				mGraphics.leaveTextureRenderTarget();
 				mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
 				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
-				drawContent();
+				drawContent(false);
 			}finally{
 				mGraphics.leaveTextureRenderTarget();
 			}
 
 			mStereoVision.draw();
 		}else{
-			drawContent();
+			drawContent(true);
 		}
 
 	}
 
-	private final void drawContent() {
+	public final void drawContent(boolean callPreDraw) {
 		mGraphics.clear(0,0,0);
 		try{
 			assert mGraphics.preCheck("Draw content");
@@ -480,6 +494,8 @@ public abstract class YangSurface implements EventQueueHolder {
 			mGraphics.beginFrame();
 			if(mLoadingState>=mStartupSteps) {
 				assert mGraphics.preCheck("Draw call");
+				if(callPreDraw)
+					preDraw();
 				draw();
 				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
 					mGFXDebug.draw();
@@ -499,6 +515,8 @@ public abstract class YangSurface implements EventQueueHolder {
 					mEventQueue.clearEvents();
 					mRuntimeState = 0;
 					mResuming = false;
+					if(callPreDraw)
+						preDraw();
 					draw();
 				}else{
 					float progress;
@@ -619,6 +637,11 @@ public abstract class YangSurface implements EventQueueHolder {
 
 	public boolean isStereoVision() {
 		return mUseStereoVision;
+	}
+
+	@Override
+	public boolean rawEvent(YangEvent event) {
+		return false;
 	}
 
 }

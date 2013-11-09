@@ -9,6 +9,7 @@ public class KeyFrame {
 	public int mDuration;
 	public float mTimeFactor;
 	public Posture mPose;
+	public boolean mCloned = false;
 
 	public KeyFrame(Posture<?,?> pose, int duration) {
 		mPose = pose;
@@ -20,6 +21,8 @@ public class KeyFrame {
 	}
 
 	public String toSourceCode(int frameNr) {
+		if(mCloned)
+			return "";
 		final String res = "public static KeyFrame frame"+frameNr+" = new KeyFrame(new "+mPose.getClassName()+"("+mPose.toSourceCode()+"),"+mDuration+");";
 		return res;
 	}
@@ -31,7 +34,9 @@ public class KeyFrame {
 
 	@Override
 	public KeyFrame clone() {
-		return new KeyFrame(mPose,mDuration);
+		final KeyFrame result = new KeyFrame(mPose,mDuration);
+		result.mCloned = true;
+		return result;
 	}
 
 	public KeyFrame setDuration(int duration) {

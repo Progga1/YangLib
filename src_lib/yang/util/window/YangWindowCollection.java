@@ -5,31 +5,31 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.math.objects.Point3f;
 import yang.util.YangList;
 
-public class YangWindowCollection {
+public class YangWindowCollection<WindowType extends YangWindow<?>> {
 
-	public YangList<YangWindow<?>> mWindows;
+	public YangList<WindowType> mWindows;
 	public Point3f mLookAtReference = null;
 	public DefaultGraphics<?> mGraphics;
 
 	public YangWindowCollection(DefaultGraphics<?> graphics) {
-		mWindows = new YangList<YangWindow<?>>();
+		mWindows = new YangList<WindowType>();
 		mGraphics = graphics;
 	}
 
 	public void setLookAtPointReference(Point3f reference) {
 		mLookAtReference = reference;
-		for(final YangWindow<?> window:mWindows) {
+		for(final WindowType window:mWindows) {
 			if(window instanceof YangBillboardWindow) {
 				((YangBillboardWindow<?>)window).setLookAtPointReference(reference);
 			}
 		}
 	}
 
-	public Iterable<YangWindow<?>> getWindows() {
+	public Iterable<WindowType> getWindows() {
 		return mWindows;
 	}
 
-	public void addWindow(YangWindow<?> window) {
+	public void addWindow(WindowType window) {
 		mWindows.add(window);
 		if(mLookAtReference!=null && (window instanceof YangBillboardWindow)) {
 			((YangBillboardWindow<?>)window).setLookAtPointReference(mLookAtReference);
@@ -56,9 +56,9 @@ public class YangWindowCollection {
 		return false;
 	}
 
-	public void draw(int drawPass) {
-		for(final YangWindow<?> window:mWindows) {
-			if(!window.mVisible)
+	public void draw(int drawPass,boolean solid) {
+		for(final WindowType window:mWindows) {
+			if(!window.mVisible || solid^window.mSolid)
 				continue;
 			window.draw(drawPass);
 		}
@@ -69,15 +69,21 @@ public class YangWindowCollection {
 		mGraphics.mTranslator.switchZWriting(true);
 	}
 
-	public void draw() {
-		draw(YangWindow.PASS_BACKGROUND);
-		draw(YangWindow.PASS_MAIN);
-		draw(YangWindow.PASS_DEBUG);
+	public void draw(boolean solid) {
+		draw(YangWindow.PASS_BACKGROUND,solid);
+		draw(YangWindow.PASS_MAIN,solid);
+		draw(YangWindow.PASS_DEBUG,solid);
 	}
 
 	public void setDebugAlpha(float alpha) {
 		for(final YangWindow<?> window:mWindows) {
 			window.mDebugPointsAlpha = alpha;
+		}
+	}
+
+	public void setDrawDebug(boolean drawDebug) {
+		for(final YangWindow<?> window:mWindows) {
+			window.mDrawDebugPoints = drawDebug;
 		}
 	}
 

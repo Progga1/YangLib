@@ -32,8 +32,11 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	protected Point3f[] mCursorPositions;
 	private final Point3f mTempPoint = new Point3f();
 	public float mDebugPointsAlpha = 0;
+	public boolean mDrawDebugPoints = false;
 	public boolean mVisible = true;
 	public float mMaxEventZ = 1,mMinEventZ = -0.5f;
+
+	public boolean mSolid = false;
 
 	private final SurfacePointerEvent mTempPointerEvent = new SurfacePointerEvent();
 
@@ -93,7 +96,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 			mInternalObject.draw();
 		}
 		if(drawPass==PASS_DEBUG) {
-			if(mDebugPointsAlpha>0) {
+			if(mDrawDebugPoints && mDebugPointsAlpha>0) {
 				mGraphics.mTranslator.bindTexture(debugPointerTexture);
 				for(int i=0;i<MAX_POINTERS;i++) {
 					if(mActiveCursors[i]) {

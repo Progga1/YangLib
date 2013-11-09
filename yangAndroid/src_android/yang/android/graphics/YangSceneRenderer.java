@@ -12,24 +12,27 @@ public class YangSceneRenderer implements GLSurfaceView.Renderer {
 
 	public YangSurface mSurface;
 	public GraphicsTranslator mGraphicsTranslator;
-	
+
 	public YangSceneRenderer(Context context) {
 		mGraphicsTranslator = new AndroidGraphics(context);
 	}
-	
+
 	public void setSurface(YangSurface surface) {
 		mSurface = surface;
 		mSurface.setGraphics(mGraphicsTranslator);
 	}
-	
+
+	@Override
 	public void onDrawFrame(GL10 ignore) {
 		mSurface.drawFrame();
 	}
 
+	@Override
 	public void onSurfaceCreated(GL10 ignore, EGLConfig config) {
-		mSurface.onSurfaceCreated();
+		mSurface.onSurfaceCreated(true);
 	}
-	
+
+	@Override
 	public void onSurfaceChanged(GL10 ignore, int width, int height) {
 		mSurface.onSurfaceChanged(width,height);
 	}
@@ -38,4 +41,4 @@ public class YangSceneRenderer implements GLSurfaceView.Renderer {
 		return mGraphicsTranslator;
 	}
 }
-	
+

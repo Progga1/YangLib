@@ -2,7 +2,6 @@ package yang.graphics.defaults;
 
 import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
-import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.font.BitmapFont;
@@ -52,11 +51,6 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 
 	protected void initDebugOutput(BitmapFont font) {
 		initDebugOutput(mGraphics2D,font);
-	}
-
-	@Override
-	public boolean rawEvent(YangEvent event) {
-		return false;
 	}
 
 	@Override

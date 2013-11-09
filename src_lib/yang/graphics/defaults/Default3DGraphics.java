@@ -209,7 +209,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	private void refreshCamera() {
 		mOriginalCameraMatrix.set(mCameraMatrix);
-		if(mTranslator.mForceStereo || mTranslator.getRenderTargetStackLevel()<=(mTranslator.mStereo?0:-1)) {
+		if(mTranslator.isStereo()) {
 			if(mTranslator.mSensorCameraEnabled) {
 				mCameraMatrix.postTranslate(0, 0, mSensorZ);
 				mCameraMatrix.multiplyLeft(mTranslator.mSensorCameraMatrix);
@@ -313,7 +313,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void drawSphere(int verticesAlpha,int verticesBeta,YangMatrix transform,float textureCoordFactorX,float textureCoordFactorY) {
 		mSphereCreator.begin(verticesAlpha,verticesBeta,1,1,1);
 		mSphereCreator.putPositions(transform,true);
-		mSphereCreator.putTerrainTextureRect(0,0,textureCoordFactorX,textureCoordFactorY);
+		mSphereCreator.putGridTextureRect(0,0,textureCoordFactorX,textureCoordFactorY);
 		mSphereCreator.putGridColor(mCurColor);
 		mSphereCreator.putGridSuppData(mCurSuppData);
 		mSphereCreator.finish();

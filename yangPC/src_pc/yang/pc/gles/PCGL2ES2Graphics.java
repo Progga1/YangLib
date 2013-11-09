@@ -142,7 +142,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 			}
 		gles2 = glAutoDrawable.getGL().getGL2();
 		gles2.glEnable(GL2.GL_TEXTURE_2D);
-		mSurface.onSurfaceCreated();
+		mSurface.onSurfaceCreated(true);
 	}
 
 	public void setSurface(YangSurface surface) {

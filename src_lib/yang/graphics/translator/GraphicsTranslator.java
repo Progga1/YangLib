@@ -56,10 +56,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mMaxTime = 60;
 	private int mMaxTextureId = -1;
 	public boolean mStereo = false;
-	public YangMatrix mSensorCameraMatrix;
+	public boolean mForceMono = false;
 	public boolean mForceStereo = false;
+	public YangMatrix mSensorCameraMatrix;
 
 	//State
+	private boolean mInitialized = false;
 	protected Texture[] mCurrentTextures;
 	public IndexedVertexBuffer mCurrentVertexBuffer;
 	public boolean mFlushDisabled;
@@ -253,6 +255,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public final void init() {
+		if(mInitialized)
+			return;
+		mInitialized = true;
 		start();
 
 		postInit();
@@ -869,6 +874,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	public int getRenderTargetStackLevel() {
 		return mRenderTargetStackPos;
+	}
+
+	public boolean isStereo() {
+		if(mForceMono)
+			return false;
+		else
+			return mForceStereo || getRenderTargetStackLevel()<=(mStereo?0:-1);
 	}
 
 }
