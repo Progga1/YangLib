@@ -22,7 +22,7 @@ public class ShadowHelper {
 	private final DepthProgram mDepthProgram = new DepthProgram();
 	private static YangMatrix depthTrafoCorrection;
 	public static TextureProperties defaultTextureSettings = createTextureSettings();
-	public static float BIAS = 0.008f;
+	public static float DEFAULT_BIAS = 0.008f;
 
 	private GraphicsTranslator mGraphics;
 	public Default3DGraphics mGraphics3D;
@@ -35,6 +35,7 @@ public class ShadowHelper {
 	public float mAddLight = 0.1f;
 	public float mLightFactor = 1f;
 	public boolean mRenderToScreen = false;
+	public float mBias = DEFAULT_BIAS;
 
 	private static TextureProperties createTextureSettings() {
 		final TextureProperties result = new TextureProperties(TextureWrap.CLAMP,TextureWrap.CLAMP,TextureFilter.LINEAR);
@@ -57,7 +58,7 @@ public class ShadowHelper {
 		if(depthTrafoCorrection==null) {
 			depthTrafoCorrection = mGraphics.createTransformationMatrix();
 			depthTrafoCorrection.loadIdentity();
-			depthTrafoCorrection.translate(0.5f, 0.5f, 0.5f+BIAS);
+			depthTrafoCorrection.translate(0.5f, 0.5f, 0.5f+mBias);
 			depthTrafoCorrection.scale(0.5f, 0.5f, -0.5f);
 		}
 		return depthTrafoCorrection;

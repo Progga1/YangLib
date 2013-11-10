@@ -33,6 +33,13 @@ public class YangProgramStateSystem extends DefaultSurface {
 	}
 
 	@Override
+	public void preDraw() {
+		if(mCurrentState!=null) {
+			mCurrentState.preDrawFrame();
+		}
+	}
+
+	@Override
 	public void draw() {
 		if(mCurrentState!=null) {
 			mCurrentState.drawFrame();

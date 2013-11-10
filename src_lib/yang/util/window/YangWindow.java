@@ -104,7 +104,9 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 						mGraphics.mCurColor[3] *= mDebugPointsAlpha;
 						if(!inRangeZ(mCursorPositions[i].mZ))
 							mGraphics.mCurColor[3] *= 0.5f;
+						mGraphics.mCurrentZ = 0.01f;
 						mGraphics.drawRectCentered(mCursorPositions[i].mX,mCursorPositions[i].mY, 0.1f);
+						mGraphics.mCurrentZ = 0;
 					}
 				}
 			}

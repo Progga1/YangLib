@@ -1,36 +1,50 @@
 package yang.util;
 
 import yang.events.eventtypes.YangEvent;
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.surface.YangSurface;
+import yang.util.window.YangTextureDrawer;
 
-public class SurfaceWrapper<SurfaceType extends YangSurface> {
+public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTextureDrawer {
 
-	public GraphicsTranslator mGraphics;
+	public GraphicsTranslator mTranslator;
 	public SurfaceType mInnerSurface;
 	public TextureRenderTarget mTexTarget;
 
-	public SurfaceWrapper(SurfaceType surface) {
+	public SurfaceWrapper(DefaultGraphics<?> graphics,SurfaceType surface) {
+		super(graphics);
 		mInnerSurface = surface;
 	}
 
-	public void init(GraphicsTranslator graphics,int mSurfWidth,int mSurfHeight) {
-		mGraphics = graphics;
-		mInnerSurface.setGraphics(graphics);
+	public void init(int mSurfWidth,int mSurfHeight) {
+		mTranslator = mGraphics.mTranslator;
+		mInnerSurface.setGraphics(mTranslator);
 		mInnerSurface.onSurfaceCreated(false);
-		mTexTarget = mGraphics.createRenderTarget(mSurfWidth,mSurfHeight,new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR));
+		mTexTarget = mTranslator.createRenderTarget(mSurfWidth,mSurfHeight,new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR));
+		mFlipY = true;
+		super.setDimensions(2*(float)mSurfWidth/mSurfHeight,2);
+		mTexture = mTexTarget.mTargetTexture;
 	}
 
-	public void draw() {
+	public void updateTexture() {
+		mTranslator.setTextureRenderTarget(mTexTarget);
 		mInnerSurface.drawContent(true);
+		mTranslator.leaveTextureRenderTarget();
 	}
 
 	public void handleEvent(YangEvent event) {
 		event.handle(mInnerSurface);
+	}
+
+	@Override
+	public boolean rawEvent(YangEvent event) {
+		event.handle(mInnerSurface);
+		return true;
 	}
 
 }
