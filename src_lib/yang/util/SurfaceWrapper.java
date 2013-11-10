@@ -17,6 +17,8 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 	public GraphicsTranslator mTranslator;
 	public SurfaceType mInnerSurface;
 	public TextureRenderTarget mTexTarget;
+	private int mSurfWidth,mSurfHeight;
+	private boolean mInitialized = false;
 	public int mIdShift = 0;
 
 	public SurfaceWrapper(DefaultGraphics<?> graphics,SurfaceType surface) {
@@ -24,25 +26,35 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 		mInnerSurface = surface;
 	}
 
-	public void init(int mSurfWidth,int mSurfHeight) {
+	public void init(int surfWidth,int surfHeight) {
 		mTranslator = mGraphics.mTranslator;
-		mInnerSurface.setGraphics(mTranslator);
-		mInnerSurface.onSurfaceCreated(false);
+		mSurfWidth = surfWidth;
+		mSurfHeight = surfHeight;
 		mTexTarget = mTranslator.createRenderTarget(mSurfWidth,mSurfHeight,new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR));
 		mFlipY = true;
-		super.setDimensions(2*(float)mSurfWidth/mSurfHeight,2);
+		setDimensions(2*(float)mSurfWidth/mSurfHeight,2);
 		mTexture = mTexTarget.mTargetTexture;
 	}
 
 	public void updateTexture() {
 		mTranslator.setTextureRenderTarget(mTexTarget);
+
+		if(!mInitialized) {
+			mInnerSurface.setGraphics(mTranslator);
+			mInnerSurface.onSurfaceCreated(false);
+			mInitialized = true;
+		}
+
 		mGraphics.setGlobalTransformEnabled(false);
 		final DrawListener prevListener = mTranslator.mCurDrawListener;
 		mInnerSurface.drawContent(true);
 		prevListener.activate();
 		mTranslator.leaveTextureRenderTarget();
 		mGraphics.resetGlobalTransform();
+		mGraphics.setGlobalTransformEnabled(false);
 		mTranslator.setCullMode(false);
+		mGraphics.setColorFactor(1);
+		mGraphics.setWhite();
 	}
 
 	public void handleEvent(YangEvent event) {
@@ -51,6 +63,8 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 
 	@Override
 	public boolean rawEvent(YangEvent event) {
+		mTranslator.setTextureRenderTargetOnlySurfaceValues(mTexTarget);
+		mTranslator.switchZBuffer(false);
 		if(event instanceof YangPointerEvent) {
 			((YangPointerEvent)event).mId += mIdShift;
 			event.handle(mInnerSurface);
@@ -58,6 +72,7 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 		}else
 			event.handle(mInnerSurface);
 
+		mTranslator.leaveTextureRenderTarget();
 		return true;
 	}
 

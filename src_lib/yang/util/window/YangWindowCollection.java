@@ -50,8 +50,7 @@ public class YangWindowCollection<WindowType extends YangWindow<?>> {
 		for(final YangWindow<?> window:mWindows) {
 			if(!window.mVisible)
 				continue;
-			if(event.handle(window))
-				return true;
+			event.handle(window);
 		}
 		return false;
 	}

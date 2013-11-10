@@ -199,8 +199,8 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	protected void refreshCamera() {
-		final float ratioX = mTranslator.mCurrentScreen.getSurfaceRatioX();
-		final float ratioY = mTranslator.mCurrentScreen.getSurfaceRatioY();
+		final float ratioX = mTranslator.mCurrentSurface.getSurfaceRatioX();
+		final float ratioY = mTranslator.mCurrentSurface.getSurfaceRatioY();
 		final float shift = get2DStereoShift(mStereoGameDistance);
 		mOrthoLeft = -ratioX * mZoom + mCamX + shift;
 		mOrthoRight = ratioX * mZoom + mCamX + shift;
@@ -213,8 +213,8 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			mProjectionTransform.setOrthogonalProjection(mOrthoLeft, mOrthoRight, mOrthoTop, mOrthoBottom, mGameFar, mGameNear);
 		}else{
 			mProjectionTransform.setOrthogonalProjection(
-					-mTranslator.mCurrentScreen.getSurfaceRatioX() * mZoom, ratioX * mZoom,
-					 mTranslator.mCurrentScreen.getSurfaceRatioY() * mZoom, -ratioY * mZoom
+					-mTranslator.mCurrentSurface.getSurfaceRatioX() * mZoom, ratioX * mZoom,
+					 mTranslator.mCurrentSurface.getSurfaceRatioY() * mZoom, -ratioY * mZoom
 					);
 			mProjectionTransform.rotateZ(mCamRot);
 			mProjectionTransform.translate(-mCamX, -mCamY);
@@ -270,7 +270,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	 * @return
 	 */
 	public float normToGameX(float x) {
-		return invGameProjection[0] * mTranslator.mInvRatioX * x + invGameProjection[12];
+		return invGameProjection[0]/mTranslator.mCurrentSurface.getSurfaceRatioX()*x + invGameProjection[12];
 	}
 
 	/**
@@ -279,17 +279,17 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	 * @return
 	 */
 	public float normToGameY(float y) {
-		return invGameProjection[5] * mTranslator.mInvRatioY * y + invGameProjection[13];
+		return invGameProjection[5]/mTranslator.mCurrentSurface.getSurfaceRatioY()*y + invGameProjection[13];
 	}
 
 	public int projScreenX(float gameX,float gameY) {
 		final float x = MatrixOps.applyFloatMatrixX2D(mCurProjTransform.mValues, gameX, gameY);
-		return (int)((x+1)*mTranslator.mScreenWidth*0.5f);
+		return (int)((x+1)*mTranslator.mCurrentSurface.getSurfaceWidth()*0.5f);
 	}
 
 	public int projScreenY(float gameX,float gameY) {
 		final float y = MatrixOps.applyFloatMatrixY2D(mCurProjTransform.mValues, gameX, gameY);
-		return (int)((-y+1)*mTranslator.mScreenHeight*0.5f);
+		return (int)((-y+1)*mTranslator.mCurrentSurface.getSurfaceHeight()*0.5f);
 	}
 
 	public float screenLeftToGameX() {

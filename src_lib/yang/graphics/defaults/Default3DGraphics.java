@@ -158,7 +158,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setOrthogonalProjection(float near,float far,float zoom) {
-		setOrthogonalProjection(mTranslator.mCurrentScreen.getSurfaceRatioX()*zoom*2,mTranslator.mCurrentScreen.getSurfaceRatioY()*zoom*2,near,far);
+		setOrthogonalProjection(mTranslator.mCurrentSurface.getSurfaceRatioX()*zoom*2,mTranslator.mCurrentSurface.getSurfaceRatioY()*zoom*2,near,far);
 		mCurZoom = zoom;
 	}
 
@@ -176,7 +176,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mCurNear = near;
 		mCurFar = far;
 		mCurFovy = fovy;
-		mProjectionTransform.setPerspectiveProjectionFovy(fovy, mTranslator.mCurrentScreen.getSurfaceRatioX()*stretchX,mTranslator.mCurrentScreen.getSurfaceRatioY(), near, far);
+		mProjectionTransform.setPerspectiveProjectionFovy(fovy, mTranslator.mCurrentSurface.getSurfaceRatioX()*stretchX,mTranslator.mCurrentSurface.getSurfaceRatioY(), near, far);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {

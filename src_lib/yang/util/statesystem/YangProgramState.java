@@ -82,8 +82,8 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 			restartGraphics();
 			mRestartCount = mGraphics.mRestartCount;
 		}
-		final int surfWidth = mGraphics.mCurrentScreen.getSurfaceWidth();
-		final int surfHeight = mGraphics.mCurrentScreen.getSurfaceHeight();
+		final int surfWidth = mGraphics.mCurrentSurface.getSurfaceWidth();
+		final int surfHeight = mGraphics.mCurrentSurface.getSurfaceHeight();
 		if(surfWidth!=mRecentSurfaceWidth || surfHeight!=mRecentSurfaceHeight) {
 			surfaceSizeChanged(surfWidth,surfHeight);
 			mRecentSurfaceWidth = surfWidth;

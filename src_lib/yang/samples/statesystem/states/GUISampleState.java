@@ -129,8 +129,9 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 
 	@Override
 	protected void draw() {
+		mGraphics2D.activate();
 		mGraphics.clear(0, 0, 0.1f);
-		mGraphics3D.setDefaultProgram();
+		mGraphics2D.setDefaultProgram();
 		mGUI.draw();
 	}
 

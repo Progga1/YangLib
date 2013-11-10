@@ -56,6 +56,7 @@ public class Particle2DSampleState extends SampleState {
 
 	@Override
 	protected void draw() {
+		mGraphics2D.activate();
 		mGraphics.clear(0.3f, 0.3f, 0.6f);
 		synchronized(mParticles) {
 			mParticles.draw();

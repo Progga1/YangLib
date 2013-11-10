@@ -68,7 +68,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public int mDrawMode;
 	public boolean mWireFrames;
 	public DrawListener mCurDrawListener;
-	public ScreenInfo mCurrentScreen;
+	public ScreenInfo mCurrentSurface;
 	public float mTimer;
 	public float mShaderTimer;
 	private long mLstTimestamp;
@@ -203,7 +203,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mPrograms = new YangList<AbstractProgram>();
 		mCurDrawListener = null;
 		appInstance = this;
-		mCurrentScreen = this;
+		setCurrentSurface(this);
 		mNoTexture = new Texture(this);
 		mScreenListeners = new YangList<SurfaceListener>();
 		mRenderTargets = new YangList<TextureRenderTarget>();
@@ -417,11 +417,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public float toNormX(float x) {
-		return (x - mScreenWidth / 2) / mScreenWidth * 2 * mRatioX;
+		return (x/mCurrentSurface.getSurfaceWidth()-0.5f)  * 2*mCurrentSurface.getSurfaceRatioX();
 	}
 
 	public float toNormY(float y) {
-		return -(y - mScreenHeight / 2) / mScreenHeight * 2 * mRatioY;
+		return -(y/mCurrentSurface.getSurfaceHeight()-0.5f) * 2*mCurrentSurface.getSurfaceRatioY();
 	}
 
 	public IndexedVertexBuffer createUninitializedVertexBuffer(boolean dynamicVertices,boolean dynamicIndices,int maxIndices,int maxVertices) {
@@ -685,6 +685,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		vertexBuffer.setAsCurrent();
 	}
 
+	private void refreshProjScreenTransform() {
+		final float rx = mCurrentSurface.getSurfaceRatioX();
+		final float ry = mCurrentSurface.getSurfaceRatioY();
+		mProjScreenTransform.setOrthogonalProjection(-rx,rx, ry,-ry, -1,1);
+		mProjScreenTransform.refreshInverted();
+	}
+
 	public void setSurfaceSize(int width, int height, boolean stereo) {
 		mStereo = stereo;
 		setViewPort(width,height);
@@ -704,8 +711,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mInvRatioX = 1/mRatioX;
 		mInvRatioY = 1/mRatioY;
 
-		mProjScreenTransform.setOrthogonalProjection(-mRatioX,mRatioX, mRatioY,-mRatioY, -1,1);
-		mProjScreenTransform.refreshInverted();
+		refreshProjScreenTransform();
 
 		for(final SurfaceListener surfaceListener:mScreenListeners) {
 			surfaceListener.onSurfaceSizeChanged(width, height);
@@ -749,14 +755,25 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return createRenderTarget(widthAndHeight,widthAndHeight);
 	}
 
+	private void setCurrentSurface(ScreenInfo surface) {
+		mCurrentSurface = surface;
+		refreshProjScreenTransform();
+	}
+
 	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {
 		flush();
 		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;
-		mCurrentScreen = renderTarget;
+		setCurrentSurface(renderTarget);
 		setViewPort(renderTarget.mTargetTexture.mWidth,renderTarget.mTargetTexture.mHeight);
 		derivedSetTextureRenderTarget(renderTarget);
 		unbindTextures();
 		assert checkErrorInst("Set texture render target");
+	}
+
+	public void setTextureRenderTargetOnlySurfaceValues(TextureRenderTarget renderTarget) {
+		flush();
+		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;
+		setCurrentSurface(renderTarget);
 	}
 
 	public void leaveTextureRenderTarget() {
@@ -766,7 +783,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mRenderTargetStackPos -= 2;
 		}else{
 			mRenderTargetStackPos = -1;
-			mCurrentScreen = this;
+			setCurrentSurface(this);
 			if(mStereo)
 				setViewPort(mScreenWidth*2,mScreenHeight);
 			else
@@ -815,9 +832,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public void setScissorRectNormalized(float x,float y,float width,float height) {
-		x = x*0.5f*mInvRatioX+0.5f;
-		y = y*0.5f*mInvRatioY+0.5f;
-		setScissorRectI((int)(x*mScreenWidth),(int)(y*mScreenHeight),(int)(width*0.5f*mInvRatioX*mScreenWidth),(int)(height*0.5f*mInvRatioY*mScreenHeight));
+		x = x*0.5f/mCurrentSurface.getSurfaceRatioX()+0.5f;
+		y = y*0.5f/mCurrentSurface.getSurfaceRatioY()+0.5f;
+		final int w = mCurrentSurface.getSurfaceWidth();
+		final int h = mCurrentSurface.getSurfaceHeight();
+		setScissorRectI((int)(x*w),(int)(y*h),(int)(width*0.5f/mCurrentSurface.getSurfaceRatioX()*w),(int)(height*0.5f/mCurrentSurface.getSurfaceRatioY()*h));
 		enable(GLOps.SCISSOR_TEST);
 	}
 
@@ -882,5 +901,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		else
 			return mForceStereo || getRenderTargetStackLevel()<=(mStereo?0:-1);
 	}
+
 
 }

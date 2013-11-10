@@ -34,7 +34,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	public float mDebugPointsAlpha = 0;
 	public boolean mDrawDebugPoints = false;
 	public boolean mVisible = true;
-	public float mMaxEventZ = 1,mMinEventZ = -0.5f;
+	public float mMaxEventZ = 0.5f,mMinEventZ = -0.2f;
 
 	public boolean mSolid = false;
 

@@ -27,10 +27,10 @@ public class YangTextureDrawer implements Drawable,RawEventListener {
 	@Override
 	public void draw() {
 		mGraphics.mTranslator.bindTexture(mTexture);
-		final float xFac = mFlipX?-0.5f:0.5f;
-		final float yFac = mFlipY?-0.5f:0.5f;
+		final float xFac = mFlipX?1:0;
+		final float yFac = mFlipY?0:1;
 		mGraphics.setWhite();
-		mGraphics.drawRect(-mWidth*xFac, -mHeight*yFac, mWidth*xFac, mHeight*yFac);
+		mGraphics.drawRect(-mWidth*0.5f, -mHeight*0.5f, mWidth*0.5f, mHeight*0.5f, xFac,yFac,1-xFac,1-yFac);
 	}
 
 	@Override

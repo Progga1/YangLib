@@ -367,19 +367,19 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 
 	//---Screen-data---
 	public float getScreenRight() {
-		return mTranslator.mRatioX;
+		return mTranslator.mCurrentSurface.getSurfaceRatioX();
 	}
 
 	public float getScreenBottom() {
-		return -mTranslator.mRatioY;
+		return -mTranslator.mCurrentSurface.getSurfaceRatioY();
 	}
 
 	public float getScreenLeft() {
-		return -mTranslator.mRatioX;
+		return -mTranslator.mCurrentSurface.getSurfaceRatioX();
 	}
 
 	public float getScreenTop() {
-		return mTranslator.mRatioY;
+		return mTranslator.mCurrentSurface.getSurfaceRatioY();
 	}
 
 	public float getScreenCenterX() {
