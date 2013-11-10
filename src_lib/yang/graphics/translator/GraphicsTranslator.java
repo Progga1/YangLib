@@ -899,7 +899,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(mForceMono)
 			return false;
 		else
-			return mForceStereo || getRenderTargetStackLevel()<=(mStereo?0:-1);
+			return mForceStereo || mStereo;
 	}
 
 

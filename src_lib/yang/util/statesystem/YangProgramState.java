@@ -20,6 +20,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected boolean mFirstFrame = true;
 	protected int mRecentSurfaceWidth = 0,mRecentSurfaceHeight = 0;
 	protected StateSystemType mStateSystem;
+
 	public double mStateTimer = 0;
 	protected GraphicsTranslator mGraphics;
 	protected Default2DGraphics mGraphics2D;
@@ -77,6 +78,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		if(mFirstFrame) {
 			initGraphics();
 			mRestartCount = mGraphics.mRestartCount;
+			start();
 		}
 		if(mRestartCount<mGraphics.mRestartCount) {
 			restartGraphics();

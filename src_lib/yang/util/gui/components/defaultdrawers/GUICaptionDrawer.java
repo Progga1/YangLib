@@ -3,6 +3,7 @@ package yang.util.gui.components.defaultdrawers;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.DrawableAnchoredLines;
 import yang.graphics.font.DrawableString;
+import yang.graphics.font.StringProperties;
 import yang.graphics.model.FloatColor;
 import yang.util.Util;
 import yang.util.gui.components.GUIComponentDrawPass;
@@ -46,6 +47,12 @@ public class GUICaptionDrawer extends GUIComponentDrawPass<GUIMultipassComponent
 	public GUICaptionDrawer createCaption(String caption) {
 		mCaption = new DrawableAnchoredLines(caption).setAnchors(DrawableString.ANCHOR_CENTER, DrawableString.ANCHOR_MIDDLE);
 		mCaption.setConstant();
+		return this;
+	}
+
+	public GUICaptionDrawer createCaption(String caption, StringProperties properties) {
+		mCaption = new DrawableAnchoredLines(caption).setAnchors(DrawableString.ANCHOR_CENTER, DrawableString.ANCHOR_MIDDLE);
+		mCaption.mProperties = properties;
 		return this;
 	}
 

@@ -119,6 +119,12 @@ public class Point3f {
 		mZ += (target.mZ-mZ)*weight;
 	}
 
+	public void lerp(float targetX,float targetY,float targetZ, float weight) {
+		mX += (targetX-mX)*weight;
+		mY += (targetY-mY)*weight;
+		mZ += (targetZ-mZ)*weight;
+	}
+
 	public void setZero() {
 		mX = 0;
 		mY = 0;

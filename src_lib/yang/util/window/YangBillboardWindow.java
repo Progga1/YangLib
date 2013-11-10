@@ -9,8 +9,11 @@ import yang.model.callback.Drawable;
 public class YangBillboardWindow<InternalType extends RawEventListener & Drawable> extends YangWindow<InternalType> {
 
 	private Point3f mLookAtPoint = new Point3f();
+	private final Point3f mTargetPoint = new Point3f();
 	public Point3f mPosition = new Point3f();
 	private final Vector3f mScale = new Vector3f(1,1,1);
+	public float mBetaWeight = 0.4f;
+	public float mDelay = 0.12f;
 
 	public YangBillboardWindow(InternalType internalObject,DefaultGraphics<?> graphics) {
 		super(internalObject,graphics);
@@ -18,7 +21,8 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 
 	@Override
 	public void step(float deltaTime) {
-		mTransform.setPointFromTo(mPosition,mLookAtPoint,Vector3f.UP);
+		mTargetPoint.lerp(mLookAtPoint.mX,mLookAtPoint.mY*mBetaWeight+mPosition.mY*(1-mBetaWeight),mLookAtPoint.mZ,mDelay);
+		mTransform.setPointFromTo(mPosition,mTargetPoint,Vector3f.UP);
 		mTransform.scale(mScale);
 		mTransform.postTranslate(mPosition);
 		updateTransform();
@@ -31,6 +35,11 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 
 	public void setLookAtPointReference(Point3f point) {
 		mLookAtPoint = point;
+		mTargetPoint.set(point);
+	}
+
+	public void snap() {
+		mTargetPoint.set(mLookAtPoint);
 	}
 
 	public void setLookAtPoint(float x,float y,float z) {

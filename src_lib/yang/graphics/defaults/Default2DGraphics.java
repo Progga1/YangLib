@@ -201,7 +201,9 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	protected void refreshCamera() {
 		final float ratioX = mTranslator.mCurrentSurface.getSurfaceRatioX();
 		final float ratioY = mTranslator.mCurrentSurface.getSurfaceRatioY();
-		final float shift = get2DStereoShift(mStereoGameDistance);
+		float shift = 0;
+		if(mTranslator.isStereo())
+			shift = get2DStereoShift(mStereoGameDistance);
 		mOrthoLeft = -ratioX * mZoom + mCamX + shift;
 		mOrthoRight = ratioX * mZoom + mCamX + shift;
 		mOrthoTop = ratioY * mZoom + mCamY;

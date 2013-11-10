@@ -85,7 +85,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 //			}
 //		}else{
 		float x;
-		if(mGraphics.getSurfaceHeight()<mGraphics.getSurfaceWidth())
+		if(mGraphics.getSurfaceHeight()<mGraphics.mCurrentSurface.getSurfaceWidth())
 			x = mGUI.getGUICenterX()-1f;
 		else
 			x = mGUI.getGUICenterX()-0.5f;

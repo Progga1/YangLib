@@ -161,7 +161,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		if (program != null) {
 			if(mCurProjTransform == mTranslator.mProjScreenTransform) {
 				mCameraProjectionMatrix.set(mTranslator.mProjScreenTransform);
-				if(mTranslator.mStereo) {
+				if(mTranslator.isStereo()) {
 					mCameraProjectionMatrix.postTranslate(-get2DStereoShift(mStereoScreenDistance),0);
 				}
 			}else

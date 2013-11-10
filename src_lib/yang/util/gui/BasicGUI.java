@@ -93,8 +93,8 @@ public class BasicGUI implements RawEventListener,Drawable {
 	private void setCoordinatesMode(GUICoordinatesMode mode) {
 		mCoordinatesMode = mode;
 		if(mDimensionsBySurface) {
-			mWidth = mTranslator.mRatioX*2;
-			mHeight = mTranslator.mRatioY*2;
+			mWidth = mTranslator.mCurrentSurface.getSurfaceRatioX()*2;
+			mHeight = mTranslator.mCurrentSurface.getSurfaceRatioY()*2;
 		}
 		final float w = mWidth*0.5f;
 		final float h = mHeight*0.5f;

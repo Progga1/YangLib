@@ -18,7 +18,8 @@ public class YangProgramStateSystem extends DefaultSurface {
 		if(mCurrentState!=null)
 			mCurrentState.stop();
 		mCurrentState = newState;
-		mCurrentState.start();
+		if(!mCurrentState.mFirstFrame)
+			mCurrentState.start();
 	}
 
 	public YangProgramState<?> getCurrentState() {
