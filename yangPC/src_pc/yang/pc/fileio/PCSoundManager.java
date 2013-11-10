@@ -16,10 +16,12 @@ public class PCSoundManager extends AbstractSoundManager {
 
 	@SuppressWarnings("unused")
 	private final JFXPanel fxPanel;
+	private final PCResourceManager mResources;
 
 	public PCSoundManager(PCResourceManager resources) {
 		super();
-		SOUND_PATH = resources.getAssetFile(SOUND_PATH).getAbsolutePath();
+		mResources = resources;
+		//SOUND_PATH = resources.getAssetFile(SOUND_PATH).getAbsolutePath();
 		//need to call this to initialize javafx
 		fxPanel = new JFXPanel();
 	}
@@ -28,7 +30,7 @@ public class PCSoundManager extends AbstractSoundManager {
 	public synchronized AbstractSound loadSound(String name) {
 		AudioClip clip = null;
 		try {
-			final File file = new File(SOUND_PATH+ name + SOUND_EXT);
+			final File file = mResources.getAssetFile(SOUND_PATH+ name + SOUND_EXT);
 			if (!file.exists()) throw new RuntimeException();
 			clip = new AudioClip(file.toURI().toString());
 		} catch (final Exception e) {
@@ -41,7 +43,7 @@ public class PCSoundManager extends AbstractSoundManager {
 	protected AbstractMusic loadMusic(String name) {
 		MediaPlayer player = null;
 		try {
-			final File file = new File(SOUND_PATH+ name + SOUND_EXT);
+			final File file = mResources.getAssetFile(SOUND_PATH + name + SOUND_EXT);
 			if (!file.exists()) throw new RuntimeException();
 			player = new MediaPlayer(new Media(file.toURI().toString()));
 		} catch (final Exception e) {
