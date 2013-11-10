@@ -8,22 +8,23 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import yang.pc.fileio.PCResourceManager;
 import yang.pc.fileio.PCSoundManager;
 import yang.surface.YangSurface;
 
 public class PCFrame extends JFrame implements WindowListener,FocusListener  {
-	
+
 	private static final long serialVersionUID = 42L;
-	private boolean mFirstFocLost = true;
-	
+	private final boolean mFirstFocLost = true;
+
 	public YangSurface mSurface;
-	
+
 	public PCFrame() {
 		this.addWindowListener(this);
 	}
-	
+
 	public void present() {
-		mSurface.mSounds = new PCSoundManager();
+		mSurface.mSounds = new PCSoundManager(new PCResourceManager());
 		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -33,7 +34,7 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 	protected void close() {
 		mSurface.exit();
 	}
-	
+
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 
@@ -41,7 +42,7 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		
+
 	}
 
 	@Override
@@ -51,22 +52,22 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		
+
 	}
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
-		
+
 	}
 
 	@Override
@@ -86,5 +87,5 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 //		mSurface.pause();
 //		mSurface.stop();
 	}
-	
+
 }

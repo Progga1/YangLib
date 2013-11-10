@@ -57,7 +57,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 	public void init(int areaWidthAndHeight,BasicProgram[] usedShaders) {
 		mUsedShaders = usedShaders;
 		mFrame = new YangGLESFrame(mTitle);
-		final AbstractSoundManager sound = new PCSoundManager();
+		final AbstractSoundManager sound = new PCSoundManager(new PCResourceManager());
 		mSurface = new DefaultAnimatorSurface(sound,this);
 		mSurface.setInitializationCallback(new InitCallback());
 
@@ -92,7 +92,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mSideBar.mSkeletonListBox.addKeyListener(mFrame.mPCEventHandler);
 		mSideBar.mAnimationListBox.addKeyListener(mFrame.mPCEventHandler);
 
-		App.soundManager = new PCSoundManager();
+		App.soundManager = sound;
 		App.storage = new PCDataStorage();
 		App.gfxLoader = mGraphics.mGFXLoader;
 		App.resourceManager = new PCResourceManager();

@@ -24,10 +24,24 @@ public class PCResourceManager extends AbstractResourceManager {
 		return new File(filename);
 	}
 
+	public File getAssetFile(String filename) {
+		File file;
+		final String[] paths = PathSpecs.ASSET_PATHS;
+		int i=0;
+		do{
+			file = new File(paths[i]+filename);
+			i++;
+		}while(i<paths.length && !file.exists());
+		if(!file.exists())
+			return null;
+		else
+			return file;
+	}
+
 	@Override
 	public InputStream getAssetInputStream(String filename) {
-		final File file = new File(PathSpecs.ASSET_PATH+filename);
-		if(!file.exists())
+		final File file = getAssetFile(filename);
+		if(file==null)
 			return null;
 		FileInputStream fis = null;
 		try {
@@ -42,7 +56,7 @@ public class PCResourceManager extends AbstractResourceManager {
 	@Override
 	public BufferedReader loadAssetTextFile(String filename) {
 		try {
-			final File file = new File(PathSpecs.ASSET_PATH, filename);
+			final File file = getAssetFile(filename);
 			return new BufferedReader(new FileReader(file));
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -55,7 +69,7 @@ public class PCResourceManager extends AbstractResourceManager {
 	public String textFileToString(String filename) {
 		String shader = null;
 		try {
-			final File file = new File(PathSpecs.ASSET_PATH, filename);
+			final File file = getAssetFile(filename);
 			final BufferedReader r = new BufferedReader(new FileReader(file));
 
 			final char[] buf = new char[(int) file.length()];
@@ -73,7 +87,8 @@ public class PCResourceManager extends AbstractResourceManager {
 
 	@Override
 	public String[] getFileList(String directory) throws IOException {
-		final File[] files = new File(PathSpecs.ASSET_PATH+directory).listFiles();
+		//final File[] files = new File(PathSpecs.ASSET_PATH+directory).listFiles();
+		final File[] files = getAssetFile(directory).listFiles();
 		final String[] result = new String[files.length];
 		for(int i=0;i<result.length;i++) {
 			result[i] = files[i].getName();
@@ -83,7 +98,7 @@ public class PCResourceManager extends AbstractResourceManager {
 
 	@Override
 	public OutputStream getAssetOutputStream(String filename) {
-		return getExternalOutputStream(PathSpecs.ASSET_PATH+filename);
+		return getExternalOutputStream(PathSpecs.ASSET_PATHS[0]+filename);
 	}
 
 }

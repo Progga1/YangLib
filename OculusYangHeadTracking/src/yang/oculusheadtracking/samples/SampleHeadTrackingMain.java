@@ -10,7 +10,7 @@ import yang.systemdependent.YangSensor;
 public class SampleHeadTrackingMain {
 
 	public static void main(String[] args) {
-		PathSpecs.ASSET_PATH = "../yangAndroid/assets/";
+		PathSpecs.setAssetPath("../yangAndroid/assets/");
 		App.sensor = new OculusSensor();
 		final YangGLESFrame frame = new YangGLESFrame().init(1280,800);
 		frame.setSurface(new SampleStateSystem());

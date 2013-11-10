@@ -12,49 +12,48 @@ import yang.graphics.textures.TextureData;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Dimensions2i;
-import yang.model.PathSpecs;
 
 public class PCGFXLoader extends AbstractGFXLoader {
-	
+
 	public PCGFXLoader(GraphicsTranslator graphics) {
 		super(graphics,new PCResourceManager());
 	}
 
 	@Override
 	public void getImageDimensions(String filename,Dimensions2i result) {
-		
-		String path = PathSpecs.ASSET_PATH + filename;
+
+		final String path = ((PCResourceManager)mResources).getAssetFile(filename).getAbsolutePath();
 		try {
-			BufferedImage image = ImageIO.read(new File(path));
+			final BufferedImage image = ImageIO.read(new File(path));
 			result.set(image.getWidth(),image.getHeight());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException("Image not found: "+path);
 		}
 	}
-	
+
 	@Override
 	public TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
 		ByteBuffer buffer = null;
 		BufferedImage image = null;
-		
-		String path = PathSpecs.ASSET_PATH + filename;
+
+		final String path =((PCResourceManager)mResources).getAssetFile(filename).getAbsolutePath();
 		try {
 			image = ImageIO.read(new File(path));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException("Image not found: "+path);
 		}
-		
-		int width = image.getWidth();
-		int height = image.getHeight();
 
-		WritableRaster alphaBuffer = image.getAlphaRaster();
-		int channels = alphaBuffer!=null || forceRGBA?4:3;
+		final int width = image.getWidth();
+		final int height = image.getHeight();
+
+		final WritableRaster alphaBuffer = image.getAlphaRaster();
+		final int channels = alphaBuffer!=null || forceRGBA?4:3;
 		buffer = ByteBuffer.allocate(width * height * channels);
 
 		if(alphaBuffer==null) {
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					int rgb = image.getRGB(x, y);
+					final int rgb = image.getRGB(x, y);
 					buffer.put((byte)(((rgb>>16)&0xFF)));
 					buffer.put((byte)(((rgb>>8)&0xFF)));
 					buffer.put((byte)(((rgb)&0xFF)));
@@ -65,10 +64,10 @@ public class PCGFXLoader extends AbstractGFXLoader {
 		}else{
 			for (int y = 0; y < height; y++) {
 				for (int x = 0; x < width; x++) {
-					int rgb = image.getRGB(x, y);
-					int alpha = alphaBuffer.getSample(x, y, 0);
+					final int rgb = image.getRGB(x, y);
+					final int alpha = alphaBuffer.getSample(x, y, 0);
 					if(alpha<255 && TextureData.USE_PREMULTIPLICATION) {
-						float fac = alpha/255f;
+						final float fac = alpha/255f;
 						buffer.put((byte)(((rgb>>16)&0xFF)*fac));
 						buffer.put((byte)(((rgb>>8)&0xFF)*fac));
 						buffer.put((byte)(((rgb)&0xFF)*fac));
@@ -77,7 +76,7 @@ public class PCGFXLoader extends AbstractGFXLoader {
 						buffer.put((byte)(((rgb>>8)&0xFF)));
 						buffer.put((byte)(((rgb)&0xFF)));
 					}
-					
+
 					buffer.put((byte)alpha);
 				}
 			}
@@ -86,5 +85,5 @@ public class PCGFXLoader extends AbstractGFXLoader {
 
 		return new TextureData(buffer,width,height,channels);
 	}
-	
+
 }

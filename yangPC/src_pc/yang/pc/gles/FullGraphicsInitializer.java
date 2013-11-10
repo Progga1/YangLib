@@ -20,12 +20,13 @@ public class FullGraphicsInitializer {
 	public FullGraphicsInitializer init(int resolutionX,int resolutionY) {
 		mTranslator = new PCGL2ES2Graphics(resolutionX,resolutionY);
 
-		App.soundManager = new PCSoundManager();
+
 		if(App.sensor==null)
 			App.sensor = new PCSensorFrame();
 		App.storage = new PCDataStorage();
 		App.gfxLoader = mTranslator.mGFXLoader;
 		App.resourceManager = new PCResourceManager();
+		App.soundManager = new PCSoundManager((PCResourceManager)App.resourceManager);
 		App.vibrator = new PCVibrator();
 		App.systemCalls = new PCSystemCalls();
 		return this;
