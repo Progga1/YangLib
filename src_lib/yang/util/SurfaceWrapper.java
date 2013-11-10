@@ -41,6 +41,8 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 		mInnerSurface.drawContent(true);
 		prevListener.activate();
 		mTranslator.leaveTextureRenderTarget();
+		mGraphics.resetGlobalTransform();
+		mTranslator.setCullMode(false);
 	}
 
 	public void handleEvent(YangEvent event) {

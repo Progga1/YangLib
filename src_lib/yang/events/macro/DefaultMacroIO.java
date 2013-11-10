@@ -81,6 +81,8 @@ public class DefaultMacroIO extends AbstractMacroIO {
 			final YangKeyEvent keyEvent = mEventQueue.newKeyEvent();
 			keyEvent.mAction = id-ID_KEY_EVENT;
 			keyEvent.mKey = stream.readShort();
+			if(keyEvent.mKey<0)
+				keyEvent.mKey += 256*256;
 			return keyEvent;
 		}else if(id==ID_ZOOM_EVENT) {
 			final YangZoomEvent zoomEvent = mEventQueue.newZoomEvent();
