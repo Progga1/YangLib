@@ -4,6 +4,7 @@ import yang.graphics.skeletons.CartoonBone;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
 import yang.graphics.skeletons.pose.Posture;
+import yang.math.objects.Point3f;
 import yang.model.Rect;
 import yang.physics.massaggregation.constraints.Constraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
@@ -44,7 +45,9 @@ public class MassAggregation {
 	public boolean mConstraintsActivated;
 	public Posture mCurrentPose;
 	public float mScale = 1;
+	public Point3f mCurJointShift = new Point3f();
 	protected int mCurJointId = 0;
+	public float mCurJointScale = 1;
 
 
 	public MassAggregation() {
@@ -91,6 +94,10 @@ public class MassAggregation {
 	}
 
 	public Joint addJoint(Joint joint) {
+		joint.mPosX = joint.mPosX*mCurJointScale + mCurJointShift.mX;
+		joint.mPosY = joint.mPosY*mCurJointScale + mCurJointShift.mY;
+		joint.mPosZ = joint.mPosZ*mCurJointScale + mCurJointShift.mZ;
+		joint.mRadius *= mCurJointScale;
 		mJoints.add(joint);
 		return joint;
 	}

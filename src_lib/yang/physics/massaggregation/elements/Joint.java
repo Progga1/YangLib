@@ -72,7 +72,7 @@ public class Joint {
 	}
 
 	public Joint setRadius(float radius) {
-		mRadius = radius;
+		mRadius = radius * mSkeleton.mCurJointScale;
 		return this;
 	}
 
