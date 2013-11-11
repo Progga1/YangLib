@@ -226,7 +226,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 		final Texture texture = loadTexture(filename, textureProperties,alphaMap);
 		entry.mTextures.add(texture);
-		mGraphics.rebindTexture(0);
+//		mGraphics.rebindTexture(0);
+		mGraphics.bindTextureNoFlush(mGraphics.mNoTexture,0);
 
 		return texture;
 	}

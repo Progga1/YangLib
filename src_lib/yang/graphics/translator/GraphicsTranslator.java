@@ -62,7 +62,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	//State
 	private boolean mInitialized = false;
-	protected Texture[] mCurrentTextures;
+	public Texture[] mCurrentTextures;
 	public IndexedVertexBuffer mCurrentVertexBuffer;
 	public boolean mFlushDisabled;
 	public int mDrawMode;
@@ -100,7 +100,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	//Persistent
 	public Texture mWhiteTexture;
 	public Texture mBlackTexture;
-	private final Texture mNoTexture;
+	final Texture mNoTexture;
 	public AbstractGFXLoader mGFXLoader;
 	private final YangList<TextureRenderTarget> mRenderTargets;
 	private final YangList<Texture> mRegisteredTextures;
@@ -781,6 +781,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(mRenderTargetStackPos>0) {
 			setTextureRenderTarget(mRenderTargetStack[mRenderTargetStackPos-1]);
 			mRenderTargetStackPos -= 2;
+			unbindTextures();
 		}else{
 			mRenderTargetStackPos = -1;
 			setCurrentSurface(this);
