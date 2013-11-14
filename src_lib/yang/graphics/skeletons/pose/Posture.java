@@ -23,11 +23,6 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 		mData = data;
 	}
 
-	public Posture(SkeletonType skeleton) {
-		this();
-		mData = new float[skeleton.calcAnimatedJointCount()];
-	}
-
 	public abstract void applyPose(SkeletonType skeleton,InterpolationPoseType interpolationPose, float weight);
 	public abstract void copyFromSkeleton(SkeletonType skeleton);
 	public abstract String toSourceCode();
@@ -38,6 +33,11 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 
 	public String getClassName() {
 		return Util.getClassName(this);
+	}
+
+	@Override
+	public String toString() {
+		return "{"+Util.arrayToString(mData,",",0)+"}";
 	}
 
 }

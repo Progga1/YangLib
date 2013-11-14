@@ -29,7 +29,7 @@ public class KeyFrame {
 
 	@Override
 	public String toString() {
-		return ""+mId+": @"+mFirstFrame+" "+mDuration+"f";
+		return ""+mId+": @"+mFirstFrame+" "+mDuration+"f"+" "+mPose.toString();
 	}
 
 	@Override

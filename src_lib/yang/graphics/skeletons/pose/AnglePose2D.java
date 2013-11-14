@@ -16,10 +16,6 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 		super(angles);
 	}
 
-	public AnglePose2D(CartoonSkeleton2D skeleton) {
-		super(skeleton);
-	}
-
 	public AnglePose2D() {
 		super();
 	}

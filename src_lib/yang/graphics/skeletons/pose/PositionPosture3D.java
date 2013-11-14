@@ -11,7 +11,7 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 	}
 
 	public PositionPosture3D(MassAggregation skeleton) {
-		super(skeleton);
+		super(new float[skeleton.calcAnimatedJointCount()*3]);
 	}
 
 	@Override
@@ -20,9 +20,15 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 		final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {
 			if(joint.mAnimate) {
-				joint.mPosX = (mData[c]*dWeight + interpolationPose.mData[c++]*weight);
-				joint.mPosY = (mData[c]*dWeight + interpolationPose.mData[c++]*weight);
-				joint.mPosZ = (mData[c]*dWeight + interpolationPose.mData[c++]*weight);
+				if(weight==0 || interpolationPose==null) {
+					joint.mPosX = mData[c++];
+					joint.mPosY = mData[c++];
+					joint.mPosZ = mData[c++];
+				}else{
+					joint.mPosX = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
+					joint.mPosY = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
+					joint.mPosZ = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
+				}
 			}
 		}
 	}

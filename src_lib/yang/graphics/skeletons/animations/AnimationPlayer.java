@@ -18,6 +18,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public AbstractSoundManager mSound;
 	public float mAnimationSpeed;
 	public boolean mLockedAnimation;
+	protected KeyFrame mCurrentPrevFrame,mCurrentNextFrame;
 
 	public AnimationPlayer(MassAggregation skeleton,AnimationType startAnimation) {
 		mSkeleton = skeleton;
@@ -45,8 +46,9 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 					mLockedAnimation = false;
 					stopNode();
 					return;
-				}else
+				}else{
 					newTime = mCurrentAnimation.mFrameCount;
+				}
 			}
 			mCurrentAnimationTime = newTime/mCurrentAnimation.mFramesPerSecond;
 		}
@@ -65,17 +67,20 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		}
 
 		if(mCurrentAnimation.mAutoAnimate) {
-			int frameId = (int)newTime;
+			final int frameId = (int)newTime;
+			mCurrentPrevFrame = mCurrentAnimation.mPreviousFrames[frameId];
+			mCurrentNextFrame = mCurrentAnimation.mNextFrames[frameId];
 			if(!mCurrentAnimation.mInterpolate) {
-				mCurrentAnimation.mPreviousFrames[frameId].mPose.applyPose(mSkeleton);
+				mCurrentPrevFrame.mPose.applyPose(mSkeleton);
 			}else{
 
-				KeyFrame prevFrame = mCurrentAnimation.mPreviousFrames[frameId];
-				KeyFrame nextFrame = mCurrentAnimation.mNextFrames[frameId];
+				final KeyFrame prevFrame = mCurrentPrevFrame;
+				final KeyFrame nextFrame = mCurrentNextFrame;
+
 				if(nextFrame==null)
 					prevFrame.mPose.applyPose(mSkeleton);
 				else{
-					float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mTimeFactor;
+					final float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mTimeFactor;
 					nextFrame.mPose.applyPose(mSkeleton, prevFrame.mPose, t);
 				}
 			}
@@ -128,6 +133,14 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 			return 0;
 		else
 			return mCurrentAnimationTime/mCurrentAnimation.mTotalDuration;
+	}
+
+	public KeyFrame getCurrentPreviousKeyFrame() {
+		return mCurrentPrevFrame;
+	}
+
+	public KeyFrame getCurrentNextKeyFrame() {
+		return mCurrentNextFrame;
 	}
 
 }

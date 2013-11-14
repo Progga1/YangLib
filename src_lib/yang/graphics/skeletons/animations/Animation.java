@@ -13,7 +13,7 @@ public class Animation<CarrierType> {
 	public KeyFrame[] mNextFrames;
 	protected WrapMode mWrap;
 	public boolean mAutoAnimate;
-	protected float mFramesPerSecond;
+	public float mFramesPerSecond;
 	public Interpolation mInterpolation;
 	public int mFrameCount;
 	public float mTotalDuration;
@@ -146,6 +146,15 @@ public class Animation<CarrierType> {
 		if(index<0)
 			index = 0;
 		return mPreviousFrames[index].mId;
+	}
+
+	public void setFrameCount(int frameCount) {
+		mKeyFrameCount = frameCount;
+	}
+
+	public void appendKeyFrame(KeyFrame keyFrame) {
+		mKeyFrames[mKeyFrameCount++] = keyFrame;
+		refreshKeyFrames();
 	}
 
 }
