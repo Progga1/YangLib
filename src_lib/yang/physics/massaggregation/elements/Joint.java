@@ -422,6 +422,10 @@ public class Joint {
 		return mOrientation!=null;
 	}
 
+	public boolean isAnimated() {
+		return mAnimate;
+	}
+
 
 
 }

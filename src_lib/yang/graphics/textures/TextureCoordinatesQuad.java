@@ -309,4 +309,18 @@ public class TextureCoordinatesQuad {
 		return mTop+mHeight-2*mBiasY;
 	}
 
+	public void rotateCW() {
+		int rot = getRotation()+1;
+		if(rot>3)
+			rot = 0;
+		setRotation(rot);
+	}
+
+	public void rotateCCW() {
+		int rot = getRotation()-1;
+		if(rot<0)
+			rot = 3;
+		setRotation(rot);
+	}
+
 }

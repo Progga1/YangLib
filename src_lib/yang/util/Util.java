@@ -5,6 +5,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import yang.math.MathConst;
+
 public class Util {
 
 	public static final class NanoSec {
@@ -268,6 +270,11 @@ public class Util {
 			return minValue;
 		else
 			return value;
+	}
+
+
+	public static float normAngle(float mX) {
+		return wrapValueRepeat(mX,0,MathConst.PI*2);
 	}
 
 	public static String intToBin(int value,int digits) {

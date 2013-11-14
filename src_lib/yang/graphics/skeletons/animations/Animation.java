@@ -20,6 +20,7 @@ public class Animation<CarrierType> {
 	public boolean mInterpolate;
 	public boolean mAutoSetAnimationTime = true;
 	public boolean mBlocking = false;
+	public int mKeyFrameCount = -1;
 
 	protected void startVisuals(CarrierType body) { }
 	public void startPhysics(CarrierType body) { }
@@ -50,23 +51,27 @@ public class Animation<CarrierType> {
 	public void refreshKeyFrames() {
 		mFrameCount = 0;
 		mTotalDuration = 0;
-		final boolean insertFrame = mWrap==WrapMode.LOOP || mKeyFrames.length==1;
+		final int keyFrameCount = mKeyFrameCount>=0?mKeyFrameCount:mKeyFrames.length;
+
+		final boolean insertFrame = mWrap==WrapMode.LOOP || keyFrameCount==1;
 		mKeyFrames[0].mId = 0;
-		for(int i=insertFrame?0:1;i<mKeyFrames.length;i++) {
+		for(int i=insertFrame?0:1;i<keyFrameCount;i++) {
 			mFrameCount += mKeyFrames[i].mDuration;
 			mKeyFrames[i].mId = i;
 		}
 		mTotalDuration = mFrameCount/mFramesPerSecond;
-		mPreviousFrames = new KeyFrame[mFrameCount+1];
-		mNextFrames = new KeyFrame[mFrameCount+1];
+		if(mPreviousFrames==null || mPreviousFrames.length<mFrameCount+1)
+			mPreviousFrames = new KeyFrame[mFrameCount+1];
+		if(mNextFrames==null || mNextFrames.length<mFrameCount+1)
+			mNextFrames = new KeyFrame[mFrameCount+1];
 		int c = 0;
-		final int l = mKeyFrames.length;
+		final int l = keyFrameCount;
 		for(int i=0;i<l;i++) {
 			final int index = i;
 
 			final KeyFrame curPrevFrame = mKeyFrames[index];
 			KeyFrame curNextFrame;
-			if(index>=mKeyFrames.length-1) {
+			if(index>=keyFrameCount-1) {
 				curNextFrame = null;
 			}else
 				curNextFrame = mKeyFrames[index+1];
@@ -85,7 +90,7 @@ public class Animation<CarrierType> {
 		}
 
 		if(insertFrame) {
-			final KeyFrame curPrevFrame = mKeyFrames[mKeyFrames.length-1];
+			final KeyFrame curPrevFrame = mKeyFrames[keyFrameCount-1];
 			mNextFrames[c-1] = mKeyFrames[0];
 			for(int j=0;j<mKeyFrames[0].mDuration;j++) {
 				mPreviousFrames[c] = curPrevFrame;
@@ -96,17 +101,17 @@ public class Animation<CarrierType> {
 		}
 	}
 
-	protected void setFrames(WrapMode wrapMode,KeyFrame... frames) {
+	public void setFrames(WrapMode wrapMode,KeyFrame... frames) {
 		mKeyFrames = frames;
 		mWrap = wrapMode;
 		refreshKeyFrames();
 	}
 
-	protected void setFrames(KeyFrame... frames) {
+	public void setFrames(KeyFrame... frames) {
 		setFrames(mWrap,frames);
 	}
 
-	protected void setFrames(WrapMode clampMode,Posture<?, ?>... frames) {
+	public void setFrames(WrapMode clampMode,Posture<?, ?>... frames) {
 		mKeyFrames = new KeyFrame[frames.length];
 		for(int i=0;i<frames.length;i++) {
 			mKeyFrames[i] = new KeyFrame(frames[i]);
@@ -114,7 +119,7 @@ public class Animation<CarrierType> {
 		setFrames(clampMode,mKeyFrames);
 	}
 
-	protected void setFrames(Posture<?, ?>... frames) {
+	public void setFrames(Posture<?, ?>... frames) {
 		setFrames(DEFAULT_WRAP_MODE,frames);
 	}
 

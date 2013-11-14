@@ -64,6 +64,15 @@ public class YangProgramStateSystem extends DefaultSurface {
 		}
 	}
 
+
+
+	@Override
+	public void exit() {
+		if(mCurrentState!=null)
+			mCurrentState.stop();
+		super.exit();
+	}
+
 	@Override
 	public void pause() {
 		super.pause();

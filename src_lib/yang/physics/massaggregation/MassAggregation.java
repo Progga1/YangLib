@@ -93,6 +93,16 @@ public class MassAggregation {
 		}
 	}
 
+	public int calcAnimatedJointCount() {
+		int count = 0;
+		for(final Joint joint:mJoints) {
+			if(joint.isAnimated()) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	public Joint addJoint(Joint joint) {
 		joint.mPosX = joint.mPosX*mCurJointScale + mCurJointShift.mX;
 		joint.mPosY = joint.mPosY*mCurJointScale + mCurJointShift.mY;

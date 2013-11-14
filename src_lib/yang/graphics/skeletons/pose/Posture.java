@@ -1,6 +1,5 @@
 package yang.graphics.skeletons.pose;
 
-import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.math.MathConst;
 import yang.physics.massaggregation.MassAggregation;
 import yang.util.Util;
@@ -10,17 +9,29 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 
 	public static float PI = MathConst.PI;
 	public static float PI_HALF = MathConst.PI_HALF;
-	
-	protected int mPoseId;
-	
+
+	public float[] mData;
+
+	protected int mPostureId;
+
 	public Posture() {
-		mPoseId = 0;
+		mPostureId = 0;
 	}
-	
+
+	public Posture(float[] data) {
+		this();
+		mData = data;
+	}
+
+	public Posture(SkeletonType skeleton) {
+		this();
+		mData = new float[skeleton.calcAnimatedJointCount()];
+	}
+
 	public abstract void applyPose(SkeletonType skeleton,InterpolationPoseType interpolationPose, float weight);
-	public abstract void copyFromSkeleton(CartoonSkeleton2D skeleton);
+	public abstract void copyFromSkeleton(SkeletonType skeleton);
 	public abstract String toSourceCode();
-	
+
 	public void applyPose(SkeletonType skeleton) {
 		applyPose(skeleton,null,1);
 	}
@@ -28,5 +39,5 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 	public String getClassName() {
 		return Util.getClassName(this);
 	}
-	
+
 }

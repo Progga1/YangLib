@@ -20,6 +20,7 @@ import yang.graphics.stereovision.StereoVision;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.math.MathConst;
 import yang.model.App;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
@@ -31,6 +32,8 @@ import yang.systemdependent.YangSystemCalls;
 import yang.util.Util;
 
 public abstract class YangSurface implements EventQueueHolder,RawEventListener {
+
+	public static float PI = MathConst.PI;
 
 	public static boolean CATCH_EXCEPTIONS = false;
 	public final static boolean NO_MACRO_OVERWRITE = false;
