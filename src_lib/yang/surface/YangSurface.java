@@ -565,7 +565,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 
 		mCatchUpTime = 0;
 		mRuntimeState = 1;
-		if(mSystemCalls.reloadAfterPause()) {
+		if(mSystemCalls == null || mSystemCalls.reloadAfterPause()) {
 			mLoadingState = 0;
 		}
 		if(!mLoadedOnce) {

@@ -14,4 +14,8 @@ public class YangSystemCalls {
 
 	}
 
+	public void hideKeyBoard() {
+
+	}
+
 }

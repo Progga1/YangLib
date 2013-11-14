@@ -3,11 +3,10 @@ package yang.android.graphics;
 import yang.events.Keys;
 import yang.events.eventtypes.YangKeyEvent;
 import yang.graphics.translator.GraphicsTranslator;
-import android.content.Context;
+import yang.model.App;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
 
 public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListener {
 
@@ -33,8 +32,7 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 
 		if ((keyCode == KeyEvent.KEYCODE_SEARCH && event.getAction() == KeyEvent.ACTION_UP) || (keyCode == KeyEvent.KEYCODE_MENU && event.isLongPress())) {
-			final InputMethodManager inputMgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputMgr.showSoftInput(this, InputMethodManager.SHOW_FORCED);
+			App.systemCalls.openKeyBoard();
 			return true;
 		}
 

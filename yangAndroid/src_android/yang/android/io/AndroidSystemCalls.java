@@ -2,12 +2,13 @@ package yang.android.io;
 
 import yang.android.graphics.YangActivity;
 import yang.systemdependent.YangSystemCalls;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.content.DialogInterface;
 import android.os.Build;
+import android.view.inputmethod.InputMethodManager;
 
-public class AndroidSystemCalls extends YangSystemCalls{
+public class AndroidSystemCalls extends YangSystemCalls {
 
 	protected final Context mContext;
 	protected final YangActivity mActivity;
@@ -19,9 +20,15 @@ public class AndroidSystemCalls extends YangSystemCalls{
 
 	@Override
 	public void openKeyBoard() {
-
+		final InputMethodManager inputMgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMgr.showSoftInput(mActivity.getWindow().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
 	}
 
+	@Override
+	public void hideKeyBoard() {
+		final InputMethodManager inputMgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMgr.hideSoftInputFromWindow(mActivity.getWindow().getCurrentFocus().getWindowToken(), 0);
+	}
 
 	@Override
 	public boolean reloadAfterPause() {
@@ -30,9 +37,24 @@ public class AndroidSystemCalls extends YangSystemCalls{
 
 	@Override
 	public void throwDebugIntent() {
-		final Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse("http://www.youtube.com/watch?v=5PvA9LQ1Sfc"));
-		mActivity.startActivity(intent);
+		mActivity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+				builder.setMessage("debug intent")
+				.setPositiveButton("foo", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+
+					}
+				})
+				.setNegativeButton("bar", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+
+					}
+				});
+				builder.create().show();
+			}
+		});
 	}
 
 }

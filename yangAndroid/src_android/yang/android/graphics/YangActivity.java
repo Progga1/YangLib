@@ -27,8 +27,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 		mGLView = androidSurface;
-
-		setContentView(mGLView);
+		if (mGLView.getParent() == null) setContentView(mGLView);
 	}
 
 	protected void activityOut(Object msg) {
