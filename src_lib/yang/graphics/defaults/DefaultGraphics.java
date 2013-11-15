@@ -3,8 +3,6 @@ package yang.graphics.defaults;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import javax.vecmath.Point4f;
-
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
 import yang.graphics.defaults.meshcreators.StripCreator;
@@ -18,6 +16,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MatrixOps;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
+import yang.model.Rect;
 import yang.util.Util;
 
 public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> {
@@ -629,12 +628,12 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	}
 
-	public void drawRect(Point4f rect, TextureCoordinatesQuad texCoords) {
-		drawRect(rect.x, rect.y, rect.z, rect.w, texCoords);
+	public void drawRect(Rect rect, TextureCoordinatesQuad texCoords) {
+		drawRect(rect.mLeft, rect.mBottom, rect.mRight, rect.mTop, texCoords);
 	}
 
-	public void drawRect(Point4f rect) {
-		drawRect(rect.x, rect.y, rect.z, rect.w);
+	public void drawRect(Rect rect) {
+		drawRect(rect.mLeft, rect.mBottom, rect.mRight, rect.mTop);
 	}
 
 	@Override
