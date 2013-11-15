@@ -62,7 +62,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	protected void step(float deltaTime) {
 		super.step(deltaTime);
-		mSkeleton.applyConstraints(deltaTime);
+		mSkeleton.physicalStep(deltaTime);
 	}
 
 	@Override

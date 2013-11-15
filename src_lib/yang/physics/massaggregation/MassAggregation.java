@@ -32,6 +32,7 @@ public class MassAggregation {
 
 	//Objects
 	public SkeletonCarrier mCarrier;
+	public ForceCallback mForceCallback = null;
 
 	//Data
 	public YangList<Joint> mJoints;
@@ -175,7 +176,7 @@ public class MassAggregation {
 		return (y-mCarrier.getWorldY())*mCarrier.getScale();
 	}
 
-	public void applyConstraints(float deltaTime) {
+	public void physicalStep(float deltaTime) {
 
 		final float uDeltaTime = deltaTime/mAccuracy;
 		final float worldY = mCarrier.getWorldY();
@@ -204,6 +205,10 @@ public class MassAggregation {
 				for(final Joint joint:mJoints) {
 					joint.applyConstraint();
 				}
+
+			if(mForceCallback!=null) {
+				mForceCallback.preApply(uDeltaTime);
+			}
 
 			for(final Joint joint:mJoints) {
 				joint.physicalStep(uDeltaTime);

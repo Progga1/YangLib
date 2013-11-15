@@ -147,13 +147,13 @@ public class Animator implements YangEventListener {
 		mCamera.update();
 		if(mCurSkeleton!=null) {
 			if(mPhysicsMode) {
-				mCurSkeleton.applyConstraints(deltaTime);
+				mCurSkeleton.physicalStep(deltaTime);
 			}else if(mPlaying) {
 				if(!mPaused)
 					mCurAnimationPlayer.proceed(deltaTime);
 			}else{
 
-				mCurSkeleton.applyConstraints(deltaTime);
+				mCurSkeleton.physicalStep(deltaTime);
 			}
 		}
 	}

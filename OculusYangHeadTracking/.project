@@ -25,5 +25,10 @@
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/yangPC/src_pc</locationURI>
 		</link>
+		<link>
+			<name>libs_yang</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/yangPC/lib</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>

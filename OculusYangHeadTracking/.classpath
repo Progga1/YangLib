@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7-32">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="OculusYangHeadTracking/lib"/>
 		</attributes>
@@ -9,23 +9,23 @@
 	<classpathentry kind="src" path="src_yanglib"/>
 	<classpathentry kind="src" path="src_yangpc"/>
 	<classpathentry kind="lib" path="lib/JRift.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/gluegen-rt-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/gluegen-rt-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/gluegen-rt-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/gluegen-rt-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/gluegen-rt-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/gluegen.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl-all-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl-all-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl-all-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl-all-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl-all-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl.all-mobile.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl.all-noawt.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/jogl.all.jar"/>
-	<classpathentry kind="lib" path="lib/opengl/swt.jar"/>
-	<classpathentry kind="lib" path="lib/Jama-1.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/vecmath.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/gluegen-rt-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/gluegen-rt-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/gluegen-rt-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/gluegen.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl-all-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl-all-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl-all-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl-all-natives-windows-i586.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all-mobile.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all-noawt.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all.jar"/>
+	<classpathentry kind="lib" path="libs_yang/opengl/swt.jar"/>
+	<classpathentry kind="lib" path="libs_yang/Jama-1.0.2.jar"/>
+	<classpathentry kind="lib" path="libs_yang/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

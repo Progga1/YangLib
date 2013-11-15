@@ -33,6 +33,7 @@ public class Joint {
 	public boolean mEnabled;
 	public float mInitialX,mInitialY,mInitialZ;
 	public Quaternion mOrientation = null;
+	public boolean mNoAnimationForce = false;
 
 	//State
 	public float mForceX,mForceY,mForceZ;
