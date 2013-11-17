@@ -8,20 +8,20 @@ import yang.physics.massaggregation.elements.JointNormalConstraint;
 import yang.util.Util;
 
 
-public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
+public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 
 	public final static float PI2 = (float)Math.PI/2;
 
-	public AnglePose2D(float[] angles) {
+	public AnglePosture2D(float[] angles) {
 		super(angles);
 	}
 
-	public AnglePose2D() {
+	public AnglePosture2D() {
 		super();
 	}
 
 	@Override
-	public void applyPose(CartoonSkeleton2D skeleton,AnglePose2D interpolationPose,float weight) {
+	public void applyPose(CartoonSkeleton2D skeleton,AnglePosture2D interpolationPose,float weight) {
 		int c = 0;
 		final float dWeight = 1-weight;
 		skeleton.mCurrentPose = this;
@@ -149,7 +149,7 @@ public class AnglePose2D extends Posture<AnglePose2D,CartoonSkeleton2D>{
 	}
 
 	@Override
-	public void applyForceBased(CartoonSkeleton2D skeleton, AnglePose2D interpolationPose, float weight) {
+	public void applyForceBased(CartoonSkeleton2D skeleton, AnglePosture2D interpolationPose, float weight) {
 		// TODO Auto-generated method stub
 
 	}

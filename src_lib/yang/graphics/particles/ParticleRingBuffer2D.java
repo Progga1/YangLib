@@ -46,7 +46,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 						}
 					}
 					vertexBuffer.beginQuad(false);
-					vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*mCelShadingX*particle.mScaleX, uScale*mCelShadingY*particle.mScaleY, particle.mPosX, particle.mPosY, 0, particle.mRotation);
+					vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*mCelShadingX*particle.mScaleX, uScale*mCelShadingY*particle.mScaleY, particle.mPosX, particle.mPosY, particle.mPosZ, particle.mRotation);
 					vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, particle.mTextureCoordinates.mAppliedCoordinates);
 					vertexBuffer.putArray(DefaultGraphics.ID_COLORS, DefaultGraphics.RECT_BLACK);
 					vertexBuffer.putArray(DefaultGraphics.ID_SUPPDATA, DefaultGraphics.RECT_BLACK);
@@ -79,7 +79,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 					}
 				}
 				vertexBuffer.beginQuad(false);
-				vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*particle.mScaleX, uScale*particle.mScaleY, particle.mPosX, particle.mPosY, 0, particle.mRotation);
+				vertexBuffer.putRotatedRect3D(DefaultGraphics.ID_POSITIONS, uScale*particle.mScaleX, uScale*particle.mScaleY, particle.mPosX, particle.mPosY, particle.mPosZ, particle.mRotation);
 				vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, particle.mTextureCoordinates.mAppliedCoordinates);
 				vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mGraphics.mCurColor, 4);
 				vertexBuffer.putArray(DefaultGraphics.ID_SUPPDATA, DefaultGraphics.RECT_BLACK);
