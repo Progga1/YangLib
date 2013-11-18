@@ -192,10 +192,14 @@ public class Util {
 
 	public static String getClassName(Object object,String ignoreEnding) {
 		final String name = object.getClass().getName();
-		final int start = name.lastIndexOf(".")+1;
+
 		int end = name.indexOf("$");
 		if(end<0)
 			end = name.length();
+		else{
+			return name.split("\\$")[1];
+		}
+		final int start = name.lastIndexOf(".")+1;
 		String result = name.substring(start,end);
 		if(result.endsWith(ignoreEnding))
 			result = result.substring(0,result.length()-ignoreEnding.length());
@@ -204,10 +208,13 @@ public class Util {
 
 	public static String getClassName(Object object) {
 		final String name = object.getClass().getName();
-		final int start = name.lastIndexOf(".")+1;
 		int end = name.indexOf("$");
 		if(end<0)
 			end = name.length();
+		else{
+			return name.split("\\$")[1];
+		}
+		final int start = name.lastIndexOf(".")+1;
 		return name.substring(start,end);
 	}
 

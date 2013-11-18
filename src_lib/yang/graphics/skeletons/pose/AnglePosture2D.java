@@ -144,11 +144,6 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 	}
 
 	@Override
-	public String getClassName() {
-		return "AnglePose2D";
-	}
-
-	@Override
 	public void applyForceBased(CartoonSkeleton2D skeleton, AnglePosture2D interpolationPose, float weight) {
 		// TODO Auto-generated method stub
 

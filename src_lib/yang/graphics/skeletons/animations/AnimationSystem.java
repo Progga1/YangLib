@@ -7,14 +7,20 @@ public class AnimationSystem<CarrierType extends SkeletonCarrier,AnimationType e
 
 	public YangList<AnimationType> mAnimations;
 	protected AnimationType mStartNode;
-	
+
 	protected AnimationSystem(AnimationType startNode) {
 		mStartNode = startNode;
 		mAnimations = new YangList<AnimationType>();
 	}
-	
+
 	public AnimationType getStartNode() {
 		return mStartNode;
 	}
-	
+
+	protected void addAnimations(AnimationType... animations) {
+		for(final AnimationType animation:animations) {
+			mAnimations.add(animation);
+		}
+	}
+
 }
