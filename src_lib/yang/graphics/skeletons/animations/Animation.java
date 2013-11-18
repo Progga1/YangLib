@@ -21,6 +21,7 @@ public class Animation<CarrierType> {
 	public boolean mAutoSetAnimationTime = true;
 	public boolean mBlocking = false;
 	public int mKeyFrameCount = -1;
+	public int mTags = 0;
 
 	protected void startVisuals(CarrierType body) { }
 	public void startPhysics(CarrierType body) { }
