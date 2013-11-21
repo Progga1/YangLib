@@ -185,4 +185,10 @@ public class Skeleton3DEditing {
 		return mSkeleton.mJoints;
 	}
 
+	public void setPrevPositions() {
+		for(final JointEditData jointData:mJointData) {
+			jointData.setPrevPos();
+		}
+	}
+
 }

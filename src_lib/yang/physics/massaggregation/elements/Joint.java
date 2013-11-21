@@ -41,6 +41,7 @@ public class Joint {
 	public float mPosX, mPosY, mPosZ;
 	public Point3f mDragDelay = new Point3f();
 	public Point3f mDragTo = new Point3f();
+	public Vector3f mDragVec = new Vector3f();
 	public boolean mDragging;
 	public float mParentCurAngle;
 
@@ -162,7 +163,7 @@ public class Joint {
 		if(dist>0) {
 			float fac;
 			if(mSkeleton.m3D)
-				fac = TOWARDS_FACTOR;//TODO 3D
+				fac = TOWARDS_FACTOR * factor;//TODO 3D
 			else
 				fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR * mPositionForceFactor * factor;
 			mForceX += fac * dX;
@@ -240,6 +241,7 @@ public class Joint {
 	public void drag(float deltaX,float deltaY,float deltaZ) {
 		final float fac = 1f/mSkeleton.mCarrier.getScale();
 		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
+		mDragVec.set(deltaX*fac,deltaY*fac,deltaZ*fac);
 	}
 
 	public void drag(float deltaX,float deltaY) {
@@ -322,9 +324,16 @@ public class Joint {
 		mPosY = y;
 	}
 
+	public void setPos(float x,float y,float z) {
+		mPosX = x;
+		mPosY = y;
+		mPosZ = z;
+	}
+
 	public void setPos(Joint joint) {
 		mPosX = joint.mPosX;
 		mPosY = joint.mPosY;
+		mPosZ = joint.mPosZ;
 	}
 
 	public void setPosIK(float posX, float posY) {

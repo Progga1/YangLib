@@ -74,7 +74,6 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 			if(!mCurrentAnimation.mInterpolate) {
 				mCurrentPrevFrame.mPose.applyPose(mSkeleton);
 			}else{
-
 				final KeyFrame prevFrame = mCurrentPrevFrame;
 				final KeyFrame nextFrame = mCurrentNextFrame;
 

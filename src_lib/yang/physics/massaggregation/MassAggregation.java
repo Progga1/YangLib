@@ -195,6 +195,10 @@ public class MassAggregation {
 				}
 			}
 
+			if(mForceCallback!=null) {
+				mForceCallback.preApply(uDeltaTime);
+			}
+
 			//Apply constraints
 			if(mConstraintsActivated)
 				for(final Constraint constraint:mConstraints) {
@@ -206,9 +210,7 @@ public class MassAggregation {
 					joint.applyConstraint();
 				}
 
-			if(mForceCallback!=null) {
-				mForceCallback.preApply(uDeltaTime);
-			}
+
 
 			for(final Joint joint:mJoints) {
 				joint.physicalStep(uDeltaTime);

@@ -22,6 +22,7 @@ public class Animation<CarrierType> {
 	public boolean mBlocking = false;
 	public int mKeyFrameCount = -1;
 	public int mTags = 0;
+	public boolean mDebug = false;
 
 	protected void startVisuals(CarrierType body) { }
 	public void startPhysics(CarrierType body) { }
