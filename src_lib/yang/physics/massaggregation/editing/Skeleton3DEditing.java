@@ -85,7 +85,7 @@ public class Skeleton3DEditing {
 		for(final Joint joint:mSkeleton.mJoints) {
 			final JointEditData data = mJointData[joint.mId];
 
-			if(data.mSelectionIndex>=0)
+			if(data.mSelectionGroup>=0)
 				mGraphics3D.setColor(selectedColor);
 			else if(joint==mHoverJoint)
 				mGraphics3D.setColor(hoverColor);
@@ -139,24 +139,45 @@ public class Skeleton3DEditing {
 		return mJointData[joint.mId];
 	}
 
-	public void setJointSelected(Joint joint,int index) {
+	public void setJointSelected(Joint joint,int group,int depth) {
 		final JointEditData data = mJointData[joint.mId];
 //		if(index>=0)
 //			mSelection[index] = data;
 //		else if(data.mSelectionIndex>=0)
 //			mSelection[data.mSelectionIndex] = null;
-		joint.endDrag();
-		data.mSelectionIndex = index;
+		if(data.mSelectionDepth<=depth) {
+			if(group<0) {
+				data.mSelectionGroup = -1;
+				data.mSelectionDepth = -1;
+				joint.endDrag();
+			}else{
+				data.mSelectionGroup = group;
+				data.mSelectionDepth = depth;
+				joint.startDrag();
+			}
+		}
+		if(--depth>0) {
+			for(Joint child:joint.mChildren)
+				setJointSelected(child,group,depth);
+		}
+	}
+
+	public void setJointSelected(Joint joint,int group,boolean recursive) {
+		setJointSelected(joint,group,512);
+	}
+
+	public void setJointSelected(Joint joint,int group) {
+		setJointSelected(joint,group,false);
 	}
 
 	public void unselectJoint(Joint joint) {
 		setJointSelected(joint,-1);
 	}
 
-	public void unselectJoint(int index) {
+	public void unselectJointGroup(int group) {
 		for(final Joint joint:mSkeleton.mJoints) {
 			final JointEditData data = mJointData[joint.mId];
-			if(data.mSelectionIndex==index)
+			if(data.mSelectionGroup==group)
 				unselectJoint(joint);
 		}
 	}
@@ -169,13 +190,13 @@ public class Skeleton3DEditing {
 	}
 
 	public boolean isSelected(Joint joint) {
-		return mJointData[joint.mId].mSelectionIndex>=0;
+		return mJointData[joint.mId].mSelectionGroup>=0;
 	}
 
 	public int getSelectionCount() {
 		int result = 0;
 		for(final Joint joint:mSkeleton.mJoints) {
-			if(mJointData[joint.mId].mSelectionIndex>=0)
+			if(mJointData[joint.mId].mSelectionGroup>=0)
 				result++;
 		}
 		return result;

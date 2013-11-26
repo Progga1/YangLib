@@ -108,6 +108,14 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 
 	}
 
+	protected void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		return false;

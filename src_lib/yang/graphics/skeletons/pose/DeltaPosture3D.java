@@ -45,7 +45,7 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 									jointData.mPrevPosX + mData[c]*fac,
 									jointData.mPrevPosY + mData[c+1]*fac,
 									jointData.mPrevPosZ + mData[c+2]*fac,
-									10);
+									8);
 						}
 					}
 				}

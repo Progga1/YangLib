@@ -55,7 +55,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	protected boolean mCurIsPerspective;
 	private float mCurNear,mCurFar,mCurFovy,mCurZoom;
-	public float mSensorZ = 0.1f;
+	public float mSensorZ = 0.05f;
 
 
 	//Temp vars

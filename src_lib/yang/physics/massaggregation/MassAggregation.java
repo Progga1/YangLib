@@ -63,8 +63,8 @@ public class MassAggregation {
 		mConstantForceX = 0;
 		mConstantForceY = 0;
 		mConstantForceZ = 0;
-		mLimitForceInwards = 20f;
-		mLimitForceOutwards = 10f;
+		mLimitForceInwards = 40f;
+		mLimitForceOutwards = 20f;
 		mLowerLimit = Float.MIN_VALUE;
 	}
 

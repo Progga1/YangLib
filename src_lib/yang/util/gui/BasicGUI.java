@@ -5,6 +5,9 @@ import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.listeners.RawEventListener;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.font.DrawableAnchoredLines;
+import yang.graphics.font.DrawableString;
+import yang.graphics.font.StringProperties;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.model.callback.Drawable;
@@ -290,6 +293,18 @@ public class BasicGUI implements RawEventListener,Drawable {
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		return handleEvent(event)!=null;
+	}
+
+	public static DrawableString createCaptionString(String string,StringProperties properties) {
+		return new DrawableAnchoredLines(string).setProperties(properties).setConstant();
+	}
+
+	public static DrawableString[] createCaptionStringArray(String[] strings,StringProperties properties) {
+		DrawableString[] result = new DrawableString[strings.length];
+		for(int i=0;i<result.length;i++) {
+			result[i] = createCaptionString(strings[i],properties);
+		}
+		return result;
 	}
 
 }

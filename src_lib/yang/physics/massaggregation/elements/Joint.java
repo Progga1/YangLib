@@ -34,12 +34,13 @@ public class Joint {
 	public float mInitialX,mInitialY,mInitialZ;
 	public Quaternion mOrientation = null;
 	public boolean mNoAnimationForce = false;
+	public float mDragDelay = 0.05f;
 
 	//State
 	public float mForceX,mForceY,mForceZ;
 	public float mVelX,mVelY,mVelZ;
 	public float mPosX, mPosY, mPosZ;
-	public Point3f mDragDelay = new Point3f();
+	public Point3f mDragDelayed = new Point3f();
 	public Point3f mDragTo = new Point3f();
 	public Vector3f mDragVec = new Vector3f();
 	public boolean mDragging;
@@ -214,8 +215,8 @@ public class Joint {
 			}
 
 			if(mDragging) {
-				mDragDelay.lerp(mDragTo,0.02f);
-				addPositionForce(mDragDelay.mX,mDragDelay.mY,mDragDelay.mZ,1);
+				mDragDelayed.lerp(mDragTo,mDragDelay);
+				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,1);
 			}
 
 			mVelX += mForceX/mMass * mForceFactor * deltaTime;
@@ -233,14 +234,16 @@ public class Joint {
 	}
 
 	public void startDrag() {
-		mDragDelay.set(mPosX,mPosY,mPosZ);
-		mDragTo.set(mDragDelay);
+		mDragDelayed.set(mPosX,mPosY,mPosZ);
+		mDragTo.set(mDragDelayed);
 		mDragging = true;
 	}
 
 	public void drag(float deltaX,float deltaY,float deltaZ) {
 		final float fac = 1f/mSkeleton.mCarrier.getScale();
 		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
+		if(mDragTo.mY<mSkeleton.mLowerLimit)
+			mDragTo.mY = mSkeleton.mLowerLimit;
 		mDragVec.set(deltaX*fac,deltaY*fac,deltaZ*fac);
 	}
 
@@ -436,6 +439,21 @@ public class Joint {
 		return mAnimate;
 	}
 
-
+//	protected void setDragRec(Vector3f dragVector) {
+//		this.drag(dragVector);
+//		for(Joint child:mChildren) {
+//			if(!child.mDragging)
+//				child.startDrag();
+//			child.setDragRec(dragVector);
+//		}
+//	}
+//
+//	public void setChildrenDrag() {
+//		for(Joint child:mChildren) {
+//			if(!child.mDragging)
+//				child.startDrag();
+//			child.setDragRec(mDragVec);
+//		}
+//	}
 
 }

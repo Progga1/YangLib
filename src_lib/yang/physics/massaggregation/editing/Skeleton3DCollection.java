@@ -98,14 +98,14 @@ public class Skeleton3DCollection {
 		return count;
 	}
 
-	public void setJointSelected(Skeleton3DEditing skeleton, Joint joint, int index) {
-		skeleton.setJointSelected(joint, index);
+	public void setJointSelected(Skeleton3DEditing skeleton, Joint joint, int index,boolean recursive) {
+		skeleton.setJointSelected(joint, index, recursive);
 		mSelectedSkeletons[index] = skeleton;
 	}
 
 	public void unselectJoint(int index) {
 		if(mSelectedSkeletons[index]!=null) {
-			mSelectedSkeletons[index].unselectJoint(index);
+			mSelectedSkeletons[index].unselectJointGroup(index);
 			mSelectedSkeletons[index] = null;
 		}
 	}
