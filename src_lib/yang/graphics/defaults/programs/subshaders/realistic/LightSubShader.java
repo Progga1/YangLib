@@ -12,12 +12,12 @@ public class LightSubShader extends SubShader {
 	public int mLightDiffuseHandle;
 	public int mLightSpecularHandle;
 	public LightProperties mLightProperties;
-	public float mAddValue = 0.4f;
-	
+	public float mAddValue = 0.8f;
+
 	public LightSubShader(LightProperties lightProperties) {
 		mLightProperties = lightProperties;
 	}
-	
+
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("vec3","lightDir");
@@ -31,16 +31,16 @@ public class LightSubShader extends SubShader {
 		mLightDiffuseHandle = program.getUniformLocation("lightDiffuse");
 	}
 
-	
+
 	@Override
 	public void passData(GLProgram program) {
 		program.setUniform3f(mLightDirHandle, mLightProperties.mDirection);
 		program.setUniform3f(mLightDiffuseHandle, mLightProperties.mDiffuse.mValues);
 	}
-	
+
 	@Override
 	public boolean passesData() {
 		return mLightProperties!=null;
 	}
-	
+
 }

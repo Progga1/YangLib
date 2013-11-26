@@ -16,7 +16,7 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
-import yang.graphics.skeletons.defaults.human.HumanSkeletonCreator3D;
+import yang.graphics.skeletons.defaults.human.HumanoidSkeletonCreator3D;
 import yang.graphics.skeletons.defaults.human.HumanoidSkeletonProperties;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.physics.massaggregation.MassAggregation;
@@ -28,7 +28,7 @@ import yang.samples.statesystem.SampleStateCameraControl;
 public class Skeleton3DSampleState extends SampleStateCameraControl {
 
 	public Skeleton3DEditing mSkeleton3D;
-	public HumanSkeletonCreator3D mSkeletonCreator;
+	public HumanoidSkeletonCreator3D mSkeletonCreator;
 	public MassAggregation mSkeleton;
 	public ShaderPermutations mShader;
 	private LightProperties mLight;
@@ -37,7 +37,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 	@Override
 	public void initGraphics() {
 		super.initGraphics();
-		mSkeletonCreator = new HumanSkeletonCreator3D();
+		mSkeletonCreator = new HumanoidSkeletonCreator3D();
 		mSkeleton = mSkeletonCreator.create(new HumanoidSkeletonProperties());
 		mSkeleton3D = new Skeleton3DEditing(mGraphics3D,mSkeleton).initLines();
 		mLight = new LightProperties();

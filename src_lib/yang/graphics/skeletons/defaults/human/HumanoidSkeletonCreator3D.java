@@ -4,7 +4,7 @@ import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Bone3D;
 import yang.physics.massaggregation.elements.Joint;
 
-public class HumanSkeletonCreator3D {
+public class HumanoidSkeletonCreator3D {
 
 	public Joint mBreastJoint;
 	public Joint mHeadJoint;
@@ -46,7 +46,7 @@ public class HumanSkeletonCreator3D {
 
 	public MassAggregation mSkeleton;
 
-	public HumanSkeletonCreator3D() {
+	public HumanoidSkeletonCreator3D() {
 
 	}
 
@@ -59,6 +59,7 @@ public class HumanSkeletonCreator3D {
 		final float locScaleX = 1;
 		final float locScaleY = 1;
 		final float smallRad = 0.05f*locScaleX;
+		final float medRad = 0.09f*locScaleX;
 		final float neckY = properties.mBreastY*properties.mHeight;
 		final float hipsY = properties.mHeight*properties.mHipsY;
 		final float kneeY = hipsY*0.5f;
@@ -78,14 +79,14 @@ public class HumanSkeletonCreator3D {
 		mHipJoint = mSkeleton.addJoint("Hip",mBreastJoint, 0,hipsY,hipsZ);
 		mLeftLegJoint = mSkeleton.addJoint("LeftLeg",mHipJoint, legsX,hipsY,hipsZ).setRadius(smallRad);
 		mRightLegJoint = mSkeleton.addJoint("RightLeg",mHipJoint, -legsX,hipsY,hipsZ).setRadius(smallRad);
-		mLeftKneeJoint = mSkeleton.addJoint("LeftKnee",mLeftLegJoint, legsX,kneeY,hipsZ);
-		mRightKneeJoint = mSkeleton.addJoint("RightKnee",mRightLegJoint, -legsX, kneeY,hipsZ);
+		mLeftKneeJoint = mSkeleton.addJoint("LeftKnee",mLeftLegJoint, legsX,kneeY,hipsZ).setRadius(medRad);
+		mRightKneeJoint = mSkeleton.addJoint("RightKnee",mRightLegJoint, -legsX, kneeY,hipsZ).setRadius(medRad);
 		mLeftFootJoint = mSkeleton.addJoint("LeftFoot",mLeftKneeJoint, legsX,0,hipsZ);
 		mRightFootJoint = mSkeleton.addJoint("RightFoot",mRightKneeJoint, -legsX,0,hipsZ);
 		mLeftShoulderJoint = mSkeleton.addJoint("LeftShoulder",mBreastJoint, shoulderX,shoulderY,breastZ).setRadius(smallRad);
 		mRightShoulderJoint = mSkeleton.addJoint("RightShoulder",mBreastJoint, -shoulderX,shoulderY,breastZ).setRadius(smallRad);
-		mLeftElbowJoint = mSkeleton.addJoint("LeftElbow",mLeftShoulderJoint, armX,elbowY,breastZ);
-		mRightElbowJoint = mSkeleton.addJoint("RightElbow",mRightShoulderJoint, -armX,elbowY,breastZ);
+		mLeftElbowJoint = mSkeleton.addJoint("LeftElbow",mLeftShoulderJoint, armX,elbowY,breastZ).setRadius(medRad);
+		mRightElbowJoint = mSkeleton.addJoint("RightElbow",mRightShoulderJoint, -armX,elbowY,breastZ).setRadius(medRad);
 		mLeftHandJoint = mSkeleton.addJoint("LeftHand",mLeftElbowJoint, armX, handY, breastZ);
 		mRightHandJoint = mSkeleton.addJoint("RightHand",mRightElbowJoint, -armX, handY, breastZ);
 
