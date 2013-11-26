@@ -295,8 +295,12 @@ public class BasicGUI implements RawEventListener,Drawable {
 		return handleEvent(event)!=null;
 	}
 
+	public static DrawableString createCaptionString(String string,StringProperties properties,float anchor) {
+		return new DrawableAnchoredLines(string).setProperties(properties).setHorizontalAnchor(anchor).setConstant();
+	}
+
 	public static DrawableString createCaptionString(String string,StringProperties properties) {
-		return new DrawableAnchoredLines(string).setProperties(properties).setConstant();
+		return createCaptionString(string,properties,DrawableString.DEFAULT_HORIZONTAL_ANCHOR);
 	}
 
 	public static DrawableString[] createCaptionStringArray(String[] strings,StringProperties properties) {

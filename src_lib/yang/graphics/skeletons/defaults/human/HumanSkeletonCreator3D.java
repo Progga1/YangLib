@@ -50,7 +50,7 @@ public class HumanSkeletonCreator3D {
 
 	}
 
-	public MassAggregation create(HumanSkeletonProperties properties) {
+	public MassAggregation create(HumanoidSkeletonProperties properties) {
 
 		if(mSkeleton==null) {
 			mSkeleton = new MassAggregation();
@@ -59,8 +59,8 @@ public class HumanSkeletonCreator3D {
 		final float locScaleX = 1;
 		final float locScaleY = 1;
 		final float smallRad = 0.05f*locScaleX;
-		final float neckY = (1-properties.mHeadRatio)*properties.mHeight;
-		final float hipsY = properties.mHeight*properties.mHipRatio;
+		final float neckY = properties.mBreastY*properties.mHeight;
+		final float hipsY = properties.mHeight*properties.mHipsY;
 		final float kneeY = hipsY*0.5f;
 		final float legsX = properties.mHipWidth*0.5f;
 		final float shoulderX = properties.mShoulderWidth*0.5f;
@@ -71,21 +71,23 @@ public class HumanSkeletonCreator3D {
 
 		mSkeleton.mDefaultJointRadius = 0.1f*locScaleX;
 
-		mBreastJoint = mSkeleton.addJoint("Breast",null, 0,neckY,0);
-		mHeadJoint = mSkeleton.addJoint("Head",mBreastJoint, 0,2*locScaleY,0).setRadius(0.15f*locScaleX);
-		mHipJoint = mSkeleton.addJoint("Hip",mBreastJoint, 0,hipsY,0);
-		mLeftLegJoint = mSkeleton.addJoint("LeftLeg",mHipJoint, legsX, hipsY,0).setRadius(smallRad);
-		mRightLegJoint = mSkeleton.addJoint("RightLeg",mHipJoint, -legsX, hipsY,0).setRadius(smallRad);
-		mLeftKneeJoint = mSkeleton.addJoint("LeftKnee",mLeftLegJoint, legsX, kneeY,0);
-		mRightKneeJoint = mSkeleton.addJoint("RightKnee",mRightLegJoint, -legsX, kneeY,0);
-		mLeftFootJoint = mSkeleton.addJoint("LeftFoot",mLeftKneeJoint, legsX,0,0);
-		mRightFootJoint = mSkeleton.addJoint("RightFoot",mRightKneeJoint, -legsX,0,0);
-		mLeftShoulderJoint = mSkeleton.addJoint("LeftShoulder",mBreastJoint, shoulderX,shoulderY,0).setRadius(smallRad);
-		mRightShoulderJoint = mSkeleton.addJoint("RightShoulder",mBreastJoint, -shoulderX,shoulderY,0).setRadius(smallRad);
-		mLeftElbowJoint = mSkeleton.addJoint("LeftElbow",mLeftShoulderJoint, armX,elbowY,0);
-		mRightElbowJoint = mSkeleton.addJoint("RightElbow",mRightShoulderJoint, -armX,elbowY,0);
-		mLeftHandJoint = mSkeleton.addJoint("LeftHand",mLeftElbowJoint, armX, handY, 0);
-		mRightHandJoint = mSkeleton.addJoint("RightHand",mRightElbowJoint, -armX, handY, 0);
+		float breastZ = properties.mBreastZ;
+		float hipsZ = properties.mHipsZ;
+		mBreastJoint = mSkeleton.addJoint("Breast",null, 0,neckY,breastZ);
+		mHeadJoint = mSkeleton.addJoint("Head",mBreastJoint, 0,properties.mHeight*locScaleY,properties.mHeadZ).setRadius(0.15f*locScaleX);
+		mHipJoint = mSkeleton.addJoint("Hip",mBreastJoint, 0,hipsY,hipsZ);
+		mLeftLegJoint = mSkeleton.addJoint("LeftLeg",mHipJoint, legsX,hipsY,hipsZ).setRadius(smallRad);
+		mRightLegJoint = mSkeleton.addJoint("RightLeg",mHipJoint, -legsX,hipsY,hipsZ).setRadius(smallRad);
+		mLeftKneeJoint = mSkeleton.addJoint("LeftKnee",mLeftLegJoint, legsX,kneeY,hipsZ);
+		mRightKneeJoint = mSkeleton.addJoint("RightKnee",mRightLegJoint, -legsX, kneeY,hipsZ);
+		mLeftFootJoint = mSkeleton.addJoint("LeftFoot",mLeftKneeJoint, legsX,0,hipsZ);
+		mRightFootJoint = mSkeleton.addJoint("RightFoot",mRightKneeJoint, -legsX,0,hipsZ);
+		mLeftShoulderJoint = mSkeleton.addJoint("LeftShoulder",mBreastJoint, shoulderX,shoulderY,breastZ).setRadius(smallRad);
+		mRightShoulderJoint = mSkeleton.addJoint("RightShoulder",mBreastJoint, -shoulderX,shoulderY,breastZ).setRadius(smallRad);
+		mLeftElbowJoint = mSkeleton.addJoint("LeftElbow",mLeftShoulderJoint, armX,elbowY,breastZ);
+		mRightElbowJoint = mSkeleton.addJoint("RightElbow",mRightShoulderJoint, -armX,elbowY,breastZ);
+		mLeftHandJoint = mSkeleton.addJoint("LeftHand",mLeftElbowJoint, armX, handY, breastZ);
+		mRightHandJoint = mSkeleton.addJoint("RightHand",mRightElbowJoint, -armX, handY, breastZ);
 
 		mSkeleton.mDefaultBoneSpring = 10;
 		mBodyBone = mSkeleton.addSpringBone(new Bone3D("Body",mBreastJoint,mHipJoint));
@@ -109,7 +111,7 @@ public class HumanSkeletonCreator3D {
 		return mSkeleton;
 	}
 
-	public MassAggregation create(MassAggregation target, HumanSkeletonProperties properties) {
+	public MassAggregation create(MassAggregation target, HumanoidSkeletonProperties properties) {
 		mSkeleton = target;
 		create(properties);
 		return mSkeleton;

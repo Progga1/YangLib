@@ -5,6 +5,7 @@ import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
 import yang.graphics.skeletons.pose.Posture;
 import yang.math.objects.Point3f;
+import yang.math.objects.matrix.YangMatrix;
 import yang.model.Rect;
 import yang.physics.massaggregation.constraints.Constraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
@@ -63,8 +64,8 @@ public class MassAggregation {
 		mConstantForceX = 0;
 		mConstantForceY = 0;
 		mConstantForceZ = 0;
-		mLimitForceInwards = 40f;
-		mLimitForceOutwards = 20f;
+		mLimitForceInwards = 100f;
+		mLimitForceOutwards = 50f;
 		mLowerLimit = Float.MIN_VALUE;
 	}
 
@@ -257,6 +258,12 @@ public class MassAggregation {
 	public void refreshGeometry() {
 		for(final JointConnection connection:mBones) {
 			connection.refreshGeometry();
+		}
+	}
+
+	public void applyTransform(YangMatrix transform) {
+		for(Joint joint:mJoints) {
+			joint.applyTransform(transform);
 		}
 	}
 

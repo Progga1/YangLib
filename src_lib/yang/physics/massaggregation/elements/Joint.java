@@ -5,6 +5,7 @@ import yang.math.Geometry;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
+import yang.math.objects.matrix.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.util.YangList;
 
@@ -437,6 +438,16 @@ public class Joint {
 
 	public boolean isAnimated() {
 		return mAnimate;
+	}
+
+	public void applyTransform(YangMatrix transform) {
+		float[] matrix = transform.mValues;
+		float x = mPosX;
+		float y = mPosY;
+		float z = mPosZ;
+		mPosX = matrix[0]*x+matrix[4]*y+matrix[8]*z+matrix[12];
+		mPosY = matrix[1]*x+matrix[5]*y+matrix[9]*z+matrix[13];
+		mPosZ = matrix[2]*x+matrix[6]*y+matrix[10]*z+matrix[14];
 	}
 
 //	protected void setDragRec(Vector3f dragVector) {

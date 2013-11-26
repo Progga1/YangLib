@@ -82,6 +82,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private final TextureRenderTarget[] mRenderTargetStack = new TextureRenderTarget[MAX_NESTED_RENDERTARGETS];
 	private int mRenderTargetStackPos = -1;
 	public float mCameraShiftX = 0;
+	public float mMinForceWireFrameRenderTargetDepth = -1;
 
 	//Matrices
 	public YangMatrixCameraOps mProjScreenTransform;
@@ -633,7 +634,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		ShortBuffer indexBuffer = mCurrentVertexBuffer.mIndexBuffer;
 		indexBuffer.position(bufferStart);
 
-		if(mForceWireFrames) {
+		boolean wireFrames = mForceWireFrames && mRenderTargetStackPos>=mMinForceWireFrameRenderTargetDepth;
+		if(wireFrames) {
 			final int cap = indexBuffer.capacity();
 			if(mWireFrameIndexBuffer==null || mWireFrameIndexBuffer.capacity()<cap*2)
 				mWireFrameIndexBuffer = ByteBuffer.allocateDirect(cap*2*2).order(ByteOrder.nativeOrder()).asShortBuffer();
@@ -656,7 +658,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			vertexCount = vertexCount*2;
 		}
 		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
-			drawDefaultVertices(bufferStart,vertexCount,mForceWireFrames,indexBuffer);
+			drawDefaultVertices(bufferStart,vertexCount, wireFrames,indexBuffer);
 		}
 	}
 

@@ -456,7 +456,7 @@ public class DrawableString extends FixedString {
 	public void draw(float x,float y,float lineHeight) {
 		interMatrix2.loadIdentity();
 		interMatrix2.translate(x, y);
-		interMatrix2.scale(lineHeight*mSize);
+		interMatrix2.scale(mProperties.mLineHeight*lineHeight*mSize);
 		draw(interMatrix2);
 	}
 
