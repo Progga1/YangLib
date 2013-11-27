@@ -145,7 +145,7 @@ public class Skeleton3DEditing {
 //			mSelection[index] = data;
 //		else if(data.mSelectionIndex>=0)
 //			mSelection[data.mSelectionIndex] = null;
-		if(data.mSelectionDepth<=depth) {
+		if(data.mSelectionDepth==-1 || data.mSelectionDepth>=depth) {
 			if(group<0) {
 				data.mSelectionGroup = -1;
 				data.mSelectionDepth = -1;
@@ -156,14 +156,14 @@ public class Skeleton3DEditing {
 				joint.startDrag();
 			}
 		}
-		if(--depth>0) {
+		//if(++depth>0) {
 			for(Joint child:joint.mChildren)
-				setJointSelected(child,group,depth);
-		}
+				setJointSelected(child,group,depth+1);
+		//}
 	}
 
 	public void setJointSelected(Joint joint,int group,boolean recursive) {
-		setJointSelected(joint,group,512);
+		setJointSelected(joint,group,0);
 	}
 
 	public void setJointSelected(Joint joint,int group) {

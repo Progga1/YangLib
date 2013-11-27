@@ -313,9 +313,16 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 
 	public void multColor(float brightness) {
-		mCurColor[0] *= brightness;
-		mCurColor[1] *= brightness;
-		mCurColor[2] *= brightness;
+		if(brightness<1) {
+			mCurColor[0] *= brightness;
+			mCurColor[1] *= brightness;
+			mCurColor[2] *= brightness;
+		}else if(brightness>1) {
+			float b = brightness-1;
+			mCurColor[0] += (1-mCurColor[0])*b;
+			mCurColor[1] += (1-mCurColor[1])*b;
+			mCurColor[2] += (1-mCurColor[2])*b;
+		}
 	}
 
 
