@@ -12,7 +12,8 @@ public class GUIIconDrawer extends GUIComponentDrawPass<GUIInteractiveRectCompon
 	public float mIconSize = 1;
 	public FloatColor mIconColor = FloatColor.WHITE.clone();
 	public FloatColor mIconColorDisabled = FloatColor.WHITE.clone();
-	
+	public boolean mVisible = true;
+
 	public GUIIconDrawer setIcon(TextureCoordinatesQuad texCoords,float iconSize) {
 		mIconTexCoords = texCoords;
 		mIconSize = iconSize;
@@ -21,10 +22,10 @@ public class GUIIconDrawer extends GUIComponentDrawPass<GUIInteractiveRectCompon
 
 	@Override
 	public void draw(DefaultGraphics<?> graphics, GUIInteractiveRectComponent component) {
-		if(mIconTexCoords!=null) {
+		if(mVisible && mIconTexCoords!=null) {
 			graphics.setColor(component.mEnabled?mIconColor.mValues:mIconColorDisabled.mValues);
 			graphics.drawRectCentered(component.getProjCenterX(),component.getProjCenterY(),mIconSize,mIconTexCoords);
 		}
 	}
-	
+
 }

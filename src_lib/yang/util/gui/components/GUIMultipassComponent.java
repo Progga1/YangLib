@@ -41,6 +41,14 @@ public class GUIMultipassComponent extends GUIComponent {
 		return mProjBottom;
 	}
 
+	public float getProjWidth() {
+		return 0;
+	}
+
+	public float getProjHeight() {
+		return 0;
+	}
+
 	public float getProjZ() {
 		return mProjZ;
 	}

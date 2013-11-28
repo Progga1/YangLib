@@ -59,6 +59,7 @@ public class Skeleton3DEditing {
 
 	public void draw() {
 		mGraphics3D.mTranslator.switchZBuffer(true);
+
 		if(mSphereBatch==null) {
 			final SphereCreator sphere = new SphereCreator(mGraphics3D);
 			sphere.beginBatch(SPHERE_VERTICES_X,SPHERE_VERTICES_Y, 1,1);
@@ -71,6 +72,11 @@ public class Skeleton3DEditing {
 //			Joint joint2 = bone.mJoint2;
 //			mLineDrawer.drawLine(joint1.mPosX,joint1.mPosY,joint1.mPosZ, joint2.mPosX,joint2.mPosY,joint2.mPosZ);
 //		}
+
+		mGraphics3D.setGlobalTransformEnabled(true);
+		mGraphics3D.mWorldTransform.loadIdentity();
+		mGraphics3D.mWorldTransform.scale(mSkeleton.mScale);
+
 		mGraphics3D.setWhite();
 		mGraphics3D.mColorFactor[3] *= mAlpha;
 		for(final Joint joint:mSkeleton.mJoints)
@@ -81,7 +87,7 @@ public class Skeleton3DEditing {
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.fillBuffers();
 
-		mGraphics3D.setGlobalTransformEnabled(true);
+
 		for(final Joint joint:mSkeleton.mJoints) {
 			final JointEditData data = mJointData[joint.mId];
 
@@ -93,10 +99,11 @@ public class Skeleton3DEditing {
 				mGraphics3D.setColor(jointColor);
 			mGraphics3D.setColorFactor(mGraphics3D.getCurrentColor());
 			mGraphics3D.mColorFactor[3] *= mAlpha;
-			mGraphics3D.mWorldTransform.loadIdentity();
+			mGraphics3D.mWorldTransform.stackPush();
 			mGraphics3D.mWorldTransform.translate(joint.mPosX,joint.mPosY,joint.mPosZ);
 			mGraphics3D.mWorldTransform.scale(joint.getOutputRadius());
 			mSphereBatch.draw();
+			mGraphics3D.mWorldTransform.stackPop();
 		}
 		mGraphics3D.setGlobalTransformEnabled(false);
 		mGraphics3D.setColorFactor(1);
@@ -106,12 +113,13 @@ public class Skeleton3DEditing {
 		return initLines(16,0.03f);
 	}
 
-	public Joint pickJoint3D(Point3f pickPos,float radiusFactor) {
+	public Joint pickJoint3D(Point3f pickPos,float pickRadius,float radiusFactor) {
 		Joint result = null;
+		tempVec1.set(pickPos.mX/mSkeleton.mScale,pickPos.mY/mSkeleton.mScale,pickPos.mZ/mSkeleton.mScale);
 		float minDist = Float.MAX_VALUE;
 		for(final Joint joint:mSkeleton.mJoints) {
-			final float dist = pickPos.getDistance(joint.mPosX,joint.mPosY,joint.mPosZ);
-			if(dist<minDist && dist<joint.getOutputRadius()*radiusFactor) {
+			final float dist = tempVec1.getDistance(joint.mPosX,joint.mPosY,joint.mPosZ);
+			if(dist<minDist && dist<pickRadius+joint.getOutputRadius()*radiusFactor) {
 				minDist = dist;
 				result = joint;
 			}
@@ -156,14 +164,14 @@ public class Skeleton3DEditing {
 				joint.startDrag();
 			}
 		}
-		//if(++depth>0) {
+		if(depth>-1) {
 			for(Joint child:joint.mChildren)
 				setJointSelected(child,group,depth+1);
-		//}
+		}
 	}
 
 	public void setJointSelected(Joint joint,int group,boolean recursive) {
-		setJointSelected(joint,group,0);
+		setJointSelected(joint,group,recursive?0:-1);
 	}
 
 	public void setJointSelected(Joint joint,int group) {

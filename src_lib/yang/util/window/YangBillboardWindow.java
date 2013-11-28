@@ -39,7 +39,8 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 	}
 
 	public void snap() {
-		mTargetPoint.set(mLookAtPoint);
+		//mTargetPoint.set(mLookAtPoint);
+		mTargetPoint.set(mLookAtPoint.mX,mLookAtPoint.mY*mBetaWeight+mPosition.mY*(1-mBetaWeight),mLookAtPoint.mZ);
 	}
 
 	public void setLookAtPoint(float x,float y,float z) {

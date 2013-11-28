@@ -63,14 +63,20 @@ public class GUITrackbar extends GUIInteractiveRectComponent {
 
 	@Override
 	public void guiPointerDown(float x,float y,GUIPointerEvent event) {
-		if(event.mButton==YangPointerEvent.BUTTON_LEFT)
+		if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
 			setNormValue(event.mX/mWidth);
+			if(mActionListener!=null)
+				mActionListener.onGUIAction(this);
+		}
 	}
 
 	@Override
 	public void guiFocusedDrag(GUIPointerEvent event) {
-		if(event.mButton==YangPointerEvent.BUTTON_LEFT)
+		if(event.mButton==YangPointerEvent.BUTTON_LEFT) {
 			setNormValue(event.mX/mWidth);
+			if(mActionListener!=null)
+				mActionListener.onGUIAction(this);
+		}
 	}
 
 }

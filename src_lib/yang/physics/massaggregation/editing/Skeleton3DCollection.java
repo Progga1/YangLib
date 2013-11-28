@@ -62,9 +62,9 @@ public class Skeleton3DCollection {
 		return null;
 	}
 
-	public Joint pickJoint3D(Point3f position, float radius) {
+	public Joint pickJoint3D(Point3f position,float pickRadius, float radiusFactor) {
 		for(Skeleton3DEditing skeleton:mSkeletons) {
-			Joint result = skeleton.pickJoint3D(position,radius);
+			Joint result = skeleton.pickJoint3D(position,pickRadius,radiusFactor);
 			if(result!=null) {
 				mLastPickedSkeleton = skeleton;
 				return result;

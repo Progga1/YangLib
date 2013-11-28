@@ -2,6 +2,7 @@ package yang.util.gui.components;
 
 import yang.events.YangEventQueue;
 import yang.events.eventtypes.SurfacePointerEvent;
+import yang.events.eventtypes.YangPointerEvent;
 import yang.util.YangList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
@@ -30,7 +31,8 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 //				while((component=iter.previous())!=null) {
 			GUIComponent result = null;
 			for(final GUIInteractiveComponent component:mInteractiveComponents) {
-				if(component.mVisible && component.mEnabled && component.inArea(x, y)) {
+
+				if(component.mVisible && component.mEnabled && component.inArea(x, y)) {//if(pointerEvent.mAction==YangPointerEvent.ACTION_POINTERDOWN)System.out.println(component);
 					int poolPos = BasicGUI.componentPoolPos++;
 					if(BasicGUI.componentPoolPos>=BasicGUI.mGUIEventPool.length) {
 						BasicGUI.componentPoolPos = 0;
@@ -39,7 +41,7 @@ public class GUIContainer extends GUIInteractiveRectComponent {
 					final GUIPointerEvent guiEvent = BasicGUI.mGUIEventPool[poolPos];
 					guiEvent.createFromPointerEvent(pointerEvent, component);
 
-					if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null || pointerEvent.mAction!=SurfacePointerEvent.ACTION_POINTERDRAG) {
+					if(mGUI.mPointerData[pointerEvent.mId].mPressedComponent==null || pointerEvent.mAction!=YangPointerEvent.ACTION_POINTERDRAG) {
 						if(component.mHoverTime<0) {
 							//Pointer enter
 							component.mHoverTime = mGUI.mCurrentTime;

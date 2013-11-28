@@ -36,6 +36,16 @@ public class GUIInteractiveRectComponent extends GUIInteractiveComponent {
 		return mProjBottom+mProjHeight*0.5f;
 	}
 
+	@Override
+	public float getProjWidth() {
+		return mProjWidth;
+	}
+
+	@Override
+	public float getProjHeight() {
+		return mProjHeight;
+	}
+
 	public GUIInteractiveRectComponent setBounds(float left,float top,float right,float bottom) {
 		mPosX = left;
 		mPosY = top;
