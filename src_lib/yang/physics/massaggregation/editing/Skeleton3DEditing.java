@@ -75,14 +75,14 @@ public class Skeleton3DEditing {
 
 		mGraphics3D.setGlobalTransformEnabled(true);
 		mGraphics3D.mWorldTransform.loadIdentity();
-		mGraphics3D.mWorldTransform.scale(mSkeleton.mScale);
+		//mGraphics3D.mWorldTransform.scale(mSkeleton.mScale);
 
 		mGraphics3D.setWhite();
 		mGraphics3D.mColorFactor[3] *= mAlpha;
 		for(final Joint joint:mSkeleton.mJoints)
 			if(joint.mEnabled && joint.mAngleParent!=null){
 				final Joint parent = joint.mAngleParent;
-				mLineDrawer.drawLine(joint.mPosX,joint.mPosY,joint.mPosZ, parent.mPosX,parent.mPosY,parent.mPosZ, joint.getOutputRadius()*0.5f,parent.getOutputRadius()*0.5f);
+				mLineDrawer.drawLine(joint.mWorldPosition, parent.mWorldPosition, joint.getOutputRadius()*0.5f,parent.getOutputRadius()*0.5f);
 			}
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.fillBuffers();
@@ -100,7 +100,7 @@ public class Skeleton3DEditing {
 			mGraphics3D.setColorFactor(mGraphics3D.getCurrentColor());
 			mGraphics3D.mColorFactor[3] *= mAlpha;
 			mGraphics3D.mWorldTransform.stackPush();
-			mGraphics3D.mWorldTransform.translate(joint.mPosX,joint.mPosY,joint.mPosZ);
+			mGraphics3D.mWorldTransform.translate(joint.mWorldPosition);
 			mGraphics3D.mWorldTransform.scale(joint.getOutputRadius());
 			mSphereBatch.draw();
 			mGraphics3D.mWorldTransform.stackPop();
@@ -115,10 +115,10 @@ public class Skeleton3DEditing {
 
 	public Joint pickJoint3D(Point3f pickPos,float pickRadius,float radiusFactor) {
 		Joint result = null;
-		tempVec1.set(pickPos.mX/mSkeleton.mScale,pickPos.mY/mSkeleton.mScale,pickPos.mZ/mSkeleton.mScale);
+		//tempVec1.set(pickPos.mX/mSkeleton.mScale,pickPos.mY/mSkeleton.mScale,pickPos.mZ/mSkeleton.mScale);
 		float minDist = Float.MAX_VALUE;
 		for(final Joint joint:mSkeleton.mJoints) {
-			final float dist = tempVec1.getDistance(joint.mPosX,joint.mPosY,joint.mPosZ);
+			final float dist = pickPos.getDistance(joint.mWorldPosition);
 			if(dist<minDist && dist<pickRadius+joint.getOutputRadius()*radiusFactor) {
 				minDist = dist;
 				result = joint;

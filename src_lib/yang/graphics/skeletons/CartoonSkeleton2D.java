@@ -42,6 +42,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	protected boolean mUpdateTexCoords;
 	protected int mVertexCount;
 	protected float[] mInterColor;
+	public float mShiftX,mShiftY,mShiftZ;
 
 	public CartoonSkeleton2D() {
 		super();
@@ -78,8 +79,12 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		init(graphics,NEUTRAL_CARRIER);
 	}
 
+	public void drawEditing(DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing) {
+		drawEditing(this,skeletonEditing,graphics,mShiftX,mShiftY,mLookDirection);
+	}
+
 	public void drawEditing(SkeletonEditing skeletonEditing) {
-		super.drawEditing(mGraphics,skeletonEditing);
+		drawEditing(mGraphics,skeletonEditing);
 	}
 
 	public void texCoordsIntoRect(float rectLeft,float rectTop,float rectWidth,float rectHeight) {
@@ -319,11 +324,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		mRotAnchorY = 0;
 	}
 
-	@Override
-	public float getJointWorldX(Joint joint) {
-		return mCarrier.getWorldX() + (mShiftX + joint.mPosX*mLookDirection)*mCarrier.getScale()*mScale;
-	}
-
 	protected void finishUpdate() {
 		final int l = mLayersList.size();
 		mLayers = new CartoonBone[l][];
@@ -356,6 +356,26 @@ public class CartoonSkeleton2D extends Skeleton2D {
 
 	public Texture getDefaultTexture(AbstractGFXLoader gfxLoader) {
 		return null;
+	}
+
+	public void setOffset(float x, float y) {
+		mShiftX = x;
+		mShiftY = y;
+	}
+
+	@Override
+	public float getJointWorldX(Joint joint) {
+		return mCarrier.getWorldX() + (mShiftX + joint.mPosX*mLookDirection)*mCarrier.getScale()*mScale;
+	}
+
+	@Override
+	public float getJointWorldY(Joint joint) {
+		return mCarrier.getWorldY() + (mShiftY + joint.mPosY)*mCarrier.getScale()*mScale;
+	}
+
+	@Override
+	public float getJointWorldZ(Joint joint) {
+		return mCarrier.getWorldZ() + (mShiftZ + joint.mPosZ)*mCarrier.getScale()*mScale;
 	}
 
 }

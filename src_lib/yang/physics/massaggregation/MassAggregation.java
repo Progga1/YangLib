@@ -41,12 +41,14 @@ public class MassAggregation {
 	public YangList<Constraint> mConstraints;
 
 	//State
-	public float mShiftX = 0;
-	public float mShiftY = 0;
-	public float mShiftZ = 0;
+//	public float mShiftX = 0;
+//	public float mShiftY = 0;
+//	public float mShiftZ = 0;
+	public float mScale = 1;
+	public YangMatrix mTransform = YangMatrix.IDENTITY.clone();
+	public YangMatrix mInvTransform = YangMatrix.IDENTITY.clone();
 	public boolean mConstraintsActivated;
 	public Posture mCurrentPose;
-	public float mScale = 1;
 	public Point3f mCurJointShift = new Point3f();
 	protected int mCurJointId = 0;
 	public float mCurJointScale = 1;
@@ -71,6 +73,10 @@ public class MassAggregation {
 
 	protected void build() {
 
+	}
+
+	public void refreshTransform() {
+		mTransform.asInverted(mInvTransform.mValues);
 	}
 
 	public void recalculateConstraints() {
@@ -153,20 +159,16 @@ public class MassAggregation {
 	}
 
 	public float getJointWorldX(Joint joint) {
-		return mCarrier.getWorldX() + (mShiftX + joint.mPosX)*mCarrier.getScale()*mScale;
+		//return mCarrier.getWorldX() + (mShiftX + joint.mPosX)*mCarrier.getScale()*mScale;
+		return mCarrier.getWorldX() + joint.mWorldPosition.mX*mCarrier.getScale();
 	}
 
 	public float getJointWorldY(Joint joint) {
-		return mCarrier.getWorldY() + (mShiftY + joint.mPosY)*mCarrier.getScale()*mScale;
+		return mCarrier.getWorldY() + joint.mWorldPosition.mY*mCarrier.getScale();
 	}
 
 	public float getJointWorldZ(Joint joint) {
-		return mCarrier.getWorldZ() + (mShiftZ + joint.mPosZ)*mCarrier.getScale()*mScale;
-	}
-
-	public void setOffset(float x, float y) {
-		mShiftX = x;
-		mShiftY = y;
+		return mCarrier.getWorldZ() + joint.mWorldPosition.mZ*mCarrier.getScale();
 	}
 
 	public float toJointX(float x) {
@@ -211,14 +213,13 @@ public class MassAggregation {
 					joint.applyConstraint();
 				}
 
-
-
 			for(final Joint joint:mJoints) {
 				joint.physicalStep(uDeltaTime);
 			}
 
 		}
 
+		refreshJointWorldPositions();
 	}
 
 	public void reApplyPose() {
@@ -265,6 +266,13 @@ public class MassAggregation {
 		for(Joint joint:mJoints) {
 			joint.applyTransform(transform);
 		}
+	}
+
+	public void refreshJointWorldPositions() {
+		if(mTransform!=null)
+			for(Joint joint:mJoints) {
+				joint.refreshWorldPosition();
+			}
 	}
 
 }

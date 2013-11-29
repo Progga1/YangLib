@@ -21,10 +21,6 @@ public class Skeleton2D extends MassAggregation {
 		mLookDirection = 1;
 	}
 
-	public void drawEditing(DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing) {
-		drawEditing(this,skeletonEditing,graphics,mShiftX,mShiftY,mLookDirection);
-	}
-
 	public static void drawEditing(MassAggregation massAggregation,SkeletonEditing skeletonEditing,DefaultGraphics<?> graphics,float offsetX,float offsetY,int lookDirection) {
 		Joint markedJoint;
 		if(skeletonEditing==null)

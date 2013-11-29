@@ -41,6 +41,7 @@ public class Joint {
 	public float mForceX,mForceY,mForceZ;
 	public float mVelX,mVelY,mVelZ;
 	public float mPosX, mPosY, mPosZ;
+	public Point3f mWorldPosition = new Point3f();
 	public Point3f mDragDelayed = new Point3f();
 	public Point3f mDragTo = new Point3f();
 	public Vector3f mDragVec = new Vector3f();
@@ -232,6 +233,10 @@ public class Joint {
 			mPosY += mVelY * deltaTime;
 			mPosZ += mVelZ * deltaTime;
 		}
+	}
+
+	public void refreshWorldPosition() {
+		mSkeleton.mTransform.apply3D(mPosX*mSkeleton.mScale,mPosY*mSkeleton.mScale,mPosZ*mSkeleton.mScale, mWorldPosition);
 	}
 
 	public void startDrag() {

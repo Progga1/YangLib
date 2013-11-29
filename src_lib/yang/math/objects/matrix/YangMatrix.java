@@ -727,4 +727,11 @@ public class YangMatrix {
 		target.mZ = mValues[14];
 	}
 
+	@Override
+	public YangMatrix clone() {
+		YangMatrix result = new YangMatrix();
+		result.set(this.mValues);
+		return result;
+	}
+
 }
