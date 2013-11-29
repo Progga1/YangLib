@@ -246,7 +246,7 @@ public class Joint {
 	}
 
 	public void drag(float deltaX,float deltaY,float deltaZ) {
-		final float fac = 1f/mSkeleton.mCarrier.getScale();
+		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
 		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
 		if(mDragTo.mY<mSkeleton.mLowerLimit)
 			mDragTo.mY = mSkeleton.mLowerLimit;

@@ -384,6 +384,25 @@ public class YangMatrix {
 		return true;
 	}
 
+	public void asTransposed(float[] target) {
+		target[0] = mValues[0];
+		target[1] = mValues[4];
+		target[2] = mValues[8];
+		target[3] = mValues[12];
+		target[4] = mValues[1];
+		target[5] = mValues[5];
+		target[6] = mValues[9];
+		target[7] = mValues[13];
+		target[8] = mValues[2];
+		target[9] = mValues[6];
+		target[10] = mValues[10];
+		target[11] = mValues[11];
+		target[12] = mValues[3];
+		target[13] = mValues[7];
+		target[14] = mValues[11];
+		target[15] = mValues[15];
+	}
+
 	public boolean refreshInverted() {
 		if(mInverted==null)
 			mInverted = new float[16];

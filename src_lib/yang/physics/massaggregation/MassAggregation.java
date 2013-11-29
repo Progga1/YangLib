@@ -26,6 +26,7 @@ public class MassAggregation {
 	public float mLowerLimit;
 	public float mLimitForceInwards;
 	public float mLimitForceOutwards;
+	public float mSpeedFactor = 1;
 	public int mAccuracy;
 	public boolean m3D;
 	public float mDefaultJointRadius = 0.1f;
@@ -47,6 +48,7 @@ public class MassAggregation {
 	public float mScale = 1;
 	public YangMatrix mTransform = YangMatrix.IDENTITY.clone();
 	public YangMatrix mInvTransform = YangMatrix.IDENTITY.clone();
+	public YangMatrix mVectorTransform = YangMatrix.IDENTITY.clone();
 	public boolean mConstraintsActivated;
 	public Posture mCurrentPose;
 	public Point3f mCurJointShift = new Point3f();
@@ -77,6 +79,7 @@ public class MassAggregation {
 
 	public void refreshTransform() {
 		mTransform.asInverted(mInvTransform.mValues);
+		mInvTransform.asTransposed(mVectorTransform.mValues);
 	}
 
 	public void recalculateConstraints() {
@@ -183,7 +186,8 @@ public class MassAggregation {
 
 		final float uDeltaTime = deltaTime/mAccuracy;
 		final float worldY = mCarrier.getWorldY();
-		for(int i=0;i<mAccuracy;i++) {
+		int stepCount = (int)(mAccuracy * mSpeedFactor);
+		for(int i=0;i<stepCount;i++) {
 
 			//Init force
 			for(final Joint joint:mJoints) {

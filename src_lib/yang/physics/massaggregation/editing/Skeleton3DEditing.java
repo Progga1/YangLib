@@ -115,10 +115,11 @@ public class Skeleton3DEditing {
 
 	public Joint pickJoint3D(Point3f pickPos,float pickRadius,float radiusFactor) {
 		Joint result = null;
-		//tempVec1.set(pickPos.mX/mSkeleton.mScale,pickPos.mY/mSkeleton.mScale,pickPos.mZ/mSkeleton.mScale);
+		mSkeleton.mInvTransform.apply3D(pickPos.mX,pickPos.mY,pickPos.mZ,tempVec1);
+		tempVec1.scale(1/mSkeleton.mScale);
 		float minDist = Float.MAX_VALUE;
 		for(final Joint joint:mSkeleton.mJoints) {
-			final float dist = pickPos.getDistance(joint.mWorldPosition);
+			final float dist = tempVec1.getDistance(joint.mPosX,joint.mPosY,joint.mPosZ);
 			if(dist<minDist && dist<pickRadius+joint.getOutputRadius()*radiusFactor) {
 				minDist = dist;
 				result = joint;
