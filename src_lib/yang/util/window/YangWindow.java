@@ -11,9 +11,10 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.math.objects.Point3f;
 import yang.math.objects.matrix.YangMatrix;
+import yang.model.Extents;
 import yang.model.callback.Drawable;
 
-public class YangWindow<InternalType extends RawEventListener & Drawable> implements RawEventListener {
+public class YangWindow<InternalType extends RawEventListener & Drawable & Extents> implements RawEventListener {
 
 	public static int PASS_MAIN = 0;
 	public static int PASS_BACKGROUND = -1;
@@ -34,7 +35,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 	public float mDebugPointsAlpha = 0;
 	public boolean mDrawDebugPoints = false;
 	public boolean mVisible = true;
-	public float mMaxEventZ = 0.35f,mMinEventZ = -0.15f;
+	public float mMaxEventZ = 0.2f,mMinEventZ = -0.1f;
 
 	public boolean mSolid = false;
 
@@ -77,8 +78,12 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 		mTransform.asInverted(mInvertedTransform.mValues);
 	}
 
-	protected boolean inRangeZ(float z) {
-		return z>=mMinEventZ && z<=mMaxEventZ;
+//	protected boolean inRangeZ(float z) {
+//		return z>=mMinEventZ && z<=mMaxEventZ;
+//	}
+
+	protected boolean inRange(Point3f point) {
+		return point.mX>=mInternalObject.getLeft() && point.mX<=mInternalObject.getRight() && point.mY>=mInternalObject.getBottom() && point.mY<=mInternalObject.getTop() && point.mZ>=mMinEventZ && point.mZ<=mMaxEventZ;
 	}
 
 	public void draw(int drawPass) {
@@ -99,11 +104,11 @@ public class YangWindow<InternalType extends RawEventListener & Drawable> implem
 			if(mDrawDebugPoints && mDebugPointsAlpha>0) {
 				mGraphics.mTranslator.bindTexture(debugPointerTexture);
 				for(int i=0;i<MAX_POINTERS;i++) {
-					if(mActiveCursors[i]) {
+					if(mActiveCursors[i] && inRange(mCursorPositions[i])) {
 						mGraphics.setColor(mDebugColorPalette[i%mDebugColorPalette.length]);
 						mGraphics.mCurColor[3] *= mDebugPointsAlpha;
-						if(!inRangeZ(mCursorPositions[i].mZ))
-							mGraphics.mCurColor[3] *= 0.5f;
+//						if(!inRangeZ(mCursorPositions[i].mZ))
+//							mGraphics.mCurColor[3] *= 0.5f;
 						mGraphics.mCurrentZ = 0.01f;
 						mGraphics.drawRectCentered(mCursorPositions[i].mX,mCursorPositions[i].mY, 0.1f);
 						mGraphics.mCurrentZ = 0;

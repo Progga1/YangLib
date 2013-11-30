@@ -281,4 +281,8 @@ public class MassAggregation {
 			}
 	}
 
+	public int getJointCount() {
+		return mJoints.size();
+	}
+
 }

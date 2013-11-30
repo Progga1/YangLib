@@ -4,9 +4,10 @@ import yang.events.listeners.RawEventListener;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
+import yang.model.Extents;
 import yang.model.callback.Drawable;
 
-public class YangBillboardWindow<InternalType extends RawEventListener & Drawable> extends YangWindow<InternalType> {
+public class YangBillboardWindow<InternalType extends RawEventListener & Drawable & Extents> extends YangWindow<InternalType> {
 
 	private Point3f mLookAtPoint = new Point3f();
 	private final Point3f mTargetPoint = new Point3f();

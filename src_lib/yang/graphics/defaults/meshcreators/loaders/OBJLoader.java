@@ -50,7 +50,10 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public int[] mNormIndices;
 	public int[] mSmoothIndices;
 	public int[] mRedirectIndices;
+	public int[] mSkinIds;
+	public float[] mSkinWeights;
 	public short[] mIndices;
+	private int mSkinJointsPerVertex = 4;
 	public FloatColor mColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
 	public YangList<YangMaterialSet> mMaterialSets;
@@ -528,6 +531,10 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 
 	public boolean hasStaticNormals() {
 		return mNormals!=null;
+	}
+
+	public void createSkin() {
+
 	}
 
 }

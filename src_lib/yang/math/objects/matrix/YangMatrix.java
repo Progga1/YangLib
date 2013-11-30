@@ -154,6 +154,10 @@ public class YangMatrix {
 		translate(translationVector.mX,translationVector.mY,translationVector.mZ);
 	}
 
+	public final void translateNegative(Point3f translationVector) {
+		translate(-translationVector.mX,-translationVector.mY,-translationVector.mZ);
+	}
+
 	public final void postTranslate(float x,float y,float z) {
 		mValues[12] += x;
 		mValues[13] += y;

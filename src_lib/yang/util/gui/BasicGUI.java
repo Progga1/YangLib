@@ -10,6 +10,7 @@ import yang.graphics.font.DrawableString;
 import yang.graphics.font.StringProperties;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
+import yang.model.Extents;
 import yang.model.callback.Drawable;
 import yang.util.YangList;
 import yang.util.gui.components.GUIComponent;
@@ -18,7 +19,7 @@ import yang.util.gui.components.GUIInteractiveComponent;
 import yang.util.gui.interfaces.GUIActionListener;
 import yang.util.gui.interfaces.GUIPointerListener;
 
-public class BasicGUI implements RawEventListener,Drawable {
+public class BasicGUI implements RawEventListener,Drawable,Extents {
 
 	public static GUIPointerEvent[] mGUIEventPool = createEventPool(512);
 	public static int componentPoolPos;
@@ -309,6 +310,26 @@ public class BasicGUI implements RawEventListener,Drawable {
 			result[i] = createCaptionString(strings[i],properties);
 		}
 		return result;
+	}
+
+	@Override
+	public float getLeft() {
+		return mGUILeft;
+	}
+
+	@Override
+	public float getBottom() {
+		return mGUIBottom;
+	}
+
+	@Override
+	public float getRight() {
+		return mGUIRight;
+	}
+
+	@Override
+	public float getTop() {
+		return mGUITop;
 	}
 
 }
