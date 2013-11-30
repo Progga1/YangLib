@@ -268,7 +268,7 @@ public class MassAggregation {
 		}
 	}
 
-	public void applyTransform(YangMatrix transform) {
+	public void transformJointPositions(YangMatrix transform) {
 		for(Joint joint:mJoints) {
 			joint.applyTransform(transform);
 		}

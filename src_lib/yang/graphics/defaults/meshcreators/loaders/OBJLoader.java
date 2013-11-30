@@ -8,6 +8,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.MeshCreator;
+import yang.graphics.defaults.meshcreators.YangArmature;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
 import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.model.FloatColor;
@@ -17,6 +18,7 @@ import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
 import yang.util.YangList;
@@ -60,6 +62,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	public YangList<OBJMaterialSection> mMaterialSections;
 	public TextureProperties mTextureProperties;
 	public boolean mUseShaders = true;
+
+	public YangArmature mCurArmature = null;
 
 	public DrawBatch mDrawBatch;
 
@@ -133,6 +137,8 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 	}
 
 	public void loadOBJ(InputStream modelStream,YangMaterialProvider materialProvider,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {
+		if(modelStream==null)
+			throw new RuntimeException("No stream given");
 		final TextureProperties prevTexProps = YangMaterialSet.diffuseTextureProperties;
 		if(mTextureProperties!=null)
 			YangMaterialSet.diffuseTextureProperties = mTextureProperties;
@@ -351,8 +357,32 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 			final int i = posInd*3;
 			if(i<0)
 				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, 0,0,0);
-			else
-				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, mPositions[i],mPositions[i+1],mPositions[i+2]);
+			else{
+				//Skinning
+				if(mCurArmature!=null) {
+					float x = mPositions[i];
+					float y = mPositions[i+1];
+					float z = mPositions[i+2];
+					float resX = 0;
+					float resY = 0;
+					float resZ = 0;
+					int weightBaseId = posInd*mSkinJointsPerVertex;
+					float maxWeight = 0;
+					for(int k=0;k<mSkinJointsPerVertex;k++) {
+						float weight = mSkinWeights[weightBaseId+k];
+						int jointId = mSkinIds[weightBaseId+k];
+						float[] matrix = mCurArmature.mTransforms[jointId].mValues;
+						//if(weight>maxWeight) {maxWeight = weight;weight = 1;
+
+							resX += (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*weight;
+							resY += (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*weight;
+							resZ += (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*weight;
+						//}
+					}
+					vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, resX,resY,resZ);
+				}else
+					vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, mPositions[i],mPositions[i+1],mPositions[i+2]);
+			}
 		}
 //		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
 		if(mTexCoords!=null && mTexCoords.length>0)
@@ -533,8 +563,67 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 		return mNormals!=null;
 	}
 
-	public void createSkin() {
+	private Point3f tempPoint = new Point3f();
 
+	public void createArmatureWeights(YangArmature armature) {
+		if(mPositions==null)
+			throw new RuntimeException("Cannot use armature on static mesh");
+		int weights = mSkinJointsPerVertex;
+		int vCount = mPositions.length/3;
+		int l = vCount*weights;
+		if(mSkinIds==null) {
+			mSkinIds = new int[l];
+			mSkinWeights = new float[l];
+		}
+
+		for(int i=0;i<vCount;i++) {
+
+			int skinBaseId = i*weights;
+			for(int k=0;k<weights;k++) {
+				mSkinWeights[skinBaseId+k] = 0;
+			}
+
+			tempPoint.set(mPositions[i*3],mPositions[i*3+1],mPositions[i*3+2]);
+
+			int j = 0;
+			for(Point3f point:armature.mInitialPositions) {
+				float dist = point.getDistance(tempPoint);
+				float resWeight = 0;
+				if(dist<=0.00001f) {
+					resWeight = 1;
+				}else{
+					resWeight = 1f/(dist*dist);
+				}
+				float smallestWeight = Float.MAX_VALUE;
+				int smallestWeightId = 0;
+				for(int k=0;k<weights;k++) {
+					if(mSkinWeights[skinBaseId+k]<smallestWeight) {
+						smallestWeight = mSkinWeights[skinBaseId+k];
+						smallestWeightId = k;
+					}
+				}
+				if(resWeight>smallestWeight) {
+					mSkinWeights[skinBaseId+smallestWeightId] = resWeight;
+					mSkinIds[skinBaseId+smallestWeightId] = j;
+				}
+				j++;
+			}
+
+			//Normalize
+			float sum = 0;
+			for(int k=0;k<weights;k++) {
+				sum += mSkinWeights[skinBaseId+k];
+			}
+			sum = 1f/sum;
+			for(int k=0;k<weights;k++) {
+				mSkinWeights[skinBaseId+k] *= sum;
+			}
+
+		}
+	}
+
+	public boolean hasArmatureWeights() {
+		return mSkinIds!=null;
 	}
 
 }
