@@ -179,6 +179,14 @@ public class Joint {
 		addPositionForce(posX,posY,0,factor);
 	}
 
+	public void addWorldPositionForce(float worldX,float worldY,float worldZ, float factor) {
+		float[] matrix = mSkeleton.mInvTransform.mValues;
+		float x = matrix[0] * worldX + matrix[4] * worldY + matrix[8] * worldZ + matrix[12];
+		float y = matrix[1] * worldX + matrix[5] * worldY + matrix[9] * worldZ + matrix[13];
+		float z = matrix[2] * worldX + matrix[6] * worldY + matrix[10] * worldZ + matrix[14];
+		addPositionForce(x,y,z,factor);
+	}
+
 	/**
 	 * Zero degrees: downwards, CCW
 	 */
@@ -241,16 +249,20 @@ public class Joint {
 
 	public void startDrag() {
 		mDragDelayed.set(mPosX,mPosY,mPosZ);
+		//mDragDelayed.set(mWorldPosition);
 		mDragTo.set(mDragDelayed);
 		mDragging = true;
 	}
 
 	public void drag(float deltaX,float deltaY,float deltaZ) {
 		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
-		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
+
+		mSkeleton.mInvVectorTransform.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
+		//YangMatrix.IDENTITY.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
+		mDragTo.add(mDragVec);
 		if(mDragTo.mY<mSkeleton.mLowerLimit)
 			mDragTo.mY = mSkeleton.mLowerLimit;
-		mDragVec.set(deltaX*fac,deltaY*fac,deltaZ*fac);
+
 	}
 
 	public void drag(float deltaX,float deltaY) {

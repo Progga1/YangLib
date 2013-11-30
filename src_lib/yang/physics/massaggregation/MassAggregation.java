@@ -49,6 +49,7 @@ public class MassAggregation {
 	public YangMatrix mTransform = YangMatrix.IDENTITY.clone();
 	public YangMatrix mInvTransform = YangMatrix.IDENTITY.clone();
 	public YangMatrix mVectorTransform = YangMatrix.IDENTITY.clone();
+	public YangMatrix mInvVectorTransform = YangMatrix.IDENTITY.clone();
 	public boolean mConstraintsActivated;
 	public Posture mCurrentPose;
 	public Point3f mCurJointShift = new Point3f();
@@ -80,6 +81,7 @@ public class MassAggregation {
 	public void refreshTransform() {
 		mTransform.asInverted(mInvTransform.mValues);
 		mInvTransform.asTransposed(mVectorTransform.mValues);
+		mVectorTransform.asInverted(mInvVectorTransform.mValues);
 	}
 
 	public void recalculateConstraints() {
