@@ -590,7 +590,7 @@ public class OBJLoader extends MeshCreator<DefaultGraphics<?>>{
 				float dist = point.getDistance(tempPoint);
 				float resWeight = 0;
 				if(dist<=0.00001f) {
-					resWeight = 1;
+					resWeight = 1000000;
 				}else{
 					resWeight = 1f/(dist*dist);
 				}

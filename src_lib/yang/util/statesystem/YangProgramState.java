@@ -73,7 +73,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		mStateTimer += deltaTime;
 	}
 
-	public void preDrawFrame() {
+	public final void preDrawFrame() {
 		assert mGraphics.preCheck("draw state frame");
 		if(mFirstFrame) {
 			initGraphics();
@@ -92,7 +92,6 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 			mRecentSurfaceHeight = surfHeight;
 		}
 		preDraw();
-
 	}
 
 	public void drawFrame() {
