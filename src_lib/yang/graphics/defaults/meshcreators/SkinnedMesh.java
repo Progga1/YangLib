@@ -6,6 +6,7 @@ import yang.physics.massaggregation.MassAggregation;
 
 public class SkinnedMesh {
 
+	public boolean mWireFrames = false;
 	public DefaultGraphics<?> mGraphics;
 	public YangArmature mArmature;
 	public MassAggregation mSkeleton;
@@ -30,6 +31,8 @@ public class SkinnedMesh {
 	}
 
 	public void draw() {
+		boolean preWireframes = mGraphics.mTranslator.mForceWireFrames;
+		mGraphics.mTranslator.mForceWireFrames = mWireFrames;
 		if(mSkeleton!=null) {
 			if(mAutoRefresh)
 				mArmature.refreshMatrices(mSkeleton);
@@ -38,11 +41,15 @@ public class SkinnedMesh {
 			mGraphics.setGlobalTransformEnabled(true);
 			mGraphics.mWorldTransform.stackPush();
 			mGraphics.mWorldTransform.set(mSkeleton.mTransform);
+			mGraphics.mWorldTransform.scale(mSkeleton.getScale());
+
 			mMesh.drawDynamic();
+
 			mGraphics.mWorldTransform.stackPop();
 		}else{
 			mMesh.draw();
 		}
+		mGraphics.mTranslator.mForceWireFrames = preWireframes;
 	}
 
 	public void refresh() {

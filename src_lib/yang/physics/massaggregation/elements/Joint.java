@@ -254,23 +254,31 @@ public class Joint {
 		mDragging = true;
 	}
 
-	public void drag(float deltaX,float deltaY,float deltaZ) {
+	public void dragLocal(float deltaX,float deltaY,float deltaZ) {
 		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
 
 		mSkeleton.mInvVectorTransform.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
-		//YangMatrix.IDENTITY.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
+		mDragTo.add(mDragVec);
+		if(mDragTo.mY<mSkeleton.mLowerLimit)
+			mDragTo.mY = mSkeleton.mLowerLimit;
+	}
+
+	public void dragWorld(float deltaX,float deltaY,float deltaZ) {
+		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
+		mSkeleton.mInvVectorTransform.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
+
 		mDragTo.add(mDragVec);
 		if(mDragTo.mY<mSkeleton.mLowerLimit)
 			mDragTo.mY = mSkeleton.mLowerLimit;
 
 	}
 
-	public void drag(float deltaX,float deltaY) {
-		drag(deltaX,deltaY,0);
+	public void dragWorld(float deltaX,float deltaY) {
+		dragWorld(deltaX,deltaY,0);
 	}
 
-	public void drag(Vector3f vector) {
-		drag(vector.mX,vector.mY,vector.mZ);
+	public void dragWorld(Vector3f vector) {
+		dragWorld(vector.mX,vector.mY,vector.mZ);
 	}
 
 	public void endDrag() {

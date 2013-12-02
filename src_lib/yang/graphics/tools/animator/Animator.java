@@ -351,7 +351,7 @@ public class Animator implements YangEventListener {
 		switch(event.mButton) {
 			case SurfacePointerEvent.BUTTON_LEFT:
 				if(mSkeletonEditing.mMainMarkedJoint!=null) {
-					mSkeletonEditing.mMainMarkedJoint.drag(deltaX, deltaY);
+					mSkeletonEditing.mMainMarkedJoint.dragWorld(deltaX, deltaY);
 					mPoseChanged = true;
 				}
 				break;

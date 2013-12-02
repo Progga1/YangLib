@@ -163,6 +163,40 @@ public class MassAggregation {
 		return null;
 	}
 
+//	public DistanceConstraint getDistanceConstraint(Joint joint1,Joint joint2) {
+//		for(Constraint constraint:mConstraints) {
+//			if(constraint instanceof DistanceConstraint) {
+//				DistanceConstraint distConstr = (DistanceConstraint)constraint;
+//				if((distConstr.mBone.)
+//				return ()
+//			}
+//		}
+//		return null;
+//	}
+
+	public DistanceConstraint getDistanceConstraint(JointConnection connection) {
+		for(Constraint constraint:mConstraints) {
+			if(constraint instanceof DistanceConstraint) {
+				DistanceConstraint distConstr = (DistanceConstraint)constraint;
+				if(distConstr.mBone==connection)
+					return distConstr;
+			}
+		}
+		return null;
+	}
+
+	public DistanceConstraint getDistanceConstraint(Joint joint1,Joint joint2) {
+		return getDistanceConstraint(getJointConnection(joint1,joint2));
+	}
+
+	public JointConnection getJointConnection(Joint joint1,Joint joint2) {
+		for(JointConnection connection:mBones) {
+			if((connection.mJoint1==joint1 && connection.mJoint2==joint2) || (connection.mJoint2==joint1 && connection.mJoint1==joint2))
+				return connection;
+		}
+		return null;
+	}
+
 	public float getJointWorldX(Joint joint) {
 		//return mCarrier.getWorldX() + (mShiftX + joint.mPosX)*mCarrier.getScale()*mScale;
 		return mCarrier.getWorldX() + joint.mWorldPosition.mX*mCarrier.getScale();
@@ -209,15 +243,15 @@ public class MassAggregation {
 			}
 
 			//Apply constraints
-			if(mConstraintsActivated)
+			if(mConstraintsActivated) {
 				for(final Constraint constraint:mConstraints) {
 					constraint.apply();
 				}
 
-			if(mConstraintsActivated)
 				for(final Joint joint:mJoints) {
 					joint.applyConstraint();
 				}
+			}
 
 			for(final Joint joint:mJoints) {
 				joint.physicalStep(uDeltaTime);
@@ -283,6 +317,26 @@ public class MassAggregation {
 
 	public int getJointCount() {
 		return mJoints.size();
+	}
+
+	public void clearForces() {
+		for(Joint joint:mJoints) {
+			joint.mForceX = 0;
+			joint.mForceY = 0;
+			joint.mForceZ = 0;
+		}
+	}
+
+	public void clearVelocities() {
+		for(Joint joint:mJoints) {
+			joint.mVelX = 0;
+			joint.mVelY = 0;
+			joint.mVelZ = 0;
+		}
+	}
+
+	public float getScale() {
+		return mCarrier.getScale()*mScale;
 	}
 
 }

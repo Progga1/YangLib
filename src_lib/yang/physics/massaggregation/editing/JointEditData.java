@@ -1,5 +1,6 @@
 package yang.physics.massaggregation.editing;
 
+import yang.physics.massaggregation.constraints.DistanceConstraint;
 import yang.physics.massaggregation.elements.Joint;
 
 
@@ -12,9 +13,14 @@ public class JointEditData {
 	public int mSelectionGroup = -1;
 	public int mSelectionDepth = -1;
 	public Joint mJoint;
+	public DistanceConstraint mParentConnection;
 
 	public void set(Joint joint) {
 		mJoint = joint;
+		if(mJoint.mAngleParent!=null)
+			mParentConnection = mJoint.mSkeleton.getDistanceConstraint(mJoint.mAngleParent,mJoint);
+		else
+			mParentConnection = null;
 	}
 
 	public void setPrevPos() {

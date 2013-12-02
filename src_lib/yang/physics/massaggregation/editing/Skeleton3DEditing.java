@@ -158,10 +158,19 @@ public class Skeleton3DEditing {
 			if(group<0) {
 				data.mSelectionGroup = -1;
 				data.mSelectionDepth = -1;
+				if(data.mParentConnection!=null) {
+					//data.mParentConnection.mApplyToJoint1 = true;
+				}
 				joint.endDrag();
 			}else{
 				data.mSelectionGroup = group;
 				data.mSelectionDepth = depth;
+//				if(data.mParentConnection!=null) {
+//					if(data.mParentConnection.mBone.mJoint1==joint)
+//						data.mParentConnection.mApplyToJoint2 = false;
+//					else
+//						data.mParentConnection.mApplyToJoint1 = false;
+//				}
 				joint.startDrag();
 			}
 		}

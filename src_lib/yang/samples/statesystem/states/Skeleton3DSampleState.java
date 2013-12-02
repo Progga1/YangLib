@@ -155,7 +155,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 				for(final Joint joint:mSkeleton3D.getJoints()) {
 					final JointEditData data = mSkeleton3D.getJointEditData(joint);
 					if(data.mSelectionGroup==event.mId)
-						joint.drag(dragX*mCamRight.mX+dragY*mCamUp.mX,dragX*mCamRight.mY+dragY*mCamUp.mY,dragX*mCamRight.mZ+dragY*mCamUp.mZ);
+						joint.dragWorld(dragX*mCamRight.mX+dragY*mCamUp.mX,dragX*mCamRight.mY+dragY*mCamUp.mY,dragX*mCamRight.mZ+dragY*mCamUp.mZ);
 				}
 			}
 		}else{
