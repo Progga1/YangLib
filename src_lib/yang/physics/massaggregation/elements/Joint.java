@@ -253,7 +253,7 @@ public class Joint {
 				//refreshResDrag();
 				mDragDelayed.lerp(mCurResDrag,mDragDelay);
 
-				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,1);
+				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,2);
 			}
 
 			mVelX += mForceX/mMass * mForceFactor * deltaTime;
@@ -288,10 +288,10 @@ public class Joint {
 		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
 
 		refreshResDrag();
+		if(mCurResDrag.mY<mSkeleton.mLowerLimit)
+			mCurResDrag.mY = mSkeleton.mLowerLimit;
 		mDragVec.setFromTo(mPrevDrag,mCurResDrag);
 		mPrevDrag.set(mCurResDrag);
-		if(mDragTo.mY<mSkeleton.mLowerLimit)
-			mDragTo.mY = mSkeleton.mLowerLimit;
 	}
 
 	public void dragWorld(float deltaX,float deltaY,float deltaZ) {
