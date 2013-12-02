@@ -109,4 +109,11 @@ public class Skeleton3DCollection {
 			mSelectedSkeletons[index] = null;
 		}
 	}
+
+	public void recalculateConstraints() {
+		for(Skeleton3DEditing skeleton:mSkeletons) {
+			skeleton.mSkeleton.recalculateConstraints();
+		}
+	}
+
 }

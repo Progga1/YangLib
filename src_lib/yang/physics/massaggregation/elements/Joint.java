@@ -44,9 +44,13 @@ public class Joint {
 	public Point3f mWorldPosition = new Point3f();
 	public Point3f mDragDelayed = new Point3f();
 	public Point3f mDragTo = new Point3f();
+	public Point3f mPrevDrag = new Point3f();
+	public Point3f mCurResDrag = new Point3f();
 	public Vector3f mDragVec = new Vector3f();
 	public boolean mDragging;
 	public float mParentCurAngle;
+
+	private Vector3f tempVec = new Vector3f(), tempVec2 = new Vector3f();
 
 	public Joint(String name,Joint parent,float posX,float posY,float radius,MassAggregation skeleton) {
 		mName = name;
@@ -150,7 +154,11 @@ public class Joint {
 		if(joint==null)
 			return -1;
 		else
-			return Geometry.getDistance(mPosX,mPosY,joint.mPosX,joint.mPosY);
+			return Geometry.getDistance(mPosX-joint.mPosX,mPosY-joint.mPosY,mPosZ-joint.mPosZ);
+	}
+
+	private float getDistance(float x, float y, float z) {
+		return Geometry.getDistance(mPosX-x,mPosY-y,mPosZ-z);
 	}
 
 	public void setSpeed(Joint preface) {
@@ -215,6 +223,23 @@ public class Joint {
 		setPosByAngle(mParentCurAngle+angle);
 	}
 
+	private void refreshResDrag() {
+		if(mAngleParent!=null) {
+			float dist = mAngleParent.getDistance(mDragTo.mX,mDragTo.mY,mDragTo.mZ);
+			if(dist!=0) {
+				dist = 1/dist*mParentDistance;
+				float dx = (mDragTo.mX-mAngleParent.mPosX);
+				float dy = (mDragTo.mY-mAngleParent.mPosY);
+				float dz = (mDragTo.mZ-mAngleParent.mPosZ);
+				mCurResDrag.set(mAngleParent.mPosX+dx*dist,mAngleParent.mPosY+dy*dist,mAngleParent.mPosZ+dz*dist);
+			}else{
+				mCurResDrag.set(mDragTo);
+			}
+		}else{
+			mCurResDrag.set(mDragTo);
+		}
+	}
+
 	public void physicalStep(float deltaTime) {
 
 		if(mEnabled) {
@@ -225,7 +250,9 @@ public class Joint {
 			}
 
 			if(mDragging) {
-				mDragDelayed.lerp(mDragTo,mDragDelay);
+				//refreshResDrag();
+				mDragDelayed.lerp(mCurResDrag,mDragDelay);
+
 				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,1);
 			}
 
@@ -257,19 +284,25 @@ public class Joint {
 	public void dragLocal(float deltaX,float deltaY,float deltaZ) {
 		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
 
-		mSkeleton.mInvVectorTransform.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
-		mDragTo.add(mDragVec);
+		//mDragVec.set(deltaX*fac,deltaY*fac,deltaZ*fac);
+		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
+
+		refreshResDrag();
+		mDragVec.setFromTo(mPrevDrag,mCurResDrag);
+		mPrevDrag.set(mCurResDrag);
 		if(mDragTo.mY<mSkeleton.mLowerLimit)
 			mDragTo.mY = mSkeleton.mLowerLimit;
 	}
 
 	public void dragWorld(float deltaX,float deltaY,float deltaZ) {
-		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
-		mSkeleton.mInvVectorTransform.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
+//		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
+		//mSkeleton.mInvVectorTransform.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
 
-		mDragTo.add(mDragVec);
-		if(mDragTo.mY<mSkeleton.mLowerLimit)
-			mDragTo.mY = mSkeleton.mLowerLimit;
+		mSkeleton.mInvVectorTransform.apply3D(deltaX,deltaY,deltaZ, tempVec);
+		dragLocal(tempVec.mX,tempVec.mY,tempVec.mZ);
+//		mDragTo.add(mDragVec);
+//		if(mDragTo.mY<mSkeleton.mLowerLimit)
+//			mDragTo.mY = mSkeleton.mLowerLimit;
 
 	}
 
