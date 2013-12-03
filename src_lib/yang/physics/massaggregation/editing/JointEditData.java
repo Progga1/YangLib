@@ -30,9 +30,9 @@ public class JointEditData {
 				mPrevPosY = mJoint.mDragDelayed.mY;
 				mPrevPosZ = mJoint.mDragDelayed.mZ;
 			}else{
-				mPrevPosX = mJoint.mPosX;
-				mPrevPosY = mJoint.mPosY;
-				mPrevPosZ = mJoint.mPosZ;
+				mPrevPosX = mJoint.mX;
+				mPrevPosY = mJoint.mY;
+				mPrevPosZ = mJoint.mZ;
 			}
 		}
 	}

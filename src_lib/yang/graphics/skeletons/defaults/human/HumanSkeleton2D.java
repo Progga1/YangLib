@@ -184,22 +184,22 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 		}
 		
 		if(m3D) {
-			mLeftLegJoint.mPosZ = legZ*0.9f;
-			mRightLegJoint.mPosZ = -legZ*0.9f;
-			mLeftKneeJoint.mPosZ = legZ;
-			mRightKneeJoint.mPosZ = -legZ;
-			mLeftFootJoint.mPosZ = legZ;
-			mRightFootJoint.mPosZ = -legZ;
+			mLeftLegJoint.mZ = legZ*0.9f;
+			mRightLegJoint.mZ = -legZ*0.9f;
+			mLeftKneeJoint.mZ = legZ;
+			mRightKneeJoint.mZ = -legZ;
+			mLeftFootJoint.mZ = legZ;
+			mRightFootJoint.mZ = -legZ;
 			if(mLeftToesJoint!=null) {
-				mLeftToesJoint.mPosZ = legZ;
-				mRightToesJoint.mPosZ = -legZ;
+				mLeftToesJoint.mZ = legZ;
+				mRightToesJoint.mZ = -legZ;
 			}
-			mLeftShoulderJoint.mPosZ = armZ*0.9f;
-			mRightShoulderJoint.mPosZ = -armZ*0.9f;
-			mLeftElbowJoint.mPosZ = armZ;
-			mRightElbowJoint.mPosZ = -armZ;
-			mLeftHandJoint.mPosZ = armZ;
-			mRightHandJoint.mPosZ = -armZ;
+			mLeftShoulderJoint.mZ = armZ*0.9f;
+			mRightShoulderJoint.mZ = -armZ*0.9f;
+			mLeftElbowJoint.mZ = armZ;
+			mRightElbowJoint.mZ = -armZ;
+			mLeftHandJoint.mZ = armZ;
+			mRightHandJoint.mZ = -armZ;
 		}
 
 		//--- Contours ---

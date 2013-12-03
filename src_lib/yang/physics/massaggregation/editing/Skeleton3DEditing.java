@@ -119,7 +119,7 @@ public class Skeleton3DEditing {
 		tempVec1.scale(1/mSkeleton.mScale);
 		float minDist = Float.MAX_VALUE;
 		for(final Joint joint:mSkeleton.mJoints) {
-			final float dist = tempVec1.getDistance(joint.mPosX,joint.mPosY,joint.mPosZ);
+			final float dist = tempVec1.getDistance(joint.mX,joint.mY,joint.mZ);
 			if(dist<minDist && dist<pickRadius+joint.getOutputRadius()*radiusFactor) {
 				minDist = dist;
 				result = joint;
@@ -134,7 +134,7 @@ public class Skeleton3DEditing {
 
 		Joint result = null;
 		for(final Joint joint:mSkeleton.mJoints) {
-			final float rad = mGraphics3D.getProjectedPositionAndRadius(tempVec1, joint.mPosX,joint.mPosY,joint.mPosZ, joint.getOutputRadius()*radiusFactor);
+			final float rad = mGraphics3D.getProjectedPositionAndRadius(tempVec1, joint.mX,joint.mY,joint.mZ, joint.getOutputRadius()*radiusFactor);
 			final float dist = Geometry.getDistance(x-tempVec1.mX, y-tempVec1.mY);
 			if(dist<=rad && dist<=minDist) {
 				result = joint;

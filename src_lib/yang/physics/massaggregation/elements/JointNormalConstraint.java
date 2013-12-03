@@ -18,8 +18,8 @@ public class JointNormalConstraint extends Joint{
 		mRelativeY = boneY;
 		mBone.refreshGeometry();
 		refreshConstraintPos();
-		mPosX = mForcePosX;
-		mPosY = mForcePosY;
+		mX = mForcePosX;
+		mY = mForcePosY;
 		mSavePose = false;
 		setParent(angleParent);
 		recalculate();
@@ -34,21 +34,21 @@ public class JointNormalConstraint extends Joint{
 
 	public void refreshConstraintPos() {
 		mBone.refreshGeometry();
-		mForcePosX = mBone.mJoint1.mPosX + mBone.mDistX * mRelativeX + mBone.mNormDirY * mRelativeY;
-		mForcePosY = mBone.mJoint1.mPosY + mBone.mDistY * mRelativeX - mBone.mNormDirX * mRelativeY;
+		mForcePosX = mBone.mJoint1.mX + mBone.mDistX * mRelativeX + mBone.mNormDirY * mRelativeY;
+		mForcePosY = mBone.mJoint1.mY + mBone.mDistY * mRelativeX - mBone.mNormDirX * mRelativeY;
 	}
 	
 	public void setPosByConstraint() {
 		refreshConstraintPos();
-		mPosX = mForcePosX;
-		mPosY = mForcePosY;
+		mX = mForcePosX;
+		mY = mForcePosY;
 	}
 	
 	@Override
 	public void applyConstraint() {
 		refreshConstraintPos();
-		float dX = mForcePosX - mPosX;
-		float dY = mForcePosY - mPosY;
+		float dX = mForcePosX - mX;
+		float dY = mForcePosY - mY;
 		float dist = (float)Math.sqrt(dX*dX + dY*dY);
 		float fac;
 		fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR;

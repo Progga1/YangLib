@@ -132,10 +132,10 @@ public class CartoonBone extends JointConnection {
 		mResShiftX2 = -orthNormX * mShiftX2 - mNormDirX * mShiftY2;
 		mResShiftY2 = -orthNormY * mShiftX2 - mNormDirY * mShiftY2;
 
-		final float posX1 = mJoint1.mPosX;
-		final float posY1 = mJoint1.mPosY;
-		final float posX2 = mJoint2.mPosX;
-		final float posY2 = mJoint2.mPosY;
+		final float posX1 = mJoint1.mX;
+		final float posY1 = mJoint1.mY;
+		final float posX2 = mJoint2.mX;
+		final float posY2 = mJoint2.mY;
 
 		mVertX1 = posX1+mResShiftX1-orthNormX*mWidth1 * mWidthFac;
 		mVertY1 = posY1+mResShiftY1-orthNormY*mWidth1 * mWidthFac;

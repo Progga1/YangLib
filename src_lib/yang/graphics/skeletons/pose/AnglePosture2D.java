@@ -43,11 +43,11 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 							y = y*weight + interpolationPose.mData[c-1]*dWeight;
 						}
 						if(skeleton.mRotation==0) {
-							joint.mPosX = x;
-							joint.mPosY = y;
+							joint.mX = x;
+							joint.mY = y;
 						}else{
-							joint.mPosX = -Geometry.rotateGetX(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
-							joint.mPosY = Geometry.rotateGetY(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+							joint.mX = -Geometry.rotateGetX(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+							joint.mY = Geometry.rotateGetY(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
 						}
 					}else{
 						c += 2;
@@ -115,8 +115,8 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 				final Joint parent = joint.mAngleParent;
 				if(parent==null) {
 					//By position
-					mData[c++] = joint.mPosX;
-					mData[c++] = joint.mPosY;
+					mData[c++] = joint.mX;
+					mData[c++] = joint.mY;
 				}else{
 					//By angle
 					float angle = joint.getParentAngle();

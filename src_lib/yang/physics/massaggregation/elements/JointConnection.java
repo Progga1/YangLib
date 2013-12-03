@@ -21,9 +21,9 @@ public class JointConnection {
 	}
 	
 	public void refreshGeometry() {
-		mDistX = mJoint2.mPosX - mJoint1.mPosX;
-		mDistY = mJoint2.mPosY - mJoint1.mPosY;
-		mDistZ = mJoint2.mPosZ - mJoint1.mPosZ;
+		mDistX = mJoint2.mX - mJoint1.mX;
+		mDistY = mJoint2.mY - mJoint1.mY;
+		mDistZ = mJoint2.mZ - mJoint1.mZ;
 		mDistance = (float)Math.sqrt(mDistX*mDistX + mDistY*mDistY + mDistZ*mDistZ);
 		
 		mPrevNormDirX = mNormDirX;

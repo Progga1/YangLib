@@ -25,13 +25,13 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 			if(joint.mAnimate) {
 				if(mData[c]!=Float.MAX_VALUE) {
 					if(weight==0 || interpolationPose==null) {
-						joint.mPosX = mData[c++];
-						joint.mPosY = mData[c++];
-						joint.mPosZ = mData[c++];
+						joint.mX = mData[c++];
+						joint.mY = mData[c++];
+						joint.mZ = mData[c++];
 					}else{
-						joint.mPosX = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
-						joint.mPosY = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
-						joint.mPosZ = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
+						joint.mX = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
+						joint.mY = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
+						joint.mZ = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
 					}
 				}else
 					c += 3;
@@ -67,9 +67,9 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 		int c=0;
 		for(final Joint joint:skeleton.mJoints) {
 			if(joint.mAnimate) {
-				mData[c++] = joint.mPosX;
-				mData[c++] = joint.mPosY;
-				mData[c++] = joint.mPosZ;
+				mData[c++] = joint.mX;
+				mData[c++] = joint.mY;
+				mData[c++] = joint.mZ;
 			}
 		}
 	}

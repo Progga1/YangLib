@@ -95,14 +95,14 @@ public class MassAggregation {
 	public void get2DBoundaries(Rect target) {
 		target.set(100000,-100000,-100000,100000);
 		for(final Joint joint:mJoints) {
-			if(joint.mPosX<target.mLeft)
-				target.mLeft = joint.mPosX;
-			if(joint.mPosX>target.mRight)
-				target.mRight = joint.mPosX;
-			if(joint.mPosY>target.mTop)
-				target.mTop = joint.mPosY;
-			if(joint.mPosY<target.mBottom)
-				target.mBottom = joint.mPosY;
+			if(joint.mX<target.mLeft)
+				target.mLeft = joint.mX;
+			if(joint.mX>target.mRight)
+				target.mRight = joint.mX;
+			if(joint.mY>target.mTop)
+				target.mTop = joint.mY;
+			if(joint.mY<target.mBottom)
+				target.mBottom = joint.mY;
 		}
 	}
 
@@ -117,9 +117,9 @@ public class MassAggregation {
 	}
 
 	public Joint addJoint(Joint joint) {
-		joint.mPosX = joint.mPosX*mCurJointScale + mCurJointShift.mX;
-		joint.mPosY = joint.mPosY*mCurJointScale + mCurJointShift.mY;
-		joint.mPosZ = joint.mPosZ*mCurJointScale + mCurJointShift.mZ;
+		joint.mX = joint.mX*mCurJointScale + mCurJointShift.mX;
+		joint.mY = joint.mY*mCurJointScale + mCurJointShift.mY;
+		joint.mZ = joint.mZ*mCurJointScale + mCurJointShift.mZ;
 		joint.mRadius *= mCurJointScale;
 		mJoints.add(joint);
 		return joint;
@@ -127,7 +127,7 @@ public class MassAggregation {
 
 	public Joint addJoint(String name,Joint parent,float x,float y,float z) {
 		final Joint newJoint = new Joint(name, parent, x,y, mDefaultJointRadius, this);
-		newJoint.mPosZ = z;
+		newJoint.mZ = z;
 		return addJoint(newJoint);
 	}
 
@@ -244,9 +244,9 @@ public class MassAggregation {
 				joint.mForceY = mConstantForceY*joint.mMass;
 				joint.mForceZ = mConstantForceZ*joint.mMass;
 
-				if(joint.mPosY+worldY<mLowerLimit) {
+				if(joint.mY+worldY<mLowerLimit) {
 					final float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
-					joint.mForceY += (mLowerLimit-joint.mPosY)*uForce;
+					joint.mForceY += (mLowerLimit-joint.mY)*uForce;
 					joint.mVelX *= mFloorFriction;
 				}
 			}

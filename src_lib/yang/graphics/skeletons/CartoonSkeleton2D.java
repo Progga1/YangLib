@@ -365,17 +365,17 @@ public class CartoonSkeleton2D extends Skeleton2D {
 
 	@Override
 	public float getJointWorldX(Joint joint) {
-		return mCarrier.getWorldX() + (mShiftX + joint.mPosX*mLookDirection)*mCarrier.getScale()*mScale;
+		return mCarrier.getWorldX() + (mShiftX + joint.mX*mLookDirection)*mCarrier.getScale()*mScale;
 	}
 
 	@Override
 	public float getJointWorldY(Joint joint) {
-		return mCarrier.getWorldY() + (mShiftY + joint.mPosY)*mCarrier.getScale()*mScale;
+		return mCarrier.getWorldY() + (mShiftY + joint.mY)*mCarrier.getScale()*mScale;
 	}
 
 	@Override
 	public float getJointWorldZ(Joint joint) {
-		return mCarrier.getWorldZ() + (mShiftZ + joint.mPosZ)*mCarrier.getScale()*mScale;
+		return mCarrier.getWorldZ() + (mShiftZ + joint.mZ)*mCarrier.getScale()*mScale;
 	}
 
 }

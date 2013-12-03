@@ -44,7 +44,7 @@ public class Skeleton2D extends MassAggregation {
 					graphics.setColor(1, 0, 0, alpha);
 				else
 					graphics.setColor(0.8f,0.8f,0.8f,alpha);
-				graphics.drawRectCentered(worldPosX + joint.mPosX*scale * mirrorFac, worldPosY + joint.mPosY*scale, joint.getOutputRadius()*2);
+				graphics.drawRectCentered(worldPosX + joint.mX*scale * mirrorFac, worldPosY + joint.mY*scale, joint.getOutputRadius()*2);
 			}
 
 		translator.bindTexture(null);
@@ -52,8 +52,8 @@ public class Skeleton2D extends MassAggregation {
 		for(final Joint joint:massAggregation.mJoints)
 			if(joint.mEnabled && joint.mAngleParent!=null){
 				graphics.drawLine(
-						worldPosX + joint.mPosX*scale * mirrorFac, worldPosY + joint.mPosY*scale,
-						worldPosX + joint.mAngleParent.mPosX*scale * mirrorFac, worldPosY + joint.mAngleParent.mPosY*scale,
+						worldPosX + joint.mX*scale * mirrorFac, worldPosY + joint.mY*scale,
+						worldPosX + joint.mAngleParent.mX*scale * mirrorFac, worldPosY + joint.mAngleParent.mY*scale,
 						0.015f
 						);
 		}
