@@ -39,7 +39,7 @@ public class JointConnection {
 	}
 	
 	public void setAngle2D(float angle) {
-		mJoint2.setPosByAngle(mJoint1, this, angle);
+		mJoint2.setPosByAngle2D(mJoint1, this, angle);
 	}
 	
 }

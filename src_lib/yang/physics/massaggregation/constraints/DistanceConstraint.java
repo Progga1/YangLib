@@ -55,7 +55,7 @@ public class DistanceConstraint extends Constraint{
 	}
 
 	public void setAngle2D(float angle) {
-		mBone.mJoint2.setPosByAngle(mBone.mJoint1, mForceDistance, angle);
+		mBone.mJoint2.setPosByAngle2D(mBone.mJoint1, mForceDistance, angle);
 	}
 
 	@Override

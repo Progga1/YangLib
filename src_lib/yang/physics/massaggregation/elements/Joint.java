@@ -36,6 +36,7 @@ public class Joint {
 	public Quaternion mOrientation = null;
 	public boolean mNoAnimationForce = false;
 	public float mDragDelay = 0.05f;
+	public boolean mDragKeepDistance = false;
 
 	//State
 	public float mForceX,mForceY,mForceZ;
@@ -113,7 +114,7 @@ public class Joint {
 		if(mAngleParent==null)
 			mParentCurAngle = 0;
 		else
-			mParentCurAngle = getAngle(mAngleParent);
+			mParentCurAngle = getAngle2D(mAngleParent);
 	}
 
 	/**
@@ -198,33 +199,33 @@ public class Joint {
 	/**
 	 * Zero degrees: downwards, CCW
 	 */
-	public float getAngle(Joint joint) {
+	public float getAngle2D(Joint joint) {
 		return Geometry.getAngleDown(joint.mPosX,joint.mPosY,mPosX,mPosY);
 	}
 
 	/**
 	 * Zero degrees: downwards, CCW
 	 */
-	public void setPosByAngle(Joint relativeJoint,float distance,float angle) {
+	public void setPosByAngle2D(Joint relativeJoint,float distance,float angle) {
 		mParentCurAngle = angle;
 		mPosX = relativeJoint.mPosX + (float)(distance*Math.sin(angle));
 		mPosY = relativeJoint.mPosY - (float)(distance*Math.cos(angle));//System.out.println(angle+" "+getAngle(relativeJoint));
 	}
 
-	public void setPosByAngle(Joint relativeJoint,JointConnection connectingBone,float angle) {
-		setPosByAngle(relativeJoint,connectingBone.mDistance,angle);
+	public void setPosByAngle2D(Joint relativeJoint,JointConnection connectingBone,float angle) {
+		setPosByAngle2D(relativeJoint,connectingBone.mDistance,angle);
 	}
 
-	public void setPosByAngle(float angle) {
-		setPosByAngle(mAngleParent,mParentDistance,angle);
+	public void setPosByAngle2D(float angle) {
+		setPosByAngle2D(mAngleParent,mParentDistance,angle);
 	}
 
 	public void rotate(float angle) {
-		setPosByAngle(mParentCurAngle+angle);
+		setPosByAngle2D(mParentCurAngle+angle);
 	}
 
 	private void refreshResDrag() {
-		if(mAngleParent!=null) {
+		if(mDragKeepDistance && mAngleParent!=null) {
 			float dist = mAngleParent.getDistance(mDragTo.mX,mDragTo.mY,mDragTo.mZ);
 			if(dist!=0) {
 				dist = 1/dist*mParentDistance;
@@ -458,7 +459,7 @@ public class Joint {
 	}
 
 	public float getParentAngle() {
-		return getAngle(mAngleParent);
+		return getAngle2D(mAngleParent);
 	}
 
 	public void recalculate() {

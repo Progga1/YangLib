@@ -82,7 +82,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 							}else
 								angle = angle*weight + prevAngle*dWeight;
 						}
-						joint.setPosByAngle(angle+skeleton.mRotation);
+						joint.setPosByAngle2D(angle+skeleton.mRotation);
 					}
 					c++;
 				}

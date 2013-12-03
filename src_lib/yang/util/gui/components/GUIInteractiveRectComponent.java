@@ -54,6 +54,13 @@ public class GUIInteractiveRectComponent extends GUIInteractiveComponent {
 		return this;
 	}
 
+	public GUIInteractiveRectComponent setBounds(float left,float top,float right) {
+		mPosX = left;
+		mPosY = top;
+		mWidth = right-left;
+		return this;
+	}
+
 	public GUIInteractiveRectComponent setBounds(GUIInteractiveRectComponent preface) {
 		mPosX = preface.mPosX;
 		mPosY = preface.mPosY;

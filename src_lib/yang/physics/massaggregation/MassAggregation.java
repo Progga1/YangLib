@@ -154,11 +154,20 @@ public class MassAggregation {
 		return addSpringBone(bone);
 	}
 
-	public Joint getBoneByName(String name) {
+	public Joint getJointByName(String name) {
 		name = name.toUpperCase();
-		for(final Joint bone:mJoints) {
-			if(bone.mName.equals(name))
-				return bone;
+		for(final Joint joint:mJoints) {
+			if(joint.mName.equals(name))
+				return joint;
+		}
+		return null;
+	}
+
+	public JointConnection getConnectionByName(String name) {
+		//name = name.toUpperCase();
+		for(final JointConnection connection:mBones) {
+			if(connection.mName.equals(name))
+				return connection;
 		}
 		return null;
 	}
@@ -183,6 +192,10 @@ public class MassAggregation {
 			}
 		}
 		return null;
+	}
+
+	public DistanceConstraint getDistanceConstraintByName(String name) {
+		return getDistanceConstraint(getConnectionByName(name));
 	}
 
 	public DistanceConstraint getDistanceConstraint(Joint joint1,Joint joint2) {
