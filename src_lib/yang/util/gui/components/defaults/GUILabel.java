@@ -7,24 +7,27 @@ import yang.util.gui.components.defaultdrawers.GUICaptionDrawer;
 
 public class GUILabel extends GUIMultipassComponent {
 
-	public GUILabel() {
-		setPasses(null,null,null,new GUICaptionDrawer());
-	}
+	public GUICaptionDrawer mCaption;
 
 	public GUILabel(int passCount,int textPassId) {
 		super();
+		mCaption = new GUICaptionDrawer();
 		GUIComponentDrawPass[] passes = new GUIComponentDrawPass[passCount];
-		passes[textPassId] = new GUICaptionDrawer();
+		passes[textPassId] = mCaption;
 		setPasses(passes);
 	}
 
+	public GUILabel() {
+		this(4,3);
+	}
+
 	public GUILabel setCaption(DrawableString caption) {
-		getPass(GUICaptionDrawer.class).setCaption(caption);
+		mCaption.setCaption(caption);
 		return this;
 	}
 
 	public GUILabel createCaption(String caption) {
-		getPass(GUICaptionDrawer.class).createCaption(caption);
+		mCaption.createCaption(caption);
 		return this;
 	}
 

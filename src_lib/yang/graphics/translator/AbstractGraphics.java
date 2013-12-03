@@ -210,10 +210,18 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		setVertexBuffer(mDynamicVertexBuffer);
 	}
 
-	public void startBatchRecording(int maxIndices,int maxVertices,boolean dynamicIndices,boolean dynamicVertices) {
+	public void startBatchRecording(IndexedVertexBuffer vertexBuffer) {
 		mBatchRecording = true;
 		mTranslator.mFlushDisabled = true;
-		setVertexBuffer(createVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices));
+		setVertexBuffer(vertexBuffer);
+	}
+
+	public void startBatchRecording(DrawBatch batch) {
+		startBatchRecording(batch.mVertexBuffer);
+	}
+
+	public void startBatchRecording(int maxIndices,int maxVertices,boolean dynamicIndices,boolean dynamicVertices) {
+		startBatchRecording(createVertexBuffer(dynamicVertices,dynamicIndices,maxIndices,maxVertices));
 	}
 
 	public void startBatchRecording(int maxIndices, int maxVertices) {

@@ -1,6 +1,7 @@
 package yang.events.eventtypes;
 
 import yang.math.objects.Point3f;
+import yang.math.objects.Vector3f;
 
 
 public abstract class YangPointerEvent extends YangEvent {
@@ -128,6 +129,12 @@ public abstract class YangPointerEvent extends YangEvent {
 
 	public void setPos(Point3f position) {
 		setPos(position.mX,position.mY,position.mZ);
+	}
+
+	public void setDelta(Vector3f delta) {
+		mDeltaX = delta.mX;
+		mDeltaY = delta.mY;
+		mDeltaZ = delta.mZ;
 	}
 
 }
