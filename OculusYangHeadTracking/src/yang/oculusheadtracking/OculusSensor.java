@@ -13,6 +13,7 @@ public class OculusSensor extends YangSensor {
 	private HMDInfo mHMDInfo;
 	private long mFrameCount;
 	private boolean mThreadActive = false;
+	public float mYawOffset = 0;
 
 	private final Thread mThread = new Thread(){
 
@@ -29,7 +30,7 @@ public class OculusSensor extends YangSensor {
 //				if(mSensorActive[YangSensor.TYPE_EULER_ANGLES] && mFrameCount%(SPEED_FASTEST+1-mSpeed[YangSensor.TYPE_EULER_ANGLES])==0)
 //					System.out.println(mRift.getYaw());
 				if(mSensorActive[YangSensor.TYPE_EULER_ANGLES] && mFrameCount%(SPEED_FASTEST+1-mSpeed[YangSensor.TYPE_EULER_ANGLES])==0)
-					mEvents.putSensorEvent(YangSensor.TYPE_EULER_ANGLES, mRift.getYaw(), mRift.getPitch(), mRift.getRoll());
+					mEvents.putSensorEvent(YangSensor.TYPE_EULER_ANGLES, mRift.getYaw()+mYawOffset, mRift.getPitch(), mRift.getRoll());
 
 				try {
 					Thread.sleep(20);
@@ -41,6 +42,11 @@ public class OculusSensor extends YangSensor {
 		}
 
 	};
+
+	@Override
+	public void setNullYaw() {
+		mYawOffset = -mRift.getYaw();
+	}
 
 	public boolean connected() {
 		if(mRift==null) {

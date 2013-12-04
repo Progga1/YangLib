@@ -30,6 +30,7 @@ public abstract class YangSensor {
 	protected abstract void derivedStopSensor(int type);
 	protected void derivedPause() { };
 	protected void derivedResume() { };
+	public void setNullYaw() { };
 
 	public void startSensor(int type,int speed) {
 		if(!mSensorActive[type]) {
