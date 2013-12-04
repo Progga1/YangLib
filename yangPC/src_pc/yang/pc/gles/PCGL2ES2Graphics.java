@@ -1,7 +1,10 @@
 package yang.pc.gles;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 
@@ -36,6 +39,8 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public static boolean DEFAULT_USE_GLPANEL = false;
 	public static boolean USE_DISPLAY = false;
 	public boolean mStereo = false;
+
+	private Cursor mBlankCursor = null;
 
 	public static final boolean clearError(GL2ES2 gl2) {
 		gl2.glGetError();
@@ -101,6 +106,17 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 
 	public PCGL2ES2Graphics(int resolutionX,int resolutionY) {
 		this(resolutionX,resolutionY,DEFAULT_USE_GLPANEL);
+	}
+
+	@Override
+	public void setSystemCursorEnabled(boolean enabled) {
+		if(mBlankCursor==null)
+			mBlankCursor = mPanel.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),"null");
+		if(enabled)
+			mPanel.setCursor(Cursor.getDefaultCursor());
+		else
+			mPanel.setCursor(mBlankCursor);
+
 	}
 
 	public static int channelsToConst(int channels) {

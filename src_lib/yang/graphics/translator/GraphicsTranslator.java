@@ -149,6 +149,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void switchZWriting(boolean enable);
 
 	protected void postInit() { }
+	public void setSystemCursorEnabled(boolean enabled){ }
 
 	//TODO: glColorMask
 
