@@ -37,4 +37,8 @@ public class JointEditData {
 		}
 	}
 
+	public boolean isSelected() {
+		return mSelectionGroup>-1;
+	}
+
 }

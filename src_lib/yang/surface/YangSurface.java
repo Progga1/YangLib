@@ -36,7 +36,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	public static float PI = MathConst.PI;
 
 	public static boolean CATCH_EXCEPTIONS = false;
-	public final static boolean NO_MACRO_OVERWRITE = false;
+	public static boolean NO_MACRO_OVERWRITE = false;
 	public static int ALWAYS_STEREO_VISION = 0;
 	public static boolean SHOW_MACRO_SIGN = true;
 

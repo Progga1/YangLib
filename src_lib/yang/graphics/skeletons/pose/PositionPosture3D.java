@@ -80,6 +80,4 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 	}
 
 
-
-
 }

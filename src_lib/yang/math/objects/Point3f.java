@@ -1,5 +1,6 @@
 package yang.math.objects;
 
+
 public class Point3f {
 
 	public final static Point3f ZERO = new Point3f(0,0,0);
@@ -111,6 +112,25 @@ public class Point3f {
 		final float dY = mY-y;
 		final float dZ = mZ-z;
 		return (float)Math.sqrt(dX*dX+dY*dY+dZ*dZ);
+	}
+
+	public float getManhattanDistance(Point3f point) {
+		float dX;
+		float dY;
+		float dZ;
+		if(point.mX<mX)
+			dX = mX-point.mX;
+		else
+			dX = point.mX-mX;
+		if(point.mY<mY)
+			dY = mY-point.mY;
+		else
+			dY = point.mY-mY;
+		if(point.mZ<mZ)
+			dZ = mZ-point.mZ;
+		else
+			dZ = point.mZ-mZ;
+		return dX+dY+dZ;
 	}
 
 	public float getDistanceXZ(Point3f point) {
