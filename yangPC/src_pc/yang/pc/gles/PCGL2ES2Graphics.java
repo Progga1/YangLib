@@ -20,6 +20,7 @@ import javax.media.opengl.awt.GLJPanel;
 import yang.events.EventQueueHolder;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.Texture;
 import yang.model.enums.ByteFormat;
@@ -191,13 +192,14 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
-	public void setTextureData(int texId,int width,int height,int channels, ByteBuffer data) {
+	public void derivedSetTextureData(int texId,int width,int height, ByteBuffer data,TextureProperties properties) {
 		assert preCheck("Init texture");
 		gles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
 		gles2.glBindTexture(GL2ES2.GL_TEXTURE_2D, texId);
 		gles2.glPixelStorei(GL2ES2.GL_UNPACK_ALIGNMENT, GL2ES2.GL_TRUE);
 		assert checkErrorInst("Bind new texture");
 
+		int channels = properties.mChannels;
 		final int format = channelsToConst(channels);
 		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL2ES2.GL_UNSIGNED_BYTE, data);
 		assert checkErrorInst("Pass texture data with "+channels+" channels");

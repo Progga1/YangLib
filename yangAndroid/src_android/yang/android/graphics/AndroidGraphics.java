@@ -6,30 +6,36 @@ import java.nio.ShortBuffer;
 import yang.android.io.AndroidGFXLoader;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
+import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
+import yang.model.DebugYang;
 import yang.model.enums.ByteFormat;
 import android.content.Context;
+import android.opengl.ETC1;
 import android.opengl.GLES20;
 
 public class AndroidGraphics extends GraphicsTranslator {
 
+	public static boolean ALWAYS_RGBA = false;
+	public static boolean USE_TEXTURE_COMPRESSION = true;
+
 	public Context mContext;
-	
+
 	public AndroidGraphics(Context context) {
 		super();
 		mDriverKey = "ANDROID_GLES20";
 		mContext = context;
-		
+
 		mGFXLoader = new AndroidGFXLoader(this,mContext);
 	}
-	
+
 	public static final boolean clearError() {
 		GLES20.glGetError();
 		return true;
 	}
-	
+
 	public static final boolean checkError(String message,boolean pre) {
 		int error = GLES20.glGetError();
 		if (error != 0) {
@@ -42,7 +48,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 			return true;
 		}
 	}
-	
+
 	public static final boolean checkError(String message) {
 		return checkError(message,false);
 	}
@@ -56,7 +62,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 			default: throw new RuntimeException(channels + " channels not supported.");
 		}
 	}
-	
+
 	public static int byteFormatToConst(ByteFormat byteFormat) {
 		switch(byteFormat) {
 		case BYTE: return GLES20.GL_BYTE;
@@ -72,7 +78,8 @@ public class AndroidGraphics extends GraphicsTranslator {
 	public void postInit() {
 		GLES20.glDepthFunc(GLES20.GL_LEQUAL);
 	}
-	
+
+	@Override
 	public GLProgram createProgram() {
 		return new AndroidGLProgram();
 	}
@@ -81,7 +88,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	public void setClearColor(float r, float g, float b,float a) {
 		GLES20.glClearColor(r,g,b,a);
 	}
-	
+
 	@Override
 	public void clear(int mask) {
 		assert preCheck("Clear");
@@ -95,28 +102,51 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glGenTextures(count, target, 0);
 		assert checkError("Generate texture");
 	}
-	
+
 	@Override
 	public void setTextureParameter(int pName, int param) {
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, pName, param);
 	}
-	
+
+	public int getUnsigned(ByteBuffer buffer) {
+		int res = buffer.get();
+		if(res<0)
+			return res+256;
+		else
+			return res;
+	}
+
 	@Override
-	public void setTextureData(int texId,int width,int height,int channels, ByteBuffer buffer) {
+	public void derivedSetTextureData(int texId,int width,int height,ByteBuffer buffer,TextureProperties properties) {
+
+//		int[] results = new int[20];
+//        GLES20.glGetIntegerv(GLES20.GL_NUM_COMPRESSED_TEXTURE_FORMATS, results, 0);
+//        int numFormats = results[0];
+//        if (numFormats > results.length) {
+//            results = new int[numFormats];
+//        }
+//        GLES20.glGetIntegerv(GLES20.GL_COMPRESSED_TEXTURE_FORMATS, results, 0);
+//        for (int i = 0; i < numFormats; i++) {
+//            if (results[i] == ETC1.ETC1_RGB8_OES) {
+//                System.out.println("YEEEEEEEEEEESSS");
+//            }
+//        }
+
+		int channels = properties.mChannels;
 		assert preCheck("Set texture data");
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texId);
 		assert checkError("Bind new texture");
 		GLES20.glPixelStorei(GLES20.GL_UNPACK_ALIGNMENT, GLES20.GL_TRUE);
-		
+
 		int format;
 		int outFormat;
 		switch(channels) {
-//		case 1: 
+//		case 1:
 //			format = GLES20.GL_LUMINANCE;
 //			outFormat = GLES20.GL_RGB;
 //			break;
-		case 3: 
+		case 3:
 			format = GLES20.GL_RGB;
 			outFormat = GLES20.GL_RGB;
 			break;
@@ -127,11 +157,72 @@ public class AndroidGraphics extends GraphicsTranslator {
 			default: throw new RuntimeException(channels + " channels not supported.");
 		}
 
-		GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, width, height, 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
+		if(USE_TEXTURE_COMPRESSION && properties.mCompressIfPossible && channels==3 && buffer!=null) {
+
+			ByteBuffer tempBuf = ByteBuffer.allocateDirect(width*height*3);
+			int minSize = ETC1.getEncodedDataSize(4,4);
+			int size = minSize;
+			int i=0;
+			DebugYang.println("COMPRESS: "+width+"x"+height,1);
+			do {
+				if(i>0 && width>=2) {
+					buffer.rewind();
+
+					int stride = width*3;
+					for(int y=0;y<height;y++) {
+						for(int x=0;x<width;x++) {
+							int idX = x*2*3;
+							int idY = y*2*stride*2;
+							buffer.position(idX + idY);
+							int r = getUnsigned(buffer);
+							int g = getUnsigned(buffer);
+							int b = getUnsigned(buffer);
+							buffer.position(idX+3 + idY);
+							r += getUnsigned(buffer);
+							g += getUnsigned(buffer);
+							b += getUnsigned(buffer);
+							buffer.position(idX + idY+stride*2);
+							r += getUnsigned(buffer);
+							g += getUnsigned(buffer);
+							b += getUnsigned(buffer);
+							buffer.position(idX+3 + idY+stride*2);
+							r += getUnsigned(buffer);
+							g += getUnsigned(buffer);
+							b += getUnsigned(buffer);
+							buffer.position(x*3+y*stride);
+							buffer.put((byte)(r/4));
+							buffer.put((byte)(g/4));
+							buffer.put((byte)(b/4));
+						}
+					}
+				}
+				if(width>=4)
+					size = ETC1.getEncodedDataSize(width, height);
+				else
+					size = minSize;
+				tempBuf.rewind();
+				buffer.rewind();
+				ETC1.encodeImage(buffer, width, height, 3, width*3, tempBuf);
+				GLES20.glCompressedTexImage2D(GLES20.GL_TEXTURE_2D, i, ETC1.ETC1_RGB8_OES, width, height, 0, size, tempBuf);
+				//GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, i, format, width, height, 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
+				width /= 2;
+				height /= 2;
+				i++;
+			}while(width>=1 && properties.isMipMap());
+
+		}else
+			GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, width, height, 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
 		assert checkError("Pass texture data");
 
 	}
-	
+
+	@Override
+	public void generateMipMap() {
+		assert preCheck("Generate mip map");
+		GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
+		assert checkError("Generate mip map");
+	}
+
 	@Override
 	public void setTextureRectData(int texId,int level,int offsetX,int offsetY,int width,int height,int channels, ByteBuffer data) {
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -151,12 +242,12 @@ public class AndroidGraphics extends GraphicsTranslator {
 			indexBuffer.limit(lim);
 		}
 	}
-	
+
 	@Override
 	public void derivedSetAttributeBuffer(int handle, int bufferIndex,IndexedVertexBuffer vertexBuffer) {
 		GLES20.glVertexAttribPointer(handle, vertexBuffer.mFloatBufferElementSizes[bufferIndex], GLES20.GL_FLOAT, false, 0, vertexBuffer.getFloatBuffer(bufferIndex));
 	}
-	
+
 	@Override
 	public void enableAttributePointer(int handle) {
 		GLES20.glEnableVertexAttribArray(handle);
@@ -171,7 +262,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	protected void setViewPort(int width, int height) {
 		GLES20.glViewport(0, 0, width, height);
 	}
-	
+
 	@Override
 	public void setCullMode(boolean drawClockwise) {
 		if(drawClockwise)
@@ -193,7 +284,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 		assert checkError("Set screen render target");
 	}
-	
+
 	@Override
 	public TextureRenderTarget derivedCreateRenderTarget(Texture texture) {
 		assert preCheck("Create render target");
@@ -231,7 +322,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 			GLES20.glDepthFunc(GLES20.GL_GREATER);
 		assert checkError("Set depth function");
 	}
-	
+
 	@Override
 	public void bindTexture(int texId,int level) {
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0+level);
@@ -239,13 +330,6 @@ public class AndroidGraphics extends GraphicsTranslator {
 		assert checkError("Bind texture");
 	}
 
-	@Override
-	public void generateMipMap() {
-		assert preCheck("Generate mip map");
-		GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		assert checkError("Generate mip map");
-	}
-	
 	@Override
 	public void readPixels(int x,int y,int width,int height,int channels,ByteFormat byteFormat,ByteBuffer target) {
 		if(byteFormat!=ByteFormat.UNSIGNED_BYTE)
@@ -269,7 +353,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	public void disable(int glConstant) {
 		GLES20.glDisable(glConstant);
 	}
-	
+
 	@Override
 	public void setBlendFunction(int sourceFactor,int destFactor) {
 		GLES20.glBlendFunc(sourceFactor, destFactor);
@@ -289,7 +373,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 	public void setScissorRectI(int x, int y, int width, int height) {
 		GLES20.glScissor(x, y, width, height);
 	}
-	
+
 	@Override
 	public void switchZWriting(boolean enabled) {
 		GLES20.glDepthMask(enabled);

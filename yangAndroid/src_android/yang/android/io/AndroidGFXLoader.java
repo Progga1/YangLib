@@ -3,6 +3,7 @@ package yang.android.io;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import yang.android.graphics.AndroidGraphics;
 import yang.graphics.textures.TextureData;
@@ -14,15 +15,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class AndroidGFXLoader extends AbstractGFXLoader {
-	
+
 	private Context mContext;
 	private ByteBuffer mTempBuf;
-	
+
 	public AndroidGFXLoader(AndroidGraphics graphics,Context context) {
 		super(graphics,new AndroidResourceManager(context));
 		mContext = context;
 	}
-	
+
 	@Override
 	protected void getImageDimensions(String filename,Dimensions2i result) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
@@ -38,7 +39,7 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		BitmapFactory.decodeStream(is,null,options);
 		result.set(options.outWidth,options.outHeight);
 	}
-	
+
 	@Override
 	protected TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
 		AssetManager mgr = mContext.getAssets();
@@ -49,36 +50,54 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		Bitmap bmp = BitmapFactory.decodeStream(is);
 
-		try { 
+		BitmapFactory.Options opt = new BitmapFactory.Options();
+		opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		Bitmap bmp = BitmapFactory.decodeStream(is,null,opt);
+
+		try {
 			is.close();
 			is = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		int width = bmp.getWidth();
 		int height = bmp.getHeight();
-		
+
 //		if(mTempBuf==null)
 //			mTempBuf = ByteBuffer.allocateDirect(2048*1024*4);
 //		if((width>1024 || height>1024) && mTempBuf.capacity()<(2048*2048*4))
 //			 mTempBuf = ByteBuffer.allocateDirect(2048*2048*4);
-		
-		
-		int channels = bmp.hasAlpha()?4:4;
-		mTempBuf = ByteBuffer.allocateDirect(width*height*channels);
+
+
+		boolean alpha = bmp.hasAlpha() || forceRGBA || AndroidGraphics.ALWAYS_RGBA;
+		int channels = alpha?4:3;
+		mTempBuf = ByteBuffer.allocateDirect(width*height*4).order(ByteOrder.nativeOrder());
 		bmp.copyPixelsToBuffer(mTempBuf);
+
+		ByteBuffer uBuf = mTempBuf;
+		if(channels==3) {
+			ByteBuffer rgbBuffer = ByteBuffer.allocateDirect(width*height*3).order(ByteOrder.nativeOrder());
+			mTempBuf.rewind();
+			for(int i=0;i<rgbBuffer.capacity();i+=3) {
+				rgbBuffer.put(mTempBuf.get());
+				rgbBuffer.put(mTempBuf.get());
+				rgbBuffer.put(mTempBuf.get());
+				mTempBuf.get();
+			}
+			mTempBuf.rewind();
+			uBuf = rgbBuffer;
+		}
+		//System.out.println(filename+" "+channels+" "+bmp.hasAlpha()+" "+forceRGBA+" "+AndroidGraphics.ALWAYS_RGBA);
 		bmp.recycle();
 		bmp = null;
-		mTempBuf.rewind();
-		TextureData data =  new TextureData(mTempBuf,width,height,channels);
+		uBuf.rewind();
+		TextureData data =  new TextureData(uBuf,width,height,channels);
 		mTempBuf = null;
 		return data;
 	}
-	
+
 //	@Override
 //	public Texture loadImage(String name,TextureSettings textureSettings,boolean redToAlpha) {
 //		if(redToAlpha)
@@ -91,19 +110,19 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //		}
-//		
+//
 //		final Bitmap bmp = BitmapFactory.decodeStream(is);
 //
-//		try { 
+//		try {
 //			is.close();
 //			is = null;
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-//		
+//
 //		int width = bmp.getWidth();
 //		int height = bmp.getHeight();
-//		
+//
 //		bmp.copyPixelsToBuffer(tempBuf);
 //		bmp.recycle();
 //		tempBuf.rewind();

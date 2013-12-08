@@ -1,8 +1,6 @@
 package yang.samples.statesystem.states;
 
 import yang.graphics.model.FloatColor;
-import yang.graphics.textures.enums.TextureFilter;
-import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.math.objects.matrix.YangMatrix;
 import yang.samples.statesystem.SampleStateCameraControl;
@@ -14,7 +12,6 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 	//public boolean mDrawCube = true;
 	public boolean mDrawCross = false;
 	public YangMatrix mTransform = new YangMatrix();
-	public Texture mCubeTex;
 	public boolean mUseDebugTransform = true;
 
 	public StereoCalibrationState() {
@@ -26,7 +23,6 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 		super.initGraphics();
 		super.mOrthogonalProjection = false;
 		mCamera.setZoom(3);
-		mCubeTex = mGFXLoader.getImage("cube",TextureFilter.LINEAR_MIP_LINEAR);
 	}
 
 	@Override
@@ -52,7 +48,7 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 		//mTransform.scale(1,1,0.5f);
 
 		mGraphics3D.setWhite();
-		mGraphics.bindTexture(mCubeTex);
+		mGraphics.bindTexture(mStateSystem.mCubeTexture);
 
 		if(!mDrawCross)
 			mGraphics3D.drawCubeCentered(mTransform);

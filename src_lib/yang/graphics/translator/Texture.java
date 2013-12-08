@@ -30,6 +30,15 @@ public class Texture extends AbstractTexture {
 		mProperties = properties;
 	}
 
+	@Override
+	public void update(TextureData data) {
+		if(mIsAlphaMap)
+			mProperties.mChannels = 4;
+		else
+			mProperties.mChannels = data.mChannels;
+		super.update(data);
+	}
+
 //	public Texture(GraphicsTranslator graphics, ByteBuffer source, int width, int height, TextureProperties properties) {
 //		this(graphics);
 //		initCompletely(source, width, height, properties);

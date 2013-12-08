@@ -175,6 +175,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 				System.err.println("Image not found: "+texKey);
 			if(tex.mIsAlphaMap)
 				data.redToAlpha();
+
 			tex.update(data);
 		}
 	}
@@ -187,19 +188,24 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	private Texture loadTexture(String filename,TextureProperties textureProperties,boolean alphaMap) {
 		if(mEnqueueMode) {
-			final Texture result = mGraphics.createTexture(textureProperties).generate();
+			final Texture result = mGraphics.createTexture(textureProperties.clone()).generate();
 			this.getImageDimensions(filename, mTempDim);
 			//mTempDim.set(512, 512);
 			result.mWidth = mTempDim.mWidth;
 			result.mHeight = mTempDim.mHeight;
-			if(alphaMap)
+			if(alphaMap) {
 				result.mIsAlphaMap = true;
+				result.mProperties.mChannels = 4;
+			}else{
+				result.mProperties.mChannels = 0;
+			}
 			enqueue(filename,result);
 			return result;
 		}else{
 			final TextureData data = derivedLoadImageData(filename,alphaMap);
 			if(alphaMap)
 				data.redToAlpha();
+			textureProperties.mChannels = data.mChannels;
 			final Texture result = mGraphics.createAndInitTexture(data,textureProperties);
 			result.mIsAlphaMap = alphaMap;
 			result.finish();
