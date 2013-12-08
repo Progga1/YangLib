@@ -13,8 +13,8 @@ public class TextureCoordinatesQuad {
 	public static final int ROTATE_CW90 = 1;
 	public static final int ROTATE_180 = 2;
 	public static final int ROTATE_CCW90 = 3;
-	public static final int FLIP_HORIZONTALLY = 4;
-	public static final int FLIP_VERTICALLY = 5;
+	public static final int FLIP_HORIZONTALLY = 1 << 8;
+	public static final int FLIP_VERTICALLY = 1 << 9;
 	public static final int ID_X1 = 4;
 	public static final int ID_Y1 = 5;
 	public static final int ID_X2 = 2;
@@ -91,7 +91,7 @@ public class TextureCoordinatesQuad {
 	}
 
 	public TextureCoordinatesQuad setFlipped(boolean flipX,boolean flipY) {
-		return setModifier((mModifier & 0xFF) + (flipX?256:0) + (flipY?512:0));
+		return setModifier((mModifier & 0xFF) + (flipX?FLIP_HORIZONTALLY:0) + (flipY?FLIP_VERTICALLY:0));
 	}
 
 	public TextureCoordinatesQuad setFlippedX() {
