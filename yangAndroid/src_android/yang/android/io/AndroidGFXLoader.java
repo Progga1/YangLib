@@ -17,7 +17,6 @@ import android.graphics.BitmapFactory;
 public class AndroidGFXLoader extends AbstractGFXLoader {
 
 	private Context mContext;
-	private ByteBuffer mTempBuf;
 
 	public AndroidGFXLoader(AndroidGraphics graphics,Context context) {
 		super(graphics,new AndroidResourceManager(context));
@@ -73,20 +72,20 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 
 		boolean alpha = bmp.hasAlpha() || forceRGBA || AndroidGraphics.ALWAYS_RGBA;
 		int channels = alpha?4:3;
-		mTempBuf = ByteBuffer.allocateDirect(width*height*4).order(ByteOrder.nativeOrder());
-		bmp.copyPixelsToBuffer(mTempBuf);
+		ByteBuffer tempBuf = getOrCreateTempBuffer(width,height,4);
+		bmp.copyPixelsToBuffer(tempBuf);
 
-		ByteBuffer uBuf = mTempBuf;
+		ByteBuffer uBuf = tempBuf;
 		if(channels==3) {
 			ByteBuffer rgbBuffer = ByteBuffer.allocateDirect(width*height*3).order(ByteOrder.nativeOrder());
-			mTempBuf.rewind();
+			tempBuf.rewind();
 			for(int i=0;i<rgbBuffer.capacity();i+=3) {
-				rgbBuffer.put(mTempBuf.get());
-				rgbBuffer.put(mTempBuf.get());
-				rgbBuffer.put(mTempBuf.get());
-				mTempBuf.get();
+				rgbBuffer.put(tempBuf.get());
+				rgbBuffer.put(tempBuf.get());
+				rgbBuffer.put(tempBuf.get());
+				tempBuf.get();
 			}
-			mTempBuf.rewind();
+			tempBuf.rewind();
 			uBuf = rgbBuffer;
 		}
 		//System.out.println(filename+" "+channels+" "+bmp.hasAlpha()+" "+forceRGBA+" "+AndroidGraphics.ALWAYS_RGBA);
@@ -94,7 +93,6 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		bmp = null;
 		uBuf.rewind();
 		TextureData data =  new TextureData(uBuf,width,height,channels);
-		mTempBuf = null;
 		return data;
 	}
 

@@ -33,7 +33,6 @@ public class PCGFXLoader extends AbstractGFXLoader {
 
 	@Override
 	public TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
-		ByteBuffer buffer = null;
 		BufferedImage image = null;
 
 		final String path =((PCResourceManager)mResources).getAssetFile(filename).getAbsolutePath();
@@ -48,7 +47,7 @@ public class PCGFXLoader extends AbstractGFXLoader {
 
 		final WritableRaster alphaBuffer = image.getAlphaRaster();
 		final int channels = alphaBuffer!=null || forceRGBA?4:3;
-		buffer = ByteBuffer.allocate(width * height * channels);
+		ByteBuffer buffer = getOrCreateTempBuffer(width,height,channels);
 
 		if(alphaBuffer==null) {
 			for (int y = 0; y < height; y++) {

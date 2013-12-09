@@ -18,8 +18,8 @@ import android.opengl.GLES20;
 
 public class AndroidGraphics extends GraphicsTranslator {
 
-	public static boolean ALWAYS_RGBA = false;
-	public static boolean USE_TEXTURE_COMPRESSION = true;
+	public static boolean ALWAYS_RGBA = true;
+	public static boolean USE_TEXTURE_COMPRESSION = false;
 
 	public Context mContext;
 
@@ -128,7 +128,6 @@ public class AndroidGraphics extends GraphicsTranslator {
 //        GLES20.glGetIntegerv(GLES20.GL_COMPRESSED_TEXTURE_FORMATS, results, 0);
 //        for (int i = 0; i < numFormats; i++) {
 //            if (results[i] == ETC1.ETC1_RGB8_OES) {
-//                System.out.println("YEEEEEEEEEEESSS");
 //            }
 //        }
 

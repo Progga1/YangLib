@@ -2,6 +2,8 @@ package yang.graphics.translator;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -15,8 +17,6 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.math.objects.Dimensions2i;
 import yang.systemdependent.AbstractResourceManager;
 import yang.util.YangList;
-
-
 
 public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
@@ -34,7 +34,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	}
 
-	public static int MAX_TEXTURES = 512;
+	public static boolean REUSE_BUFFER = false;
+	public static int MAX_TEXTURES = 1024;
+
 	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg",".bmp"};
 	public static final String SHADER_EXT	= ".txt";
 
@@ -47,6 +49,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	protected HashMap<String, YangMaterialSet> mMaterials;
 	protected YangList<Texture> mAtlasses;
 	protected GraphicsTranslator mGraphics;
+	protected ByteBuffer mTempBuffer;
+	protected int mMaxTexBytes = 0;
 
 	public String[] mTexKeyQueue;
 	public AbstractTexture[] mTexQueue;
@@ -127,6 +131,13 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return loadImageData(name,false);
 	}
 
+	protected ByteBuffer getOrCreateTempBuffer(int width,int height,int channels) {
+		if(mTempBuffer!=null)
+			return mTempBuffer;
+		else
+			return ByteBuffer.allocateDirect(width*height*channels);
+	}
+
 	public SubTexture loadIntoTexture(Texture target,String name,int x,int y) {
 		final SubTexture result = new SubTexture(target);
 		result.setPosition(x,y);
@@ -149,6 +160,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 
 	private void enqueue(String key,AbstractTexture tex) {
+		int size = tex.getWidth()*tex.getHeight()*4;
+		if(size>mMaxTexBytes) {
+			mMaxTexBytes = size;
+		}
 		mTexQueue[mTexQueueId] = tex;
 		mTexKeyQueue[mTexQueueId++] = key;
 		mQueueBytes += tex.getByteCount();
@@ -163,6 +178,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 
 	public void loadEnqueuedTextures() {
+		if(REUSE_BUFFER && mTempBuffer==null && mMaxTexBytes>0) {
+			mTempBuffer = ByteBuffer.allocateDirect(mMaxTexBytes).order(ByteOrder.nativeOrder());System.out.println(mMaxTexBytes);
+		}
 		mEnqueueMode = false;
 		String texKey;
 		final int minBytes = mMaxQueueLoadingBytes>0?mQueueBytes - mMaxQueueLoadingBytes:-1;
@@ -184,6 +202,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		for(final Texture atlas:mAtlasses) {
 			atlas.finish();
 		}
+		mTempBuffer = null;
 	}
 
 	private Texture loadTexture(String filename,TextureProperties textureProperties,boolean alphaMap) {
