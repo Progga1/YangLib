@@ -49,4 +49,8 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 		System.arraycopy(posture.mData, 0, mData, 0, mData.length);
 	}
 
+	public void clear() {
+
+	}
+
 }

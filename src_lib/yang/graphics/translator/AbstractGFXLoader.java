@@ -34,7 +34,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	}
 
-	public static boolean REUSE_BUFFER = false;
+	public static boolean REUSE_BUFFER = true;
 	public static int MAX_TEXTURES = 1024;
 
 	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg",".bmp"};

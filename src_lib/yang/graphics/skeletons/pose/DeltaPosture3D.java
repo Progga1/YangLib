@@ -56,9 +56,7 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 
 	@Override
 	public void copyFromSkeleton(MassAggregation skeleton) {
-		for(int i=0;i<mData.length;i++) {
-			mData[i] = Float.MAX_VALUE;
-		}
+		clear();
 	}
 
 	@Override
@@ -66,7 +64,12 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 		return "new PositionPose3D(new float[]{"+Util.arrayToString(mData,",",0)+"})";
 	}
 
-
+	@Override
+	public void clear() {
+		for(int i=0;i<mData.length;i++) {
+			mData[i] = Float.MAX_VALUE;
+		}
+	}
 
 
 }
