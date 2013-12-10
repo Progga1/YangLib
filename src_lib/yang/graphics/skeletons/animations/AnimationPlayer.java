@@ -149,4 +149,14 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		return mCurrentNextFrame;
 	}
 
+	public KeyFrame getPreviousKeyFrame(float time) {
+		time *= mCurrentAnimation.mFramesPerSecond;
+		if(time<0)
+			return null;
+		if(time>mCurrentAnimation.mFrameCount)
+			return null;
+		return mCurrentAnimation.mPreviousFrames[(int)(time)];
+	}
+
+
 }

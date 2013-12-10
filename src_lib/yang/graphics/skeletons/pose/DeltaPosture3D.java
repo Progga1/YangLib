@@ -42,10 +42,10 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 						final float fac = weight;
 						if(interpolationPose.mData[c]!=Float.MAX_VALUE) {
 							joint.addPositionForce(
-									jointData.mPrevPosX + mData[c]*fac,
-									jointData.mPrevPosY + mData[c+1]*fac,
-									jointData.mPrevPosZ + mData[c+2]*fac,
-									8);
+									jointData.mPrevPos.mX + mData[c]*fac,
+									jointData.mPrevPos.mY + mData[c+1]*fac,
+									jointData.mPrevPos.mZ + mData[c+2]*fac,
+									4);
 						}
 					}
 				}

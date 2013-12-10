@@ -179,7 +179,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	public void loadEnqueuedTextures() {
 		if(REUSE_BUFFER && mTempBuffer==null && mMaxTexBytes>0) {
-			mTempBuffer = ByteBuffer.allocateDirect(mMaxTexBytes).order(ByteOrder.nativeOrder());System.out.println(mMaxTexBytes);
+			mTempBuffer = ByteBuffer.allocateDirect(mMaxTexBytes).order(ByteOrder.nativeOrder());
 		}
 		mEnqueueMode = false;
 		String texKey;

@@ -60,13 +60,14 @@ public class Vector3f extends Point3f{
 		mZ *= scalar;
 	}
 
-	public void normalize() {
+	public float normalize() {
 		final float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
 		if(d!=0) {
 			mX /= d;
 			mY /= d;
 			mZ /= d;
 		}
+		return d;
 	}
 
 	public float dot(Vector3f vector) {

@@ -1,14 +1,13 @@
 package yang.physics.massaggregation.editing;
 
+import yang.math.objects.Point3f;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
 import yang.physics.massaggregation.elements.Joint;
 
 
 public class JointEditData {
 
-	public float mPrevPosX;
-	public float mPrevPosY;
-	public float mPrevPosZ;
+	public Point3f mPrevPos = new Point3f();
 
 	public int mSelectionGroup = -1;
 	public int mSelectionDepth = -1;
@@ -26,13 +25,13 @@ public class JointEditData {
 	public void setPrevPos() {
 		if(mJoint!=null) {
 			if(false && mJoint.mDragging) {
-				mPrevPosX = mJoint.mDragDelayed.mX;
-				mPrevPosY = mJoint.mDragDelayed.mY;
-				mPrevPosZ = mJoint.mDragDelayed.mZ;
+				mPrevPos.mX = mJoint.mDragDelayed.mX;
+				mPrevPos.mY = mJoint.mDragDelayed.mY;
+				mPrevPos.mZ = mJoint.mDragDelayed.mZ;
 			}else{
-				mPrevPosX = mJoint.mX;
-				mPrevPosY = mJoint.mY;
-				mPrevPosZ = mJoint.mZ;
+				mPrevPos.mX = mJoint.mX;
+				mPrevPos.mY = mJoint.mY;
+				mPrevPos.mZ = mJoint.mZ;
 			}
 		}
 	}

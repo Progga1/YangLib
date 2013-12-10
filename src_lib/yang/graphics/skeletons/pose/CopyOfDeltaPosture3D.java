@@ -50,9 +50,9 @@ public class CopyOfDeltaPosture3D extends Posture<CopyOfDeltaPosture3D,MassAggre
 //									);
 
 							joint.addPositionForce(
-									jointData.mPrevPosX + mData[c]*fac,
-									jointData.mPrevPosY + mData[c+1]*fac,
-									jointData.mPrevPosZ + mData[c+2]*fac,
+									jointData.mPrevPos.mX + mData[c]*fac,
+									jointData.mPrevPos.mY + mData[c+1]*fac,
+									jointData.mPrevPos.mZ + mData[c+2]*fac,
 									1);
 
 //							float x,y,z;
