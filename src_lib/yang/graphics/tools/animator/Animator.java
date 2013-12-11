@@ -217,7 +217,7 @@ public class Animator implements YangEventListener {
 		else{
 			mCurAnimationPlayer.setNormalizedAnimationTime((float)mCurFrame.mFirstFrame/mCurAnimation.mFrameCount);
 			if(!mCurAnimationPlayer.mCurrentAnimation.mAutoAnimate)
-				mCurFrame.mPose.applyPose(mCurSkeleton);
+				mCurFrame.mPose.applyPosture(mCurSkeleton);
 		}
 
 	}

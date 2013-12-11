@@ -21,7 +21,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 	}
 
 	@Override
-	public void applyPose(CartoonSkeleton2D skeleton,AnglePosture2D interpolationPose,float weight) {
+	public void applyPosture(CartoonSkeleton2D skeleton,AnglePosture2D interpolationPose,float weight) {
 		int c = 0;
 		final float dWeight = 1-weight;
 		skeleton.mCurrentPose = this;

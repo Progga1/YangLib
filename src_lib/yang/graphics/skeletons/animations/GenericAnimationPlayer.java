@@ -80,13 +80,13 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 
 	public void setFrame(int frame) {
 		if(frame!=mCurFrame)
-			mCurrentAnimation.mKeyFrames[frame].mPose.applyPose(mSkeleton);
+			mCurrentAnimation.mKeyFrames[frame].mPose.applyPosture(mSkeleton);
 	}
 
 	public void setFrameForceUpdate(int frame) {
 		if(frame>=mCurrentAnimation.mKeyFrames.length)
 			return;
-		mCurrentAnimation.mKeyFrames[frame].mPose.applyPose(mSkeleton);
+		mCurrentAnimation.mKeyFrames[frame].mPose.applyPosture(mSkeleton);
 	}
 
 	public void restart() {

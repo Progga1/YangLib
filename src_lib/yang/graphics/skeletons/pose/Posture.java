@@ -23,13 +23,13 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 		mData = data;
 	}
 
-	public abstract void applyPose(SkeletonType skeleton,InterpolationPoseType interpolationPose, float weight);
+	public abstract void applyPosture(SkeletonType skeleton,InterpolationPoseType interpolationPose, float weight);
 	public abstract void applyForceBased(SkeletonType skeleton,InterpolationPoseType interpolationPose, float weight);
 	public abstract void copyFromSkeleton(SkeletonType skeleton);
 	public abstract String toSourceCode();
 
-	public void applyPose(SkeletonType skeleton) {
-		applyPose(skeleton,null,1);
+	public void applyPosture(SkeletonType skeleton) {
+		applyPosture(skeleton,null,1);
 	}
 
 	public void applyForceBased(SkeletonType skeleton) {

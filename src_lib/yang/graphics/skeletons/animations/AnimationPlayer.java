@@ -72,7 +72,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 			mCurrentPrevFrame = mCurrentAnimation.mPreviousFrames[frameId];
 			mCurrentNextFrame = mCurrentAnimation.mNextFrames[frameId];
 			if(!mCurrentAnimation.mInterpolate) {
-				mCurrentPrevFrame.mPose.applyPose(mSkeleton);
+				mCurrentPrevFrame.mPose.applyPosture(mSkeleton);
 			}else{
 				final KeyFrame prevFrame = mCurrentPrevFrame;
 				final KeyFrame nextFrame = mCurrentNextFrame;
@@ -81,13 +81,13 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 					if(mForceBased)
 						prevFrame.mPose.applyForceBased(mSkeleton);
 					else
-						prevFrame.mPose.applyPose(mSkeleton);
+						prevFrame.mPose.applyPosture(mSkeleton);
 				}else{
 					final float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mTimeFactor;
 					if(mForceBased)
 						nextFrame.mPose.applyForceBased(mSkeleton, prevFrame.mPose, t);
 					else
-						nextFrame.mPose.applyPose(mSkeleton, prevFrame.mPose, t);
+						nextFrame.mPose.applyPosture(mSkeleton, prevFrame.mPose, t);
 				}
 			}
 		}
@@ -148,24 +148,5 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public KeyFrame getCurrentNextKeyFrame() {
 		return mCurrentNextFrame;
 	}
-
-	public KeyFrame getPreviousKeyFrame(float time) {
-		time *= mCurrentAnimation.mFramesPerSecond;
-		if(time<0)
-			return null;
-		if(time>mCurrentAnimation.mFrameCount)
-			return null;
-		return mCurrentAnimation.mPreviousFrames[(int)(time)];
-	}
-
-	public KeyFrame getNextKeyFrame(float time) {
-		time *= mCurrentAnimation.mFramesPerSecond;
-		if(time<0)
-			return null;
-		if(time>mCurrentAnimation.mFrameCount)
-			return null;
-		return mCurrentAnimation.mNextFrames[(int)(time)];
-	}
-
 
 }

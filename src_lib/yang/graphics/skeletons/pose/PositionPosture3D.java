@@ -18,11 +18,11 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 	}
 
 	@Override
-	public void applyPose(MassAggregation skeleton, PositionPosture3D interpolationPose, float weight) {
+	public void applyPosture(MassAggregation skeleton, PositionPosture3D interpolationPose, float weight) {
 		int c = 0;
 		final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {
-			if(joint.mAnimate) {
+			if(joint.isAnimated()) {
 				if(mData[c]!=Float.MAX_VALUE) {
 					if(weight==0 || interpolationPose==null) {
 						joint.mX = mData[c++];
@@ -44,7 +44,7 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 		int c = 0;
 		final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {
-			if(joint.mAnimate && !joint.mNoAnimationForce) {
+			if(joint.isAnimated() && !joint.mNoAnimationForce) {
 				if(mData[c]!=Float.MAX_VALUE) {
 					if(weight==0 || interpolationPose==null) {
 						joint.addPositionForce(mData[c],mData[c+1],mData[c+2],1);

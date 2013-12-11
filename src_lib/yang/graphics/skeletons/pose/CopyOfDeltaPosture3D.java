@@ -23,7 +23,7 @@ public class CopyOfDeltaPosture3D extends Posture<CopyOfDeltaPosture3D,MassAggre
 	}
 
 	@Override
-	public void applyPose(MassAggregation skeleton, CopyOfDeltaPosture3D interpolationPose, float weight) {
+	public void applyPosture(MassAggregation skeleton, CopyOfDeltaPosture3D interpolationPose, float weight) {
 
 	}
 

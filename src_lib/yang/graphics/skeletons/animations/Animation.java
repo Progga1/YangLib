@@ -159,4 +159,22 @@ public class Animation<CarrierType> {
 		refreshKeyFrames();
 	}
 
+	public KeyFrame getPreviousKeyFrame(float time) {
+		time *= mFramesPerSecond;
+		if(time<0)
+			return null;
+		if(time>mFrameCount)
+			return null;
+		return mPreviousFrames[(int)(time)];
+	}
+
+	public KeyFrame getNextKeyFrame(float time) {
+		time *= mFramesPerSecond;
+		if(time<0)
+			return null;
+		if(time>mFrameCount)
+			return null;
+		return mNextFrames[(int)(time)];
+	}
+
 }

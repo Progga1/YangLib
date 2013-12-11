@@ -277,7 +277,7 @@ public class MassAggregation {
 
 	public void reApplyPose() {
 		if(mCurrentPose!=null)
-			mCurrentPose.applyPose(this);
+			mCurrentPose.applyPosture(this);
 	}
 
 	@SuppressWarnings("unchecked")
