@@ -364,6 +364,10 @@ public class YangEventQueue {
 		}
 	}
 
+	public void clearMetaKeys() {
+		for (int i = 0; i < mMetaKeys.length; i++) mMetaKeys[i] = false;
+	}
+
 	public void close() {
 		if(mMacroWriters!=null) {
 			for(final MacroWriter writer:mMacroWriters)
