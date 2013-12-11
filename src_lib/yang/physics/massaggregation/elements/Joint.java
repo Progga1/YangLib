@@ -473,7 +473,7 @@ public class Joint extends Point3f {
 
 	@Override
 	public String toString() {
-		return "JOINT:"+this.mName;
+		return this.mName;
 	}
 
 	public float getWorldDistance(float worldX, float worldY) {

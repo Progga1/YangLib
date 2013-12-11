@@ -13,9 +13,11 @@ public class JointEditData {
 	public int mSelectionDepth = -1;
 	public Joint mJoint;
 	public DistanceConstraint mParentConnection;
+	public Skeleton3DEditing mSkeletonEdit;
 
-	public void set(Joint joint) {
+	public void set(Joint joint,Skeleton3DEditing skeletonEdit) {
 		mJoint = joint;
+		mSkeletonEdit = skeletonEdit;
 		if(mJoint.mAngleParent!=null)
 			mParentConnection = mJoint.mSkeleton.getDistanceConstraint(mJoint.mAngleParent,mJoint);
 		else
@@ -38,6 +40,11 @@ public class JointEditData {
 
 	public boolean isSelected() {
 		return mSelectionGroup>-1;
+	}
+
+	@Override
+	public String toString() {
+		return "selection group/depth="+mSelectionGroup+"/"+mSelectionDepth+"; Joint="+mJoint;
 	}
 
 }

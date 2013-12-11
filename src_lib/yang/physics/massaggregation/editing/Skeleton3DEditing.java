@@ -1,5 +1,6 @@
 package yang.physics.massaggregation.editing;
 
+import model.animation.JointEditListener;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.meshcreators.LineDrawer3D;
@@ -32,6 +33,8 @@ public class Skeleton3DEditing {
 	public Joint mHoverJoint = null;
 	private DrawBatch mSphereBatch;
 
+	public JointEditListener mJointEditListener;
+
 	public float mAlpha = 1;
 
 	public Skeleton3DEditing(Default3DGraphics graphics3D,MassAggregation skeleton) {
@@ -53,7 +56,7 @@ public class Skeleton3DEditing {
 
 	public void refreshSkeletonData() {
 		for(final Joint joint:mSkeleton.mJoints) {
-			mJointData[joint.mId].set(joint);
+			mJointData[joint.mId].set(joint,this);
 		}
 	}
 
@@ -156,6 +159,8 @@ public class Skeleton3DEditing {
 //			mSelection[data.mSelectionIndex] = null;
 		if(data.mSelectionDepth==-1 || data.mSelectionDepth>=depth) {
 			if(group<0) {
+				if(mJointEditListener!=null)
+					mJointEditListener.onDeselectJoint(data);
 				data.mSelectionGroup = -1;
 				data.mSelectionDepth = -1;
 				if(data.mParentConnection!=null) {
@@ -165,6 +170,8 @@ public class Skeleton3DEditing {
 			}else{
 				data.mSelectionGroup = group;
 				data.mSelectionDepth = depth;
+				if(mJointEditListener!=null)
+					mJointEditListener.onSelectJoint(data);
 //				if(data.mParentConnection!=null) {
 //					if(data.mParentConnection.mBone.mJoint1==joint)
 //						data.mParentConnection.mApplyToJoint2 = false;
@@ -228,6 +235,10 @@ public class Skeleton3DEditing {
 		for(final JointEditData jointData:mJointData) {
 			jointData.setPrevPos();
 		}
+	}
+
+	public void setJointEditListener(JointEditListener listener) {
+		mJointEditListener = listener;
 	}
 
 }
