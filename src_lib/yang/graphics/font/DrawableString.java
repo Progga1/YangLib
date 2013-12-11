@@ -191,8 +191,8 @@ public class DrawableString extends FixedString {
 								spaceCharX = charX+font.mKerningMaxX[lstVal];
 								charX = spaceCharX+font.mSpaceWidth;
 							}else{
-								spaceCharX = charX + spacing;
-								charX += spacing*2;
+								spaceCharX = charX + spaceWidth + spacing;
+								charX += spaceWidth*2;
 							}
 						}
 						lstVal = -1;
@@ -266,7 +266,10 @@ public class DrawableString extends FixedString {
 								mRecentCharCount -= charCount;
 								if(wordSplit) {
 									uVal = '-';
-									uX = charX;
+									if(kerningEnabled)
+										uX = charX;
+									else
+										uX = charX+font.mConstantCharDistance;
 									coords = font.mCoordinates[uVal];
 									w = font.mWidths[uVal];
 								}else

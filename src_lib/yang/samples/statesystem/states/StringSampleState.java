@@ -41,6 +41,7 @@ public class StringSampleState extends SampleState {
 
 		mAutoLineBreakString = new DrawableAnchoredLines();
 		mAutoLineBreakString.allocFormatString("A long Text with auto~matic line breaks..\nas well as manual line breaks.");
+//		mAutoLineBreakString.mProperties.mKerningEnabled = false;
 	}
 
 	@Override
