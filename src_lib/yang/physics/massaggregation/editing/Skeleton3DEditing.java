@@ -1,6 +1,5 @@
 package yang.physics.massaggregation.editing;
 
-import model.animation.JointEditListener;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.meshcreators.LineDrawer3D;
