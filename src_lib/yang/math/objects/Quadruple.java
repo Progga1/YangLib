@@ -110,5 +110,13 @@ public class Quadruple {
 	public Quadruple clone() {
 		return new Quadruple(mValues);
 	}
+
+	public void mixIn(float amountNew, float... color) {
+		final float old = 1-amountNew;		
+		
+		for(int i=0; i<mValues.length; i++) {
+			mValues[i] = mValues[i]*old + color[i]*amountNew; 
+		}
+	}
 	
 }
