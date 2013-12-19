@@ -32,7 +32,7 @@ public class RopeSkeletonCreator {
 		for(int i=0;i<mJointCount;i++) {
 			Joint joint = new Joint("R"+i,prevJoint,0,-i*lenPerJoint,lenPerJoint*0.5f,mSkeleton);
 			joint.mMass = mJointMass;
-			joint.setInitials();
+			joint.setInitialValues();
 			mSkeleton.addJoint(joint);
 			if(i>0) {
 				CartoonBone bone = new CartoonBone(null,"RB"+i, prevJoint,joint);

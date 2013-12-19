@@ -549,7 +549,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 
 	public void stop() {
 		mInactive = true;
-		mRuntimeState = 2;
+		mRuntimeState = RUNTIME_STATE_STOPPED;
 		mLoadingState = 0;
 	}
 
@@ -564,7 +564,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 		mInactive = true;
 
 		mCatchUpTime = 0;
-		mRuntimeState = 1;
+		mRuntimeState = RUNTIME_STATE_PAUSED;
 		if(mSystemCalls == null || mSystemCalls.reloadAfterPause()) {
 			mLoadingState = 0;
 		}
@@ -587,11 +587,13 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 //			}
 		mInactive = false;
 		mCatchUpTime = 0;
-		if(mSystemCalls==null || mRuntimeState == 2 || mSystemCalls.reloadAfterPause()) {
+		if(mSystemCalls==null || mRuntimeState>RUNTIME_STATE_STOPPED || mSystemCalls.reloadAfterPause()) {
 			mResuming = false;
 			mLoadingState = 0;
-		}else
-			mRuntimeState = 0;
+		}else{
+			mRuntimeState = RUNTIME_STATE_RUNNING;
+			mLoadingState = mLoadingSteps;
+		}
 		if(mSensor!=null)
 			mSensor.resume();
 	}

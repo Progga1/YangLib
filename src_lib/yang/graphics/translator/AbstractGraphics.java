@@ -333,6 +333,20 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		}
 	}
 
+	public void addColor(float r,float g,float b,float a) {
+		mCurColor[0] += r;
+		mCurColor[1] += g;
+		mCurColor[2] += b;
+		mCurColor[3] += a;
+	}
+
+	public void addColor(FloatColor color) {
+		mCurColor[0] += color.mValues[0];
+		mCurColor[1] += color.mValues[1];
+		mCurColor[2] += color.mValues[2];
+		mCurColor[3] += color.mValues[3];
+	}
+
 
 	/**
 	 * weight=0 => color1

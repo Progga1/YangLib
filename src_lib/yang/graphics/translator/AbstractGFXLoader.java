@@ -21,6 +21,16 @@ import yang.util.YangList;
 
 public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
+	public static boolean REUSE_BUFFER = true;
+	public static int MAX_TEXTURES = 1024;
+
+	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg",".bmp"};
+	public static final String SHADER_EXT	= ".txt";
+
+	protected String SHADER_PATH	= "shaders" + File.separatorChar;
+	protected String[] IMAGE_PATH		= new String[]{"","textures"+File.separatorChar,"models"+File.separatorChar};
+	protected String MATERIAL_PATH  = "models" + File.separatorChar;
+
 	private class ResourceEntry {
 
 		public YangList<Texture> mTextures = new YangList<Texture>();
@@ -34,16 +44,6 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		}
 
 	}
-
-	public static boolean REUSE_BUFFER = true;
-	public static int MAX_TEXTURES = 1024;
-
-	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg",".bmp"};
-	public static final String SHADER_EXT	= ".txt";
-
-	protected String SHADER_PATH	= "shaders" + File.separatorChar;
-	protected String[] IMAGE_PATH		= new String[]{"","textures"+File.separatorChar,"models"+File.separatorChar};
-	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 
 	public HashMap<String, ResourceEntry> mTextures;
 	protected HashMap<String, String> mShaders;
@@ -159,9 +159,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		resource.mSubTextures.add(result);
 		return result;
 	}
-	
+
 	public TextureCoordinatesQuad loadIntoTextureGetCoords(Texture target,String name,int x,int y, float biasX, float biasY) {
-		SubTexture sub = loadIntoTexture(target, name, x, y);		
+		SubTexture sub = loadIntoTexture(target, name, x, y);
 		return new TextureCoordinatesQuad().initBiased(sub.mLeft, sub.mTop, sub.mLeft+sub.mWidth, sub.mTop+sub.mHeight, sub.mTexture.mWidth, sub.mTexture.mHeight, biasX, biasY);
 	}
 
@@ -194,13 +194,14 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			final AbstractTexture tex = mTexQueue[mTexQueueId];
 			if(tex.isFinished())
 				continue;
-			final TextureData data = loadImageData(texKey,tex.getChannels()>3);
+			TextureData data = loadImageData(texKey,tex.getChannels()>3);
 			if(data==null)
 				System.err.println("Image not found: "+texKey);
 			if(tex.mIsAlphaMap)
 				data.redToAlpha();
 
 			tex.update(data);
+			data = null;
 		}
 	}
 

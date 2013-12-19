@@ -41,7 +41,8 @@ public class YangTouchSurface extends GLSurfaceView{
 		super.setEGLConfigChooser(8,8,8,0, 16,0);
 		//HTC working: RGBA_8888
 		super.getHolder().setFormat(PixelFormat.RGBA_8888);
-		if (Build.VERSION.SDK_INT >= 11) super.setPreserveEGLContextOnPause(true);
+		if (Build.VERSION.SDK_INT>=11 && !AndroidSystemCalls.ALWAYS_RELOAD_AFTER_PAUSE)
+			super.setPreserveEGLContextOnPause(true);
 		DebugYang.println("INITIALIZE OPENGL");
 
 		mSceneRenderer = new YangSceneRenderer(context);

@@ -31,11 +31,11 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 	public void applyForceBased(MassAggregation skeleton, DeltaPosture3D interpolationPose, float weight) {
 		int c = 0;
 		int i = 0;
-		final float dWeight = 1-weight;
+		//final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {
 			if(joint.mAnimate) {
 				final JointEditData jointData = mSkeletonData.mJointData[i++];
-				if(!joint.mDragging && !joint.mNoAnimationForce && mData[c]!=Float.MAX_VALUE) {
+				if(!joint.mDragging && mData[c]!=Float.MAX_VALUE) {
 					if(interpolationPose==null) {
 
 					}else{
@@ -45,7 +45,7 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 									jointData.mPrevPos.mX + mData[c]*fac,
 									jointData.mPrevPos.mY + mData[c+1]*fac,
 									jointData.mPrevPos.mZ + mData[c+2]*fac,
-									4);
+									20);
 						}
 					}
 				}

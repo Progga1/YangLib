@@ -35,7 +35,7 @@ public class CopyOfDeltaPosture3D extends Posture<CopyOfDeltaPosture3D,MassAggre
 		for(final Joint joint:skeleton.mJoints) {
 			if(joint.mAnimate) {
 				final JointEditData jointData = mSkeletonData.mJointData[i++];
-				if(!joint.mDragging && !joint.mNoAnimationForce && mData[c]!=Float.MAX_VALUE) {
+				if(!joint.mDragging && mData[c]!=Float.MAX_VALUE) {
 					if(interpolationPose==null) {
 
 					}else{

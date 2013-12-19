@@ -18,9 +18,12 @@ public class Skeleton3DEditing {
 	public static int SPHERE_VERTICES_Y = 16;
 
 	public static int MAX_JOINTS = 256;
-	public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
-	public static FloatColor hoverColor = new FloatColor(1,0.3f,0.04f);
+	//public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
+	public static FloatColor jointColor = new FloatColor(0.6f,0.6f,0.6f);
+	public static FloatColor jointFixedColor = new FloatColor(0.9f,0.2f,0.2f);
+//	public static FloatColor hoverColor = new FloatColor(1,0.3f,0.04f);
 	public static FloatColor selectedColor = new FloatColor(1,0.5f,0);
+	public static FloatColor jointSelectedAddColor = new FloatColor(0.3f,0.2f,0.2f,0.1f);
 
 	public JointEditData[] mJointData = new JointEditData[MAX_JOINTS];
 	//public JointEditData[] mSelection = new JointEditData[MAX_JOINTS];
@@ -93,12 +96,16 @@ public class Skeleton3DEditing {
 		for(final Joint joint:mSkeleton.mJoints) {
 			final JointEditData data = mJointData[joint.mId];
 
-			if(data.mSelectionGroup>=0)
-				mGraphics3D.setColor(selectedColor);
-			else if(joint==mHoverJoint)
-				mGraphics3D.setColor(hoverColor);
+
+			if(joint.mFixed)
+				mGraphics3D.setColor(jointFixedColor);
 			else
 				mGraphics3D.setColor(jointColor);
+			if(data.mSelectionGroup>=0)
+				mGraphics3D.addColor(jointSelectedAddColor);
+			else if(joint==mHoverJoint)
+				mGraphics3D.multColor(1.3f);
+
 			mGraphics3D.setColorFactor(mGraphics3D.getCurrentColor());
 			mGraphics3D.mColorFactor[3] *= mAlpha;
 			mGraphics3D.mWorldTransform.stackPush();
@@ -158,6 +165,7 @@ public class Skeleton3DEditing {
 //			mSelection[data.mSelectionIndex] = null;
 		if(data.mSelectionDepth==-1 || data.mSelectionDepth>=depth) {
 			if(group<0) {
+				joint.endDrag();
 				if(mJointEditListener!=null)
 					mJointEditListener.onDeselectJoint(data);
 				data.mSelectionGroup = -1;
@@ -165,7 +173,7 @@ public class Skeleton3DEditing {
 				if(data.mParentConnection!=null) {
 					//data.mParentConnection.mApplyToJoint1 = true;
 				}
-				joint.endDrag();
+
 			}else{
 				data.mSelectionGroup = group;
 				data.mSelectionDepth = depth;

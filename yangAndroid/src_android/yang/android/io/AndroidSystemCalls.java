@@ -32,7 +32,7 @@ public class AndroidSystemCalls extends YangSystemCalls {
 
 	@Override
 	public boolean reloadAfterPause() {
-		return Build.VERSION.SDK_INT<11;
+		return Build.VERSION.SDK_INT<11 || ALWAYS_RELOAD_AFTER_PAUSE;
 	}
 
 	@Override
@@ -43,11 +43,13 @@ public class AndroidSystemCalls extends YangSystemCalls {
 				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 				builder.setMessage("debug intent")
 				.setPositiveButton("foo", new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 
 					}
 				})
 				.setNegativeButton("bar", new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 
 					}

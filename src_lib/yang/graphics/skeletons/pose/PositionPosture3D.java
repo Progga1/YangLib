@@ -22,16 +22,17 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 		int c = 0;
 		final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {
-			if(joint.isAnimated()) {
-				if(mData[c]!=Float.MAX_VALUE) {
+			if(joint.mAnimate) {
+				if(mData[c]!=Float.MAX_VALUE && !joint.mDragging) {
 					if(weight==0 || interpolationPose==null) {
 						joint.mX = mData[c++];
 						joint.mY = mData[c++];
 						joint.mZ = mData[c++];
 					}else{
-						joint.mX = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
-						joint.mY = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
-						joint.mZ = mData[c]*weight + interpolationPose.mData[c++]*dWeight;
+						joint.mX = mData[c]*weight + interpolationPose.mData[c]*dWeight;
+						joint.mY = mData[c+1]*weight + interpolationPose.mData[c+1]*dWeight;
+						joint.mZ = mData[c+2]*weight + interpolationPose.mData[c+2]*dWeight;
+						c += 3;
 					}
 				}else
 					c += 3;
@@ -44,8 +45,8 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 		int c = 0;
 		final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {
-			if(joint.isAnimated() && !joint.mNoAnimationForce) {
-				if(mData[c]!=Float.MAX_VALUE) {
+			if(joint.mAnimate) {
+				if(mData[c]!=Float.MAX_VALUE && !joint.mDragging) {
 					if(weight==0 || interpolationPose==null) {
 						joint.addPositionForce(mData[c],mData[c+1],mData[c+2],1);
 					}else{

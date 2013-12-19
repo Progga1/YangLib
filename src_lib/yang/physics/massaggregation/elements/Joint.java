@@ -34,9 +34,9 @@ public class Joint extends Point3f {
 	public boolean mEnabled;
 	public float mInitialX,mInitialY,mInitialZ;
 	public Quaternion mOrientation = null;
-	public boolean mNoAnimationForce = false;
 	public float mDragDelay = 0.05f;
 	public boolean mDragKeepDistance = false;
+	//public boolean mDisableAnimation = false;
 
 	//State
 	public float mForceX,mForceY,mForceZ;
@@ -62,7 +62,7 @@ public class Joint extends Point3f {
 		mRadius = radius;
 		mFixed = false;
 		mMass = 1;
-		setInitials();
+		setInitialValues();
 		mDragging = false;
 		mAnimate = true;
 		mSkeleton = skeleton;
@@ -85,7 +85,7 @@ public class Joint extends Point3f {
 		return this;
 	}
 
-	public void setInitials() {
+	public void setInitialValues() {
 		mInitialX = mX;
 		mInitialY = mY;
 		mInitialZ = mZ;
@@ -239,11 +239,6 @@ public class Joint extends Point3f {
 	public void physicalStep(float deltaTime) {
 
 		if(mEnabled) {
-			if(mFixed) {
-				mForceX = 0;
-				mForceY = 0;
-				mForceZ = 0;
-			}
 
 			if(mDragging) {
 				//refreshResDrag();

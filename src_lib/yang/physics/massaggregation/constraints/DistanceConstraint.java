@@ -46,10 +46,10 @@ public class DistanceConstraint extends Constraint{
 			else
 				fac = (dVX*fX+dVY*fY<0)?Joint.AWAY_FACTOR:Joint.TOWARDS_FACTOR;
 
-			if(mApplyToJoint1)
+			if(mApplyToJoint1 && !mBone.mJoint1.mFixed)
 				mBone.mJoint1.addForce(fX*fac,fY*fac,fZ*fac);
 			//fac = (mBone.mJoint2.mVelX*(-fX)+mBone.mJoint2.mVelY*(-fY)<0)?Joint.AWAY_FACTOR:Joint.TOWARDS_FACTOR;
-			if(mApplyToJoint2)
+			if(mApplyToJoint2 && !mBone.mJoint2.mFixed)
 				mBone.mJoint2.addForce(-fX*fac,-fY*fac,-fZ*fac);
 		}
 	}

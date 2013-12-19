@@ -50,9 +50,9 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 			e.printStackTrace();
 		}
 
-		BitmapFactory.Options opt = new BitmapFactory.Options();
-		opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		Bitmap bmp = BitmapFactory.decodeStream(is,null,opt);
+//		BitmapFactory.Options opt = new BitmapFactory.Options();
+//		opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		Bitmap bmp = BitmapFactory.decodeStream(is);
 
 		try {
 			is.close();
@@ -92,7 +92,8 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 		bmp.recycle();
 		bmp = null;
 		uBuf.rewind();
-		TextureData data =  new TextureData(uBuf,width,height,channels);
+		TextureData data = new TextureData(uBuf,width,height,channels);
+
 		return data;
 	}
 
