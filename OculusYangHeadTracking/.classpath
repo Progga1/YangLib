@@ -25,7 +25,5 @@
 	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all-noawt.jar"/>
 	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all.jar"/>
 	<classpathentry kind="lib" path="libs_yang/opengl/swt.jar"/>
-	<classpathentry kind="lib" path="libs_yang/Jama-1.0.2.jar"/>
-	<classpathentry kind="lib" path="libs_yang/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

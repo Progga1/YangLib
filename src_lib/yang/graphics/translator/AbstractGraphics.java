@@ -1,8 +1,5 @@
 package yang.graphics.translator;
 
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
-
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.listeners.DrawListener;
@@ -12,6 +9,7 @@ import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
 import yang.math.objects.Quadruple;
+import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.math.objects.matrix.YangMatrixRectOps;
@@ -286,24 +284,17 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 
 	public void setColor(Vector3f color) {
-		mCurColor[0] = color.x;
-		mCurColor[1] = color.y;
-		mCurColor[2] = color.z;
+		mCurColor[0] = color.mX;
+		mCurColor[1] = color.mY;
+		mCurColor[2] = color.mZ;
 		mCurColor[3] = 1;
 	}
 
 	public void setColor(Vector3f color, float a) {
-		mCurColor[0] = color.x;
-		mCurColor[1] = color.y;
-		mCurColor[2] = color.z;
+		mCurColor[0] = color.mX;
+		mCurColor[1] = color.mY;
+		mCurColor[2] = color.mZ;
 		mCurColor[3] = a;
-	}
-
-	public void setColor(Vector4f color) {
-		mCurColor[0] = color.x;
-		mCurColor[1] = color.y;
-		mCurColor[2] = color.z;
-		mCurColor[3] = color.w;
 	}
 
 	public void setColor(FloatColor color) {

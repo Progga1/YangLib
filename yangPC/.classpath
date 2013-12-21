@@ -20,6 +20,5 @@
 	<classpathentry kind="lib" path="lib/opengl/jogl.all.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/opengl/swt.jar"/>
-	<classpathentry kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

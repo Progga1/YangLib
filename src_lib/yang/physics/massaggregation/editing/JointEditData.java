@@ -7,13 +7,17 @@ import yang.physics.massaggregation.elements.Joint;
 
 public class JointEditData {
 
-	public Point3f mPrevPos = new Point3f();
-
-	public int mSelectionGroup = -1;
-	public int mSelectionDepth = -1;
+	//Objects
 	public Joint mJoint;
 	public DistanceConstraint mParentConnection;
 	public Skeleton3DEditing mSkeletonEdit;
+
+	//Selection
+	public int mSelectionGroup = -1;
+	public int mSelectionDepth = -1;
+	public float mLstSelectTime = -1;
+
+	public Point3f mPrevPos = new Point3f();
 
 	public void set(Joint joint,Skeleton3DEditing skeletonEdit) {
 		mJoint = joint;

@@ -4,8 +4,9 @@ import yang.systemdependent.YangSystemCalls;
 
 public class PCSystemCalls extends YangSystemCalls {
 
+	@Override
 	public boolean reloadAfterPause() {
-		return false;
+		return true;
 	}
 
 }

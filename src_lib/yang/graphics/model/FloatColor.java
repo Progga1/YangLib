@@ -165,4 +165,11 @@ public class FloatColor extends Quadruple {
 		}
 	}
 
+	public void setBlend(FloatColor startColor,FloatColor endColor,float weight) {
+		mValues[0] = (1-weight)*startColor.mValues[0] + weight*endColor.mValues[0];
+		mValues[1] = (1-weight)*startColor.mValues[1] + weight*endColor.mValues[1];
+		mValues[2] = (1-weight)*startColor.mValues[2] + weight*endColor.mValues[2];
+		mValues[3] = (1-weight)*startColor.mValues[3] + weight*endColor.mValues[3];
+	}
+
 }
