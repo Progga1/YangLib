@@ -240,7 +240,11 @@ public class MassAggregation {
 
 			//Init force
 			for(final Joint joint:mJoints) {
-				if(!joint.mFixed) {
+				if(joint.mFixed) {
+					joint.mForceX = 0;
+					joint.mForceY = 0;
+					joint.mForceZ = 0;
+				}else{
 					joint.mForceX = mConstantForceX*joint.mMass;
 					joint.mForceY = mConstantForceY*joint.mMass;
 					joint.mForceZ = mConstantForceZ*joint.mMass;

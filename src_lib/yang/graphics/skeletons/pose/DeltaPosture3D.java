@@ -71,5 +71,10 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 		}
 	}
 
+	@Override
+	public void clear(int id) {
+		mData[id*3] = Float.MAX_VALUE;
+	}
+
 
 }

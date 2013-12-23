@@ -86,4 +86,9 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 			mData[c] = Float.MAX_VALUE;
 	}
 
+	@Override
+	public void clear(int id) {
+		mData[id*3] = Float.MAX_VALUE;
+	}
+
 }

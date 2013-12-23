@@ -53,4 +53,8 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 
 	}
 
+	public void clear(int mId) {
+
+	}
+
 }

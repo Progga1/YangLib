@@ -179,6 +179,7 @@ public class Skeleton3DEditing {
 				data.mSelectionDepth = depth;
 				if(mJointEditListener!=null)
 					mJointEditListener.onSelectJoint(data);
+				data.mLstSelectTime = mGraphics3D.mTranslator.mTimer;
 //				if(data.mParentConnection!=null) {
 //					if(data.mParentConnection.mBone.mJoint1==joint)
 //						data.mParentConnection.mApplyToJoint2 = false;
