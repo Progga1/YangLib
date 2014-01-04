@@ -2,13 +2,13 @@ package yang.graphics.defaults.meshcreators.loaders;
 
 import yang.graphics.model.material.YangMaterial;
 
-public class OBJMaterialSection {
+public class YangMaterialSection {
 
 	public int mStartIndex;
 	public int mEndIndex;
 	public YangMaterial mMaterial;
 	
-	public OBJMaterialSection(int startIndex,YangMaterial material) {
+	public YangMaterialSection(int startIndex,YangMaterial material) {
 		mStartIndex = startIndex;
 		mMaterial = material;
 	}

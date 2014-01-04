@@ -5,7 +5,7 @@ import java.io.IOException;
 import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
-import yang.graphics.defaults.meshcreators.loaders.ObjMaterialHandles;
+import yang.graphics.defaults.meshcreators.loaders.MeshMaterialHandles;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
@@ -38,7 +38,7 @@ public class OBJSampleState extends SampleState {
 	private int mCurObjIndex = 0;
 	private final Camera3D mCamera = new Camera3D();
 	private int mObjCount = 0;
-	private ObjMaterialHandles mMatHandles;
+	private MeshMaterialHandles mMatHandles;
 	private Texture mToonRamp1;
 	private Texture mToonRamp2;
 	private ToonRampSubShader mToonRampShader;
@@ -62,7 +62,7 @@ public class OBJSampleState extends SampleState {
 		try {
 			final YangMatrix transform = new YangMatrix();
 
-			mMatHandles = new ObjMaterialHandles(mObjProgram);
+			mMatHandles = new MeshMaterialHandles(mObjProgram);
 			mObjCount = -1;
 
 			transform.loadIdentity();

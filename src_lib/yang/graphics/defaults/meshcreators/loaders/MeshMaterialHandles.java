@@ -5,7 +5,7 @@ import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.programs.GLProgram;
 
-public class ObjMaterialHandles {
+public class MeshMaterialHandles {
 
 	public int mDiffuseColorHandle;
 	public EmissiveSubShader mEmisShader;
@@ -14,17 +14,17 @@ public class ObjMaterialHandles {
 	private EmissiveSubShader tempEmisShader;
 	private SpecularLightBasicSubShader tempSpecShader;
 	
-	public ObjMaterialHandles() {
+	public MeshMaterialHandles() {
 		tempEmisShader = new EmissiveSubShader(null);
 		tempSpecShader = new SpecularLightBasicSubShader(null);
 	}
 	
-	public ObjMaterialHandles(AbstractProgram shader) {
+	public MeshMaterialHandles(AbstractProgram shader) {
 		this();
 		refreshHandles(shader);
 	}
 	
-	public ObjMaterialHandles refreshHandles(AbstractProgram shader) {
+	public MeshMaterialHandles refreshHandles(AbstractProgram shader) {
 		GLProgram program = shader.getProgram();
 		
 		mDiffuseColorHandle = program.getUniformLocation("diffuseColor");

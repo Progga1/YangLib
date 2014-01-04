@@ -1,13 +1,13 @@
 package yang.graphics.defaults.meshcreators;
 
-import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
+import yang.graphics.translator.AbstractGraphics;
 import yang.physics.massaggregation.MassAggregation;
 
 public class SkinnedMesh {
 
 	public boolean mWireFrames = false;
-	public DefaultGraphics<?> mGraphics;
+	public AbstractGraphics<?> mGraphics;
 	public YangArmature mArmature;
 	public MassAggregation mSkeleton;
 	public OBJLoader mMesh;

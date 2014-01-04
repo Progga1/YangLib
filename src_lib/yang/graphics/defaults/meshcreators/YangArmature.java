@@ -27,12 +27,10 @@ public class YangArmature {
 		mTransforms = new YangMatrix[l];
 		mInitialVectors = new Vector3f[l];
 		mInitialPositions = new Point3f[l];
-		int i = 0;
-		for(Joint joint:mTemplateSkeleton.mJoints) {
+		for(int i=0;i<skeleton.mJoints.size();i++) {
 			mInitialVectors[i] = new Vector3f();
 			mTransforms[i] = new YangMatrix();
 			mInitialPositions[i] = new Point3f();
-			i++;
 		}
 		setInitialValues();
 		return this;
