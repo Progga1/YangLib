@@ -1,11 +1,11 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.defaults.Default3DGraphics;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 
-public class LineDrawer3D extends MeshCreator<Default3DGraphics> {
+public class LineDrawer3D extends GeometryCreator<Default3DGraphics> {
 
 	public float mLineWidth;
 	public final CylinderCreator mCylinder;

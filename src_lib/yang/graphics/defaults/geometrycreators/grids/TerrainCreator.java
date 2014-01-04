@@ -1,4 +1,4 @@
-package yang.graphics.defaults.meshcreators.grids;
+package yang.graphics.defaults.geometrycreators.grids;
 
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.interfaces.KernelFunction;

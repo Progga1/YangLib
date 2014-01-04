@@ -1,9 +1,9 @@
 package yang.util.gui.components.defaultdrawers;
 
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeCreator;
-import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeDefaultProperties;
-import yang.graphics.defaults.meshcreators.outlinedrawer.OrthoStrokeProperties;
+import yang.graphics.defaults.geometrycreators.outlinedrawer.OrthoStrokeCreator;
+import yang.graphics.defaults.geometrycreators.outlinedrawer.OrthoStrokeDefaultProperties;
+import yang.graphics.defaults.geometrycreators.outlinedrawer.OrthoStrokeProperties;
 import yang.graphics.textures.TextureCoordBounds;
 import yang.util.gui.components.GUIComponentDrawPass;
 import yang.util.gui.components.GUIInteractiveRectComponent;

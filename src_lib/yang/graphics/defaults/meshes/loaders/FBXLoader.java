@@ -1,8 +1,7 @@
-package yang.graphics.defaults.meshcreators.loaders;
+package yang.graphics.defaults.meshes.loaders;
 
 import java.io.InputStream;
 
-import yang.graphics.defaults.meshcreators.YangMesh;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.util.YangList;
 import yang.util.filereader.TokenReader;
@@ -24,6 +23,8 @@ public class FBXLoader {
 		if(stream==null)
 			return false;
 		mReader = new TokenReader(stream);
+
+
 
 		return true;
 	}

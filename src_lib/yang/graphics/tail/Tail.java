@@ -1,8 +1,8 @@
 package yang.graphics.tail;
 
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.defaults.meshcreators.DoubleStripCreator;
-import yang.graphics.defaults.meshcreators.StripCreator;
+import yang.graphics.defaults.geometrycreators.DoubleStripCreator;
+import yang.graphics.defaults.geometrycreators.StripCreator;
 import yang.math.Geometry;
 import yang.model.DebugYang;
 import yang.util.Util;

@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
-import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
-import yang.graphics.defaults.meshcreators.loaders.MeshMaterialHandles;
+import yang.graphics.defaults.meshes.loaders.MeshMaterialHandles;
+import yang.graphics.defaults.meshes.loaders.OBJLoader;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;

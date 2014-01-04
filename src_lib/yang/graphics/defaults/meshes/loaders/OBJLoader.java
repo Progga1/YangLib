@@ -1,10 +1,9 @@
-package yang.graphics.defaults.meshcreators.loaders;
+package yang.graphics.defaults.meshes.loaders;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.defaults.meshcreators.YangMesh;
 import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
@@ -16,17 +15,6 @@ import yang.util.filereader.TokenReader;
 public class OBJLoader extends YangMesh {
 
 	private static final String[] KEYWORDS = {"mtllib","usemtl"};
-
-	public static int MAX_VERTICES = 200000;
-	private static float[] workingPositions;
-	private static float[] workingNormals;
-	private static float[] workingTexCoords;
-	private static short[] workingIndices;
-	private static int[] redirectIndices;
-	private static int[] positionIndices;
-	private static int[] texCoordIndices;
-	private static int[] normalIndices;
-	private static int[] smoothIndices;
 
 	private TokenReader mModelReader;
 	private int mIndexId = 0;

@@ -1,4 +1,4 @@
-package yang.graphics.defaults.meshcreators.outlinedrawer;
+package yang.graphics.defaults.geometrycreators.outlinedrawer;
 
 import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureCoordinatesQuad;

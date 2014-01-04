@@ -1,4 +1,4 @@
-package yang.graphics.defaults.meshcreators.outlinedrawer;
+package yang.graphics.defaults.geometrycreators.outlinedrawer;
 
 import yang.math.objects.Point2f;
 import yang.util.Util;

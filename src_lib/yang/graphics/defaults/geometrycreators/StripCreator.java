@@ -1,4 +1,4 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;

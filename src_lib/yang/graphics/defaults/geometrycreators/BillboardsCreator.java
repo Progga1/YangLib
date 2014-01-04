@@ -1,11 +1,11 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
 
-public class BillboardsCreator extends MeshCreator<Default3DGraphics>{
+public class BillboardsCreator extends GeometryCreator<Default3DGraphics>{
 
 	private static final float HALF_ANGLE_SCALE = 1.41f*0.5f;
 

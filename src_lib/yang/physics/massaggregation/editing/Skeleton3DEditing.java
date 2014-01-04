@@ -2,8 +2,8 @@ package yang.physics.massaggregation.editing;
 
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.defaults.Default3DGraphics;
-import yang.graphics.defaults.meshcreators.LineDrawer3D;
-import yang.graphics.defaults.meshcreators.SphereCreator;
+import yang.graphics.defaults.geometrycreators.LineDrawer3D;
+import yang.graphics.defaults.geometrycreators.SphereCreator;
 import yang.graphics.model.FloatColor;
 import yang.math.Geometry;
 import yang.math.objects.Point3f;

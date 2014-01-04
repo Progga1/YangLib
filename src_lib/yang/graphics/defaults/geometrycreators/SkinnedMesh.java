@@ -1,6 +1,7 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.geometrycreators;
 
-import yang.graphics.defaults.meshcreators.loaders.OBJLoader;
+import yang.graphics.defaults.meshes.armature.YangArmature;
+import yang.graphics.defaults.meshes.loaders.OBJLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.physics.massaggregation.MassAggregation;
 

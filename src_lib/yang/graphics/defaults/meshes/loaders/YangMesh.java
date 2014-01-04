@@ -1,11 +1,10 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.meshes.loaders;
 
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.defaults.meshcreators.loaders.MeshMaterialHandles;
-import yang.graphics.defaults.meshcreators.loaders.YangMaterialSection;
+import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
 import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.model.FloatColor;
@@ -29,6 +28,17 @@ public static float PI = 3.1415926535f;
 	protected GraphicsTranslator mTranslator;
 
 	protected final MeshMaterialHandles mHandles;
+
+	public static int MAX_VERTICES = 200000;
+	protected static float[] workingPositions;
+	protected static float[] workingNormals;
+	protected static float[] workingTexCoords;
+	protected static short[] workingIndices;
+	protected static int[] redirectIndices;
+	protected static int[] positionIndices;
+	protected static int[] texCoordIndices;
+	protected static int[] normalIndices;
+	protected static int[] smoothIndices;
 
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;

@@ -1,4 +1,4 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.meshes.armature;
 
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;

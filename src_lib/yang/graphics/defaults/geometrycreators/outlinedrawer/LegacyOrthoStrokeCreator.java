@@ -1,13 +1,13 @@
-package yang.graphics.defaults.meshcreators.outlinedrawer;
+package yang.graphics.defaults.geometrycreators.outlinedrawer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.defaults.meshcreators.MeshCreator;
+import yang.graphics.defaults.geometrycreators.GeometryCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.MathFunc;
 
-public class LegacyOrthoStrokeCreator extends MeshCreator<DefaultGraphics<?>> {
+public class LegacyOrthoStrokeCreator extends GeometryCreator<DefaultGraphics<?>> {
 
 	public static float SNAP_TOLERANCE = 0.001f;
 	public static float BIAS = 0.0001f;

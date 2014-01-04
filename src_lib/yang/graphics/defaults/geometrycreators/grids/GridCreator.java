@@ -1,12 +1,12 @@
-package yang.graphics.defaults.meshcreators.grids;
+package yang.graphics.defaults.geometrycreators.grids;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.defaults.meshcreators.MeshCreator;
+import yang.graphics.defaults.geometrycreators.GeometryCreator;
 import yang.graphics.model.FloatColor;
 import yang.math.Interpolation;
 
-public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends MeshCreator<GraphicsType>{
+public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends GeometryCreator<GraphicsType>{
 
 	protected final static float[][] ZERO_FLOAT = {{0}};
 	protected final static float[][] ONE_FLOAT = {{1}};

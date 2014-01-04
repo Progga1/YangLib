@@ -1,8 +1,8 @@
 package yang.samples.statesystem.states;
 
 import yang.graphics.buffers.DrawBatch;
+import yang.graphics.defaults.geometrycreators.grids.TerrainCreator;
 import yang.graphics.defaults.kernels.SqrtKernel;
-import yang.graphics.defaults.meshcreators.grids.TerrainCreator;
 import yang.graphics.defaults.particles.DefaultParticles3D;
 import yang.graphics.defaults.programs.BillboardProgram;
 import yang.graphics.defaults.programs.DepthProgram;

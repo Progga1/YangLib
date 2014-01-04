@@ -1,7 +1,7 @@
 package yang.graphics.particles;
 
 import yang.graphics.defaults.Default3DGraphics;
-import yang.graphics.defaults.meshcreators.BillboardsCreator;
+import yang.graphics.defaults.geometrycreators.BillboardsCreator;
 
 public abstract class ParticleRingBuffer3D<ParticleType extends Particle>  extends AbstractParticleRingBuffer<Default3DGraphics,ParticleType> {
 

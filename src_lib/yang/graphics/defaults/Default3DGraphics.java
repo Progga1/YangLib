@@ -6,8 +6,8 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.meshcreators.LineDrawer3D;
-import yang.graphics.defaults.meshcreators.SphereCreator;
+import yang.graphics.defaults.geometrycreators.LineDrawer3D;
+import yang.graphics.defaults.geometrycreators.SphereCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;

@@ -1,4 +1,4 @@
-package yang.graphics.defaults.meshcreators.loaders;
+package yang.graphics.defaults.meshes.loaders;
 
 import yang.graphics.model.material.YangMaterial;
 

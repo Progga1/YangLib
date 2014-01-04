@@ -2,7 +2,7 @@ package yang.samples.statesystem.states;
 
 import yang.events.eventtypes.YangPointerEvent;
 import yang.events.eventtypes.SurfacePointerEvent;
-import yang.graphics.defaults.meshcreators.PolygonCreator;
+import yang.graphics.defaults.geometrycreators.PolygonCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.translator.Texture;
 import yang.samples.statesystem.SampleState;

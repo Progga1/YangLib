@@ -1,11 +1,11 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.math.objects.matrix.YangMatrix;
 
-public class CylinderCreator extends MeshCreator<Default3DGraphics> {
+public class CylinderCreator extends GeometryCreator<Default3DGraphics> {
 
 	public int mSamples;
 	public boolean mClosed = true;

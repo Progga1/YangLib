@@ -5,7 +5,7 @@ import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
-import yang.graphics.defaults.meshcreators.StripCreator;
+import yang.graphics.defaults.geometrycreators.StripCreator;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
 import yang.graphics.model.FloatColor;

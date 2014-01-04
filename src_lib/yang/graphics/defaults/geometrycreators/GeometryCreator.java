@@ -1,17 +1,17 @@
-package yang.graphics.defaults.meshcreators;
+package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 
-public class MeshCreator<GraphicsType extends AbstractGraphics<?>> {
+public class GeometryCreator<GraphicsType extends AbstractGraphics<?>> {
 
 	public static float PI = 3.1415926535f;
 	
 	public GraphicsType mGraphics;
 	protected GraphicsTranslator mTranslator;
 	
-	public MeshCreator(GraphicsType graphics) {
+	public GeometryCreator(GraphicsType graphics) {
 		if(graphics!=null)
 			setGraphics(graphics);
 	}
