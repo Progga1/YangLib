@@ -1,6 +1,7 @@
 package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.defaults.meshes.armature.YangArmature;
+import yang.graphics.defaults.meshes.armature.YangArmaturePose;
 import yang.graphics.defaults.meshes.loaders.OBJLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.physics.massaggregation.MassAggregation;
@@ -10,6 +11,7 @@ public class SkinnedMesh {
 	public boolean mWireFrames = false;
 	public AbstractGraphics<?> mGraphics;
 	public YangArmature mArmature;
+	public YangArmaturePose mArmaturePose;
 	public MassAggregation mSkeleton;
 	public OBJLoader mMesh;
 	public boolean mAutoRefresh = true;
@@ -20,9 +22,10 @@ public class SkinnedMesh {
 		mSkeleton = skeleton;
 		if(mSkeleton!=null) {
 			mArmature = new YangArmature();
-			mArmature.init(skeleton);
+			mArmature.initBySkeleton(skeleton);
+			mArmaturePose = new YangArmaturePose(mArmature);
 			if(!mMesh.hasArmatureWeights())
-				mMesh.createArmatureWeights(mArmature);
+				mMesh.generateArmatureWeights(mArmature);
 		}
 	}
 
@@ -36,8 +39,8 @@ public class SkinnedMesh {
 		mGraphics.mTranslator.mForceWireFrames = mWireFrames;
 		if(mSkeleton!=null) {
 			if(mAutoRefresh)
-				mArmature.refreshMatrices(mSkeleton);
-			mMesh.mCurArmature = mArmature;
+				mArmaturePose.refreshMatrices(mSkeleton);
+			mMesh.mCurArmature = mArmaturePose;
 
 			mGraphics.setGlobalTransformEnabled(true);
 			mGraphics.mWorldTransform.stackPush();
@@ -54,8 +57,8 @@ public class SkinnedMesh {
 	}
 
 	public void refresh() {
-		if(mArmature!=null)
-			mArmature.refreshMatrices(mSkeleton);
+		if(mArmaturePose!=null)
+			mArmaturePose.refreshMatrices(mSkeleton);
 	}
 
 }

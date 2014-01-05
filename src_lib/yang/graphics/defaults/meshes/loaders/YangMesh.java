@@ -5,6 +5,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshes.armature.YangArmature;
+import yang.graphics.defaults.meshes.armature.YangArmaturePose;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
 import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.model.FloatColor;
@@ -63,7 +64,7 @@ public static float PI = 3.1415926535f;
 	public boolean mUseShaders = true;
 	protected int mSkinJointsPerVertex = 4;
 
-	public YangArmature mCurArmature = null;
+	public YangArmaturePose mCurArmature = null;
 
 	public DrawBatch mDrawBatch;
 
@@ -76,7 +77,7 @@ public static float PI = 3.1415926535f;
 		mTextureProperties = textureProperties;
 	}
 
-	public void createArmatureWeights(YangArmature armature) {
+	public void generateArmatureWeights(YangArmature armature) {
 		if(mPositions==null)
 			throw new RuntimeException("Cannot use armature on static mesh");
 		int weights = mSkinJointsPerVertex;
