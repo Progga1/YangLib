@@ -9,22 +9,34 @@ public class TokenReader {
 
 	public static final int ERROR_INT = Integer.MIN_VALUE;
 	public static final float ERROR_FLOAT = Float.MIN_VALUE;
-	
+
 	public BufferedReader mInputStream;
 	public static int maxWordLength = 1024;
 
 	public char[] mCharBuffer = new char[maxWordLength];
+	public char[] mLineComments = "//".toCharArray();
+	public boolean mAutoSkipComments = false;
+	public boolean[] mWordBreakers = new boolean[256];
+	public boolean[] mWhiteSpaces = new boolean[256];
 	public char mFstSpaceChar = '\0';
 	//public boolean mLineBroken = false;
 	public int mWordLength = 0;
 	public int mLstRead;
 	public int mNumberPos = -1;
-	
+
 	public TokenReader(InputStream stream) {
 		mInputStream = new BufferedReader(new InputStreamReader(stream));	//TODO crash on nexus
 		mLstRead = 0;
+		mWordBreakers[' '] = true;
+		mWordBreakers['\n'] = true;
+		mWordBreakers['\t'] = true;
+		mWordBreakers['\r'] = true;
+		mWhiteSpaces[' '] = true;
+		mWhiteSpaces['\n'] = true;
+		mWhiteSpaces['\t'] = true;
+		mWhiteSpaces['\r'] = true;
 	}
-	
+
 	public void skipSpace(boolean ignoreLineBreak) throws IOException {
 		if(mLstRead<0)
 			return;
@@ -32,21 +44,25 @@ public class TokenReader {
 			mCharBuffer[0] = '\n';
 			return;
 		}
-			
+
 		char c = '\0';
 		int read;
 		while((mLstRead=mInputStream.read())>=0) {
 			c = (char) mLstRead;
 			if(!ignoreLineBreak && c=='\n') {
 				break;
-			}else if(c!=' ' && c!='\t' && c!='\r') {
+			}else if(!mWhiteSpaces[c]) {
 				mCharBuffer[0] = c;
 				return;
 			}
 		}
 		mCharBuffer[0] = c;
 	}
-	
+
+	public void setLineCommentChars(String chars) {
+		mLineComments = chars.toCharArray();
+	}
+
 	public void toLineEnd() throws IOException {
 		if(mLstRead<0 || mFstSpaceChar=='\n' || mCharBuffer[0]=='\n') {
 			mCharBuffer[0] = '\n';
@@ -61,7 +77,7 @@ public class TokenReader {
 			}
 		}
 	}
-	
+
 	public boolean nextWord(boolean ignoreLineEnd) throws IOException {
 		mNumberPos = -1;
 		skipSpace(ignoreLineEnd);
@@ -76,26 +92,41 @@ public class TokenReader {
 			return true;
 		}
 		char c;
-		int i=(mCharBuffer[0]=='\0')?0:1;
-		while((mLstRead=mInputStream.read())>=0 && i<maxWordLength) {
+		boolean comment = mAutoSkipComments;
+		int i = 0;
+		if(mLstRead=='\0') {
+			mLstRead = mInputStream.read();
+		}
+		while(mLstRead>=0 && i<maxWordLength) {
 			c = (char) mLstRead;
 			if(c!='\r') {
-				if(c==' ' || c=='\t' || c=='\n') {
+				if(mWordBreakers[c]) {
 					mFstSpaceChar = c;
 					break;
 				}else{
+					if(comment) {
+						if(i>=mLineComments.length || c!=mLineComments[i])
+							comment = false;
+						else if(i>=mLineComments.length-1) {
+							mFstSpaceChar = '\0';
+							toLineEnd();
+							return nextWord(ignoreLineEnd);
+						}
+
+					}
 					mCharBuffer[i++] = c;
 				}
 			}
+			mLstRead=mInputStream.read();
 		}
 		mWordLength = i;
 		return i>=1;
 	}
-	
+
 	public String wordToString() {
 		return String.copyValueOf(mCharBuffer, 0, mWordLength);
 	}
-	
+
 	public int wordToInt(int startAt,int defaultVal) {
 		if(mWordLength-startAt<=0)
 			return defaultVal;
@@ -119,7 +150,7 @@ public class TokenReader {
 		else
 			return result;
 	}
-	
+
 	public float wordToFloat(int startAt,float defaultVal) {
 		if(mWordLength-startAt<=0)
 			return ERROR_FLOAT;
@@ -169,7 +200,7 @@ public class TokenReader {
 		nextWord(ignoreLineBreak);
 		return wordToInt(0,ERROR_INT);
 	}
-	
+
 	public float readFloat(boolean ignoreLineBreak) throws IOException {
 		nextWord(ignoreLineBreak);
 		return wordToFloat(0,ERROR_FLOAT);
@@ -179,7 +210,7 @@ public class TokenReader {
 		nextWord(ignoreLineBreak);
 		return wordToString();
 	}
-	
+
 	public int pickWord(String[] words) {
 		int i = -1;
 		for(String word:words) {
@@ -197,5 +228,17 @@ public class TokenReader {
 				return i;
 		}
 		return -1;
+	}
+
+	public boolean isWord(String word) {
+		if(word.length()!=mWordLength)
+			return false;
+		boolean eq = true;
+		for(int j=0;j<mWordLength;j++) {
+			if(mCharBuffer[j]!=word.charAt(j)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

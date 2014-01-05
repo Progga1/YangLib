@@ -6,7 +6,7 @@ import yang.graphics.defaults.meshes.loaders.OBJLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.physics.massaggregation.MassAggregation;
 
-public class SkinnedMesh {
+public class SkinnedSkeleton {
 
 	public boolean mWireFrames = false;
 	public AbstractGraphics<?> mGraphics;
@@ -16,7 +16,7 @@ public class SkinnedMesh {
 	public OBJLoader mMesh;
 	public boolean mAutoRefresh = true;
 
-	public SkinnedMesh(OBJLoader mesh,MassAggregation skeleton) {
+	public SkinnedSkeleton(OBJLoader mesh,MassAggregation skeleton) {
 		mMesh = mesh;
 		mGraphics = mesh.mGraphics;
 		mSkeleton = skeleton;
@@ -29,7 +29,7 @@ public class SkinnedMesh {
 		}
 	}
 
-	public SkinnedMesh(OBJLoader mesh) {
+	public SkinnedSkeleton(OBJLoader mesh) {
 		this(mesh,null);
 
 	}
