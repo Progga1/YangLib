@@ -10,23 +10,29 @@ public class TokenReader {
 	public static final int ERROR_INT = Integer.MIN_VALUE;
 	public static final float ERROR_FLOAT = Float.MIN_VALUE;
 
-	public BufferedReader mInputStream;
 	public static int maxWordLength = 1024;
 
-	public char[] mCharBuffer = new char[maxWordLength];
-	public char[] mLineComments = "//".toCharArray();
+	public BufferedReader mInputStream;
+
+	//PROPERTIES
 	public boolean mAutoSkipComments = false;
+	public boolean mAutoHandleQuotationMarks = true;
 	public boolean[] mWordBreakers = new boolean[256];
 	public boolean[] mWhiteSpaces = new boolean[256];
-	public char mFstSpaceChar = '\0';
-	//public boolean mLineBroken = false;
+	public char[] mLineComments = "//".toCharArray();
+
+	//STATE
+	public char[] mCharBuffer = new char[maxWordLength];
+	public int mFstSpaceChar = '\0';
 	public int mWordLength = 0;
 	public int mLstRead;
 	public int mNumberPos = -1;
+	private int mCurLine;
+	private int mCurColumn;
+	private boolean mIsQuotationMarks = false;
 
 	public TokenReader(InputStream stream) {
-		mInputStream = new BufferedReader(new InputStreamReader(stream));	//TODO crash on nexus
-		mLstRead = 0;
+		reset(stream);
 		mWordBreakers[' '] = true;
 		mWordBreakers['\n'] = true;
 		mWordBreakers['\t'] = true;
@@ -35,6 +41,25 @@ public class TokenReader {
 		mWhiteSpaces['\n'] = true;
 		mWhiteSpaces['\t'] = true;
 		mWhiteSpaces['\r'] = true;
+	}
+
+	public void reset(InputStream stream) {
+		mInputStream = new BufferedReader(new InputStreamReader(stream));	//TODO crash on nexus
+		mLstRead = 0;
+		mCurLine = 0;
+		mCurColumn = 0;
+	}
+
+	private int nextChar() throws IOException {
+		int c = mInputStream.read();
+		if(mLstRead=='\n') {
+			mCurColumn = 0;
+			mCurLine++;
+		}else
+			mCurColumn++;
+		mLstRead = c;
+		return c;
+
 	}
 
 	public void skipSpace(boolean ignoreLineBreak) throws IOException {
@@ -46,8 +71,9 @@ public class TokenReader {
 		}
 
 		char c = '\0';
-		int read;
-		while((mLstRead=mInputStream.read())>=0) {
+		while(nextChar()>=0) {
+			if(c=='\n')
+				mCurLine++;
 			c = (char) mLstRead;
 			if(!ignoreLineBreak && c=='\n') {
 				break;
@@ -69,7 +95,7 @@ public class TokenReader {
 			return;
 		}
 		char c = '\0';
-		while((mLstRead=mInputStream.read())>=0) {
+		while(nextChar()>=0) {
 			c = (char) mLstRead;
 			if(c=='\n') {
 				mCharBuffer[0] = '\n';
@@ -91,33 +117,44 @@ public class TokenReader {
 			mFstSpaceChar = '\0';
 			return true;
 		}
-		char c;
-		boolean comment = mAutoSkipComments;
-		int i = 0;
-		if(mLstRead=='\0') {
-			mLstRead = mInputStream.read();
-		}
-		while(mLstRead>=0 && i<maxWordLength) {
-			c = (char) mLstRead;
-			if(c!='\r') {
-				if(mWordBreakers[c]) {
-					mFstSpaceChar = c;
-					break;
-				}else{
-					if(comment) {
-						if(i>=mLineComments.length || c!=mLineComments[i])
-							comment = false;
-						else if(i>=mLineComments.length-1) {
-							mFstSpaceChar = '\0';
-							toLineEnd();
-							return nextWord(ignoreLineEnd);
-						}
 
-					}
-					mCharBuffer[i++] = c;
-				}
+		boolean comment = mAutoSkipComments;
+		int c = mLstRead;
+		if(c=='\0') {
+			c = nextChar();
+		}
+		int i = 0;
+		if(mAutoHandleQuotationMarks && c=='"') {
+			mIsQuotationMarks = true;
+			while((c=nextChar())>=0 && i<maxWordLength) {
+				if(c=='"')
+					break;
+				mCharBuffer[i++] = (char) c;
 			}
-			mLstRead=mInputStream.read();
+		}else{
+			mIsQuotationMarks = false;
+
+			while(c>=0 && i<maxWordLength) {
+				if(c!='\r') {
+					if(mWordBreakers[c]) {
+						mFstSpaceChar = c;
+						break;
+					}else{
+						if(comment) {
+							if(i>=mLineComments.length || c!=mLineComments[i])
+								comment = false;
+							else if(i>=mLineComments.length-1) {
+								mFstSpaceChar = '\0';
+								toLineEnd();
+								return nextWord(ignoreLineEnd);
+							}
+
+						}
+						mCharBuffer[i++] = (char) c;
+					}
+				}
+				c = nextChar();
+			}
 		}
 		mWordLength = i;
 		return i>=1;
@@ -240,5 +277,11 @@ public class TokenReader {
 			}
 		}
 		return true;
+	}
+
+	public void expect(String expectedWord) throws UnexpectedTokenException, IOException {
+		nextWord(true);
+		if(!isWord(expectedWord))
+			throw new UnexpectedTokenException(mCurLine,mCurColumn,expectedWord,wordToString());
 	}
 }

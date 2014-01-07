@@ -26,7 +26,8 @@ public class FullGraphicsInitializer {
 		App.storage = new PCDataStorage();
 		App.gfxLoader = mTranslator.mGFXLoader;
 		App.resourceManager = new PCResourceManager();
-		App.soundManager = new PCSoundManager((PCResourceManager)App.resourceManager);
+		if(App.soundManager==null)
+			App.soundManager = new PCSoundManager((PCResourceManager)App.resourceManager);
 		App.vibrator = new PCVibrator();
 		App.systemCalls = new PCSystemCalls();
 		return this;

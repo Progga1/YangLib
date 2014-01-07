@@ -8,6 +8,7 @@ import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.util.YangList;
 import yang.util.filereader.TokenReader;
+import yang.util.filereader.UnexpectedTokenException;
 
 public class FBXLoader {
 
@@ -18,6 +19,7 @@ public class FBXLoader {
 	public MeshMaterialHandles mHandles;
 
 	private TokenReader mReader;
+	private char[] mChars;
 	private AbstractGFXLoader mGFXLoader;
 
 	public FBXLoader(AbstractGraphics<?> graphics, MeshMaterialHandles handles) {
@@ -26,32 +28,35 @@ public class FBXLoader {
 	}
 
 	public void readObjects() throws IOException {
-		final char[] chars = mReader.mCharBuffer;
 		while(!mReader.eof()) {
-			mReader.nextWord(false);
+			mReader.nextWord(true);
 			if(mReader.isWord("Model")) {
-
+				mReader.nextWord(true);
+				System.out.println(mReader.wordToString());
 			}
 
 		}
 	}
 
-	public boolean load(String filename,AbstractGFXLoader gfxLoader) throws IOException {
+	public boolean load(String filename,AbstractGFXLoader gfxLoader) throws IOException, UnexpectedTokenException {
 		mGFXLoader = gfxLoader;
 		InputStream stream = gfxLoader.mResources.getAssetInputStream(filename);
 		if(stream==null)
 			return false;
 		mReader = new TokenReader(stream);
+		mChars = mReader.mCharBuffer;
 		mReader.setLineCommentChars(";");
 		mReader.mAutoSkipComments = true;
+		mReader.mWordBreakers[':'] = true;
+		mReader.mWordBreakers[','] = true;
 
 		mMeshes.clear();
 		mArmatures.clear();
 
-		final char[] chars = mReader.mCharBuffer;
 		while(!mReader.eof()) {
-			mReader.nextWord(false);
-			if(mReader.isWord("Object")) {
+			mReader.nextWord(true);
+			if(mReader.isWord("Objects")) {
+				mReader.expect("{");
 				readObjects();
 			}
 

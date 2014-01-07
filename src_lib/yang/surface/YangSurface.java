@@ -55,6 +55,8 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 
+	public int mMaxStepsPerCycle = 16;
+
 	private UpdateMode mUpdateMode;
 	protected boolean mInitialized = false;
 	protected Object mInitializedNotifier;
@@ -367,9 +369,16 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 			handleEvents();
 			mCatchUpTime = 0;
 		}else{
+			int steps = 0;
 			while(mCatchUpTime<System.nanoTime()) {
 				mCatchUpTime += (long)(deltaTimeNanos*mPlaySpeed);
 				proceed();
+				steps++;
+				if(steps>mMaxStepsPerCycle) {
+					mCatchUpTime = 0;
+					System.err.println("Step emergency stop");
+					break;
+				}
 			}
 		}
 	}

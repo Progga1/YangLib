@@ -4,6 +4,7 @@ import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordBounds;
+import yang.graphics.textures.TextureHolder;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
@@ -36,6 +37,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	public CartoonBone[] mCartoonBones;
 	public CartoonBone[][] mLayers;
 	public CartoonBone[][] mFrontToBackLayers;
+	public TextureHolder mTextureHolder = null,mContourTextureHolder = null;
 
 	//State
 	protected boolean mUpdateColor;
@@ -178,7 +180,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 						}
 					}
 				//Fill
-				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.WHITE,4*layer.length);
+				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mSkeletonColor,4*layer.length);
 				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4*layer.length);
 				//mInterColor[3] += zInc;
 				//mInterColor[3] += 0.05f;
@@ -245,6 +247,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 					mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_12);
 				}
 			}
+		}
+
+		if(mTextureHolder!=null) {
+			mGraphics.bindTextureInHolder(mTextureHolder);
 		}
 
 		mMesh.draw();
@@ -376,6 +382,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	@Override
 	public float getJointWorldZ(Joint joint) {
 		return mCarrier.getWorldZ() + (mShiftZ + joint.mZ)*mCarrier.getScale()*mScale;
+	}
+
+	public void loadTexture() {
+		mTextureHolder.getTexture(mTranslator.mGFXLoader);
 	}
 
 }

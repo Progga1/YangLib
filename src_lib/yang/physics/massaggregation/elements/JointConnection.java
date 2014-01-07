@@ -6,7 +6,7 @@ public class JointConnection {
 	public String mName;
 	public Joint mJoint1;
 	public Joint mJoint2;
-	
+
 	//State
 	public float mNormDirX,mNormDirY,mNormDirZ;
 	public float mDistX, mDistY, mDistZ;
@@ -19,17 +19,17 @@ public class JointConnection {
 		mJoint2 = joint2;
 		refreshGeometry();
 	}
-	
+
 	public void refreshGeometry() {
 		mDistX = mJoint2.mX - mJoint1.mX;
 		mDistY = mJoint2.mY - mJoint1.mY;
 		mDistZ = mJoint2.mZ - mJoint1.mZ;
 		mDistance = (float)Math.sqrt(mDistX*mDistX + mDistY*mDistY + mDistZ*mDistZ);
-		
+
 		mPrevNormDirX = mNormDirX;
 		mPrevNormDirY = mNormDirY;
 		mPrevNormDirZ = mNormDirZ;
-		
+
 		if(mDistance!=0) {
 			float d = 1 / mDistance;
 			mNormDirX = mDistX * d;
@@ -37,9 +37,14 @@ public class JointConnection {
 			mNormDirZ = mDistZ * d;
 		}
 	}
-	
+
 	public void setAngle2D(float angle) {
 		mJoint2.setPosByAngle2D(mJoint1, this, angle);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Bone:"+mName+" "+mJoint1.mName+"-"+mJoint2.mName;
+	}
+
 }
