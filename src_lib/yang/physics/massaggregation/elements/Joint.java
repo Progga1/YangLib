@@ -12,6 +12,7 @@ import yang.util.YangList;
 public class Joint extends Point3f {
 
 	public static float DEFAULT_FRICTION = 0.9998f;
+	public static float DEFAULT_RADIUS = 0.1f;
 	public static float TOWARDS_FACTOR = 50;
 	public static float AWAY_FACTOR = 1000;
 
@@ -52,12 +53,10 @@ public class Joint extends Point3f {
 
 	private Vector3f tempVec = new Vector3f(), tempVec2 = new Vector3f();
 
-	public Joint(String name,Joint parent,float posX,float posY,float radius,MassAggregation skeleton) {
+	public Joint(String name,Joint parent,float posX,float posY,float posZ,float radius) {
+		super(posX,posY,posZ);
 		mName = name;
 		mFixed = false;
-		mX = posX;
-		mY = posY;
-		mZ = 0;
 
 		mRadius = radius;
 		mFixed = false;
@@ -65,14 +64,30 @@ public class Joint extends Point3f {
 		setInitialValues();
 		mDragging = false;
 		mAnimate = true;
-		mSkeleton = skeleton;
-		mId = mSkeleton.getNextJointId();
 		mSavePose = true;
 		mChildren = new YangList<Joint>();
 		mFriction = DEFAULT_FRICTION;
+		mEnabled = true;
+
 		setParent(parent);
 		refreshParentAngle();
-		mEnabled = true;
+	}
+
+	public Joint(String name) {
+		this(name,null, 0,0,0, DEFAULT_RADIUS);
+	}
+
+	public Joint(String name,Joint parent,float posX,float posY,float radius) {
+		this(name,parent,posX,posY,0,radius);
+	}
+
+	public Joint(String name,Joint parent,Point3f position,float radius) {
+		this(name,parent,position.mX,position.mY,position.mZ, radius);
+	}
+
+	public void setMassAggregation(MassAggregation massAggregation) {
+		mSkeleton = massAggregation;
+		mId = mSkeleton.getNextJointId();
 	}
 
 	public Joint setName(String name) {

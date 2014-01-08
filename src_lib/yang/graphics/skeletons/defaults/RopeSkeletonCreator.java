@@ -7,21 +7,21 @@ import yang.physics.massaggregation.constraints.AngleConstraint;
 import yang.physics.massaggregation.elements.Joint;
 
 public class RopeSkeletonCreator {
-	
+
 	private int mJointCount = 1;
 	private float mRopeLength = 2;
 	private float mWidth = 1;
 
 	public float mJointMass = 1.5f;
-	public MassAggregation mSkeleton; 
-	
+	public MassAggregation mSkeleton;
+
 	public RopeSkeletonCreator(int jointCount,float length,float width) {
 		super();
 		mJointCount = jointCount;
 		mRopeLength = length;
 		mWidth = width;
 	}
-	
+
 	public MassAggregation create() {
 		if(mSkeleton==null) {
 			mSkeleton = new MassAggregation();
@@ -30,7 +30,7 @@ public class RopeSkeletonCreator {
 		Joint prevJoint = null;
 		CartoonBone prevBone = null;
 		for(int i=0;i<mJointCount;i++) {
-			Joint joint = new Joint("R"+i,prevJoint,0,-i*lenPerJoint,lenPerJoint*0.5f,mSkeleton);
+			Joint joint = new Joint("R"+i,prevJoint,0,-i*lenPerJoint,lenPerJoint*0.5f);
 			joint.mMass = mJointMass;
 			joint.setInitialValues();
 			mSkeleton.addJoint(joint);
@@ -52,5 +52,5 @@ public class RopeSkeletonCreator {
 	public void setTarget(Skeleton2D target) {
 		mSkeleton = target;
 	}
-	
+
 }

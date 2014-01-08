@@ -68,20 +68,20 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 		//--- Joints ---
 		float midX = 0;
 
-		mBreastJoint = new Joint("Breast",null,midX, 1.5f*locScaleY, 0.1f*locScaleX,this);
-		mHeadJoint = new Joint("Head",mBreastJoint,midX,2*locScaleY, 0.1f*locScaleX,this);
-		mHipJoint = new Joint("Hip",mBreastJoint,midX,0.9f*locScaleY, 0.1f*locScaleX,this);
-		mLeftKneeJoint = new Joint("LeftKnee",null,midX-(legDist+legShift)*locScaleX, 0.5f*locScaleY-kneeDist, 0.1f*locScaleX,this);
-		mRightKneeJoint = new Joint("RightKnee",null,midX+(legDist+legShift)*locScaleX, 0.5f*locScaleY+kneeDist, 0.1f*locScaleX,this);
-		mLeftFootJoint = new Joint("LeftFoot",mLeftKneeJoint,midX-(legDist+legShift*2)*locScaleX, leftFootY*locScaleY, 0.1f*locScaleX,this);
-		mRightFootJoint = new Joint("RightFoot",mRightKneeJoint,midX+(legDist+legShift*2)*locScaleX, rightFootY*locScaleY, 0.1f*locScaleX,this);
-		mLeftElbowJoint = new Joint("LeftElbow",null,midX-shoulderDist*locScaleX*leftShoulderFac, 1.17f*locScaleY, 0.08f*locScaleX,this);
-		mRightElbowJoint = new Joint("RightElbow",null,midX+shoulderDist*rightShoulderFac*locScaleX, 1.16f*locScaleY, 0.08f*locScaleX,this);
-		mLeftHandJoint = new Joint("LeftHand",mLeftElbowJoint,midX-shoulderDist*locScaleX*leftShoulderFac, 0.85f*locScaleY, 0.06f*locScaleX,this);
-		mRightHandJoint = new Joint("RightHand",mRightElbowJoint,midX+shoulderDist*rightShoulderFac*locScaleX, 0.9f*locScaleY, 0.06f*locScaleX,this);
+		mBreastJoint = new Joint("Breast",null,midX, 1.5f*locScaleY, 0.1f*locScaleX);
+		mHeadJoint = new Joint("Head",mBreastJoint,midX,2*locScaleY, 0.1f*locScaleX);
+		mHipJoint = new Joint("Hip",mBreastJoint,midX,0.9f*locScaleY, 0.1f*locScaleX);
+		mLeftKneeJoint = new Joint("LeftKnee",null,midX-(legDist+legShift)*locScaleX, 0.5f*locScaleY-kneeDist, 0.1f*locScaleX);
+		mRightKneeJoint = new Joint("RightKnee",null,midX+(legDist+legShift)*locScaleX, 0.5f*locScaleY+kneeDist, 0.1f*locScaleX);
+		mLeftFootJoint = new Joint("LeftFoot",mLeftKneeJoint,midX-(legDist+legShift*2)*locScaleX, leftFootY*locScaleY, 0.1f*locScaleX);
+		mRightFootJoint = new Joint("RightFoot",mRightKneeJoint,midX+(legDist+legShift*2)*locScaleX, rightFootY*locScaleY, 0.1f*locScaleX);
+		mLeftElbowJoint = new Joint("LeftElbow",null,midX-shoulderDist*locScaleX*leftShoulderFac, 1.17f*locScaleY, 0.08f*locScaleX);
+		mRightElbowJoint = new Joint("RightElbow",null,midX+shoulderDist*rightShoulderFac*locScaleX, 1.16f*locScaleY, 0.08f*locScaleX);
+		mLeftHandJoint = new Joint("LeftHand",mLeftElbowJoint,midX-shoulderDist*locScaleX*leftShoulderFac, 0.85f*locScaleY, 0.06f*locScaleX);
+		mRightHandJoint = new Joint("RightHand",mRightElbowJoint,midX+shoulderDist*rightShoulderFac*locScaleX, 0.9f*locScaleY, 0.06f*locScaleX);
 		if(addFeet) {
-			mLeftToesJoint = new Joint("LeftToes",mLeftFootJoint,midX-(legDist+legShift*2)*locScaleX+0.18f, leftFootY*locScaleY, 0.06f*locScaleX,this);
-			mRightToesJoint = new Joint("RightToes",mRightFootJoint,midX+(legDist+legShift*2)*locScaleX+0.18f, rightFootY*locScaleY, 0.06f*locScaleX,this);
+			mLeftToesJoint = new Joint("LeftToes",mLeftFootJoint,midX-(legDist+legShift*2)*locScaleX+0.18f, leftFootY*locScaleY, 0.06f*locScaleX);
+			mRightToesJoint = new Joint("RightToes",mRightFootJoint,midX+(legDist+legShift*2)*locScaleX+0.18f, rightFootY*locScaleY, 0.06f*locScaleX);
 		}
 
 		//Body
@@ -92,10 +92,10 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 
 
 		//--- Normal constraint joints ---
-		mLeftShoulderJoint = new JointNormalConstraint("LeftShoulder",mBreastJoint,mBodyBone,0.17f,shoulderDist*locScaleX*leftShoulderFac,0.02f,this);
-		mRightShoulderJoint = new JointNormalConstraint("RightShoulder",mBreastJoint,mBodyBone,0.10f,-shoulderDist*rightShoulderFac*locScaleX,0.023f,this);
-		mLeftLegJoint = new JointNormalConstraint("LeftLeg",mHipJoint,mBodyBone,0.94f,legDist*locScaleX,0.02f,this);
-		mRightLegJoint = new JointNormalConstraint("RightLeg",mHipJoint,mBodyBone,0.97f,-legDist*locScaleX,0.02f,this);
+		mLeftShoulderJoint = new JointNormalConstraint("LeftShoulder",mBreastJoint,mBodyBone,0.17f,shoulderDist*locScaleX*leftShoulderFac,0.02f);
+		mRightShoulderJoint = new JointNormalConstraint("RightShoulder",mBreastJoint,mBodyBone,0.10f,-shoulderDist*rightShoulderFac*locScaleX,0.023f);
+		mLeftLegJoint = new JointNormalConstraint("LeftLeg",mHipJoint,mBodyBone,0.94f,legDist*locScaleX,0.02f);
+		mRightLegJoint = new JointNormalConstraint("RightLeg",mHipJoint,mBodyBone,0.97f,-legDist*locScaleX,0.02f);
 
 		mLeftElbowJoint.setParent(mLeftShoulderJoint);
 		mRightElbowJoint.setParent(mRightShoulderJoint);

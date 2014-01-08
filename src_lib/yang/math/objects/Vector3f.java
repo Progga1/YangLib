@@ -2,6 +2,8 @@ package yang.math.objects;
 
 public class Vector3f extends Point3f{
 
+	public final static Vector3f ZERO = new Vector3f(0,0,0);
+	public final static Vector3f ONE = new Vector3f(1,1,1);
 	public final static Vector3f RIGHT = new Vector3f(1,0,0);
 	public final static Vector3f LEFT = new Vector3f(-1,0,0);
 	public final static Vector3f UP = new Vector3f(0,1,0);

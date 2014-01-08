@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import yang.math.objects.Point3f;
+
 public class TokenReader {
 
 	public static final int ERROR_INT = Integer.MIN_VALUE;
@@ -52,7 +54,7 @@ public class TokenReader {
 
 	private int nextChar() throws IOException {
 		int c = mInputStream.read();
-		if(mLstRead=='\n') {
+		if(c=='\n') {
 			mCurColumn = 0;
 			mCurLine++;
 		}else
@@ -72,17 +74,15 @@ public class TokenReader {
 
 		char c = '\0';
 		while(nextChar()>=0) {
-			if(c=='\n')
-				mCurLine++;
 			c = (char) mLstRead;
 			if(!ignoreLineBreak && c=='\n') {
 				break;
 			}else if(!mWhiteSpaces[c]) {
-				mCharBuffer[0] = c;
+				//mCharBuffer[0] = c;
 				return;
 			}
 		}
-		mCharBuffer[0] = c;
+		//mCharBuffer[0] = c;
 	}
 
 	public void setLineCommentChars(String chars) {
@@ -90,8 +90,9 @@ public class TokenReader {
 	}
 
 	public void toLineEnd() throws IOException {
-		if(mLstRead<0 || mFstSpaceChar=='\n' || mCharBuffer[0]=='\n') {
+		if(mLstRead<0 || mFstSpaceChar=='\n' || mLstRead=='\n') {
 			mCharBuffer[0] = '\n';
+			mWordLength = 1;
 			return;
 		}
 		char c = '\0';
@@ -99,6 +100,7 @@ public class TokenReader {
 			c = (char) mLstRead;
 			if(c=='\n') {
 				mCharBuffer[0] = '\n';
+				mWordLength = 1;
 				return;
 			}
 		}
@@ -112,7 +114,7 @@ public class TokenReader {
 			mFstSpaceChar = '\0';
 			return false;
 		}
-		if(mCharBuffer[0]=='\n') {
+		if(mLstRead=='\n') {
 			mWordLength = 1;
 			mFstSpaceChar = '\0';
 			return true;
@@ -125,12 +127,16 @@ public class TokenReader {
 		}
 		int i = 0;
 		if(mAutoHandleQuotationMarks && c=='"') {
+			//Quotation marks
 			mIsQuotationMarks = true;
 			while((c=nextChar())>=0 && i<maxWordLength) {
 				if(c=='"')
 					break;
 				mCharBuffer[i++] = (char) c;
 			}
+			skipSpace(ignoreLineEnd);
+//			if(mWordBreakers[mLstRead])
+//				nextChar();
 		}else{
 			mIsQuotationMarks = false;
 
@@ -267,10 +273,21 @@ public class TokenReader {
 		return -1;
 	}
 
+	public boolean startsWith(String word) {
+		int l = word.length();
+		if(l>mWordLength)
+			return false;
+		for(int j=0;j<l;j++) {
+			if(mCharBuffer[j]!=word.charAt(j)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public boolean isWord(String word) {
 		if(word.length()!=mWordLength)
 			return false;
-		boolean eq = true;
 		for(int j=0;j<mWordLength;j++) {
 			if(mCharBuffer[j]!=word.charAt(j)) {
 				return false;
@@ -279,9 +296,40 @@ public class TokenReader {
 		return true;
 	}
 
+	public boolean isChar(char c) {
+		return mWordLength==1 && mCharBuffer[0] == c;
+	}
+
 	public void expect(String expectedWord) throws UnexpectedTokenException, IOException {
 		nextWord(true);
 		if(!isWord(expectedWord))
 			throw new UnexpectedTokenException(mCurLine,mCurColumn,expectedWord,wordToString());
 	}
+
+	public int getCurrentLine() {
+		return mCurLine;
+	}
+
+	public int getCurrentColumn() {
+		return mCurColumn;
+	}
+
+	public void skipWord(boolean ignoreLineEndings) throws IOException {
+		nextWord(ignoreLineEndings);
+	}
+
+	public void readPoint3f(Point3f targetPoint) throws IOException {
+		nextWord(true);
+		targetPoint.mX = wordToFloat(0,0);
+		nextWord(true);
+		targetPoint.mY = wordToFloat(0,0);
+		nextWord(true);
+		targetPoint.mZ = wordToFloat(0,0);
+	}
+
+	@Override
+	public String toString() {
+		return ""+mCurLine+"-"+mCurColumn+" "+wordToString();
+	}
+
 }

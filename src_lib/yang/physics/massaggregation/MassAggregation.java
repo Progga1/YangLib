@@ -19,6 +19,7 @@ public class MassAggregation {
 	protected static SkeletonCarrier NEUTRAL_CARRIER = new NeutralSkeletonCarrier();
 
 	//Properties
+	public String mName = null;
 	public float mFloorFriction = 0.98f;
 	public float mConstantForceX;
 	public float mConstantForceY;
@@ -117,6 +118,7 @@ public class MassAggregation {
 	}
 
 	public Joint addJoint(Joint joint) {
+		joint.setMassAggregation(this);
 		joint.mX = joint.mX*mCurJointScale + mCurJointShift.mX;
 		joint.mY = joint.mY*mCurJointScale + mCurJointShift.mY;
 		joint.mZ = joint.mZ*mCurJointScale + mCurJointShift.mZ;
@@ -126,7 +128,7 @@ public class MassAggregation {
 	}
 
 	public Joint addJoint(String name,Joint parent,float x,float y,float z) {
-		final Joint newJoint = new Joint(name, parent, x,y, mDefaultJointRadius, this);
+		final Joint newJoint = new Joint(name, parent, x,y, mDefaultJointRadius);
 		newJoint.mZ = z;
 		return addJoint(newJoint);
 	}
@@ -356,6 +358,12 @@ public class MassAggregation {
 
 	public float getScale() {
 		return mCarrier.getScale()*mScale;
+	}
+
+	public void clear() {
+		mJoints.clear();
+		mBones.clear();
+		mConstraints.clear();
 	}
 
 }
