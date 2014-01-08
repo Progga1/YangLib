@@ -12,7 +12,8 @@ import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 import yang.util.YangList;
 import yang.util.filereader.TokenReader;
-import yang.util.filereader.UnexpectedTokenException;
+import yang.util.filereader.exceptions.ParseException;
+import yang.util.filereader.exceptions.UnknownIdentifierException;
 
 public class FBXLoader {
 
@@ -54,6 +55,7 @@ public class FBXLoader {
 	}
 
 	private void skipBracketContent() throws IOException {
+		mReader.toLineEnd();
 		int depth = 1;
 		while(!mReader.eof()) {
 			mReader.nextWord(true);
@@ -67,7 +69,7 @@ public class FBXLoader {
 		}
 	}
 
-	private void readObjects() throws IOException, UnexpectedTokenException {
+	private void readObjects() throws IOException, ParseException {
 		while(!mReader.eof()) {
 			mReader.nextWord(true);
 			if(mReader.isWord("}"))
@@ -91,7 +93,7 @@ public class FBXLoader {
 				}else
 					newObj = new SceneObject();
 				mObjects.add(newObj);
-				newObj.mName = name.split("::")[1];
+				newObj.mName = name.substring(7);
 
 				while(!mReader.eof()) {
 					mReader.nextWord(true);
@@ -102,30 +104,57 @@ public class FBXLoader {
 
 						readProperties(newObj);
 					}else if(mReader.startsWith("Layer")){
-						mReader.toLineEnd();
 						skipBracketContent();
 					}else
 						mReader.toLineEnd();
 				}
+			}else if(mReader.isWord("Materials")) {
+				skipBracketContent();
+			}else if(mReader.isWord("Pose")) {
+				skipBracketContent();
+			}else if(mReader.isWord("GlobalSettings")) {
+				skipBracketContent();
 			}
 
 		}
 	}
 
-	public void createSkeleton(MassAggregation targetSkeleton) {
-		for(LimbObject limbObject:mLimbObjects) {
-			Joint joint = new Joint(limbObject.mName,null,limbObject.mTranslation,mDefaultJointRadius);
-			targetSkeleton.addJoint(joint);
+	private SceneObject findModel() {
+		for(SceneObject obj:mObjects) {
+			if(mReader.endsWith(obj.mName)) {
+				return obj;
+			}
+		}
+		return null;
+	}
+
+	private void readConnections() throws IOException, UnknownIdentifierException {
+		while(!mReader.eof()) {
+			mReader.nextWord(true);
+			if(mReader.isWord("}"))
+				break;
+			if(mReader.isWord("Connect")) {
+				mReader.nextWord(true); //"OO"
+				mReader.nextWord(true);
+				if(mReader.startsWith("Model")) {
+					SceneObject obj1 = findModel();
+					if(obj1==null)
+						throw new UnknownIdentifierException(mReader,mReader.wordToString().substring(7));
+					mReader.nextWord(true);
+					if(mReader.startsWith("Model")) {
+						SceneObject obj2 = findModel();
+						if(obj2==null)
+							throw new UnknownIdentifierException(mReader,mReader.wordToString().substring(7));
+						obj1.setParent(obj2);
+						System.out.println(obj1+" "+obj2);
+					}
+				}
+
+			}
 		}
 	}
 
-	public MassAggregation createSkeleton() {
-		MassAggregation skel = new MassAggregation();
-		createSkeleton(skel);
-		return skel;
-	}
-
-	public boolean load(String filename,AbstractGFXLoader gfxLoader) throws IOException, UnexpectedTokenException {
+	public boolean load(String filename,AbstractGFXLoader gfxLoader) throws IOException, ParseException {
 	//	mGFXLoader = gfxLoader;
 		InputStream stream = gfxLoader.mResources.getAssetInputStream(filename);
 		if(stream==null)
@@ -143,16 +172,47 @@ public class FBXLoader {
 		mArmatures.clear();
 		mMassAggregation.clear();
 
+		SceneObject scene = new SceneObject();
+		scene.mName = "Scene";
+		mObjects.add(scene);
+
 		while(!mReader.eof()) {
 			mReader.nextWord(true);
 			if(mReader.isWord("Objects")) {
 				mReader.expect("{");
 				readObjects();
+			}else if(mReader.isWord("Connections")) {
+				mReader.expect("{");
+				readConnections();
+			}else if(mReader.isWord("Takes")) {
+				skipBracketContent();
+			}else if(mReader.startsWith("Version")) {
+				skipBracketContent();
+			}else if(mReader.startsWith("Relations")) {
+				skipBracketContent();
 			}
 
 		}
 
 		return true;
+	}
+
+	public void createSkeleton(MassAggregation targetSkeleton) {
+		for(LimbObject limbObject:mLimbObjects) {
+			Joint joint = new Joint(limbObject.mName,null,limbObject.mTranslation,mDefaultJointRadius);
+			targetSkeleton.addJoint(joint);
+		}
+		for(LimbObject limbObject:mLimbObjects) {
+			if(limbObject.mParent!=null) {
+				targetSkeleton.getJointByName(limbObject.mName).setParent(targetSkeleton.getJointByName(limbObject.mParent.mName));
+			}
+		}
+	}
+
+	public MassAggregation createSkeleton() {
+		MassAggregation skel = new MassAggregation();
+		createSkeleton(skel);
+		return skel;
 	}
 
 }

@@ -157,7 +157,7 @@ public class MassAggregation {
 	}
 
 	public Joint getJointByName(String name) {
-		name = name.toUpperCase();
+		//name = name.toUpperCase();
 		for(final Joint joint:mJoints) {
 			if(joint.mName.equals(name))
 				return joint;

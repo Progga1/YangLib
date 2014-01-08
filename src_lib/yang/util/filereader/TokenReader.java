@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import yang.math.objects.Point3f;
+import yang.util.filereader.exceptions.UnexpectedTokenException;
 
 public class TokenReader {
 
@@ -134,7 +135,7 @@ public class TokenReader {
 					break;
 				mCharBuffer[i++] = (char) c;
 			}
-			skipSpace(ignoreLineEnd);
+			skipSpace(false);
 //			if(mWordBreakers[mLstRead])
 //				nextChar();
 		}else{
@@ -294,6 +295,22 @@ public class TokenReader {
 			}
 		}
 		return true;
+	}
+
+	public boolean isSubString(String word, int offset) {
+		int l = word.length();
+		if(l+offset>mWordLength)
+			return false;
+		for(int j=0;j<l;j++) {
+			if(mCharBuffer[j+offset]!=word.charAt(j)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean endsWith(String word) {
+		return isSubString(word, mWordLength-word.length());
 	}
 
 	public boolean isChar(char c) {

@@ -1,25 +1,22 @@
-package yang.util.filereader;
+package yang.util.filereader.exceptions;
 
-public class UnexpectedTokenException extends Exception {
+
+public class UnexpectedTokenException extends ParseException {
 
 	private static final long serialVersionUID = 1L;
 
-	public int mLine;
-	public int mColumn;
 	public String mExpected;
 	public String mGot;
 
 	public UnexpectedTokenException(int line,int column,String expected,String got) {
-		super();
-		mLine = line;
-		mColumn = column;
+		super(line,column);
 		mExpected = expected;
 		mGot = got;
 	}
 
 	@Override
 	public String getMessage() {
-		return mLine+"-"+mColumn+" Unexpected token: expected "+mExpected+", got "+mGot;
+		return super.getMessage("Unexpected token","expected "+mExpected+", got "+mGot);
 	}
 
 }
