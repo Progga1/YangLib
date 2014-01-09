@@ -757,4 +757,21 @@ public class YangMatrix {
 		return result;
 	}
 
+	public void swapLines(int line1, int line2) {
+		int l1 = line1*4;
+		int l2 = line2*4;
+		float h = mValues[l1];
+		mValues[l1] = mValues[l2];
+		mValues[l2] = h;
+		h = mValues[l1+1];
+		mValues[l1+1] = mValues[l2+1];
+		mValues[l2+1] = h;
+		h = mValues[l1+2];
+		mValues[l1+2] = mValues[l2+2];
+		mValues[l2+2] = h;
+		h = mValues[l1+3];
+		mValues[l1+3] = mValues[l2+3];
+		mValues[l2+3] = h;
+	}
+
 }

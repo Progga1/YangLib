@@ -310,7 +310,10 @@ public class TokenReader {
 	}
 
 	public boolean endsWith(String word) {
-		return isSubString(word, mWordLength-word.length());
+		if(mWordLength<word.length())
+			return false;
+		else
+			return isSubString(word, mWordLength-word.length());
 	}
 
 	public boolean isChar(char c) {

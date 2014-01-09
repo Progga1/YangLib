@@ -9,10 +9,12 @@ import yang.graphics.defaults.meshes.scenes.SceneObject;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.math.MathConst;
+import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.YangList;
 import yang.util.filereader.TokenReader;
 import yang.util.filereader.exceptions.ParseException;
@@ -60,7 +62,20 @@ public class FBXLoader {
 				mReader.skipWords(2);
 				mReader.readPoint3f(tempVec);
 				tempVec.scale(MathConst.PI/180);
-				targetObject.mOrientation.setFromEuler(tempVec.mX,tempVec.mY,tempVec.mZ);
+				Quaternion quat = targetObject.mOrientation;
+//				targetObject.mOrientation.setFromEuler(tempVec.mX,tempVec.mY,tempVec.mZ);
+				quat.setIdentity();
+
+				quat.rotateX(tempVec.mX);
+				quat.rotateY(tempVec.mY);
+				quat.rotateZ(tempVec.mZ);
+			}
+			if(targetObject instanceof LimbObject) {
+				LimbObject limbObj = (LimbObject)targetObject;
+				if(mReader.isWord("LimbLength")) {
+					mReader.skipWords(2);
+					limbObj.mLimbLength = mReader.readFloat(true);
+				}
 			}
 		}
 	}
@@ -214,18 +229,29 @@ public class FBXLoader {
 			parentJoint.applyTransform(transform);
 			targetSkeleton.addJoint(parentJoint);
 		}
+		transform.stackPush();
 		baseObj.multTransform(transform);
-		transform.translate(baseObj.mBoneLength,0,0);
+		transform.translate(baseObj.mLimbLength,0,0);
 		Joint joint = new Joint(baseObj.mName);
 		joint.applyTransform(transform);
 		joint.setParent(parentJoint);
 		targetSkeleton.addJoint(joint);
+		transform.translate(-baseObj.mLimbLength,0,0);
+
+		System.out.println(targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint)));
+
+//		transform.stackPop();
+//		transform.stackPush();
+//		transform.translate(baseObj.mTranslation);
+//		transform.translate(baseObj.mBoneLength,0,0);
+
 		for(SceneObject obj:baseObj.mChildren) {
 			if(obj instanceof LimbObject) {
 				LimbObject limbObj = (LimbObject)obj;
 				subSkel(targetSkeleton,limbObj,transform,joint);
 			}
 		}
+		transform.stackPop();
 	}
 
 	public void createSkeleton(MassAggregation targetSkeleton) {
@@ -252,6 +278,11 @@ public class FBXLoader {
 			}
 		}
 
+		matrix.loadIdentity();
+		matrix.swapLines(0,1);
+		matrix.rotateY(MathConst.PI);
+		matrix.rotateZ(MathConst.PI/2);
+		targetSkeleton.transformJointPositions(matrix);
 	}
 
 	public MassAggregation createSkeleton() {

@@ -2,6 +2,6 @@ package yang.graphics.defaults.meshes.scenes;
 
 public class LimbObject extends SceneObject {
 
-	public float mBoneLength = 1;
+	public float mLimbLength = 1;
 
 }

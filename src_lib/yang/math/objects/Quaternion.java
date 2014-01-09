@@ -136,6 +136,13 @@ public class Quaternion {
 		rotateY(yaw);
 	}
 
+//	public void setFromEuler2(float yaw, float pitch, float roll) {
+//		setIdentity();
+//		rotateX(roll);
+//		rotateY(pitch);
+//		rotateZ(yaw);
+//	}
+
 	public void setFromAxis(Vector3f axis, float angle) {
 		final float sinA = (float) Math.sin(angle * AXIS_FAC);
 		final float cosA = (float) Math.cos(angle * W_FAC);
