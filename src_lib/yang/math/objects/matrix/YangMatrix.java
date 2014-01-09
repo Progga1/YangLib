@@ -4,7 +4,6 @@ import yang.math.MatrixOps;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
-import yang.util.Util;
 
 //TODO normal inversion only 3x3, autocreate inversed mat, save orthogonal etc information
 
@@ -85,6 +84,11 @@ public class YangMatrix {
 		loadIdentity();
 	}
 
+	public YangMatrix(int stackCapacity) {
+		this();
+		initStack(stackCapacity);
+	}
+
 	public void initStack(int capacity) {
 		mStack = new float[capacity][16];
 		mStackPointer = -1;
@@ -108,10 +112,11 @@ public class YangMatrix {
 	}
 
 	public void stackPush() {
-		if(mStack==null)
-			initStack(8);
-		else if(mStackPointer>=mStack.length)
-			mStack = Util.resizeArray(mStack,new float[mStackPointer+2][16]);
+		assert mStack!=null;
+//		if(mStack==null)
+//			throw new RuntimeException();
+//		else if(mStackPointer>=mStack.length)
+//			mStack = Util.resizeArray(mStack,new float[mStackPointer+2][16]);
 		System.arraycopy(mValues,0,mStack[++mStackPointer],0,16);
 	}
 

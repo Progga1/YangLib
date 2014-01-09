@@ -9,6 +9,7 @@ import yang.graphics.defaults.meshes.scenes.SceneObject;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.math.MathConst;
+import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
@@ -49,6 +50,15 @@ public class FBXLoader {
 		mMassAggregation = target;
 	}
 
+	private void readPoint3f(Point3f target) throws IOException {
+		mReader.nextWord(true);
+		target.mX = mReader.wordToFloat(0,0);
+		mReader.nextWord(true);
+		target.mY = mReader.wordToFloat(0,0);
+		mReader.nextWord(true);
+		target.mZ = mReader.wordToFloat(0,0);
+	}
+
 	private void readProperties(SceneObject targetObject) throws IOException {
 		while(!mReader.eof()) {
 			mReader.nextWord(true);
@@ -56,16 +66,16 @@ public class FBXLoader {
 				break;
 			if(mReader.isWord("Lcl Translation")) {
 				mReader.skipWords(2);
-				mReader.readPoint3f(targetObject.mTranslation);
+				readPoint3f(targetObject.mTranslation);
 			}
 			if(mReader.isWord("Lcl Rotation")) {
 				mReader.skipWords(2);
-				mReader.readPoint3f(tempVec);
+				readPoint3f(tempVec);
 				tempVec.scale(MathConst.PI/180);
-				Quaternion quat = targetObject.mOrientation;
-//				targetObject.mOrientation.setFromEuler(tempVec.mX,tempVec.mY,tempVec.mZ);
-				quat.setIdentity();
 
+//				targetObject.mOrientation.setFromEuler(tempVec.mX,tempVec.mY,tempVec.mZ);
+				Quaternion quat = targetObject.mOrientation;
+				quat.setIdentity();
 				quat.rotateX(tempVec.mX);
 				quat.rotateY(tempVec.mY);
 				quat.rotateZ(tempVec.mZ);
@@ -174,7 +184,6 @@ public class FBXLoader {
 						obj1.setParent(obj2);
 					}
 				}
-
 			}
 		}
 	}
@@ -238,7 +247,7 @@ public class FBXLoader {
 		targetSkeleton.addJoint(joint);
 		transform.translate(-baseObj.mLimbLength,0,0);
 
-		System.out.println(targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint)));
+		targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
 
 //		transform.stackPop();
 //		transform.stackPush();
@@ -255,17 +264,8 @@ public class FBXLoader {
 	}
 
 	public void createSkeleton(MassAggregation targetSkeleton) {
-//		for(LimbObject limbObject:mLimbObjects) {
-//			Joint joint = new Joint(limbObject.mName);
-//			joint.setRadius(mDefaultJointRadius);
-//			targetSkeleton.addJoint(joint);
-//		}
-//		for(LimbObject limbObject:mLimbObjects) {
-//			if(limbObject.mParent!=null) {
-//				targetSkeleton.getJointByName(limbObject.mName).setParent(targetSkeleton.getJointByName(limbObject.mParent.mName));
-//			}
-//		}
 		YangMatrix matrix = new YangMatrix();
+		matrix.initStack(64);
 
 		for(SceneObject obj:mRootObject.mChildren) {
 			if(obj instanceof LimbObject) {
@@ -278,11 +278,11 @@ public class FBXLoader {
 			}
 		}
 
-		matrix.loadIdentity();
-		matrix.swapLines(0,1);
-		matrix.rotateY(MathConst.PI);
-		matrix.rotateZ(MathConst.PI/2);
-		targetSkeleton.transformJointPositions(matrix);
+//		matrix.loadIdentity();
+//		matrix.swapLines(0,1);
+//		matrix.rotateY(MathConst.PI);
+//		matrix.rotateZ(MathConst.PI/2);
+//		targetSkeleton.transformJointPositions(matrix);
 	}
 
 	public MassAggregation createSkeleton() {

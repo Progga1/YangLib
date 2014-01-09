@@ -23,6 +23,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public final static float PI = 3.1415926535f;
 	public static float METERS_PER_UNIT = 1;
 	public static int MAX_DYNAMIC_VERTICES = 200000;
+	public static int WORLD_TRANSFORM_STACK_CAPACITY = 128;
 
 	//Matrices
 	public YangMatrixRectOps mInterTransf1;
@@ -94,7 +95,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mProjectionTransform = new YangMatrixCameraOps();
 		mInterTransf1 = new YangMatrixRectOps();
 		mInterTransf2 = new YangMatrixRectOps();
-		mWorldTransform = new YangMatrix();
+		mWorldTransform = new YangMatrix(WORLD_TRANSFORM_STACK_CAPACITY);
 		mWorldTransform.loadIdentity();
 		mStereoScreenTransform = new YangMatrix();
 		mCameraProjectionMatrix = new YangMatrix();
