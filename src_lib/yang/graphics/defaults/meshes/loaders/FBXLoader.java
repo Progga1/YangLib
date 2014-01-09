@@ -8,6 +8,9 @@ import yang.graphics.defaults.meshes.scenes.LimbObject;
 import yang.graphics.defaults.meshes.scenes.SceneObject;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.AbstractGraphics;
+import yang.math.MathConst;
+import yang.math.objects.Vector3f;
+import yang.math.objects.matrix.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 import yang.util.YangList;
@@ -23,12 +26,15 @@ public class FBXLoader {
 	public MassAggregation mMassAggregation;
 	public YangList<SceneObject> mObjects = new YangList<SceneObject>();
 	public YangList<LimbObject> mLimbObjects = new YangList<LimbObject>();
+	public SceneObject mRootObject;
 
 	public AbstractGraphics<?> mGraphics;
 	public MeshMaterialHandles mHandles;
 
 	private TokenReader mReader;
 	private float mDefaultJointRadius = Joint.DEFAULT_RADIUS;
+
+	private Vector3f tempVec = new Vector3f();
 
 	//private targetObject mTempProperties = new targetObject();
 
@@ -47,9 +53,14 @@ public class FBXLoader {
 			if(mReader.isChar('}'))
 				break;
 			if(mReader.isWord("Lcl Translation")) {
-				mReader.skipWord(true);
-				mReader.skipWord(true);
+				mReader.skipWords(2);
 				mReader.readPoint3f(targetObject.mTranslation);
+			}
+			if(mReader.isWord("Lcl Rotation")) {
+				mReader.skipWords(2);
+				mReader.readPoint3f(tempVec);
+				tempVec.scale(MathConst.PI/180);
+				targetObject.mOrientation.setFromEuler(tempVec.mX,tempVec.mY,tempVec.mZ);
 			}
 		}
 	}
@@ -146,7 +157,6 @@ public class FBXLoader {
 						if(obj2==null)
 							throw new UnknownIdentifierException(mReader,mReader.wordToString().substring(7));
 						obj1.setParent(obj2);
-						System.out.println(obj1+" "+obj2);
 					}
 				}
 
@@ -172,9 +182,9 @@ public class FBXLoader {
 		mArmatures.clear();
 		mMassAggregation.clear();
 
-		SceneObject scene = new SceneObject();
-		scene.mName = "Scene";
-		mObjects.add(scene);
+		mRootObject = new SceneObject();
+		mRootObject.mName = "Scene";
+		mObjects.add(mRootObject);
 
 		while(!mReader.eof()) {
 			mReader.nextWord(true);
@@ -197,16 +207,51 @@ public class FBXLoader {
 		return true;
 	}
 
-	public void createSkeleton(MassAggregation targetSkeleton) {
-		for(LimbObject limbObject:mLimbObjects) {
-			Joint joint = new Joint(limbObject.mName,null,limbObject.mTranslation,mDefaultJointRadius);
-			targetSkeleton.addJoint(joint);
+	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,YangMatrix transform,Joint parentJoint) {
+		if(parentJoint==null) {
+			parentJoint = new Joint("root_"+baseObj.mName);
+			parentJoint.set(baseObj.mTranslation);
+			parentJoint.applyTransform(transform);
+			targetSkeleton.addJoint(parentJoint);
 		}
-		for(LimbObject limbObject:mLimbObjects) {
-			if(limbObject.mParent!=null) {
-				targetSkeleton.getJointByName(limbObject.mName).setParent(targetSkeleton.getJointByName(limbObject.mParent.mName));
+		baseObj.multTransform(transform);
+		transform.translate(baseObj.mBoneLength,0,0);
+		Joint joint = new Joint(baseObj.mName);
+		joint.applyTransform(transform);
+		joint.setParent(parentJoint);
+		targetSkeleton.addJoint(joint);
+		for(SceneObject obj:baseObj.mChildren) {
+			if(obj instanceof LimbObject) {
+				LimbObject limbObj = (LimbObject)obj;
+				subSkel(targetSkeleton,limbObj,transform,joint);
 			}
 		}
+	}
+
+	public void createSkeleton(MassAggregation targetSkeleton) {
+//		for(LimbObject limbObject:mLimbObjects) {
+//			Joint joint = new Joint(limbObject.mName);
+//			joint.setRadius(mDefaultJointRadius);
+//			targetSkeleton.addJoint(joint);
+//		}
+//		for(LimbObject limbObject:mLimbObjects) {
+//			if(limbObject.mParent!=null) {
+//				targetSkeleton.getJointByName(limbObject.mName).setParent(targetSkeleton.getJointByName(limbObject.mParent.mName));
+//			}
+//		}
+		YangMatrix matrix = new YangMatrix();
+
+		for(SceneObject obj:mRootObject.mChildren) {
+			if(obj instanceof LimbObject) {
+				obj.multTransform(matrix);
+				for(SceneObject boneObj:obj.mChildren) {
+					if(boneObj instanceof LimbObject) {
+						subSkel(targetSkeleton,(LimbObject)boneObj,matrix,null);
+					}
+				}
+			}
+		}
+
 	}
 
 	public MassAggregation createSkeleton() {

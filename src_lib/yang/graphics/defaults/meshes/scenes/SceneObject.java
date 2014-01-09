@@ -3,6 +3,7 @@ package yang.graphics.defaults.meshes.scenes;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
+import yang.math.objects.matrix.YangMatrix;
 import yang.util.YangList;
 
 public class SceneObject {
@@ -45,6 +46,27 @@ public class SceneObject {
 	@Override
 	public String toString() {
 		return mName+": "+mTranslation;
+	}
+
+	public void multTransform(YangMatrix targetMatrix) {
+		targetMatrix.translate(mTranslation);
+		targetMatrix.multiplyQuaternionRight(mOrientation);
+		targetMatrix.scale(mScaling);
+	}
+
+	public String hierarchyToString() {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for(SceneObject child:mChildren) {
+			if(!first)
+				result.append(',');
+			result.append(child.hierarchyToString());
+			first = false;
+		}
+		if(first)
+			return mName;
+		else
+			return mName+"("+result.toString()+")";
 	}
 
 }

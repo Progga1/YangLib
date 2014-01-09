@@ -335,6 +335,11 @@ public class TokenReader {
 		nextWord(ignoreLineEndings);
 	}
 
+	public void skipWords(int count) throws IOException {
+		for(int i=0;i<count;i++)
+			skipWord(true);
+	}
+
 	public void readPoint3f(Point3f targetPoint) throws IOException {
 		nextWord(true);
 		targetPoint.mX = wordToFloat(0,0);

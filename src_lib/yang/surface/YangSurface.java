@@ -342,7 +342,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 		return mLoadingState>=mStartupSteps;
 	}
 
-	private void handleEvents() {
+	protected void handleEvents() {
 		assert mGraphics.preCheck("Handle events");
 		if(mEventListener!=null) {
 			if(!mPaused && mLoadingState>=mStartupSteps)
