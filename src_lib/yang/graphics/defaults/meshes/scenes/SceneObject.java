@@ -15,7 +15,7 @@ public class SceneObject {
 	public boolean mVisibility;
 
 	public SceneObject mParent = null;
-	public YangList<SceneObject> mChildren = new YangList<SceneObject>();
+	protected YangList<SceneObject> mChildren = new YangList<SceneObject>();
 
 	public SceneObject() {
 		reset();
@@ -43,9 +43,8 @@ public class SceneObject {
 	}
 
 
-	@Override
-	public String toString() {
-		return mName+": "+mTranslation;
+	public Iterable<SceneObject> getChildren() {
+		return mChildren;
 	}
 
 	public void multTransform(YangMatrix targetMatrix) {
@@ -67,6 +66,11 @@ public class SceneObject {
 			return mName;
 		else
 			return mName+"("+result.toString()+")";
+	}
+
+	@Override
+	public String toString() {
+		return mName+": "+mTranslation;
 	}
 
 }

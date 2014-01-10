@@ -35,7 +35,7 @@ public class FBXLoader {
 	public MeshMaterialHandles mHandles;
 
 	private TokenReader mReader;
-	private float mDefaultJointRadius = Joint.DEFAULT_RADIUS;
+	private float mDefaultJointRadius = Joint.DEFAULT_RADIUS * 0.7f;
 
 	private Vector3f tempVec = new Vector3f();
 
@@ -231,20 +231,26 @@ public class FBXLoader {
 		return true;
 	}
 
+	private float getRadius(float limbLength) {
+		return Math.min(limbLength*0.35f,mDefaultJointRadius);
+	}
+
 	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,YangMatrix transform,Joint parentJoint) {
 		if(parentJoint==null) {
 			parentJoint = new Joint("root_"+baseObj.mName);
 			parentJoint.set(baseObj.mTranslation);
 			parentJoint.applyTransform(transform);
 			targetSkeleton.addJoint(parentJoint);
+			parentJoint.setRadius(getRadius(baseObj.mLimbLength));
 		}
 		transform.stackPush();
 		baseObj.multTransform(transform);
 		transform.translate(baseObj.mLimbLength,0,0);
 		Joint joint = new Joint(baseObj.mName);
 		joint.applyTransform(transform);
-		joint.setParent(parentJoint);
 		targetSkeleton.addJoint(joint);
+		joint.setRadius(getRadius(baseObj.getMinAdjescentLimbLength()));
+		joint.setParent(parentJoint);
 		transform.translate(-baseObj.mLimbLength,0,0);
 
 		targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
@@ -254,7 +260,7 @@ public class FBXLoader {
 //		transform.translate(baseObj.mTranslation);
 //		transform.translate(baseObj.mBoneLength,0,0);
 
-		for(SceneObject obj:baseObj.mChildren) {
+		for(SceneObject obj:baseObj.getChildren()) {
 			if(obj instanceof LimbObject) {
 				LimbObject limbObj = (LimbObject)obj;
 				subSkel(targetSkeleton,limbObj,transform,joint);
@@ -267,10 +273,10 @@ public class FBXLoader {
 		YangMatrix matrix = new YangMatrix();
 		matrix.initStack(64);
 
-		for(SceneObject obj:mRootObject.mChildren) {
+		for(SceneObject obj:mRootObject.getChildren()) {
 			if(obj instanceof LimbObject) {
 				obj.multTransform(matrix);
-				for(SceneObject boneObj:obj.mChildren) {
+				for(SceneObject boneObj:obj.getChildren()) {
 					if(boneObj instanceof LimbObject) {
 						subSkel(targetSkeleton,(LimbObject)boneObj,matrix,null);
 					}
