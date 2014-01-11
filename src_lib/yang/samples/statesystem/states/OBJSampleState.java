@@ -6,6 +6,7 @@ import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.defaults.meshes.loaders.MeshMaterialHandles;
 import yang.graphics.defaults.meshes.loaders.OBJLoader;
+import yang.graphics.defaults.meshes.loaders.YangMesh;
 import yang.graphics.defaults.programs.DefaultObjShader;
 import yang.graphics.defaults.programs.LightProgram;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
@@ -29,7 +30,7 @@ import yang.samples.statesystem.SampleState;
 
 public class OBJSampleState extends SampleState {
 
-	private final OBJLoader[] mObj = new OBJLoader[8];
+	private final YangMesh[] mObj = new YangMesh[8];
 	private LightProgram mLightProgram;
 	private DefaultObjShader mActiveShader;
 	private DefaultObjShader mObjProgram;
@@ -65,41 +66,39 @@ public class OBJSampleState extends SampleState {
 			mMatHandles = new MeshMaterialHandles(mObjProgram);
 			mObjCount = -1;
 
+			OBJLoader loader = new OBJLoader(mGraphics3D,mMatHandles);
+
 			transform.loadIdentity();
 			transform.scale(0.1f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/cessna.obj"),mGFXLoader,transform,true,true);
+			loader.loadOBJ(mResources.getAssetInputStream("models/cessna.obj"),transform,true,true);
+			mObj[++mObjCount] = loader.getMesh();
 
 			transform.loadIdentity();
 			transform.scale(0.5f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles,new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR));
-			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/PeaPodBoat.obj"),mGFXLoader,transform,true,true);
+			loader.mTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
+			loader.loadOBJ(mResources.getAssetInputStream("models/PeaPodBoat.obj"),transform,true,true);
+			mObj[++mObjCount] = loader.getMesh();
+			loader.mTextureProperties = null;
 
 			transform.loadIdentity();
 			transform.translate(0, 0.3f);
 			transform.rotateY((float)Math.PI/2);
 			transform.rotateX(-0.3f);
 			transform.scale(0.2f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),mGFXLoader,transform,true,true);
+			loader.loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),transform,true,true);
+			mObj[++mObjCount] = loader.getMesh();
 
 			transform.loadIdentity();
 			transform.scale(0.42f);
 			transform.translate(0, -0.85f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/cutedog.obj"),mGFXLoader,transform,true,false);
+			loader.loadOBJ(mResources.getAssetInputStream("models/cutedog.obj"),transform,true,false);
+			mObj[++mObjCount] = loader.getMesh();
 
 			transform.loadIdentity();
 			transform.scale(1.2f);
 			transform.translate(0, -0.0f);
-			mObj[++mObjCount] = new OBJLoader(mGraphics3D,mMatHandles);
-			mObj[mObjCount].loadOBJ(mResources.getAssetInputStream("models/scifi_hero.obj"),mGFXLoader,transform,true,true);
-
-//			transform.loadIdentity();
-//			transform.scale(0.5f);
-//			transform.translate(-0.5f, -0.5f);
-//			mObj[0] = new OBJLoader(mGraphics3D,handles);
-//			mObj[0].loadOBJ(mResources.getInputStream("models/cubetest.obj"),mGFXLoader,transform);
+			loader.loadOBJ(mResources.getAssetInputStream("models/scifi_hero.obj"),transform,true,true);
+			mObj[++mObjCount] = loader.getMesh();
 
 			mObjCount++;
 		} catch (final IOException e) {

@@ -21,25 +21,12 @@ import yang.util.YangList;
 
 public class YangMesh {
 
-public static float PI = 3.1415926535f;
-
-	public static YangMaterial DEFAULT_MATERIAL = new YangMaterial();
+	public static float PI = 3.1415926535f;
 
 	public AbstractGraphics<?> mGraphics;
 	protected GraphicsTranslator mTranslator;
 
 	protected final MeshMaterialHandles mHandles;
-
-	public static int MAX_VERTICES = 200000;
-	protected static float[] workingPositions;
-	protected static float[] workingNormals;
-	protected static float[] workingTexCoords;
-	protected static short[] workingIndices;
-	protected static int[] redirectIndices;
-	protected static int[] positionIndices;
-	protected static int[] texCoordIndices;
-	protected static int[] normalIndices;
-	protected static int[] smoothIndices;
 
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
@@ -75,6 +62,8 @@ public static float PI = 3.1415926535f;
 		mTranslator = graphics.mTranslator;
 		mHandles = handles;
 		mTextureProperties = textureProperties;
+		mMaterialSets = new YangList<YangMaterialSet>();
+		mMaterialSections = new YangList<YangMaterialSection>();
 	}
 
 	public void generateArmatureWeights(YangArmature armature) {

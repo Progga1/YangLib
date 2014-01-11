@@ -323,7 +323,7 @@ public class TokenReader {
 	public void expect(String expectedWord) throws UnexpectedTokenException, IOException {
 		nextWord(true);
 		if(!isWord(expectedWord))
-			throw new UnexpectedTokenException(mCurLine,mCurColumn,expectedWord,wordToString());
+			throw new UnexpectedTokenException(this,expectedWord);
 	}
 
 	public int getCurrentLine() {

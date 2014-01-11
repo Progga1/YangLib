@@ -1,9 +1,10 @@
 package yang.graphics.defaults.meshes.scenes;
 
-import yang.graphics.defaults.meshes.loaders.FBXMesh;
+import yang.graphics.defaults.meshes.loaders.YangMesh;
+
 
 public class MeshObject extends SceneObject {
 
-	public FBXMesh mMesh;
+	public YangMesh mMesh;
 
 }

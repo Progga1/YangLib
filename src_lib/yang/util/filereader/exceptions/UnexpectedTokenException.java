@@ -1,5 +1,7 @@
 package yang.util.filereader.exceptions;
 
+import yang.util.filereader.TokenReader;
+
 
 public class UnexpectedTokenException extends ParseException {
 
@@ -12,6 +14,10 @@ public class UnexpectedTokenException extends ParseException {
 		super(line,column);
 		mExpected = expected;
 		mGot = got;
+	}
+
+	public UnexpectedTokenException(TokenReader reader, String expected) {
+		this(reader.getCurrentLine(),reader.getCurrentColumn(),expected,reader.wordToString());
 	}
 
 	@Override

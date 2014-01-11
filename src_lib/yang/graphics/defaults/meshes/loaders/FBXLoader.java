@@ -20,9 +20,10 @@ import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.YangList;
 import yang.util.filereader.TokenReader;
 import yang.util.filereader.exceptions.ParseException;
+import yang.util.filereader.exceptions.UnexpectedTokenException;
 import yang.util.filereader.exceptions.UnknownIdentifierException;
 
-public class FBXLoader {
+public class FBXLoader extends YangSceneLoader {
 
 	public static final int OBJ_NONE = 0;
 	public static final int OBJ_MESH = 1;
@@ -60,16 +61,18 @@ public class FBXLoader {
 		target.mZ = mReader.wordToFloat(0,0);
 	}
 
-	private void readProperties(SceneObject targetObject) throws IOException {
+	private void readProperties(SceneObject targetObject) throws IOException, UnexpectedTokenException {
 		while(!mReader.eof()) {
 			mReader.nextWord(true);
 			if(mReader.isChar('}'))
 				break;
+			if(!mReader.isWord("Property"))
+				throw new UnexpectedTokenException(mReader, "Property");
+			mReader.nextWord(true);
 			if(mReader.isWord("Lcl Translation")) {
 				mReader.skipWords(2);
 				readPoint3f(targetObject.mTranslation);
-			}
-			if(mReader.isWord("Lcl Rotation")) {
+			}else if(mReader.isWord("Lcl Rotation")) {
 				mReader.skipWords(2);
 				readPoint3f(tempVec);
 				tempVec.scale(MathConst.PI/180);
@@ -80,14 +83,11 @@ public class FBXLoader {
 				quat.rotateX(tempVec.mX);
 				quat.rotateY(tempVec.mY);
 				quat.rotateZ(tempVec.mZ);
-			}
-			if(targetObject instanceof LimbObject) {
-				LimbObject limbObj = (LimbObject)targetObject;
-				if(mReader.isWord("LimbLength")) {
-					mReader.skipWords(2);
-					limbObj.mLimbLength = mReader.readFloat(true);
-				}
-			}
+			}else if((targetObject instanceof LimbObject) && limbProperty((LimbObject)targetObject)) {
+			//}else if((targetObject instanceof MeshObject) && meshProperty((MeshObject)targetObject)) {
+
+			}else
+				mReader.toLineEnd();
 		}
 	}
 
@@ -104,6 +104,21 @@ public class FBXLoader {
 					return;
 			}
 		}
+	}
+
+	private boolean limbProperty(LimbObject limbObj) throws IOException {
+		if(mReader.isWord("LimbLength")) {
+			mReader.skipWords(2);
+			limbObj.mLimbLength = mReader.readFloat(true);
+		}else
+			return false;
+
+		return true;
+	}
+
+	private boolean meshKeyword(MeshObject meshObj) {
+
+		return false;
 	}
 
 	private void readObjects() throws IOException, ParseException {
@@ -124,12 +139,14 @@ public class FBXLoader {
 
 				SceneObject newObj;
 				MeshObject meshObj = null;
+				LimbObject limbObj = null;
 				if(objType==OBJ_LIMB) {
 //					Joint joint = new Joint(name.split("::")[1],null,mTempProperties.mTranslation,mDefaultJointRadius,mMassAggregation);
 //					mMassAggregation.addJoint(joint);
 //					System.out.println(joint);
 					newObj = new LimbObject();
-					mLimbObjects.add((LimbObject)newObj);
+					limbObj = (LimbObject)newObj;
+					mLimbObjects.add(limbObj);
 				}else if(objType==OBJ_MESH) {
 					newObj = new MeshObject();
 					meshObj = (MeshObject)newObj;
@@ -142,8 +159,8 @@ public class FBXLoader {
 					mReader.nextWord(true);
 					if(mReader.isWord("}")) {
 						break;
-					}else if(objType==OBJ_MESH && meshObj.mMesh.keyword(mReader)) {
-
+					}else if(objType==OBJ_MESH && meshKeyword(meshObj)) {
+					//}else if(objType==OBJ_LIMB && limbProperty(limbObj)) {
 					}else if(mReader.isWord("Properties60")) {
 						mReader.expect("{");
 

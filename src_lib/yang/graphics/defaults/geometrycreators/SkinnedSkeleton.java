@@ -2,7 +2,7 @@ package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.armature.YangArmaturePose;
-import yang.graphics.defaults.meshes.loaders.OBJLoader;
+import yang.graphics.defaults.meshes.loaders.YangMesh;
 import yang.graphics.translator.AbstractGraphics;
 import yang.physics.massaggregation.MassAggregation;
 
@@ -13,10 +13,10 @@ public class SkinnedSkeleton {
 	public YangArmature mArmature;
 	public YangArmaturePose mArmaturePose;
 	public MassAggregation mSkeleton;
-	public OBJLoader mMesh;
+	public YangMesh mMesh;
 	public boolean mAutoRefresh = true;
 
-	public SkinnedSkeleton(OBJLoader mesh,MassAggregation skeleton) {
+	public SkinnedSkeleton(YangMesh mesh,MassAggregation skeleton) {
 		mMesh = mesh;
 		mGraphics = mesh.mGraphics;
 		mSkeleton = skeleton;
@@ -29,7 +29,7 @@ public class SkinnedSkeleton {
 		}
 	}
 
-	public SkinnedSkeleton(OBJLoader mesh) {
+	public SkinnedSkeleton(YangMesh mesh) {
 		this(mesh,null);
 
 	}
