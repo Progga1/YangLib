@@ -16,12 +16,12 @@ public class OBJLoader extends YangMesh {
 
 	private static final String[] KEYWORDS = {"mtllib","usemtl"};
 
-	private TokenReader mModelReader;
-	private int mIndexId = 0;
-	private int curSmoothGroup;
-	private int posId;
-	private int texId;
-	private int normId;
+	protected TokenReader mModelReader;
+	protected int mIndexId = 0;
+	protected int curSmoothGroup;
+	protected int posId;
+	protected int texId;
+	protected int normId;
 
 	public OBJLoader(DefaultGraphics<?> graphics,MeshMaterialHandles handles,TextureProperties textureProperties) {
 		super(graphics,handles,textureProperties);

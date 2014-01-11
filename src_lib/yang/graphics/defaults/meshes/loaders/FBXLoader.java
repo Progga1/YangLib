@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.scenes.LimbObject;
+import yang.graphics.defaults.meshes.scenes.MeshObject;
 import yang.graphics.defaults.meshes.scenes.SceneObject;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.AbstractGraphics;
@@ -23,10 +24,14 @@ import yang.util.filereader.exceptions.UnknownIdentifierException;
 
 public class FBXLoader {
 
+	public static final int OBJ_NONE = 0;
+	public static final int OBJ_MESH = 1;
+	public static final int OBJ_LIMB = 2;
+
 	public YangList<YangMesh> mMeshes = new YangList<YangMesh>();
 	public YangList<YangArmature> mArmatures = new YangList<YangArmature>();
 //	public YangList<MassAggregation> mSkeletons = new YangList<MassAggregation>();
-	public MassAggregation mMassAggregation;
+
 	public YangList<SceneObject> mObjects = new YangList<SceneObject>();
 	public YangList<LimbObject> mLimbObjects = new YangList<LimbObject>();
 	public SceneObject mRootObject;
@@ -44,10 +49,6 @@ public class FBXLoader {
 	public FBXLoader(AbstractGraphics<?> graphics, MeshMaterialHandles handles) {
 		mGraphics = graphics;
 		mHandles = handles;
-	}
-
-	public void setTargetMassAggregation(MassAggregation target) {
-		mMassAggregation = target;
 	}
 
 	private void readPoint3f(Point3f target) throws IOException {
@@ -116,16 +117,22 @@ public class FBXLoader {
 				String name = mReader.wordToString();
 				//mReader.expect(",");
 				mReader.nextWord(true);
-				boolean isLimb = mReader.isWord("Limb");
+				int objType = OBJ_NONE;
+				if(mReader.isWord("Limb"))
+					objType = OBJ_LIMB;
 				//mReader.expect("{");
 
 				SceneObject newObj;
-				if(isLimb) {
+				MeshObject meshObj = null;
+				if(objType==OBJ_LIMB) {
 //					Joint joint = new Joint(name.split("::")[1],null,mTempProperties.mTranslation,mDefaultJointRadius,mMassAggregation);
 //					mMassAggregation.addJoint(joint);
 //					System.out.println(joint);
 					newObj = new LimbObject();
 					mLimbObjects.add((LimbObject)newObj);
+				}else if(objType==OBJ_MESH) {
+					newObj = new MeshObject();
+					meshObj = (MeshObject)newObj;
 				}else
 					newObj = new SceneObject();
 				mObjects.add(newObj);
@@ -135,6 +142,8 @@ public class FBXLoader {
 					mReader.nextWord(true);
 					if(mReader.isWord("}")) {
 						break;
+					}else if(objType==OBJ_MESH && meshObj.mMesh.keyword(mReader)) {
+
 					}else if(mReader.isWord("Properties60")) {
 						mReader.expect("{");
 
@@ -193,8 +202,6 @@ public class FBXLoader {
 		InputStream stream = gfxLoader.mResources.getAssetInputStream(filename);
 		if(stream==null)
 			return false;
-		if(mMassAggregation==null)
-			mMassAggregation = new MassAggregation();
 		mReader = new TokenReader(stream);
 	//	mChars = mReader.mCharBuffer;
 		mReader.setLineCommentChars(";");
@@ -204,7 +211,6 @@ public class FBXLoader {
 
 		mMeshes.clear();
 		mArmatures.clear();
-		mMassAggregation.clear();
 
 		mRootObject = new SceneObject();
 		mRootObject.mName = "Scene";
@@ -295,6 +301,20 @@ public class FBXLoader {
 		MassAggregation skel = new MassAggregation();
 		createSkeleton(skel);
 		return skel;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		for(SceneObject obj:mObjects) {
+			if(!first)
+				result.append(',');
+			else
+				first = false;
+			result.append(obj.hierarchyToString());
+		}
+		return result.toString();
 	}
 
 }
