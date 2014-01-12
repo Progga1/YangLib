@@ -17,6 +17,7 @@ import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
+import yang.math.objects.matrix.YangMatrix;
 import yang.util.YangList;
 
 public class YangMesh {
@@ -398,6 +399,10 @@ public class YangMesh {
 
 	public boolean hasArmatureWeights() {
 		return mSkinIds!=null;
+	}
+
+	public void applyTransform(YangMatrix transform) {
+		transform.applyToArray(mPositions, mVertexCount, true, 0,0, 0,0, mPositions, 0);
 	}
 
 }

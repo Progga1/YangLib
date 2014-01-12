@@ -42,7 +42,9 @@ public class FBXLoader extends YangSceneLoader {
 	private TokenReader mReader;
 	private float mDefaultJointRadius = Joint.DEFAULT_RADIUS * 0.7f;
 
+	//TEMPS
 	private Vector3f tempVec = new Vector3f();
+	private YangMatrix tempMat = new YangMatrix();
 
 	//private targetObject mTempProperties = new targetObject();
 
@@ -356,6 +358,13 @@ public class FBXLoader extends YangSceneLoader {
 		createSkeleton(skel);
 		return skel;
 	}
+
+//	public void applyTransformations() {
+//		tempMat.loadIdentity();
+//		for(SceneObject obj:mObjects) {
+//
+//		}
+//	}
 
 	@Override
 	public String toString() {
