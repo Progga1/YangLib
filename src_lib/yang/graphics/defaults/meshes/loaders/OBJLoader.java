@@ -152,7 +152,7 @@ public class OBJLoader extends YangSceneLoader {
 						case 0:
 							//mtllib
 							final String filename = mModelReader.readString(false);
-							final YangMaterialSet newMatSet = mMaterialProvider.getMaterialSet(filename);
+							final YangMaterialSet newMatSet = mGFXLoader.getMaterialSet(filename);
 							mMesh.mMaterialSets.add(newMatSet);
 							break;
 						case 1:
@@ -173,8 +173,6 @@ public class OBJLoader extends YangSceneLoader {
 				}
 			}
 		}
-
-		currentMatSec.mEndIndex = mIndexId;
 
 		finishLoadingMesh(useNormals,staticMesh);
 	}

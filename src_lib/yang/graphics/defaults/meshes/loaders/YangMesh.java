@@ -233,7 +233,7 @@ public class YangMesh {
 							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
 					}
 			}else{
-				Default3DGraphics.fillNormals(vertexBuffer,0);
+				Default3DGraphics.fillNormals(vertexBuffer,0); //TODO not per draw call !
 			}
 		}
 	}

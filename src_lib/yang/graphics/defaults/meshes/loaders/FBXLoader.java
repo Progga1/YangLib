@@ -7,7 +7,6 @@ import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.scenes.LimbObject;
 import yang.graphics.defaults.meshes.scenes.MeshObject;
 import yang.graphics.defaults.meshes.scenes.SceneObject;
-import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.AbstractGraphics;
 import yang.math.MathConst;
 import yang.math.objects.Point3f;
@@ -29,12 +28,12 @@ public class FBXLoader extends YangSceneLoader {
 	public static final int OBJ_MESH = 1;
 	public static final int OBJ_LIMB = 2;
 
-	public YangList<YangMesh> mMeshes = new YangList<YangMesh>();
 	public YangList<YangArmature> mArmatures = new YangList<YangArmature>();
 //	public YangList<MassAggregation> mSkeletons = new YangList<MassAggregation>();
 
 	public YangList<SceneObject> mObjects = new YangList<SceneObject>();
 	public YangList<LimbObject> mLimbObjects = new YangList<LimbObject>();
+	public YangList<MeshObject> mMeshObjects = new YangList<MeshObject>();
 	public SceneObject mRootObject;
 
 	public AbstractGraphics<?> mGraphics;
@@ -116,6 +115,33 @@ public class FBXLoader extends YangSceneLoader {
 		if(mReader.isWord("Vertices")) {
 			posId = mReader.readArray(workingPositions,posId);
 			mVertexCount = posId/3;
+		}else if(mReader.isWord("PolygonVertexIndex")) {
+			int baseIndex = -1;
+			int lstIndex = -1;
+			while(!mReader.eof()) {
+				mReader.nextWord(true);
+				int val = mReader.wordToInt();
+				if(val==TokenReader.ERROR_INT)
+					break;
+				if(baseIndex<0) {
+					baseIndex = val;
+				}else{
+					if(lstIndex>=0) {
+						workingIndices[mIndexId++] = (short)baseIndex;
+						workingIndices[mIndexId++] = (short)lstIndex;
+						if(val<0) {
+							baseIndex = -1;
+							lstIndex = -1;
+							val = -val-1;
+						}
+						workingIndices[mIndexId++] = (short)val;
+					}
+					if(baseIndex>=0)
+						lstIndex = val;
+				}
+
+			}
+
 		}else
 			return false;
 		return true;
@@ -153,6 +179,7 @@ public class FBXLoader extends YangSceneLoader {
 					newObj = new MeshObject();
 					meshObj = (MeshObject)newObj;
 					meshObj.mMesh = startLoadingMesh();
+					mMeshObjects.add(meshObj);
 				}else
 					newObj = new SceneObject();
 				mObjects.add(newObj);
@@ -190,8 +217,9 @@ public class FBXLoader extends YangSceneLoader {
 	}
 
 	private SceneObject findModel() {
+		int l = mReader.mWordLength-7;
 		for(SceneObject obj:mObjects) {
-			if(mReader.endsWith(obj.mName)) {
+			if(l==obj.mName.length() && mReader.endsWith(obj.mName)) {
 				return obj;
 			}
 		}
@@ -222,9 +250,9 @@ public class FBXLoader extends YangSceneLoader {
 		}
 	}
 
-	public boolean load(String filename,AbstractGFXLoader gfxLoader) throws IOException, ParseException {
+	public boolean load(String filename) throws IOException, ParseException {
 	//	mGFXLoader = gfxLoader;
-		InputStream stream = gfxLoader.mResources.getAssetInputStream(filename);
+		InputStream stream = mGFXLoader.mResources.getAssetInputStream(filename);
 		if(stream==null)
 			return false;
 		mReader = new TokenReader(stream);
@@ -233,8 +261,9 @@ public class FBXLoader extends YangSceneLoader {
 		mReader.mAutoSkipComments = true;
 		mReader.mWordBreakers[':'] = true;
 		mReader.mWordBreakers[','] = true;
+		mReader.mWhiteSpaces[','] = true;
 
-		mMeshes.clear();
+		mMeshObjects.clear();
 		mArmatures.clear();
 
 		mRootObject = new SceneObject();

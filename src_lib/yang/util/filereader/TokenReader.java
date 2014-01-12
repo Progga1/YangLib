@@ -10,8 +10,8 @@ import yang.util.filereader.exceptions.UnexpectedTokenException;
 
 public class TokenReader {
 
-	public static final int ERROR_INT = Integer.MIN_VALUE;
-	public static final float ERROR_FLOAT = Float.MIN_VALUE;
+	public static final int ERROR_INT = Integer.MAX_VALUE;
+	public static final float ERROR_FLOAT = Float.MAX_VALUE;
 
 	public static int maxWordLength = 1024;
 
@@ -33,6 +33,7 @@ public class TokenReader {
 	private int mCurLine;
 	private int mCurColumn;
 	private boolean mIsQuotationMarks = false;
+	private boolean mHoldWord = false;
 
 	public TokenReader(InputStream stream) {
 		reset(stream);
@@ -108,6 +109,10 @@ public class TokenReader {
 	}
 
 	public boolean nextWord(boolean ignoreLineEnd) throws IOException {
+		if(mHoldWord) {
+			mHoldWord = false;
+			return true;
+		}
 		mNumberPos = -1;
 		skipSpace(ignoreLineEnd);
 		if(mLstRead<0) {
@@ -135,7 +140,8 @@ public class TokenReader {
 					break;
 				mCharBuffer[i++] = (char) c;
 			}
-			skipSpace(false);
+			nextChar();
+		//	skipSpace(false);
 //			if(mWordBreakers[mLstRead])
 //				nextChar();
 		}else{
@@ -193,6 +199,10 @@ public class TokenReader {
 			return -result;
 		else
 			return result;
+	}
+
+	public int wordToInt() {
+		return wordToInt(0,Integer.MAX_VALUE);
 	}
 
 	public float wordToFloat(int startAt,float defaultVal) {
@@ -328,6 +338,10 @@ public class TokenReader {
 		return mWordLength==1 && mCharBuffer[0] == c;
 	}
 
+	public boolean isEmptyWord() {
+		return mWordLength==0;
+	}
+
 	public void expect(String expectedWord) throws UnexpectedTokenException, IOException {
 		nextWord(true);
 		if(!isWord(expectedWord))
@@ -362,11 +376,23 @@ public class TokenReader {
 
 	public int readArray(float[] target,int offset) throws IOException {
 		while(!eof()) {
-			nextWord(false);
-			if(isLineEnd())
+			nextWord(true);
+			float val = wordToFloat();
+			if(val==ERROR_FLOAT)
 				break;
-			target[offset++] = wordToFloat();
-			System.out.println(wordToFloat());
+			target[offset++] = val;
+		}
+		mHoldWord = true;
+		return offset;
+	}
+
+	public int readArray(int[] target,int offset) throws IOException {
+		while(!eof()) {
+			nextWord(true);
+			int val = wordToInt();
+			if(val==ERROR_INT)
+				break;
+			target[offset++] = val;
 		}
 		return offset;
 	}
