@@ -5,7 +5,6 @@ import java.io.InputStream;
 
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.model.material.YangMaterial;
-import yang.graphics.model.material.YangMaterialProvider;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureProperties;
 import yang.math.objects.matrix.YangMatrix;
@@ -15,25 +14,13 @@ public class OBJLoader extends YangSceneLoader {
 
 	private static final String[] KEYWORDS = {"mtllib","usemtl"};
 
-	protected int mVertexCount;
-	protected int mIndexId = 0;
 	protected int curSmoothGroup;
-	protected int posId;
-	protected int texId;
-	protected int normId;
 
+	protected TokenReader mModelReader;
 	public YangMesh mMesh;
-	public TextureProperties mTextureProperties;
-	public DefaultGraphics<?> mGraphics;
-	public MeshMaterialHandles mHandles;
-	public YangMaterialProvider mMaterialProvider;
 
 	public OBJLoader(DefaultGraphics<?> graphics,MeshMaterialHandles handles,TextureProperties textureProperties) {
-		super();
-		mGraphics = graphics;
-		mHandles = handles;
-		mTextureProperties = textureProperties;
-		mMaterialProvider = graphics.mTranslator.mGFXLoader;
+		super(graphics,handles,textureProperties);
 	}
 
 	public OBJLoader(DefaultGraphics<?> graphics,MeshMaterialHandles handles) {
@@ -70,24 +57,13 @@ public class OBJLoader extends YangSceneLoader {
 	public void loadOBJ(InputStream modelStream,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {
 		if(modelStream==null)
 			throw new RuntimeException("No stream given");
-		final TextureProperties prevTexProps = YangMaterialSet.diffuseTextureProperties;
-		if(mTextureProperties!=null)
-			YangMaterialSet.diffuseTextureProperties = mTextureProperties;
+
 		mModelReader = new TokenReader(modelStream);
-		YangMaterialSection currentMatSec = new YangMaterialSection(0,DEFAULT_MATERIAL);
 
 		//Reset mesh
-		mMesh = new YangMesh(mGraphics,mHandles,mTextureProperties);
-		mMesh.mMaterialSections.clear();
-		mMesh.mMaterialSections.add(currentMatSec);
-		mMesh.mDrawBatch = null;
+		mMesh = startLoadingMesh();
 
-		mVertexCount = 0;
 		curSmoothGroup = -1;
-		posId = 0;
-		texId = 0;
-		normId = 0;
-		mIndexId = 0;
 
 		final char[] chars = mModelReader.mCharBuffer;
 		while(!mModelReader.eof()) {
@@ -200,42 +176,7 @@ public class OBJLoader extends YangSceneLoader {
 
 		currentMatSec.mEndIndex = mIndexId;
 
-		mMesh.mVertexCount = mVertexCount;
-		mMesh.mPositions = new float[posId];
-		mMesh.mPosIndices = new int[mVertexCount];
-		System.arraycopy(workingPositions, 0, mMesh.mPositions, 0, posId);
-		System.arraycopy(positionIndices, 0, mMesh.mPosIndices, 0, mVertexCount);
-
-		if(texId>0) {
-			mMesh.mTexCoords = new float[texId];
-			mMesh.mTexCoordIndices = new int[mVertexCount];
-			System.arraycopy(workingTexCoords, 0, mMesh.mTexCoords, 0, texId);
-			System.arraycopy(texCoordIndices, 0, mMesh.mTexCoordIndices, 0, mVertexCount);
-		}
-		if(normId>0) {
-			mMesh.mNormals = new float[normId];
-			mMesh.mNormIndices = new int[mVertexCount];
-			System.arraycopy(workingNormals, 0, mMesh.mNormals, 0, normId);
-			System.arraycopy(normalIndices, 0, mMesh.mNormIndices, 0, mVertexCount);
-		}
-
-		mMesh.mIndices = new short[mIndexId];
-		System.arraycopy(workingIndices, 0, mMesh.mIndices, 0, mIndexId);
-		mMesh.mSmoothIndices = new int[mMesh.mIndices.length];
-		System.arraycopy(smoothIndices, 0, mMesh.mSmoothIndices, 0, mMesh.mSmoothIndices.length);
-		mMesh.mRedirectIndices = new int[mMesh.mIndices.length];
-		System.arraycopy(redirectIndices, 0, mMesh.mRedirectIndices, 0, mMesh.mRedirectIndices.length);
-
-		mMesh.mIndexCount = mIndexId;
-
-		if(useNormals)
-			mMesh.calculateNormals();
-
-		if(staticMesh) {
-			mMesh.createDrawBatch(true);
-		}
-
-		YangMaterialSet.diffuseTextureProperties = prevTexProps;
+		finishLoadingMesh(useNormals,staticMesh);
 	}
 
 	public void draw() {

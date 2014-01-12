@@ -48,17 +48,13 @@ public class FBXLoader extends YangSceneLoader {
 	//private targetObject mTempProperties = new targetObject();
 
 	public FBXLoader(AbstractGraphics<?> graphics, MeshMaterialHandles handles) {
+		super(graphics,handles);
 		mGraphics = graphics;
 		mHandles = handles;
 	}
 
 	private void readPoint3f(Point3f target) throws IOException {
-		mReader.nextWord(true);
-		target.mX = mReader.wordToFloat(0,0);
-		mReader.nextWord(true);
-		target.mY = mReader.wordToFloat(0,0);
-		mReader.nextWord(true);
-		target.mZ = mReader.wordToFloat(0,0);
+		mReader.readPoint3f(target);
 	}
 
 	private void readProperties(SceneObject targetObject) throws IOException, UnexpectedTokenException {
@@ -116,9 +112,13 @@ public class FBXLoader extends YangSceneLoader {
 		return true;
 	}
 
-	private boolean meshKeyword(MeshObject meshObj) {
-
-		return false;
+	private boolean meshKeyword(MeshObject meshObj) throws IOException {
+		if(mReader.isWord("Vertices")) {
+			posId = mReader.readArray(workingPositions,posId);
+			mVertexCount = posId/3;
+		}else
+			return false;
+		return true;
 	}
 
 	private void readObjects() throws IOException, ParseException {
@@ -135,6 +135,8 @@ public class FBXLoader extends YangSceneLoader {
 				int objType = OBJ_NONE;
 				if(mReader.isWord("Limb"))
 					objType = OBJ_LIMB;
+				if(mReader.isWord("Mesh"))
+					objType = OBJ_MESH;
 				//mReader.expect("{");
 
 				SceneObject newObj;
@@ -150,6 +152,7 @@ public class FBXLoader extends YangSceneLoader {
 				}else if(objType==OBJ_MESH) {
 					newObj = new MeshObject();
 					meshObj = (MeshObject)newObj;
+					meshObj.mMesh = startLoadingMesh();
 				}else
 					newObj = new SceneObject();
 				mObjects.add(newObj);
@@ -170,6 +173,9 @@ public class FBXLoader extends YangSceneLoader {
 					}else
 						mReader.toLineEnd();
 				}
+				if(objType==OBJ_MESH) {
+					finishLoadingMesh(false,false);
+				}
 			}else if(mReader.isWord("Materials")) {
 				skipBracketContent();
 			}else if(mReader.isWord("Pose")) {
@@ -179,6 +185,8 @@ public class FBXLoader extends YangSceneLoader {
 			}
 
 		}
+
+
 	}
 
 	private SceneObject findModel() {

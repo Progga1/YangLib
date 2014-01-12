@@ -7,4 +7,8 @@ public class MeshObject extends SceneObject {
 
 	public YangMesh mMesh;
 
+	public void draw() {
+		mMesh.draw();
+	}
+
 }

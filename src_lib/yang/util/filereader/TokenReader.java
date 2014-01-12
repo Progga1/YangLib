@@ -236,6 +236,10 @@ public class TokenReader {
 			return result;
 	}
 
+	public float wordToFloat() {
+		return wordToFloat(0,Float.MAX_VALUE);
+	}
+
 	public boolean eof() throws IOException {
 		return mLstRead<0;
 	}
@@ -297,6 +301,10 @@ public class TokenReader {
 		return true;
 	}
 
+	public boolean isLineEnd() {
+		return mWordLength==1 && mCharBuffer[0] == '\n';
+	}
+
 	public boolean isSubString(String word, int offset) {
 		int l = word.length();
 		if(l+offset>mWordLength)
@@ -350,6 +358,17 @@ public class TokenReader {
 		targetPoint.mY = wordToFloat(0,0);
 		nextWord(true);
 		targetPoint.mZ = wordToFloat(0,0);
+	}
+
+	public int readArray(float[] target,int offset) throws IOException {
+		while(!eof()) {
+			nextWord(false);
+			if(isLineEnd())
+				break;
+			target[offset++] = wordToFloat();
+			System.out.println(wordToFloat());
+		}
+		return offset;
 	}
 
 	@Override
