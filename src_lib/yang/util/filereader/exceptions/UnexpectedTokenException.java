@@ -11,18 +11,13 @@ public class UnexpectedTokenException extends ParseException {
 	public String mGot;
 
 	public UnexpectedTokenException(int line,int column,String expected,String got) {
-		super(line,column);
+		super(line,column,"Unexpected token","expected "+expected+", got "+got);
 		mExpected = expected;
 		mGot = got;
 	}
 
 	public UnexpectedTokenException(TokenReader reader, String expected) {
 		this(reader.getCurrentLine(),reader.getCurrentColumn(),expected,reader.wordToString());
-	}
-
-	@Override
-	public String getMessage() {
-		return super.getMessage("Unexpected token","expected "+mExpected+", got "+mGot);
 	}
 
 }

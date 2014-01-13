@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.scenes.LimbObject;
+import yang.graphics.defaults.meshes.scenes.MeshDeformer;
 import yang.graphics.defaults.meshes.scenes.MeshObject;
 import yang.graphics.defaults.meshes.scenes.SceneObject;
 import yang.graphics.translator.AbstractGraphics;
@@ -28,6 +29,9 @@ public class FBXLoader extends YangSceneLoader {
 	public static final int OBJ_MESH = 1;
 	public static final int OBJ_LIMB = 2;
 
+	private static float[] tempFloats;
+	private static int[] tempInts;
+
 	public YangList<YangArmature> mArmatures = new YangList<YangArmature>();
 //	public YangList<MassAggregation> mSkeletons = new YangList<MassAggregation>();
 
@@ -50,6 +54,10 @@ public class FBXLoader extends YangSceneLoader {
 
 	public FBXLoader(AbstractGraphics<?> graphics, MeshMaterialHandles handles) {
 		super(graphics,handles);
+		if(tempFloats==null) {
+			tempFloats = new float[MAX_VERTICES];
+			tempInts = new int[MAX_VERTICES];
+		}
 		mGraphics = graphics;
 		mHandles = handles;
 	}
@@ -155,7 +163,7 @@ public class FBXLoader extends YangSceneLoader {
 			if(mReader.isWord("}"))
 				break;
 			else if(mReader.isWord("Model")) {
-				//Read single model
+				//NEW MODEL
 				mReader.nextWord(true);
 				String name = mReader.wordToString();
 				//mReader.expect(",");
@@ -205,11 +213,55 @@ public class FBXLoader extends YangSceneLoader {
 				if(objType==OBJ_MESH) {
 					finishLoadingMesh(false,false);
 				}
-			}else if(mReader.isWord("Materials")) {
+			}else if(mReader.isWord("Deformer")) {
+				mReader.skipSpace(true);
+				mReader.nextWord(true);
+				if(mReader.isWord("SubDeformer")) {
+					mReader.skipChar();
+					mReader.nextWord(true);
+					if(mReader.isWord("Cluster")) {
+						mReader.nextWord(true);
+						SceneObject obj1 = findObject(0);
+						mReader.nextWord(true);
+						SceneObject obj2 = findObject(0);
+						if((obj1 instanceof MeshObject) && (obj2 instanceof LimbObject)) {
+							MeshObject meshObj = (MeshObject)obj1;
+							LimbObject limbObj = (LimbObject)obj2;
+
+							mReader.expect("Cluster");
+							mReader.expect("{");
+							MeshDeformer deformer = limbObj.addDeformer(meshObj);
+							int count = 0;
+							while(!mReader.eof()) {
+								mReader.nextWord(true);
+								if(mReader.isWord("}")) {
+									break;
+								}
+								if(mReader.isWord("Properties60")) {
+									mReader.toLineEnd();
+									skipBracketContent();
+								}else if(mReader.isWord("Indexes")) {
+									count = mReader.readArray(tempInts,0);
+								}else if(mReader.isWord("Weights")) {
+									count = mReader.readArray(tempFloats,0);
+								}else
+									mReader.toLineEnd();
+
+							}
+							deformer.init(count);
+							deformer.copyFrom(tempInts,tempFloats);
+						}else{
+							throw new ParseException(mReader,"Only Mesh-Bone deformers allowed");
+						}
+					}
+				}
+			}else if(mReader.isWord("Material")) {
 				skipBracketContent();
 			}else if(mReader.isWord("Pose")) {
 				skipBracketContent();
 			}else if(mReader.isWord("GlobalSettings")) {
+				skipBracketContent();
+			}else{
 				skipBracketContent();
 			}
 
@@ -218,8 +270,8 @@ public class FBXLoader extends YangSceneLoader {
 
 	}
 
-	private SceneObject findModel() {
-		int l = mReader.mWordLength-7;
+	private SceneObject findObject(int startAt) {
+		int l = mReader.mWordLength-startAt;
 		for(SceneObject obj:mObjects) {
 			if(l==obj.mName.length() && mReader.endsWith(obj.mName)) {
 				return obj;
@@ -228,21 +280,21 @@ public class FBXLoader extends YangSceneLoader {
 		return null;
 	}
 
-	private void readConnections() throws IOException, UnknownIdentifierException {
+	private void readConnections() throws IOException, ParseException {
 		while(!mReader.eof()) {
 			mReader.nextWord(true);
 			if(mReader.isWord("}"))
 				break;
 			if(mReader.isWord("Connect")) {
-				mReader.nextWord(true); //"OO"
+				mReader.expect("OO");
 				mReader.nextWord(true);
 				if(mReader.startsWith("Model")) {
-					SceneObject obj1 = findModel();
+					SceneObject obj1 = findObject(7);
 					if(obj1==null)
 						throw new UnknownIdentifierException(mReader,mReader.wordToString().substring(7));
 					mReader.nextWord(true);
 					if(mReader.startsWith("Model")) {
-						SceneObject obj2 = findModel();
+						SceneObject obj2 = findObject(7);
 						if(obj2==null)
 							throw new UnknownIdentifierException(mReader,mReader.wordToString().substring(7));
 						obj1.setParent(obj2);
@@ -263,6 +315,7 @@ public class FBXLoader extends YangSceneLoader {
 		mReader.mAutoSkipComments = true;
 		mReader.mWordBreakers[':'] = true;
 		mReader.mWordBreakers[','] = true;
+		mReader.mWordBreakers['"'] = true;
 		mReader.mWhiteSpaces[','] = true;
 
 		mMeshObjects.clear();

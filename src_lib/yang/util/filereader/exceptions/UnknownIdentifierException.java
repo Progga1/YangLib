@@ -6,16 +6,11 @@ public class UnknownIdentifierException extends ParseException {
 
 	private static final long serialVersionUID = 1L;
 
-	private String mIdentifier;
+	public String mIdentifier;
 
 	public UnknownIdentifierException(TokenReader reader,String identifier) {
-		super(reader);
+		super(reader,"Unknown identifier","'"+identifier+"'");
 		mIdentifier = identifier;
-	}
-
-	@Override
-	public String getMessage() {
-		return super.getMessage("Unknown identifier","'"+mIdentifier+"'");
 	}
 
 }

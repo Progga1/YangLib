@@ -7,6 +7,7 @@ public class LimbObject extends SceneObject {
 	public float mLimbLength = 1;
 
 	protected YangList<LimbObject> mLimbChildren = new YangList<LimbObject>();
+	public YangList<MeshDeformer> mDeformers = new YangList<MeshDeformer>();
 
 	public float getMinAdjescentLimbLength() {
 		float result = mLimbLength;
@@ -23,6 +24,16 @@ public class LimbObject extends SceneObject {
 		if(parent instanceof LimbObject) {
 			((LimbObject)parent).mLimbChildren.add(this);
 		}
+	}
+
+	public MeshDeformer addDeformer(MeshObject mesh) {
+		MeshDeformer deformer = new MeshDeformer(this,mesh);
+		mDeformers.add(deformer);
+		return deformer;
+	}
+
+	public String deformersToString() {
+		return mDeformers.toString();
 	}
 
 }

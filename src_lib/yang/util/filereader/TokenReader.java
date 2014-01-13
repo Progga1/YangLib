@@ -177,6 +177,14 @@ public class TokenReader {
 		return String.copyValueOf(mCharBuffer, 0, mWordLength);
 	}
 
+	public String subWordToString(int beginIndex,int endIndex) {
+		return String.copyValueOf(mCharBuffer, beginIndex, endIndex-beginIndex);
+	}
+
+	public String subWordToString(int beginIndex) {
+		return String.copyValueOf(mCharBuffer, beginIndex, mWordLength-beginIndex);
+	}
+
 	public int wordToInt(int startAt,int defaultVal) {
 		if(mWordLength-startAt<=0)
 			return defaultVal;
@@ -394,7 +402,12 @@ public class TokenReader {
 				break;
 			target[offset++] = val;
 		}
+		mHoldWord = true;
 		return offset;
+	}
+
+	public void skipChar() throws IOException {
+		nextChar();
 	}
 
 	@Override
