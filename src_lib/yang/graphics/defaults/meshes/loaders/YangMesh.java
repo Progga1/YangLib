@@ -67,16 +67,37 @@ public class YangMesh {
 		mMaterialSections = new YangList<YangMaterialSection>();
 	}
 
+	public void initArmatureWeights() {
+		int l = mPositions.length/3*mSkinJointsPerVertex;
+		if(mSkinIds==null) {
+			mSkinIds = new int[l];
+			mSkinWeights = new float[l];
+		}
+	}
+
+	public void addArmatureWeight(int vertexId, int limbId, float weight) {
+		float smallestWeight = Float.MAX_VALUE;
+		int smallestWeightId = 0;
+		int skinBaseId = vertexId*mSkinJointsPerVertex;
+		for(int k=0;k<mSkinJointsPerVertex;k++) {
+			if(mSkinWeights[skinBaseId+k]<smallestWeight) {
+				smallestWeight = mSkinWeights[skinBaseId+k];
+				smallestWeightId = k;
+			}
+		}
+		if(weight>smallestWeight) {
+			mSkinWeights[skinBaseId+smallestWeightId] = weight;
+			mSkinIds[skinBaseId+smallestWeightId] = limbId;
+		}
+	}
+
 	public void generateArmatureWeights(YangArmature armature) {
 		if(mPositions==null)
 			throw new RuntimeException("Cannot use armature on static mesh");
 		int weights = mSkinJointsPerVertex;
 		int vCount = mPositions.length/3;
 		int l = vCount*weights;
-		if(mSkinIds==null) {
-			mSkinIds = new int[l];
-			mSkinWeights = new float[l];
-		}
+		initArmatureWeights();
 
 		for(int i=0;i<vCount;i++) {
 
@@ -96,18 +117,19 @@ public class YangMesh {
 				}else{
 					resWeight = 1f/(dist*dist);
 				}
-				float smallestWeight = Float.MAX_VALUE;
-				int smallestWeightId = 0;
-				for(int k=0;k<weights;k++) {
-					if(mSkinWeights[skinBaseId+k]<smallestWeight) {
-						smallestWeight = mSkinWeights[skinBaseId+k];
-						smallestWeightId = k;
-					}
-				}
-				if(resWeight>smallestWeight) {
-					mSkinWeights[skinBaseId+smallestWeightId] = resWeight;
-					mSkinIds[skinBaseId+smallestWeightId] = j;
-				}
+//				float smallestWeight = Float.MAX_VALUE;
+//				int smallestWeightId = 0;
+//				for(int k=0;k<weights;k++) {
+//					if(mSkinWeights[skinBaseId+k]<smallestWeight) {
+//						smallestWeight = mSkinWeights[skinBaseId+k];
+//						smallestWeightId = k;
+//					}
+//				}
+//				if(resWeight>smallestWeight) {
+//					mSkinWeights[skinBaseId+smallestWeightId] = resWeight;
+//					mSkinIds[skinBaseId+smallestWeightId] = j;
+//				}
+				addArmatureWeight(i,j,resWeight);
 				j++;
 			}
 
@@ -192,8 +214,11 @@ public class YangMesh {
 					int weightBaseId = posInd*mSkinJointsPerVertex;
 					float maxWeight = 0;
 					for(int k=0;k<mSkinJointsPerVertex;k++) {
-						float weight = mSkinWeights[weightBaseId+k];
 						int jointId = mSkinIds[weightBaseId+k];
+						if(jointId<0)
+							break;
+						float weight = mSkinWeights[weightBaseId+k];
+
 						float[] matrix = mCurArmature.mTransforms[jointId].mValues;
 						//if(weight>maxWeight) {maxWeight = weight;weight = 1;
 
@@ -405,4 +430,45 @@ public class YangMesh {
 		transform.applyToArray(mPositions, mVertexCount, true, 0,0, 0,0, mPositions, 0);
 	}
 
+	public void createNeutralArmatureWeights() {
+		initArmatureWeights();
+		for(int i=0;i<mSkinIds.length;i++) {
+			if(i%mSkinJointsPerVertex==0) {
+				mSkinIds[i] = 0;
+				mSkinWeights[i] = 1;
+			}else{
+				mSkinIds[i] = -1;
+				mSkinWeights[i] = 0;
+			}
+		}
+	}
+
+	public void setZeroArmatureWeights() {
+		initArmatureWeights();
+		for(int i=0;i<mSkinIds.length;i++) {
+			mSkinIds[i] = -1;
+			mSkinWeights[i] = 0;
+		}
+	}
+
+	public void normalizeArmatureWeights() {
+		if(mSkinIds!=null) {
+			int l = mSkinIds.length/mSkinJointsPerVertex;
+			for(int i=0;i<l;i++) {
+				float sum = 0;
+				int baseId = i*mSkinJointsPerVertex;
+				for(int j=0;j<mSkinJointsPerVertex;j++) {
+					sum += mSkinWeights[baseId+j];
+				}
+				if(sum>0) {
+//					if(Math.abs(sum-1)>0.001f)
+//						System.out.println(sum);
+					sum = 1/sum;
+					for(int j=0;j<mSkinJointsPerVertex;j++) {
+						mSkinWeights[baseId+j] *= sum;
+					}
+				}
+			}
+		}
+	}
 }

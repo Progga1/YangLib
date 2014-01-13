@@ -3,7 +3,6 @@ package yang.graphics.defaults.meshes.loaders;
 import java.io.IOException;
 import java.io.InputStream;
 
-import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.scenes.LimbObject;
 import yang.graphics.defaults.meshes.scenes.MeshDeformer;
 import yang.graphics.defaults.meshes.scenes.MeshObject;
@@ -32,7 +31,7 @@ public class FBXLoader extends YangSceneLoader {
 	private static float[] tempFloats;
 	private static int[] tempInts;
 
-	public YangList<YangArmature> mArmatures = new YangList<YangArmature>();
+	public YangList<MeshDeformer> mDeformers = new YangList<MeshDeformer>();
 //	public YangList<MassAggregation> mSkeletons = new YangList<MassAggregation>();
 
 	public YangList<SceneObject> mObjects = new YangList<SceneObject>();
@@ -238,7 +237,6 @@ public class FBXLoader extends YangSceneLoader {
 									break;
 								}
 								if(mReader.isWord("Properties60")) {
-									mReader.toLineEnd();
 									skipBracketContent();
 								}else if(mReader.isWord("Indexes")) {
 									count = mReader.readArray(tempInts,0);
@@ -246,10 +244,10 @@ public class FBXLoader extends YangSceneLoader {
 									count = mReader.readArray(tempFloats,0);
 								}else
 									mReader.toLineEnd();
-
 							}
 							deformer.init(count);
 							deformer.copyFrom(tempInts,tempFloats);
+							mDeformers.add(deformer);
 						}else{
 							throw new ParseException(mReader,"Only Mesh-Bone deformers allowed");
 						}
@@ -319,7 +317,7 @@ public class FBXLoader extends YangSceneLoader {
 		mReader.mWhiteSpaces[','] = true;
 
 		mMeshObjects.clear();
-		mArmatures.clear();
+		mDeformers.clear();
 
 		mRootObject = new SceneObject();
 		mRootObject.mName = "Scene";
@@ -367,6 +365,7 @@ public class FBXLoader extends YangSceneLoader {
 		joint.setRadius(getRadius(baseObj.getMinAdjescentLimbLength()));
 		joint.setParent(parentJoint);
 		transform.translate(-baseObj.mLimbLength,0,0);
+		baseObj.setDeformerIndex(joint.mId);
 
 		targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
 
@@ -404,6 +403,28 @@ public class FBXLoader extends YangSceneLoader {
 //		matrix.rotateY(MathConst.PI);
 //		matrix.rotateZ(MathConst.PI/2);
 //		targetSkeleton.transformJointPositions(matrix);
+	}
+
+	public void createSkinWeights() {
+		for(MeshDeformer deformer:mDeformers) {
+			YangMesh mesh = deformer.mMesh.mMesh;
+			if(!mesh.hasArmatureWeights()) {
+				//mesh.initArmatureWeights();
+				//mesh.createNeutralArmatureWeights();
+				mesh.setZeroArmatureWeights();
+			}
+			int l = deformer.getVertexCount();
+			for(int i=0;i<l;i++) {
+				int vertId = deformer.mIndices[i];
+				float weight = deformer.mWeights[i];
+				mesh.addArmatureWeight(vertId,deformer.mMapIndex,weight);
+			}
+
+		}
+
+		for(MeshObject meshObj:mMeshObjects) {
+			meshObj.mMesh.normalizeArmatureWeights();
+		}
 	}
 
 	public MassAggregation createSkeleton() {

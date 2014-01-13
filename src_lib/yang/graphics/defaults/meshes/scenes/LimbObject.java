@@ -18,14 +18,6 @@ public class LimbObject extends SceneObject {
 		return result;
 	}
 
-	@Override
-	public void setParent(SceneObject parent) {
-		super.setParent(parent);
-		if(parent instanceof LimbObject) {
-			((LimbObject)parent).mLimbChildren.add(this);
-		}
-	}
-
 	public MeshDeformer addDeformer(MeshObject mesh) {
 		MeshDeformer deformer = new MeshDeformer(this,mesh);
 		mDeformers.add(deformer);
@@ -34,6 +26,20 @@ public class LimbObject extends SceneObject {
 
 	public String deformersToString() {
 		return mDeformers.toString();
+	}
+
+	public void setDeformerIndex(int index) {
+		for(MeshDeformer deformer:mDeformers) {
+			deformer.mMapIndex = index;
+		}
+	}
+
+	@Override
+	public void setParent(SceneObject parent) {
+		super.setParent(parent);
+		if(parent instanceof LimbObject) {
+			((LimbObject)parent).mLimbChildren.add(this);
+		}
 	}
 
 }

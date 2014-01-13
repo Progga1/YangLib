@@ -10,7 +10,7 @@ public class YangSceneLoader {
 
 	public static YangMaterial DEFAULT_MATERIAL = new YangMaterial();
 
-	public static int MAX_VERTICES = 200000;
+	public static int MAX_VERTICES = 300000;
 	protected static float[] workingPositions;
 	protected static float[] workingNormals;
 	protected static float[] workingTexCoords;
