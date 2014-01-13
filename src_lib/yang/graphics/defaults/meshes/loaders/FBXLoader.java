@@ -120,7 +120,7 @@ public class FBXLoader extends YangSceneLoader {
 		return true;
 	}
 
-	private boolean meshKeyword(MeshObject meshObj) throws IOException {
+	private boolean meshKeyword(MeshObject meshObj) throws IOException,ParseException {
 		if(mReader.isWord("Vertices")) {
 			posId = mReader.readArray(workingPositions,posId);
 			mVertexCount = posId/3;
@@ -159,6 +159,18 @@ public class FBXLoader extends YangSceneLoader {
 
 			}
 
+		}else if(mReader.isWord("LayerElementUV")) {
+			mReader.nextWord(true);
+			mReader.expect("{");
+			while(!mReader.eof()) {
+				mReader.nextWord(true);
+				if(mReader.isWord("}"))
+					break;
+				if(mReader.isWord("UV")) {
+					texId = mReader.readArray(workingTexCoords,texId);
+				}else
+					mReader.toLineEnd();
+			}
 		}else
 			return false;
 		return true;
@@ -210,7 +222,6 @@ public class FBXLoader extends YangSceneLoader {
 					//}else if(objType==OBJ_LIMB && limbProperty(limbObj)) {
 					}else if(mReader.isWord("Properties60")) {
 						mReader.expect("{");
-
 						readProperties(newObj);
 					}else if(mReader.startsWith("Layer")){
 						skipBracketContent();
