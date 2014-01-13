@@ -10,7 +10,7 @@ public class YangSceneLoader {
 
 	public static YangMaterial DEFAULT_MATERIAL = new YangMaterial();
 
-	public static int MAX_VERTICES = 300000;
+	public static int MAX_VERTICES = 100000;
 	protected static float[] workingPositions;
 	protected static float[] workingNormals;
 	protected static float[] workingTexCoords;
@@ -66,6 +66,7 @@ public class YangSceneLoader {
 		texId = 0;
 		normId = 0;
 		mIndexId = 0;
+		positionIndices[0] = -1;
 
 		mCurrentMesh = currentMesh;
 		currentMatSec = new YangMaterialSection(0,DEFAULT_MATERIAL);
@@ -93,7 +94,14 @@ public class YangSceneLoader {
 		mCurrentMesh.mPositions = new float[posId];
 		mCurrentMesh.mPosIndices = new int[mVertexCount];
 		System.arraycopy(workingPositions, 0, mCurrentMesh.mPositions, 0, posId);
-		System.arraycopy(positionIndices, 0, mCurrentMesh.mPosIndices, 0, mVertexCount);
+		if(positionIndices[0]!=-1)
+			System.arraycopy(positionIndices, 0, mCurrentMesh.mPosIndices, 0, mVertexCount);
+		else{
+			for(int i=0;i<mVertexCount;i++) {
+				mCurrentMesh.mPosIndices[i] = i;
+			}
+		}
+
 
 		if(texId>0) {
 			mCurrentMesh.mTexCoords = new float[texId];

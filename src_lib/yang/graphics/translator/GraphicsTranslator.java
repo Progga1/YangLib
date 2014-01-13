@@ -37,6 +37,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public static int MAX_NESTED_RENDERTARGETS = 128;
 	public final static int T_TRIANGLES = 0;
 	public final static int T_STRIP = 1;
+	public static final int T_POINTS = 2;
 	public final static int MAX_TEXTURES = 32;
 	public static GraphicsTranslator INSTANCE;
 	public static GraphicsTranslator appInstance;

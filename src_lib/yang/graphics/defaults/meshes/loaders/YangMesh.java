@@ -204,7 +204,7 @@ public class YangMesh {
 				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, 0,0,0);
 			else{
 				//Skinning
-				if(mCurArmature!=null) {
+				if(mCurArmature!=null && mCurArmature.mTransforms.length>0) {
 					float x = mPositions[i];
 					float y = mPositions[i+1];
 					float z = mPositions[i+2];

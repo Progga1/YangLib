@@ -127,25 +127,33 @@ public class FBXLoader extends YangSceneLoader {
 		}else if(mReader.isWord("PolygonVertexIndex")) {
 			int baseIndex = -1;
 			int lstIndex = -1;
+			int c = 0;
 			while(!mReader.eof()) {
 				mReader.nextWord(true);
 				int val = mReader.wordToInt();
 				if(val==TokenReader.ERROR_INT)
 					break;
+				c++;
 				if(baseIndex<0) {
 					baseIndex = val;
 				}else{
+					boolean polyEnd = val<0;
 					if(lstIndex>=0) {
-						workingIndices[mIndexId++] = (short)baseIndex;
-						workingIndices[mIndexId++] = (short)lstIndex;
-						if(val<0) {
+
+						workingIndices[mIndexId++] = (short)(baseIndex);
+						workingIndices[mIndexId++] = (short)(lstIndex);
+
+						if(polyEnd) {
 							baseIndex = -1;
 							lstIndex = -1;
 							val = -val-1;
+							c = 0;
 						}
-						workingIndices[mIndexId++] = (short)val;
+						workingIndices[mIndexId++] = (short)(val);
+
+						//}
 					}
-					if(baseIndex>=0)
+					if(!polyEnd && baseIndex>=0)
 						lstIndex = val;
 				}
 
