@@ -378,9 +378,12 @@ public class FBXLoader extends YangSceneLoader {
 		}
 		transform.stackPush();
 		baseObj.multTransform(transform);
+		YangMatrix transf = new YangMatrix();
+		transf.set(baseObj.mGlobalTransform);
+		transf.translate(baseObj.mLimbLength,0,0);
 		transform.translate(baseObj.mLimbLength,0,0);
 		Joint joint = new Joint(baseObj.mName);
-		joint.applyTransform(transform);
+		joint.applyTransform(transf);
 		targetSkeleton.addJoint(joint);
 		joint.setRadius(getRadius(baseObj.getMinAdjescentLimbLength()));
 		joint.setParent(parentJoint);
@@ -414,11 +417,12 @@ public class FBXLoader extends YangSceneLoader {
 	}
 
 	public void refreshGlobalTransforms(YangMatrix initialTransform) {
-		tempMat.stackPush();
+		initialTransform.stackPush();
 		for(SceneObject obj:mObjects) {
-			refreshGlobalTransform(obj,initialTransform);
+			if(obj.mParent==null)
+				refreshGlobalTransform(obj,initialTransform);
 		}
-		tempMat.stackPop();
+		initialTransform.stackPop();
 	}
 
 	public void refreshGlobalTransforms() {

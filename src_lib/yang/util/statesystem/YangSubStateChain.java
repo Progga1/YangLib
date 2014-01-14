@@ -17,7 +17,13 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	}
 
 	public void setState(int layer,YangProgramState<StateMachineType> state) {
+		if(!state.isInitialized())
+			state.init(mStateSystem);
+		if(mStates[layer]!=null)
+			mStates[layer].stop();
 		mStates[layer] = state;
+		if(!state.mFirstFrame)
+			state.start();
 		mStatesActive[layer] = true;
 	}
 
