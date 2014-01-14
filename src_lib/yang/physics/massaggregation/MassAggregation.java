@@ -366,4 +366,13 @@ public class MassAggregation {
 		mConstraints.clear();
 	}
 
+	public float getJointMinY() {
+		float minVal = Float.MAX_VALUE;
+		for(Joint joint:mJoints) {
+			if(joint.mY<minVal)
+				minVal = joint.mY;
+		}
+		return minVal;
+	}
+
 }

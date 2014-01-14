@@ -368,26 +368,25 @@ public class FBXLoader extends YangSceneLoader {
 		return Math.min(limbLength*0.35f,mDefaultJointRadius);
 	}
 
-	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,YangMatrix transform,Joint parentJoint) {
+	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,Joint parentJoint) {
+		YangMatrix transform = baseObj.mGlobalTransform;
 		if(parentJoint==null) {
 			parentJoint = new Joint("root_"+baseObj.mName);
-			parentJoint.set(baseObj.mTranslation);
+			//parentJoint.set(baseObj.mTranslation);
 			parentJoint.applyTransform(transform);
 			targetSkeleton.addJoint(parentJoint);
 			parentJoint.setRadius(getRadius(baseObj.mLimbLength));
+			for(MeshDeformer deformer:baseObj.mDeformers) {
+				deformer.mMesh.mMesh.applyTransform(baseObj.mParent.mGlobalTransform);
+			}
 		}
-		transform.stackPush();
-		baseObj.multTransform(transform);
-		YangMatrix transf = new YangMatrix();
-		transf.set(baseObj.mGlobalTransform);
-		transf.translate(baseObj.mLimbLength,0,0);
-		transform.translate(baseObj.mLimbLength,0,0);
+
 		Joint joint = new Joint(baseObj.mName);
-		joint.applyTransform(transf);
+		joint.mX = baseObj.mLimbLength;
+		joint.applyTransform(transform);
 		targetSkeleton.addJoint(joint);
 		joint.setRadius(getRadius(baseObj.getMinAdjescentLimbLength()));
 		joint.setParent(parentJoint);
-		transform.translate(-baseObj.mLimbLength,0,0);
 		baseObj.setDeformerIndex(joint.mId);
 
 		targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
@@ -400,10 +399,31 @@ public class FBXLoader extends YangSceneLoader {
 		for(SceneObject obj:baseObj.getChildren()) {
 			if(obj instanceof LimbObject) {
 				LimbObject limbObj = (LimbObject)obj;
-				subSkel(targetSkeleton,limbObj,transform,joint);
+				subSkel(targetSkeleton,limbObj,joint);
 			}
 		}
-		transform.stackPop();
+	}
+
+	public void createSkeleton(MassAggregation targetSkeleton) {
+		YangMatrix matrix = new YangMatrix();
+		matrix.initStack(64);
+
+		for(SceneObject obj:mRootObject.getChildren()) {
+			if(obj instanceof LimbObject) {
+				obj.multTransform(matrix);
+				for(SceneObject boneObj:obj.getChildren()) {
+					if(boneObj instanceof LimbObject) {
+						subSkel(targetSkeleton,(LimbObject)boneObj,null);
+					}
+				}
+			}
+		}
+
+//		matrix.loadIdentity();
+//		matrix.swapLines(0,1);
+//		matrix.rotateY(MathConst.PI);
+//		matrix.rotateZ(MathConst.PI/2);
+//		targetSkeleton.transformJointPositions(matrix);
 	}
 
 	public void refreshGlobalTransform(SceneObject object,YangMatrix parentTransform) {
@@ -428,28 +448,6 @@ public class FBXLoader extends YangSceneLoader {
 	public void refreshGlobalTransforms() {
 		tempMat.loadIdentity();
 		refreshGlobalTransforms(tempMat);
-	}
-
-	public void createSkeleton(MassAggregation targetSkeleton) {
-		YangMatrix matrix = new YangMatrix();
-		matrix.initStack(64);
-
-		for(SceneObject obj:mRootObject.getChildren()) {
-			if(obj instanceof LimbObject) {
-				obj.multTransform(matrix);
-				for(SceneObject boneObj:obj.getChildren()) {
-					if(boneObj instanceof LimbObject) {
-						subSkel(targetSkeleton,(LimbObject)boneObj,matrix,null);
-					}
-				}
-			}
-		}
-
-//		matrix.loadIdentity();
-//		matrix.swapLines(0,1);
-//		matrix.rotateY(MathConst.PI);
-//		matrix.rotateZ(MathConst.PI/2);
-//		targetSkeleton.transformJointPositions(matrix);
 	}
 
 	public void createSkinWeights() {
