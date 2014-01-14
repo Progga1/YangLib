@@ -59,7 +59,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	@Override
 	public boolean rawEvent(YangEvent event) {
-		for(int i=mStateCount-1;i>=0;i++) {
+		for(int i=mStateCount-1;i>=0;i--) {
 			if(mStatesActive[i]) {
 				YangProgramState<?> state = mStates[i];
 				if(!state.mFirstFrame) {
