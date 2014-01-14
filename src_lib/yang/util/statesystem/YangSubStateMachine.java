@@ -2,7 +2,7 @@ package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
 
-public class YangSubStateMachine<StateMachineType extends YangProgramStateSystem> extends YangProgramState<YangProgramStateSystem> {
+public class YangSubStateMachine<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> {
 
 	public YangProgramState<?> mCurrentState;
 

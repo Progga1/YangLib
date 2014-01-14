@@ -2,7 +2,7 @@ package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
 
-public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> extends YangProgramState<YangProgramStateSystem> {
+public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> {
 
 	public YangProgramState<StateMachineType>[] mStates;
 	public boolean[] mStatesActive;
@@ -18,6 +18,13 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	public void setState(int layer,YangProgramState<StateMachineType> state) {
 		mStates[layer] = state;
+		mStatesActive[layer] = true;
+	}
+
+	public void deactivateAllStates() {
+		for(int i=0;i<mStateCount;i++) {
+			mStatesActive[i] = false;
+		}
 	}
 
 	@Override
@@ -46,7 +53,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	@Override
 	public boolean rawEvent(YangEvent event) {
-		for(int i=0;i<mStateCount;i++) {
+		for(int i=mStateCount-1;i>=0;i++) {
 			if(mStatesActive[i]) {
 				YangProgramState<?> state = mStates[i];
 				if(!state.mFirstFrame) {
