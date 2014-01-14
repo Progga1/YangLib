@@ -11,4 +11,8 @@ public class MeshObject extends SceneObject {
 		mMesh.draw();
 	}
 
+	public void applyTransformToMesh() {
+		mMesh.applyTransform(mGlobalTransform);
+	}
+
 }

@@ -59,6 +59,7 @@ public class FBXLoader extends YangSceneLoader {
 		}
 		mGraphics = graphics;
 		mHandles = handles;
+		tempMat.initStack(128);
 	}
 
 	private void readPoint3f(Point3f target) throws IOException {
@@ -283,8 +284,6 @@ public class FBXLoader extends YangSceneLoader {
 			}
 
 		}
-
-
 	}
 
 	private SceneObject findObject(int startAt) {
@@ -360,6 +359,8 @@ public class FBXLoader extends YangSceneLoader {
 
 		}
 
+		refreshGlobalTransforms();
+
 		return true;
 	}
 
@@ -400,6 +401,29 @@ public class FBXLoader extends YangSceneLoader {
 			}
 		}
 		transform.stackPop();
+	}
+
+	public void refreshGlobalTransform(SceneObject object,YangMatrix parentTransform) {
+		parentTransform.stackPush();
+		object.multTransform(parentTransform);
+		object.mGlobalTransform.set(parentTransform);
+		for(SceneObject child:object.getChildren()) {
+			refreshGlobalTransform(child,parentTransform);
+		}
+		parentTransform.stackPop();
+	}
+
+	public void refreshGlobalTransforms(YangMatrix initialTransform) {
+		tempMat.stackPush();
+		for(SceneObject obj:mObjects) {
+			refreshGlobalTransform(obj,initialTransform);
+		}
+		tempMat.stackPop();
+	}
+
+	public void refreshGlobalTransforms() {
+		tempMat.loadIdentity();
+		refreshGlobalTransforms(tempMat);
 	}
 
 	public void createSkeleton(MassAggregation targetSkeleton) {

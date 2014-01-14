@@ -13,6 +13,7 @@ public class SceneObject {
 	public Quaternion mOrientation = Quaternion.IDENTITY.clone();
 	public Vector3f mScaling = Vector3f.ONE.clone();
 	public boolean mVisibility;
+	public YangMatrix mGlobalTransform = new YangMatrix();
 
 	public SceneObject mParent = null;
 	protected YangList<SceneObject> mChildren = new YangList<SceneObject>();
