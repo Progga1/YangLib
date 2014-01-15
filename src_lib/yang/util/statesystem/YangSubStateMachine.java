@@ -8,13 +8,13 @@ public class YangSubStateMachine<StateMachineType extends YangProgramStateSystem
 
 	@SuppressWarnings("unchecked")
 	public <ThisType extends YangProgramStateSystem> void setState(YangProgramState<ThisType> newState) {
-		if(!newState.isInitialized())
+		if(newState != null && !newState.isInitialized())
 			newState.init((ThisType)mStateSystem);
 		if(mCurrentState!=null)
 			mCurrentState.stop();
 		mCurrentState = newState;
-		if(!mCurrentState.mFirstFrame)
-			mCurrentState.start();
+		if(newState != null && !newState.mFirstFrame)
+			newState.start();
 	}
 
 	public YangProgramState<?> getCurrentState() {
