@@ -462,7 +462,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	}
 
 	public final void drawContent(boolean callPreDraw) {
-		mGraphics.clear(0,0,0);
+
 		try{
 			assert mGraphics.preCheck("Draw content");
 			if(mMetaEventListener!=null)

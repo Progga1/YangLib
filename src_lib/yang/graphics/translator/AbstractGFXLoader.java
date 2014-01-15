@@ -118,7 +118,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			}
 		}
 
-		throw new RuntimeException("Image not found: "+name);
+		//throw new RuntimeException("Image not found: "+name);
+		return null;
 	}
 
 	protected TextureData loadImageData(String name,boolean forceRGBA) {

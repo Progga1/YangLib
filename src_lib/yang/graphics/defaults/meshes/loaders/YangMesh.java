@@ -233,14 +233,16 @@ public class YangMesh {
 			}
 		}
 //		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
-		if(mTexCoords!=null && mTexCoords.length>0)
+		if(mTexCoords!=null && mTexCoords.length>0) {
+			int i = 0;
 			for(final int texInd:mTexCoordIndices) {
-				final int i = texInd*2;
-				if(i<0)
-					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, 0,0);
-				else
+				if(texInd<0)
 					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
+				else
+					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[texInd*2], mTexCoords[texInd*2+1]);
+				i += 2;
 			}
+		}
 //		vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
 
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, mVertexCount);
@@ -427,7 +429,7 @@ public class YangMesh {
 	}
 
 	public void applyTransform(YangMatrix transform) {
-		transform.applyToArray(mPositions, mVertexCount, true, 0,0, 0,0, mPositions, 0);
+		transform.applyToArray(mPositions, mPositions.length/3, true, 0,0, 0,0, mPositions, 0);
 	}
 
 	public void createNeutralArmatureWeights() {

@@ -14,8 +14,6 @@ public class OBJLoader extends YangSceneLoader {
 
 	private static final String[] KEYWORDS = {"mtllib","usemtl"};
 
-	protected int curSmoothGroup;
-
 	protected TokenReader mModelReader;
 	public YangMesh mMesh;
 
@@ -25,33 +23,6 @@ public class OBJLoader extends YangSceneLoader {
 
 	public OBJLoader(DefaultGraphics<?> graphics,MeshMaterialHandles handles) {
 		this(graphics,handles,null);
-	}
-
-	private void copyVertex(int index,int posIndex,int texIndex) {
-		redirectIndices[index] = mVertexCount;
-
-		redirectIndices[mVertexCount] = -1;
-		smoothIndices[mVertexCount] = curSmoothGroup;
-
-		mVertexCount++;
-	}
-
-	private void addIndex(int posIndex,int texIndex,int normIndex) {
-		int index = posIndex;
-		while((smoothIndices[index]!=Integer.MIN_VALUE && (curSmoothGroup==-1 || curSmoothGroup!=smoothIndices[index])) || (texCoordIndices[index]>=0 && texCoordIndices[index]!=texIndex)) {
-			final int redirect = redirectIndices[index];
-			if(redirect<0) {
-				copyVertex(index,posIndex,texIndex);
-				index = mVertexCount-1;
-				break;
-			}
-			index = redirect;
-		}
-		positionIndices[index] = posIndex;
-		texCoordIndices[index] = texIndex;
-		normalIndices[index] = normIndex;
-		smoothIndices[index] = curSmoothGroup;
-		workingIndices[mIndexId++] = (short)(index);
 	}
 
 	public void loadOBJ(InputStream modelStream,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {

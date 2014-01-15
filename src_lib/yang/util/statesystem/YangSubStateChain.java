@@ -24,7 +24,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 		mStates[layer] = state;
 		if(!state.mFirstFrame)
 			state.start();
-		mStatesActive[layer] = true;
+		mStatesActive[layer] = state!=null;
 	}
 
 	public void deactivateAllStates() {

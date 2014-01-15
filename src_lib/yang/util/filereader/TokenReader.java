@@ -356,6 +356,12 @@ public class TokenReader {
 			throw new UnexpectedTokenException(this,expectedWord);
 	}
 
+	public void expect(char expectedChar) throws UnexpectedTokenException, IOException {
+		nextWord(true);
+		if(!isChar(expectedChar))
+			throw new UnexpectedTokenException(this,""+expectedChar);
+	}
+
 	public int getCurrentLine() {
 		return mCurLine;
 	}
@@ -413,6 +419,10 @@ public class TokenReader {
 	@Override
 	public String toString() {
 		return ""+mCurLine+"-"+mCurColumn+" "+wordToString();
+	}
+
+	public void holdWord() {
+		mHoldWord = true;
 	}
 
 }

@@ -34,6 +34,7 @@ public class YangSceneLoader {
 	protected int posId;
 	protected int texId;
 	protected int normId;
+	protected int curSmoothGroup;
 	protected YangMaterialSection currentMatSec;
 	private TextureProperties prevTexProps;
 
@@ -43,17 +44,44 @@ public class YangSceneLoader {
 			workingTexCoords = new float[MAX_VERTICES*2];
 			workingNormals = new float[MAX_VERTICES*3];
 			workingIndices = new short[MAX_VERTICES*2];
-			redirectIndices = new int[MAX_VERTICES];
+			redirectIndices = new int[workingIndices.length];
 			positionIndices = new int[MAX_VERTICES];
 			texCoordIndices = new int[MAX_VERTICES];
 			normalIndices = new int[MAX_VERTICES];
-			smoothIndices = new int[MAX_VERTICES];
+			smoothIndices = new int[workingIndices.length];
 		}
 
 		mGraphics = graphics;
 		mHandles = handles;
 		mTextureProperties = textureProperties;
 		mGFXLoader = graphics.mTranslator.mGFXLoader;
+	}
+
+	protected int copyVertex(int index) {
+		redirectIndices[index] = mVertexCount;
+
+		redirectIndices[mVertexCount] = -1;
+		smoothIndices[mVertexCount] = curSmoothGroup;
+
+		return mVertexCount++;
+	}
+
+	protected void addIndex(int posIndex,int texIndex,int normIndex) {
+		int index = posIndex;
+		while((smoothIndices[index]!=Integer.MIN_VALUE && (curSmoothGroup==-1 || curSmoothGroup!=smoothIndices[index])) || (texCoordIndices[index]>=0 && texCoordIndices[index]!=texIndex)) {
+			final int redirect = redirectIndices[index];
+			if(redirect<0) {
+				copyVertex(index);
+				index = mVertexCount-1;
+				break;
+			}
+			index = redirect;
+		}
+		positionIndices[index] = posIndex;
+		texCoordIndices[index] = texIndex;
+		normalIndices[index] = normIndex;
+		smoothIndices[index] = curSmoothGroup;
+		workingIndices[mIndexId++] = (short)(index);
 	}
 
 	public YangSceneLoader(AbstractGraphics<?> graphics,MeshMaterialHandles handles) {

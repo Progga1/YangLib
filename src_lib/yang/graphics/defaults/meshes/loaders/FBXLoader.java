@@ -2,12 +2,14 @@ package yang.graphics.defaults.meshes.loaders;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import yang.graphics.defaults.meshes.scenes.LimbObject;
 import yang.graphics.defaults.meshes.scenes.MeshDeformer;
 import yang.graphics.defaults.meshes.scenes.MeshObject;
 import yang.graphics.defaults.meshes.scenes.SceneObject;
 import yang.graphics.translator.AbstractGraphics;
+import yang.graphics.translator.Texture;
 import yang.math.MathConst;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
@@ -29,7 +31,11 @@ public class FBXLoader extends YangSceneLoader {
 	public static final int OBJ_LIMB = 2;
 
 	private static float[] tempFloats;
+	private static float[] tempTexCoords;
 	private static int[] tempInts;
+	private static int[] polygonIndices;
+
+	private int polyId = 0;
 
 	public YangList<MeshDeformer> mDeformers = new YangList<MeshDeformer>();
 //	public YangList<MassAggregation> mSkeletons = new YangList<MassAggregation>();
@@ -37,6 +43,7 @@ public class FBXLoader extends YangSceneLoader {
 	public YangList<SceneObject> mObjects = new YangList<SceneObject>();
 	public YangList<LimbObject> mLimbObjects = new YangList<LimbObject>();
 	public YangList<MeshObject> mMeshObjects = new YangList<MeshObject>();
+	public YangList<Texture> mTextures = new YangList<Texture>();
 	public SceneObject mRootObject;
 
 	public AbstractGraphics<?> mGraphics;
@@ -54,8 +61,10 @@ public class FBXLoader extends YangSceneLoader {
 	public FBXLoader(AbstractGraphics<?> graphics, MeshMaterialHandles handles) {
 		super(graphics,handles);
 		if(tempFloats==null) {
-			tempFloats = new float[MAX_VERTICES];
+			tempFloats = new float[MAX_VERTICES*2];
+			tempTexCoords = new float[MAX_VERTICES*2];
 			tempInts = new int[MAX_VERTICES];
+			polygonIndices = new int[MAX_VERTICES];
 		}
 		mGraphics = graphics;
 		mHandles = handles;
@@ -134,12 +143,16 @@ public class FBXLoader extends YangSceneLoader {
 				int val = mReader.wordToInt();
 				if(val==TokenReader.ERROR_INT)
 					break;
+
 				c++;
 				if(baseIndex<0) {
 					baseIndex = val;
 				}else{
 					boolean polyEnd = val<0;
 					if(lstIndex>=0) {
+
+//						texCoordIndices[mIndexId] = (short)(baseIndex);
+//						texCoordIndices[mIndexId+1] = (short)(lstIndex);
 
 						workingIndices[mIndexId++] = (short)(baseIndex);
 						workingIndices[mIndexId++] = (short)(lstIndex);
@@ -150,6 +163,7 @@ public class FBXLoader extends YangSceneLoader {
 							val = -val-1;
 							c = 0;
 						}
+//						texCoordIndices[mIndexId] = (short)(val);
 						workingIndices[mIndexId++] = (short)(val);
 
 						//}
@@ -157,8 +171,9 @@ public class FBXLoader extends YangSceneLoader {
 					if(!polyEnd && baseIndex>=0)
 						lstIndex = val;
 				}
-
+				polygonIndices[polyId++] = val;
 			}
+			mReader.holdWord();
 
 		}else if(mReader.isWord("LayerElementUV")) {
 			mReader.nextWord(true);
@@ -168,13 +183,46 @@ public class FBXLoader extends YangSceneLoader {
 				if(mReader.isWord("}"))
 					break;
 				if(mReader.isWord("UV")) {
-					texId = mReader.readArray(workingTexCoords,texId);
+					while(!mReader.eof()) {
+						mReader.nextWord(true);
+						float valX = mReader.wordToFloat();
+						if(valX==TokenReader.ERROR_FLOAT)
+							break;
+						mReader.nextWord(true);
+						float valY = mReader.wordToFloat();
+						if(valY==TokenReader.ERROR_FLOAT)
+							break;
+						tempFloats[texId++] = valX;
+						tempFloats[texId++] = 1-valY;
+					}
+					mReader.holdWord();
+				}else if(mReader.isWord("UVIndex")) {
+					int texC = mReader.readArray(tempInts,0);
+					for(int i=0;i<texC;i++) {
+						int index = polygonIndices[i];
+						float preValX = workingTexCoords[index*2];
+						float resX = tempFloats[tempInts[i]*2];
+						float resY = tempFloats[tempInts[i]*2+1];
+						workingTexCoords[index*2] = resX;
+						workingTexCoords[index*2+1] = resY;
+					}
+
 				}else
 					mReader.toLineEnd();
 			}
 		}else
 			return false;
 		return true;
+	}
+
+	@Override
+	protected YangMesh startLoadingMesh() {
+		polyId = 0;
+		Arrays.fill(workingIndices, (short)-1);
+		Arrays.fill(workingTexCoords, -1);
+		Arrays.fill(positionIndices, -1);
+		Arrays.fill(texCoordIndices, -1);
+		return super.startLoadingMesh();
 	}
 
 	private void readObjects() throws IOException, ParseException {
@@ -271,6 +319,28 @@ public class FBXLoader extends YangSceneLoader {
 						}else{
 							throw new ParseException(mReader,"Only Mesh-Bone deformers allowed");
 						}
+					}
+				}
+			}else if(mReader.isWord("Texture")) {
+				mReader.nextWord(true);
+				mReader.nextWord(true);
+				mReader.expect('{');
+				while(!mReader.eof()) {
+					mReader.nextWord(true);
+					if(mReader.isWord("}"))
+						break;
+					if(mReader.isWord("FileName")) {
+						mReader.nextWord(true);
+						String filename = mGFXLoader.createExistingFilename(mReader.wordToString());
+						if(filename!=null) {
+							Texture texture = mGFXLoader.getImage(filename,mTextureProperties);
+							if(texture!=null) {
+								mTextures.add(texture);
+							}
+							currentMatSec.mMaterial.mDiffuseTexture = texture;
+						}
+					}else if(mReader.isWord("Properties60")) {
+						skipBracketContent();
 					}
 				}
 			}else if(mReader.isWord("Material")) {
