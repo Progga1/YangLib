@@ -57,6 +57,7 @@ public class YangMesh {
 	public DrawBatch mDrawBatch;
 
 	protected Point3f tempPoint = new Point3f();
+	private YangMatrix tempMat = new YangMatrix();
 
 	public YangMesh(AbstractGraphics<?> graphics,MeshMaterialHandles handles,TextureProperties textureProperties) {
 		mGraphics = graphics;
@@ -248,21 +249,19 @@ public class YangMesh {
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, mVertexCount);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues,mVertexCount);
 
-		if(mGraphics instanceof Default3DGraphics) {
-			if(mNormals!=null && mNormals.length>0) {
-				if(mNormIndices==null)
-					vertexBuffer.putArray(DefaultGraphics.ID_NORMALS, mNormals);
-				else
-					for(final int normInd:mNormIndices) {
-						final int i = normInd*3;
-						if(i<0)
-							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
-						else
-							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
-					}
-			}else{
-				Default3DGraphics.fillNormals(vertexBuffer,0); //TODO not per draw call !
-			}
+		if(mNormals!=null && mNormals.length>0) {
+			if(mNormIndices==null)
+				vertexBuffer.putArray(DefaultGraphics.ID_NORMALS, mNormals);
+			else
+				for(final int normInd:mNormIndices) {
+					final int i = normInd*3;
+					if(i<0)
+						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
+					else
+						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
+				}
+		}else{
+			Default3DGraphics.fillNormals(vertexBuffer,0); //TODO not per draw call !
 		}
 	}
 
@@ -430,6 +429,10 @@ public class YangMesh {
 
 	public void applyTransform(YangMatrix transform) {
 		transform.applyToArray(mPositions, mPositions.length/3, true, 0,0, 0,0, mPositions, 0);
+		if(mNormals!=null) {
+			transform.asNormalTransform4f(tempMat.mValues);
+			tempMat.applyToArray(mNormals, mNormals.length/3, true, 0,0, 0,0, mNormals, 0);
+		}
 	}
 
 	public void createNeutralArmatureWeights() {

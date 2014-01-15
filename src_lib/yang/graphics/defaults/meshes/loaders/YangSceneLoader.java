@@ -10,7 +10,7 @@ public class YangSceneLoader {
 
 	public static YangMaterial DEFAULT_MATERIAL = new YangMaterial();
 
-	public static int MAX_VERTICES = 100000;
+	public static int MAX_VERTICES = Short.MAX_VALUE;
 	protected static float[] workingPositions;
 	protected static float[] workingNormals;
 	protected static float[] workingTexCoords;
@@ -43,7 +43,7 @@ public class YangSceneLoader {
 			workingPositions = new float[MAX_VERTICES*3];
 			workingTexCoords = new float[MAX_VERTICES*2];
 			workingNormals = new float[MAX_VERTICES*3];
-			workingIndices = new short[MAX_VERTICES*2];
+			workingIndices = new short[MAX_VERTICES*4];
 			redirectIndices = new int[workingIndices.length];
 			positionIndices = new int[MAX_VERTICES];
 			texCoordIndices = new int[MAX_VERTICES];
@@ -95,6 +95,8 @@ public class YangSceneLoader {
 		normId = 0;
 		mIndexId = 0;
 		positionIndices[0] = -1;
+		normalIndices[0] = -1;
+		curSmoothGroup = -1;
 
 		mCurrentMesh = currentMesh;
 		currentMatSec = new YangMaterialSection(0,DEFAULT_MATERIAL);
@@ -141,7 +143,13 @@ public class YangSceneLoader {
 			mCurrentMesh.mNormals = new float[normId];
 			mCurrentMesh.mNormIndices = new int[mVertexCount];
 			System.arraycopy(workingNormals, 0, mCurrentMesh.mNormals, 0, normId);
-			System.arraycopy(normalIndices, 0, mCurrentMesh.mNormIndices, 0, mVertexCount);
+			if(normalIndices[0]!=-1)
+				System.arraycopy(normalIndices, 0, mCurrentMesh.mNormIndices, 0, mVertexCount);
+			else{
+				for(int i=0;i<mVertexCount;i++) {
+					mCurrentMesh.mNormIndices[i] = i;
+				}
+			}
 		}
 
 		mCurrentMesh.mIndices = new short[mIndexId];

@@ -199,14 +199,19 @@ public class FBXLoader extends YangSceneLoader {
 					}
 					mReader.holdWord();
 //				}else if(mReader.isWord("UVIndex")) {
-//					int texC = mReader.readArray(tempInts,0);
-//					for(int i=0;i<texC;i++) {
-//						int index = polygonIndices[i];
-//						float resX = tempTexCoords[tempInts[i]*2];
-//						float resY = tempTexCoords[tempInts[i]*2+1];
-//						workingTexCoords[index*2] = resX;
-//						workingTexCoords[index*2+1] = resY;
-//					}
+//					mReader.readArray(tempInts,0);
+				}else
+					mReader.toLineEnd();
+			}
+		}else if(mReader.isWord("LayerElementNormal")) {
+			mReader.nextWord(true);
+			mReader.expect("{");
+			while(!mReader.eof()) {
+				mReader.nextWord(true);
+				if(mReader.isWord("}"))
+					break;
+				if(mReader.isWord("Normals")) {
+					normId = mReader.readArray(workingNormals,normId);
 				}else
 					mReader.toLineEnd();
 			}
@@ -224,6 +229,74 @@ public class FBXLoader extends YangSceneLoader {
 		Arrays.fill(texCoordIndices, -1);
 		Arrays.fill(redirectIndices, -1);
 		return super.startLoadingMesh();
+	}
+
+	@Override
+	protected YangMesh finishLoadingMesh(boolean calcNormals,boolean staticMesh) {
+		int baseIndex = -1;
+		int lstIndex = -1;
+
+		for(int i=0;i<posId;i++) {
+			positionIndices[i] = i;
+			normalIndices[i] = i;
+			texCoordIndices[i] = i;
+		}
+
+		for(int i=0;i<polyId;i++) {
+			int index = polygonIndices[i];
+
+			boolean polyEnd = index<0;
+			if(polyEnd) {
+				index = -index-1;
+			}
+			int initialIndex = index;
+
+			float texX = tempTexCoords[i*2];
+			float texY = tempTexCoords[i*2+1];
+
+			float prevTexX;
+			float prevTexY;
+			do {
+				prevTexX = workingTexCoords[index*2];
+				prevTexY = workingTexCoords[index*2+1];
+
+				if(prevTexX<0 || (prevTexX==texX && prevTexY==texY))
+					break;
+
+				int redirect =  redirectIndices[index];
+				if(redirect<0) {
+					redirect = copyVertex(index);
+					positionIndices[redirect] = initialIndex;
+					normalIndices[redirect] = initialIndex;
+					index = redirect;
+					break;
+				}else{
+					index = redirect;
+				}
+			}while(true);
+
+			workingTexCoords[index*2] = texX;
+			workingTexCoords[index*2+1] = texY;
+
+			if(baseIndex<0) {
+				baseIndex = index;
+			}else{
+				if(lstIndex>=0) {
+					workingIndices[mIndexId++] = (short)(baseIndex);
+					workingIndices[mIndexId++] = (short)(lstIndex);
+
+					if(polyEnd) {
+						baseIndex = -1;
+						lstIndex = -1;
+					}
+					workingIndices[mIndexId++] = (short)(index);
+
+				}
+				if(!polyEnd && baseIndex>=0)
+					lstIndex = index;
+			}
+		}
+		return super.finishLoadingMesh(calcNormals,staticMesh);
 	}
 
 	private void readObjects() throws IOException, ParseException {
@@ -279,70 +352,7 @@ public class FBXLoader extends YangSceneLoader {
 						mReader.toLineEnd();
 				}
 				if(objType==OBJ_MESH) {
-
 					//MESH FINISHED
-					int baseIndex = -1;
-					int lstIndex = -1;
-
-					for(int i=0;i<posId;i++) {
-						positionIndices[i] = i;
-						normalIndices[i] = i;
-						texCoordIndices[i] = i;
-					}
-
-					for(int i=0;i<polyId;i++) {
-						int index = polygonIndices[i];
-
-						boolean polyEnd = index<0;
-						if(polyEnd) {
-							index = -index-1;
-						}
-						int initialIndex = index;
-
-						float texX = tempTexCoords[i*2];
-						float texY = tempTexCoords[i*2+1];
-
-						float prevTexX;
-						float prevTexY;
-						do {
-							prevTexX = workingTexCoords[index*2];
-							prevTexY = workingTexCoords[index*2+1];
-
-							if(prevTexX<0 || (prevTexX==texX && prevTexY==texY))
-								break;
-
-							int redirect =  redirectIndices[index];
-							if(redirect<0) {
-								redirect = copyVertex(index);
-								positionIndices[redirect] = initialIndex;
-								index = redirect;
-								break;
-							}else{
-								index = redirect;
-							}
-						}while(true);
-
-						workingTexCoords[index*2] = texX;
-						workingTexCoords[index*2+1] = texY;
-
-						if(baseIndex<0) {
-							baseIndex = index;
-						}else{
-							if(lstIndex>=0) {
-								workingIndices[mIndexId++] = (short)(baseIndex);
-								workingIndices[mIndexId++] = (short)(lstIndex);
-
-								if(polyEnd) {
-									baseIndex = -1;
-									lstIndex = -1;
-								}
-								workingIndices[mIndexId++] = (short)(index);
-
-							}
-							if(!polyEnd && baseIndex>=0)
-								lstIndex = index;
-						}
-					}
 					finishLoadingMesh(false,false);
 				}
 			}else if(mReader.isWord("Deformer")) {
