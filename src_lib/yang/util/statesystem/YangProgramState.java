@@ -21,6 +21,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected int mRecentSurfaceWidth = 0,mRecentSurfaceHeight = 0;
 	protected StateSystemType mStateSystem;
 	public boolean mBlockEvents = false;
+	public boolean mBlockSteps = false;
 
 	public double mStateTimer = 0;
 	protected GraphicsTranslator mGraphics;
@@ -31,6 +32,8 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected AbstractResourceManager mResources;
 	public StringsXML mStrings;
 	private int mRestartCount = 0;
+
+
 
 	protected abstract void step(float deltaTime);
 	protected void preDraw() { }

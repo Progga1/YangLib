@@ -35,9 +35,12 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	@Override
 	protected void step(float deltaTime) {
-		for(int i=0;i<mStateCount;i++) {
-			if(mStatesActive[i])
+		for(int i=mStateCount-1;i>=0;i--) {
+			if(mStatesActive[i]) {
 				mStates[i].proceed(deltaTime);
+				if(mStates[i].mBlockSteps)
+					break;
+			}
 		}
 	}
 

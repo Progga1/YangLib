@@ -283,10 +283,11 @@ public class FBXLoader extends YangSceneLoader {
 					//MESH FINISHED
 					int baseIndex = -1;
 					int lstIndex = -1;
-					int c = 0;
 
 					for(int i=0;i<posId;i++) {
 						positionIndices[i] = i;
+						normalIndices[i] = i;
+						texCoordIndices[i] = i;
 					}
 
 					for(int i=0;i<polyId;i++) {
@@ -324,7 +325,6 @@ public class FBXLoader extends YangSceneLoader {
 						workingTexCoords[index*2] = texX;
 						workingTexCoords[index*2+1] = texY;
 
-						c++;
 						if(baseIndex<0) {
 							baseIndex = index;
 						}else{
@@ -335,7 +335,6 @@ public class FBXLoader extends YangSceneLoader {
 								if(polyEnd) {
 									baseIndex = -1;
 									lstIndex = -1;
-									c = 0;
 								}
 								workingIndices[mIndexId++] = (short)(index);
 
