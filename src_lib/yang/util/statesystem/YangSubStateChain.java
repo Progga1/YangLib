@@ -45,7 +45,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	protected void preDraw() {
 		for(int i=0;i<mStateCount;i++) {
 			if(mStatesActive[i])
-				mStates[i].preDraw();
+				mStates[i].preDrawFrame();
 		}
 	}
 
@@ -53,7 +53,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	protected void draw() {
 		for(int i=0;i<mStateCount;i++) {
 			if(mStatesActive[i])
-				mStates[i].draw();
+				mStates[i].drawFrame();
 		}
 	}
 
