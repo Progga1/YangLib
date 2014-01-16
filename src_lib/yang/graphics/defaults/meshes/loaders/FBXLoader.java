@@ -513,14 +513,15 @@ public class FBXLoader extends YangSceneLoader {
 		return Math.min(limbLength*0.35f,mDefaultJointRadius);
 	}
 
-	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,Joint parentJoint) {
+	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,Joint parentJoint,float radScale) {
 		YangMatrix transform = baseObj.mGlobalTransform;
+		radScale *= baseObj.mScaling.mX;
 		if(parentJoint==null) {
 			parentJoint = new Joint("root_"+baseObj.mName);
 			//parentJoint.set(baseObj.mTranslation);
 			parentJoint.applyTransform(transform);
 			targetSkeleton.addJoint(parentJoint);
-			parentJoint.setRadius(getRadius(baseObj.mLimbLength));
+			parentJoint.setRadius(getRadius(baseObj.mLimbLength)*radScale);
 			for(MeshDeformer deformer:baseObj.mDeformers) {
 				deformer.mMesh.mMesh.applyTransform(baseObj.mParent.mGlobalTransform);
 			}
@@ -530,21 +531,16 @@ public class FBXLoader extends YangSceneLoader {
 		joint.mX = baseObj.mLimbLength;
 		joint.applyTransform(transform);
 		targetSkeleton.addJoint(joint);
-		joint.setRadius(getRadius(baseObj.getMinAdjescentLimbLength()));
+		joint.setRadius(getRadius(baseObj.getMinAdjescentLimbLength())*radScale);
 		joint.setParent(parentJoint);
 		baseObj.setDeformerIndex(joint.mId);
 
 		targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
 
-//		transform.stackPop();
-//		transform.stackPush();
-//		transform.translate(baseObj.mTranslation);
-//		transform.translate(baseObj.mBoneLength,0,0);
-
 		for(SceneObject obj:baseObj.getChildren()) {
 			if(obj instanceof LimbObject) {
 				LimbObject limbObj = (LimbObject)obj;
-				subSkel(targetSkeleton,limbObj,joint);
+				subSkel(targetSkeleton,limbObj,joint,radScale);
 			}
 		}
 	}
@@ -558,17 +554,11 @@ public class FBXLoader extends YangSceneLoader {
 				obj.multTransform(matrix);
 				for(SceneObject boneObj:obj.getChildren()) {
 					if(boneObj instanceof LimbObject) {
-						subSkel(targetSkeleton,(LimbObject)boneObj,null);
+						subSkel(targetSkeleton,(LimbObject)boneObj,null,obj.mScaling.mX);
 					}
 				}
 			}
 		}
-
-//		matrix.loadIdentity();
-//		matrix.swapLines(0,1);
-//		matrix.rotateY(MathConst.PI);
-//		matrix.rotateZ(MathConst.PI/2);
-//		targetSkeleton.transformJointPositions(matrix);
 	}
 
 	public void refreshGlobalTransform(SceneObject object,YangMatrix parentTransform) {

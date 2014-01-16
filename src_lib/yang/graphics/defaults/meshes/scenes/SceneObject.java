@@ -74,4 +74,8 @@ public class SceneObject {
 		return mName+": "+mTranslation;
 	}
 
+	public void scale(float factor) {
+		mScaling.set(factor,factor,factor);
+	}
+
 }
