@@ -136,47 +136,6 @@ public class FBXLoader extends YangSceneLoader {
 			mVertexCount = posId/3;
 		}else if(mReader.isWord("PolygonVertexIndex")) {
 			polyId = mReader.readArray(polygonIndices,polyId);
-//			int baseIndex = -1;
-//			int lstIndex = -1;
-//			int c = 0;
-//			while(!mReader.eof()) {
-//				mReader.nextWord(true);
-//				int val = mReader.wordToInt();
-//				if(val==TokenReader.ERROR_INT)
-//					break;
-//
-//				c++;
-//				if(baseIndex<0) {
-//					baseIndex = val;
-//				}else{
-//					boolean polyEnd = val<0;
-//					if(lstIndex>=0) {
-//
-////						texCoordIndices[mIndexId] = (short)(baseIndex);
-////						texCoordIndices[mIndexId+1] = (short)(lstIndex);
-//
-//						workingIndices[mIndexId++] = (short)(baseIndex);
-//						workingIndices[mIndexId++] = (short)(lstIndex);
-//
-//						if(polyEnd) {
-//							baseIndex = -1;
-//							lstIndex = -1;
-//							val = -val-1;
-//							c = 0;
-//						}
-////						texCoordIndices[mIndexId] = (short)(val);
-//						workingIndices[mIndexId++] = (short)(val);
-//
-//						//}
-//					}
-//					if(!polyEnd && baseIndex>=0)
-//						lstIndex = val;
-//				}
-//				polygonIndices[polyId++] = val;
-//			}
-//			mReader.holdWord();
-
-
 		}else if(mReader.isWord("LayerElementUV")) {
 			mReader.nextWord(true);
 			mReader.expect("{");
@@ -228,6 +187,7 @@ public class FBXLoader extends YangSceneLoader {
 		Arrays.fill(positionIndices, -1);
 		Arrays.fill(texCoordIndices, -1);
 		Arrays.fill(redirectIndices, -1);
+		curSmoothGroup = 0;
 		return super.startLoadingMesh();
 	}
 
@@ -277,6 +237,7 @@ public class FBXLoader extends YangSceneLoader {
 
 			workingTexCoords[index*2] = texX;
 			workingTexCoords[index*2+1] = texY;
+			smoothIndices[index] = curSmoothGroup;
 
 			if(baseIndex<0) {
 				baseIndex = index;
@@ -296,7 +257,7 @@ public class FBXLoader extends YangSceneLoader {
 					lstIndex = index;
 			}
 		}
-		return super.finishLoadingMesh(calcNormals,staticMesh);
+		return super.finishLoadingMesh(calcNormals && normId<=0,staticMesh);
 	}
 
 	private void readObjects() throws IOException, ParseException {
@@ -353,7 +314,7 @@ public class FBXLoader extends YangSceneLoader {
 				}
 				if(objType==OBJ_MESH) {
 					//MESH FINISHED
-					finishLoadingMesh(false,false);
+					finishLoadingMesh(true,false);
 				}
 			}else if(mReader.isWord("Deformer")) {
 				mReader.skipSpace(true);

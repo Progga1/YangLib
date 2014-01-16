@@ -132,7 +132,6 @@ public class YangSceneLoader {
 			}
 		}
 
-
 		if(texId>0) {
 			mCurrentMesh.mTexCoords = new float[texId];
 			mCurrentMesh.mTexCoordIndices = new int[mVertexCount];
