@@ -79,4 +79,18 @@ public class YangProgramStateSystem extends DefaultSurface {
 		}
 	}
 
+	public void onBlock() {
+		if(mCurrentState!=null) {
+			mCurrentState.mBlocked = true;
+			mCurrentState.onBlock();
+		}
+	}
+
+	public void onUnblock() {
+		if(mCurrentState!=null) {
+			mCurrentState.mBlocked = false;
+			mCurrentState.onUnblock();
+		}
+	}
+
 }

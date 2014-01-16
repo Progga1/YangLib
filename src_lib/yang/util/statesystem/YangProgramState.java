@@ -33,6 +33,8 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	public StringsXML mStrings;
 	private int mRestartCount = 0;
 
+	public boolean mBlocked = false;
+
 
 
 	protected abstract void step(float deltaTime);
