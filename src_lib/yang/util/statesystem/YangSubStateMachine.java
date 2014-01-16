@@ -70,4 +70,20 @@ public class YangSubStateMachine<StateMachineType extends YangProgramStateSystem
 		}
 	}
 
+	@Override
+	public void onBlock() {
+		if(mCurrentState!=null) {
+			mCurrentState.mBlocked = true;
+			mCurrentState.onBlock();
+		}
+	}
+
+	@Override
+	public void onUnblock() {
+		if(mCurrentState!=null) {
+			mCurrentState.mBlocked = false;
+			mCurrentState.onUnblock();
+		}
+	}
+
 }
