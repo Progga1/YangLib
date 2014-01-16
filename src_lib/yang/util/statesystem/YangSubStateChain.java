@@ -6,6 +6,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	public YangProgramState<StateMachineType>[] mStates;
 	public boolean[] mStatesActive;
+	private boolean[] mStatesBlocked;
 
 	private int mStateCount;
 
@@ -35,11 +36,23 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	@Override
 	protected void step(float deltaTime) {
+		boolean blocked = false;
 		for(int i=mStateCount-1;i>=0;i--) {
 			if(mStatesActive[i]) {
-				mStates[i].proceed(deltaTime);
-				if(mStates[i].mBlockSteps)
-					break;
+				if(blocked) {
+					if(!mStatesBlocked[i]) {
+						mStatesBlocked[i] = true;
+						mStates[i].onBlock();
+					}
+				}else{
+					if(mStatesBlocked[i]) {
+						mStatesBlocked[i] = false;
+						mStates[i].onUnblock();
+					}
+					mStates[i].proceed(deltaTime);
+					if(mStates[i].mBlockSteps)
+						blocked = true;
+				}
 			}
 		}
 	}

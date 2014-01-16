@@ -164,4 +164,12 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 
 	}
 
+	public void onBlock() {
+
+	}
+
+	public void onUnblock() {
+
+	}
+
 }
