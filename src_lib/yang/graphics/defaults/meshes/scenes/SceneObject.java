@@ -1,17 +1,12 @@
 package yang.graphics.defaults.meshes.scenes;
 
-import yang.math.objects.Point3f;
-import yang.math.objects.Quaternion;
-import yang.math.objects.Vector3f;
+import yang.graphics.model.TransformationData;
 import yang.math.objects.matrix.YangMatrix;
 import yang.util.YangList;
 
-public class SceneObject {
+public class SceneObject extends TransformationData {
 
 	public String mName;
-	public Point3f mTranslation = Point3f.ZERO.clone();
-	public Quaternion mOrientation = Quaternion.IDENTITY.clone();
-	public Vector3f mScaling = Vector3f.ONE.clone();
 	public boolean mVisibility;
 	public YangMatrix mGlobalTransform = new YangMatrix();
 
@@ -23,9 +18,7 @@ public class SceneObject {
 	}
 
 	public void reset() {
-		mTranslation.setZero();
-		mOrientation.setIdentity();
-		mScaling.setOne();
+		super.loadIdentity();
 		mVisibility = true;
 	}
 
@@ -48,12 +41,6 @@ public class SceneObject {
 		return mChildren;
 	}
 
-	public void multTransform(YangMatrix targetMatrix) {
-		targetMatrix.translate(mTranslation);
-		targetMatrix.multiplyQuaternionRight(mOrientation);
-		targetMatrix.scale(mScaling);
-	}
-
 	public String hierarchyToString() {
 		StringBuilder result = new StringBuilder();
 		boolean first = true;
@@ -72,10 +59,6 @@ public class SceneObject {
 	@Override
 	public String toString() {
 		return mName+": "+mTranslation;
-	}
-
-	public void scale(float factor) {
-		mScaling.set(factor,factor,factor);
 	}
 
 }
