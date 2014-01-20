@@ -35,9 +35,11 @@ public class Skeleton3DEditing {
 	public Joint mHoverJoint = null;
 	private DrawBatch mSphereBatch;
 
-	public JointEditListener mJointEditListener;
+	public JointEditListener mJointEditListener = null;
+	public JointDrawCallback mJointDrawCallback = null;
 
 	public float mAlpha = 1;
+	private FloatColor mJointColor = new FloatColor();
 
 	public Skeleton3DEditing(Default3DGraphics graphics3D,MassAggregation skeleton) {
 		mGraphics3D = graphics3D;
@@ -96,21 +98,30 @@ public class Skeleton3DEditing {
 		for(final Joint joint:mSkeleton.mJoints) {
 			final JointEditData data = mJointData[joint.mId];
 
-
+			float radius;
 			if(joint.mFixed)
-				mGraphics3D.setColor(jointFixedColor);
+				mJointColor.set(jointFixedColor);
 			else
-				mGraphics3D.setColor(jointColor);
+				mJointColor.set(jointColor);
 			if(data.mSelectionGroup>=0)
-				mGraphics3D.addColor(jointSelectedAddColor);
-			else if(joint==mHoverJoint)
+				mJointColor.set(jointSelectedAddColor);
+			if(mJointDrawCallback!=null) {
+				mJointDrawCallback.getJointColor(data,mJointColor);
+				radius = mJointDrawCallback.getJointRadius(data);
+			}else
+				radius = joint.getOutputRadius();
+			mGraphics3D.setColor(mJointColor);
+			if(data.mSelectionGroup<0 && joint==mHoverJoint)
 				mGraphics3D.multColor(1.3f);
+
+
+			if(mJointDrawCallback!=null)
 
 			mGraphics3D.setColorFactor(mGraphics3D.getCurrentColor());
 			mGraphics3D.mColorFactor[3] *= mAlpha;
 			mGraphics3D.mWorldTransform.stackPush();
 			mGraphics3D.mWorldTransform.translate(joint.mWorldPosition);
-			mGraphics3D.mWorldTransform.scale(joint.getOutputRadius());
+			mGraphics3D.mWorldTransform.scale(radius);
 			mSphereBatch.draw();
 			mGraphics3D.mWorldTransform.stackPop();
 		}
@@ -122,19 +133,26 @@ public class Skeleton3DEditing {
 		return initLines(16,0.03f);
 	}
 
-	public Joint pickJoint3D(Point3f pickPos,float pickRadius,float radiusFactor) {
+	public Joint pickJoint3D(Point3f pickPos,float pickRadius,float radiusFactor,boolean onlySelectable) {
 		Joint result = null;
 		mSkeleton.mInvTransform.apply3D(pickPos.mX,pickPos.mY,pickPos.mZ,tempVec1);
 		tempVec1.scale(1/mSkeleton.mScale);
 		float minDist = Float.MAX_VALUE;
 		for(final Joint joint:mSkeleton.mJoints) {
-			final float dist = tempVec1.getDistance(joint.mX,joint.mY,joint.mZ);
-			if(dist<minDist && dist<pickRadius+joint.getOutputRadius()*radiusFactor) {
-				minDist = dist;
-				result = joint;
+			JointEditData jointData = mJointData[joint.mId];
+			if(!onlySelectable || jointData.mSelectable) {
+				final float dist = tempVec1.getDistance(joint.mX,joint.mY,joint.mZ);
+				if(dist<minDist && dist<pickRadius+joint.getOutputRadius()*radiusFactor) {
+					minDist = dist;
+					result = joint;
+				}
 			}
 		}
 		return result;
+	}
+
+	public Joint pickJoint3D(Point3f pickPos,float pickRadius,float radiusFactor) {
+		return pickJoint3D(pickPos,pickRadius,radiusFactor,true);
 	}
 
 	public Joint pickJoint2D(float x,float y,float zoom,float radiusFactor) {
@@ -247,6 +265,12 @@ public class Skeleton3DEditing {
 
 	public void setJointEditListener(JointEditListener listener) {
 		mJointEditListener = listener;
+	}
+
+	public void setSelectable(boolean selectable) {
+		for(JointEditData jointData:mJointData) {
+			jointData.mSelectable = selectable;
+		}
 	}
 
 }

@@ -62,9 +62,9 @@ public class Skeleton3DCollection {
 		return null;
 	}
 
-	public Joint pickJoint3D(Point3f position,float pickRadius, float radiusFactor) {
+	public Joint pickJoint3D(Point3f position,float pickRadius, float radiusFactor,boolean onlySelectable) {
 		for(Skeleton3DEditing skeleton:mSkeletons) {
-			Joint result = skeleton.pickJoint3D(position,pickRadius,radiusFactor);
+			Joint result = skeleton.pickJoint3D(position,pickRadius,radiusFactor,onlySelectable);
 			if(result!=null) {
 				mLastPickedSkeleton = skeleton;
 				return result;
@@ -72,6 +72,10 @@ public class Skeleton3DCollection {
 		}
 		mLastPickedSkeleton = null;
 		return null;
+	}
+
+	public Joint pickJoint3D(Point3f position,float pickRadius, float radiusFactor) {
+		return pickJoint3D(position,pickRadius,radiusFactor,true);
 	}
 
 	public void setHover(Skeleton3DEditing hoverSkeleton, Joint hoverJoint) {
@@ -114,6 +118,10 @@ public class Skeleton3DCollection {
 		for(Skeleton3DEditing skeleton:mSkeletons) {
 			skeleton.mSkeleton.recalculateConstraints();
 		}
+	}
+
+	public boolean isSelected() {
+		return getSelectionCount()<=0;
 	}
 
 }

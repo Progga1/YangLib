@@ -16,6 +16,7 @@ public class JointEditData {
 	public int mSelectionGroup = -1;
 	public int mSelectionDepth = -1;
 	public float mLstSelectTime = -1;
+	public boolean mSelectable = true;
 
 	public Point3f mPrevPos = new Point3f();
 
