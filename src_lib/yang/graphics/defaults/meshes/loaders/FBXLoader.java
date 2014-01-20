@@ -476,7 +476,7 @@ public class FBXLoader extends YangSceneLoader {
 
 	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,Joint parentJoint,float radScale) {
 		YangMatrix transform = baseObj.mGlobalTransform;
-		radScale *= baseObj.mScaling.mX;
+		radScale *= baseObj.mScale.mX;
 		if(parentJoint==null) {
 			parentJoint = new Joint("root_"+baseObj.mName);
 			//parentJoint.set(baseObj.mTranslation);
@@ -512,10 +512,10 @@ public class FBXLoader extends YangSceneLoader {
 
 		for(SceneObject obj:mRootObject.getChildren()) {
 			if(obj instanceof LimbObject) {
-				obj.multTransform(matrix);
+				obj.multMatrix(matrix);
 				for(SceneObject boneObj:obj.getChildren()) {
 					if(boneObj instanceof LimbObject) {
-						subSkel(targetSkeleton,(LimbObject)boneObj,null,obj.mScaling.mX);
+						subSkel(targetSkeleton,(LimbObject)boneObj,null,obj.mScale.mX);
 					}
 				}
 			}
@@ -524,7 +524,7 @@ public class FBXLoader extends YangSceneLoader {
 
 	public void refreshGlobalTransform(SceneObject object,YangMatrix parentTransform) {
 		parentTransform.stackPush();
-		object.multTransform(parentTransform);
+		object.multMatrix(parentTransform);
 		object.mGlobalTransform.set(parentTransform);
 		for(SceneObject child:object.getChildren()) {
 			refreshGlobalTransform(child,parentTransform);
