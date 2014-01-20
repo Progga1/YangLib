@@ -34,8 +34,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	private int mRestartCount = 0;
 
 	public boolean mBlocked = false;
-
-
+	public float mFadeProgress = 1;
 
 	protected abstract void step(float deltaTime);
 	protected void preDraw() { }
@@ -171,6 +170,14 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	}
 
 	public void onUnblock() {
+
+	}
+
+	public void onFadeOut() {
+
+	}
+
+	public void onFadeInFinished() {
 
 	}
 

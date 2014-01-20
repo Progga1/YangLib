@@ -13,13 +13,17 @@ public class YangProgramStateSystem extends DefaultSurface {
 
 	@SuppressWarnings("unchecked")
 	public <ThisType extends YangProgramStateSystem> void setState(YangProgramState<ThisType> newState) {
+		setStateNoStart(newState);
+		if(!mCurrentState.mFirstFrame)
+			mCurrentState.start();
+	}
+
+	public <ThisType extends YangProgramStateSystem> void setStateNoStart(YangProgramState<ThisType> newState) {
 		if(!newState.isInitialized())
 			newState.init((ThisType)this);
 		if(mCurrentState!=null)
 			mCurrentState.stop();
 		mCurrentState = newState;
-		if(!mCurrentState.mFirstFrame)
-			mCurrentState.start();
 	}
 
 	public YangProgramState<?> getCurrentState() {
