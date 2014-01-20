@@ -121,6 +121,7 @@ public class Texture extends AbstractTexture {
 		if(mProperties.mFilter == TextureFilter.LINEAR_MIP_LINEAR || mProperties.mFilter == TextureFilter.NEAREST_MIP_LINEAR) {
 			mGraphics.bindTexture(this);
 			mGraphics.generateMipMap();
+			mGraphics.bindTextureNoFlush(mGraphics.mNoTexture,0);
 		}
 		if(mStatus<STATUS_FINISHED)
 			mStatus = STATUS_FINISHED;
