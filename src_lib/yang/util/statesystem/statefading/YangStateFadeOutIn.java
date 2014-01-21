@@ -1,5 +1,6 @@
 package yang.util.statesystem.statefading;
 
+import yang.events.eventtypes.YangEvent;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
@@ -35,6 +36,14 @@ public class YangStateFadeOutIn<StateSystemType extends YangProgramStateSystem> 
 		}
 	}
 
-
+	@Override
+	public boolean rawEvent(YangEvent event) {
+		if(mToState==null || mFromState.mFadeProgress>0.5f)
+			return event.handle(mFromState);
+		else if(mFromState==null)
+			return event.handle(mToState);
+		else
+			return false;
+	}
 
 }

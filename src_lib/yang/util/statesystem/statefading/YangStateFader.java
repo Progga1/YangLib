@@ -6,7 +6,7 @@ import yang.util.statesystem.YangProgramStateSystem;
 
 public abstract class YangStateFader<StateSystemType extends YangProgramStateSystem> extends YangProgramState<StateSystemType> {
 
-	public YangProgramState<StateSystemType> mFromState = null, mToState = null;
+	protected YangProgramState<StateSystemType> mFromState = null, mToState = null;
 	public float mTransitionTime = 1;
 
 	public YangStateFader(float transitionTime) {
@@ -61,8 +61,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 
 	@Override
 	public void onSet(StateSystemInterface stateSystem,int layer) {
-		super.onSet(stateSystem, layer);
-		mFromState = getParentStateSystem().getCurrentState(getStateSystemLayer());
+		mFromState = stateSystem.getCurrentState(getStateSystemLayer());
 		if(mFromState!=null) {
 			if(!mFromState.isInitialized())
 				mFromState.init(mStateSystem);
@@ -73,8 +72,9 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 			if(!mToState.isInitialized())
 				mToState.init(mStateSystem);
 			mToState.mFadeProgress = 0;
-			mToState.onSet(getParentStateSystem(),getStateSystemLayer());
+			mToState.onSet(stateSystem,layer);
 		}
+		super.onSet(stateSystem, layer);
 	}
 
 	@Override

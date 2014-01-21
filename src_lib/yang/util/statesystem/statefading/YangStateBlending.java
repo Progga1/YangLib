@@ -1,5 +1,6 @@
 package yang.util.statesystem.statefading;
 
+import yang.events.eventtypes.YangEvent;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
@@ -29,6 +30,12 @@ public class YangStateBlending<StateSystemType extends YangProgramStateSystem> e
 		}
 	}
 
-
+	@Override
+	public boolean rawEvent(YangEvent event) {
+		if(mToState!=null)
+			return event.handle(mToState);
+		else
+			return false;
+	}
 
 }

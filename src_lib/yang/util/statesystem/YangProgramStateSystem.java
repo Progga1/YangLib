@@ -30,15 +30,16 @@ public class YangProgramStateSystem extends DefaultSurface implements StateSyste
 	}
 
 	@Override
-	public void fadeState(int layer,YangStateFader fader) {
+	public void fadeState(int layer,YangStateFader fader,YangProgramState toState) {
 		if(!fader.isInitialized())
 			fader.init(this);
+		fader.setTargetState(toState);
 		fader.onSet(this,layer);
 		mCurrentState = fader;
 	}
 
-	public void fadeState(YangStateFader fader) {
-		fadeState(0,fader);
+	public void fadeState(YangStateFader fader,YangProgramState toState) {
+		fadeState(0,fader,toState);
 	}
 
 	@Override
