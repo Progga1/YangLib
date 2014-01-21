@@ -3,6 +3,7 @@ package yang.graphics.tail;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.DoubleStripCreator;
 import yang.graphics.defaults.geometrycreators.StripCreator;
+import yang.graphics.model.FloatColor;
 import yang.math.Geometry;
 import yang.model.DebugYang;
 import yang.util.Util;
@@ -114,6 +115,14 @@ public class Tail {
 		mCurColor[2] = b;
 		mCurColor[3] = a;
 		mGlobAlpha = a;
+	}
+	
+	public void setColor(FloatColor color) {
+		setColor(color.mValues[0], color.mValues[1], color.mValues[2], color.mValues[3]);
+	}
+	
+	public void setColor(FloatColor color, float alpha) {
+		setColor(color.mValues[0], color.mValues[1], color.mValues[2], alpha);
 	}
 
 	public void setColor(float r,float g,float b) {
@@ -452,6 +461,5 @@ public class Tail {
 
 	public void setTexShiftBySize() {
 		mTexXShift = -getTailLength()%mTexXRepeat;
-	}
-
+	}	
 }

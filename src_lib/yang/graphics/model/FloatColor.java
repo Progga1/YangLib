@@ -146,6 +146,14 @@ public class FloatColor extends Quadruple {
 		}
 		return new FloatColor(values);
 	}
+	
+	public static FloatColor fromHex(int rgba) {
+		return new FloatColor(
+				((rgba >> 24) 	& 0xff) / 255f, 
+				((rgba >> 16) 	& 0xff) / 255f, 
+				((rgba >> 8) 	& 0xff) / 255f, 
+				((rgba) 		& 0xff) / 255f);
+	}
 
 	public FloatColor cloneWithAlpha(float alpha) {
 		return new FloatColor(mValues[0],mValues[1],mValues[2],alpha);
