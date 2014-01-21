@@ -3,7 +3,7 @@ package yang.util.statesystem;
 import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultSurface;
 
-public class YangProgramStateSystem extends DefaultSurface {
+public class YangProgramStateSystem extends DefaultSurface implements StateSystemInterface {
 
 	public YangProgramState<?> mCurrentState;
 
@@ -11,19 +11,27 @@ public class YangProgramStateSystem extends DefaultSurface {
 		super(init2dGraphics, init3dGraphics);
 	}
 
-	@SuppressWarnings("unchecked")
-	public <ThisType extends YangProgramStateSystem> void setState(YangProgramState<ThisType> newState) {
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void setState(YangProgramState newState) {
 		setStateNoStart(newState);
 		if(!mCurrentState.mFirstFrame)
 			mCurrentState.start();
 	}
 
-	public <ThisType extends YangProgramStateSystem> void setStateNoStart(YangProgramState<ThisType> newState) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public void setStateNoStart(YangProgramState newState) {
 		if(!newState.isInitialized())
-			newState.init((ThisType)this);
+			newState.init(this);
 		if(mCurrentState!=null)
 			mCurrentState.stop();
 		mCurrentState = newState;
+	}
+
+	@Override
+	public YangProgramState getCurrentState(int layer) {
+		return mCurrentState;
 	}
 
 	public YangProgramState<?> getCurrentState() {

@@ -20,6 +20,8 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	protected boolean mFirstFrame = true;
 	protected int mRecentSurfaceWidth = 0,mRecentSurfaceHeight = 0;
 	protected StateSystemType mStateSystem;
+	private StateSystemInterface mParentStateSystem;
+	private int mStateSystemLayer;
 	public boolean mBlockEvents = false;
 	public boolean mBlockSteps = false;
 
@@ -104,8 +106,15 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		mFirstFrame = false;
 	}
 
-	public void start() {
+	protected void start() {
 		mStateTimer = 0;
+	}
+
+	public final void onSet(StateSystemInterface stateSystem,int layer) {
+		mParentStateSystem = stateSystem;
+		mStateSystemLayer = layer;
+		if(!mFirstFrame)
+			start();
 	}
 
 	public void stop() {
@@ -179,6 +188,18 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 
 	public void onFadeInFinished() {
 
+	}
+
+	public int getStateSystemLayer() {
+		return mStateSystemLayer;
+	}
+
+	public StateSystemInterface getParentStateSystem() {
+		return mParentStateSystem;
+	}
+
+	public void activate() {
+		mParentStateSystem.setState(this);
 	}
 
 }

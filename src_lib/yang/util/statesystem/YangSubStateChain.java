@@ -2,7 +2,7 @@ package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
 
-public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> {
+public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> implements StateSystemInterface {
 
 	public YangProgramState<StateMachineType>[] mStates;
 	public boolean[] mStatesActive;
@@ -16,15 +16,34 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 		mStateCount = capacity;
 	}
 
-	public void setState(int layer,YangProgramState<StateMachineType> state) {
+	@Override
+	public void setState(YangProgramState state) {
+		setState(state.getStateSystemLayer(),state);
+	}
+
+	@Override
+	public void setStateNoStart(YangProgramState state) {
+		setStateNoStart(state.getStateSystemLayer(),state);
+	}
+
+	public void setStateNoStart(int layer,YangProgramState<StateMachineType> state) {
 		if(state!=null && !state.isInitialized())
 			state.init(mStateSystem);
 		if(mStates[layer]!=null)
 			mStates[layer].stop();
 		mStates[layer] = state;
-		if(state!=null && !state.mFirstFrame)
-			state.start();
 		mStatesActive[layer] = state!=null;
+	}
+
+	public void setState(int layer,YangProgramState<StateMachineType> state) {
+		setStateNoStart(layer,state);
+		if(state!=null && !state.mFirstFrame)
+			state.onSet(this,layer);
+	}
+
+	@Override
+	public YangProgramState getCurrentState(int layer) {
+		return mStates[layer];
 	}
 
 	public void deactivateAllStates() {

@@ -121,7 +121,7 @@ public class Skeleton3DCollection {
 	}
 
 	public boolean isSelected() {
-		return getSelectionCount()<=0;
+		return getSelectionCount()>0;
 	}
 
 }

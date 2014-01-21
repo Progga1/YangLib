@@ -1,6 +1,9 @@
-package yang.util.statesystem;
+package yang.util.statesystem.statefading;
 
-public class YangStateFade<StateSystemType extends YangProgramStateSystem> extends YangProgramState<StateSystemType> {
+import yang.util.statesystem.YangProgramState;
+import yang.util.statesystem.YangProgramStateSystem;
+
+public abstract class YangStateFade<StateSystemType extends YangProgramStateSystem> extends YangProgramState<StateSystemType> {
 
 	public YangProgramState<StateSystemType> mFromState = null, mToState = null;
 	public float mTransitionTime = 1;
@@ -9,16 +12,18 @@ public class YangStateFade<StateSystemType extends YangProgramStateSystem> exten
 		mTransitionTime = transitionTime;
 	}
 
+	public YangStateFade() {
+		this(1);
+	}
+
+	protected abstract void refreshProgress(float deltaTime,float toWeight);
+
 	protected void preStateDraw() { }
 	protected void postStateDraw() { }
 
-	public YangStateFade<StateSystemType> setStates(YangProgramState<StateSystemType> fromState,YangProgramState<StateSystemType> toState) {
-		mFromState = fromState;
-		if(fromState!=null && !fromState.isInitialized())
-			fromState.init(mStateSystem);
+	public YangStateFade<StateSystemType> setState(YangProgramState<StateSystemType> toState) {
+		mFromState = getParentStateSystem().getCurrentState(getStateSystemLayer());
 		mToState = toState;
-		if(toState!=null && !toState.isInitialized())
-			toState.init(mStateSystem);
 		return this;
 	}
 
@@ -26,19 +31,15 @@ public class YangStateFade<StateSystemType extends YangProgramStateSystem> exten
 	protected void step(float deltaTime) {
 		float t = (float)(mStateTimer/mTransitionTime);
 		if(t>1) {
-			mFromState.mFadeProgress = 1;
-			mToState.mFadeProgress = 1;
-			mToState.onFadeInFinished();
-			mStateSystem.setStateNoStart(mToState);
-		}else{
-			if(mFromState!=null) {
-				mFromState.mFadeProgress = 1-t;
-				mFromState.step(deltaTime);
-			}
+			if(mFromState!=null)
+				mFromState.mFadeProgress = 1;
 			if(mToState!=null) {
-				mToState.mFadeProgress = t;
-				mToState.step(deltaTime);
+				mToState.mFadeProgress = 1;
+				mToState.onFadeInFinished();
 			}
+			mToState.getParentStateSystem().setStateNoStart(mToState);
+		}else{
+			refreshProgress(deltaTime,t);
 		}
 	}
 
@@ -62,13 +63,18 @@ public class YangStateFade<StateSystemType extends YangProgramStateSystem> exten
 
 	@Override
 	public void start() {
+		mFromState = getParentStateSystem().getCurrentState(getStateSystemLayer());
 		if(mFromState!=null) {
+			if(!mFromState.isInitialized())
+				mFromState.init(mStateSystem);
 			mFromState.onFadeOut();
 			mFromState.mFadeProgress = 1;
 		}
 		if(mToState!=null) {
+			if(!mToState.isInitialized())
+				mToState.init(mStateSystem);
 			mToState.mFadeProgress = 0;
-			mToState.start();
+			mToState.onSet(getParentStateSystem(),getStateSystemLayer());
 		}
 	}
 

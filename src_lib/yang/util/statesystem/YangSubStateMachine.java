@@ -2,22 +2,30 @@ package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
 
-public class YangSubStateMachine<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> {
+public class YangSubStateMachine<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> implements StateSystemInterface {
 
 	public YangProgramState<?> mCurrentState;
 
-	@SuppressWarnings("unchecked")
-	public <ThisType extends YangProgramStateSystem> void setState(YangProgramState<ThisType> newState) {
-		if(newState!=null && !newState.isInitialized())
-			newState.init((ThisType)mStateSystem);
-		if(mCurrentState!=null)
-			mCurrentState.stop();
-		mCurrentState = newState;
-		if(newState!=null && !newState.mFirstFrame)
-			newState.start();
+	@Override
+	@SuppressWarnings("rawtypes")
+	public void setState(YangProgramState state) {
+		setStateNoStart(state);
+		if(state!=null && !state.mFirstFrame)
+			state.start();
 	}
 
-	public YangProgramState<?> getCurrentState() {
+
+	@Override
+	public void setStateNoStart(YangProgramState state) {
+		if(state!=null && !state.isInitialized())
+			state.init(mStateSystem);
+		if(mCurrentState!=null)
+			mCurrentState.stop();
+		mCurrentState = state;
+	}
+
+	@Override
+	public YangProgramState<?> getCurrentState(int layer) {
 		return mCurrentState;
 	}
 
