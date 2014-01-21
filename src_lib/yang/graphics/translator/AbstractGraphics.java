@@ -305,6 +305,14 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mCurColor[3] = color.mValues[3];
 	}
 
+
+	public void setColor(FloatColor color, float alphaFactor) {
+		mCurColor[0] = color.mValues[0];
+		mCurColor[1] = color.mValues[1];
+		mCurColor[2] = color.mValues[2];
+		mCurColor[3] = color.mValues[3]*alphaFactor;
+	}
+
 	public void setColor(Quadruple color) {
 		mCurColor[0] = color.mValues[0];
 		mCurColor[1] = color.mValues[1];
