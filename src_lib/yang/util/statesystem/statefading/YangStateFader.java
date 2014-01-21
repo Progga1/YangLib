@@ -8,6 +8,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 
 	protected YangProgramState<StateSystemType> mFromState = null, mToState = null;
 	public float mTransitionTime = 1;
+	protected float mFadeProgress = 0;
 
 	public YangStateFader(float transitionTime) {
 		mTransitionTime = transitionTime;
@@ -31,8 +32,9 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 
 	@Override
 	protected void step(float deltaTime) {
-		float t = (float)(mStateTimer/mTransitionTime);
-		if(t>1) {
+		mFadeProgress = (float)(mStateTimer/mTransitionTime);
+		if(mFadeProgress>1) {
+			mFadeProgress = 1;
 			if(mFromState!=null)
 				mFromState.mFadeProgress = 1;
 			if(mToState!=null) {
@@ -41,7 +43,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 			}
 			mToState.getParentStateSystem().setStateNoStart(mToState);
 		}else{
-			refreshProgress(deltaTime,t);
+			refreshProgress(deltaTime,mFadeProgress);
 		}
 	}
 
@@ -61,6 +63,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 
 	@Override
 	public void onSet(StateSystemInterface stateSystem,int layer) {
+		mFadeProgress = 0;
 		mFromState = stateSystem.getCurrentState(getStateSystemLayer());
 		if(mFromState!=null) {
 			if(!mFromState.isInitialized())
@@ -79,6 +82,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 
 	@Override
 	public void stop() {
+		mFadeProgress = 0;
 		if(mFromState!=null)
 			mFromState.mFadeProgress = 1;
 		if(mToState!=null)
