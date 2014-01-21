@@ -32,7 +32,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 
 	@Override
 	protected void step(float deltaTime) {
-		mFadeProgress = (float)(mStateTimer/mTransitionTime);
+		mFadeProgress += deltaTime/mTransitionTime;
 		if(mFadeProgress>1) {
 			mFadeProgress = 1;
 			if(mFromState!=null)
@@ -87,5 +87,9 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 			mFromState.mFadeProgress = 1;
 		if(mToState!=null)
 			mToState.mFadeProgress = 1;
+	}
+
+	public void abort() {
+		mFadeProgress = 1;
 	}
 }
