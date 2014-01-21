@@ -4,16 +4,16 @@ import yang.util.statesystem.StateSystemInterface;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
-public abstract class YangStateFade<StateSystemType extends YangProgramStateSystem> extends YangProgramState<StateSystemType> {
+public abstract class YangStateFader<StateSystemType extends YangProgramStateSystem> extends YangProgramState<StateSystemType> {
 
 	public YangProgramState<StateSystemType> mFromState = null, mToState = null;
 	public float mTransitionTime = 1;
 
-	public YangStateFade(float transitionTime) {
+	public YangStateFader(float transitionTime) {
 		mTransitionTime = transitionTime;
 	}
 
-	public YangStateFade() {
+	public YangStateFader() {
 		this(1);
 	}
 
@@ -23,7 +23,7 @@ public abstract class YangStateFade<StateSystemType extends YangProgramStateSyst
 	protected void preStateDraw() { }
 	protected void postStateDraw() { }
 
-	public YangStateFade<StateSystemType> setTargetState(YangProgramState<StateSystemType> toState) {
+	public YangStateFader<StateSystemType> setTargetState(YangProgramState<StateSystemType> toState) {
 		mFromState = null;
 		mToState = toState;
 		return this;

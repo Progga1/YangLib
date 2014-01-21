@@ -1,12 +1,12 @@
 package yang.util.statesystem;
 
-import yang.util.statesystem.statefading.YangStateFade;
+import yang.util.statesystem.statefading.YangStateFader;
 
 public interface StateSystemInterface {
 
 	public void setState(YangProgramState state);
 	public void setStateNoStart(YangProgramState state);
-	public void fadeState(int layer,YangStateFade fader);
+	public void fadeState(int layer,YangStateFader fader);
 	public YangProgramState getCurrentState(int layer);
 
 }

@@ -3,9 +3,9 @@ package yang.util.statesystem.statefading;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
-public class YangStateBlend<StateSystemType extends YangProgramStateSystem> extends YangStateFade<StateSystemType> {
+public class YangStateBlending<StateSystemType extends YangProgramStateSystem> extends YangStateFader<StateSystemType> {
 
-	public YangStateBlend(float transitionTime) {
+	public YangStateBlending(float transitionTime) {
 		super(transitionTime);
 	}
 
