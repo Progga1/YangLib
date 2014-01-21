@@ -335,10 +335,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		return  posX+mRect.mLeft<=screenRightToGameX() && posY+mRect.mBottom<=screenTopToGameY() && (posX+mRect.mRight>=screenLeftToGameX()) && (posY+mRect.mTop>=screenBottomToGameY());
 	}
 
-	public void switchZBuffer(boolean enabled) {
-		mTranslator.switchZBuffer(enabled);
-	}
-
 	public void beginQuad(boolean wireFrames) {
 		mCurrentVertexBuffer.beginQuad(wireFrames);
 	}
