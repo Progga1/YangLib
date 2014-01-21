@@ -19,7 +19,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 	}
 
 	protected abstract void refreshProgress(float deltaTime,float toWeight);
-	protected abstract void prepareStateDraw(YangProgramState<StateSystemType> state,float fade);
+	protected abstract boolean prepareStateDraw(YangProgramState<StateSystemType> state,float fade);
 
 	protected void preStateDraw() { }
 	protected void postStateDraw() { }
@@ -51,12 +51,12 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 	protected void draw() {
 		preStateDraw();
 		if(mFromState!=null) {
-			prepareStateDraw(mFromState,mFromState.mFadeProgress);
-			mFromState.drawFrame();
+			if(prepareStateDraw(mFromState,mFromState.mFadeProgress));
+				mFromState.drawFrame();
 		}
 		if(mToState!=null) {
-			prepareStateDraw(mToState,mToState.mFadeProgress);
-			mToState.drawFrame();
+			if(prepareStateDraw(mToState,mToState.mFadeProgress))
+				mToState.drawFrame();
 		}
 		postStateDraw();
 	}

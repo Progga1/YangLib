@@ -15,10 +15,12 @@ public class YangStateFadeOutIn<StateSystemType extends YangProgramStateSystem> 
 	}
 
 	@Override
-	protected void prepareStateDraw(YangProgramState<StateSystemType> state,float fadeProgress) {
+	protected boolean prepareStateDraw(YangProgramState<StateSystemType> state,float fadeProgress) {
 		if(fadeProgress>0.5f) {
 			prepareFade(state,fadeProgress*2-1);
-		}
+			return true;
+		}else
+			return false;
 	}
 
 	@Override

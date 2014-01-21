@@ -11,11 +11,12 @@ public class YangStateBlending<StateSystemType extends YangProgramStateSystem> e
 	}
 
 	@Override
-	protected void prepareStateDraw(YangProgramState<StateSystemType> state,float fade) {
+	protected boolean prepareStateDraw(YangProgramState<StateSystemType> state,float fade) {
 		if(mFromState!=null)
 			mGraphics2D.setColorFactor(1,1,1,fade);
 		else
 			mGraphics2D.setColorFactor(fade);
+		return true;
 	}
 
 	@Override
