@@ -51,12 +51,16 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 	protected void draw() {
 		preStateDraw();
 		if(mFromState!=null) {
-			if(prepareStateDraw(mFromState,mFromState.mFadeProgress));
+			if(prepareStateDraw(mFromState,mFromState.mFadeProgress)) {
+				mFromState.preDrawFrame();
 				mFromState.drawFrame();
+			}
 		}
 		if(mToState!=null) {
-			if(prepareStateDraw(mToState,mToState.mFadeProgress))
+			if(prepareStateDraw(mToState,mToState.mFadeProgress)) {
+				mToState.preDrawFrame();
 				mToState.drawFrame();
+			}
 		}
 		postStateDraw();
 	}
