@@ -1,6 +1,7 @@
 package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
+import yang.util.statesystem.statefading.YangStateFade;
 
 public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> implements StateSystemInterface {
 
@@ -37,8 +38,16 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	public void setState(int layer,YangProgramState<StateMachineType> state) {
 		setStateNoStart(layer,state);
-		if(state!=null && !state.mFirstFrame)
+		if(state!=null)
 			state.onSet(this,layer);
+	}
+
+	public void fadeState(int layer,YangStateFade fader) {
+		if(!fader.isInitialized())
+			fader.init(mStateSystem);
+		fader.onSet(this,layer);
+		mStates[layer] = fader;
+		mStatesActive[layer] = true;
 	}
 
 	@Override

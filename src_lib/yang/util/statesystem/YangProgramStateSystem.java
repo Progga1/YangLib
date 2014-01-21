@@ -2,6 +2,7 @@ package yang.util.statesystem;
 
 import yang.events.eventtypes.YangEvent;
 import yang.graphics.defaults.DefaultSurface;
+import yang.util.statesystem.statefading.YangStateFade;
 
 public class YangProgramStateSystem extends DefaultSurface implements StateSystemInterface {
 
@@ -15,8 +16,7 @@ public class YangProgramStateSystem extends DefaultSurface implements StateSyste
 	@Override
 	public void setState(YangProgramState newState) {
 		setStateNoStart(newState);
-		if(!mCurrentState.mFirstFrame)
-			mCurrentState.start();
+		mCurrentState.onSet(this,0);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -27,6 +27,18 @@ public class YangProgramStateSystem extends DefaultSurface implements StateSyste
 		if(mCurrentState!=null)
 			mCurrentState.stop();
 		mCurrentState = newState;
+	}
+
+	@Override
+	public void fadeState(int layer,YangStateFade fader) {
+		if(!fader.isInitialized())
+			fader.init(this);
+		fader.onSet(this,layer);
+		mCurrentState = fader;
+	}
+
+	public void fadeState(YangStateFade fader) {
+		fadeState(0,fader);
 	}
 
 	@Override

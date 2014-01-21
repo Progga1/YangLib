@@ -110,7 +110,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		mStateTimer = 0;
 	}
 
-	public final void onSet(StateSystemInterface stateSystem,int layer) {
+	public void onSet(StateSystemInterface stateSystem,int layer) {
 		mParentStateSystem = stateSystem;
 		mStateSystemLayer = layer;
 		if(!mFirstFrame)

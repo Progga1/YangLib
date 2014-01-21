@@ -1,5 +1,6 @@
 package yang.util.statesystem.statefading;
 
+import yang.util.statesystem.StateSystemInterface;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
@@ -17,12 +18,13 @@ public abstract class YangStateFade<StateSystemType extends YangProgramStateSyst
 	}
 
 	protected abstract void refreshProgress(float deltaTime,float toWeight);
+	protected abstract void prepareStateDraw(YangProgramState<StateSystemType> state,float fade);
 
 	protected void preStateDraw() { }
 	protected void postStateDraw() { }
 
-	public YangStateFade<StateSystemType> setState(YangProgramState<StateSystemType> toState) {
-		mFromState = getParentStateSystem().getCurrentState(getStateSystemLayer());
+	public YangStateFade<StateSystemType> setTargetState(YangProgramState<StateSystemType> toState) {
+		mFromState = null;
 		mToState = toState;
 		return this;
 	}
@@ -43,10 +45,6 @@ public abstract class YangStateFade<StateSystemType extends YangProgramStateSyst
 		}
 	}
 
-	protected void prepareStateDraw(YangProgramState<StateSystemType> state,float fade) {
-		mGraphics2D.setColorFactor(1,1,1,fade);
-	}
-
 	@Override
 	protected void draw() {
 		preStateDraw();
@@ -62,7 +60,8 @@ public abstract class YangStateFade<StateSystemType extends YangProgramStateSyst
 	}
 
 	@Override
-	public void start() {
+	public void onSet(StateSystemInterface stateSystem,int layer) {
+		super.onSet(stateSystem, layer);
 		mFromState = getParentStateSystem().getCurrentState(getStateSystemLayer());
 		if(mFromState!=null) {
 			if(!mFromState.isInitialized())
@@ -80,7 +79,9 @@ public abstract class YangStateFade<StateSystemType extends YangProgramStateSyst
 
 	@Override
 	public void stop() {
-		mFromState.mFadeProgress = 1;
-		mToState.mFadeProgress = 1;
+		if(mFromState!=null)
+			mFromState.mFadeProgress = 1;
+		if(mToState!=null)
+			mToState.mFadeProgress = 1;
 	}
 }
