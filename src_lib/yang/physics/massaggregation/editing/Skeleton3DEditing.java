@@ -84,34 +84,43 @@ public class Skeleton3DEditing {
 		mGraphics3D.mWorldTransform.loadIdentity();
 		//mGraphics3D.mWorldTransform.scale(mSkeleton.mScale);
 
-		mGraphics3D.setWhite();
-		mGraphics3D.mColorFactor[3] *= mAlpha;
-		for(final Joint joint:mSkeleton.mJoints)
+		for(JointEditData jointData:mJointData) {
+			Joint joint = jointData.mJoint;
+			if(joint==null)
+				continue;
 			if(joint.mEnabled && joint.mAngleParent!=null){
 				final Joint parent = joint.mAngleParent;
+				mJointColor.set(1,1,1,mAlpha);
+				if(mJointDrawCallback!=null)
+					mJointDrawCallback.getJointLineColor(jointData,mJointColor);
+				mJointColor.clamp();
+
 				mLineDrawer.drawLine(joint.mWorldPosition, parent.mWorldPosition, joint.getOutputRadius()*0.5f,parent.getOutputRadius()*0.5f);
+				mLineDrawer.mCylinder.putColor(mJointColor.mValues);
 			}
+		}
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.fillBuffers();
 
-
-		for(final Joint joint:mSkeleton.mJoints) {
-			final JointEditData data = mJointData[joint.mId];
-
+		for(JointEditData jointData:mJointData) {
+			Joint joint = jointData.mJoint;
+			if(joint==null)
+				continue;
 			float radius;
 			if(joint.mFixed)
 				mJointColor.set(jointFixedColor);
 			else
 				mJointColor.set(jointColor);
-			if(data.mSelectionGroup>=0)
+			if(jointData.mSelectionGroup>=0)
 				mJointColor.set(jointSelectedAddColor);
 			if(mJointDrawCallback!=null) {
-				mJointDrawCallback.getJointColor(data,mJointColor);
-				radius = mJointDrawCallback.getJointRadius(data);
+				mJointDrawCallback.getJointColor(jointData,mJointColor);
+				radius = mJointDrawCallback.getJointRadius(jointData);
 			}else
 				radius = joint.getOutputRadius();
+			mJointColor.clamp();
 			mGraphics3D.setColor(mJointColor);
-			if(data.mSelectionGroup<0 && joint==mHoverJoint)
+			if(jointData.mSelectionGroup<0 && joint==mHoverJoint)
 				mGraphics3D.multColor(1.3f);
 
 

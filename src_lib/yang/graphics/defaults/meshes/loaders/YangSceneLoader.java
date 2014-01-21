@@ -159,6 +159,7 @@ public class YangSceneLoader {
 		System.arraycopy(redirectIndices, 0, mCurrentMesh.mRedirectIndices, 0, mCurrentMesh.mRedirectIndices.length);
 
 		mCurrentMesh.mIndexCount = mIndexId;
+		mCurrentMesh.creationFinished();
 
 		if(calcNormals)
 			mCurrentMesh.calculateNormals();

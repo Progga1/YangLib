@@ -172,4 +172,30 @@ public class FloatColor extends Quadruple {
 		mValues[3] = (1-weight)*startColor.mValues[3] + weight*endColor.mValues[3];
 	}
 
+	public void toArray(float[] target, int offset) {
+		target[offset] = mValues[0];
+		target[offset+1] = mValues[1];
+		target[offset+2] = mValues[2];
+		target[offset+3] = mValues[3];
+	}
+
+	public void clamp() {
+		if(mValues[0]<0)
+			mValues[0] = 0;
+		if(mValues[0]>1)
+			mValues[0] = 1;
+		if(mValues[1]<0)
+			mValues[1] = 0;
+		if(mValues[1]>1)
+			mValues[1] = 1;
+		if(mValues[2]<0)
+			mValues[2] = 0;
+		if(mValues[2]>1)
+			mValues[2] = 1;
+		if(mValues[3]<0)
+			mValues[3] = 0;
+		if(mValues[3]>1)
+			mValues[3] = 1;
+	}
+
 }

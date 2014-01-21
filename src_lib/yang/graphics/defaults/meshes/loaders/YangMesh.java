@@ -1,5 +1,7 @@
 package yang.graphics.defaults.meshes.loaders;
 
+import java.util.Arrays;
+
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
@@ -31,9 +33,11 @@ public class YangMesh {
 
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
+	private int mUniqueVertexCount = 0;
 	public float[] mPositions;
 	public float[] mTexCoords;
 	public float[] mNormals;
+	public float[] mColors = null;
 	public int[] mPosIndices;
 	public int[] mTexCoordIndices;
 	public int[] mNormIndices;
@@ -43,11 +47,12 @@ public class YangMesh {
 	public float[] mSkinWeights;
 	public short[] mIndices;
 
-	public FloatColor mColor = FloatColor.WHITE.clone();
+	public FloatColor mDefaultColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
 	public YangList<YangMaterialSet> mMaterialSets;
 	public YangList<YangMaterialSection> mMaterialSections;
 	public boolean mNormalizeNormals = false;
+	public boolean mBlockTextures = false;
 
 	public TextureProperties mTextureProperties;
 	public boolean mUseShaders = true;
@@ -69,9 +74,41 @@ public class YangMesh {
 		mMaterialSections = new YangList<YangMaterialSection>();
 	}
 
+	protected void creationFinished() {
+		mUniqueVertexCount = mPositions.length/3;
+	}
+
+	public void initColors() {
+		if(mColors==null) {
+			int l = mUniqueVertexCount*4;
+			mColors = new float[l];
+		}
+	}
+
+	public void fillColor(float r,float g,float b,float a) {
+		initColors();
+		int l = mUniqueVertexCount;
+		for(int i=0;i<l;i++) {
+			int index = i*4;
+			mColors[index] = r;
+			mColors[index+1] = g;
+			mColors[index+2] = b;
+			mColors[index+3] = a;
+		}
+	}
+
+	public void fillColor(FloatColor color) {
+		fillColor(color.mValues[0],color.mValues[1],color.mValues[2],color.mValues[3]);
+	}
+
+	public void fillWhite() {
+		initColors();
+		Arrays.fill(mColors,1);
+	}
+
 	public void initArmatureWeights() {
-		int l = mPositions.length/3*mSkinJointsPerVertex;
 		if(mSkinIds==null) {
+			int l = mPositions.length/3*mSkinJointsPerVertex;
 			mSkinIds = new int[l];
 			mSkinWeights = new float[l];
 		}
@@ -163,7 +200,8 @@ public class YangMesh {
 					matSec.mMaterial = new YangMaterial();
 					mat = matSec.mMaterial;
 				}
-				mTranslator.bindTexture(mat.mDiffuseTexture);
+				if(!mBlockTextures)
+					mTranslator.bindTexture(mat.mDiffuseTexture);
 				if(specShader!=null) {
 					if(mat.mSpecularProps.mTexture!=null) {
 						program.setUniformInt(specShader.mSpecTexSampler,specShader.mTextureLevel);
@@ -256,6 +294,9 @@ public class YangMesh {
 				vertexBuffer.putVec3(DefaultGraphics.ID_NORMALS, normResX,normResY,normResZ);
 			}else
 				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, mPositions[posId],mPositions[posId+1],mPositions[posId+2]);
+
+			if(mColors!=null)
+				vertexBuffer.putArray(DefaultGraphics.ID_COLORS, mColors, posInd*4, 4);
 			i++;
 		}
 //		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
@@ -271,7 +312,8 @@ public class YangMesh {
 		}
 //		vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
 
-		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mColor.mValues, mVertexCount);
+		if(mColors==null)
+			vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mDefaultColor.mValues, mVertexCount);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues,mVertexCount);
 
 		if(!skinningActive) {
@@ -502,6 +544,14 @@ public class YangMesh {
 				}
 			}
 		}
+	}
+
+	public int getUniqueVertexCount() {
+		return mUniqueVertexCount;
+	}
+
+	public int getSkinJointsPerVertex() {
+		return mSkinJointsPerVertex;
 	}
 
 }
