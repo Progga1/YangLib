@@ -375,4 +375,10 @@ public class MassAggregation {
 		return minVal;
 	}
 
+	public void setDragDelay(float delay) {
+		for(Joint joint:mJoints) {
+			joint.mDragDelay = delay;
+		}
+	}
+
 }

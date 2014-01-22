@@ -112,7 +112,7 @@ public class Skeleton3DEditing {
 			else
 				mJointColor.set(jointColor);
 			if(jointData.mSelectionGroup>=0)
-				mJointColor.set(jointSelectedAddColor);
+				mJointColor.add(jointSelectedAddColor);
 			if(mJointDrawCallback!=null) {
 				mJointDrawCallback.getJointColor(jointData,mJointColor);
 				radius = mJointDrawCallback.getJointRadius(jointData);
@@ -122,9 +122,6 @@ public class Skeleton3DEditing {
 			mGraphics3D.setColor(mJointColor);
 			if(jointData.mSelectionGroup<0 && joint==mHoverJoint)
 				mGraphics3D.multColor(1.3f);
-
-
-			if(mJointDrawCallback!=null)
 
 			mGraphics3D.setColorFactor(mGraphics3D.getCurrentColor());
 			mGraphics3D.mColorFactor[3] *= mAlpha;
