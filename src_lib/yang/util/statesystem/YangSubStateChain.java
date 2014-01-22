@@ -116,7 +116,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
