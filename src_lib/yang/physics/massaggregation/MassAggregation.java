@@ -381,4 +381,22 @@ public class MassAggregation {
 		}
 	}
 
+	public void connectAll() {
+		int i = 0;
+		for(Joint joint1:mJoints) {
+			int j = 0;
+			mJoints.incIteratorIndex();
+			for(Joint joint2:mJoints) {
+				if(j>i) {
+					if(getDistanceConstraint(joint1,joint2)==null) {
+						addSpringBone(new JointConnection("ALL_"+joint1.mName+"-"+joint2.mName,joint1,joint2));
+					}
+				}
+				j++;
+			}
+			mJoints.decIteratorIndex();
+			i++;
+		}
+	}
+
 }

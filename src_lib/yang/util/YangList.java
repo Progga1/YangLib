@@ -25,10 +25,12 @@ public class YangList<E> implements List<E> {
 		Node current = null;
 		Node dummy = new Node(null, null, null);
 
+		@Override
 		public boolean hasNext() {
 			return current.next != null;
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public T next() {
 			if(current.next==null)
@@ -37,12 +39,13 @@ public class YangList<E> implements List<E> {
 			return (T) current.elem;
 		}
 
+		@Override
 		public void remove() {
-			YangList.this.remove((Node)current, (E)current.elem);
+			YangList.this.remove(current, current.elem);
 		}
 
 		public void prepare(int idx) {
-			current = (Node) first;
+			current = first;
 			for (int i = 0; i < idx; i++) current = current.next;
 
 			dummy.next = current;
@@ -51,26 +54,30 @@ public class YangList<E> implements List<E> {
 		}
 
 		public void prepare(Node startElement) {
-			current = (Node) startElement;
+			current = startElement;
 
 			dummy.next = current;
 			dummy.prev = current;
 			current = dummy;
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public void add(T e) {
-			YangList.this.add((Node)current, (E)e, false);
+			YangList.this.add(current, (E)e, false);
 		}
 
+		@Override
 		public boolean hasPrevious() {
 			return current.prev != null;
 		}
 
+		@Override
 		public int nextIndex() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public T previous() {
 			if(current.prev==null)
@@ -79,10 +86,12 @@ public class YangList<E> implements List<E> {
 			return (T) current.elem;
 		}
 
+		@Override
 		public int previousIndex() {
 			throw new UnsupportedOperationException();
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public void set(T e) {
 			current.elem = (E) e;
@@ -106,11 +115,13 @@ public class YangList<E> implements List<E> {
 		this(2);
 	}
 
+	@Override
 	public boolean add(E element) {	//end of list
 		add(last, element, true);
 		return true;
 	}
 
+	@Override
 	public void add(int index, E element) {	//insert (before this item)
 		if (index > size || index < 0) {
 			throw new IndexOutOfBoundsException("item: "+index +" size: "+size);
@@ -125,21 +136,25 @@ public class YangList<E> implements List<E> {
 		}
 	}
 
+	@Override
 	public boolean addAll(Collection<? extends E> c) {
 		for(E e : c) add(e);
 		return true;
 	}
 
+	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void clear() {
 		first = null;
 		last = null;
 		size = 0;
 	}
 
+	@Override
 	public boolean contains(Object o) {
 		Node curr = first;
 		while (curr != null) {
@@ -149,10 +164,12 @@ public class YangList<E> implements List<E> {
 		return false;
 	}
 
+	@Override
 	public boolean containsAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public E get(int index) {
 		if (validIdx(index)) {
 			Node curr = first;
@@ -164,6 +181,7 @@ public class YangList<E> implements List<E> {
 		return null;
 	}
 
+	@Override
 	public int indexOf(Object o) {
 		int idx = -1;
 		Node curr = first;
@@ -175,16 +193,19 @@ public class YangList<E> implements List<E> {
 		return idx;
 	}
 
+	@Override
 	public boolean isEmpty() {
 		return size == 0;
 	}
 
+	@Override
 	public Iterator<E> iterator() {
 		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		iterator.prepare(0);
 		return iterator;
 	}
 
+	@Override
 	public int lastIndexOf(Object o) {
 		int idx = -1;
 		int counter = -1;
@@ -197,6 +218,7 @@ public class YangList<E> implements List<E> {
 		return idx;
 	}
 
+	@Override
 	public ListIterator<E> listIterator() {
 		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		iterator.prepare(0);
@@ -227,6 +249,7 @@ public class YangList<E> implements List<E> {
 		return iterator;
 	}
 
+	@Override
 	public ListIterator<E> listIterator(int startIndex) {
 		YangListIterator<E> iterator = iterators[defaultIteratorIndex];
 		if (validIdx(startIndex)) {
@@ -236,6 +259,7 @@ public class YangList<E> implements List<E> {
 		return null;
 	}
 
+	@Override
 	public boolean remove(Object o) {
 		Node curr = first;
 		while (curr != null) {
@@ -248,6 +272,7 @@ public class YangList<E> implements List<E> {
 		return false;
 	}
 
+	@Override
 	public E remove(int index) {
 		if (validIdx(index)) {
 			Node curr = first;
@@ -258,6 +283,7 @@ public class YangList<E> implements List<E> {
 		return null;
 	}
 
+	@Override
 	public E set(int index, E element) {
 		if (validIdx(index)) {
 			Node curr = first;
@@ -267,26 +293,32 @@ public class YangList<E> implements List<E> {
 		return null;
 	}
 
+	@Override
 	public int size() {
 		return size;
 	}
 
+	@Override
 	public boolean removeAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Object[] toArray() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public <T> T[] toArray(T[] a) {
 		throw new UnsupportedOperationException();
 	}
@@ -362,6 +394,14 @@ public class YangList<E> implements List<E> {
 	public E getLast() {
 		if (last != null) return last.elem;
 		else return null;
+	}
+
+	public void incIteratorIndex() {
+		defaultIteratorIndex++;
+	}
+
+	public void decIteratorIndex() {
+		defaultIteratorIndex--;
 	}
 
 //	public static void main(String[] args) {
