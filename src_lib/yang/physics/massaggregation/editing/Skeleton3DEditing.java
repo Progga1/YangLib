@@ -26,7 +26,6 @@ public class Skeleton3DEditing {
 	public static FloatColor jointSelectedAddColor = new FloatColor(0.3f,0.2f,0.2f,0.1f);
 
 	public JointEditData[] mJointData = new JointEditData[MAX_JOINTS];
-	//public JointEditData[] mSelection = new JointEditData[MAX_JOINTS];
 	public Default3DGraphics mGraphics3D;
 	public MassAggregation mSkeleton;
 	public LineDrawer3D mLineDrawer;
@@ -40,6 +39,7 @@ public class Skeleton3DEditing {
 
 	public float mAlpha = 1;
 	private FloatColor mJointColor = new FloatColor();
+	public boolean mVisible = true;
 
 	public Skeleton3DEditing(Default3DGraphics graphics3D,MassAggregation skeleton) {
 		mGraphics3D = graphics3D;
@@ -65,6 +65,8 @@ public class Skeleton3DEditing {
 	}
 
 	public void draw() {
+		if(!mVisible)
+			return;
 		mGraphics3D.mTranslator.switchZBuffer(true);
 
 		if(mSphereBatch==null) {
@@ -84,8 +86,8 @@ public class Skeleton3DEditing {
 		mGraphics3D.mWorldTransform.loadIdentity();
 		//mGraphics3D.mWorldTransform.scale(mSkeleton.mScale);
 
-		for(JointEditData jointData:mJointData) {
-			Joint joint = jointData.mJoint;
+		for(Joint joint:mSkeleton.mJoints) {
+			JointEditData jointData = mJointData[joint.mId];
 			if(joint==null)
 				continue;
 			if(joint.mEnabled && joint.mAngleParent!=null){
@@ -102,8 +104,8 @@ public class Skeleton3DEditing {
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.fillBuffers();
 
-		for(JointEditData jointData:mJointData) {
-			Joint joint = jointData.mJoint;
+		for(Joint joint:mSkeleton.mJoints) {
+			JointEditData jointData = mJointData[joint.mId];
 			if(joint==null)
 				continue;
 			float radius;
@@ -264,8 +266,8 @@ public class Skeleton3DEditing {
 	}
 
 	public void setPrevPositions() {
-		for(final JointEditData jointData:mJointData) {
-			jointData.setPrevPos();
+		for(Joint joint:mSkeleton.mJoints) {
+			mJointData[joint.mId].setPrevPos();
 		}
 	}
 
@@ -274,8 +276,8 @@ public class Skeleton3DEditing {
 	}
 
 	public void setSelectable(boolean selectable) {
-		for(JointEditData jointData:mJointData) {
-			jointData.mSelectable = selectable;
+		for(Joint joint:mSkeleton.mJoints) {
+			mJointData[joint.mId].mSelectable = selectable;
 		}
 	}
 

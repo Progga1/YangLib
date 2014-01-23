@@ -206,6 +206,10 @@ public class Joint extends Point3f {
 		addPositionForce(x,y,z,factor);
 	}
 
+	public void addWorldPositionForce(Point3f worldPosition, float factor) {
+		addWorldPositionForce(worldPosition.mX,worldPosition.mY,worldPosition.mZ, factor);
+	}
+
 	/**
 	 * Zero degrees: downwards, CCW
 	 */

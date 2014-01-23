@@ -1,6 +1,7 @@
 package yang.physics.massaggregation.editing;
 
 import yang.math.objects.Point3f;
+import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
 import yang.physics.massaggregation.elements.Joint;
 
@@ -19,6 +20,7 @@ public class JointEditData {
 	public boolean mSelectable = true;
 
 	public Point3f mPrevPos = new Point3f();
+	public Vector3f mMovement = new Vector3f();
 
 	public void set(Joint joint,Skeleton3DEditing skeletonEdit) {
 		mJoint = joint;
@@ -31,16 +33,10 @@ public class JointEditData {
 
 	public void setPrevPos() {
 		if(mJoint!=null) {
-			if(false && mJoint.mDragging) {
-				mPrevPos.mX = mJoint.mDragDelayed.mX;
-				mPrevPos.mY = mJoint.mDragDelayed.mY;
-				mPrevPos.mZ = mJoint.mDragDelayed.mZ;
-			}else{
-				mPrevPos.mX = mJoint.mX;
-				mPrevPos.mY = mJoint.mY;
-				mPrevPos.mZ = mJoint.mZ;
-			}
+			mMovement.setFromTo(mPrevPos,mJoint);
+			mPrevPos.set(mJoint);
 		}
+
 	}
 
 	public boolean isSelected() {
