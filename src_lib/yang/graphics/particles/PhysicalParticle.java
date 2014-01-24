@@ -44,8 +44,8 @@ public class PhysicalParticle extends Particle {
 	}
 
 	public void setVelocity(float velX, float velY) {
-		mVelX = velX*YangSurface.deltaTimeSeconds;;
-		mVelY = velY*YangSurface.deltaTimeSeconds;;
+		mVelX = velX*YangSurface.deltaTimeSeconds;
+		mVelY = velY*YangSurface.deltaTimeSeconds;
 	}
 
 	public void setAcceleration(float accX, float accY,float accZ) {
@@ -55,15 +55,15 @@ public class PhysicalParticle extends Particle {
 	}
 
 	public void setAcceleration(float accX, float accY) {
-		mAccelerationX = accX*YangSurface.deltaTimeSeconds;;
-		mAccelerationY = accY*YangSurface.deltaTimeSeconds;;
+		mAccelerationX = accX*YangSurface.deltaTimeSeconds;
+		mAccelerationY = accY*YangSurface.deltaTimeSeconds;
 	}
 
 	public float setSpeedRange2D(float minSpeed, float maxSpeed, float minAngle, float maxAngle) {
 		final float a = MathFunc.randomF(minAngle, maxAngle);
 		final float v = MathFunc.randomF(minSpeed, maxSpeed);
-		mVelX = (float)(Math.cos(a)*v)*YangSurface.deltaTimeSeconds;;
-		mVelY = (float)(Math.sin(a)*v)*YangSurface.deltaTimeSeconds;;
+		mVelX = (float)(Math.cos(a)*v)*YangSurface.deltaTimeSeconds;
+		mVelY = (float)(Math.sin(a)*v)*YangSurface.deltaTimeSeconds;
 		return a;
 	}
 
