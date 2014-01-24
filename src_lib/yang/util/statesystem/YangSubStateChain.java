@@ -46,6 +46,8 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	public void fadeState(int layer,YangStateFader fader,YangProgramState toState) {
 		if(!fader.isInitialized())
 			fader.init(mStateSystem);
+		if(toState==mStates[layer])
+			return;
 		fader.setTargetState(toState);
 		fader.onSet(this,layer);
 		mStates[layer] = fader;
