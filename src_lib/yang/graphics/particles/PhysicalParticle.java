@@ -11,6 +11,7 @@ public class PhysicalParticle extends Particle {
 	public float mFriction;
 	public float mVelX,mVelY,mVelZ;
 	public float mAccelerationX,mAccelerationY,mAccelerationZ;
+	public float mRotOffset;
 
 	public PhysicalParticle() {
 		mAccelerationX = 0;
@@ -22,7 +23,7 @@ public class PhysicalParticle extends Particle {
 	@Override
 	public void derivedStep() {
 		if(mRotationByVelo) {
-			mRotation = Geometry.getAngle(mVelX,mVelY) + MathConst.PI*0.5f;
+			mRotation = Geometry.getAngle(mVelX,mVelY) + MathConst.PI*0.5f + mRotOffset;
 		}
 		mPosX += mVelX;
 	    mPosY += mVelY;
