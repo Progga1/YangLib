@@ -1,5 +1,6 @@
 package yang.graphics.particles;
 
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.MathFunc;
 import yang.surface.YangSurface;
@@ -52,6 +53,10 @@ public class Particle {
 		mColor[1] = g;
 		mColor[2] = b;
 		mColor[3] = a;
+	}
+	
+	public void setColor(FloatColor c) {
+		setColor(c.mValues[0], c.mValues[1], c.mValues[2], c.mValues[3]);
 	}
 	
 	public void setColor(float[] color) {
