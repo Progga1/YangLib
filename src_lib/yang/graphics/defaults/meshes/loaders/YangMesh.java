@@ -35,8 +35,10 @@ public class YangMesh {
 	public int mIndexCount = 0;
 	private int mUniqueVertexCount = 0;
 	public float[] mPositions;
+	private float[] mResultPositions = null;
 	public float[] mTexCoords;
 	public float[] mNormals;
+	public float[] mResultNormals = null;
 	public float[] mColors = null;
 	public int[] mPosIndices;
 	public int[] mTexCoordIndices;
@@ -57,6 +59,7 @@ public class YangMesh {
 	public TextureProperties mTextureProperties;
 	public boolean mUseShaders = true;
 	protected int mSkinJointsPerVertex = 4;
+	public boolean mAutoSkinningUpdate = true;
 
 	public YangArmaturePose mCurArmature = null;
 
@@ -106,11 +109,20 @@ public class YangMesh {
 		Arrays.fill(mColors,1);
 	}
 
+	public void initResultValues() {
+		if(mResultPositions==null) {
+			int l = getUniqueVertexCount()*3;
+			mResultPositions = new float[l];
+			mResultNormals = new float[l];
+		}
+	}
+
 	public void initArmatureWeights() {
 		if(mSkinIds==null) {
-			int l = mPositions.length/3*mSkinJointsPerVertex;
+			int l = getUniqueVertexCount()*mSkinJointsPerVertex;
 			mSkinIds = new int[l];
 			mSkinWeights = new float[l];
+			initResultValues();
 		}
 	}
 
@@ -235,102 +247,119 @@ public class YangMesh {
 		mGraphics.resetVertexBuffer();
 	}
 
+	public void updateSkinningVertices(YangArmaturePose armaturePose) {
+		if(mResultPositions==null)
+			initResultValues();
+		int weightBaseId = 0;
+		for(int i=0;i<mPositions.length;i+=3) {
+			float x = mPositions[i];
+			float y = mPositions[i+1];
+			float z = mPositions[i+2];
+
+			float normX = mNormals[i];
+			float normY = mNormals[i+1];
+			float normZ = mNormals[i+2];
+
+			float resX = 0;
+			float resY = 0;
+			float resZ = 0;
+			float normResX = 0;
+			float normResY = 0;
+			float normResZ = 0;
+
+			for(int k=0;k<mSkinJointsPerVertex;k++) {
+				int jointId = mSkinIds[weightBaseId+k];
+				if(jointId<0)
+					break;
+				float weight = mSkinWeights[weightBaseId+k];
+
+				float[] matrix = armaturePose.mTransforms[jointId].mValues;
+
+				normResX += (matrix[0] * normX + matrix[4] * normY + matrix[8] * normZ)*weight;
+				normResY += (matrix[1] * normX + matrix[5] * normY + matrix[9] * normZ)*weight;
+				normResZ += (matrix[2] * normX + matrix[6] * normY + matrix[10] * normZ)*weight;
+
+				resX += (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*weight;
+				resY += (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*weight;
+				resZ += (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*weight;
+			}
+
+			if(mNormalizeNormals) {
+				float dist = (float)Math.sqrt(normResX*normResX + normResY*normResY + normResZ*normResZ);
+				if(dist!=0) {
+					dist = 1/dist;
+					normResX *= dist;
+					normResY *= dist;
+					normResZ *= dist;
+				}
+			}
+
+			mResultPositions[i] = resX;
+			mResultPositions[i+1] = resY;
+			mResultPositions[i+2] = resZ;
+			mResultNormals[i] = normResX;
+			mResultNormals[i+1] = normResY;
+			mResultNormals[i+2] = normResZ;
+
+			weightBaseId += mSkinJointsPerVertex;
+		}
+	}
+
 	public void putBuffers(IndexedVertexBuffer vertexBuffer) {
 		vertexBuffer.putIndexArray(mIndices);
 
 		boolean skinningActive = mCurArmature!=null && mCurArmature.mTransforms.length>0;
 
+		if(skinningActive && mAutoSkinningUpdate) {
+			updateSkinningVertices(mCurArmature);
+		}
+
+		float[] positions = mResultPositions==null?mPositions:mResultPositions;
+		float[] normals = mResultNormals==null?mNormals:mResultNormals;
+
 		int i=0;
-		for(final int posInd:mPosIndices) {
-			final int posId = posInd*3;
-			final int normId = mNormIndices[i]*3;
+		if(mPosIndices!=null) {
+			for(final int posInd:mPosIndices) {
+				final int posId = posInd*3;
 
-			//Skinning
-			if(skinningActive) {
-				float x = mPositions[posId];
-				float y = mPositions[posId+1];
-				float z = mPositions[posId+2];
+				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, positions[posId],positions[posId+1],positions[posId+2]);
 
-				float normX = mNormals[posId];
-				float normY = mNormals[posId+1];
-				float normZ = mNormals[posId+2];
-
-				float resX = 0;
-				float resY = 0;
-				float resZ = 0;
-				float normResX = 0;
-				float normResY = 0;
-				float normResZ = 0;
-				int weightBaseId = posInd*mSkinJointsPerVertex;
-
-				for(int k=0;k<mSkinJointsPerVertex;k++) {
-					int jointId = mSkinIds[weightBaseId+k];
-					if(jointId<0)
-						break;
-					float weight = mSkinWeights[weightBaseId+k];
-
-					float[] matrix = mCurArmature.mTransforms[jointId].mValues;
-
-					normResX += (matrix[0] * normX + matrix[4] * normY + matrix[8] * normZ)*weight;
-					normResY += (matrix[1] * normX + matrix[5] * normY + matrix[9] * normZ)*weight;
-					normResZ += (matrix[2] * normX + matrix[6] * normY + matrix[10] * normZ)*weight;
-
-					resX += (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*weight;
-					resY += (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*weight;
-					resZ += (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*weight;
-				}
-
-				if(mNormalizeNormals) {
-					float dist = (float)Math.sqrt(normResX*normResX + normResY*normResY + normResZ*normResZ);
-					if(dist!=0) {
-						dist = 1/dist;
-						normResX *= dist;
-						normResY *= dist;
-						normResZ *= dist;
-					}
-				}
-
-				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, resX,resY,resZ);
-				vertexBuffer.putVec3(DefaultGraphics.ID_NORMALS, normResX,normResY,normResZ);
-			}else
-				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, mPositions[posId],mPositions[posId+1],mPositions[posId+2]);
-
-			if(mColors!=null)
-				vertexBuffer.putArray(DefaultGraphics.ID_COLORS, mColors, posInd*4, 4);
-			i++;
-		}
-//		vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
-		if(mTexCoords!=null && mTexCoords.length>0) {
-			i = 0;
-			for(final int texInd:mTexCoordIndices) {
-				if(texInd<0)
-					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
-				else
-					vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[texInd*2], mTexCoords[texInd*2+1]);
-				i += 2;
+				if(mColors!=null)
+					vertexBuffer.putArray(DefaultGraphics.ID_COLORS, mColors, posInd*4, 4);
 			}
+		}else
+			vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);
+		if(mTexCoords!=null && mTexCoords.length>0) {
+			if(mTexCoordIndices!=null) {
+				i = 0;
+				for(final int texInd:mTexCoordIndices) {
+					if(texInd<0)
+						vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
+					else
+						vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[texInd*2], mTexCoords[texInd*2+1]);
+					i += 2;
+				}
+			}else
+				vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
 		}
-//		vertexBuffer.putArray(DefaultGraphics.ID_TEXTURES, mTexCoords);
 
 		if(mColors==null)
 			vertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mDefaultColor.mValues, mVertexCount);
 		vertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData.mValues,mVertexCount);
 
-		if(!skinningActive) {
-			if(mNormals!=null && mNormals.length>0) {
-				if(mNormIndices==null)
-					vertexBuffer.putArray(DefaultGraphics.ID_NORMALS, mNormals);
-				else
-					for(final int normInd:mNormIndices) {
-						i = normInd*3;
-						if(i<0)
-							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
-						else
-							vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, mNormals[i],mNormals[i+1],mNormals[i+2]);
-					}
-			}else{
-				Default3DGraphics.fillNormals(vertexBuffer,0); //TODO not per draw call !
-			}
+		if(normals!=null && normals.length>0) {
+			if(mNormIndices==null)
+				vertexBuffer.putArray(DefaultGraphics.ID_NORMALS, normals);
+			else
+				for(final int normInd:mNormIndices) {
+					i = normInd*3;
+					if(i<0)
+						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
+					else
+						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, normals[i],normals[i+1],normals[i+2]);
+				}
+		}else{
+			Default3DGraphics.fillNormals(vertexBuffer,0); //TODO not per draw call !
 		}
 	}
 
