@@ -11,16 +11,13 @@ public class YangStateBlending<StateSystemType extends YangProgramStateSystem> e
 	}
 
 	@Override
-	protected boolean prepareStateDraw(YangProgramState<StateSystemType> state,float fade) {
-		if(mFromState!=null)
-			mGraphics2D.setColorFactor(1,1,1,fade);
-		else
-			mGraphics2D.setColorFactor(fade);
+	protected boolean prepareStateDraw(YangProgramState<StateSystemType> state, float fade) {
+		mGraphics2D.setColorFactor(1,1,1,fade);
 		return true;
 	}
 
 	@Override
-	protected void refreshProgress(float deltaTime,float toWeight) {
+	protected void refreshProgress(float deltaTime, float toWeight) {
 		if(mFromState!=null) {
 			mFromState.mFadeProgress = 1-toWeight;
 			mFromState.proceed(deltaTime);
@@ -29,6 +26,10 @@ public class YangStateBlending<StateSystemType extends YangProgramStateSystem> e
 			mToState.mFadeProgress = toWeight;
 			mToState.proceed(deltaTime);
 		}
+	}
+
+	protected void postStateDraw() {
+		mGraphics2D.setColorFactor(1);
 	}
 
 	@Override

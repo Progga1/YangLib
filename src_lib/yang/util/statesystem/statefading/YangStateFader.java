@@ -40,8 +40,10 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 			if(mToState!=null) {
 				mToState.mFadeProgress = 1;
 				mToState.onFadeInFinished();
+				mToState.getParentStateSystem().setStateNoStart(mToState);
+			} else {
+				mFromState.getParentStateSystem().setStateNoStart(null);
 			}
-			mToState.getParentStateSystem().setStateNoStart(mToState);
 		}else{
 			refreshProgress(deltaTime,mFadeProgress);
 		}
@@ -87,13 +89,40 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 	@Override
 	public void stop() {
 		mFadeProgress = 0;
-		if(mFromState!=null)
+		if(mFromState!=null) {
 			mFromState.mFadeProgress = 1;
+			mFromState.stop();
+		}
 		if(mToState!=null)
 			mToState.mFadeProgress = 1;
 	}
 
 	public void abort() {
 		mFadeProgress = 1;
+	}
+
+
+	@Override
+	public void onBlock() {
+		if(mFromState!=null) {
+			mFromState.mBlocked = true;
+			mFromState.onBlock();
+		}
+		if(mToState!=null) {
+			mToState.mBlocked = true;
+			mToState.onBlock();
+		}
+	}
+
+	@Override
+	public void onUnblock() {
+		if(mFromState!=null) {
+			mFromState.mBlocked = false;
+			mFromState.onUnblock();
+		}
+		if(mToState!=null) {
+			mToState.mBlocked = false;
+			mToState.onUnblock();
+		}
 	}
 }
