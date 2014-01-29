@@ -41,7 +41,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	protected YangMatrix mStereoScreenTransform;
 
 	//State
-	protected boolean mBatchRecording;
+	public boolean mBatchRecording;
 	protected boolean mWorldTransformEnabled;
 	public ShaderType mCurrentProgram;
 	protected float mBold;

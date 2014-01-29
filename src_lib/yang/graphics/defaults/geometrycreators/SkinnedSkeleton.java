@@ -27,6 +27,7 @@ public class SkinnedSkeleton {
 			if(!mMesh.hasArmatureWeights())
 				mMesh.generateArmatureWeights(mArmature);
 		}
+		mMesh.mAutoSkinningUpdate = false;
 	}
 
 	public SkinnedSkeleton(YangMesh mesh) {
@@ -39,7 +40,7 @@ public class SkinnedSkeleton {
 		mGraphics.mTranslator.mForceWireFrames = mWireFrames;
 		if(mSkeleton!=null) {
 			if(mAutoRefresh)
-				mArmaturePose.refreshMatrices(mSkeleton);
+				refresh();
 			mMesh.mCurArmature = mArmaturePose;
 
 			mGraphics.setGlobalTransformEnabled(true);
@@ -57,8 +58,11 @@ public class SkinnedSkeleton {
 	}
 
 	public void refresh() {
-		if(mArmaturePose!=null)
+		if(mArmaturePose!=null) {
 			mArmaturePose.refreshMatrices(mSkeleton);
+			if(!mMesh.mAutoSkinningUpdate)
+				mMesh.updateSkinningVertices(mArmaturePose);
+		}
 	}
 
 }
