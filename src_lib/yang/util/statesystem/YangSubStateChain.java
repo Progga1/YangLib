@@ -6,14 +6,17 @@ import yang.util.statesystem.statefading.YangStateFader;
 public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> extends YangProgramState<StateMachineType> implements StateSystemInterface {
 
 	public YangProgramState<StateMachineType>[] mStates;
-	public boolean[] mStatesActive;
+	public StateChainElement[] mStateElements;
 
 	private int mStateCount;
 
 	@SuppressWarnings("unchecked")
 	public YangSubStateChain(int capacity) {
 		mStates = new YangProgramState[capacity];
-		mStatesActive = new boolean[capacity];
+		mStateElements = new StateChainElement[capacity];
+		for(int i=0;i<capacity;i++) {
+			mStateElements[i] = new StateChainElement();
+		}
 		mStateCount = capacity;
 	}
 
@@ -33,7 +36,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 		if(mStates[layer]!=null)
 			mStates[layer].stop();
 		mStates[layer] = state;
-		mStatesActive[layer] = state!=null;
+		mStateElements[layer].mActive = state!=null;
 	}
 
 	public void setState(int layer,YangProgramState<StateMachineType> state) {
@@ -51,7 +54,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 		fader.setTargetState(toState);
 		fader.onSet(this,layer);
 		mStates[layer] = fader;
-		mStatesActive[layer] = true;
+		mStateElements[layer].mActive = true;
 	}
 
 	@Override
@@ -61,7 +64,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 
 	public void deactivateAllStates() {
 		for(int i=0;i<mStateCount;i++) {
-			mStatesActive[i] = false;
+			mStateElements[i].mActive = false;
 		}
 	}
 
@@ -69,19 +72,31 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	protected void step(float deltaTime) {
 		boolean blocked = false;
 		for(int i=mStateCount-1;i>=0;i--) {
-			if(mStatesActive[i]) {
+			StateChainElement element = mStateElements[i];
+			YangProgramState<StateMachineType> state = mStates[i];
+			if(element.mActive) {
 				if(blocked) {
-					if(!mStates[i].mBlocked) {
-						mStates[i].mBlocked = true;
-						mStates[i].onBlock();
+					if(!state.mBlocked) {
+						state.mBlocked = true;
+						state.onBlock();
 					}
 				}else{
-					if(mStates[i].mBlocked) {
-						mStates[i].mBlocked = false;
-						mStates[i].onUnblock();
+					if(state.mBlocked) {
+						state.mBlocked = false;
+						state.onUnblock();
 					}
-					mStates[i].proceed(deltaTime);
-					if(mStates[i].mBlockSteps)
+					if(element.mSpeedFactor!=1) {
+						if(element.mSpeedFactor>0) {
+							if(element.mTargetTime<0)
+								element.mTargetTime = state.mStateTimer;
+							element.mTargetTime += deltaTime*element.mSpeedFactor;
+							while(state.mStateTimer<element.mTargetTime) {
+								state.proceed(deltaTime);
+							}
+						}
+					}else
+						state.proceed(deltaTime);
+					if(state.mBlockSteps)
 						blocked = true;
 				}
 			}
@@ -91,7 +106,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	@Override
 	protected void preDraw() {
 		for(int i=0;i<mStateCount;i++) {
-			if(mStatesActive[i])
+			if(mStateElements[i].mActive)
 				mStates[i].preDrawFrame();
 		}
 	}
@@ -99,7 +114,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	@Override
 	protected void draw() {
 		for(int i=0;i<mStateCount;i++) {
-			if(mStatesActive[i])
+			if(mStateElements[i].mActive)
 				mStates[i].drawFrame();
 		}
 	}
@@ -107,7 +122,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		for(int i=mStateCount-1;i>=0;i--) {
-			if(mStatesActive[i]) {
+			if(mStateElements[i].mActive) {
 				YangProgramState<?> state = mStates[i];
 				if(!state.mFirstFrame) {
 					event.handle(state);
@@ -122,7 +137,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	@Override
 	public void resume() {
 		for(int i=0;i<mStateCount;i++) {
-			if(mStatesActive[i]) {
+			if(mStateElements[i].mActive) {
 				mStates[i].resume();
 			}
 		}
@@ -131,7 +146,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	@Override
 	public void stop() {
 		for(int i=0;i<mStateCount;i++) {
-			if(mStatesActive[i]) {
+			if(mStateElements[i].mActive) {
 				mStates[i].stop();
 			}
 		}
@@ -140,7 +155,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	@Override
 	public void pause() {
 		for(int i=0;i<mStateCount;i++) {
-			if(mStatesActive[i]) {
+			if(mStateElements[i].mActive) {
 				mStates[i].pause();
 			}
 		}
