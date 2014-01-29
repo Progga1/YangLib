@@ -90,12 +90,14 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 							if(element.mTargetTime<0)
 								element.mTargetTime = state.mStateTimer;
 							element.mTargetTime += deltaTime*element.mSpeedFactor;
-							while(state.mStateTimer<element.mTargetTime) {
+							while(state.mStateTimer<=element.mTargetTime) {
 								state.proceed(deltaTime);
 							}
 						}
-					}else
+					}else{
 						state.proceed(deltaTime);
+						element.mTargetTime = -1;
+					}
 					if(state.mBlockSteps)
 						blocked = true;
 				}
