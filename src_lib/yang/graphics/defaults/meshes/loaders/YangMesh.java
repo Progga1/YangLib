@@ -35,7 +35,7 @@ public class YangMesh {
 	public int mIndexCount = 0;
 	private int mUniqueVertexCount = 0;
 	public float[] mPositions;
-	private float[] mResultPositions = null;
+	public float[] mResultPositions = null;
 	public float[] mTexCoords;
 	public float[] mNormals;
 	public float[] mResultNormals = null;
@@ -126,20 +126,49 @@ public class YangMesh {
 		}
 	}
 
-	public void addArmatureWeight(int vertexId, int limbId, float weight) {
+	public boolean addArmatureWeight(int vertexId, int limbId, float weight) {
 		float smallestWeight = Float.MAX_VALUE;
 		int smallestWeightId = 0;
 		int skinBaseId = vertexId*mSkinJointsPerVertex;
+//		for(int k=0;k<mSkinJointsPerVertex;k++) {
+//			if(mSkinWeights[skinBaseId+k]<smallestWeight) {
+//				smallestWeight = mSkinWeights[skinBaseId+k];
+//				smallestWeightId = k;
+//			}
+//		}
+//		if(weight>smallestWeight) {
+//			mSkinWeights[skinBaseId+smallestWeightId] = weight;
+//			mSkinIds[skinBaseId+smallestWeightId] = limbId;
+//		}
+
+		//Delete previous weight
 		for(int k=0;k<mSkinJointsPerVertex;k++) {
-			if(mSkinWeights[skinBaseId+k]<smallestWeight) {
-				smallestWeight = mSkinWeights[skinBaseId+k];
-				smallestWeightId = k;
+			if(mSkinIds[skinBaseId+k]==limbId) {
+				weight += mSkinWeights[skinBaseId+k];
+				for(int j=k;j<mSkinJointsPerVertex-1;j++) {
+					mSkinWeights[skinBaseId+j] = mSkinWeights[skinBaseId+j+1];
+					mSkinIds[skinBaseId+j] = mSkinIds[skinBaseId+j+1];
+				}
+				mSkinWeights[mSkinJointsPerVertex-1] = 0;
+				mSkinIds[mSkinJointsPerVertex-1] = -1;
+				break;
 			}
 		}
-		if(weight>smallestWeight) {
-			mSkinWeights[skinBaseId+smallestWeightId] = weight;
-			mSkinIds[skinBaseId+smallestWeightId] = limbId;
+
+		for(int k=0;k<mSkinJointsPerVertex;k++) {
+			if(weight>mSkinWeights[skinBaseId+k]) {
+				for(int j=k+1;j<mSkinJointsPerVertex;j++) {
+					if(mSkinWeights[skinBaseId+j]>0) {
+						mSkinWeights[skinBaseId+j-1] = mSkinWeights[skinBaseId+j];
+						mSkinIds[skinBaseId+j-1] = mSkinIds[skinBaseId+j];
+					}
+				}
+				mSkinWeights[skinBaseId+k] = weight;
+				mSkinIds[skinBaseId+k] = limbId;
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public void generateArmatureWeights(YangArmature armature) {

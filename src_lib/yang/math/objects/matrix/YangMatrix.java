@@ -779,4 +779,9 @@ public class YangMatrix {
 		mValues[l2+3] = h;
 	}
 
+	public void applyInverted(Point3f position, Vector3f mTempVec1) {
+		asInverted(mBackMatrix);
+		MatrixOps.applyFloatMatrix3D(mBackMatrix, position, mTempVec1);
+	}
+
 }
