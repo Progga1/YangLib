@@ -6,6 +6,8 @@ import yang.physics.massaggregation.elements.JointConnection;
 
 public class DistanceConstraint extends Constraint{
 
+	public static float FIXED_FACTOR = 2;
+
 	public float mForceDistance;
 	public JointConnection mBone;
 	public boolean mApplyToJoint1 = true, mApplyToJoint2 = true;
@@ -47,7 +49,7 @@ public class DistanceConstraint extends Constraint{
 				fac = (dVX*fX+dVY*fY<0)?Joint.AWAY_FACTOR:Joint.TOWARDS_FACTOR;
 
 			if(mBone.mJoint1.mFixed!=mBone.mJoint2.mFixed)
-				fac *= 10;
+				fac *= FIXED_FACTOR;
 			if(mApplyToJoint1 && !mBone.mJoint1.mFixed)
 				mBone.mJoint1.addForce(fX*fac,fY*fac,fZ*fac);
 			//fac = (mBone.mJoint2.mVelX*(-fX)+mBone.mJoint2.mVelY*(-fY)<0)?Joint.AWAY_FACTOR:Joint.TOWARDS_FACTOR;

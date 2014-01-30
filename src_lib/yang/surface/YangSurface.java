@@ -55,7 +55,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 
-	public int mMaxStepsPerCycle = 16;
+	public int mMaxStepsPerCycle = 32;
 
 	private UpdateMode mUpdateMode;
 	protected boolean mInitialized = false;

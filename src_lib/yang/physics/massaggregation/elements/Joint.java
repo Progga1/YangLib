@@ -210,6 +210,17 @@ public class Joint extends Point3f {
 		addWorldPositionForce(worldPosition.mX,worldPosition.mY,worldPosition.mZ, factor);
 	}
 
+	public void setWorldPosition(float worldX,float worldY,float worldZ) {
+		float[] matrix = mSkeleton.mInvTransform.mValues;
+		mX = matrix[0] * worldX + matrix[4] * worldY + matrix[8] * worldZ + matrix[12];
+		mY = matrix[1] * worldX + matrix[5] * worldY + matrix[9] * worldZ + matrix[13];
+		mZ = matrix[2] * worldX + matrix[6] * worldY + matrix[10] * worldZ + matrix[14];
+	}
+
+	public void setWorldPosition(Point3f worldPosition) {
+		setWorldPosition(worldPosition.mX,worldPosition.mY,worldPosition.mZ);
+	}
+
 	/**
 	 * Zero degrees: downwards, CCW
 	 */
