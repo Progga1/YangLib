@@ -15,13 +15,13 @@ public class YangProgramStateSystem extends DefaultSurface implements StateSyste
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setState(YangProgramState newState) {
-		setStateNoStart(newState);
+		setStateNoStart(0, newState);
 		mCurrentState.onSet(this,0);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void setStateNoStart(YangProgramState newState) {
+	public void setStateNoStart(int layer, YangProgramState newState) {
 		if(!newState.isInitialized())
 			newState.init(this);
 		if(mCurrentState!=null)

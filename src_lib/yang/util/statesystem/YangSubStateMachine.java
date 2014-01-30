@@ -10,14 +10,14 @@ public class YangSubStateMachine<StateMachineType extends YangProgramStateSystem
 	@Override
 	@SuppressWarnings("rawtypes")
 	public void setState(YangProgramState state) {
-		setStateNoStart(state);
+		setStateNoStart(0, state);
 		if(state!=null)
 			state.onSet(this,0);
 	}
 
 
 	@Override
-	public void setStateNoStart(YangProgramState state) {
+	public void setStateNoStart(int layer, YangProgramState state) {
 		if(state!=null && !state.isInitialized())
 			state.init(mStateSystem);
 		if(mCurrentState!=null)

@@ -26,11 +26,7 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 	}
 
 	@Override
-	public void setStateNoStart(YangProgramState state) {
-		setStateNoStart(state.getStateSystemLayer(),state);
-	}
-
-	public void setStateNoStart(int layer,YangProgramState<StateMachineType> state) {
+	public void setStateNoStart(int layer,YangProgramState state) {
 		if(state!=null && !state.isInitialized())
 			state.init(mStateSystem);
 		if(mStates[layer]!=null)
@@ -98,8 +94,10 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 						state.proceed(deltaTime);
 						element.mTargetTime = -1;
 					}
-					if(state.mBlockSteps)
+					if(state.mBlockSteps) {
 						blocked = true;
+					}
+
 				}
 			}
 		}
@@ -159,6 +157,24 @@ public class YangSubStateChain<StateMachineType extends YangProgramStateSystem> 
 		for(int i=0;i<mStateCount;i++) {
 			if(mStateElements[i].mActive) {
 				mStates[i].pause();
+			}
+		}
+	}
+
+	public void onBlock() {
+		for (YangProgramState<StateMachineType> state : mStates) {
+			if (state != null) {
+				state.mBlocked = true;
+				state.onBlock();
+			}
+		}
+	}
+
+	public void onUnblock() {
+		for (YangProgramState<StateMachineType> state : mStates) {
+			if (state != null) {
+				state.mBlocked = false;
+				state.onUnblock();
 			}
 		}
 	}

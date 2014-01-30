@@ -40,9 +40,9 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 			if(mToState!=null) {
 				mToState.mFadeProgress = 1;
 				mToState.onFadeInFinished();
-				mToState.getParentStateSystem().setStateNoStart(mToState);
+				mToState.getParentStateSystem().setStateNoStart(getStateSystemLayer(), mToState);
 			} else {
-				mFromState.getParentStateSystem().setStateNoStart(null);
+				mFromState.getParentStateSystem().setStateNoStart(getStateSystemLayer(), null);
 			}
 		}else{
 			refreshProgress(deltaTime,mFadeProgress);
@@ -70,7 +70,7 @@ public abstract class YangStateFader<StateSystemType extends YangProgramStateSys
 	@Override
 	public void onSet(StateSystemInterface stateSystem,int layer) {
 		mFadeProgress = 0;
-		mFromState = stateSystem.getCurrentState(getStateSystemLayer());
+		mFromState = stateSystem.getCurrentState(layer);
 		if(mFromState!=null) {
 			if(!mFromState.isInitialized())
 				mFromState.init(mStateSystem);
