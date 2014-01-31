@@ -12,6 +12,8 @@ import yang.surface.YangSurface;
 
 public class Camera3DControllable extends Camera3DAlphaBeta implements YangEventListener {
 
+	final float MAX_BETA = MathConst.PI/2-0.01f;
+
 	//State
 	public boolean mShiftMode = false;
 	protected int mCurPointerDownCount = 0;
@@ -103,11 +105,10 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 				}else{
 					mTargetViewAlpha -= event.mDeltaX*2;
 					mTargetViewBeta -= event.mDeltaY;
-					final float MAX_BETA = MathConst.PI/2-0.01f;
-					if(mViewBeta<-MAX_BETA)
-						mViewBeta = -MAX_BETA;
-					if(mViewBeta>MAX_BETA)
-						mViewBeta = MAX_BETA;
+					if(mTargetViewBeta<-MAX_BETA)
+						mTargetViewBeta = -MAX_BETA;
+					if(mTargetViewBeta>MAX_BETA)
+						mTargetViewBeta = MAX_BETA;
 				}
 			}
 		}

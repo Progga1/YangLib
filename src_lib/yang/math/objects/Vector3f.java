@@ -21,6 +21,10 @@ public class Vector3f extends Point3f{
 		set(x,y,z);
 	}
 
+	public Vector3f(Point3f values) {
+		set(values);
+	}
+
 	public float magn() {
 		return (float)Math.sqrt(mX*mX + mY*mY + mZ*mZ);
 	}

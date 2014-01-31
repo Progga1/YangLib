@@ -67,4 +67,18 @@ public class DistanceConstraint extends Constraint{
 		return mBone==bone;
 	}
 
+	public void disableJoint(Joint joint) {
+		if(mBone.mJoint1==joint)
+			mApplyToJoint1 = false;
+		else if(mBone.mJoint2==joint)
+			mApplyToJoint2 = false;
+		else
+			throw new RuntimeException(joint+" is not a joint of this constraint ("+this+")");
+	}
+
+	@Override
+	public String toString() {
+		return mBone.mJoint1+"-"+mBone.mJoint2;
+	}
+
 }
