@@ -1,6 +1,7 @@
 package yang.util.statesystem.statefading;
 
 import yang.events.eventtypes.YangEvent;
+import yang.util.statesystem.StateSystemInterface;
 import yang.util.statesystem.YangProgramState;
 import yang.util.statesystem.YangProgramStateSystem;
 
@@ -15,12 +16,16 @@ public class YangStateFadeOutIn<StateSystemType extends YangProgramStateSystem> 
 	}
 
 	@Override
+	public void onSet(StateSystemInterface stateSystem,int layer) {
+		super.onSet(stateSystem, layer);
+		if (mFromState == null) mFadeProgress = 0.5f;
+
+	}
+
+	@Override
 	protected boolean prepareStateDraw(YangProgramState<StateSystemType> state,float fadeProgress) {
-		if(fadeProgress>0.5f) {
-			prepareFade(state,fadeProgress*2-1);
-			return true;
-		}else
-			return false;
+		prepareFade(state,fadeProgress);
+		return true;
 	}
 
 	@Override
@@ -31,6 +36,7 @@ public class YangStateFadeOutIn<StateSystemType extends YangProgramStateSystem> 
 				mFromState.proceed(deltaTime);
 			}
 		}else{
+			if (mFromState != null) mFromState.mFadeProgress = 0;
 			if(mToState!=null) {
 				mToState.mFadeProgress = fadeProgress*2-1;
 				mToState.proceed(deltaTime);
@@ -40,7 +46,7 @@ public class YangStateFadeOutIn<StateSystemType extends YangProgramStateSystem> 
 
 	@Override
 	public boolean rawEvent(YangEvent event) {
-		if(mToState==null || mFromState.mFadeProgress>0.5f)
+		if(mFromState != null && (mToState==null || mFromState.mFadeProgress>0.5f))
 			return event.handle(mFromState);
 		else if(mFromState==null)
 			return event.handle(mToState);
