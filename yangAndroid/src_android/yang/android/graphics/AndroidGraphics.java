@@ -230,16 +230,12 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 
 	@Override
-	protected void drawDefaultVertices(int bufferStart, int drawVertexCount,boolean wireFrames,ShortBuffer indexBuffer) {
-		if(wireFrames)
-			GLES20.glDrawArrays(GLES20.GL_LINES, bufferStart, drawVertexCount);
-		else{
-			int lim = indexBuffer.capacity();
-			indexBuffer.position(bufferStart);
-			indexBuffer.limit(bufferStart+drawVertexCount);
-			GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawVertexCount, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
-			indexBuffer.limit(lim);
-		}
+	protected void drawDefaultVertices(int bufferStart, int drawVertexCount,int mode,ShortBuffer indexBuffer) {
+		int lim = indexBuffer.capacity();
+		indexBuffer.position(bufferStart);
+		indexBuffer.limit(bufferStart+drawVertexCount);
+		GLES20.glDrawElements(mode, drawVertexCount, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+		indexBuffer.limit(lim);
 	}
 
 	@Override

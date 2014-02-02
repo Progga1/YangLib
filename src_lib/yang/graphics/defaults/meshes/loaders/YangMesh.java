@@ -17,6 +17,7 @@ import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.glconsts.GLDrawModes;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
@@ -29,7 +30,7 @@ public class YangMesh {
 	public AbstractGraphics<?> mGraphics;
 	protected GraphicsTranslator mTranslator;
 
-	protected final MeshMaterialHandles mHandles;
+
 
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
@@ -47,24 +48,29 @@ public class YangMesh {
 	public int[] mRedirectIndices;
 	public int[] mSkinIds;
 	public float[] mSkinWeights;
-	public short[] mIndices;
+	public short[] mTriangleIndices;
+	public short[] mEdgeIndices;
 
 	public FloatColor mDefaultColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
 	public YangList<YangMaterialSet> mMaterialSets;
 	public YangList<YangMaterialSection> mMaterialSections;
-	public boolean mNormalizeNormals = false;
-	public boolean mBlockTextures = false;
 
+	//SETTINGS
+	protected final MeshMaterialHandles mHandles;
 	public TextureProperties mTextureProperties;
 	public boolean mUseShaders = true;
 	protected int mSkinJointsPerVertex = 4;
 	public boolean mAutoSkinningUpdate = true;
-
+	public boolean mBlockTextures = false;
+	public boolean mNormalizeNormals = false;
 	public YangArmaturePose mCurArmature = null;
+	public boolean mWireFrames = false;
+
 
 	public DrawBatch mDrawBatch;
 
+	//TEMP
 	protected Point3f tempPoint = new Point3f();
 	private YangMatrix tempMat = new YangMatrix();
 
@@ -269,7 +275,10 @@ public class YangMesh {
 				program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
 			}
 
-			mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GraphicsTranslator.T_TRIANGLES);
+			if(mWireFrames)
+				mTranslator.drawVertices(matSec.mEdgeStartIndex, matSec.mEdgeEndIndex-matSec.mEdgeStartIndex, GLDrawModes.LINELIST);
+			else
+				mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GLDrawModes.TRIANGLES);
 		}
 		mTranslator.mFlushDisabled = false;
 		vertexBuffer.reset();
@@ -335,7 +344,10 @@ public class YangMesh {
 	}
 
 	public void putBuffers(IndexedVertexBuffer vertexBuffer) {
-		vertexBuffer.putIndexArray(mIndices);
+		if(mWireFrames)
+			vertexBuffer.putIndexArray(mEdgeIndices);
+		else
+			vertexBuffer.putIndexArray(mTriangleIndices);
 
 		boolean skinningActive = mCurArmature!=null && mCurArmature.mTransforms.length>0;
 
@@ -413,7 +425,7 @@ public class YangMesh {
 	public void freeDynamicData() {
 		mPositions = null;
 		mNormals = null;
-		mIndices = null;
+		mTriangleIndices = null;
 		mTexCoords = null;
 		mRedirectIndices = null;
 		mSmoothIndices = null;
@@ -506,11 +518,11 @@ public class YangMesh {
 			for(int i=0;i<mNormals.length;i++)
 				mNormals[i] = 0;
 //		}
-		final int polyCount = mIndices.length/3;
+		final int polyCount = mTriangleIndices.length/3;
 		for(int i=0;i<polyCount;i++) {
-			int i1 = mPosIndices[mIndices[i*3]]*3;
-			int i2 = mPosIndices[mIndices[i*3+1]]*3;
-			int i3 = mPosIndices[mIndices[i*3+2]]*3;
+			int i1 = mPosIndices[mTriangleIndices[i*3]]*3;
+			int i2 = mPosIndices[mTriangleIndices[i*3+1]]*3;
+			int i3 = mPosIndices[mTriangleIndices[i*3+2]]*3;
 			final float dx1 = mPositions[i2]-mPositions[i1];
 			final float dy1 = mPositions[i2+1]-mPositions[i1+1];
 			final float dz1 = mPositions[i2+2]-mPositions[i1+2];
@@ -527,9 +539,9 @@ public class YangMesh {
 			crossX *= crossMagn;
 			crossY *= crossMagn;
 			crossZ *= crossMagn;
-			i1 = mNormIndices[mIndices[i*3]]*3;
-			i2 = mNormIndices[mIndices[i*3+1]]*3;
-			i3 = mNormIndices[mIndices[i*3+2]]*3;
+			i1 = mNormIndices[mTriangleIndices[i*3]]*3;
+			i2 = mNormIndices[mTriangleIndices[i*3+1]]*3;
+			i3 = mNormIndices[mTriangleIndices[i*3+2]]*3;
 			addToNormal(i1,crossX,crossY,crossZ);
 			addToNormal(i2,crossX,crossY,crossZ);
 			addToNormal(i3,crossX,crossY,crossZ);

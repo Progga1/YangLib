@@ -20,6 +20,7 @@ import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.glconsts.GLBlendFuncs;
+import yang.graphics.translator.glconsts.GLDrawModes;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.graphics.translator.glconsts.GLTex;
@@ -35,9 +36,7 @@ import yang.util.YangList;
 public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,ScreenInfo {
 
 	public static int MAX_NESTED_RENDERTARGETS = 128;
-	public final static int T_TRIANGLES = 0;
-	public final static int T_STRIP = 1;
-	public static final int T_POINTS = 2;
+
 	public final static int MAX_TEXTURES = 32;
 	public static GraphicsTranslator INSTANCE;
 	public static GraphicsTranslator appInstance;
@@ -127,7 +126,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void setTextureRectData(int texId,int level,int offsetX,int offsetY,int width,int height,int channels, ByteBuffer data);
 	public abstract void setTextureParameter(int pName,int param);
 	public abstract void deleteTextures(int[] ids);
-	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, boolean wireFrames, ShortBuffer indexBuffer);
+	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, int mode, ShortBuffer indexBuffer);
 	public abstract void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer);
 	public abstract void enableAttributePointer(int handle);
 	public abstract void disableAttributePointer(int handle);
@@ -201,7 +200,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mFlushDisabled = false;
 		mPolygonCount = 0;
 		mFlushCount = 0;
-		mDrawMode = T_TRIANGLES;
+		mDrawMode = GLDrawModes.TRIANGLES;
 		mWireFrames = false;
 		mPrograms = new YangList<AbstractProgram>();
 		mCurDrawListener = null;
@@ -629,6 +628,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 	}
 
+	//TODO glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	public void drawVertices(int bufferStart, int vertexCount,int mode) {
 		assert preCheck("Draw vertices");
 		mPolygonCount += vertexCount/3;
@@ -636,7 +637,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		ShortBuffer indexBuffer = mCurrentVertexBuffer.mIndexBuffer;
 		indexBuffer.position(bufferStart);
 
-		boolean wireFrames = mForceWireFrames && mRenderTargetStackPos>=mMinForceWireFrameRenderTargetDepth;
+		boolean wireFrames = mode==GLDrawModes.TRIANGLES && mForceWireFrames && mRenderTargetStackPos>=mMinForceWireFrameRenderTargetDepth;
 		if(wireFrames) {
 			final int cap = indexBuffer.capacity();
 			if(mWireFrameIndexBuffer==null || mWireFrameIndexBuffer.capacity()<cap*2)
@@ -658,9 +659,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			indexBuffer.position(0);
 			bufferStart = 0;
 			vertexCount = vertexCount*2;
+			mode = GLDrawModes.LINELIST;
 		}
 		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
-			drawDefaultVertices(bufferStart,vertexCount, wireFrames,indexBuffer);
+			drawDefaultVertices(bufferStart,vertexCount, mode,indexBuffer);
 		}
 	}
 
@@ -680,7 +682,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public void drawBuffer(IndexedVertexBuffer buffer) {
-		drawBuffer(buffer,0,buffer.getIndexCount(),T_TRIANGLES);
+		drawBuffer(buffer,0,buffer.getIndexCount(),GLDrawModes.TRIANGLES);
 	}
 
 	public void setVertexBuffer(IndexedVertexBuffer vertexBuffer) {

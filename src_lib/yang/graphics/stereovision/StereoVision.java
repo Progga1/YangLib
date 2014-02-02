@@ -9,6 +9,7 @@ import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.glconsts.GLDrawModes;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.model.ScreenInfo;
 
@@ -85,11 +86,11 @@ public class StereoVision {
 		mGraphics.bindTextureNoFlush(mStereoLeftRenderTarget.mTargetTexture, 0);
 		if(LENS_DISTORTION)
 			mLensDistortionShader.setShiftX(-mLensShift);
-		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 0,6, GraphicsTranslator.T_TRIANGLES);
+		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 0,6, GLDrawModes.TRIANGLES);
 		if(LENS_DISTORTION)
 			mLensDistortionShader.setShiftX(mLensShift);
 		mGraphics.bindTextureNoFlush(mStereoRightRenderTarget.mTargetTexture, 0);
-		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 6,6, GraphicsTranslator.T_TRIANGLES);
+		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 6,6, GLDrawModes.TRIANGLES);
 
 		//reset
 		mGraphics.disableAttributePointer(stereoShader.mPositionHandle);

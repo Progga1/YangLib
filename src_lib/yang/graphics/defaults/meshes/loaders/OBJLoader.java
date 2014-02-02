@@ -134,7 +134,8 @@ public class OBJLoader extends YangSceneLoader {
 								currentMatSec.mMaterial = mat;
 							}else{
 								currentMatSec.mEndIndex = mIndexId;
-								currentMatSec = new YangMaterialSection(mIndexId,mat);
+								currentMatSec.mEdgeEndIndex = mEdgeIndexId;
+								currentMatSec = new YangMaterialSection(mIndexId,mEdgeIndexId, mat);
 								mMesh.mMaterialSections.add(currentMatSec);
 							}
 							break;

@@ -15,6 +15,7 @@ public class YangSceneLoader {
 	protected static float[] workingNormals;
 	protected static float[] workingTexCoords;
 	protected static short[] workingIndices;
+	protected static short[] edgeIndices;
 	protected static int[] redirectIndices;
 	protected static int[] positionIndices;
 	protected static int[] texCoordIndices;
@@ -31,6 +32,7 @@ public class YangSceneLoader {
 	protected YangMesh mCurrentMesh;
 	protected int mVertexCount;
 	protected int mIndexId = 0;
+	protected int mEdgeIndexId = 0;
 	protected int posId;
 	protected int texId;
 	protected int normId;
@@ -44,6 +46,7 @@ public class YangSceneLoader {
 			workingTexCoords = new float[MAX_VERTICES*2];
 			workingNormals = new float[MAX_VERTICES*3];
 			workingIndices = new short[MAX_VERTICES*4];
+			edgeIndices = new short[MAX_VERTICES*4];
 			redirectIndices = new int[workingIndices.length];
 			positionIndices = new int[MAX_VERTICES];
 			texCoordIndices = new int[MAX_VERTICES];
@@ -99,7 +102,7 @@ public class YangSceneLoader {
 		curSmoothGroup = -1;
 
 		mCurrentMesh = currentMesh;
-		currentMatSec = new YangMaterialSection(0,DEFAULT_MATERIAL);
+		currentMatSec = new YangMaterialSection(0,0,DEFAULT_MATERIAL);
 		currentMesh.mMaterialSections.clear();
 		currentMesh.mMaterialSections.add(currentMatSec);
 		currentMesh.mDrawBatch = null;
@@ -119,6 +122,7 @@ public class YangSceneLoader {
 	protected YangMesh finishLoadingMesh(boolean calcNormals,boolean staticMesh) {
 
 		currentMatSec.mEndIndex = mIndexId;
+		currentMatSec.mEdgeEndIndex = mEdgeIndexId;
 
 		mCurrentMesh.mVertexCount = mVertexCount;
 		mCurrentMesh.mPositions = new float[posId];
@@ -151,11 +155,15 @@ public class YangSceneLoader {
 			}
 		}
 
-		mCurrentMesh.mIndices = new short[mIndexId];
-		System.arraycopy(workingIndices, 0, mCurrentMesh.mIndices, 0, mIndexId);
-		mCurrentMesh.mSmoothIndices = new int[mCurrentMesh.mIndices.length];
+		mCurrentMesh.mTriangleIndices = new short[mIndexId];
+		System.arraycopy(workingIndices, 0, mCurrentMesh.mTriangleIndices, 0, mIndexId);
+		if(mEdgeIndexId>0) {
+			mCurrentMesh.mEdgeIndices = new short[mEdgeIndexId];
+			System.arraycopy(edgeIndices, 0, mCurrentMesh.mEdgeIndices, 0, mEdgeIndexId);
+		}
+		mCurrentMesh.mSmoothIndices = new int[mCurrentMesh.mTriangleIndices.length];
 		System.arraycopy(smoothIndices, 0, mCurrentMesh.mSmoothIndices, 0, mCurrentMesh.mSmoothIndices.length);
-		mCurrentMesh.mRedirectIndices = new int[mCurrentMesh.mIndices.length];
+		mCurrentMesh.mRedirectIndices = new int[mCurrentMesh.mTriangleIndices.length];
 		System.arraycopy(redirectIndices, 0, mCurrentMesh.mRedirectIndices, 0, mCurrentMesh.mRedirectIndices.length);
 
 		mCurrentMesh.mIndexCount = mIndexId;

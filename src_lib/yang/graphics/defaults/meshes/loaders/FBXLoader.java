@@ -195,6 +195,7 @@ public class FBXLoader extends YangSceneLoader {
 	protected YangMesh finishLoadingMesh(boolean calcNormals,boolean staticMesh) {
 		int baseIndex = -1;
 		int lstIndex = -1;
+		mEdgeIndexId = 0;
 
 		for(int i=0;i<posId;i++) {
 			positionIndices[i] = i;
@@ -245,15 +246,17 @@ public class FBXLoader extends YangSceneLoader {
 				if(lstIndex>=0) {
 					workingIndices[mIndexId++] = (short)(baseIndex);
 					workingIndices[mIndexId++] = (short)(lstIndex);
-
-					if(polyEnd) {
-						baseIndex = -1;
-						lstIndex = -1;
-					}
 					workingIndices[mIndexId++] = (short)(index);
-
-				}
-				if(!polyEnd && baseIndex>=0)
+					edgeIndices[mEdgeIndexId++] = (short)lstIndex;
+				}else
+					edgeIndices[mEdgeIndexId++] = (short)baseIndex;
+				edgeIndices[mEdgeIndexId++] = (short)index;
+				if(polyEnd) {
+					edgeIndices[mEdgeIndexId++] = (short)index;
+					edgeIndices[mEdgeIndexId++] = (short)baseIndex;
+					baseIndex = -1;
+					lstIndex = -1;
+				}else
 					lstIndex = index;
 			}
 		}

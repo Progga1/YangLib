@@ -214,12 +214,15 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 
 	//TODO proper modes
 	@Override
-	public void drawDefaultVertices(int bufferStart, int drawVertexCount, boolean wireFrames, ShortBuffer indexBuffer) {
-		if(wireFrames)
-			gles2.glDrawElements(GL2ES2.GL_LINES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
-		else{
-			gles2.glDrawElements(GL2ES2.GL_TRIANGLES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
-		}
+	public void drawDefaultVertices(int bufferStart, int drawVertexCount, int mode, ShortBuffer indexBuffer) {
+//		if(mode==T_TRIANGLES)
+//			gles2.glDrawElements(GL2ES2.GL_TRIANGLES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
+//		else if(mode==T_LINELIST)
+//			gles2.glDrawElements(GL2ES2.GL_LINES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
+//		else{
+//			gles2.glDrawElements(GL2ES2.GL_POINTS, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
+//		}
+		gles2.glDrawElements(mode, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 
 	@Override

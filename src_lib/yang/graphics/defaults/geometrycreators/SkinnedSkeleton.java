@@ -36,8 +36,7 @@ public class SkinnedSkeleton {
 	}
 
 	public void draw() {
-		boolean preWireframes = mGraphics.mTranslator.mForceWireFrames;
-		mGraphics.mTranslator.mForceWireFrames = mWireFrames;
+		mMesh.mWireFrames = mWireFrames;
 		if(mSkeleton!=null) {
 			if(mAutoRefresh)
 				refresh();
@@ -54,7 +53,7 @@ public class SkinnedSkeleton {
 		}else{
 			mMesh.draw();
 		}
-		mGraphics.mTranslator.mForceWireFrames = preWireframes;
+		mMesh.mWireFrames = false;
 	}
 
 	public void refresh() {

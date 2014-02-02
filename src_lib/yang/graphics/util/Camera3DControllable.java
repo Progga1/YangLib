@@ -93,7 +93,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 					float deltaY = event.mDeltaY;
 					if(mCurPointerDownCount==2) {
 						final float ux = (event.mInputState.mPointerTrackers[0].mX + event.mInputState.mPointerTrackers[1].mX)*0.5f;
-						final float uy = (event.mInputState.mPointerTrackers[0].mY + event.mInputState.mPointerTrackers[1].mY)*0.5f;	//TODO check correctness, changed [2].mY to [1].mY
+						final float uy = (event.mInputState.mPointerTrackers[0].mY + event.mInputState.mPointerTrackers[1].mY)*0.5f;
 						if(mLstX!=Float.MAX_VALUE) {
 							deltaX = ux-mLstX;
 							deltaY = uy-mLstY;
