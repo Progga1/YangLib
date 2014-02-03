@@ -66,7 +66,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public IndexedVertexBuffer mCurrentVertexBuffer;
 	public boolean mFlushDisabled;
 	public int mDrawMode;
-	public boolean mWireFrames;
 	public DrawListener mCurDrawListener;
 	public ScreenInfo mCurrentSurface;
 	public float mTimer;
@@ -201,7 +200,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mPolygonCount = 0;
 		mFlushCount = 0;
 		mDrawMode = GLDrawModes.TRIANGLES;
-		mWireFrames = false;
 		mPrograms = new YangList<AbstractProgram>();
 		mCurDrawListener = null;
 		appInstance = this;

@@ -69,7 +69,7 @@ public class OBJLoader extends YangSceneLoader {
 							mVertexCount++;
 						}else if(fstC=='f') {
 							mModelReader.nextWord(false);
-							final int baseInd = mModelReader.wordToInt(0,1)-1;
+							int baseInd = mModelReader.wordToInt(0,1)-1;
 							final int baseTexInd = mModelReader.wordToInt(mModelReader.mNumberPos+1,1)-1;
 							final int baseNormInd = mModelReader.wordToInt(mModelReader.mNumberPos+1, 1)-1;
 							mModelReader.nextWord(false);

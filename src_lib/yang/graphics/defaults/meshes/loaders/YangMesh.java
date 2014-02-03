@@ -30,8 +30,6 @@ public class YangMesh {
 	public AbstractGraphics<?> mGraphics;
 	protected GraphicsTranslator mTranslator;
 
-
-
 	public int mVertexCount = 0;
 	public int mIndexCount = 0;
 	private int mUniqueVertexCount = 0;
@@ -275,9 +273,16 @@ public class YangMesh {
 				program.setUniform4f(mHandles.mDiffuseColorHandle, mat.mDiffuseColor.mValues);
 			}
 
-			if(mWireFrames)
-				mTranslator.drawVertices(matSec.mEdgeStartIndex, matSec.mEdgeEndIndex-matSec.mEdgeStartIndex, GLDrawModes.LINELIST);
-			else
+			if(mWireFrames) {
+				if(mEdgeIndices==null) {
+					boolean preWire = mTranslator.mForceWireFrames;
+					mTranslator.mForceWireFrames = true;
+					mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GLDrawModes.TRIANGLES);
+					mTranslator.mForceWireFrames = preWire;
+				}else{
+					mTranslator.drawVertices(matSec.mEdgeStartIndex, matSec.mEdgeEndIndex-matSec.mEdgeStartIndex, GLDrawModes.LINELIST);
+				}
+			}else
 				mTranslator.drawVertices(matSec.mStartIndex, matSec.mEndIndex-matSec.mStartIndex, GLDrawModes.TRIANGLES);
 		}
 		mTranslator.mFlushDisabled = false;
@@ -344,7 +349,7 @@ public class YangMesh {
 	}
 
 	public void putBuffers(IndexedVertexBuffer vertexBuffer) {
-		if(mWireFrames)
+		if(mWireFrames && mEdgeIndices!=null)
 			vertexBuffer.putIndexArray(mEdgeIndices);
 		else
 			vertexBuffer.putIndexArray(mTriangleIndices);

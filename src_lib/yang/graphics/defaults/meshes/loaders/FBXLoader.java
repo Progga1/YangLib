@@ -183,7 +183,7 @@ public class FBXLoader extends YangSceneLoader {
 	protected YangMesh startLoadingMesh() {
 		polyId = 0;
 		Arrays.fill(workingIndices, (short)-1);
-		Arrays.fill(workingTexCoords, -1);
+		Arrays.fill(workingTexCoords, Float.MAX_VALUE);
 		Arrays.fill(positionIndices, -1);
 		Arrays.fill(texCoordIndices, -1);
 		Arrays.fill(redirectIndices, -1);
@@ -221,7 +221,7 @@ public class FBXLoader extends YangSceneLoader {
 				prevTexX = workingTexCoords[index*2];
 				prevTexY = workingTexCoords[index*2+1];
 
-				if(prevTexX<0 || (prevTexX==texX && prevTexY==texY))
+				if(prevTexX==Float.MAX_VALUE || (prevTexX==texX && prevTexY==texY))
 					break;
 
 				int redirect =  redirectIndices[index];

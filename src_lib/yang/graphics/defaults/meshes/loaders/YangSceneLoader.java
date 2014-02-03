@@ -69,7 +69,7 @@ public class YangSceneLoader {
 		return mVertexCount++;
 	}
 
-	protected void addIndex(int posIndex,int texIndex,int normIndex) {
+	protected int addIndex(int posIndex,int texIndex,int normIndex) {
 		int index = posIndex;
 		while((smoothIndices[index]!=Integer.MIN_VALUE && (curSmoothGroup==-1 || curSmoothGroup!=smoothIndices[index])) || (texCoordIndices[index]>=0 && texCoordIndices[index]!=texIndex)) {
 			final int redirect = redirectIndices[index];
@@ -85,6 +85,7 @@ public class YangSceneLoader {
 		normalIndices[index] = normIndex;
 		smoothIndices[index] = curSmoothGroup;
 		workingIndices[mIndexId++] = (short)(index);
+		return index;
 	}
 
 	public YangSceneLoader(AbstractGraphics<?> graphics,MeshMaterialHandles handles) {

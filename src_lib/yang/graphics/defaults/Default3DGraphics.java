@@ -196,7 +196,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 //	}
 
 	public void drawRectZ(float worldX1, float worldY1, float worldX2, float worldY2, float z, TextureCoordinatesQuad textureCoordinates) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		putPositionRect(worldX1, worldY1, worldX2, worldY2);
 		putTextureArray(textureCoordinates.mAppliedCoordinates);
 		putColorRect(mCurColor);
@@ -265,7 +265,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void putCubePart(float[] array,Vector3f norm,YangMatrix transform) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		if(transform==null)
 			mCurrentVertexBuffer.putArray(ID_POSITIONS,array);
 		else

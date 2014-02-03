@@ -19,6 +19,7 @@ public class SkinnedSkeleton {
 	public SkinnedSkeleton(YangMesh mesh,MassAggregation skeleton) {
 		mMesh = mesh;
 		mGraphics = mesh.mGraphics;
+		mWireFrames = mesh.mWireFrames;
 		mSkeleton = skeleton;
 		if(mSkeleton!=null) {
 			mArmature = new YangArmature();

@@ -419,11 +419,6 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		return 0;
 	}
 
-	public void switchWireFrames(boolean enabled) {
-		flush();
-		mTranslator.mWireFrames = enabled;
-	}
-
 	public float getTime() {
 		return mTime;
 	}

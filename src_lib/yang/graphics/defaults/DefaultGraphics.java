@@ -219,7 +219,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	// ---RECTS---
 
 	public void drawQuad(YangMatrix worldTransform, YangMatrix textureTransform) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		putTransformedPositionRect(worldTransform);
 		putTransformedTextureRect(textureTransform);
 		putColorRect(mCurColor);
@@ -227,7 +227,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawQuad(float worldX1,float worldY1,float worldX2,float worldY2,float worldX3,float worldY3,float worldX4,float worldY4, TextureCoordinatesQuad texCoordinates) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		putPosition(worldX1,worldY1);
 		putPosition(worldX2,worldY2);
 		putPosition(worldX3,worldY3);
@@ -241,7 +241,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawQuad(YangMatrix worldTransform, TextureCoordinatesQuad texCoordinates) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		putTransformedPositionRect(worldTransform);
 		if(texCoordinates!=null)
 			putTextureArray(texCoordinates.mAppliedCoordinates);
@@ -256,7 +256,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, float texX1, float texY1, float texX2, float texY2) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
 		mCurrentVertexBuffer.putRect2D(ID_TEXTURES,texX1, texY1, texX2, texY2);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
@@ -264,7 +264,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, TextureCoordinatesQuad texCoordinates) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
 		mCurrentVertexBuffer.putArray(ID_TEXTURES, texCoordinates.mAppliedCoordinates);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
@@ -272,7 +272,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2, YangMatrix textureTransform) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
 		putTransformedTextureRect(textureTransform);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
@@ -280,7 +280,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRect(float worldX1, float worldY1, float worldX2, float worldY2) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,worldX1, worldY1, worldX2, worldY2, mCurrentZ);
 		mCurrentVertexBuffer.putArray(ID_TEXTURES, mTexIdentity.mAppliedCoordinates);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
@@ -299,7 +299,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRectWH(float left, float bottom, float width, float height, TextureCoordinatesQuad texCoords) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,left, bottom, left+width, bottom+height, mCurrentZ);
 		if(texCoords==null)
 			mCurrentVertexBuffer.putArray(ID_TEXTURES, RECT_TEXTURECOORDS);
@@ -310,7 +310,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f,mCurrentZ);
 		mCurrentVertexBuffer.putArray(ID_TEXTURES, RECT_TEXTURECOORDS);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
@@ -318,7 +318,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float widthAndHeight) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		final float d = widthAndHeight*0.5f;
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,centerX-d,centerY-d,centerX+d,centerY+d,mCurrentZ);
 		mCurrentVertexBuffer.putArray(ID_TEXTURES, RECT_TEXTURECOORDS);
@@ -327,7 +327,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, float texX1, float texY1, float texX2, float texY2) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRotatedRect3D(ID_POSITIONS,width,height,centerX,centerY,mCurrentZ,angle);
 		mCurrentVertexBuffer.putRect2D(ID_TEXTURES,texX1, texY1, texX2, texY2);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
@@ -335,7 +335,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float angle, TextureCoordinatesQuad texCoordinates) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRotatedRect3D(ID_POSITIONS,width,height,centerX,centerY,mCurrentZ,angle);
 //		if(mTranslator.mTimer>10) return;
 		mCurrentVertexBuffer.putArray(ID_TEXTURES,texCoordinates.mAppliedCoordinates);
@@ -349,7 +349,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float texX1, float texY1, float texX2, float texY2) {
-		mCurrentVertexBuffer.beginQuad(mTranslator.mWireFrames);
+		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f,mCurrentZ);
 		mCurrentVertexBuffer.putVec4(ID_TEXTURES, texX1,texY1,texX2,texY2);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
