@@ -285,13 +285,23 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	public int projScreenX(float gameX,float gameY) {
-		final float x = MatrixOps.applyFloatMatrixX2D(mCurProjTransform.mValues, gameX, gameY);
+		final float x = MatrixOps.applyFloatMatrixX2D(mProjectionTransform.mValues, gameX, gameY);
 		return (int)((x+1)*mTranslator.mCurrentSurface.getSurfaceWidth()*0.5f);
 	}
 
 	public int projScreenY(float gameX,float gameY) {
-		final float y = MatrixOps.applyFloatMatrixY2D(mCurProjTransform.mValues, gameX, gameY);
+		final float y = MatrixOps.applyFloatMatrixY2D(mProjectionTransform.mValues, gameX, gameY);
 		return (int)((-y+1)*mTranslator.mCurrentSurface.getSurfaceHeight()*0.5f);
+	}
+
+	public float projNormX(float gameX,float gameY) {
+		final float x = MatrixOps.applyFloatMatrixX2D(mProjectionTransform.mValues, gameX, gameY);
+		return x*mTranslator.mCurrentSurface.getSurfaceRatioX();
+	}
+
+	public float projNormY(float gameX,float gameY) {
+		final float y = MatrixOps.applyFloatMatrixY2D(mProjectionTransform.mValues, gameX, gameY);
+		return y*mTranslator.mCurrentSurface.getSurfaceRatioY();
 	}
 
 	public float screenLeftToGameX() {
