@@ -6,11 +6,10 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import yang.graphics.font.DrawableAnchoredLines;
@@ -64,6 +63,13 @@ public class StringsXML {
 	private final static StringsXML load(InputStream xmlStream, StringsXML stringsXML) {
 		stringsXML.mStrings.clear();
 		try {
+
+			//TODO xml parser: find better solution for android
+			try {	//load driver if possible (needed for android, crashes on pc)
+				Class.forName("org.xmlpull.v1.sax2.Driver", false, null);	//check if class exists
+				System.setProperty("org.xml.sax.driver","org.xmlpull.v1.sax2.Driver");	//needed on android
+			} catch (Exception e) { }
+
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new StringXMLParser(stringsXML));
 			reader.parse(new InputSource(xmlStream));
@@ -123,7 +129,7 @@ public class StringsXML {
 	}
 
 
-	private static class StringXMLParser implements ContentHandler {
+	private static class StringXMLParser extends DefaultHandler {
 
 		private String mCurString;
 		private String mCurKey;
@@ -148,25 +154,10 @@ public class StringsXML {
 
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
+
 			if (localName.equals("string")) {
 				mStrings.mStrings.put(mCurKey, mCurString);
 			}
 		}
-
-		@Override public void endDocument() throws SAXException {}
-
-		@Override public void startPrefixMapping(String suffix, String uri) throws SAXException {}
-
-		@Override public void endPrefixMapping(String prefix) throws SAXException {}
-
-		@Override public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {}
-
-		@Override public void processingInstruction(String target, String data) throws SAXException {}
-
-		@Override public void setDocumentLocator(Locator locator) {}
-
-		@Override public void skippedEntity(String name) throws SAXException {}
-
-		@Override public void startDocument() throws SAXException {}
 	}
 }
