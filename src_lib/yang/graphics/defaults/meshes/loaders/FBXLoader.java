@@ -477,18 +477,41 @@ public class FBXLoader extends YangSceneLoader {
 		return Math.min(limbLength*0.35f,mDefaultJointRadius);
 	}
 
-	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,Joint parentJoint,float radScale) {
+	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,Joint parentJoint,float radScale,int idOffset) {
 		YangMatrix transform = baseObj.mGlobalTransform;
 		radScale *= baseObj.mScale.mX;
-		if(parentJoint==null) {
-			parentJoint = new Joint("root_"+baseObj.mName);
+
+		//ASSUME: parentJoint==null <=> root bone of mesh
+		boolean createParentJoint = false;
+		if((baseObj.mParent instanceof LimbObject) && parentJoint!=null) {
+			float delta = baseObj.mTranslation.mX-((LimbObject)baseObj.mParent).mLimbLength;
+			if(Math.abs(delta)>0.01f)
+				createParentJoint = true;
+		}
+
+		if(parentJoint==null || createParentJoint) {
+			Joint newJoint = new Joint((createParentJoint?"TRANS_":"ROOT_")+baseObj.mName);
 			//parentJoint.set(baseObj.mTranslation);
-			parentJoint.applyTransform(transform);
-			targetSkeleton.addJoint(parentJoint);
-			parentJoint.setRadius(getRadius(baseObj.mLimbLength)*radScale);
-			for(MeshDeformer deformer:baseObj.mDeformers) {
-				deformer.mMesh.mMesh.applyTransform(baseObj.mParent.mGlobalTransform);
+			newJoint.applyTransform(transform);
+			targetSkeleton.addJoint(newJoint);
+			newJoint.setRadius(getRadius(baseObj.mLimbLength)*radScale);
+			if(!createParentJoint) {
+				for(MeshDeformer deformer:baseObj.mDeformers) {
+					deformer.mMesh.mMesh.applyTransform(baseObj.mParent.mGlobalTransform);
+				}
 			}
+			if(createParentJoint) {
+				newJoint.setParent(parentJoint);
+				final float boneStrength = 10;
+				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mName,newJoint,parentJoint),boneStrength);
+				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mAngleParent.mName,newJoint,parentJoint.mAngleParent),boneStrength);
+				for(Joint sibling:parentJoint.mChildren) {
+					if(sibling.mName.startsWith("TRANS"))
+						targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+sibling.mName,newJoint,sibling),boneStrength);
+				}
+			}
+
+			parentJoint = newJoint;
 		}
 
 		Joint joint = new Joint(baseObj.mName);
@@ -504,7 +527,7 @@ public class FBXLoader extends YangSceneLoader {
 		for(SceneObject obj:baseObj.getChildren()) {
 			if(obj instanceof LimbObject) {
 				LimbObject limbObj = (LimbObject)obj;
-				subSkel(targetSkeleton,limbObj,joint,radScale);
+				subSkel(targetSkeleton,limbObj,joint,radScale,idOffset);
 			}
 		}
 	}
@@ -518,7 +541,7 @@ public class FBXLoader extends YangSceneLoader {
 				obj.multMatrix(matrix);
 				for(SceneObject boneObj:obj.getChildren()) {
 					if(boneObj instanceof LimbObject) {
-						subSkel(targetSkeleton,(LimbObject)boneObj,null,obj.mScale.mX);
+						subSkel(targetSkeleton,(LimbObject)boneObj,null,obj.mScale.mX,0);
 					}
 				}
 			}

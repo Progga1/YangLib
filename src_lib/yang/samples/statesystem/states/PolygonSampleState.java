@@ -16,6 +16,7 @@ public class PolygonSampleState extends SampleState {
 	private boolean mDrawDebug = true;
 	private boolean mIntersects = false;
 	private float grid = 0.1f;
+	private boolean USE_GRID = false;
 
 	@Override
 	public void initGraphics() {
@@ -65,8 +66,10 @@ public class PolygonSampleState extends SampleState {
 			mPickedPoint = mPolygon.pickPoint(x,y,0.03f);
 		}else{
 			int pick = mPolygon.pickPoint(x,y,0.025f);
-			x = (int)(x/grid)*grid;
-			y = (int)(y/grid)*grid;
+			if(USE_GRID) {
+				x = (int)(x/grid)*grid;
+				y = (int)(y/grid)*grid;
+			}
 			if(pick>=0)
 				mPolygon.addIndex(pick);
 			else
@@ -82,8 +85,10 @@ public class PolygonSampleState extends SampleState {
 
 	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
-		x = (int)(x/grid)*grid;
-		y = (int)(y/grid)*grid;
+		if(USE_GRID) {
+			x = (int)(x/grid)*grid;
+			y = (int)(y/grid)*grid;
+		}
 		if(mPickedPoint>=0) {
 			mPolygon.triangulate();
 			//mPolygon.setPointPos(mPickedPoint, (int)(x/grid)*grid, (int)(y/grid)*grid);
