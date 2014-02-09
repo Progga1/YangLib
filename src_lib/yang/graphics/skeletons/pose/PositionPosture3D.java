@@ -42,6 +42,7 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 
 	@Override
 	public void applyForceBased(MassAggregation skeleton, PositionPosture3D interpolationPose, float weight) {
+//		applyPosture(skeleton,interpolationPose,weight);if(true)return;
 		int c = 0;
 		final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {

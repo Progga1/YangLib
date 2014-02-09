@@ -114,23 +114,27 @@ public class Point3f {
 		return (float)Math.sqrt(dX*dX+dY*dY+dZ*dZ);
 	}
 
-	public float getManhattanDistance(Point3f point) {
+	public float getManhattanDistance(float x,float y,float z) {
 		float dX;
 		float dY;
 		float dZ;
-		if(point.mX<mX)
-			dX = mX-point.mX;
+		if(x<mX)
+			dX = mX-x;
 		else
-			dX = point.mX-mX;
-		if(point.mY<mY)
-			dY = mY-point.mY;
+			dX = x-mX;
+		if(y<mY)
+			dY = mY-y;
 		else
-			dY = point.mY-mY;
-		if(point.mZ<mZ)
-			dZ = mZ-point.mZ;
+			dY = y-mY;
+		if(z<mZ)
+			dZ = mZ-z;
 		else
-			dZ = point.mZ-mZ;
+			dZ = z-mZ;
 		return dX+dY+dZ;
+	}
+
+	public float getManhattanDistance(Point3f point) {
+		return getManhattanDistance(point.mX,point.mY,point.mZ);
 	}
 
 	public float getDistanceXZ(Point3f point) {

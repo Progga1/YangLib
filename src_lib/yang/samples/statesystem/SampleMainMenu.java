@@ -8,7 +8,6 @@ import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.MatrixStackSampleState;
 import yang.samples.statesystem.states.MemorySampleState;
-import yang.samples.statesystem.states.Menu3DSampleState;
 import yang.samples.statesystem.states.NestedTextureRenderTargetsSampleState;
 import yang.samples.statesystem.states.OBJSampleState;
 import yang.samples.statesystem.states.Particle2DSampleState;
@@ -23,6 +22,7 @@ import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.StrokeDrawerSampleState;
 import yang.samples.statesystem.states.TailSampleState;
 import yang.samples.statesystem.states.TextureAtlasSampleState;
+import yang.samples.statesystem.states.TrajectorySampleState;
 import yang.util.YangList;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;
@@ -70,7 +70,8 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Obj loader", new OBJSampleState());
 		addMenuItem("3D skeleton", new Skeleton3DSampleState());
 		addMenuItem("Stereo calibration",new StereoCalibrationState());
-		addMenuItem("3D Menu",new Menu3DSampleState());
+		addMenuItem("Trajectory",new TrajectorySampleState());
+
 		refreshLayout();
 	}
 
