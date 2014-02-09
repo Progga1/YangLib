@@ -3,7 +3,7 @@ package yang.samples.statesystem.states;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.model.DebugYang;
 import yang.samples.statesystem.SampleState;
-import yang.util.trajectory.YangIterativeTrajectory;
+import yang.util.trajectory.YangOptimumTrajectory;
 import yang.util.trajectory.YangSimpleTrajectory;
 import yang.util.trajectory.YangTrajectory;
 
@@ -11,14 +11,14 @@ public class TrajectorySampleState extends SampleState {
 
 	private YangTrajectory mTrajectory;
 	private YangSimpleTrajectory mSimpleTrajectory;
-	private YangIterativeTrajectory mIterTrajectory;
+	private YangOptimumTrajectory mIterTrajectory;
 	private float mDeltaTimeSteps = 0.01f;
+	private float mTargetX = 0.5f,mTargetY = 0.5f;
 
 	public TrajectorySampleState() {
 		mSimpleTrajectory = new YangSimpleTrajectory();
-		mIterTrajectory = new YangIterativeTrajectory();
-		mTrajectory = mSimpleTrajectory;
-		mTrajectory.calculate(0.5f,0.5f);
+		mIterTrajectory = new YangOptimumTrajectory();
+		mTrajectory = mIterTrajectory;
 	}
 
 	@Override
@@ -41,6 +41,7 @@ public class TrajectorySampleState extends SampleState {
 		float dt = mDeltaTimeSteps;
 		mGraphics.bindTexture(null);
 
+		mTrajectory.calculate(mTargetX,mTargetY);
 		while(t<=mTrajectory.getResultTime()*2+0.01f) {
 			if(t>0) {
 				float x = lstX + dt*velX;
@@ -56,13 +57,17 @@ public class TrajectorySampleState extends SampleState {
 			t += mDeltaTimeSteps;
 		}
 
+		mGraphics2D.setColor(1,0.1f,0);
+		mGraphics2D.drawRectCentered(mTargetX,mTargetY, 0.015f);
+
 		DebugYang.appendStateLn(mTrajectory.getResultTime());
 	}
 
 
 	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
-		mTrajectory.calculate(x,y);
+		mTargetX = x;
+		mTargetY = y;
 	}
 
 	@Override
