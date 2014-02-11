@@ -16,24 +16,33 @@ public class YangAngleTrajectory extends YangTrajectory {
 		float maxVel2 = mMaxVel * mMaxVel;
 
 		float y = targetY;
-		float t = (float)Math.sqrt(Math.abs(targetY/mGravity*2));
-		float velX = targetX/t;
-		float velY = mGravity*t;
-		float vel2 = velX*velX + velY*velY;
+		float t = 0;
+		float velX = 0;
+		float velY = 0;
+		float vel2 = Float.MAX_VALUE;
+		boolean reachable = true;
 
-		mReachable = vel2<=maxVel2;
+		boolean fixedVel = targetY<0 || mMinVel==mMaxVel;
+		if(!fixedVel) {
+			t = (float)Math.sqrt(targetY/mGravity*2);
+			velX = targetX/t;
+			velY = mGravity*t;
+			vel2 = velX*velX + velY*velY;
+			reachable = vel2<=maxVel2;
+		}
 
-		if(!mReachable || targetY<0) {
+		boolean velLowerBound = vel2<mMinVel*mMinVel;
+		if(!reachable || fixedVel || velLowerBound) {
 
 			boolean mir = targetX<0;
 			float x = mir?-targetX:targetX;
 			float g = -mGravity;
-			float v = mMaxVel;
+			float v = velLowerBound?mMinVel:mMaxVel;
 			float v2 = v*v;
 
 			double sqrt = v2*v2 - g*(g*x*x - 2*y*v2);
-			mReachable = sqrt>=0;
-			if(!mReachable)
+			reachable = sqrt>=0;
+			if(!reachable)
 				sqrt = 0;
 			double atan = (v2 - Math.sqrt(sqrt))/(g*x);
 
@@ -50,6 +59,7 @@ public class YangAngleTrajectory extends YangTrajectory {
 		mResultVelX = velX;
 		mResultVelY = velY;
 		mResultTime = t;
+		mReachable = reachable;
 	}
 
 }

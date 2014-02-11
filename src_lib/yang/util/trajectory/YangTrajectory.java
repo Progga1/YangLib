@@ -5,6 +5,7 @@ public abstract class YangTrajectory {
 	public static final float PI = (float)Math.PI;
 	public float mGravity = 9.81f;
 	public float mMaxVel = Float.MAX_VALUE;
+	public float mMinVel = 0;
 
 	protected float mResultTime = 0;
 	protected float mResultVelX = 0, mResultVelY = 0;
@@ -49,6 +50,15 @@ public abstract class YangTrajectory {
 
 	public boolean isReachable() {
 		return mReachable;
+	}
+
+	public void setVelBounds(float minVelocity,float maxVelocity) {
+		mMinVel = minVelocity;
+		mMaxVel = maxVelocity;
+	}
+
+	public void setFixedVel(float velocity) {
+		setVelBounds(velocity,velocity);
 	}
 
 }

@@ -14,7 +14,8 @@ public class TrajectorySampleState extends SampleState {
 	public TrajectorySampleState() {
 		mTrajectory = new YangAngleTrajectory();
 		mTrajectory.calculate(mTargetX,mTargetY);
-		mTrajectory.mMaxVel = 4;
+		mTrajectory.setVelBounds(2,4.5f);
+		mTrajectory.setFixedVel(3);
 	}
 
 	@Override
@@ -37,7 +38,7 @@ public class TrajectorySampleState extends SampleState {
 		mGraphics.bindTexture(null);
 
 		float alpha = mTrajectory.isReachable()?1:0.5f;
-		while(t<=mTrajectory.getResultTime()*2+0.01f) {
+		while(t<=mTrajectory.getResultTime()*2+0.01f || lstY>0) {
 			if(t>0) {
 				float x = lstX + dt*velX;
 				float y = lstY + dt*velY;
@@ -50,6 +51,8 @@ public class TrajectorySampleState extends SampleState {
 				velY -= mTrajectory.mGravity*dt;
 			}
 			t += mDeltaTimeSteps;
+			if(t>16)
+				break;
 		}
 
 		mGraphics2D.setColor(1,0.1f,0);
