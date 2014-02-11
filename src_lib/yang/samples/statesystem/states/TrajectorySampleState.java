@@ -47,7 +47,7 @@ public class TrajectorySampleState extends SampleState {
 				mGraphics2D.drawRectCentered(x,y, 0.01f);
 				lstX = x;
 				lstY = y;
-				velY += mTrajectory.mGravity*dt;
+				velY -= mTrajectory.mGravity*dt;
 			}
 			t += mDeltaTimeSteps;
 		}

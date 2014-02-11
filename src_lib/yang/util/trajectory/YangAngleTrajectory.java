@@ -2,6 +2,14 @@ package yang.util.trajectory;
 
 public class YangAngleTrajectory extends YangTrajectory {
 
+	public YangAngleTrajectory(float gravity) {
+		super(gravity);
+	}
+
+	public YangAngleTrajectory() {
+		this(9.81f);
+	}
+
 	@Override
 	public void calculate(float targetX,float targetY) {
 
@@ -10,7 +18,7 @@ public class YangAngleTrajectory extends YangTrajectory {
 		float y = targetY;
 		float t = (float)Math.sqrt(Math.abs(targetY/mGravity*2));
 		float velX = targetX/t;
-		float velY = -mGravity*t;
+		float velY = mGravity*t;
 		float vel2 = velX*velX + velY*velY;
 
 		mReachable = vel2<=maxVel2;
@@ -19,7 +27,7 @@ public class YangAngleTrajectory extends YangTrajectory {
 
 			boolean mir = targetX<0;
 			float x = mir?-targetX:targetX;
-			float g = mGravity;
+			float g = -mGravity;
 			float v = mMaxVel;
 			float v2 = v*v;
 

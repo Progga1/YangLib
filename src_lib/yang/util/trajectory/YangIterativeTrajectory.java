@@ -3,6 +3,10 @@ package yang.util.trajectory;
 @Deprecated
 public class YangIterativeTrajectory extends YangTrajectory {
 
+	public YangIterativeTrajectory(float gravity) {
+		super(gravity);
+	}
+
 	public float mMinVelX = 0;
 	public float mMaxIterations = 500;
 

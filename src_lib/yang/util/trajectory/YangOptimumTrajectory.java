@@ -3,6 +3,10 @@ package yang.util.trajectory;
 @Deprecated
 public class YangOptimumTrajectory extends YangTrajectory {
 
+	public YangOptimumTrajectory(float gravity) {
+		super(gravity);
+	}
+
 	public float mMinVelX = 0;
 
 	@Override

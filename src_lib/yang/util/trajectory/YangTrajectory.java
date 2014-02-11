@@ -3,7 +3,7 @@ package yang.util.trajectory;
 public abstract class YangTrajectory {
 
 	public static final float PI = (float)Math.PI;
-	public float mGravity = -9.81f;
+	public float mGravity = 9.81f;
 	public float mMaxVel = Float.MAX_VALUE;
 
 	protected float mResultTime = 0;
@@ -11,6 +11,16 @@ public abstract class YangTrajectory {
 	protected boolean mReachable = false;
 
 	public abstract void calculate(float targetX,float targetY);
+
+	public YangTrajectory(float gravity) {
+		mGravity = gravity;
+	}
+
+	public boolean calculate(float targetX,float targetY,float maxSpeed) {
+		mMaxVel = maxSpeed;
+		calculate(targetX,targetY);
+		return mReachable;
+	}
 
 	protected void clampVelocity() {
 		if(mMaxVel==Float.MAX_VALUE)
