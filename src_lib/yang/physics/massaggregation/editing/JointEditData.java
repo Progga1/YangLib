@@ -26,7 +26,7 @@ public class JointEditData {
 		mJoint = joint;
 		mSkeletonEdit = skeletonEdit;
 		if(mJoint.mAngleParent!=null)
-			mParentConnection = mJoint.mSkeleton.getDistanceConstraint(mJoint.mAngleParent,mJoint);
+			mParentConnection = mJoint.mMassAggregation.getDistanceConstraint(mJoint.mAngleParent,mJoint);
 		else
 			mParentConnection = null;
 	}

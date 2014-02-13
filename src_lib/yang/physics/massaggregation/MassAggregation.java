@@ -399,4 +399,52 @@ public class MassAggregation {
 		}
 	}
 
+	public void appendMassAggregation(MassAggregation massAggregation) {
+		int idOffset = mJoints.size();
+		for(Joint joint:massAggregation.mJoints) {
+			addJoint(joint.clone());
+		}
+
+		for(Joint joint:massAggregation.mJoints) {
+			if(joint.mAngleParent!=null) {
+				Joint joint1 = getJointByName(joint.mName);
+				Joint parent = getJointByName(joint.mAngleParent.mName);
+				joint1.setParent(parent);
+			}
+		}
+
+		for(JointConnection bone:massAggregation.mBones) {
+			bone.cloneInto(this);
+		}
+		for(Constraint constraint:massAggregation.mConstraints) {
+			constraint.cloneInto(this);
+		}
+	}
+
+	public void copyFrom(MassAggregation massAggregation) {
+		clear();
+		appendMassAggregation(massAggregation);
+		mTransform.set(massAggregation.mTransform);
+		mLowerLimit = massAggregation.mLowerLimit;
+		mConstantForceX = massAggregation.mConstantForceX;
+		mConstantForceY = massAggregation.mConstantForceY;
+		mConstantForceZ = massAggregation.mConstantForceZ;
+		mAccuracy = massAggregation.mAccuracy;
+		mCarrier = massAggregation.mCarrier;
+		mScale = massAggregation.mScale;
+		m3D = massAggregation.m3D;
+	}
+
+	@Override
+	public MassAggregation clone() {
+		MassAggregation result = new MassAggregation();
+		result.copyFrom(this);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "JOINTS: "+mJoints+"\nCONNECTIONS: "+mBones;
+	}
+
 }

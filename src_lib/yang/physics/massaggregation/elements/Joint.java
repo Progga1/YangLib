@@ -23,7 +23,7 @@ public class Joint extends Point3f {
 	public boolean mFixed;
 	public float mMass;
 	public float mInitialMass;
-	public MassAggregation mSkeleton;
+	public MassAggregation mMassAggregation;
 	public Joint mAngleParent;
 	public float mParentDistance;
 	public YangList<Joint> mChildren;
@@ -86,8 +86,8 @@ public class Joint extends Point3f {
 	}
 
 	public void setMassAggregation(MassAggregation massAggregation) {
-		mSkeleton = massAggregation;
-		mId = mSkeleton.getNextJointId();
+		mMassAggregation = massAggregation;
+		mId = mMassAggregation.getNextJointId();
 	}
 
 	public Joint setName(String name) {
@@ -96,7 +96,7 @@ public class Joint extends Point3f {
 	}
 
 	public Joint setRadius(float radius) {
-		mRadius = radius * mSkeleton.mCurJointScale;
+		mRadius = radius * mMassAggregation.mCurJointScale;
 		return this;
 	}
 
@@ -150,15 +150,15 @@ public class Joint extends Point3f {
 	}
 
 	public float getWorldX() {
-		return mSkeleton.getJointWorldX(this);
+		return mMassAggregation.getJointWorldX(this);
 	}
 
 	public float getWorldY() {
-		return mSkeleton.getJointWorldY(this);
+		return mMassAggregation.getJointWorldY(this);
 	}
 
 	public float getWorldZ() {
-		return mSkeleton.getJointWorldZ(this);
+		return mMassAggregation.getJointWorldZ(this);
 	}
 
 	public boolean isSubChildOf(Joint joint) {
@@ -184,7 +184,7 @@ public class Joint extends Point3f {
 		final float dist = (float)Math.sqrt(dX*dX + dY*dY + dZ*dZ);
 		if(dist>0) {
 			float fac;
-			if(mSkeleton.m3D)
+			if(mMassAggregation.m3D)
 				fac = TOWARDS_FACTOR * factor;//TODO 3D
 			else
 				fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR * mPositionForceFactor * factor;
@@ -199,7 +199,7 @@ public class Joint extends Point3f {
 	}
 
 	public void addWorldPositionForce(float worldX,float worldY,float worldZ, float factor) {
-		float[] matrix = mSkeleton.mInvTransform.mValues;
+		float[] matrix = mMassAggregation.mInvTransform.mValues;
 		float x = matrix[0] * worldX + matrix[4] * worldY + matrix[8] * worldZ + matrix[12];
 		float y = matrix[1] * worldX + matrix[5] * worldY + matrix[9] * worldZ + matrix[13];
 		float z = matrix[2] * worldX + matrix[6] * worldY + matrix[10] * worldZ + matrix[14];
@@ -211,7 +211,7 @@ public class Joint extends Point3f {
 	}
 
 	public void setWorldPosition(float worldX,float worldY,float worldZ) {
-		float[] matrix = mSkeleton.mInvTransform.mValues;
+		float[] matrix = mMassAggregation.mInvTransform.mValues;
 		mX = matrix[0] * worldX + matrix[4] * worldY + matrix[8] * worldZ + matrix[12];
 		mY = matrix[1] * worldX + matrix[5] * worldY + matrix[9] * worldZ + matrix[13];
 		mZ = matrix[2] * worldX + matrix[6] * worldY + matrix[10] * worldZ + matrix[14];
@@ -292,7 +292,7 @@ public class Joint extends Point3f {
 	}
 
 	public void refreshWorldPosition() {
-		mSkeleton.mTransform.apply3D(mX*mSkeleton.mScale,mY*mSkeleton.mScale,mZ*mSkeleton.mScale, mWorldPosition);
+		mMassAggregation.mTransform.apply3D(mX*mMassAggregation.mScale,mY*mMassAggregation.mScale,mZ*mMassAggregation.mScale, mWorldPosition);
 	}
 
 	public void startDrag() {
@@ -303,14 +303,14 @@ public class Joint extends Point3f {
 	}
 
 	public void dragLocal(float deltaX,float deltaY,float deltaZ) {
-		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
+		final float fac = 1f/mMassAggregation.mCarrier.getScale()/mMassAggregation.mScale;
 
 		//mDragVec.set(deltaX*fac,deltaY*fac,deltaZ*fac);
 		mDragTo.add(deltaX*fac,deltaY*fac,deltaZ*fac);
 
 		refreshResDrag();
-		if(mCurResDrag.mY<mSkeleton.mLowerLimit)
-			mCurResDrag.mY = mSkeleton.mLowerLimit;
+		if(mCurResDrag.mY<mMassAggregation.mLowerLimit)
+			mCurResDrag.mY = mMassAggregation.mLowerLimit;
 		mDragVec.setFromTo(mPrevDrag,mCurResDrag);
 		mPrevDrag.set(mCurResDrag);
 	}
@@ -319,7 +319,7 @@ public class Joint extends Point3f {
 //		final float fac = 1f/mSkeleton.mCarrier.getScale()/mSkeleton.mScale;
 		//mSkeleton.mInvVectorTransform.apply3D(deltaX*fac,deltaY*fac,deltaZ*fac, mDragVec);
 
-		mSkeleton.mInvVectorTransform.apply3D(deltaX,deltaY,deltaZ, tempVec);
+		mMassAggregation.mInvVectorTransform.apply3D(deltaX,deltaY,deltaZ, tempVec);
 		dragLocal(tempVec.mX,tempVec.mY,tempVec.mZ);
 //		mDragTo.add(mDragVec);
 //		if(mDragTo.mY<mSkeleton.mLowerLimit)
@@ -362,8 +362,8 @@ public class Joint extends Point3f {
 			return;
 		final float baseX = parent.mX;
 		final float baseY = parent.mY;
-		float deltaX = mSkeleton.toJointX(worldX)-baseX;
-		float deltaY = mSkeleton.toJointY(worldY)-baseY;
+		float deltaX = mMassAggregation.toJointX(worldX)-baseX;
+		float deltaY = mMassAggregation.toJointY(worldY)-baseY;
 		if(invert) {
 			deltaX = -deltaX;
 			deltaY = -deltaY;
@@ -496,14 +496,9 @@ public class Joint extends Point3f {
 		mVelY += velY;
 	}
 
-	@Override
-	public String toString() {
-		return this.mName;
-	}
-
 	public float getWorldDistance(float worldX, float worldY) {
-		final float dx = worldX-mSkeleton.getJointWorldX(this);
-		final float dy = worldY-mSkeleton.getJointWorldY(this);
+		final float dx = worldX-mMassAggregation.getJointWorldX(this);
+		final float dy = worldY-mMassAggregation.getJointWorldY(this);
 		return (float)Math.sqrt(dx*dx + dy*dy);
 	}
 
@@ -545,5 +540,28 @@ public class Joint extends Point3f {
 //			child.setDragRec(mDragVec);
 //		}
 //	}
+
+	public void copyFrom(Joint joint) {
+		super.set(joint);
+		mMassAggregation = joint.mMassAggregation;
+		mFixed = joint.mFixed;
+		mAnimate = joint.mAnimate;
+		mDragDelay = joint.mDragDelay;
+		mEnabled = joint.mEnabled;
+		mRadius = joint.mRadius;
+		mDragKeepDistance = joint.mDragKeepDistance;
+	}
+
+	@Override
+	public Joint clone() {
+		Joint joint = new Joint(this.mName);
+		joint.copyFrom(this);
+		return joint;
+	}
+
+	@Override
+	public String toString() {
+		return this.mName+": "+super.toString();
+	}
 
 }

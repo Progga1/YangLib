@@ -60,7 +60,7 @@ public class CartoonBone extends JointConnection {
 
 	public void setTextureCoordinatesIndex(int newIndex) {
 		mCurTexCoords = newIndex;
-		((CartoonSkeleton2D)mJoint1.mSkeleton).updateTexCoords();
+		((CartoonSkeleton2D)mJoint1.mMassAggregation).updateTexCoords();
 	}
 
 	public void incTextureCoordinatesIndex() {

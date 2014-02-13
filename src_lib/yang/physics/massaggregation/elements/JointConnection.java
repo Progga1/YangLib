@@ -1,5 +1,7 @@
 package yang.physics.massaggregation.elements;
 
+import yang.physics.massaggregation.MassAggregation;
+
 public class JointConnection {
 
 	//Properties
@@ -45,6 +47,12 @@ public class JointConnection {
 	@Override
 	public String toString() {
 		return "Bone:"+mName+" "+mJoint1.mName+"-"+mJoint2.mName;
+	}
+
+	public JointConnection cloneInto(MassAggregation massAggregation) {
+		JointConnection bone = new JointConnection(mName,massAggregation.getJointByName(mJoint1.mName),massAggregation.getJointByName(mJoint2.mName));
+		massAggregation.addBone(bone);
+		return bone;
 	}
 
 }

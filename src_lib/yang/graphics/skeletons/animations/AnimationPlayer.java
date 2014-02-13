@@ -32,6 +32,10 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		mPlaySounds = true;
 	}
 
+	public AnimationPlayer(MassAggregation skeleton) {
+		this(skeleton,null);
+	}
+
 	public void setAnimationTime(float newTime) {
 		mCurrentAnimationTime = newTime;
 		if(mCurrentAnimation==null)

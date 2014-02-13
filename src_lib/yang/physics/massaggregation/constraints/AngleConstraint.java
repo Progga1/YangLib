@@ -1,10 +1,12 @@
 package yang.physics.massaggregation.constraints;
 
 import yang.graphics.skeletons.CartoonBone;
+import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.JointConnection;
 
 public class AngleConstraint extends Constraint{
 
-	public CartoonBone mBone1,mBone2;
+	public JointConnection mBone1,mBone2;
 
 	private float mPrevUNormDirX;
 	private float mPrevUNormDirY;
@@ -13,7 +15,7 @@ public class AngleConstraint extends Constraint{
 	public float mSpanAngle;
 	public float mShiftAngle;
 
-	public AngleConstraint(CartoonBone bone1,CartoonBone bone2,float fromAngle,float toAngle) {
+	public AngleConstraint(JointConnection bone1,JointConnection bone2,float fromAngle,float toAngle) {
 		mBone1 = bone1;
 		mBone2 = bone2;
 
@@ -22,7 +24,7 @@ public class AngleConstraint extends Constraint{
 		mStrength = 3;
 	}
 
-	public AngleConstraint(CartoonBone bone1,CartoonBone bone2) {
+	public AngleConstraint(JointConnection bone1,JointConnection bone2) {
 		this(bone1,bone2,0,0);
 	}
 
@@ -68,6 +70,15 @@ public class AngleConstraint extends Constraint{
 	@Override
 	public boolean containsBone(CartoonBone bone) {
 		return mBone1==bone || mBone2==bone;
+	}
+
+	@Override
+	public AngleConstraint cloneInto(MassAggregation target) {
+		AngleConstraint newConstr = new AngleConstraint(target.getConnectionByName(mBone1.mName),target.getConnectionByName(mBone2.mName));
+		newConstr.mSpanAngle = mSpanAngle;
+		newConstr.mShiftAngle = mShiftAngle;
+		target.addConstraint(newConstr);
+		return newConstr;
 	}
 
 }
