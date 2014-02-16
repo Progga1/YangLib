@@ -50,6 +50,7 @@ public class Joint extends Point3f {
 	public Vector3f mDragVec = new Vector3f();
 	public boolean mDragging;
 	public float mParentCurAngle;
+	public boolean mAnimDisabled = false;
 
 	private Vector3f tempVec = new Vector3f(), tempVec2 = new Vector3f();
 

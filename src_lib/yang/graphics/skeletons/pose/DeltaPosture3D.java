@@ -35,7 +35,7 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 		for(final Joint joint:skeleton.mJoints) {
 			if(joint.mAnimate) {
 				final JointEditData jointData = mSkeletonData.mJointData[i++];
-				if(!joint.mDragging && mData[c]!=Float.MAX_VALUE) {
+				if(!joint.mAnimDisabled && mData[c]!=Float.MAX_VALUE) {
 					if(interpolationPose==null) {
 
 					}else{

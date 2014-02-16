@@ -447,4 +447,10 @@ public class MassAggregation {
 		return "JOINTS: "+mJoints+"\nCONNECTIONS: "+mBones;
 	}
 
+	public void setFixed(boolean b) {
+		for(Joint joint:mJoints) {
+			joint.mFixed = true;
+		}
+	}
+
 }
