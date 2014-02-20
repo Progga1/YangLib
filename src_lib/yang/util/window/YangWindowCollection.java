@@ -10,6 +10,7 @@ public class YangWindowCollection<WindowType extends YangWindow<?>> {
 	public YangList<WindowType> mWindows;
 	public Point3f mLookAtReference = null;
 	public DefaultGraphics<?> mGraphics;
+	protected boolean mInteracting = false;
 
 	public YangWindowCollection(DefaultGraphics<?> graphics) {
 		mWindows = new YangList<WindowType>();
@@ -47,12 +48,15 @@ public class YangWindowCollection<WindowType extends YangWindow<?>> {
 	}
 
 	public boolean handleEvent(YangEvent event) {
+		mInteracting = false;
 		for(final YangWindow<?> window:mWindows) {
 			if(!window.mVisible)
 				continue;
-			event.handle(window);
+			if(event.handle(window)) {
+				mInteracting = true;
+			}
 		}
-		return false;
+		return mInteracting;
 	}
 
 	public void draw(int drawPass,boolean solid) {
@@ -84,6 +88,10 @@ public class YangWindowCollection<WindowType extends YangWindow<?>> {
 		for(final YangWindow<?> window:mWindows) {
 			window.mDrawDebugPoints = drawDebug;
 		}
+	}
+
+	public boolean isInteracting() {
+		return mInteracting;
 	}
 
 }

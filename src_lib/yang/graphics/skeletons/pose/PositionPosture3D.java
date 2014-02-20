@@ -56,7 +56,7 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 									mData[c]*weight + interpolationPose.mData[c]*dWeight,
 									mData[c+1]*weight + interpolationPose.mData[c+1]*dWeight,
 									mData[c+2]*weight + interpolationPose.mData[c+2]*dWeight,
-									40);
+									30);
 					}
 				}
 				c += 3;

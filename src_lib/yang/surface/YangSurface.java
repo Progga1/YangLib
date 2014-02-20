@@ -548,7 +548,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 		}
 	}
 
-	protected boolean playsMacro() {
+	protected boolean isPlayingMacro() {
 		return mMacro!=null;
 	}
 

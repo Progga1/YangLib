@@ -137,4 +137,16 @@ public abstract class YangPointerEvent extends YangEvent {
 		mDeltaZ = delta.mZ;
 	}
 
+	public void set(YangPointerEvent pointerEvent) {
+		mX = pointerEvent.mX;
+		mY = pointerEvent.mY;
+		mZ = pointerEvent.mZ;
+		mButton = pointerEvent.mButton;
+		mAction = pointerEvent.mAction;
+		mId = pointerEvent.mId;
+		mDeltaX = pointerEvent.mDeltaX;
+		mDeltaY = pointerEvent.mDeltaY;
+		mDeltaZ = pointerEvent.mDeltaZ;
+	}
+
 }
