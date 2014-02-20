@@ -13,7 +13,7 @@ public class InputState {
 	public int mCurPointerDownCount = 0;
 	public boolean mShiftDown = false;
 
-	public boolean mTriggerZooming = true;
+	public boolean mTriggerZooming = false;
 
 	public final YangEventQueue mEventQueue;
 
