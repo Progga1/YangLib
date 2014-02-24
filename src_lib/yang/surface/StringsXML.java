@@ -5,12 +5,13 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import yang.graphics.font.DrawableAnchoredLines;
 
@@ -63,17 +64,11 @@ public class StringsXML {
 	private final static StringsXML load(InputStream xmlStream, StringsXML stringsXML) {
 		stringsXML.mStrings.clear();
 		try {
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+			spf.setValidating(false);
+			SAXParser sp = spf.newSAXParser();
+			sp.parse(new InputSource(xmlStream), new StringXMLParser(stringsXML));
 
-			//TODO xml parser: find better solution for android
-			try {	//load driver if possible (needed for android, crashes on pc)
-				Class.forName("org.xmlpull.v1.sax2.Driver", false, null);	//check if class exists
-				System.setProperty("org.xml.sax.driver","org.xmlpull.v1.sax2.Driver");	//needed on android
-			} catch (Exception e) { }
-
-			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(new StringXMLParser(stringsXML));
-			reader.parse(new InputSource(xmlStream));
-			xmlStream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -131,7 +126,7 @@ public class StringsXML {
 
 	private static class StringXMLParser extends DefaultHandler {
 
-		private String mCurString;
+		private StringBuffer accumulator = new StringBuffer();
 		private String mCurKey;
 		private StringsXML mStrings;
 
@@ -141,22 +136,22 @@ public class StringsXML {
 
 		@Override
 		public void characters(char[] ch, int start, int length) throws SAXException {
-			mCurString = new String(ch, start, length);
-			mCurString.trim().replace("\n", "\0").replace("\t", "\0").replace("\\n", "\n").replace("\\t", "\t").replace("\\'", "'");
+			accumulator.append(ch, start, length);
 		}
 
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-			if (localName.equals("string")) {
+			accumulator.setLength(0);
+			if (qName.equals("string")) {
 				mCurKey = atts.getValue("name");
 			}
 		}
 
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException {
-
-			if (localName.equals("string")) {
-				mStrings.mStrings.put(mCurKey, mCurString);
+			String finalString = accumulator.toString().trim().replace("\n", "\0").replace("\t", "\0").replace("\\n", "\n").replace("\\t", "\t").replace("\\'", "'");
+			if (qName.equals("string")) {
+				mStrings.mStrings.put(mCurKey, finalString);
 			}
 		}
 	}
