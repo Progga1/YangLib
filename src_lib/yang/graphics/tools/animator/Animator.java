@@ -26,7 +26,7 @@ public class Animator implements YangEventListener {
 	public AbstractSoundManager mSound;
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
-	protected CartoonSkeleton2D mCurSkeleton;
+	public CartoonSkeleton2D mCurSkeleton;
 	protected Texture mCurTexture;
 	protected SkeletonCarrier mCurCarrier;
 	@SuppressWarnings("rawtypes")
@@ -57,6 +57,7 @@ public class Animator implements YangEventListener {
 	public float mPrevSX;
 	public float mPrevSY;
 	private final Rect mBoundaries;
+	protected Joint mHoverJoint = null;
 
 	public Animator(Default2DGraphics graphics2D) {
 		mGraphics2D = graphics2D;
@@ -80,7 +81,10 @@ public class Animator implements YangEventListener {
 	}
 
 	public void savePose() {
-		mCurFrame.mPose.copyFromSkeleton(mCurSkeleton);
+		if(mCurSkeleton!=null) {
+			mCurFrame.mPose.copyFromSkeleton(mCurSkeleton);
+			mCurAnimation.setJointsAnimated(mCurSkeleton);
+		}
 	}
 
 	public void saveChangedPose() {
@@ -189,6 +193,7 @@ public class Animator implements YangEventListener {
 	}
 
 	public void selectSkeleton(int index) {
+		saveChangedPose();
 		mCurSkeleton = mSkeletons.get(index);
 		mCurSkeleton.mScale = 1;
 		mCurCarrier = mCurSkeleton.mCarrier;
@@ -200,12 +205,14 @@ public class Animator implements YangEventListener {
 	}
 
 	public void selectAnimation(int index) {
+		saveChangedPose();
 		mCurAnimation = mCurAnimationSystem.mAnimations.get(index);
 		mCurAnimation.mAutoAnimate = true;
 		mCurAnimationPlayer.mLockedAnimation = false;
 		mCurAnimationPlayer.setAnimation(mCurAnimation);
 		mAnimationIndex = index;
 		selectKeyFrame(0,true);
+		mCurSkeleton.setJointAnimationsEnabled(mCurAnimation);
 	}
 
 	public void selectKeyFrame(int index,boolean apply) {
@@ -310,13 +317,13 @@ public class Animator implements YangEventListener {
 
 	@Override
 	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
-
+		mCurPntX = mGraphics2D.normToGameX(x,y);
+		mCurPntY = mGraphics2D.normToGameY(x,y);	//TODO moved from pointerDown
+		mHoverJoint = mCurSkeleton.pickJoint2D(mCurPntX,mCurPntY);
 	}
 
 	@Override
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
-		mCurPntX = mGraphics2D.normToGameX(x,y);
-		mCurPntY = mGraphics2D.normToGameY(x,y);
 		mPrevPntX = mCurPntX;
 		mPrevPntY = mCurPntY;
 		mPrevSX = x;
@@ -377,7 +384,10 @@ public class Animator implements YangEventListener {
 
 	@Override
 	public void keyDown(int code) {
-
+		if(code=='d') {
+			mHoverJoint.mAnimDisabled ^= true;
+			mPoseChanged = true;
+		}
 	}
 
 	@Override

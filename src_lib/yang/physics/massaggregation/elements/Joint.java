@@ -512,7 +512,7 @@ public class Joint extends Point3f {
 	}
 
 	public boolean isAnimated() {
-		return mAnimate;
+		return mAnimate && !mAnimDisabled;
 	}
 
 	public void applyTransform(YangMatrix transform) {

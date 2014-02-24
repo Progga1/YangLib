@@ -1,14 +1,14 @@
 package yang.graphics.skeletons.pose;
 
-import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.math.Geometry;
 import yang.math.MathConst;
+import yang.physics.massaggregation.Skeleton2D;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointNormalConstraint;
 import yang.util.Util;
 
 
-public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
+public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 
 	public final static float PI2 = (float)Math.PI/2;
 
@@ -21,7 +21,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 	}
 
 	@Override
-	public void applyPosture(CartoonSkeleton2D skeleton,AnglePosture2D interpolationPose,float weight) {
+	public void applyPosture(Skeleton2D skeleton,AnglePosture2D interpolationPose,float weight) {
 		int c = 0;
 		final float dWeight = 1-weight;
 		skeleton.mCurrentPose = this;
@@ -38,16 +38,18 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 					if(joint.mAnimate) {
 						float x = mData[c++];
 						float y = mData[c++];
-						if(weight!=1) {
-							x = x*weight + interpolationPose.mData[c-2]*dWeight;
-							y = y*weight + interpolationPose.mData[c-1]*dWeight;
-						}
-						if(skeleton.mRotation==0) {
-							joint.mX = x;
-							joint.mY = y;
-						}else{
-							joint.mX = -Geometry.rotateGetX(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
-							joint.mY = Geometry.rotateGetY(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+						if(x!=Float.MAX_VALUE) {
+							if(weight!=1) {
+								x = x*weight + interpolationPose.mData[c-2]*dWeight;
+								y = y*weight + interpolationPose.mData[c-1]*dWeight;
+							}
+							if(skeleton.mRotation==0) {
+								joint.mX = x;
+								joint.mY = y;
+							}else{
+								joint.mX = -Geometry.rotateGetX(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+								joint.mY = Geometry.rotateGetY(-x,y,skeleton.mRotAnchorX,skeleton.mRotAnchorY,skeleton.mRotation);
+							}
 						}
 					}else{
 						c += 2;
@@ -60,29 +62,31 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 							angle = 0;
 						else
 							angle = mData[c];
-						while(angle>PI)
-							angle -= 2*PI;
-						while(angle<-PI)
-							angle += 2*PI;
-						if(weight!=1) {
-							float prevAngle = interpolationPose.mData[c];
-							while(prevAngle>PI)
-								prevAngle -= 2*PI;
-							while(prevAngle<-PI)
-								prevAngle += 2*PI;
-							if(Math.abs(prevAngle-angle)>PI) {
-								float diff;
-								if(prevAngle>angle) {
-									diff = -2*PI+prevAngle-angle;
-								}else{
-									diff = 2*PI+prevAngle-angle;
-								}
-								angle = angle + (diff)*dWeight;
+						if(angle!=Float.MAX_VALUE) {
+							while(angle>PI)
+								angle -= 2*PI;
+							while(angle<-PI)
+								angle += 2*PI;
+							if(weight!=1) {
+								float prevAngle = interpolationPose.mData[c];
+								while(prevAngle>PI)
+									prevAngle -= 2*PI;
+								while(prevAngle<-PI)
+									prevAngle += 2*PI;
+								if(Math.abs(prevAngle-angle)>PI) {
+									float diff;
+									if(prevAngle>angle) {
+										diff = -2*PI+prevAngle-angle;
+									}else{
+										diff = 2*PI+prevAngle-angle;
+									}
+									angle = angle + (diff)*dWeight;
 
-							}else
-								angle = angle*weight + prevAngle*dWeight;
+								}else
+									angle = angle*weight + prevAngle*dWeight;
+							}
+							joint.setPosByAngle2D(angle+skeleton.mRotation);
 						}
-						joint.setPosByAngle2D(angle+skeleton.mRotation);
 					}
 					c++;
 				}
@@ -93,7 +97,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 	}
 
 	@Override
-	public void copyFromSkeleton(CartoonSkeleton2D skeleton) {
+	public void copyFromSkeleton(Skeleton2D skeleton) {
 		int c = 0;
 		//get array length
 		for(final Joint joint:skeleton.mJoints) {
@@ -115,16 +119,24 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 				final Joint parent = joint.mAngleParent;
 				if(parent==null) {
 					//By position
-					mData[c++] = joint.mX;
-					mData[c++] = joint.mY;
+					if(joint.mAnimDisabled) {
+						mData[c++] = Float.MAX_VALUE;
+						mData[c++] = Float.MAX_VALUE;
+					}else{
+						mData[c++] = joint.mX;
+						mData[c++] = joint.mY;
+					}
 				}else{
 					//By angle
-					float angle = joint.getParentAngle();
-					while(angle>MathConst.PI)
-						angle -= MathConst.PI*2;
-					while(angle<-MathConst.PI)
-						angle += MathConst.PI*2;
-					mData[c++] = angle;
+					if(joint.mAnimDisabled) {
+						float angle = joint.getParentAngle();
+						while(angle>MathConst.PI)
+							angle -= MathConst.PI*2;
+						while(angle<-MathConst.PI)
+							angle += MathConst.PI*2;
+						mData[c++] = angle;
+					}else
+						mData[c++] = Float.MAX_VALUE;
 				}
 			}
 
@@ -137,14 +149,17 @@ public class AnglePosture2D extends Posture<AnglePosture2D,CartoonSkeleton2D>{
 		for(final float angle:mData) {
 			if(res!="")
 				res += ",";
-			res += Util.round(angle,1000)+"f";
+			if(angle==Float.MAX_VALUE)
+				res += "Float.MAX_VALUE";
+			else
+				res += Util.round(angle,1000)+"f";
 		}
 		res = "new float[]{"+res+"}";
 		return res;
 	}
 
 	@Override
-	public void applyForceBased(CartoonSkeleton2D skeleton, AnglePosture2D interpolationPose, float weight) {
+	public void applyForceBased(Skeleton2D skeleton, AnglePosture2D interpolationPose, float weight) {
 		// TODO Auto-generated method stub
 
 	}

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.skeletons.CartoonSkeleton2D;
+import yang.graphics.skeletons.animations.Animation;
 import yang.graphics.skeletons.animations.AnimationPlayer;
 import yang.graphics.skeletons.animations.AnimationSystem;
 import yang.graphics.tools.animator.Animator;
@@ -74,6 +75,7 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mKeyMainMenu.addItem("PLAY", "Play/Pause").setShortCut('W');
 		mKeyMainMenu.addItem("STOP", "Stop").setShortCut('Q');
 		mKeyMainMenu.addItem("PRINT", "Generate Source").setShortCut('S');
+		mKeyMainMenu.addItem("PRINTACTIVEJOINTS", "Source: active joints").setShortCut('G');
 		mKeyMainMenu.addItem("PHYSICS", "Physics").setShortCut('P');
 		mKeyMainMenu.nextSubMenu("View");
 		mKeyMainMenu.addItem("DRAWSKEL", "Draw skeleton").setShortCut('B');
@@ -184,6 +186,20 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 			final String sourceCode = animator.mCurAnimation.toSourceCode();
 			System.out.println(sourceCode);
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(sourceCode), null);
+		}
+		if(key=="PRINTACTIVEJOINTS") {
+			Animation<?> anim = animator.mCurAnimation;
+			anim.setJointsAnimated(animator.mCurSkeleton);
+			final StringBuilder sourceCode = new StringBuilder(64);
+			sourceCode.append("mActiveJoints = new boolean[]{");
+			for(int i=0;i<anim.getJointCount();i++) {
+				if(i>0)
+					sourceCode.append(',');
+				sourceCode.append(anim.isJointAnimated(i));
+			}
+			sourceCode.append("};");
+			System.out.println(sourceCode);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(sourceCode.toString()), null);
 		}
 		if(key=="PHYSICS") {
 			if(animator.isPhysicsActive()) {

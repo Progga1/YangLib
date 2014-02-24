@@ -308,4 +308,12 @@ public class Util {
 		return result.toString();
 	}
 
+	public static boolean[] createArray(int length,boolean value) {
+		boolean[] result = new boolean[length];
+		for(int i=0;i<result.length;i++) {
+			result[i] = value;
+		}
+		return result;
+	}
+
 }

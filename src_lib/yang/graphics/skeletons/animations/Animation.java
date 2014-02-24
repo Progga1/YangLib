@@ -3,10 +3,14 @@ package yang.graphics.skeletons.animations;
 import yang.graphics.skeletons.animations.interpolation.ConstantInterpolation;
 import yang.graphics.skeletons.animations.interpolation.Interpolation;
 import yang.graphics.skeletons.pose.Posture;
+import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.Joint;
+import yang.util.Util;
 
 public class Animation<CarrierType> {
 
 	public static WrapMode DEFAULT_WRAP_MODE = WrapMode.LOOP;
+	public static final boolean[] ALL_JOINTS_ACTIVE = Util.createArray(256,true);
 
 	public KeyFrame[] mKeyFrames;
 	public KeyFrame[] mPreviousFrames;
@@ -23,6 +27,7 @@ public class Animation<CarrierType> {
 	public int mKeyFrameCount = -1;
 	public int mTags = 0;
 	public boolean mDebug = false;
+	protected boolean[] mActiveJoints = ALL_JOINTS_ACTIVE;	//TODO not used yet, implement properly!
 
 	protected void startVisuals(CarrierType body) { }
 	public void startPhysics(CarrierType body) { }
@@ -175,6 +180,39 @@ public class Animation<CarrierType> {
 		if(time>mFrameCount)
 			return null;
 		return mNextFrames[(int)(time)];
+	}
+
+	public void setJointsAnimated(boolean[] animatedJoints) {
+		mActiveJoints = animatedJoints;
+	}
+
+	public void setJointsAnimated(MassAggregation templateMassAggregation) {
+
+		if(mActiveJoints==ALL_JOINTS_ACTIVE) {
+			int count = 0;
+			for(Joint joint:templateMassAggregation.mJoints) {
+				if(joint.mAnimate) {
+					count++;
+				}
+			}
+			mActiveJoints = new boolean[count];
+		}
+
+		int c = 0;
+		for(Joint joint:templateMassAggregation.mJoints) {
+			if(joint.mAnimate) {
+				mActiveJoints[c] = !joint.mAnimDisabled;
+				c++;
+			}
+		}
+	}
+
+	public boolean isJointAnimated(int jointId) {
+		return mActiveJoints[jointId];
+	}
+
+	public int getJointCount() {
+		return mActiveJoints.length;
 	}
 
 }

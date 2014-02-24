@@ -44,6 +44,9 @@ public class Skeleton2D extends MassAggregation {
 					graphics.setColor(1, 0, 0, alpha);
 				else
 					graphics.setColor(0.8f,0.8f,0.8f,alpha);
+				if(!joint.isAnimated()) {
+					graphics.multColor(0.55f);
+				}
 				graphics.drawRectCentered(worldPosX + joint.mX*scale * mirrorFac, worldPosY + joint.mY*scale, joint.getOutputRadius()*2);
 			}
 

@@ -48,6 +48,8 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 
 	@Override
 	public void proceed(float deltaTime) {
+		if(mCurrentAnimation==null)
+			return;
 		super.proceed(deltaTime);
 		mCurrentAnimation.stepPhysics(mBody,mCurrentAnimationTime,deltaTime);
 		if(!mOnlyPhysics)

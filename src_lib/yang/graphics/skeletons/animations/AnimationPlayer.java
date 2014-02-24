@@ -21,6 +21,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public boolean mLockedAnimation;
 	protected KeyFrame mCurrentPrevFrame,mCurrentNextFrame;
 
+
 	public AnimationPlayer(MassAggregation skeleton,AnimationType startAnimation) {
 		mSkeleton = skeleton;
 		mStartAnimation = startAnimation;
@@ -116,6 +117,8 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	}
 
 	public void proceed(float deltaTime) {
+		if(mCurrentAnimation==null)
+			return;
 		deltaTime *= mAnimationSpeed;
 		if(mCurrentAnimation.mAutoSetAnimationTime)
 			setAnimationTime(mCurrentAnimationTime+deltaTime);

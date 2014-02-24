@@ -22,6 +22,7 @@ public class JointNormalConstraint extends Joint{
 		mSavePose = false;
 		setParent(angleParent);
 		recalculate();
+		super.mAnimate = false;
 	}
 
 	@Override

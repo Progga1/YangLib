@@ -3,6 +3,7 @@ package yang.graphics.skeletons;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.skeletons.animations.Animation;
 import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.translator.AbstractGFXLoader;
@@ -25,7 +26,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	private boolean mInitialized;
 	public GraphicsTranslator mTranslator;
 	public DefaultGraphics<?> mGraphics;
-
 
 	//GFX data
 	public DrawBatch mMesh;
@@ -386,6 +386,16 @@ public class CartoonSkeleton2D extends Skeleton2D {
 
 	public void loadTexture() {
 		mTextureHolder.getTexture(mTranslator.mGFXLoader);
+	}
+
+	public void setJointAnimationsEnabled(Animation<?> animation) {
+		int c = 0;
+		for(Joint joint:mJoints) {
+			if(joint.mAnimate) {
+				joint.mAnimDisabled = !animation.isJointAnimated(c);
+				c++;
+			}
+		}
 	}
 
 }

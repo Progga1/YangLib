@@ -110,7 +110,7 @@ public class MassAggregation {
 	public int calcAnimatedJointCount() {
 		int count = 0;
 		for(final Joint joint:mJoints) {
-			if(joint.isAnimated()) {
+			if(joint.mAnimate) {
 				count++;
 			}
 		}
