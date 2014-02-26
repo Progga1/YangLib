@@ -327,6 +327,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawSphere(verticesAlpha,verticesBeta,mInterMatrix,textureCoordFactorX,textureCoordFactorY);
 	}
 
+	public void drawSphere(int verticesAlpha,int verticesBeta,Point3f position, float radius, float textureCoordFactorX,float textureCoordFactorY) {
+		drawSphere(verticesAlpha,verticesBeta,position.mX,position.mY,position.mZ,radius,textureCoordFactorX,textureCoordFactorY);
+	}
+
 	private static Vector3f vec1 = new Vector3f();
 	private static Vector3f vec2 = new Vector3f();
 	private static Vector3f vec3 = new Vector3f();

@@ -51,7 +51,7 @@ public class Point3f {
 		mZ += point.mZ;
 	}
 
-	public void add(Vector3f vector,float factor) {
+	public void add(Point3f vector,float factor) {
 		mX += vector.mX*factor;
 		mY += vector.mY*factor;
 		mZ += vector.mZ*factor;
@@ -63,7 +63,7 @@ public class Point3f {
 		mZ -= z;
 	}
 
-	public void sub(Vector3f vector) {
+	public void sub(Point3f vector) {
 		mX -= vector.mX;
 		mY -= vector.mY;
 		mZ -= vector.mZ;

@@ -199,4 +199,24 @@ public class Vector3f extends Point3f{
 		normalize();
 	}
 
+	public void setMagnitute(float newMagnitute) {
+		float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
+		if(d!=0) {
+			d = 1f/d * newMagnitute;
+			mX *= d;
+			mY *= d;
+			mZ *= d;
+		}
+	}
+
+	public void setMaxMagnitute(float maxMagnitute) {
+		float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
+		if(d>maxMagnitute) {
+			d = 1f/d * maxMagnitute;
+			mX *= d;
+			mY *= d;
+			mZ *= d;
+		}
+	}
+
 }
