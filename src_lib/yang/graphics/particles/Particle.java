@@ -77,8 +77,9 @@ public class Particle {
 
 	    derivedStep();
 
-	    if(mNormLifeTime>1)
+	    if(mNormLifeTime>1) {
 	    	mExists = false;
+	    }
 	}
 
 	public void setScale(float minScale, float maxScale) {
