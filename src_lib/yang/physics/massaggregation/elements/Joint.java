@@ -565,4 +565,10 @@ public class Joint extends Point3f {
 		return this.mName+": "+super.toString();
 	}
 
+	public void clearForce() {
+		mForceX = 0;
+		mForceY = 0;
+		mForceZ = 0;
+	}
+
 }

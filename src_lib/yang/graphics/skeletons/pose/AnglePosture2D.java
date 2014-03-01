@@ -158,10 +158,4 @@ public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 		return res;
 	}
 
-	@Override
-	public void applyForceBased(Skeleton2D skeleton, AnglePosture2D interpolationPose, float weight) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

@@ -9,7 +9,6 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public MassAggregation mSkeleton;
 	public boolean mOnlyPhysics;
 
-	public boolean mForceBased = false;
 	protected AnimationType mStartAnimation;
 	public AnimationType mCurrentAnimation;
 	public boolean mPlaySounds;
@@ -83,16 +82,10 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 				final KeyFrame nextFrame = mCurrentNextFrame;
 
 				if(nextFrame==null) {
-					if(mForceBased)
-						prevFrame.mPose.applyForceBased(mSkeleton);
-					else
-						prevFrame.mPose.applyPosture(mSkeleton);
+					prevFrame.mPose.applyPosture(mSkeleton);
 				}else{
 					final float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mTimeFactor;
-					if(mForceBased)
-						nextFrame.mPose.applyForceBased(mSkeleton, prevFrame.mPose, t);
-					else
-						nextFrame.mPose.applyPosture(mSkeleton, prevFrame.mPose, t);
+					nextFrame.mPose.applyPosture(mSkeleton, prevFrame.mPose, t);
 				}
 			}
 		}

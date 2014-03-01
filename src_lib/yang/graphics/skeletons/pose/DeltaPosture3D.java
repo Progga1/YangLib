@@ -27,7 +27,6 @@ public class DeltaPosture3D extends Posture<DeltaPosture3D,MassAggregation> {
 
 	}
 
-	@Override
 	public void applyForceBased(MassAggregation skeleton, DeltaPosture3D interpolationPose, float weight) {
 		int c = 0;
 		int i = 0;

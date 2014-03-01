@@ -55,7 +55,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 
-	public int mMaxStepsPerCycle = 32;
+	public int mMaxStepsPerCycle = 64;
 
 	private UpdateMode mUpdateMode;
 	protected boolean mInitialized = false;
@@ -78,6 +78,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	public int mDebugSwitchKey = -1;
 	public boolean mPaused = false;
 	public float mPlaySpeed = 1;
+	public float mFastForwardToTime = -1;
 	public String mMacroFilename;
 	public boolean mException = false;
 	private int mStartupSteps = 1;
@@ -272,6 +273,9 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 
 		refreshMetaMode();
 
+		if(mFastForwardToTime>0) {
+			mPlaySpeed = 1/32f;
+		}
 	}
 
 	public void waitUntilInitialized() {
@@ -362,6 +366,11 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 
 		if(!mInitialized || mRuntimeState>0 || mLoadingState<mStartupSteps)
 			return;
+		if(mFastForwardToTime>0 && mFastForwardToTime<mProgramTime) {
+			mPlaySpeed = 1;
+			mFastForwardToTime = -1;
+		}
+
 		if(mCatchUpTime==0)
 			mCatchUpTime = System.nanoTime()-1;
 
@@ -387,8 +396,12 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 
 		if(!mPaused && !mException) {
 			try{
-				if(mMacro!=null)
+				if(mMacro!=null) {
 					mMacro.step();
+					if(mMacro.mFinished && mEventQueue.mMetaMode) {
+						refreshMetaMode();
+					}
+				}
 				handleEvents();
 				if(mLoadingState>=mStartupSteps) {
 					mStepCount ++;
@@ -549,11 +562,11 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	}
 
 	protected boolean isPlayingMacro() {
-		return mMacro!=null;
+		return mMacro!=null && !mMacro.mFinished;
 	}
 
 	protected void refreshMetaMode() {
-		mEventQueue.mMetaMode = mPaused || mMacro!=null;
+		mEventQueue.mMetaMode = mPaused || (mMacro!=null && !mMacro.mFinished);
 	}
 
 	public void stop() {
