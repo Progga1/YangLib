@@ -82,8 +82,12 @@ public class YangWindow<InternalType extends RawEventListener & Drawable & Exten
 //		return z>=mMinEventZ && z<=mMaxEventZ;
 //	}
 
+	protected boolean inRange(float x,float y,float z) {
+		return x>=mInternalObject.getLeft() && x<=mInternalObject.getRight() && y>=mInternalObject.getBottom() && y<=mInternalObject.getTop() && z>=mMinEventZ && z<=mMaxEventZ;
+	}
+
 	protected boolean inRange(Point3f point) {
-		return point.mX>=mInternalObject.getLeft() && point.mX<=mInternalObject.getRight() && point.mY>=mInternalObject.getBottom() && point.mY<=mInternalObject.getTop() && point.mZ>=mMinEventZ && point.mZ<=mMaxEventZ;
+		return inRange(point.mX,point.mY,point.mZ);
 	}
 
 	public void draw(int drawPass) {
@@ -143,10 +147,11 @@ public class YangWindow<InternalType extends RawEventListener & Drawable & Exten
 			pointerEvent.mX = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])/w;
 			pointerEvent.mY = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])/w;
 			pointerEvent.mZ = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])/w;
-			final boolean eventOK = pointerEvent.mZ>=mMinEventZ && pointerEvent.mZ<=mMaxEventZ;
+//			boolean eventOK = pointerEvent.mZ>=mMinEventZ && pointerEvent.mZ<=mMaxEventZ;
+			boolean eventOK = inRange(pointerEvent.mX,pointerEvent.mY,pointerEvent.mZ);
 			mCursorPositions[pointerEvent.mId].set(pointerEvent.mX,pointerEvent.mY,pointerEvent.mZ);
 			if(eventOK)
-				pointerEvent.handle(mInternalObject);
+				eventOK = pointerEvent.handle(mInternalObject);
 			pointerEvent.mX = x;
 			pointerEvent.mY = y;
 			pointerEvent.mZ = z;

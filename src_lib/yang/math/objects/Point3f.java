@@ -168,4 +168,22 @@ public class Point3f {
 		mZ = point1.mZ*dWeight + point2.mZ*weight;
 	}
 
+	public void scale(float scalar) {
+		mX *= scalar;
+		mY *= scalar;
+		mZ *= scalar;
+	}
+
+	public void scale(float scaleX,float scaleY,float scaleZ) {
+		mX *= scaleX;
+		mY *= scaleY;
+		mZ *= scaleZ;
+	}
+
+	public void scale(Vector3f scaleVector) {
+		mX *= scaleVector.mX;
+		mY *= scaleVector.mY;
+		mZ *= scaleVector.mZ;
+	}
+
 }

@@ -66,24 +66,6 @@ public class Vector3f extends Point3f{
 		}
 	}
 
-	public void scale(float scalar) {
-		mX *= scalar;
-		mY *= scalar;
-		mZ *= scalar;
-	}
-
-	public void scale(float scaleX,float scaleY,float scaleZ) {
-		mX *= scaleX;
-		mY *= scaleY;
-		mZ *= scaleZ;
-	}
-
-	public void scale(Vector3f scaleVector) {
-		mX *= scaleVector.mX;
-		mY *= scaleVector.mY;
-		mZ *= scaleVector.mZ;
-	}
-
 	public float normalize() {
 		final float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
 		if(d!=0) {
