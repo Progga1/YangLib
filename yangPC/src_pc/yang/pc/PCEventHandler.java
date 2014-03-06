@@ -8,8 +8,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import javax.swing.SwingUtilities;
-
 import yang.events.EventQueueHolder;
 import yang.events.Keys;
 import yang.events.YangEventQueue;
@@ -80,27 +78,11 @@ public class PCEventHandler  implements KeyListener, MouseListener, MouseMotionL
 	public void mouseExited(MouseEvent event) {}
 
 	public void putPointerEvent(int action,MouseEvent event) {
-		int button;
+		int button = event.getButton();
 
-		if (action==SurfacePointerEvent.ACTION_POINTERMOVE) {
-			button = SurfacePointerEvent.BUTTON_NONE;
-		} else {
-			if (SwingUtilities.isLeftMouseButton(event)) {
-					if (event.isAltDown() && DebugYang.useAltForMiddleButton) {
-						button = SurfacePointerEvent.BUTTON_MIDDLE;
-					} else if (event.isControlDown() && DebugYang.useCtrlForRightButton) {
-						button = SurfacePointerEvent.BUTTON_RIGHT;
-					} else {
-						button = SurfacePointerEvent.BUTTON_LEFT;
-					}
-			} else if (SwingUtilities.isRightMouseButton(event)) {
-				button = SurfacePointerEvent.BUTTON_RIGHT;
-			} else if (SwingUtilities.isMiddleMouseButton(event)) {
-				button = SurfacePointerEvent.BUTTON_MIDDLE;
-			} else {
-				throw new RuntimeException("unkonwn button");
-			}
-		}
+		if (DebugYang.useAltForMiddleButton && button == 1) button = SurfacePointerEvent.BUTTON_MIDDLE;
+		if (DebugYang.useCtrlForRightButton && button == 1) button = SurfacePointerEvent.BUTTON_RIGHT;
+
 		mEventQueue.putSurfacePointerEvent(action, event.getX(), event.getY(), button, 0);
 	}
 
