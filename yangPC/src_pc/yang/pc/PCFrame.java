@@ -1,10 +1,7 @@
 package yang.pc;
 
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -77,24 +74,14 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 
 	}
 
-	private final KeyEventDispatcher altDisabler = new KeyEventDispatcher() {
-        @Override
-        public boolean dispatchKeyEvent(KeyEvent e) {
-            return e.getKeyCode() == 18;
-        }
-    };
-
 	@Override
 	public void focusGained(FocusEvent arg0) {
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(altDisabler);
 		//mSurface.resume();
 
 	}
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(altDisabler);
-
 //		if(mFirstFocLost) {
 //			mFirstFocLost = false;
 //			return;
