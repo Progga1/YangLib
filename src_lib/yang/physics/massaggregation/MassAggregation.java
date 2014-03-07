@@ -94,7 +94,7 @@ public class MassAggregation {
 	}
 
 	public void get2DBoundaries(Rect target) {
-		target.set(100000,-100000,-100000,100000);
+		target.set(100000,100000,-100000,-100000);
 		for(final Joint joint:mJoints) {
 			if(joint.mX<target.mLeft)
 				target.mLeft = joint.mX;
