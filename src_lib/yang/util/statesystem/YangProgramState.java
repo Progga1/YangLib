@@ -6,13 +6,14 @@ import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.Default3DGraphics;
+import yang.graphics.interfaces.Clock;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.sound.AbstractSoundManager;
 import yang.surface.StringsXML;
 import yang.systemdependent.AbstractResourceManager;
 
-public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener {
+public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener,Clock {
 
 	public static final float PI = 3.1415926535f;
 
@@ -200,6 +201,11 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 
 	public void activate() {
 		mParentStateSystem.setState(this);
+	}
+
+	@Override
+	public double getTime() {
+		return mStateTimer;
 	}
 
 }

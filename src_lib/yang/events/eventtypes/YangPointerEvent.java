@@ -65,9 +65,12 @@ public abstract class YangPointerEvent extends YangEvent {
 		if(mAction==ACTION_POINTERDOWN) {
 			mInputState.mPointerDistance = -1;
 			mInputState.mCurPointerDownCount++;
+			mInputState.mKeyStates[mButton] = true;
 		}
-		if(mAction==ACTION_POINTERUP)
+		if(mAction==ACTION_POINTERUP) {
 			mInputState.mCurPointerDownCount--;
+			mInputState.mKeyStates[mButton] = false;
+		}
 		if(mInputState.mTriggerZooming && mInputState.mCurPointerDownCount==2 && mAction==ACTION_POINTERDRAG) {
 			final float dist = mInputState.mPointerTrackers[0].getDistance(mInputState.mPointerTrackers[1]);
 			if(mInputState.mPointerDistance>=0) {

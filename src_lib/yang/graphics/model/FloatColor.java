@@ -146,12 +146,12 @@ public class FloatColor extends Quadruple {
 		}
 		return new FloatColor(values);
 	}
-	
+
 	public static FloatColor fromHex(int rgba) {
 		return new FloatColor(
-				((rgba >> 24) 	& 0xff) / 255f, 
-				((rgba >> 16) 	& 0xff) / 255f, 
-				((rgba >> 8) 	& 0xff) / 255f, 
+				((rgba >> 24) 	& 0xff) / 255f,
+				((rgba >> 16) 	& 0xff) / 255f,
+				((rgba >> 8) 	& 0xff) / 255f,
 				((rgba) 		& 0xff) / 255f);
 	}
 
@@ -178,6 +178,13 @@ public class FloatColor extends Quadruple {
 		mValues[1] = (1-weight)*startColor.mValues[1] + weight*endColor.mValues[1];
 		mValues[2] = (1-weight)*startColor.mValues[2] + weight*endColor.mValues[2];
 		mValues[3] = (1-weight)*startColor.mValues[3] + weight*endColor.mValues[3];
+	}
+
+	public void blend(FloatColor endColor,float weight) {
+		mValues[0] = (1-weight)*mValues[0] + weight*endColor.mValues[0];
+		mValues[1] = (1-weight)*mValues[1] + weight*endColor.mValues[1];
+		mValues[2] = (1-weight)*mValues[2] + weight*endColor.mValues[2];
+		mValues[3] = (1-weight)*mValues[3] + weight*endColor.mValues[3];
 	}
 
 	public void toArray(float[] target, int offset) {

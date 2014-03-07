@@ -92,6 +92,10 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 
 	}
 
+	public void addAnimationTime(float timeOffset) {
+		setAnimationTime(mCurrentAnimationTime+timeOffset);
+	}
+
 	public void start() {
 		setAnimation(mStartAnimation);
 	}

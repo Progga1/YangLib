@@ -14,6 +14,7 @@ import yang.events.macro.MacroExecuter;
 import yang.events.macro.MacroWriter;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
+import yang.graphics.interfaces.Clock;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.stereovision.StereoVision;
@@ -31,7 +32,7 @@ import yang.systemdependent.YangSensor;
 import yang.systemdependent.YangSystemCalls;
 import yang.util.Util;
 
-public abstract class YangSurface implements EventQueueHolder,RawEventListener {
+public abstract class YangSurface implements EventQueueHolder,RawEventListener,Clock {
 
 	public static float PI = MathConst.PI;
 
@@ -669,6 +670,11 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener {
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		return false;
+	}
+
+	@Override
+	public double getTime() {
+		return mProgramTime;
 	}
 
 }

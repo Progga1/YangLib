@@ -106,6 +106,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 		if(code==Keys.F5) {
 			mSurface.setPaused(false);
 			mSurface.mPlaySpeed = 1;
+			mSurface.mFastForwardToTime = -1;
 		}
 		if(code==Keys.F6) {
 			if(mSurface.mPlaySpeed>0.125f*0.25f)

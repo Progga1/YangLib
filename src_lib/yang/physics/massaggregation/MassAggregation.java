@@ -233,50 +233,58 @@ public class MassAggregation {
 		return (y-mCarrier.getWorldY())*mCarrier.getScale();
 	}
 
+	public void calcForces() {
+		//Init force
+		for(final Joint joint:mJoints) {
+			if(joint.mFixed) {
+				joint.mForceX = 0;
+				joint.mForceY = 0;
+				joint.mForceZ = 0;
+			}else{
+				joint.mForceX = mConstantForceX*joint.mMass;
+				joint.mForceY = mConstantForceY*joint.mMass;
+				joint.mForceZ = mConstantForceZ*joint.mMass;
+			}
+
+			if(joint.mY+mCarrier.getWorldY()<mLowerLimit) {
+				final float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
+				joint.mForceY += (mLowerLimit-joint.mY)*uForce;
+				joint.mVelX *= mFloorFriction;
+			}
+		}
+
+		//Apply constraints
+		if(mConstraintsActivated) {
+			for(final Constraint constraint:mConstraints) {
+				constraint.apply();
+			}
+
+			for(final Joint joint:mJoints) {
+				joint.applyConstraint();
+			}
+		}
+	}
+
+	public void jointsStep(float deltaTime) {
+		for(final Joint joint:mJoints) {
+			joint.physicalStep(deltaTime);
+		}
+	}
+
 	public void physicalStep(float deltaTime) {
 
 		final float uDeltaTime = deltaTime/mAccuracy;
-		final float worldY = mCarrier.getWorldY();
 		int stepCount = (int)(mAccuracy * mSpeedFactor);
 		for(int i=0;i<stepCount;i++) {
 
-			//Init force
-			for(final Joint joint:mJoints) {
-				if(joint.mFixed) {
-					joint.mForceX = 0;
-					joint.mForceY = 0;
-					joint.mForceZ = 0;
-				}else{
-					joint.mForceX = mConstantForceX*joint.mMass;
-					joint.mForceY = mConstantForceY*joint.mMass;
-					joint.mForceZ = mConstantForceZ*joint.mMass;
-				}
-
-				if(joint.mY+worldY<mLowerLimit) {
-					final float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
-					joint.mForceY += (mLowerLimit-joint.mY)*uForce;
-					joint.mVelX *= mFloorFriction;
-				}
-			}
-
-			//Apply constraints
-			if(mConstraintsActivated) {
-				for(final Constraint constraint:mConstraints) {
-					constraint.apply();
-				}
-
-				for(final Joint joint:mJoints) {
-					joint.applyConstraint();
-				}
-			}
+			calcForces();
 
 			if(mForceCallback!=null) {
+				refreshJointWorldPositions();
 				mForceCallback.preApply(uDeltaTime);
 			}
 
-			for(final Joint joint:mJoints) {
-				joint.physicalStep(uDeltaTime);
-			}
+			jointsStep(uDeltaTime);
 
 		}
 
