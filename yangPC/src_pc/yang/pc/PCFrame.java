@@ -77,6 +77,7 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 	@Override
 	public void focusGained(FocusEvent arg0) {
 		//mSurface.resume();
+
 	}
 
 	@Override

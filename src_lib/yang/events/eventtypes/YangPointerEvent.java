@@ -7,10 +7,10 @@ import yang.math.objects.Vector3f;
 public abstract class YangPointerEvent extends YangEvent {
 
 	public int mAction;
-	public static final int BUTTON_NONE = -1;
-	public static final int BUTTON_LEFT = 0;
+	public static final int BUTTON_NONE = 0;
+	public static final int BUTTON_LEFT = 1;
 	public static final int BUTTON_MIDDLE = 2;
-	public static final int BUTTON_RIGHT = 1;
+	public static final int BUTTON_RIGHT = 3;
 
 	public static final int ACTION_POINTERDOWN = 0;
 	public static final int ACTION_POINTERMOVE = 1;

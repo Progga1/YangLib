@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public class DebugYang {
 
+
 	public static boolean AUTO_RECORD_MACRO = true;
 
 	public static boolean FORCE_FULLSCREEN = false;
@@ -17,6 +18,9 @@ public class DebugYang {
 	public static String PLAY_MACRO_FILENAME = null;
 
 	public static String stateString = null;
+
+	public static boolean useAltForMiddleButton = false;
+	public static boolean useCtrlForRightButton = false;
 
 	public static void setRelease() {
 		DEBUG_LEVEL = 0;
