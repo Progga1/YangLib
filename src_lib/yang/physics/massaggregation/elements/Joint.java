@@ -11,10 +11,10 @@ import yang.util.YangList;
 
 public class Joint extends Point3f {
 
-	public static float DEFAULT_FRICTION = 0.9998f;
+	public static float DEFAULT_FRICTION = 0.9997f;
 	public static float DEFAULT_RADIUS = 0.1f;
 	public static float TOWARDS_FACTOR = 50;
-	public static float AWAY_FACTOR = 1000;
+	public static float AWAY_FACTOR = 500;
 
 	//Properties
 	public int mId;
@@ -188,7 +188,7 @@ public class Joint extends Point3f {
 			if(mMassAggregation.m3D)
 				fac = TOWARDS_FACTOR * factor;//TODO 3D
 			else
-				fac = (mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR * mPositionForceFactor * factor;
+				fac = ((mVelX*dX+mVelY*dY<0)?AWAY_FACTOR:TOWARDS_FACTOR) * mPositionForceFactor * factor;
 			mForceX += fac * dX;
 			mForceY += fac * dY;
 			mForceZ += fac * dZ;
@@ -275,7 +275,7 @@ public class Joint extends Point3f {
 				//refreshResDrag();
 				mDragDelayed.lerp(mCurResDrag,mDragDelay);
 
-				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,2);
+				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,2f);
 			}
 
 			mVelX += mForceX/mMass * mForceFactor * deltaTime;
@@ -298,9 +298,10 @@ public class Joint extends Point3f {
 
 	public void startDrag() {
 		mDragDelayed.set(mX,mY,mZ);
-		//mDragDelayed.set(mWorldPosition);
 		mDragTo.set(mDragDelayed);
 		mDragging = true;
+		mPrevDrag.set(mDragDelayed);
+		refreshResDrag();
 	}
 
 	public void dragLocal(float deltaX,float deltaY,float deltaZ) {

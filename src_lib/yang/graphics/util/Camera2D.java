@@ -12,7 +12,7 @@ public class Camera2D {
 	private static final float MIN_ZOOM = 1;
 	private static final float ZOOM_STEP = 1;
 	private Point2f mPos;
-	private Point2f mTarPos;
+	public Point2f mTarPos;
 	private float mTarRotation;
 
 	private float mZoom;

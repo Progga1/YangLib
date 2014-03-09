@@ -23,6 +23,9 @@ import yang.util.YangList;
 
 public class Animator implements YangEventListener {
 
+	public static float FRICTION_EDIT = 0.98f;
+	public static float FRICTION_PHYSICS = Joint.DEFAULT_FRICTION;
+
 	public AbstractSoundManager mSound;
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
@@ -115,7 +118,10 @@ public class Animator implements YangEventListener {
 
 		if(mCurSkeleton!=null) {
 			mCurSkeleton.refreshVisualData();
-			mGraphics.bindTexture(mTextures.get(mSkeletonIndex));
+			if(mSkeletonIndex<mTextures.size())
+				mGraphics.bindTexture(mTextures.get(mSkeletonIndex));
+			else
+				mGraphics.bindTexture(null);
 			mCurSkeleton.draw();
 			if(mDrawSkeleton) {
 				//mCurSkeleton.mCarrier.drawCollision();
@@ -130,7 +136,7 @@ public class Animator implements YangEventListener {
 			mCurSkeleton.mConstantForceX = 0;
 			mCurSkeleton.mConstantForceY = mGravity;
 			mCurSkeleton.mLowerLimit = 0;
-			mCurSkeleton.setFriction(Joint.DEFAULT_FRICTION);
+			mCurSkeleton.setFriction(FRICTION_PHYSICS);
 		}else{
 			mCurSkeleton.mConstantForceX = 0;
 			mCurSkeleton.mConstantForceY = 0;
@@ -138,7 +144,7 @@ public class Animator implements YangEventListener {
 				mCurSkeleton.mLowerLimit = 0;
 			else
 				mCurSkeleton.mLowerLimit = -100;
-			mCurSkeleton.setFriction(0.98f);
+			mCurSkeleton.setFriction(FRICTION_EDIT);
 		}
 	}
 
@@ -332,7 +338,7 @@ public class Animator implements YangEventListener {
 		case SurfacePointerEvent.BUTTON_LEFT:
 			mSkeletonEditing.mMainMarkedJoint = mCurSkeleton.pickJoint2D(mCurPntX, mCurPntY);
 			if(mSkeletonEditing.mMainMarkedJoint!=null)
-				mSkeletonEditing.mMainMarkedJoint.startDrag();
+				mSkeletonEditing.startDrag();
 			break;
 		case SurfacePointerEvent.BUTTON_MIDDLE:
 
@@ -358,7 +364,7 @@ public class Animator implements YangEventListener {
 		switch(event.mButton) {
 			case SurfacePointerEvent.BUTTON_LEFT:
 				if(mSkeletonEditing.mMainMarkedJoint!=null) {
-					mSkeletonEditing.mMainMarkedJoint.dragWorld(deltaX, deltaY);
+					mSkeletonEditing.mMainMarkedJoint.dragLocal(deltaX, deltaY, 0);
 					mPoseChanged = true;
 				}
 				break;

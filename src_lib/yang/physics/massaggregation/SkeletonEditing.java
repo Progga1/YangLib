@@ -6,4 +6,8 @@ public class SkeletonEditing {
 
 	public Joint mMainMarkedJoint;
 
+	public void startDrag() {
+		mMainMarkedJoint.startDrag();
+	}
+
 }

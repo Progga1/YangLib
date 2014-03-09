@@ -59,10 +59,14 @@ public class JointNormalConstraint extends Joint{
 			mForceY += fY;
 			fX *= 0.8f;
 			fY *= 0.8f;
-			mBone.mJoint1.mForceX -= fX*mWeightJoint1;
-			mBone.mJoint1.mForceY -= fY*mWeightJoint1;
-			mBone.mJoint2.mForceX -= fX*mWeightJoint2;
-			mBone.mJoint2.mForceY -= fY*mWeightJoint2;
+			if(!mBone.mJoint1.mFixed) {
+				mBone.mJoint1.mForceX -= fX*mWeightJoint1;
+				mBone.mJoint1.mForceY -= fY*mWeightJoint1;
+			}
+			if(!mBone.mJoint2.mFixed) {
+				mBone.mJoint2.mForceX -= fX*mWeightJoint2;
+				mBone.mJoint2.mForceY -= fY*mWeightJoint2;
+			}
 		}
 
 	}

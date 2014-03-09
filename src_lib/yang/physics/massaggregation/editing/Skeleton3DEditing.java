@@ -160,7 +160,7 @@ public class Skeleton3DEditing {
 	}
 
 	public Joint pickJoint3D(Point3f pickPos,float pickRadius,float radiusFactor) {
-		return pickJoint3D(pickPos,pickRadius,radiusFactor,true);
+		return pickJoint3D(pickPos,pickRadius,radiusFactor,false);
 	}
 
 	public Joint pickJoint2D(float x,float y,float zoom,float radiusFactor) {
