@@ -16,12 +16,10 @@ import yang.samples.statesystem.SampleState;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUIPointerEvent;
 import yang.util.gui.components.GUIComponent;
-import yang.util.gui.components.GUIInteractiveRectComponent;
 import yang.util.gui.components.defaultbuttons.DefaultIconButton;
 import yang.util.gui.components.defaultbuttons.DefaultNinePatchButton;
 import yang.util.gui.components.defaultbuttons.DefaultOutlineButton;
 import yang.util.gui.components.defaultbuttons.GUIButton;
-import yang.util.gui.components.defaultdrawers.GUIClippedDrawer;
 import yang.util.gui.components.defaultdrawers.GUIIconDrawer;
 import yang.util.gui.components.defaultdrawers.GUINinePatchDrawer;
 import yang.util.gui.components.defaultdrawers.GUIOutlineDrawer;
@@ -111,9 +109,9 @@ public class GUISampleState extends SampleState implements GUIActionListener,GUI
 		mOutlineButton.getPass(GUIOutlineDrawer.class).mStroke.mColor.set(0.8f,0.6f,0.1f);
 		mOutlineButton.createCaption("Outline button").setPosAndExtentsCentered(2, 1.5f, 1.0f, 0.2f);
 
-		final GUIInteractiveRectComponent scrollPanel = mGUI.addComponent(GUIInteractiveRectComponent.class);
-		scrollPanel.setPasses(null,new GUINinePatchDrawer().setNinePatch(ninePatch),null,new GUIClippedDrawer(new RectDrawer(mGraphics2D)),new GUIOutlineDrawer());
-		scrollPanel.setPosAndExtents(2.5f, 0.8f, 1.0f, 1.1f);
+//		final GUIInteractiveRectComponent scrollPanel = mGUI.addComponent(GUIInteractiveRectComponent.class);
+//		scrollPanel.setPasses(null,new GUINinePatchDrawer().setNinePatch(ninePatch),null,new GUIClippedDrawer(new RectDrawer(mGraphics2D)),new GUIOutlineDrawer());
+//		scrollPanel.setPosAndExtents(2.5f, 0.8f, 1.0f, 1.1f);
 
 		mGUI.setPassTexture(0, mGraphics.mWhiteTexture);
 		mGUI.setPassTexture(1, ninePatchTex);

@@ -22,7 +22,11 @@ public class PCGFXLoader extends AbstractGFXLoader {
 	@Override
 	public void getImageDimensions(String filename,Dimensions2i result) {
 
-		final String path = ((PCResourceManager)mResources).getAssetFile(filename).getAbsolutePath();
+		final File file = ((PCResourceManager)mResources).getAssetFile(filename);
+		if(file==null) {
+			throw new RuntimeException("Image not found: "+filename);
+		}
+		final String path = file.getAbsolutePath();
 		try {
 			final BufferedImage image = ImageIO.read(new File(path));
 			result.set(image.getWidth(),image.getHeight());
