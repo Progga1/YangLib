@@ -55,4 +55,8 @@ public class JointConnection {
 		return bone;
 	}
 
+	public boolean connectsChildParent() {
+		return mJoint1.mAngleParent==mJoint2 || mJoint2.mAngleParent==mJoint1;
+	}
+
 }

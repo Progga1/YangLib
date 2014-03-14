@@ -10,6 +10,7 @@ import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.YangList;
 
 public class Skeleton3DEditing {
@@ -38,7 +39,7 @@ public class Skeleton3DEditing {
 	public JointDrawCallback mJointDrawCallback = null;
 
 	public float mAlpha = 1;
-	private FloatColor mJointColor = new FloatColor();
+	private FloatColor mJointColor1 = new FloatColor(),mJointColor2 = new FloatColor();
 	public boolean mVisible = true;
 
 	public Skeleton3DEditing(Default3DGraphics graphics3D,MassAggregation skeleton) {
@@ -92,15 +93,36 @@ public class Skeleton3DEditing {
 				continue;
 			if(joint.mEnabled && joint.mAngleParent!=null){
 				final Joint parent = joint.mAngleParent;
-				mJointColor.set(1,1,1,mAlpha);
+				mJointColor1.set(1,1,1,mAlpha);
 				if(mJointDrawCallback!=null)
-					mJointDrawCallback.getJointLineColor(jointData,mJointColor);
-				mJointColor.clamp();
+					mJointDrawCallback.getJointLineColor(jointData,mJointColor1);
+				mJointColor1.clamp();
 
 				mLineDrawer.drawLine(joint.mWorldPosition, parent.mWorldPosition, joint.getOutputRadius()*0.5f,parent.getOutputRadius()*0.5f);
-				mLineDrawer.mCylinder.putColor(mJointColor.mValues);
+				mLineDrawer.mCylinder.putColor(mJointColor1.mValues);
 			}
 		}
+
+		for(JointConnection bone:mSkeleton.mBones) {
+			if(!bone.connectsChildParent()) {
+				Joint joint1 = bone.mJoint1;
+				Joint joint2 = bone.mJoint2;
+				if(joint1.mEnabled && joint2.mEnabled) {
+					mJointColor1.set(1,1,1,mAlpha);
+					mJointColor2.set(1,1,1,mAlpha);
+					if(mJointDrawCallback!=null)
+						mJointDrawCallback.getJointLineColor(getJointEditData(joint1),mJointColor1);
+					if(mJointDrawCallback!=null)
+						mJointDrawCallback.getJointLineColor(getJointEditData(joint2),mJointColor2);
+					mJointColor1.clamp();
+					mJointColor2.clamp();
+
+					mLineDrawer.drawLine(joint1.mWorldPosition, joint2.mWorldPosition, joint1.getOutputRadius()*0.5f,joint2.getOutputRadius()*0.5f);
+					mLineDrawer.mCylinder.putStartEndColors(mJointColor1.mValues,mJointColor2.mValues);
+				}
+			}
+		}
+
 		mGraphics3D.fillNormals(0);
 		mGraphics3D.fillBuffers();
 
@@ -110,18 +132,18 @@ public class Skeleton3DEditing {
 				continue;
 			float radius;
 			if(joint.mFixed)
-				mJointColor.set(jointFixedColor);
+				mJointColor1.set(jointFixedColor);
 			else
-				mJointColor.set(jointColor);
+				mJointColor1.set(jointColor);
 			if(jointData.mSelectionGroup>=0)
-				mJointColor.add(jointSelectedAddColor);
+				mJointColor1.add(jointSelectedAddColor);
 			if(mJointDrawCallback!=null) {
-				mJointDrawCallback.getJointColor(jointData,mJointColor);
+				mJointDrawCallback.getJointColor(jointData,mJointColor1);
 				radius = mJointDrawCallback.getJointRadius(jointData);
 			}else
 				radius = joint.getOutputRadius();
-			mJointColor.clamp();
-			mGraphics3D.setColor(mJointColor);
+			mJointColor1.clamp();
+			mGraphics3D.setColor(mJointColor1);
 			if(jointData.mSelectionGroup<0 && joint==mHoverJoint)
 				mGraphics3D.multColor(1.3f);
 

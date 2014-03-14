@@ -18,17 +18,19 @@ public class SkinnedSkeleton {
 
 	public SkinnedSkeleton(YangMesh mesh,MassAggregation skeleton) {
 		mMesh = mesh;
-		mGraphics = mesh.mGraphics;
-		mWireFrames = mesh.mWireFrames;
+		if(mMesh!=null) {
+			mGraphics = mesh.mGraphics;
+			mWireFrames = mesh.mWireFrames;
+			mMesh.mAutoSkinningUpdate = false;
+		}
 		mSkeleton = skeleton;
 		if(mSkeleton!=null) {
 			mArmature = new YangArmature();
 			mArmature.initBySkeleton(skeleton);
 			mArmaturePose = new YangArmaturePose(mArmature);
-			if(!mMesh.hasArmatureWeights())
+			if(mMesh!=null && !mMesh.hasArmatureWeights())
 				mMesh.generateArmatureWeights(mArmature);
 		}
-		mMesh.mAutoSkinningUpdate = false;
 	}
 
 	public SkinnedSkeleton(YangMesh mesh) {
@@ -36,7 +38,14 @@ public class SkinnedSkeleton {
 
 	}
 
+	public SkinnedSkeleton setGraphics(AbstractGraphics<?> graphics) {
+		mGraphics = graphics;
+		return this;
+	}
+
 	public void draw() {
+		if(mMesh==null)
+			return;
 		mMesh.mWireFrames = mWireFrames;
 		if(mSkeleton!=null) {
 			if(mAutoRefresh)

@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import yang.math.objects.Point3f;
+
 public class UniversalVertexBuffer extends IndexedVertexBuffer{
 
 	public FloatBuffer[] mFloatBuffers;
@@ -79,6 +81,14 @@ public class UniversalVertexBuffer extends IndexedVertexBuffer{
 		buf.put(v1);
 		buf.put(v2);
 		buf.put(v3);
+	}
+
+	@Override
+	public void putVec3(int bufId, Point3f values) {
+		final FloatBuffer buf = mFloatBuffers[bufId];
+		buf.put(values.mX);
+		buf.put(values.mY);
+		buf.put(values.mZ);
 	}
 
 	@Override

@@ -109,12 +109,6 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		}
 	}
 
-	public void putGridTexCoords(float[][] coords) {
-		for(final float[] row:coords) {
-			mGraphics.getCurrentVertexBuffer().putArray(DefaultGraphics.ID_TEXTURES,row);
-		}
-	}
-
 	public void putGridWhite() {
 		mGraphics.putColorWhite(mCurXCount*mCurYCount);
 	}
@@ -126,6 +120,12 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 	public void putGridNeutralColors() {
 		putGridWhite();
 		putGridSuppDataZero();
+	}
+
+	public void putGridTextureCoordinates(float[][] coords) {
+		for(final float[] row:coords) {
+			mGraphics.getCurrentVertexBuffer().putArray(DefaultGraphics.ID_TEXTURES,row);
+		}
 	}
 
 	public void putGridTextureRect(float left,float top, float right,float bottom) {
