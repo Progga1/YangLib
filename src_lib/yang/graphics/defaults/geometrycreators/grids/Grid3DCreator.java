@@ -4,6 +4,7 @@ import yang.graphics.defaults.Default3DGraphics;
 
 public class Grid3DCreator extends GridCreator<Default3DGraphics> {
 
+	public boolean mAutoFillNormals = true;
 	public float mCurDimZ;
 
 	public Grid3DCreator(Default3DGraphics graphics) {

@@ -1,6 +1,5 @@
 package yang.physics.massaggregation.constraints;
 
-import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
@@ -13,6 +12,7 @@ public class DistanceConstraint extends Constraint{
 	public JointConnection mBone;
 	public boolean mApplyToJoint1 = true, mApplyToJoint2 = true;
 	public boolean m3D = true;
+	public float mMaxDiff = 0;
 
 	public DistanceConstraint(JointConnection bone, float strength) {
 		mBone = bone;
@@ -37,6 +37,9 @@ public class DistanceConstraint extends Constraint{
 			mBone.refreshGeometry();
 
 			float diff = mBone.mDistance - mForceDistance;
+
+			if(diff>=0 && diff<mMaxDiff)
+				return;
 
 			float fX = mBone.mNormDirX * diff * mStrength;
 			float fY = mBone.mNormDirY * diff * mStrength;
@@ -64,7 +67,7 @@ public class DistanceConstraint extends Constraint{
 	}
 
 	@Override
-	public boolean containsBone(CartoonBone bone) {
+	public boolean containsBone(JointConnection bone) {
 		return mBone==bone;
 	}
 

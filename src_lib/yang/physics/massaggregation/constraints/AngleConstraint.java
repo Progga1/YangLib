@@ -1,6 +1,5 @@
 package yang.physics.massaggregation.constraints;
 
-import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.JointConnection;
 
@@ -68,7 +67,7 @@ public class AngleConstraint extends Constraint{
 	}
 
 	@Override
-	public boolean containsBone(CartoonBone bone) {
+	public boolean containsBone(JointConnection bone) {
 		return mBone1==bone || mBone2==bone;
 	}
 

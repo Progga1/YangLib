@@ -13,6 +13,12 @@ public class JointEditData {
 	public DistanceConstraint mParentConnection;
 	public Skeleton3DEditing mSkeletonEdit;
 
+	//Settings
+	public float mOutputRadiusFactor = 1;
+
+	//State
+	public boolean mVisible = true;
+
 	//Selection
 	public int mSelectionGroup = -1;
 	public int mSelectionDepth = -1;
@@ -46,6 +52,13 @@ public class JointEditData {
 	@Override
 	public String toString() {
 		return "selection group/depth="+mSelectionGroup+"/"+mSelectionDepth+"; Joint="+mJoint;
+	}
+
+	public float getOutputRadius() {
+		if(mJoint!=null)
+			return mJoint.getOutputRadius()*mOutputRadiusFactor;
+		else
+			return 0.3f;
 	}
 
 }

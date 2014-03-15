@@ -337,18 +337,18 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private static float[] arr1 = new float[3];
 	private static float[] arr2 = new float[3];
 
-	public static void fillNormals(ShortBuffer indexBuffer,FloatBuffer positions,FloatBuffer normalsTarget,int firstNormalId) {
+	public static void fillNormals(ShortBuffer indexBuffer,FloatBuffer positions,FloatBuffer normalsTarget,int startIndex) {
 		//Set zero
 		final int endNormal = positions.position();
-		normalsTarget.position(firstNormalId*POSITION_ELEM_SIZE);
+		int firstNormalId = normalsTarget.position();
 		while(normalsTarget.position()<endNormal) {
 			normalsTarget.put(ZERO_FLOAT_3);
 		}
 
 		//Compute cross products
 		final int endIndex = indexBuffer.position()/3;
-		indexBuffer.rewind();
 		int i=0;
+		indexBuffer.rewind();
 		while(i<endIndex) {
 			final int v1 = indexBuffer.get()*POSITION_ELEM_SIZE;
 			final int v2 = indexBuffer.get()*POSITION_ELEM_SIZE;
@@ -370,7 +370,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		}
 
 		//Normalize
-		normalsTarget.position(firstNormalId*POSITION_ELEM_SIZE);
+		normalsTarget.position(firstNormalId);
 		while(normalsTarget.position()<endNormal) {
 			normalsTarget.get(arr1);
 			vec1.set(arr1);
@@ -382,12 +382,16 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		}
 	}
 
-	public static void fillNormals(IndexedVertexBuffer vertexBuffer,int firstNormalId) {
-		fillNormals(vertexBuffer.mIndexBuffer,vertexBuffer.getFloatBuffer(ID_POSITIONS),vertexBuffer.getFloatBuffer(ID_NORMALS),firstNormalId);
+	public static void fillNormals(IndexedVertexBuffer vertexBuffer,int startIndex) {
+		fillNormals(vertexBuffer.mIndexBuffer,vertexBuffer.getFloatBuffer(ID_POSITIONS),vertexBuffer.getFloatBuffer(ID_NORMALS),startIndex);
 	}
 
-	public void fillNormals(int firstNormalId) {
-		fillNormals(mIndexBuffer,mPositions,mNormals,firstNormalId);
+	public void fillNormals(int startIndex) {
+		fillNormals(mIndexBuffer,mPositions,mNormals,startIndex);
+	}
+
+	public void fillNormals() {
+		fillNormals(0);
 	}
 
 	public void mergeNormals(int vertex1Id, int vertex2Id) {
@@ -512,12 +516,12 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void drawLine3D(float fromX,float fromY,float fromZ, float toX,float toY,float toZ, float startWidth,float endWidth) {
-		final int normId = mCurrentVertexBuffer.getCurrentVertexWriteCount();
+		final int indexId = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		mLineDrawer.drawLine(fromX,fromY,fromZ, toX,toY,toZ, startWidth,endWidth);
 		mLineDrawer.mCylinder.putColor(mCurColor);
 		mLineDrawer.mCylinder.putSuppData(mCurSuppData);
 		mLineDrawer.mCylinder.putTextureCoordinates();
-		fillNormals(normId);
+		fillNormals(indexId);
 	}
 
 	public void drawLine3D(float fromX,float fromY,float fromZ, float toX,float toY,float toZ) {

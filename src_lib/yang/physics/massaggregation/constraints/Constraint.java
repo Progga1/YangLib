@@ -1,7 +1,7 @@
 package yang.physics.massaggregation.constraints;
 
-import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.MassAggregation;
+import yang.physics.massaggregation.elements.JointConnection;
 
 public abstract class Constraint {
 
@@ -9,8 +9,11 @@ public abstract class Constraint {
 	public boolean mEnabled;
 
 	public abstract void apply();
-	public abstract boolean containsBone(CartoonBone bone);
 	public abstract Constraint cloneInto(MassAggregation target);
+
+	public boolean containsBone(JointConnection bone) {
+		return false;
+	}
 
 	public void recalculate() {
 

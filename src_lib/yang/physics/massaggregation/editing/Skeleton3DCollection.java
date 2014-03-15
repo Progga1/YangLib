@@ -40,7 +40,8 @@ public class Skeleton3DCollection {
 
 	public void physicalStep(float deltaTime) {
 		for(Skeleton3DEditing skeleton:mSkeletons) {
-			skeleton.mSkeleton.physicalStep(deltaTime);
+			if(skeleton.mActive)
+				skeleton.mSkeleton.physicalStep(deltaTime);
 		}
 	}
 

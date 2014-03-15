@@ -33,7 +33,8 @@ public class GridPipeCreator extends Grid3DCreator {
 					mGraphics.putPosition(x,y,z);
 			}
 		}
-		mGraphics.fillNormals(0);
+		if(mAutoFillNormals)
+			putNormals();
 		if(loopNormals)
 			super.mergeNormals();
 	}

@@ -1,6 +1,5 @@
 package yang.physics.massaggregation;
 
-import yang.graphics.skeletons.CartoonBone;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
 import yang.graphics.skeletons.pose.Posture;
@@ -267,7 +266,10 @@ public class MassAggregation {
 
 	public void jointsStep(float deltaTime) {
 		for(final Joint joint:mJoints) {
+//			if(joint.mForceZ!=0)
+//				System.out.println(joint);
 			joint.physicalStep(deltaTime);
+
 		}
 	}
 
@@ -297,7 +299,7 @@ public class MassAggregation {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <ConstraintType extends Constraint> ConstraintType getBoneConstraint(CartoonBone bone,Class<ConstraintType> type) {
+	public <ConstraintType extends Constraint> ConstraintType getBoneConstraint(JointConnection bone,Class<ConstraintType> type) {
 		for(final Constraint constraint:mConstraints) {
 			if((constraint.getClass()==type) && (constraint.containsBone(bone)))
 				return (ConstraintType)constraint;
@@ -452,7 +454,7 @@ public class MassAggregation {
 
 	@Override
 	public String toString() {
-		return "JOINTS: "+mJoints+"\nCONNECTIONS: "+mBones;
+		return "----"+mName+"----\n"+"JOINTS: "+mJoints+"\nCONNECTIONS: "+mBones;
 	}
 
 	public void setFixed(boolean b) {

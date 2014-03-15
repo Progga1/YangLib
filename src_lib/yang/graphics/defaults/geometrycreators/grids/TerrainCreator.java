@@ -9,8 +9,6 @@ import yang.math.objects.matrix.YangMatrix;
 
 public class TerrainCreator extends Grid3DCreator {
 
-	public boolean mAutoFillNormals = true;
-
 	public TerrainCreator(Default3DGraphics graphics) {
 		super(graphics);
 	}
@@ -31,7 +29,7 @@ public class TerrainCreator extends Grid3DCreator {
 			}
 		}
 		if(mAutoFillNormals)
-			mGraphics.fillNormals(0);
+			putNormals();
 	}
 
 	public void putTerrainPositionRect(float[][] heightValues) {

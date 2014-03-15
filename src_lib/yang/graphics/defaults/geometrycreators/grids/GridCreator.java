@@ -26,6 +26,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 	}
 
 	public void begin(int vertexCountX,int vertexCountY,float width,float height) {
+		super.begin();
 		mGraphics.getCurrentVertexBuffer().putGridIndices(vertexCountX,vertexCountY);
 		mCurXCount = vertexCountX;
 		mCurYCount = vertexCountY;
