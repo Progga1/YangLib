@@ -73,7 +73,7 @@ public class Animator implements YangEventListener {
 		mSkeletonIndex = -1;
 		mCurTexture = null;
 		mSkeletonEditing = new SkeletonEditing();
-		CartoonSkeleton2D.CURSOR_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
+		CartoonSkeleton2D.JOINT_DEBUG_TEXTURE = mGraphics.mGFXLoader.getImage("circle");
 		mAnimationSystems = new YangList<AnimationSystem<?,?>>();
 		mPaused = false;
 		mPlaying = false;
@@ -125,7 +125,7 @@ public class Animator implements YangEventListener {
 			mCurSkeleton.draw();
 			if(mDrawSkeleton) {
 				//mCurSkeleton.mCarrier.drawCollision();
-				mCurSkeleton.drawEditing(mGraphics2D,mSkeletonEditing);
+				mCurSkeleton.drawDebug2D(mGraphics2D,mSkeletonEditing);
 			}
 		}
 		mGraphics.flush();

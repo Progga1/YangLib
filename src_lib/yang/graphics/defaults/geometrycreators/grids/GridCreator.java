@@ -4,6 +4,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.GeometryCreator;
 import yang.graphics.model.FloatColor;
+import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.Interpolation;
 
 public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends GeometryCreator<GraphicsType>{
@@ -139,6 +140,10 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 				mGraphics.putTextureCoord(x,y);
 			}
 		}
+	}
+
+	public void putGridTextureRect(TextureCoordinatesQuad texCoords) {
+		putGridTextureRect(texCoords.getBiasedLeft(),texCoords.getBiasedTop(),texCoords.getBiasedRight(),texCoords.getBiasedBottom());
 	}
 
 	public void putGridTextureCoordinates(float texSquareSize) {

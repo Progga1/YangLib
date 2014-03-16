@@ -6,8 +6,8 @@ import yang.graphics.translator.AbstractGFXLoader;
 public class BasicProgram extends AbstractProgram {
 
 	public static int COLOR_TEXTURE_LEVEL = 0;
-	
-	public final static String VERTEX_SHADER = 
+
+	public final static String VERTEX_SHADER =
 			"uniform mat4 projTransform;\r\n" +
 			"uniform vec4 colorFactor;\r\n" +
 			"attribute vec4 vPosition;\r\n" +
@@ -15,6 +15,7 @@ public class BasicProgram extends AbstractProgram {
 			"attribute vec4 vColor;\r\n" +
 			"varying vec2 texCoord;\r\n" +
 			"varying vec4 color;\r\n" +
+
 			"\r\n" +
 			"void main() {\r\n" +
 			"	gl_Position = projTransform * vPosition;\r\n" +
@@ -22,8 +23,8 @@ public class BasicProgram extends AbstractProgram {
 			"	color = vColor * colorFactor;\r\n" +
 			"	#PREMULT color = vec4(color.r*color.a,color.g*color.a,color.b*color.a,color.a);\r\n" +
 			"}\r\n";
-	
-	public final static String VERTEX_SHADER_SCREENPOS = 
+
+	public final static String VERTEX_SHADER_SCREENPOS =
 			"uniform mat4 projTransform;\r\n" +
 			"uniform vec4 colorFactor;\r\n" +
 			"attribute vec4 vPosition;\r\n" +
@@ -40,8 +41,8 @@ public class BasicProgram extends AbstractProgram {
 			"	color = vColor * colorFactor;\r\n" +
 			"	#PREMULT color = vec4(color.r*color.a,color.g*color.a,color.b*color.a,color.a);\r\n" +
 			"}\r\n";
-	
-	public final static String FRAGMENT_SHADER = 
+
+	public final static String FRAGMENT_SHADER =
 			"#ANDROID precision mediump float;\r\n" +
 			"uniform sampler2D texSampler;\r\n" +
 			"varying vec2 texCoord;\r\n" +
@@ -50,7 +51,7 @@ public class BasicProgram extends AbstractProgram {
 			"void main() {\r\n"+
 			"	gl_FragColor = texture2D(texSampler, texCoord) * color;\r\n" +
 			"}\r\n";
-	
+
 	public int mProjHandle = -1;
 	public int mWorldTransformHandle = -1;
 	public int mNormalTransformHandle = -1;
@@ -66,11 +67,11 @@ public class BasicProgram extends AbstractProgram {
 	public boolean mHasSuppData = false;
 	public boolean mHasWorldTransform = false;
 	public boolean mHasColorFactor = false;
-	
+
 	protected String getSuppDataIdentifier() {
 		return "vSuppData";
 	}
-	
+
 	@Override
 	protected void initHandles() {
 		mPositionHandle = mProgram.getAttributeLocation("vPosition");
@@ -84,7 +85,8 @@ public class BasicProgram extends AbstractProgram {
 		mTimeHandle = mProgram.getUniformLocation("time");
 		mTexSamplerHandle = mProgram.getUniformLocation("texSampler");
 	}
-	
+
+	@Override
 	public void postInit() {
 		mHasTextureCoords = (mTextureHandle>=0);
 		mHasWorldTransform = (mWorldTransformHandle>=0);
@@ -98,37 +100,38 @@ public class BasicProgram extends AbstractProgram {
 		mProgram.setUniformMatrix4f(mProjHandle, mvpMatrix);
 		assert mGraphics.checkErrorInst("Set projection");
 	}
-	
+
 	public void setWorldTransform(float[] worldMatrix) {
 		if(mHasWorldTransform)
 			mProgram.setUniformMatrix4f(mWorldTransformHandle, worldMatrix);
 	}
-	
+
 	public void setNormalTransform(float[] normalMatrix) {
 		if(mNormalTransformHandle>=0)
 			mProgram.setUniformMatrix3f(mNormalTransformHandle, normalMatrix);
 	}
-	
+
 	public void setColorFactor(float[] color) {
 		mProgram.setUniform4f(mColorFactorHandle, color[0], color[1], color[2], color[3]);
 	}
-	
+
 	public void setColorFactor(float r,float g,float b) {
 		mProgram.setUniform4f(mColorFactorHandle, r, g, b, 1);
 	}
-	
+
 	public void setColorFactor(float r,float g,float b,float a) {
 		mProgram.setUniform4f(mColorFactorHandle, r, g, b, a);
 	}
-	
+
 	public void setColorFactor(FloatColor color) {
 		mProgram.setUniform4f(mColorFactorHandle, color.mValues);
 	}
-	
+
 	public void setTime(float time) {
 		mProgram.setUniformFloat(mTimeHandle, time);
 	}
 
+	@Override
 	public void activate() {
 		super.activate();
 		assert mGraphics.checkErrorInst("Activate");
@@ -145,5 +148,5 @@ public class BasicProgram extends AbstractProgram {
 	protected String getFragmentShader(AbstractGFXLoader gfxLoader) {
 		return FRAGMENT_SHADER;
 	}
-	
+
 }

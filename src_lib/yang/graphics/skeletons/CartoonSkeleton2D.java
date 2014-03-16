@@ -81,12 +81,13 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		init(graphics,NEUTRAL_CARRIER);
 	}
 
-	public void drawEditing(DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing) {
-		drawEditing(this,skeletonEditing,graphics,mShiftX,mShiftY,mLookDirection);
+	@Override
+	public void drawDebug2D(DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing) {
+		drawDebug2D(this,graphics,skeletonEditing,mShiftX,mShiftY,mLookDirection);
 	}
 
-	public void drawEditing(SkeletonEditing skeletonEditing) {
-		drawEditing(mGraphics,skeletonEditing);
+	public void drawEditing2D(SkeletonEditing skeletonEditing) {
+		drawDebug2D(mGraphics,skeletonEditing);
 	}
 
 	public void texCoordsIntoRect(float rectLeft,float rectTop,float rectWidth,float rectHeight) {

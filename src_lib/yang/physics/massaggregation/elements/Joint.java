@@ -343,7 +343,7 @@ public class Joint extends Point3f {
 
 	public float getOutputRadius() {
 		//return Math.max(0.01f,Math.min(0.1f,mRadius));
-		return Math.max(0.01f,mRadius);
+		return Math.max(0.01f,mRadius)*mMassAggregation.mJointRadiusOutputFactor;
 	}
 
 	public void addForce(float fX, float fY) {
@@ -570,6 +570,12 @@ public class Joint extends Point3f {
 		mForceX = 0;
 		mForceY = 0;
 		mForceZ = 0;
+	}
+
+	public void clearVelocity() {
+		mVelX = 0;
+		mVelY = 0;
+		mVelZ = 0;
 	}
 
 }

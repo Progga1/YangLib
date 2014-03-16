@@ -1,8 +1,11 @@
 package yang.physics.massaggregation;
 
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
 import yang.graphics.skeletons.pose.Posture;
+import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.Texture;
 import yang.math.objects.Point3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.model.Rect;
@@ -13,6 +16,8 @@ import yang.physics.massaggregation.elements.JointConnection;
 import yang.util.YangList;
 
 public class MassAggregation {
+
+	public static Texture JOINT_DEBUG_TEXTURE;
 
 	public static int DEFAULT_ACCURACY = 16;
 	protected static SkeletonCarrier NEUTRAL_CARRIER = new NeutralSkeletonCarrier();
@@ -31,6 +36,7 @@ public class MassAggregation {
 	public boolean m3D;
 	public float mDefaultJointRadius = 0.1f;
 	public float mDefaultBoneSpring = 10;
+	public float mJointRadiusOutputFactor = 1;
 
 	//Objects
 	public SkeletonCarrier mCarrier;
@@ -461,6 +467,70 @@ public class MassAggregation {
 		for(Joint joint:mJoints) {
 			joint.mFixed = true;
 		}
+	}
+
+	public static void drawDebug2D(MassAggregation massAggregation,DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing,float offsetX,float offsetY,int lookDirection) {
+		Joint markedJoint;
+		if(skeletonEditing==null)
+			markedJoint = null;
+		else
+			markedJoint = skeletonEditing.mMainMarkedJoint;
+		final float worldPosX = massAggregation.mCarrier.getWorldX() + offsetX;
+		final float worldPosY = massAggregation.mCarrier.getWorldY() + offsetY;
+		final float scale = massAggregation.mCarrier.getScale()*massAggregation.mScale;
+		final int mirrorFac = lookDirection;
+
+		final GraphicsTranslator translator = graphics.mTranslator;
+		graphics.setDefaultProgram();
+		graphics.setColorFactor(1);
+
+		massAggregation.refreshJointWorldPositions();
+
+		translator.bindTexture(null);
+		graphics.setColor(0.8f,0.1f,0, 0.8f);
+		for(final Joint joint:massAggregation.mJoints) {
+			if(joint.mEnabled && joint.mAngleParent!=null) {
+				graphics.drawLine(
+						worldPosX + joint.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint.mWorldPosition.mY*scale,
+						worldPosX + joint.mAngleParent.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint.mAngleParent.mWorldPosition.mY*scale,
+						0.015f
+						);
+			}
+		}
+
+		graphics.setColor(0.8f,0.8f,0.8f,0.6f);
+		for(JointConnection bone:massAggregation.mBones) {
+			if(!bone.connectsChildParent()) {
+				Joint joint1 = bone.mJoint1;
+				Joint joint2 = bone.mJoint2;
+				if(joint1.mEnabled && joint2.mEnabled) {
+					graphics.drawLine(
+							worldPosX + joint1.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint1.mWorldPosition.mY*scale,
+							worldPosX + joint2.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint2.mWorldPosition.mY*scale,
+							0.015f
+							);
+				}
+			}
+		}
+
+		translator.bindTexture(JOINT_DEBUG_TEXTURE);
+		for(final Joint joint:massAggregation.mJoints)
+			if(joint.mEnabled){
+				final float alpha = (markedJoint==joint)?1:0.6f;
+				if(joint.mFixed)
+					graphics.setColor(1, 0, 0, alpha);
+				else
+					graphics.setColor(0.8f,0.8f,0.8f,alpha);
+				if(!joint.isAnimated()) {
+					graphics.multColor(0.55f);
+				}
+				graphics.drawRectCentered(worldPosX + joint.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint.mWorldPosition.mY*scale, joint.getOutputRadius()*2);
+			}
+
+	}
+
+	public void drawDebug2D(DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing) {
+		drawDebug2D(this,graphics,skeletonEditing,0,0,1);
 	}
 
 }

@@ -44,7 +44,7 @@ public class ColliderConstraint extends Constraint{
 			fac = Joint.TOWARDS_FACTOR;
 		else
 			fac = (dVX*fX+dVY*fY<0)?Joint.AWAY_FACTOR:Joint.TOWARDS_FACTOR;
-
+		fac *= 2;
 		if(mJoint1.mFixed!=mJoint2.mFixed)
 			fac *= FIXED_FACTOR;
 		if(!mJoint1.mFixed)

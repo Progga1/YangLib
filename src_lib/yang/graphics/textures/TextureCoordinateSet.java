@@ -36,15 +36,19 @@ public abstract class TextureCoordinateSet {
 		return createTexCoordSequencePixelsBias(texture,startX,startY,size,size,count,0,0);
 	}
 
-	public TextureCoordinateSet(GraphicsTranslator graphics,float texWidth,float texHeight,float patchSize,float defaultBias) {
+	public TextureCoordinateSet(GraphicsTranslator graphics,float texWidth,float texHeight,float patchSize,float defaultBiasX,float defaultBiasY) {
 		mGraphics = graphics;
 		mTexWidth = texWidth;
 		mTexHeight = texHeight;
 		mPatchSizeX = patchSize;
 		mPatchSizeY = patchSize;
-		mDefaultBiasX = defaultBias;
-		mDefaultBiasY = defaultBias;
+		mDefaultBiasX = defaultBiasX;
+		mDefaultBiasY = defaultBiasY;
 		mTexCoords = new YangList<TextureCoordinatesQuad>();
+	}
+
+	public TextureCoordinateSet(GraphicsTranslator graphics,float texWidth,float texHeight,float patchSize,float defaultBias) {
+		this(graphics,texWidth,texHeight,patchSize,defaultBias,defaultBias);
 	}
 
 	public TextureCoordinateSet(GraphicsTranslator graphics) {
