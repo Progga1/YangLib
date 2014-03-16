@@ -14,17 +14,17 @@ public class Grid3DCreator extends GridCreator<Default3DGraphics> {
 	}
 
 	@Override
-	public void begin(int vertexCountX,int vertexCountY,float width,float height) {
-		begin(vertexCountX, vertexCountY, width, height, 1);
+	public void init(int vertexCountX,int vertexCountY,float width,float height) {
+		init(vertexCountX, vertexCountY, width, height, 1);
 	}
 
-	public void begin(int vertexCountX,int vertexCountY,float width,float height,float depth) {
-		super.begin(vertexCountX, vertexCountY, width, height);
+	public void init(int vertexCountX,int vertexCountY,float width,float height,float depth) {
+		super.init(vertexCountX, vertexCountY, width, height);
 		mCurDimZ = depth;
 	}
 
-	public void beginBatch(int vertexCountX,int vertexCountY,float width,float height,float depth) {
-		super.beginBatch(vertexCountX, vertexCountY, width, height);
+	public void initBatch(int vertexCountX,int vertexCountY,float width,float height,float depth) {
+		super.initBatch(vertexCountX, vertexCountY, width, height);
 		mCurDimZ = depth;
 	}
 

@@ -271,7 +271,9 @@ public class IcyTerrainState extends SampleState {
 			transfMatrix.loadIdentity();
 			transfMatrix.rotateX(-PI/2);
 			transfMatrix.scaleZ(0.3f);
-			mTerrain.beginBatch(PATCHES_X, PATCHES_Y,terrainDimX,terrainDimY);
+			mTerrain.initBatch(PATCHES_X, PATCHES_Y,terrainDimX,terrainDimY);
+			mTerrain.beginDraw();
+			mTerrain.putIndices();
 			mTerrain.putGridNeutralColors();
 			if(USE_LIGHTMAPS)
 				mTerrain.putGridTextureNormalRect(false);
@@ -280,14 +282,18 @@ public class IcyTerrainState extends SampleState {
 			mTerrain.putTerrainPositionRect(heights,transfMatrix);
 			mTerrainBatch = mGraphics3D.finishBatchRecording().setName("Terrain");
 
-			mTerrain.beginBatch(PATCHES_X, PATCHES_Y,terrainDimX,terrainDimY);
+			mTerrain.initBatch(PATCHES_X, PATCHES_Y,terrainDimX,terrainDimY);
+			mTerrain.beginDraw();
+			mTerrain.putIndices();
 			mTerrain.putGridNeutralColors();
 			mTerrain.putGridTextureCoordinates(1.5f);
 			mTerrain.putTerrainPositionRect(heights,transfMatrix);
 			mGraphics3D.fillNormals();
 			mTerrainBatchLowPoly = mGraphics3D.finishBatchRecording().setName("Terrain_lowPoly");
 
-			mTerrain.beginBatch(WATER_PATCHES_X, WATER_PATCHES_Y,terrainDimX,terrainDimY);
+			mTerrain.initBatch(WATER_PATCHES_X, WATER_PATCHES_Y,terrainDimX,terrainDimY);
+			mTerrain.beginDraw();
+			mTerrain.putIndices();
 			mTerrain.putTerrainPositionRect(new float[WATER_PATCHES_X][WATER_PATCHES_Y],transfMatrix);
 			mTerrain.putGridTextureNormalRect(false);
 			mGraphics3D.fillBuffers();

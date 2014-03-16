@@ -1,7 +1,6 @@
 package yang.graphics.skeletons.defaults;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.grids.GridCreator;
 import yang.graphics.model.FloatColor;
@@ -134,6 +133,7 @@ public class JointGridCreator {
 
 	public void initGraphics(DefaultGraphics<?> graphics) {
 		mGridDrawer = new GridCreator<DefaultGraphics<?>>(graphics);
+		mGridDrawer.init(mColCount,mRowCount, 1,1);
 	}
 
 	public void putPositions() {
@@ -148,15 +148,13 @@ public class JointGridCreator {
 	}
 
 	public void drawDefault(FloatColor color,TextureCoordinatesQuad texCoords) {
-		int indexStart = mGridDrawer.mGraphics.mCurrentVertexBuffer.getCurrentIndexWriteCount();
-		mGridDrawer.begin(mColCount,mRowCount, 1,1);
+		mGridDrawer.beginDraw();
+		mGridDrawer.putIndices();
 		putPositions();
 		mGridDrawer.putGridColor(color.mValues);
 		mGridDrawer.putGridSuppData(FloatColor.BLACK.mValues);
 		mGridDrawer.putGridTextureRect(texCoords);
-		if(mGridDrawer.mGraphics instanceof Default3DGraphics) {
-			((Default3DGraphics)mGridDrawer.mGraphics).fillNormals(indexStart);
-		}
+		mGridDrawer.putNormals();
 	}
 
 	public void drawDefault() {

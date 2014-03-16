@@ -207,4 +207,15 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		}
 	}
 
+	public void putGridIndexPatch(int width, int patchX,int patchY) {
+		short c = (short)getCurrentVertexWriteCount();
+		c += width*patchY + patchX;
+		mIndexBuffer.put(c);
+		mIndexBuffer.put((short)(c+1));
+		mIndexBuffer.put((short)(c+width));
+		mIndexBuffer.put((short)(c+1+width));
+		mIndexBuffer.put((short)(c+width));
+		mIndexBuffer.put((short)(c+1));
+	}
+
 }

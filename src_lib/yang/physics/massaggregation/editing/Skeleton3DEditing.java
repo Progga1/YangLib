@@ -75,7 +75,9 @@ public class Skeleton3DEditing {
 
 		if(mSphereBatch==null) {
 			final SphereCreator sphere = new SphereCreator(mGraphics3D);
-			sphere.beginBatch(SPHERE_VERTICES_X,SPHERE_VERTICES_Y, 1,1);
+			sphere.initBatch(SPHERE_VERTICES_X,SPHERE_VERTICES_Y, 1,1);
+			sphere.beginDraw();
+			sphere.putIndices();
 			sphere.putPositions();
 			mSphereBatch = sphere.finishBatch();
 		}

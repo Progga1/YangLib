@@ -32,14 +32,15 @@ public class GeometryCreator<GraphicsType extends AbstractGraphics<?>> {
 		return mGraphics.finishBatchRecording();
 	}
 
-	public void begin() {
+	public void beginDraw() {
 		mIndexStartId = mGraphics.getCurrentVertexBuffer().getCurrentIndexWriteCount();
 		mVertexStartId = mGraphics.getCurrentVertexBuffer().getCurrentVertexWriteCount();
 	}
 
 	public void putNormals() {
 		//TODO make normals graphics 3D independent
-		((Default3DGraphics)mGraphics).fillNormals(mIndexStartId);
+		if(mGraphics instanceof Default3DGraphics)
+			((Default3DGraphics)mGraphics).fillNormals(mIndexStartId);
 	}
 
 }

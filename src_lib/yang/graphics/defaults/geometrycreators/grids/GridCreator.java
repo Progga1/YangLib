@@ -26,9 +26,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		super(graphics);
 	}
 
-	public void begin(int vertexCountX,int vertexCountY,float width,float height) {
-		super.begin();
-		mGraphics.getCurrentVertexBuffer().putGridIndices(vertexCountX,vertexCountY);
+	public void init(int vertexCountX,int vertexCountY,float width,float height) {
 		mCurXCount = vertexCountX;
 		mCurYCount = vertexCountY;
 		mCurDimX = width;
@@ -36,11 +34,19 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		mCurValues = null;
 	}
 
-	public void beginBatch(int vertexCountX,int vertexCountY,float width,float height) {
+	public void putIndices() {
+		mGraphics.getCurrentVertexBuffer().putGridIndices(mCurXCount,mCurYCount);
+	}
+
+	public void putIndexPatch(int patchX, int patchY) {
+		mGraphics.getCurrentVertexBuffer().putGridIndexPatch(mCurXCount, patchX,patchY);
+	}
+
+	public void initBatch(int vertexCountX,int vertexCountY,float width,float height) {
 		final int indices = vertexCountX*vertexCountY*6;
 		final int vertices = vertexCountX*vertexCountY;
 		mGraphics.startBatchRecording(indices,vertices,false,false);
-		begin(vertexCountX,vertexCountY,width,height);
+		init(vertexCountX,vertexCountY,width,height);
 	}
 
 	public void putVec4Map(float[][] map,int bufferIndex) {
