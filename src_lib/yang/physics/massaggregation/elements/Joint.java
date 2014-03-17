@@ -235,7 +235,7 @@ public class Joint extends Point3f {
 	public void setPosByAngle2D(Joint relativeJoint,float distance,float angle) {
 		mParentCurAngle = angle;
 		mX = relativeJoint.mX + (float)(distance*Math.sin(angle));
-		mY = relativeJoint.mY - (float)(distance*Math.cos(angle));//System.out.println(angle+" "+getAngle(relativeJoint));
+		mY = relativeJoint.mY - (float)(distance*Math.cos(angle));
 	}
 
 	public void setPosByAngle2D(Joint relativeJoint,JointConnection connectingBone,float angle) {

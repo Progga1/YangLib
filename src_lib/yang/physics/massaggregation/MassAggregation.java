@@ -29,6 +29,7 @@ public class MassAggregation {
 	public float mConstantForceY;
 	public float mConstantForceZ;
 	public float mLowerLimit;
+	public float mFarLimit = -128;
 	public float mLimitForceInwards;
 	public float mLimitForceOutwards;
 	public float mSpeedFactor = 1;
@@ -255,6 +256,13 @@ public class MassAggregation {
 				final float uForce = (joint.mVelY<0)?mLimitForceInwards:mLimitForceOutwards;
 				joint.mForceY += (mLowerLimit-joint.mY)*uForce;
 				joint.mVelX *= mFloorFriction;
+				joint.mVelZ *= mFloorFriction;
+			}
+			if(joint.mZ+mCarrier.getWorldZ()<mFarLimit) {
+				final float uForce = (joint.mVelZ<0)?mLimitForceInwards:mLimitForceOutwards;
+				joint.mForceZ += (mFarLimit-joint.mZ)*uForce;
+				joint.mVelX *= mFloorFriction;
+				joint.mVelY *= mFloorFriction;
 			}
 		}
 
