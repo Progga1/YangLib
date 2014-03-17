@@ -201,4 +201,8 @@ public class Vector3f extends Point3f{
 		}
 	}
 
+	public float getManhattanDistance() {
+		return (mX<0?-mX:mX)+(mY<0?-mY:mY)+(mZ<0?-mZ:mZ);
+	}
+
 }
