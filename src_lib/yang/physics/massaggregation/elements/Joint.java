@@ -275,7 +275,7 @@ public class Joint extends Point3f {
 				//refreshResDrag();
 				mDragDelayed.lerp(mCurResDrag,mDragDelay);
 
-				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,2f);
+				addPositionForce(mDragDelayed.mX,mDragDelayed.mY,mDragDelayed.mZ,6f);
 			}
 
 			mVelX += mForceX/mMass * mForceFactor * deltaTime;
@@ -576,6 +576,10 @@ public class Joint extends Point3f {
 		mVelX = 0;
 		mVelY = 0;
 		mVelZ = 0;
+	}
+
+	public void dragTo(float x,float y,float z) {
+		this.dragLocal(x-mX, y-mY, z-mZ);
 	}
 
 }

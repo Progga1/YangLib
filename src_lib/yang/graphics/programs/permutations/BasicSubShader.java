@@ -8,6 +8,9 @@ public class BasicSubShader extends SubShader {
 	private final boolean mUseTexture;
 	private final boolean mUseColor;
 	public boolean mPassScreenPos;
+	public boolean mTwoFacedTextures = false;
+	public int mBackTextureHandle;
+	private int mBackTextureLevel;
 
 	public BasicSubShader(boolean useWorldTransform,boolean useTexture,boolean useColor,boolean passScreenPos) {
 		mWorldTransform = useWorldTransform;
@@ -28,7 +31,15 @@ public class BasicSubShader extends SubShader {
 			shaderParser.vsDeclaration("attribute vec2 vTexture");
 			shaderParser.addVarying("vec2","texCoord");
 			fsDecl.addUniform("sampler2D","texSampler");
-			shaderParser.appendLn(VAR_FS_MAIN,"vec4 texCl = texture2D(texSampler, texCoord)");
+			if(mTwoFacedTextures) {
+				fsDecl.addUniform("sampler2D","texSamplerBack");
+				shaderParser.appendLn(VAR_FS_MAIN,"vec4 texCl;\n" +
+						"if(gl_FrontFacing)\n" +
+						"	texCl = texture2D(texSampler, texCoord);\n" +
+						"else\n" +
+						"	texCl = texture2D(texSamplerBack, texCoord)");
+			}else
+				shaderParser.appendLn(VAR_FS_MAIN,"vec4 texCl = texture2D(texSampler, texCoord)");
 			shaderParser.appendOp(VAR_FRAGCOLOR, "texCl","*");
 			shaderParser.appendLn(VAR_VS_MAIN, "texCoord = vTexture");
 		}
@@ -58,8 +69,18 @@ public class BasicSubShader extends SubShader {
 	@Override
 	public void initHandles(GLProgram program) {
 		program.nextTextureLevel();
+		mBackTextureHandle = program.getUniformLocation("texSamplerBack");
+		mBackTextureLevel = program.nextTextureLevel();
 	}
 
+	@Override
+	public final void passData(GLProgram program) {
+		program.setUniformInt(mBackTextureHandle, mBackTextureLevel);
+	}
 
+	@Override
+	public boolean passesData() {
+		return mTwoFacedTextures;
+	}
 
 }
