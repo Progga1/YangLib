@@ -69,7 +69,7 @@ public class SkinnedSkeleton {
 	public void refresh() {
 		if(mArmaturePose!=null) {
 			mArmaturePose.refreshMatrices(mSkeleton);
-			if(!mMesh.mAutoSkinningUpdate)
+			if(mMesh!=null && !mMesh.mAutoSkinningUpdate)
 				mMesh.updateSkinningVertices(mArmaturePose);
 		}
 	}

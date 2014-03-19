@@ -1,5 +1,6 @@
 package yang.math.objects;
 
+
 public class Vector3f extends Point3f{
 
 	public final static Vector3f ZERO = new Vector3f(0,0,0);

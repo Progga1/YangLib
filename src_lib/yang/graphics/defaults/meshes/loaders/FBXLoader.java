@@ -47,7 +47,6 @@ public class FBXLoader extends YangSceneLoader {
 	public SceneObject mRootObject;
 
 	public AbstractGraphics<?> mGraphics;
-	public MeshMaterialHandles mHandles;
 
 	private TokenReader mReader;
 	private float mDefaultJointRadius = Joint.DEFAULT_RADIUS * 0.7f;
@@ -67,7 +66,6 @@ public class FBXLoader extends YangSceneLoader {
 			polygonIndices = new int[MAX_VERTICES];
 		}
 		mGraphics = graphics;
-		mHandles = handles;
 		tempMat.initStack(128);
 	}
 

@@ -148,6 +148,8 @@ public class JointGridCreator {
 	}
 
 	public void drawDefault(FloatColor color,TextureCoordinatesQuad texCoords) {
+		if(texCoords==null)
+			texCoords = TextureCoordinatesQuad.FULL_TEXTURE;
 		mGridDrawer.beginDraw();
 		mGridDrawer.putIndices();
 		putPositions();
@@ -161,8 +163,8 @@ public class JointGridCreator {
 		drawDefault(FloatColor.WHITE,TextureCoordinatesQuad.FULL_TEXTURE);
 	}
 
-	public Joint pickJoint(float column,float row) {
-		return mJoints[normToRow(row)][normToColumn(column)];
+	public Joint pickJoint(float normColumn,float normRow) {
+		return mJoints[normToRow(normRow)][normToColumn(normColumn)];
 	}
 
 }

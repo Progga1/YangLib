@@ -3,21 +3,24 @@ package yang.graphics.util;
 import yang.math.Geometry;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
 
-public class Camera3D {
+public class Camera3D extends YangCamera {
 
 	private float[] mLookVector = new float[4];
 	private float[] mLookDirection = new float[4];
 	public float mEyeX,mEyeY,mEyeZ;
 	public float mLookAtX,mLookAtY,mLookAtZ;
 	public float mUpX,mUpY,mUpZ;
-	public YangMatrixCameraOps mViewMatrix;
 
 	public Camera3D() {
+		super();
 		mLookVector[3] = 1;
 		mLookDirection[3] = 0;
-		mViewMatrix = new YangMatrixCameraOps();
+		reset();
+	}
+
+	public void reset() {
+		set(0,0,0, 0,0,-1);
 	}
 
 	public Camera3D set(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {

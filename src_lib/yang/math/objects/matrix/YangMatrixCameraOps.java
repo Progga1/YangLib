@@ -83,13 +83,5 @@ public class YangMatrixCameraOps extends YangMatrix {
 		if(outPosition!=null)
 			outPosition.set(eyeX,eyeY,eyeZ);
 	}
-//
-//	public float getProjectedPositionAndRadius(Camera3D camera, float x, float y, float z, float radius,Vector3f target) {
-//		MatrixOps.applyFloatMatrix3D(mMatrix,x,y,z,target);
-//		camera.getEyeToPointVector(x,y,z,mVec1);
-//		mVec2.createOrthoVec(mVec1);
-//		MatrixOps.applyFloatMatrix3DNormalized(mMatrix,x+mVec2.mX*radius,y+mVec2.mY*radius,z+mVec2.mZ*radius,mTempMat1,0);
-//		return target.getDistance(mTempMat1);
-//	}
 
 }
