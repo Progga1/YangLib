@@ -12,7 +12,7 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.util.Camera3D;
+import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
@@ -234,7 +234,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		setCameraLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, 0,1,0);
 	}
 
-	public void setCamera(Camera3D camera) {
+	public void setCamera(LegacyCamera3D camera) {
 		setCameraLookAt(camera.mEyeX,camera.mEyeY,camera.mEyeZ, camera.mLookAtX,camera.mLookAtY,camera.mLookAtZ, camera.mUpX,camera.mUpY,camera.mUpZ);
 	}
 

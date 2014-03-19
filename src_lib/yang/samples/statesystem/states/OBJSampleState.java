@@ -23,7 +23,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.graphics.util.Camera3D;
+import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.matrix.YangMatrix;
 import yang.model.wrappers.FloatWrapper;
 import yang.samples.statesystem.SampleState;
@@ -37,7 +37,7 @@ public class OBJSampleState extends SampleState {
 	private DefaultObjShader mToonObjProgram;
 	private LightProperties mLightProperties;
 	private int mCurObjIndex = 0;
-	private final Camera3D mCamera = new Camera3D();
+	private final LegacyCamera3D mCamera = new LegacyCamera3D();
 	private int mObjCount = 0;
 	private MeshMaterialHandles mMatHandles;
 	private Texture mToonRamp1;

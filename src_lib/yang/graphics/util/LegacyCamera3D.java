@@ -3,8 +3,12 @@ package yang.graphics.util;
 import yang.math.Geometry;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.matrix.YangMatrixCameraOps;
 
-public class Camera3D extends YangCamera {
+public class LegacyCamera3D {
+
+	public YangMatrixCameraOps mViewMatrix;
+	public YangMatrixCameraOps mProjectionMatrix;
 
 	private float[] mLookVector = new float[4];
 	private float[] mLookDirection = new float[4];
@@ -12,7 +16,7 @@ public class Camera3D extends YangCamera {
 	public float mLookAtX,mLookAtY,mLookAtZ;
 	public float mUpX,mUpY,mUpZ;
 
-	public Camera3D() {
+	public LegacyCamera3D() {
 		super();
 		mLookVector[3] = 1;
 		mLookDirection[3] = 0;
@@ -23,7 +27,7 @@ public class Camera3D extends YangCamera {
 		set(0,0,0, 0,0,-1);
 	}
 
-	public Camera3D set(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
+	public LegacyCamera3D set(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
 		mEyeX = eyeX;
 		mEyeY = eyeY;
 		mEyeZ = eyeZ;
@@ -37,11 +41,11 @@ public class Camera3D extends YangCamera {
 		return this;
 	}
 
-	public Camera3D set(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
+	public LegacyCamera3D set(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
 		return set(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, 0,1,0);
 	}
 
-	public Camera3D set(Camera3D preface) {
+	public LegacyCamera3D set(LegacyCamera3D preface) {
 		mEyeX = preface.mEyeX;
 		mEyeY = preface.mEyeY;
 		mEyeZ = preface.mEyeZ;
@@ -101,14 +105,14 @@ public class Camera3D extends YangCamera {
 		return mLookDirection;
 	}
 
-	public Camera3D setAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {
+	public LegacyCamera3D setAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {
 		return set(focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance,
 				focusY+(float)Math.sin(beta)*distance,
 				focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance,
 				focusX,focusY,focusZ, 0,1,0);
 	}
 
-	public Camera3D setOutwardsAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {
+	public LegacyCamera3D setOutwardsAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {
 		return set(focusX,focusY,focusZ,
 				focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance,
 				focusY+(float)Math.sin(beta)*distance,
@@ -116,11 +120,11 @@ public class Camera3D extends YangCamera {
 				0,1,0);
 	}
 
-	public Camera3D setAlphaBeta(float alpha, float beta, float distance) {
+	public LegacyCamera3D setAlphaBeta(float alpha, float beta, float distance) {
 		return setAlphaBeta(alpha,beta,distance,0,0,0);
 	}
 
-	public Camera3D setAlphaBeta(float alpha, float beta) {
+	public LegacyCamera3D setAlphaBeta(float alpha, float beta) {
 		return setAlphaBeta(alpha,beta,1,0,0,0);
 	}
 

@@ -22,7 +22,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.graphics.util.Camera3D;
+import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.Vector3f;
 import yang.math.objects.matrix.YangMatrix;
 import yang.model.Boundaries3D;
@@ -76,7 +76,7 @@ public class IcyTerrainState extends SampleState {
 	private DrawBatch mWaterBatch = null;
 	private DrawBatch mSkyBoxBatch = null;
 
-	private Camera3D mCamera = new Camera3D();
+	private LegacyCamera3D mCamera = new LegacyCamera3D();
 	private float mWorldAngle = 0;
 	private Vector3f mWorldShift = new Vector3f();
 	private float mCubeTop = 1;

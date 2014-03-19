@@ -4,7 +4,7 @@ import yang.math.MathConst;
 
 public class Camera3DAlphaBeta {
 
-	protected Camera3D mCamera;
+	protected LegacyCamera3D mCamera;
 
 	public float mViewAlpha,mViewBeta;
 	public float mZoom;
@@ -12,10 +12,10 @@ public class Camera3DAlphaBeta {
 	public boolean 	mInvertView = false;
 
 	public Camera3DAlphaBeta() {
-		mCamera = new Camera3D();
+		mCamera = new LegacyCamera3D();
 	}
 
-	public Camera3D getUpdatedCamera() {
+	public LegacyCamera3D getUpdatedCamera() {
 		if(mInvertView)
 			mCamera.setOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
 		else
@@ -24,7 +24,7 @@ public class Camera3DAlphaBeta {
 	}
 
 
-	public Camera3D getCameraInstance() {
+	public LegacyCamera3D getCameraInstance() {
 		return mCamera;
 	}
 

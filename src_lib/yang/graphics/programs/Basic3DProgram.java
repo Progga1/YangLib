@@ -1,6 +1,6 @@
 package yang.graphics.programs;
 
-import yang.graphics.util.Camera3D;
+import yang.graphics.util.LegacyCamera3D;
 
 public class Basic3DProgram extends BasicProgram {
 
@@ -21,7 +21,7 @@ public class Basic3DProgram extends BasicProgram {
 		mHasEyePosition = (mEyePositionHandle>=0);
 	}
 	
-	public void setCamera(Camera3D camera) {
+	public void setCamera(LegacyCamera3D camera) {
 		if(mHasEyePosition)
 			mProgram.setUniform4f(mEyePositionHandle, camera.mEyeX, camera.mEyeY, camera.mEyeZ, 0);
 	}
