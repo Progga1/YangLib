@@ -7,8 +7,8 @@ import yang.math.objects.matrix.YangMatrixCameraOps;
 
 public class LegacyCamera3D {
 
-	public YangMatrixCameraOps mViewMatrix;
-	public YangMatrixCameraOps mProjectionMatrix;
+	public YangMatrixCameraOps mViewMatrix = new YangMatrixCameraOps();
+	public YangMatrixCameraOps mProjectionMatrix = new YangMatrixCameraOps();
 
 	private float[] mLookVector = new float[4];
 	private float[] mLookDirection = new float[4];

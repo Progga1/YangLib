@@ -11,8 +11,8 @@ public class YangMatrix {
 
 	public static final YangMatrix IDENTITY = new YangMatrix();
 
-	public static float DEFAULT_NEAR = 1;
-	public static float DEFAULT_FAR = -1;
+	public static float DEFAULT_NEAR = -1;
+	public static float DEFAULT_FAR = 1;
 
 	//Indices: Row-Column
 	public static final int M00 = 0;
@@ -297,15 +297,15 @@ public class YangMatrix {
 //		mMatrix[15] = 1;
 	}
 
-	public void mirrorAtPlane(float nx,float ny,float nz, Vector3f offset) {
+	public void mirrorAtPlane(float nx,float ny,float nz, Vector3f base) {
 		MatrixOps.createDirectionTrafo(mTempMat1, nx,ny,nz);
-		if(offset!=null)
-			translate(offset);
+		if(base!=null)
+			translate(base);
 		multiplyRight(mTempMat1);
 		scale(1,-1,1);
 		multiplyRightTransposed(mTempMat1);
-		if(offset!=null)
-			translate(-offset.mX,-offset.mY,-offset.mZ);
+		if(base!=null)
+			translateNegative(base);
 	}
 
 	public void rotateAround(Vector3f rotationVector, float angle) {

@@ -1,5 +1,6 @@
 package yang.graphics.defaults.programs.subshaders.dataproviders;
 
+import yang.graphics.camera.YangCamera;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
@@ -9,11 +10,15 @@ public class CameraVectorSubShader extends SubShader {
 
 	public float[] mCameraMatrix;
 	public int mCamDirHandle;
-	
+
 	public CameraVectorSubShader(float[] cameraMatrix) {
 		mCameraMatrix = cameraMatrix;
 	}
-	
+
+	public CameraVectorSubShader(YangCamera cameraInstance) {
+		mCameraMatrix = cameraInstance.getViewTransformReference().mValues;
+	}
+
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("vec3", "camDir");
@@ -33,5 +38,5 @@ public class CameraVectorSubShader extends SubShader {
 	public boolean passesData() {
 		return mCameraMatrix!=null;
 	}
-	
+
 }

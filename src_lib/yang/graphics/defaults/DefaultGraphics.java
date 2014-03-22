@@ -5,6 +5,7 @@ import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
+import yang.graphics.camera.YangCamera;
 import yang.graphics.defaults.geometrycreators.StripCreator;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
@@ -14,8 +15,10 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MatrixOps;
+import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.matrix.YangMatrixCameraOps;
 import yang.model.Rect;
 import yang.util.Util;
 
@@ -52,6 +55,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	//Properties
 	public BitmapFont mDefaultFont;
+	public boolean mAutoRefreshCameraTransform = true;
 
 	//State
 	public float mCurrentZ;
@@ -67,7 +71,9 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public FloatBuffer mSuppData;
 	public FloatBuffer mNormals;
 
-	protected abstract void refreshViewTransform();
+	//Objects
+	protected YangCamera mCamera;
+	protected YangMatrixCameraOps mCamRefProjection;
 
 	public void shareBuffers(DefaultGraphics<?> graphics) {
 		initDynamicBuffer();
@@ -93,6 +99,9 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	@Override
 	protected void derivedInit() {
 		setColorFactor(1);
+		mCamera = new YangCamera();
+		mCamRefProjection = mCamera.getProjectionTransformReference();
+		mCurViewProjTransform = mViewProjectionTransform;
 	}
 
 	@Override
@@ -146,19 +155,29 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		assert mTranslator.checkErrorInst("Disable buffers 2D");
 	}
 
+	public void refreshViewTransform() {
+		mCameraProjectionMatrix.set(mCurViewProjTransform);
+		mCameraProjectionMatrix.postScale(1f/mTranslator.mCurrentSurface.getSurfaceRatioX(),1f/mTranslator.mCurrentSurface.getSurfaceRatioY(),1);
+	}
+
 	public void getToScreenTransform(YangMatrix target) {
 		refreshViewTransform();
-		target.set(mCameraProjectionMatrix);
+		target.set(mCurViewProjTransform);
 		if (mWorldTransformEnabled)
 			target.multiplyRight(mWorldTransform);
-		target.postScale(mTranslator.mRatioX, mTranslator.mRatioY, 1);
+//		target.postScale(mTranslator.mRatioX, mTranslator.mRatioY, 1);
+	}
+
+	public void refreshCameraTransform() {
+		flush();
+		mCamera.calcResultTransform(mViewProjectionTransform, null, -mTranslator.mCameraShiftX);
 	}
 
 	protected void updateProgramProjection() {
 		assert mTranslator.preCheck("Set program projection");
 		final BasicProgram program = mCurrentProgram;
 		if (program != null) {
-			if(mCurProjTransform == mTranslator.mProjScreenTransform) {
+			if(mCurViewProjTransform == mTranslator.mProjScreenTransform) {
 				mCameraProjectionMatrix.set(mTranslator.mProjScreenTransform);
 				if(mTranslator.isStereo()) {
 					mCameraProjectionMatrix.postTranslate(-get2DStereoShift(mStereoScreenDistance),0);
@@ -369,12 +388,12 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawLine(float fromX,float fromY, float toX,float toY, float width, YangMatrix textureTransform) {
-		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
+		MatrixOps.setLine(mInterTransf1,fromX, fromY, toX, toY, width);
 		drawQuad(mInterTransf1,textureTransform);
 	}
 
 	public void drawLine(float fromX,float fromY, float toX,float toY, float width, TextureCoordinatesQuad texCoordinates) {
-		mInterTransf1.setLine(fromX, fromY, toX, toY, width);
+		MatrixOps.setLine(mInterTransf1,fromX, fromY, toX, toY, width);
 		drawQuad(mInterTransf1,texCoordinates);
 	}
 
@@ -658,6 +677,26 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public void drawString(float x,float y,float lineHeight,float rotation,DrawableString string) {
 		string.draw(x,y,lineHeight,rotation);
+	}
+
+	public float getCamX() {
+		return mCamera.getX();
+	}
+
+	public float getCamY() {
+		return mCamera.getY();
+	}
+
+	public float getCamZ() {
+		return mCamera.getZ();
+	}
+
+	public Point3f getCamPositionReference() {
+		return mCamera.getPositionReference();
+	}
+
+	public YangCamera getCameraInstance() {
+		return mCamera;
 	}
 
 }

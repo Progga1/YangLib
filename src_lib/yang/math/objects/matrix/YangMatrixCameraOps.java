@@ -44,19 +44,13 @@ public class YangMatrixCameraOps extends YangMatrix {
 		setColumn(3,-mVec0.dot(mVec1),-mVec0.dot(mVec2),-mVec0.dot(mVec3));
 	}
 
-	public void setOrthogonalProjection(float left, float right, float top, float bottom, float near, float far) {
-		final float dx = 1/(right - left);
-		final float dy = 1/(top - bottom);
-		final float dz = 1/(far - near);
-
-		setRow(0, 2*dx,    0,    0, -(right+left)*dx);
-		setRow(1, 0,    2*dy,    0, -(top+bottom)*dy);
-		setRow(2, 0,    0, -2*dz, -(far+near)*dz);
-		setRow(3, 0,    0,    0,    1);
-	}
-
-	public void setOrthogonalProjection(float left, float right, float top, float bottom) {
-		setOrthogonalProjection(left,right,top,bottom,DEFAULT_NEAR,DEFAULT_FAR);
+	public void setLookAtAlphaBeta(float focusX, float focusY, float focusZ, float alpha, float beta,float distance,Point3f outPosition) {
+		final float eyeX = focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance;
+		final float eyeY = focusY+(float)Math.sin(beta)*distance;
+		final float eyeZ = focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance;
+		setLookAt(eyeX,eyeY,eyeZ, focusX,focusY,focusZ, 0,1,0);
+		if(outPosition!=null)
+			outPosition.set(eyeX,eyeY,eyeZ);
 	}
 
 	public void setPerspectiveProjection(float right,float top,float near, float far) {
@@ -73,15 +67,6 @@ public class YangMatrixCameraOps extends YangMatrix {
 
 	public void setPerspectiveProjectionFovy(float fovy,float ratioX,float near, float far) {
 		setPerspectiveProjectionFovy(fovy,ratioX,1,near,far);
-	}
-
-	public void setLookAtAlphaBeta(float focusX, float focusY, float focusZ, float alpha, float beta,float distance,Point3f outPosition) {
-		final float eyeX = focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance;
-		final float eyeY = focusY+(float)Math.sin(beta)*distance;
-		final float eyeZ = focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance;
-		setLookAt(eyeX,eyeY,eyeZ, focusX,focusY,focusZ, 0,1,0);
-		if(outPosition!=null)
-			outPosition.set(eyeX,eyeY,eyeZ);
 	}
 
 }

@@ -3,6 +3,7 @@ package yang.math;
 import java.util.Arrays;
 
 import yang.math.objects.Point3f;
+import yang.math.objects.matrix.YangMatrix;
 
 public class MatrixOps {
 
@@ -285,6 +286,28 @@ public class MatrixOps {
 		target[13] = 0;
 		target[14] = 0;
 		target[15] = 1;
+	}
+
+	public static void setLine(YangMatrix target, float fromX, float fromY, float toX, float toY, float width) {
+		target.loadIdentity();
+		float angle;
+		float dx = toX - fromX;
+		float dy = toY - fromY;
+		float r = (float) Math.sqrt(dx * dx + dy * dy);
+		if (r == 0) {
+			target.scale(0);
+			return;
+		}
+		if (dy < 0)
+			angle = -(float) Math.acos(dx / r);
+		else
+			angle = (float) Math.acos(dx / r);
+		angle += (float) Math.PI * 0.5f;
+
+		target.translate(fromX, fromY);
+		target.rotateZ(angle);
+		target.scale(width, r);
+		target.translate(-0.5f, -1);
 	}
 
 	public static final float applyFloatMatrixX2D(float[] matrix, float x, float y) {

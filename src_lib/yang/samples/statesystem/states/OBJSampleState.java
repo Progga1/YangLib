@@ -80,13 +80,13 @@ public class OBJSampleState extends SampleState {
 			mObj[++mObjCount] = loader.getMesh();
 			loader.mTextureProperties = null;
 
-			transform.loadIdentity();
-			transform.translate(0, 0.3f);
-			transform.rotateY((float)Math.PI/2);
-			transform.rotateX(-0.3f);
-			transform.scale(0.2f);
-			loader.loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),transform,true,true);
-			mObj[++mObjCount] = loader.getMesh();
+//			transform.loadIdentity();
+//			transform.translate(0, 0.3f);
+//			transform.rotateY((float)Math.PI/2);
+//			transform.rotateX(-0.3f);
+//			transform.scale(0.2f);
+//			loader.loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),transform,true,true);
+//			mObj[++mObjCount] = loader.getMesh();
 
 			transform.loadIdentity();
 			transform.scale(0.42f);
@@ -122,8 +122,8 @@ public class OBJSampleState extends SampleState {
 		//mGraphics.clear(0.4f,0.4f,0.9f,GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
-		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
-		mGraphics3D.setCamera(mCamera.setAlphaBeta(0*0.05f,0.4f,2));
+
+		mGraphics3D.setCamera(mCamera.setAlphaBeta(0*0.05f,0.4f,2));mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
 		if(false) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);

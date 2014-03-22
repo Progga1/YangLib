@@ -332,12 +332,13 @@ public class IcyTerrainState extends SampleState {
 
 		if(ENVIRONMENT_MAPPING) {
 			mGraphics.checkErrorInst("Pre environment mapping");
-			mGraphics.setTextureRenderTarget(mEnvironmentMap);
+			mGraphics.setTextureRenderTarget(mEnvironmentMap,true);
 			mGraphics.mForceStereo = true;
 			mGraphics.clear(0,0,0,1,GLMasks.DEPTH_BUFFER_BIT);
 
 			mGraphics3D.setCamera(mCamera);
-			mGraphics3D.mCameraMatrix.mirrorAtPlane(-(float)Math.sin(mWorldAngle),(float)Math.cos(mWorldAngle),0, mWorldShift);
+			mGraphics3D.mViewProjectionTransform.mirrorAtPlane(-(float)Math.sin(mWorldAngle),(float)Math.cos(mWorldAngle),0, mWorldShift);
+			//mGraphics3D.refreshCameraTransform();
 
 			drawSky();
 
@@ -360,7 +361,6 @@ public class IcyTerrainState extends SampleState {
 			waterTex = mEnvironmentMap.mTargetTexture;
 			mGraphics.checkErrorInst("Post environment mapping");
 
-			mGraphics3D.mCameraMatrix.loadIdentity();
 		}
 
 		//Begin real drawing
@@ -382,6 +382,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.checkErrorInst("Draw sky");
 
 		drawWater(pX,pY,pZ);
+
 		if(USE_LIGHTMAPS)
 			//drawTerrainLightmap();
 			drawTerrainSpecular();

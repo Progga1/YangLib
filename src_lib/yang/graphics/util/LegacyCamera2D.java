@@ -7,7 +7,7 @@ import yang.math.objects.Point2f;
  * @author Xider
  *
  */
-public class Camera2D {
+public class LegacyCamera2D {
 	private static final float MAX_ZOOM = 30;
 	private static final float MIN_ZOOM = 1;
 	private static final float ZOOM_STEP = 1;
@@ -19,7 +19,7 @@ public class Camera2D {
 	private float mTarZoom;
 	public float mAdaption;
 
-	public Camera2D(float startX, float startY, float zoom){
+	public LegacyCamera2D(float startX, float startY, float zoom){
 		mPos = new Point2f(startX,startY);
 		mTarPos = new Point2f(mPos);
 
@@ -30,7 +30,7 @@ public class Camera2D {
 		mAdaption = 0.1f;
 	}
 
-	public Camera2D() {
+	public LegacyCamera2D() {
 		this(0,0,1);
 	}
 

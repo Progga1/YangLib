@@ -14,7 +14,7 @@ import yang.graphics.skeletons.animations.AnimationSystem;
 import yang.graphics.skeletons.animations.KeyFrame;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.graphics.util.Camera2D;
+import yang.graphics.util.LegacyCamera2D;
 import yang.model.Rect;
 import yang.physics.massaggregation.SkeletonEditing;
 import yang.physics.massaggregation.elements.Joint;
@@ -34,7 +34,7 @@ public class Animator implements YangEventListener {
 	protected SkeletonCarrier mCurCarrier;
 	@SuppressWarnings("rawtypes")
 	public AnimationPlayer mCurAnimationPlayer;
-	private final Camera2D mCamera;
+	private final LegacyCamera2D mCamera;
 	private final SkeletonEditing mSkeletonEditing;
 	public YangList<CartoonSkeleton2D> mSkeletons;
 	public YangList<Texture> mTextures;
@@ -65,7 +65,7 @@ public class Animator implements YangEventListener {
 	public Animator(Default2DGraphics graphics2D) {
 		mGraphics2D = graphics2D;
 		mGraphics = graphics2D.mTranslator;
-		mCamera = new Camera2D();
+		mCamera = new LegacyCamera2D();
 		mCamera.mAdaption = 0.2f;
 		mSkeletons = new YangList<CartoonSkeleton2D>();
 		mTextures = new YangList<Texture>();

@@ -15,7 +15,7 @@ public class Texture extends AbstractTexture {
 	public static final int STATUS_FINISHED = 2;
 	public static final int STATUS_FREE = 3;
 
-	protected GraphicsTranslator mGraphics;
+	public GraphicsTranslator mGraphics;
 	public int mId;
 	public TextureProperties mProperties;
 	public int mStatus = STATUS_UNINITIALIZED;

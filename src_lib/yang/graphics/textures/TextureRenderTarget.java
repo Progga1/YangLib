@@ -1,10 +1,11 @@
 package yang.graphics.textures;
 
 import yang.graphics.translator.Texture;
-import yang.model.ScreenInfo;
+import yang.model.SurfaceParameters;
 
-public class TextureRenderTarget implements ScreenInfo{
+public class TextureRenderTarget implements SurfaceParameters{
 
+	public boolean mStereoEnabled = false;
 	public Texture mTargetTexture;
 	public int mFrameBufferId;
 	public int mDepthBufferId;
@@ -55,8 +56,16 @@ public class TextureRenderTarget implements ScreenInfo{
 		fakeDimensions(width,height,(float)width/height,1);
 	}
 
-	public void fakeDimensions(ScreenInfo surface) {
+	public void fakeDimensions(SurfaceParameters surface) {
 		fakeDimensions(surface.getSurfaceWidth(),surface.getSurfaceHeight(),surface.getSurfaceRatioX(),surface.getSurfaceRatioY());
+	}
+
+	@Override
+	public float getCameraShift() {
+		if(mStereoEnabled)
+			return mTargetTexture.mGraphics.mCameraShiftX;
+		else
+			return 0;
 	}
 
 }

@@ -17,7 +17,7 @@ public class CameraPerVertexVectorSubShader extends SubShader {
 	}
 
 	public CameraPerVertexVectorSubShader(Default3DGraphics graphics3D) {
-		this(graphics3D.getCameraPosition());
+		this(graphics3D.getCamPositionReference());
 	}
 
 	@Override
