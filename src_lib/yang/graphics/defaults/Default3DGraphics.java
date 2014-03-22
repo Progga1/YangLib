@@ -8,6 +8,7 @@ import java.nio.ShortBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.camera.Camera3D;
 import yang.graphics.camera.projection.OrthogonalProjection;
+import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.graphics.defaults.geometrycreators.LineDrawer3D;
 import yang.graphics.defaults.geometrycreators.SphereCreator;
 import yang.graphics.model.FloatColor;
@@ -18,8 +19,7 @@ import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
@@ -141,7 +141,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
-		OrthogonalProjection.setOrthogonalProjection(mCamera.getProjectionTransformReference(),-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
+		OrthogonalProjection.getTransform(mCamera.getProjectionTransformReference(),-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
 		if(mAutoRefreshCameraTransform)
 			refreshCameraTransform();
 	}
@@ -159,7 +159,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
-		mCamRefProjection.setPerspectiveProjectionFovy(fovy, stretchX,1, near, far);
+		PerspectiveProjection.getTransformFovy(mCamRefProjection,fovy, stretchX,1, near, far);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
@@ -514,10 +514,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	private final Vector3f tempVec1 = new Vector3f();
 	private final Vector3f tempVec2 = new Vector3f();
-	private final YangMatrixCameraOps mProjectionMatrix = new YangMatrixCameraOps();
+	private final YangMatrix mProjectionMatrix = new YangMatrix();
 
 	public void prepareProjection() {
-		this.getToScreenTransform(mProjectionMatrix);
+		this.getUnprojection(mProjectionMatrix);
 	}
 
 	public float getProjectedPositionAndRadius(Vector3f target, float x, float y, float z, float radius) {

@@ -1,6 +1,5 @@
 package yang.graphics.defaults.programs.helpers;
 
-import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.programs.LightmapCreatorProgram;
 import yang.graphics.textures.TextureProperties;
@@ -9,8 +8,6 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
 
 public class PlanarLightmapHelper {
 
@@ -25,9 +22,6 @@ public class PlanarLightmapHelper {
 	public static TextureProperties defaultTextureSettingsMipMap = createTextureSettings(true);
 	public boolean mRenderToScreen = false;
 	public ShadowHelper mShadowHelper;
-	public YangMatrix mOrthoProjection;
-	public YangMatrixCameraOps mCameraTransform;
-	public float[] mInvOrthoProjection = new float[16];
 	private TextureProperties mTextureSettings;
 	private boolean mMipMapping;
 	private boolean mFinished = false;
@@ -40,12 +34,6 @@ public class PlanarLightmapHelper {
 
 	public PlanarLightmapHelper() {
 
-	}
-
-	public void refreshProjections() {
-		mCameraTransform.setLookAt(0,0,0, 0,-1,0, 0,0,-1);
-		OrthogonalProjection.setOrthogonalProjection(mOrthoProjection,-mObjectWidth*0.5f,mObjectWidth*0.5f, mObjectHeight*0.5f, -mObjectHeight*0.5f, mNear, mFar);
-		mOrthoProjection.asInverted(mInvOrthoProjection);
 	}
 
 	public void init(ShadowHelper shadowHelper,int textureWidthAndHeight,float objectWidth,float objectHeight,float topMost,float bottomMost,boolean mipMapping) {
@@ -63,9 +51,6 @@ public class PlanarLightmapHelper {
 		mFar = -bottomMost;
 		mGraphics.addProgram(mLightmapCreatorProgram);
 		mSize = textureWidthAndHeight;
-		mCameraTransform = new YangMatrixCameraOps();
-		mOrthoProjection = new YangMatrixCameraOps();
-		refreshProjections();
 		mLightMap = mGraphics.createRenderTarget(mSize, mSize, mTextureSettings);
 	}
 

@@ -1,6 +1,6 @@
 package yang.graphics.camera.projection;
 
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 
 public class OrthogonalProjection extends Projection {
@@ -8,7 +8,7 @@ public class OrthogonalProjection extends Projection {
 	public final static float DEFAULT_NEAR = -1;
 	public final static float DEFAULT_FAR = 1;
 
-	public static void setOrthogonalProjection(YangMatrix target,float left, float right, float top, float bottom, float near, float far) {
+	public static void getTransform(YangMatrix target,float left, float right, float top, float bottom, float near, float far) {
 		final float dx = 1/(right - left);
 		final float dy = 1/(top - bottom);
 		final float dz = 1/(far - near);
@@ -20,14 +20,7 @@ public class OrthogonalProjection extends Projection {
 	}
 
 	public void setOrthogonalProjection(YangMatrix target,float left, float right, float top, float bottom) {
-		setOrthogonalProjection(target,left,right,top,bottom,DEFAULT_NEAR,DEFAULT_FAR);
-	}
-
-	public void setPerspectiveProjection(YangMatrix target,float right,float top,float near, float far) {
-		target.setRow(0, near/right, 0, 0, 0);
-		target.setRow(1, 0, near/top, 0, 0);
-		target.setRow(2, 0,0,-(far+near)/(far-near),-2*far*near/(far-near));
-		target.setRow(3, 0,0,-1,0);
+		getTransform(target,left,right,top,bottom,DEFAULT_NEAR,DEFAULT_FAR);
 	}
 
 	private float mSize = 1;
@@ -46,7 +39,7 @@ public class OrthogonalProjection extends Projection {
 	public void refresh() {
 		float w = mRatioX*mSize*0.5f;
 		float h = mRatioY*mSize*0.5f;
-		OrthogonalProjection.setOrthogonalProjection(mTransform,-w,w, h,-h, mNear,mFar);
+		OrthogonalProjection.getTransform(mTransform,-w,w, h,-h, mNear,mFar);
 	}
 
 	public void set(float near,float far,float size) {

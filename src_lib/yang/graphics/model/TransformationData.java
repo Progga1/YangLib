@@ -3,7 +3,7 @@ package yang.graphics.model;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 public class TransformationData {
 

@@ -5,7 +5,7 @@ import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.font.BitmapFont;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.surface.YangSurface;
 import yang.systemdependent.YangSensor;
 

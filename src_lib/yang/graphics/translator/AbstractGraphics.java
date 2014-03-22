@@ -8,10 +8,10 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
+import yang.math.MatrixOps;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 import yang.model.DebugYang;
 
 
@@ -32,7 +32,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public TextureCoordinatesQuad mTexIdentity;
 	//Camera
 	public YangMatrix mWorldTransform;
-	public YangMatrixCameraOps mViewProjectionTransform;
+	public YangMatrix mViewProjectionTransform;
 	public YangMatrix mCameraProjectionMatrix;
 	protected YangMatrix mResultTransformationMatrix;
 	public YangMatrix mCurViewProjTransform;
@@ -92,7 +92,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		if (DebugYang.showStart) DebugYang.showStackTrace("5", 1);
 
 		mWorldTransformEnabled = false;
-		mViewProjectionTransform = new YangMatrixCameraOps();
+		mViewProjectionTransform = new YangMatrix();
 		mInterTransf1 = new YangMatrix();
 		mInterTransf2 = new YangMatrix();
 		mWorldTransform = new YangMatrix(WORLD_TRANSFORM_STACK_CAPACITY);
@@ -173,7 +173,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 			if(!mWorldTransform.asNormalTransform3f(mNormalTransform))
 				return false;
 		}else{
-			YangMatrix.identity3f(mNormalTransform);
+			MatrixOps.identity3f(mNormalTransform);
 		}
 		return true;
 	}

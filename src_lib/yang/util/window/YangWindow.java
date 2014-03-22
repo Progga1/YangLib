@@ -10,7 +10,7 @@ import yang.graphics.model.GFXDebug;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.math.objects.Point3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.model.Extents;
 import yang.model.callback.Drawable;
 

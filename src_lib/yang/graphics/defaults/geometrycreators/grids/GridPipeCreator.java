@@ -1,7 +1,7 @@
 package yang.graphics.defaults.geometrycreators.grids;
 
 import yang.graphics.defaults.Default3DGraphics;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 public class GridPipeCreator extends Grid3DCreator {
 

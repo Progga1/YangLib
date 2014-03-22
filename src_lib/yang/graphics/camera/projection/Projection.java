@@ -1,15 +1,14 @@
 package yang.graphics.camera.projection;
 
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 
 public class Projection {
 
 	public YangMatrix mTransform;
 	protected YangMatrix mInvTransform;
 	public float mRatioX = 1,mRatioY = 1;
-	protected float mNear = YangMatrixCameraOps.DEFAULT_NEAR;
-	protected float mFar = YangMatrixCameraOps.DEFAULT_FAR;
+	protected float mNear = -1;
+	protected float mFar = 1;
 
 	public void refresh() {
 
@@ -38,8 +37,8 @@ public class Projection {
 	}
 
 	public void reset() {
-		mNear = YangMatrixCameraOps.DEFAULT_NEAR;
-		mFar = YangMatrixCameraOps.DEFAULT_FAR;
+		mNear = -1;
+		mFar = 1;
 		if(mTransform!=null)
 			mTransform.loadIdentity();
 	}

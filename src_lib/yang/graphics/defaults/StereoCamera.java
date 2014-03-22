@@ -2,8 +2,7 @@ package yang.graphics.defaults;
 
 import yang.graphics.camera.YangCamera;
 import yang.graphics.stereovision.StereoVision;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 
 public class StereoCamera {
 
@@ -15,9 +14,9 @@ public class StereoCamera {
 
 	public float mInterOcularDistance = StereoVision.DEFAULT_INTEROCULAR_DISTANCE;
 
-	public YangMatrixCameraOps mResultTransformLeft = new YangMatrixCameraOps();
-	public YangMatrixCameraOps mResultTransformRight = new YangMatrixCameraOps();
-	public YangMatrixCameraOps mBaseTransform = new YangMatrixCameraOps();
+	public YangMatrix mResultTransformLeft = new YangMatrix();
+	public YangMatrix mResultTransformRight = new YangMatrix();
+	public YangMatrix mBaseTransform = new YangMatrix();
 
 	public StereoCamera(YangCamera baseCamera) {
 		mBaseCamera = baseCamera;

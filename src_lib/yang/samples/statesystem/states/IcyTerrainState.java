@@ -24,7 +24,7 @@ import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.model.Boundaries3D;
 import yang.samples.statesystem.SampleState;
 

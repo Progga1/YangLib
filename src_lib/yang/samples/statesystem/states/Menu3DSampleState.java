@@ -7,7 +7,7 @@ import yang.graphics.font.StringProperties;
 import yang.graphics.model.FloatColor;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.math.objects.Point3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.samples.statesystem.SampleStateCameraControl;
 import yang.util.gui.BasicGUI;
 import yang.util.gui.GUICoordinatesMode;

@@ -15,7 +15,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.math.Geometry;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 public class ShadowHelper {
 

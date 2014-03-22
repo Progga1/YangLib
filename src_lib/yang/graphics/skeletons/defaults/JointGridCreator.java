@@ -5,7 +5,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.grids.GridCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.constraints.ColliderConstraint;
 import yang.physics.massaggregation.elements.Joint;

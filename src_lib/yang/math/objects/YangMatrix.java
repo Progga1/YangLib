@@ -1,9 +1,6 @@
-package yang.math.objects.matrix;
+package yang.math.objects;
 
 import yang.math.MatrixOps;
-import yang.math.objects.Point3f;
-import yang.math.objects.Quaternion;
-import yang.math.objects.Vector3f;
 
 //TODO normal inversion only 3x3, autocreate inversed mat, save orthogonal etc information
 
@@ -41,37 +38,6 @@ public class YangMatrix {
 
 	public static float TO_RAD_FACTOR = (float) Math.PI / 180;
 	public static float TO_DEG_FACTOR = 180 / (float) Math.PI;
-
-	public static void identity4f(float[] matrix) {
-		matrix[0] = 1;
-		matrix[1] = 0;
-		matrix[2] = 0;
-		matrix[3] = 0;
-		matrix[4] = 0;
-		matrix[5] = 1;
-		matrix[6] = 0;
-		matrix[7] = 0;
-		matrix[8] = 0;
-		matrix[9] = 0;
-		matrix[10] = 1;
-		matrix[11] = 0;
-		matrix[12] = 0;
-		matrix[13] = 0;
-		matrix[14] = 0;
-		matrix[15] = 1;
-	}
-
-	public static void identity3f(float[] matrix) {
-		matrix[0] = 1;
-		matrix[1] = 0;
-		matrix[2] = 0;
-		matrix[3] = 0;
-		matrix[4] = 1;
-		matrix[5] = 0;
-		matrix[6] = 0;
-		matrix[7] = 0;
-		matrix[8] = 1;
-	}
 
 	public YangMatrix() {
 		mValues = new float[16];
@@ -225,6 +191,10 @@ public class YangMatrix {
 			mValues[i*4+1] *= y;
 			mValues[i*4+2] *= z;
 		}
+	}
+
+	public void postScale(float s) {
+		postScale(s,s,s);
 	}
 
 	public void scale(float x, float y) {
@@ -562,6 +532,10 @@ public class YangMatrix {
 
 	public void apply3DNormalized(float x, float y, float z, float[] target, int targetOffset) {
 		MatrixOps.applyFloatMatrix3DNormalized(mValues,x,y,z,target,targetOffset);
+	}
+
+	public void apply3DNormalized(float x, float y, float z, Point3f target) {
+		MatrixOps.applyFloatMatrix3DNormalized(mValues,x,y,z,target);
 	}
 
 	protected void setColumn(int col, Vector3f values) {

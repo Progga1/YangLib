@@ -26,8 +26,7 @@ import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.graphics.translator.glconsts.GLTex;
 import yang.math.objects.Bounds;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 import yang.model.SurfaceParameters;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
@@ -85,7 +84,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mMinForceWireFrameRenderTargetDepth = -1;
 
 	//Matrices
-	public YangMatrixCameraOps mProjScreenTransform;
+	public YangMatrix mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
 
 	//Counters
@@ -193,7 +192,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public GraphicsTranslator() {
 		INSTANCE = this;
 		mCurrentTextures = new Texture[MAX_TEXTURES];
-		mProjScreenTransform = new YangMatrixCameraOps();
+		mProjScreenTransform = new YangMatrix();
 		mSensorCameraMatrix = new YangMatrix();
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
@@ -693,7 +692,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private void refreshProjScreenTransform() {
 		final float rx = mCurrentSurface.getSurfaceRatioX();
 		final float ry = mCurrentSurface.getSurfaceRatioY();
-		OrthogonalProjection.setOrthogonalProjection(mProjScreenTransform,-rx,rx, ry,-ry, -1,1);
+		OrthogonalProjection.getTransform(mProjScreenTransform,-rx,rx, ry,-ry, -1,1);
 		mProjScreenTransform.refreshInverted();
 	}
 

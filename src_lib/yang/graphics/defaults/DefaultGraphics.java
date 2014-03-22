@@ -17,8 +17,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MatrixOps;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 import yang.model.Rect;
 import yang.util.Util;
 
@@ -73,7 +72,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	//Objects
 	protected YangCamera mCamera;
-	protected YangMatrixCameraOps mCamRefProjection;
+	protected YangMatrix mCamRefProjection;
 
 	public void shareBuffers(DefaultGraphics<?> graphics) {
 		initDynamicBuffer();
@@ -160,7 +159,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mCameraProjectionMatrix.postScale(1f/mTranslator.mCurrentSurface.getSurfaceRatioX(),1f/mTranslator.mCurrentSurface.getSurfaceRatioY(),1);
 	}
 
-	public void getToScreenTransform(YangMatrix target) {
+	public void getUnprojection(YangMatrix target) {
 		refreshViewTransform();
 		target.set(mCurViewProjTransform);
 		if (mWorldTransformEnabled)

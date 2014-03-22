@@ -1,6 +1,6 @@
 package yang.samples.statesystem.states;
 
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.samples.statesystem.SampleState;
 import yang.util.pools.YangPool;
 

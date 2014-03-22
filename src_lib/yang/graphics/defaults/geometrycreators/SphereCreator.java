@@ -3,7 +3,7 @@ package yang.graphics.defaults.geometrycreators;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.geometrycreators.grids.Grid3DCreator;
 import yang.math.Geometry;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 public class SphereCreator extends Grid3DCreator {
 

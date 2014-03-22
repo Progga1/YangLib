@@ -1,18 +1,20 @@
 package yang.graphics.camera;
 
+import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 import yang.model.SurfaceParameters;
 
 public class YangCamera {
 
-	protected YangMatrixCameraOps mProjectionTransform = new YangMatrixCameraOps();
-	protected YangMatrixCameraOps mViewTransform = new YangMatrixCameraOps();
+	protected YangMatrix mProjectionTransform = new YangMatrix();
+	protected YangMatrix mViewTransform = new YangMatrix();
 
 	public SurfaceParameters mSurface;
 	protected Point3f mPosition = new Point3f();
+	protected float mNear = OrthogonalProjection.DEFAULT_NEAR;
+	protected float mFar = OrthogonalProjection.DEFAULT_FAR;
 
 	public boolean mAutoRefreshInverted = true;
 
@@ -80,7 +82,7 @@ public class YangCamera {
 		target.mZ = mat[10];
 	}
 
-	public YangMatrixCameraOps getProjectionTransformReference() {
+	public YangMatrix getProjectionTransformReference() {
 		return mProjectionTransform;
 	}
 

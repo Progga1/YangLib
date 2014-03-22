@@ -24,7 +24,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.util.LegacyCamera3D;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.model.wrappers.FloatWrapper;
 import yang.samples.statesystem.SampleState;
 

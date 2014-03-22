@@ -1,14 +1,14 @@
 package yang.graphics.util;
 
 import yang.math.Geometry;
+import yang.math.MatrixOps;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 
 public class LegacyCamera3D {
 
-	public YangMatrixCameraOps mViewMatrix = new YangMatrixCameraOps();
-	public YangMatrixCameraOps mProjectionMatrix = new YangMatrixCameraOps();
+	public YangMatrix mViewMatrix = new YangMatrix();
+	public YangMatrix mProjectionMatrix = new YangMatrix();
 
 	private float[] mLookVector = new float[4];
 	private float[] mLookDirection = new float[4];
@@ -59,7 +59,7 @@ public class LegacyCamera3D {
 	}
 
 	public void refreshMatrix() {
-		mViewMatrix.setLookAt(mEyeX,mEyeY,mEyeZ, mLookAtX,mLookAtY,mLookAtZ, mUpX,mUpY,mUpZ);
+		MatrixOps.setLookAtInverse(mViewMatrix.mValues, mEyeX,mEyeY,mEyeZ, mLookAtX,mLookAtY,mLookAtZ, mUpX,mUpY,mUpZ);
 	}
 
 	public YangMatrix getMatrix() {

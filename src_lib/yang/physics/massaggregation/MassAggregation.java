@@ -7,7 +7,7 @@ import yang.graphics.skeletons.pose.Posture;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.math.objects.Point3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.model.Rect;
 import yang.physics.massaggregation.constraints.Constraint;
 import yang.physics.massaggregation.constraints.DistanceConstraint;

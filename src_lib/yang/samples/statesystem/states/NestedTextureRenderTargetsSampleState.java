@@ -5,7 +5,7 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.samples.statesystem.SampleState;
 
 public class NestedTextureRenderTargetsSampleState extends SampleState {
