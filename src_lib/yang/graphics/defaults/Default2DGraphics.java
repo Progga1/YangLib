@@ -19,6 +19,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	private BasicProgram mDefaultProgram;
 
 	//Camera
+	protected Camera2D mCamera2D;
 	protected float mStereoGameDistance = 1.2f;
 
 	public Default2DGraphics(GraphicsTranslator graphics) {
@@ -28,6 +29,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	@Override
 	protected void derivedInit() {
 		super.derivedInit();
+		mCamera2D = new Camera2D();
 		mDefaultProgram = new BasicProgram();
 		mTranslator.addProgram(mDefaultProgram);
 	}
@@ -43,11 +45,12 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			return posX<=mTranslator.mRatioX && posY<=mTranslator.mRatioY && (posX>=-mTranslator.mRatioX-width) && (posY>=-mTranslator.mRatioY-height);
 	}
 
+	//TODO does nothing
 	public void setStereoZDistance(float distance) {
 		flush();
 		mStereoGameDistance = distance;
 		if(mAutoRefreshCameraTransform)
-			refreshCameraTransform();
+			mCamera2D.calcTransformations(mCameraProjection);
 	}
 
 	@Override
@@ -56,11 +59,10 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	public void setCamera(float x, float y, float zoom, float rotation) {
-		if(Thread.currentThread().getId()==mTranslator.mThreadId)
-			mTranslator.flush();
-		Camera2D.set(mCamera,x,y,zoom,rotation);
+		mTranslator.flush();
+		mCamera2D.set(x,y,zoom,rotation);
 		if(mAutoRefreshCameraTransform)
-			refreshCameraTransform();
+			mCamera2D.calcTransformations(mCameraProjection);
 	}
 
 	public void setCamera(float x, float y, float zoom) {
@@ -159,7 +161,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	public float getCamZoom() {
-		return mCamera.getZ();
+		return mCameraProjection.getZ();
 	}
 
 	//TODO remove

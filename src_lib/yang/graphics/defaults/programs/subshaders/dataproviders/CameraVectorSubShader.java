@@ -1,6 +1,6 @@
 package yang.graphics.defaults.programs.subshaders.dataproviders;
 
-import yang.graphics.camera.YangCamera;
+import yang.graphics.camera.CameraProjection;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
@@ -15,8 +15,8 @@ public class CameraVectorSubShader extends SubShader {
 		mCameraMatrix = cameraMatrix;
 	}
 
-	public CameraVectorSubShader(YangCamera cameraInstance) {
-		mCameraMatrix = cameraInstance.getViewTransformReference().mValues;
+	public CameraVectorSubShader(CameraProjection camera) {
+		mCameraMatrix = camera.getViewTransformReference().mValues;
 	}
 
 	@Override

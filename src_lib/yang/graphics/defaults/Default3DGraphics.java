@@ -52,6 +52,8 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private final SphereCreator mSphereCreator;
 	public final LineDrawer3D mLineDrawer;
 
+	private Camera3D mCamera3D = new Camera3D();
+
 	public float mSensorZ = 0.05f;
 
 	//Temp vars
@@ -141,9 +143,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
-		OrthogonalProjection.getTransform(mCamera.getProjectionTransformReference(),-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
+		OrthogonalProjection.getTransform(mCamera3D.getProjectionTransformReference(),-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
 		if(mAutoRefreshCameraTransform)
-			refreshCameraTransform();
+			mCamera3D.calcTransformations(mCameraProjection);
 	}
 
 	public void setOrthogonalProjection(float near,float far,float zoom) {
@@ -155,11 +157,13 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setOrthogonalProjection() {
-		setOrthogonalProjection(YangMatrix.DEFAULT_NEAR,YangMatrix.DEFAULT_FAR);
+		setOrthogonalProjection(OrthogonalProjection.DEFAULT_NEAR,OrthogonalProjection.DEFAULT_FAR);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
-		PerspectiveProjection.getTransformFovy(mCamRefProjection,fovy, stretchX,1, near, far);
+		PerspectiveProjection.getTransformFovy(mCamera3D.getProjectionTransformReference(),fovy, stretchX,1, near, far);
+		if(mAutoRefreshCameraTransform)
+			mCamera3D.calcTransformations(mCameraProjection);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
@@ -207,9 +211,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 //	}
 
 	public void setCameraLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
-		Camera3D.setLookAt(mCamera, eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ);
+		mCamera3D.setLookAt(eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ);
 		if(mAutoRefreshCameraTransform)
-			refreshCameraTransform();
+			mCamera3D.calcTransformations(mCameraProjection);
 	}
 
 	public void setCameraLookAt(float eyeX,float eyeY, float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
@@ -221,9 +225,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
-		Camera3D.setLookAtAlphaBeta(mCamera,lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
+		mCamera3D.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
 		if(mAutoRefreshCameraTransform)
-			refreshCameraTransform();
+			mCamera3D.calcTransformations(mCameraProjection);
 	}
 
 	public void setCameraAlphaBeta(float alpha, float beta, float distance) {
@@ -231,9 +235,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setViewByTransform(YangMatrix cameraTransform) {
-		Camera3D.setByTransform(mCamera,cameraTransform);
+		mCamera3D.setViewByTransform(cameraTransform);
 		if(mAutoRefreshCameraTransform)
-			refreshCameraTransform();
+			mCamera3D.calcTransformations(mCameraProjection);
 	}
 
 //	@Override
@@ -428,15 +432,15 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 //	}
 
 	public void getCameraRightVector(Vector3f target) {
-		mCamera.getRightVector(target);
+		mCameraProjection.getRightVector(target);
 	}
 
 	public void getCameraUpVector(Vector3f target) {
-		mCamera.getUpVector(target);
+		mCameraProjection.getUpVector(target);
 	}
 
 	public void getCameraForwardVector(Vector3f target) {
-		mCamera.getUpVector(target);
+		mCameraProjection.getUpVector(target);
 	}
 
 	public static float DEBUG_AXIS_WIDTH = 0.03f;

@@ -109,8 +109,6 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mTranslator.checkErrorInst("Matrices");
 		mInvViewProjectionTransform = new YangMatrix();
 		mInvViewProjectionTransform.loadIdentity();
-		mCurViewProjTransform = mViewProjectionTransform;
-		mCurViewProjTransform.loadIdentity();
 		mCurColor = new float[4];
 		mCurSuppData = new float[4];
 		mTime = 0;
@@ -123,6 +121,9 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mBatchRecording = false;
 
 		derivedInit();
+
+		mCurViewProjTransform = mViewProjectionTransform;
+
 		restart();
 	}
 

@@ -3,27 +3,11 @@ package yang.graphics.camera;
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.math.MatrixOps;
 
-public class Camera2D extends YangCamera {
+public class Camera2D extends DefaultCamera {
 
 	public float mZoom;
 	public float mRotation;
 	public float mRatioX = 1,mRatioY = 1;
-
-	public static void set(YangCamera target,float x,float y,float zoom, float rotation) {
-		if(rotation!=0) {
-			MatrixOps.setRotationZ(target.mViewTransform.mValues,rotation);
-			target.mViewTransform.postTranslate(-x, -y);
-		}else
-			target.mViewTransform.setTranslation(-x, -y);
-		target.mViewTransform.postScale(1/zoom);
-		target.mPosition.set(x,y,zoom);
-		zoom = 1;
-		OrthogonalProjection.getTransform(target.mProjectionTransform,
-				-zoom, zoom,
-				zoom, -zoom,
-				target.mNear,target.mFar
-				);
-	}
 
 	public Camera2D() {
 		super();
@@ -50,6 +34,7 @@ public class Camera2D extends YangCamera {
 			mViewTransform.postTranslate(-mPosition.mX, -mPosition.mY);
 		}else
 			mViewTransform.setTranslation(-mPosition.mX, -mPosition.mY);
+		mViewTransform.postScale(1/mZoom);
 
 	}
 

@@ -8,9 +8,6 @@ public class YangMatrix {
 
 	public static final YangMatrix IDENTITY = new YangMatrix();
 
-	public static float DEFAULT_NEAR = -1;
-	public static float DEFAULT_FAR = 1;
-
 	//Indices: Row-Column
 	public static final int M00 = 0;
 	public static final int M01 = 4;

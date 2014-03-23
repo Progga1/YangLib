@@ -16,7 +16,7 @@ public class BillboardsCreator extends GeometryCreator<Default3DGraphics>{
 	}
 
 	private void putApplied(float x,float y,float z,float rectX,float rectY) {
-		final float[] viewMat = mGraphics.getCameraInstance().getViewTransformReference().mValues;
+		final float[] viewMat = mGraphics.getCameraProjection().getViewTransformReference().mValues;
 		final float appX = x + viewMat[0]*rectX + viewMat[1]*rectY;
 		final float appY = y + viewMat[4]*rectX + viewMat[5]*rectY;
 		final float appZ = z + viewMat[8]*rectX + viewMat[9]*rectY;

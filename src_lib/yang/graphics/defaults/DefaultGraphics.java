@@ -5,7 +5,7 @@ import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
-import yang.graphics.camera.YangCamera;
+import yang.graphics.camera.CameraProjection;
 import yang.graphics.defaults.geometrycreators.StripCreator;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
@@ -71,8 +71,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public FloatBuffer mNormals;
 
 	//Objects
-	protected YangCamera mCamera;
-	protected YangMatrix mCamRefProjection;
+	protected CameraProjection mCameraProjection;
 
 	public void shareBuffers(DefaultGraphics<?> graphics) {
 		initDynamicBuffer();
@@ -98,9 +97,9 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	@Override
 	protected void derivedInit() {
 		setColorFactor(1);
-		mCamera = new YangCamera();
-		mCamRefProjection = mCamera.getProjectionTransformReference();
-		mCurViewProjTransform = mViewProjectionTransform;
+		mCameraProjection = new CameraProjection();
+		mViewProjectionTransform = mCameraProjection.getViewProjReference();
+		mInvViewProjectionTransform = mCameraProjection.getUnprojCameraReference();
 	}
 
 	@Override
@@ -165,11 +164,6 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		if (mWorldTransformEnabled)
 			target.multiplyRight(mWorldTransform);
 //		target.postScale(mTranslator.mRatioX, mTranslator.mRatioY, 1);
-	}
-
-	public void refreshCameraTransform() {
-		flush();
-		mCamera.calcResultTransform(mViewProjectionTransform, null, -mTranslator.mCameraShiftX);
 	}
 
 	protected void updateProgramProjection() {
@@ -679,23 +673,23 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public float getCamX() {
-		return mCamera.getX();
+		return mCameraProjection.getX();
 	}
 
 	public float getCamY() {
-		return mCamera.getY();
+		return mCameraProjection.getY();
 	}
 
 	public float getCamZ() {
-		return mCamera.getZ();
+		return mCameraProjection.getZ();
 	}
 
 	public Point3f getCamPositionReference() {
-		return mCamera.getPositionReference();
+		return mCameraProjection.getPositionReference();
 	}
 
-	public YangCamera getCameraInstance() {
-		return mCamera;
+	public CameraProjection getCameraProjection() {
+		return mCameraProjection;
 	}
 
 }
