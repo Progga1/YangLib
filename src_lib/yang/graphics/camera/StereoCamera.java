@@ -29,8 +29,8 @@ public class StereoCamera {
 	}
 
 	public void refreshCameras() {
-		mBaseCamera.calcTransformations(mLeftCameraProjection);
-		mBaseCamera.calcTransformations(mRightCameraProjection);
+		mLeftCameraProjection.copyFrom(mBaseCamera);
+		mRightCameraProjection.copyFrom(mBaseCamera);
 	}
 
 }

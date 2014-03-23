@@ -40,7 +40,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 			posY += mWorldTransform.get(13);
 		}
 		if(mCurViewProjTransform==mViewProjectionTransform)
-			return posX<=screenRightToGameX() && posY<=screenTopToGameY() && (posX>=screenLeftToGameX()-width) && (posY>=screenBottomToGameY()-height);
+			return posX<=normRightToWorldX() && posY<=normTopToWorldY() && (posX>=normLeftToWorldX()-width) && (posY>=normBottomToWorldY()-height);
 		else
 			return posX<=mTranslator.mRatioX && posY<=mTranslator.mRatioY && (posX>=-mTranslator.mRatioX-width) && (posY>=-mTranslator.mRatioY-height);
 	}
@@ -50,7 +50,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		flush();
 		mStereoGameDistance = distance;
 		if(mAutoRefreshCameraTransform)
-			mCamera2D.calcTransformations(mCameraProjection);
+			mCameraProjection.copyFrom(mCamera2D);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mTranslator.flush();
 		mCamera2D.set(x,y,zoom,rotation);
 		if(mAutoRefreshCameraTransform)
-			mCamera2D.calcTransformations(mCameraProjection);
+			mCameraProjection.copyFrom(mCamera2D);
 	}
 
 	public void setCamera(float x, float y, float zoom) {
@@ -73,21 +73,21 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		setCamera(camera.getX(),camera.getY(),camera.getZoom(),camera.getRotation());
 	}
 
-	public float normToGameX(float x,float y) {
+	public float normToWorldX(float x,float y) {
 		return mInvViewProjectionTransform.mValues[0] * x + mInvViewProjectionTransform.mValues[4] * y + mInvViewProjectionTransform.mValues[12];
 	}
 
-	public float normToGameY(float x,float y) {
+	public float normToWorldY(float x,float y) {
 		return mInvViewProjectionTransform.mValues[1] * x + mInvViewProjectionTransform.mValues[5] * y + mInvViewProjectionTransform.mValues[13];
 	}
 
 	/**
 	 * Only for non-rotating cam!
-	 * @param x
+	 * @param normX
 	 * @return
 	 */
-	public float normToGameX(float x) {
-		return mInvViewProjectionTransform.mValues[0]*x + mInvViewProjectionTransform.mValues[12];
+	public float normToWorldX(float normX) {
+		return mInvViewProjectionTransform.mValues[0]*normX + mInvViewProjectionTransform.mValues[12];
 	}
 
 	/**
@@ -95,56 +95,46 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	 * @param x
 	 * @return
 	 */
-	public float normToGameY(float y) {
-		return mInvViewProjectionTransform.mValues[5]*y + mInvViewProjectionTransform.mValues[13];
+	public float normToWorldY(float normY) {
+		return mInvViewProjectionTransform.mValues[5]*normY + mInvViewProjectionTransform.mValues[13];
 	}
 
-//	public int projScreenX(float gameX,float gameY) {
-//		final float x = MatrixOps.applyFloatMatrixX2D(mViewProjectionTransform.mValues, gameX, gameY);
-//		return (int)((x+1)*mTranslator.mCurrentSurface.getSurfaceWidth()*0.5f);
-//	}
-//
-//	public int projScreenY(float gameX,float gameY) {
-//		final float y = MatrixOps.applyFloatMatrixY2D(mViewProjectionTransform.mValues, gameX, gameY);
-//		return (int)((-y+1)*mTranslator.mCurrentSurface.getSurfaceHeight()*0.5f);
-//	}
-
-	public float projNormX(float gameX,float gameY) {
-		final float x = MatrixOps.applyFloatMatrixX2D(mViewProjectionTransform.mValues, gameX, gameY);
+	public float worldToNormX(float worldX,float worldY) {
+		final float x = MatrixOps.applyFloatMatrixX2D(mViewProjectionTransform.mValues, worldX, worldY);
 		return x*mTranslator.mCurrentSurface.getSurfaceRatioX();
 	}
 
-	public float projNormY(float gameX,float gameY) {
-		final float y = MatrixOps.applyFloatMatrixY2D(mViewProjectionTransform.mValues, gameX, gameY);
+	public float worldToNormY(float worldX,float worldY) {
+		final float y = MatrixOps.applyFloatMatrixY2D(mViewProjectionTransform.mValues, worldX, worldY);
 		return y*mTranslator.mCurrentSurface.getSurfaceRatioY();
 	}
 
-	public float screenLeftToGameX() {
-		return normToGameX(-mTranslator.mRatioX);
+	public float normLeftToWorldX() {
+		return normToWorldX(-mTranslator.mRatioX);
 	}
 
-	public float screenRightToGameX() {
-		return normToGameX(mTranslator.mRatioX);
+	public float normRightToWorldX() {
+		return normToWorldX(mTranslator.mRatioX);
 	}
 
-	public float screenTopToGameY() {
-		return normToGameY(mTranslator.mRatioY);
+	public float normTopToWorldY() {
+		return normToWorldY(mTranslator.mRatioY);
 	}
 
-	public float screenBottomToGameY() {
-		return normToGameY(-mTranslator.mRatioY);
+	public float normBottomToWorldY() {
+		return normToWorldY(-mTranslator.mRatioY);
 	}
 
-	public float screenCenterToGameY() {
+	public float normCenterToWorldY() {
 		return mInvViewProjectionTransform.mValues[12];
 	}
 
-	public float screenCenterToGameX() {
+	public float normCenterToWorldX() {
 		return mInvViewProjectionTransform.mValues[13];
 	}
 
 	public boolean rectInScreen2D(float posX,float posY,Rect mRect) {
-		return  posX+mRect.mLeft<=screenRightToGameX() && posY+mRect.mBottom<=screenTopToGameY() && (posX+mRect.mRight>=screenLeftToGameX()) && (posY+mRect.mTop>=screenBottomToGameY());
+		return  posX+mRect.mLeft<=normRightToWorldX() && posY+mRect.mBottom<=normTopToWorldY() && (posX+mRect.mRight>=normLeftToWorldX()) && (posY+mRect.mTop>=normBottomToWorldY());
 	}
 
 	public void beginQuad(boolean wireFrames) {

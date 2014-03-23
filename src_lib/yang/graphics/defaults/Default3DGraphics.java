@@ -144,8 +144,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
 		OrthogonalProjection.getTransform(mCamera3D.getProjectionTransformReference(),-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
+		mCamera3D.setProjectionUpdated();
 		if(mAutoRefreshCameraTransform)
-			mCamera3D.calcTransformations(mCameraProjection);
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setOrthogonalProjection(float near,float far,float zoom) {
@@ -162,8 +163,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
 		PerspectiveProjection.getTransformFovy(mCamera3D.getProjectionTransformReference(),fovy, stretchX,1, near, far);
+		mCamera3D.setProjectionUpdated();
 		if(mAutoRefreshCameraTransform)
-			mCamera3D.calcTransformations(mCameraProjection);
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
@@ -213,7 +215,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setCameraLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
 		mCamera3D.setLookAt(eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ);
 		if(mAutoRefreshCameraTransform)
-			mCamera3D.calcTransformations(mCameraProjection);
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setCameraLookAt(float eyeX,float eyeY, float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
@@ -227,7 +229,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
 		mCamera3D.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
 		if(mAutoRefreshCameraTransform)
-			mCamera3D.calcTransformations(mCameraProjection);
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setCameraAlphaBeta(float alpha, float beta, float distance) {
@@ -237,7 +239,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setViewByTransform(YangMatrix cameraTransform) {
 		mCamera3D.setViewByTransform(cameraTransform);
 		if(mAutoRefreshCameraTransform)
-			mCamera3D.calcTransformations(mCameraProjection);
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 //	@Override

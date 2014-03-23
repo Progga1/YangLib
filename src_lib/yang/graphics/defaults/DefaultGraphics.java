@@ -6,6 +6,7 @@ import java.nio.ShortBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
 import yang.graphics.camera.CameraProjection;
+import yang.graphics.camera.YangCamera;
 import yang.graphics.defaults.geometrycreators.StripCreator;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.font.DrawableString;
@@ -153,9 +154,13 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		assert mTranslator.checkErrorInst("Disable buffers 2D");
 	}
 
-	public void refreshViewTransform() {
+	protected void refreshViewTransform() {
 		mCameraProjectionMatrix.set(mCurViewProjTransform);
 		mCameraProjectionMatrix.postScale(1f/mTranslator.mCurrentSurface.getSurfaceRatioX(),1f/mTranslator.mCurrentSurface.getSurfaceRatioY(),1);
+	}
+
+	public void setCamera(YangCamera camera) {
+		mCameraProjection.copyFrom(camera);
 	}
 
 	public void getUnprojection(YangMatrix target) {

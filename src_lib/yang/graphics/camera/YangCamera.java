@@ -3,9 +3,8 @@ package yang.graphics.camera;
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.math.objects.Point3f;
 
-public abstract class YangCamera {
+public abstract class YangCamera extends CameraTransformations {
 
-	protected Point3f mPosition = new Point3f();
 	protected float mNear = OrthogonalProjection.DEFAULT_NEAR;
 	protected float mFar = OrthogonalProjection.DEFAULT_FAR;
 
@@ -15,7 +14,7 @@ public abstract class YangCamera {
 
 	}
 
-	public abstract void calcTransformations(CameraProjection target);
+	public abstract void calcTransformations();
 
 //	public Point3f normToWorld(float normX,float normY,float normZ) {
 //		mInvResultTransform.apply3D(normX,normY,normZ, mTempPoint);
@@ -27,18 +26,22 @@ public abstract class YangCamera {
 //		return mTempPoint;
 //	}
 
+	@Override
 	public float getX() {
 		return mPosition.mX;
 	}
 
+	@Override
 	public float getY() {
 		return mPosition.mY;
 	}
 
+	@Override
 	public float getZ() {
 		return mPosition.mZ;
 	}
 
+	@Override
 	public Point3f getPositionReference() {
 		return mPosition;
 	}

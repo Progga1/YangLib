@@ -13,7 +13,7 @@ public class Camera2D extends DefaultCamera {
 		super();
 		mPosition.mZ = 1;
 		mZoom = 1;
-		refreshProjectionTransform();
+		reset();
 	}
 
 	public void reset() {
@@ -39,6 +39,7 @@ public class Camera2D extends DefaultCamera {
 	}
 
 	protected void refreshProjectionTransform() {
+		mProjectionUpdated = true;
 		OrthogonalProjection.getTransform(mProjectionTransform,
 				-mRatioX * mZoom, mRatioX * mZoom,
 				mRatioY * mZoom, -mRatioY * mZoom,
