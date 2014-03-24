@@ -10,6 +10,8 @@ public abstract class CameraTransformations {
 	protected YangMatrix mPostCameraTransform = new YangMatrix();
 	protected YangMatrix mViewTransform = new YangMatrix(),mCameraTransform = new YangMatrix();
 	protected YangMatrix mViewProjectTransform = new YangMatrix(),mUnprojectCameraTransform = new YangMatrix();
+	protected YangMatrix mProjectionTransform = new YangMatrix();
+	protected YangMatrix mInvProjectionTransform = new YangMatrix();
 	protected Point3f mPosition = new Point3f();
 
 	public float getX() {

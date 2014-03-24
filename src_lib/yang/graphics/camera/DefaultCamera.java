@@ -5,10 +5,6 @@ import yang.math.objects.YangMatrix;
 
 public class DefaultCamera extends YangCamera {
 
-	protected YangMatrix mProjectionTransform = new YangMatrix();
-	protected YangMatrix mInvProjectionTransform = new YangMatrix();
-	protected YangMatrix mViewTransform = new YangMatrix();
-
 	protected boolean mProjectionUpdated = true;
 
 	float[] mTempMat = new float[16];
