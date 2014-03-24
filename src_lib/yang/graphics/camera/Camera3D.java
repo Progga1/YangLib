@@ -20,10 +20,6 @@ public class Camera3D extends DefaultCamera {
 		setOrthogonalProjection(near,far,1);
 	}
 
-	public void setOrthogonalProjection() {
-		setOrthogonalProjection(mNear,mFar);
-	}
-
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
 		PerspectiveProjection.getTransformFovy(mProjectionTransform,fovy, stretchX,1, near, far);
 		mProjectionUpdated = true;

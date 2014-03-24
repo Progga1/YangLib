@@ -1,7 +1,6 @@
 package yang.graphics.camera;
 
 import yang.graphics.camera.projection.OrthogonalProjection;
-import yang.math.MatrixOps;
 
 public class Camera2D extends DefaultCamera {
 
@@ -29,13 +28,18 @@ public class Camera2D extends DefaultCamera {
 	}
 
 	public void refreshViewTransform() {
-		if(mRotation!=0) {
-			MatrixOps.setRotationZ(mViewTransform.mValues,mRotation);
-			mViewTransform.postTranslate(-mPosition.mX, -mPosition.mY);
-		}else
-			mViewTransform.setTranslation(-mPosition.mX, -mPosition.mY);
-		mViewTransform.postScale(1/mZoom);
+//		if(mRotation!=0) {
+//			MatrixOps.setRotationZ(mViewTransform.mValues,mRotation);
+//			mViewTransform.postTranslate(-mPosition.mX, -mPosition.mY);
+//		}else
+//			mViewTransform.setTranslation(-mPosition.mX, -mPosition.mY);
+//		mViewTransform.postScale(1/mZoom);
 
+		mCameraTransform.setTranslation(mPosition.mX,mPosition.mY);
+		mCameraTransform.scale(mZoom,mZoom,1);
+		if(mRotation!=0) {
+			mCameraTransform.rotateZ(-mRotation);
+		}
 	}
 
 	protected void refreshProjectionTransform() {

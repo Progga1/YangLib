@@ -568,7 +568,7 @@ public class MatrixOps {
 	}
 
 	public static final void applyFloatMatrix3DNormalized(float[] matrix, float x, float y, float z, Point3f target) {
-		final float w = 1f/applyFloatMatrixW3D(matrix,x,y,z);
+		float w = 1f/applyFloatMatrixW3D(matrix,x,y,z);
 		target.mX = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*w;
 		target.mY = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*w;
 		target.mZ = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*w;

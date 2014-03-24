@@ -54,7 +54,7 @@ public abstract class CameraTransformations {
 		if(mProjectionUpdated) {
 			mProjectionTransform.asInverted(mInvProjectionTransform.mValues);
 			if(mPostUnprojection!=null) {
-				mInvProjectionTransform.multiplyLeft(mPostUnprojection.mValues);
+				mInvProjectionTransform.multiplyRight(mPostUnprojection.mValues);
 			}
 			mProjectionUpdated = false;
 		}

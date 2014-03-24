@@ -9,24 +9,14 @@ public class DefaultCamera extends YangCamera {
 
 	@Override
 	public void calcTransformations() {
-//		if(target.mPostCameraTransform!=null) {
-//			target.mPostCameraTransform.getTranslation(target.mPosition);
-//			target.mPosition.add(mPosition);
-//			target.mPostCameraTransform.asInverted(mTempMat);
-//			target.mViewTransform.multiply(mTempMat,mViewTransform.mValues);
-//		}else{
-//			target.mPosition.set(mPosition);
-//			target.mViewTransform.set(mViewTransform);
-//		}
-//		target.mViewProjectTransform.multiply(mProjectionTransform,target.mViewTransform);
-//
-//		target.mViewTransform.asInverted(target.mCameraTransform.mValues);
-//		target.mViewProjectTransform.asInverted(target.mUnprojectCameraTransform.mValues);
 
+//		mViewProjectTransform.multiply(mProjectionTransform,mViewTransform);
+//		mViewProjectTransform.asInverted(mUnprojectCameraTransform.mValues);
+//		mViewTransform.asInverted(mCameraTransform.mValues);
+
+		mCameraTransform.asInverted(mViewTransform.mValues);
 		mViewProjectTransform.multiply(mProjectionTransform,mViewTransform);
-		mViewProjectTransform.asInverted(mUnprojectCameraTransform.mValues);
-		mViewTransform.asInverted(mCameraTransform.mValues);
-		//mCameraTransform.getTranslation(mPosition);
+		mUnprojectCameraTransform.multiply(mCameraTransform,getUnprojection());
 	}
 
 	@Override

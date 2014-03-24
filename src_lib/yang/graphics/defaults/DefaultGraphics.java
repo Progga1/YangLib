@@ -708,10 +708,12 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public boolean rectInScreen2D(float posX, float posY, Rect rect) {
+		if(true)return true;
 		return inScreen2D(posX+rect.mLeft, posY+rect.mBottom, rect.getWidth(), rect.getHeight());
 	}
 
 	public boolean inScreen2D(float posX, float posY, float width, float height) {
+		if(true)return true;
 		if(mWorldTransformEnabled) {
 			posX += mWorldTransform.get(12);
 			posY += mWorldTransform.get(13);

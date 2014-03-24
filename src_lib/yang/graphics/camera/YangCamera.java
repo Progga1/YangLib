@@ -5,10 +5,9 @@ import yang.math.objects.Point3f;
 
 public abstract class YangCamera extends CameraTransformations {
 
-	protected float mNear = OrthogonalProjection.DEFAULT_NEAR;
-	protected float mFar = OrthogonalProjection.DEFAULT_FAR;
-
 	public boolean mAutoRefreshInverted = true;
+	public float mNear = OrthogonalProjection.DEFAULT_NEAR;
+	public float mFar = OrthogonalProjection.DEFAULT_FAR;
 
 	public YangCamera() {
 
