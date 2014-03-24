@@ -1,5 +1,6 @@
 package yang.math.objects;
 
+
 public class Vector3f extends Point3f{
 
 	public final static Vector3f ZERO = new Vector3f(0,0,0);
@@ -199,6 +200,10 @@ public class Vector3f extends Point3f{
 			mY *= d;
 			mZ *= d;
 		}
+	}
+
+	public float getManhattanDistance() {
+		return (mX<0?-mX:mX)+(mY<0?-mY:mY)+(mZ<0?-mZ:mZ);
 	}
 
 }

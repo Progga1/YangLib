@@ -8,11 +8,10 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureHolder;
+import yang.math.MatrixOps;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
-import yang.math.objects.matrix.YangMatrixRectOps;
+import yang.math.objects.YangMatrix;
 import yang.model.DebugYang;
 
 
@@ -26,18 +25,19 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public static int WORLD_TRANSFORM_STACK_CAPACITY = 128;
 
 	//Matrices
-	public YangMatrixRectOps mInterTransf1;
-	public YangMatrixRectOps mInterTransf2;
-	protected YangMatrixRectOps mInterTexTransf;
+	public YangMatrix mInterTransf1;
+	public YangMatrix mInterTransf2;
+	protected YangMatrix mInterTexTransf;
 	protected YangMatrix mIdentity;
 	public TextureCoordinatesQuad mTexIdentity;
+	//Camera
 	public YangMatrix mWorldTransform;
-	protected YangMatrixCameraOps mProjectionTransform;
+	public YangMatrix mViewProjectionTransform;
 	public YangMatrix mCameraProjectionMatrix;
 	protected YangMatrix mResultTransformationMatrix;
-	public YangMatrix mCurProjTransform;
+	public YangMatrix mCurViewProjTransform;
 	public float[] mNormalTransform;
-	protected float[] invGameProjection;
+	protected YangMatrix mInvViewProjectionTransform;
 	protected YangMatrix mStereoScreenTransform;
 
 	//State
@@ -92,24 +92,23 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		if (DebugYang.showStart) DebugYang.showStackTrace("5", 1);
 
 		mWorldTransformEnabled = false;
-		mProjectionTransform = new YangMatrixCameraOps();
-		mInterTransf1 = new YangMatrixRectOps();
-		mInterTransf2 = new YangMatrixRectOps();
+		mViewProjectionTransform = new YangMatrix();
+		mInterTransf1 = new YangMatrix();
+		mInterTransf2 = new YangMatrix();
 		mWorldTransform = new YangMatrix(WORLD_TRANSFORM_STACK_CAPACITY);
 		mWorldTransform.loadIdentity();
 		mStereoScreenTransform = new YangMatrix();
 		mCameraProjectionMatrix = new YangMatrix();
 		mResultTransformationMatrix = new YangMatrix();
 		mNormalTransform = new float[9];
-		mInterTexTransf = new YangMatrixRectOps();
+		mInterTexTransf = new YangMatrix();
 		mIdentity = new YangMatrix();
 		mIdentity.loadIdentity();
 		mTexIdentity = new TextureCoordinatesQuad();
 		mTexIdentity.init(0, 0, 1);
 		mTranslator.checkErrorInst("Matrices");
-		invGameProjection = new float[16];
-		mCurProjTransform = mProjectionTransform;
-		mCurProjTransform.loadIdentity();
+		mInvViewProjectionTransform = new YangMatrix();
+		mInvViewProjectionTransform.loadIdentity();
 		mCurColor = new float[4];
 		mCurSuppData = new float[4];
 		mTime = 0;
@@ -122,6 +121,9 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mBatchRecording = false;
 
 		derivedInit();
+
+		mCurViewProjTransform = mViewProjectionTransform;
+
 		restart();
 	}
 
@@ -172,7 +174,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 			if(!mWorldTransform.asNormalTransform3f(mNormalTransform))
 				return false;
 		}else{
-			YangMatrix.identity3f(mNormalTransform);
+			MatrixOps.identity3f(mNormalTransform);
 		}
 		return true;
 	}
@@ -241,13 +243,13 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 
 	public void switchGameCoordinates(boolean enable) {
-		if((enable && mCurProjTransform == mProjectionTransform) || (!enable && mCurProjTransform == mTranslator.mProjScreenTransform))
+		if((enable && mCurViewProjTransform == mViewProjectionTransform) || (!enable && mCurViewProjTransform == mTranslator.mProjScreenTransform))
 			return;
 		flush();
 		if(enable) {
-			mCurProjTransform = mProjectionTransform;
+			mCurViewProjTransform = mViewProjectionTransform;
 		}else{
-			mCurProjTransform = mTranslator.mProjScreenTransform;
+			mCurViewProjTransform = mTranslator.mProjScreenTransform;
 		}
 	}
 

@@ -2,7 +2,7 @@ package yang.samples.statesystem.states;
 
 import yang.graphics.model.FloatColor;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.samples.statesystem.SampleStateCameraControl;
 
 public class StereoCalibrationState extends SampleStateCameraControl {
@@ -30,6 +30,7 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 		final float GRAY = 0.15f;
 		mGraphics.clear(GRAY,GRAY,GRAY+0.25f, GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics3D.activate();
+		mGraphics3D.setPerspectiveProjection(100);
 		mGraphics.bindTexture(null);
 
 		setCamera();

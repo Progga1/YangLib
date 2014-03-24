@@ -5,7 +5,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.grids.GridCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.constraints.ColliderConstraint;
 import yang.physics.massaggregation.elements.Joint;
@@ -153,6 +153,8 @@ public class JointGridCreator {
 	}
 
 	public void drawDefault(FloatColor color,TextureCoordinatesQuad texCoords) {
+		if(texCoords==null)
+			texCoords = TextureCoordinatesQuad.FULL_TEXTURE;
 		mGridDrawer.beginDraw();
 		mGridDrawer.putIndices();
 		putPositions();
@@ -166,8 +168,8 @@ public class JointGridCreator {
 		drawDefault(FloatColor.WHITE,TextureCoordinatesQuad.FULL_TEXTURE);
 	}
 
-	public Joint pickJoint(float column,float row) {
-		return mJoints[normToRow(row)][normToColumn(column)];
+	public Joint pickJoint(float normColumn,float normRow) {
+		return mJoints[normToRow(normRow)][normToColumn(normColumn)];
 	}
 
 }

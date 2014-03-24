@@ -1,18 +1,12 @@
-package yang.math.objects.matrix;
+package yang.math.objects;
 
 import yang.math.MatrixOps;
-import yang.math.objects.Point3f;
-import yang.math.objects.Quaternion;
-import yang.math.objects.Vector3f;
 
 //TODO normal inversion only 3x3, autocreate inversed mat, save orthogonal etc information
 
 public class YangMatrix {
 
 	public static final YangMatrix IDENTITY = new YangMatrix();
-
-	public static float DEFAULT_NEAR = 1;
-	public static float DEFAULT_FAR = -1;
 
 	//Indices: Row-Column
 	public static final int M00 = 0;
@@ -41,37 +35,6 @@ public class YangMatrix {
 
 	public static float TO_RAD_FACTOR = (float) Math.PI / 180;
 	public static float TO_DEG_FACTOR = 180 / (float) Math.PI;
-
-	public static void identity4f(float[] matrix) {
-		matrix[0] = 1;
-		matrix[1] = 0;
-		matrix[2] = 0;
-		matrix[3] = 0;
-		matrix[4] = 0;
-		matrix[5] = 1;
-		matrix[6] = 0;
-		matrix[7] = 0;
-		matrix[8] = 0;
-		matrix[9] = 0;
-		matrix[10] = 1;
-		matrix[11] = 0;
-		matrix[12] = 0;
-		matrix[13] = 0;
-		matrix[14] = 0;
-		matrix[15] = 1;
-	}
-
-	public static void identity3f(float[] matrix) {
-		matrix[0] = 1;
-		matrix[1] = 0;
-		matrix[2] = 0;
-		matrix[3] = 0;
-		matrix[4] = 1;
-		matrix[5] = 0;
-		matrix[6] = 0;
-		matrix[7] = 0;
-		matrix[8] = 1;
-	}
 
 	public YangMatrix() {
 		mValues = new float[16];
@@ -227,6 +190,10 @@ public class YangMatrix {
 		}
 	}
 
+	public void postScale(float s) {
+		postScale(s,s,s);
+	}
+
 	public void scale(float x, float y) {
 		scale(x, y, 1);
 	}
@@ -297,15 +264,15 @@ public class YangMatrix {
 //		mMatrix[15] = 1;
 	}
 
-	public void mirrorAtPlane(float nx,float ny,float nz, Vector3f offset) {
+	public void mirrorAtPlane(float nx,float ny,float nz, Vector3f base) {
 		MatrixOps.createDirectionTrafo(mTempMat1, nx,ny,nz);
-		if(offset!=null)
-			translate(offset);
+		if(base!=null)
+			translate(base);
 		multiplyRight(mTempMat1);
 		scale(1,-1,1);
 		multiplyRightTransposed(mTempMat1);
-		if(offset!=null)
-			translate(-offset.mX,-offset.mY,-offset.mZ);
+		if(base!=null)
+			translateNegative(base);
 	}
 
 	public void rotateAround(Vector3f rotationVector, float angle) {
@@ -562,6 +529,10 @@ public class YangMatrix {
 
 	public void apply3DNormalized(float x, float y, float z, float[] target, int targetOffset) {
 		MatrixOps.applyFloatMatrix3DNormalized(mValues,x,y,z,target,targetOffset);
+	}
+
+	public void apply3DNormalized(float x, float y, float z, Point3f target) {
+		MatrixOps.applyFloatMatrix3DNormalized(mValues,x,y,z,target);
 	}
 
 	protected void setColumn(int col, Vector3f values) {

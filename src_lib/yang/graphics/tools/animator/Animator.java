@@ -14,7 +14,7 @@ import yang.graphics.skeletons.animations.AnimationSystem;
 import yang.graphics.skeletons.animations.KeyFrame;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.graphics.util.Camera2D;
+import yang.graphics.util.LegacyCamera2D;
 import yang.model.Rect;
 import yang.physics.massaggregation.SkeletonEditing;
 import yang.physics.massaggregation.elements.Joint;
@@ -34,7 +34,7 @@ public class Animator implements YangEventListener {
 	protected SkeletonCarrier mCurCarrier;
 	@SuppressWarnings("rawtypes")
 	public AnimationPlayer mCurAnimationPlayer;
-	private final Camera2D mCamera;
+	private final LegacyCamera2D mCamera;
 	private final SkeletonEditing mSkeletonEditing;
 	public YangList<CartoonSkeleton2D> mSkeletons;
 	public YangList<Texture> mTextures;
@@ -65,7 +65,7 @@ public class Animator implements YangEventListener {
 	public Animator(Default2DGraphics graphics2D) {
 		mGraphics2D = graphics2D;
 		mGraphics = graphics2D.mTranslator;
-		mCamera = new Camera2D();
+		mCamera = new LegacyCamera2D();
 		mCamera.mAdaption = 0.2f;
 		mSkeletons = new YangList<CartoonSkeleton2D>();
 		mTextures = new YangList<Texture>();
@@ -104,12 +104,12 @@ public class Animator implements YangEventListener {
 		final float gray = 0.1f;
 		mGraphics.clear(gray, gray, gray);
 		mGraphics2D.switchGameCoordinates(true);
-		mGraphics2D.setCamera2D(mCamera);
+		mGraphics2D.setCamera(mCamera);
 
 		//Floor
 		mGraphics.bindTexture(null);
 		mGraphics2D.setColor(0.5f);
-		mGraphics2D.drawRect(mGraphics2D.normToGameX(mGraphics2D.getScreenLeft()), 0, mGraphics2D.normToGameX(mGraphics2D.getScreenRight()), mGraphics2D.normToGameY(mGraphics2D.getScreenBottom()));
+		mGraphics2D.drawRect(mGraphics2D.normToWorldX(mGraphics2D.getScreenLeft()), 0, mGraphics2D.normToWorldX(mGraphics2D.getScreenRight()), mGraphics2D.normToWorldY(mGraphics2D.getScreenBottom()));
 		mGraphics2D.setColor(0.2f);
 		mGraphics2D.drawLine(-100, 1, 100, 1, 0.01f);
 		mGraphics2D.drawLine(-100, 2, 100, 2, 0.01f);
@@ -323,8 +323,8 @@ public class Animator implements YangEventListener {
 
 	@Override
 	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
-		mCurPntX = mGraphics2D.normToGameX(x,y);
-		mCurPntY = mGraphics2D.normToGameY(x,y);	//TODO moved from pointerDown
+		mCurPntX = mGraphics2D.normToWorldX(x,y);
+		mCurPntY = mGraphics2D.normToWorldY(x,y);	//TODO moved from pointerDown
 		mHoverJoint = mCurSkeleton.pickJoint2D(mCurPntX,mCurPntY);
 	}
 
@@ -356,8 +356,8 @@ public class Animator implements YangEventListener {
 
 		mPrevPntX = mCurPntX;
 		mPrevPntY = mCurPntY;
-		mCurPntX = mGraphics2D.normToGameX(x,y);
-		mCurPntY = mGraphics2D.normToGameY(x,y);
+		mCurPntX = mGraphics2D.normToWorldX(x,y);
+		mCurPntY = mGraphics2D.normToWorldY(x,y);
 		final float deltaX = mCurPntX-mPrevPntX;
 		final float deltaY = mCurPntY-mPrevPntY;
 

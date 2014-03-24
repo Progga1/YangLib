@@ -11,7 +11,7 @@ import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLDrawModes;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.model.ScreenInfo;
+import yang.model.SurfaceParameters;
 
 public class StereoVision {
 
@@ -102,7 +102,7 @@ public class StereoVision {
 		assert mGraphics.checkErrorInst("3");
 	}
 
-	public void surfaceChanged(ScreenInfo screenInfo) {
+	public void surfaceChanged(SurfaceParameters screenInfo) {
 		if(mStereoLeftRenderTarget==null)
 			return;
 		mStereoLeftRenderTarget.fakeDimensions(screenInfo);

@@ -1,7 +1,7 @@
 package yang.graphics.defaults.meshes.scenes;
 
 import yang.graphics.model.TransformationData;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.util.YangList;
 
 public class SceneObject extends TransformationData {

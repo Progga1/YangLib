@@ -14,7 +14,7 @@ import yang.math.MathConst;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 import yang.physics.massaggregation.elements.JointConnection;
@@ -47,7 +47,6 @@ public class FBXLoader extends YangSceneLoader {
 	public SceneObject mRootObject;
 
 	public AbstractGraphics<?> mGraphics;
-	public MeshMaterialHandles mHandles;
 
 	private TokenReader mReader;
 	private float mDefaultJointRadius = Joint.DEFAULT_RADIUS * 0.7f;
@@ -67,7 +66,6 @@ public class FBXLoader extends YangSceneLoader {
 			polygonIndices = new int[MAX_VERTICES];
 		}
 		mGraphics = graphics;
-		mHandles = handles;
 		tempMat.initStack(128);
 	}
 

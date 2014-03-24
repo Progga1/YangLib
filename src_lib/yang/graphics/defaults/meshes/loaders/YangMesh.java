@@ -20,7 +20,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLDrawModes;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.util.YangList;
 
 public class YangMesh {

@@ -1,7 +1,7 @@
 package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.defaults.Default3DGraphics;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 public class RingCreator2D extends CylinderCreator {
 

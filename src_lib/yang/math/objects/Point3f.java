@@ -1,5 +1,7 @@
 package yang.math.objects;
 
+import yang.physics.massaggregation.elements.Joint;
+
 
 public class Point3f {
 
@@ -41,6 +43,12 @@ public class Point3f {
 		mX = point.mX;
 		mY = point.mY;
 		mZ = point.mZ;
+	}
+
+	public void setNegative(Joint point) {
+		mX = -point.mX;
+		mY = -point.mY;
+		mZ = -point.mZ;
 	}
 
 	public void add(float x,float y,float z) {

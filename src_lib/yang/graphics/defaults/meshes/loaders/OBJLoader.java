@@ -7,7 +7,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureProperties;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.util.filereader.TokenReader;
 
 public class OBJLoader extends YangSceneLoader {

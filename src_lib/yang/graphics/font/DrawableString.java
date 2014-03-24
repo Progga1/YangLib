@@ -4,7 +4,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 public class DrawableString extends FixedString {
 

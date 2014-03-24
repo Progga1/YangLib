@@ -4,7 +4,7 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
 import yang.math.MathFunc;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.samples.statesystem.SampleState;
 
 public class MatrixStackSampleState extends SampleState {

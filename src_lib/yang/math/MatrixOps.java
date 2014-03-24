@@ -3,6 +3,7 @@ package yang.math;
 import java.util.Arrays;
 
 import yang.math.objects.Point3f;
+import yang.math.objects.YangMatrix;
 
 public class MatrixOps {
 
@@ -32,8 +33,20 @@ public class MatrixOps {
 			0,0,0,1
 		};
 
-	public static void setIdentity(float[] target) {
+	public static void identity4f(float[] target) {
 		System.arraycopy(IDENTITY, 0, target, 0, 16);
+	}
+
+	public static void identity3f(float[] target) {
+		target[0] = 1;
+		target[1] = 0;
+		target[2] = 0;
+		target[3] = 0;
+		target[4] = 1;
+		target[5] = 0;
+		target[6] = 0;
+		target[7] = 0;
+		target[8] = 1;
 	}
 
 	public static void setTranslation(float[] target,float x,float y,float z) {
@@ -287,6 +300,211 @@ public class MatrixOps {
 		target[15] = 1;
 	}
 
+	public static void setLine(YangMatrix target, float fromX, float fromY, float toX, float toY, float width) {
+		target.loadIdentity();
+		float angle;
+		float dx = toX - fromX;
+		float dy = toY - fromY;
+		float r = (float) Math.sqrt(dx * dx + dy * dy);
+		if (r == 0) {
+			target.scale(0);
+			return;
+		}
+		if (dy < 0)
+			angle = -(float) Math.acos(dx / r);
+		else
+			angle = (float) Math.acos(dx / r);
+		angle += (float) Math.PI * 0.5f;
+
+		target.translate(fromX, fromY);
+		target.rotateZ(angle);
+		target.scale(width, r);
+		target.translate(-0.5f, -1);
+	}
+
+	public static void setLookDir(float[] target,float dirX,float dirY,float dirZ, float upX, float upY, float upZ) {
+
+		float rightX = -dirY*upZ + dirZ*upY;
+		float rightY = -dirZ*upX + dirX*upZ;
+		float rightZ = -dirX*upY + dirY*upX;
+
+		float rightDist = (float)Math.sqrt(rightX*rightX + rightY*rightY + rightZ*rightZ);
+		if(rightDist == 0) {
+			rightX = 1;
+			rightDist = 1;
+		}
+		if(rightDist!=1) {
+			float dDist = 1/rightDist;
+			rightX *= dDist;
+			rightY *= dDist;
+			rightZ *= dDist;
+		}
+
+		upX = -rightY*dirZ + rightZ*dirY;
+		upY = -rightZ*dirX + rightX*dirZ;
+		upZ = -rightX*dirY + rightY*dirX;
+
+		target[0] = rightX;
+		target[1] = rightY;
+		target[2] = rightZ;
+		target[3] = 0;
+
+		target[4] = upX;
+		target[5] = upY;
+		target[6] = upZ;
+		target[7] = 0;
+
+		target[8] = dirX;
+		target[9] = dirY;
+		target[10] = dirZ;
+		target[11] = 0;
+
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
+	}
+
+	public static void setLookAt(float[] target,float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ) {
+
+		float dx = eyeX-lookAtX;
+		float dy = eyeY-lookAtY;
+		float dz = eyeZ-lookAtZ;
+
+		float dist = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
+		if(dist==0) {
+			dz = 1;
+			dist = 1;
+		}
+		if(dist!=1) {
+			float dDist = 1/dist;
+			dx *= dDist;
+			dy *= dDist;
+			dz *= dDist;
+		}
+
+		float rightX = -dy*upZ + dz*upY;
+		float rightY = -dz*upX + dx*upZ;
+		float rightZ = -dx*upY + dy*upX;
+
+		float rightDist = (float)Math.sqrt(rightX*rightX + rightY*rightY + rightZ*rightZ);
+		if(rightDist == 0) {
+			rightX = 1;
+			rightDist = 1;
+		}
+		if(rightDist!=1) {
+			float dDist = 1/rightDist;
+			rightX *= dDist;
+			rightY *= dDist;
+			rightZ *= dDist;
+		}
+
+		upX = -rightY*dz + rightZ*dy;
+		upY = -rightZ*dx + rightX*dz;
+		upZ = -rightX*dy + rightY*dx;
+
+		target[0] = rightX;
+		target[1] = rightY;
+		target[2] = rightZ;
+		target[3] = 0;
+
+		target[4] = upX;
+		target[5] = upY;
+		target[6] = upZ;
+		target[7] = 0;
+
+		target[8] = dx;
+		target[9] = dy;
+		target[10] = dz;
+		target[11] = 0;
+
+		target[12] = eyeX;
+		target[13] = eyeY;
+		target[14] = eyeZ;
+		target[15] = 1;
+	}
+
+	public static void setLookAt(float[] target,Point3f eye,Point3f lookAt,Point3f up) {
+		setLookAt(target,eye.mX,eye.mY,eye.mZ, lookAt.mX,lookAt.mY,lookAt.mZ, up.mX,up.mY,up.mZ);
+	}
+
+	public static void setLookAtAlphaBeta(float[] target,float focusX, float focusY, float focusZ, float alpha, float beta,float distance,Point3f outPosition) {
+		final float eyeX = focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance;
+		final float eyeY = focusY+(float)Math.sin(beta)*distance;
+		final float eyeZ = focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance;
+		setLookAt(target, eyeX,eyeY,eyeZ, focusX,focusY,focusZ, 0,1,0);
+		if(outPosition!=null)
+			outPosition.set(eyeX,eyeY,eyeZ);
+	}
+
+	public static void setLookAtInverse(float[] target,float eyeX, float eyeY, float eyeZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ) {
+
+		float dx = eyeX-lookAtX;
+		float dy = eyeY-lookAtY;
+		float dz = eyeZ-lookAtZ;
+
+		float dist = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
+		if(dist==0) {
+			dz = 1;
+			dist = 1;
+		}
+		if(dist!=1) {
+			float dDist = 1/dist;
+			dx *= dDist;
+			dy *= dDist;
+			dz *= dDist;
+		}
+
+		float rightX = -dy*upZ + dz*upY;
+		float rightY = -dz*upX + dx*upZ;
+		float rightZ = -dx*upY + dy*upX;
+
+		float rightDist = (float)Math.sqrt(rightX*rightX + rightY*rightY + rightZ*rightZ);
+		if(rightDist == 0) {
+			rightX = 1;
+			rightDist = 1;
+		}
+		if(rightDist!=1) {
+			float dDist = 1/rightDist;
+			rightX *= dDist;
+			rightY *= dDist;
+			rightZ *= dDist;
+		}
+
+		upX = -rightY*dz + rightZ*dy;
+		upY = -rightZ*dx + rightX*dz;
+		upZ = -rightX*dy + rightY*dx;
+
+		target[0] = rightX;
+		target[1] = upX;
+		target[2] = dx;
+		target[3] = 0;
+
+		target[4] = rightY;
+		target[5] = upY;
+		target[6] = dy;
+		target[7] = 0;
+
+		target[8] = rightZ;
+		target[9] = upZ;
+		target[10] = dz;
+		target[11] = 0;
+
+		target[12] = -(eyeX*rightX + eyeY*rightY + eyeZ*rightZ);
+		target[13] = -(eyeX*upX + eyeY*upY + eyeZ*upZ);
+		target[14] = -(eyeX*dx + eyeY*dy + eyeZ*dz);
+		target[15] = 1;
+	}
+
+	public static void setLookAtAlphaBetaInverse(float[] target,float focusX, float focusY, float focusZ, float alpha, float beta,float distance,Point3f outPosition) {
+		final float eyeX = focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance;
+		final float eyeY = focusY+(float)Math.sin(beta)*distance;
+		final float eyeZ = focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance;
+		setLookAtInverse(target, eyeX,eyeY,eyeZ, focusX,focusY,focusZ, 0,1,0);
+		if(outPosition!=null)
+			outPosition.set(eyeX,eyeY,eyeZ);
+	}
+
 	public static final float applyFloatMatrixX2D(float[] matrix, float x, float y) {
 		return matrix[0] * x + matrix[4] * y + matrix[12];
 	}
@@ -347,6 +565,13 @@ public class MatrixOps {
 		target[targetOffset] = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*w;
 		target[targetOffset+1] = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*w;
 		target[targetOffset+2] = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*w;
+	}
+
+	public static final void applyFloatMatrix3DNormalized(float[] matrix, float x, float y, float z, Point3f target) {
+		final float w = 1f/applyFloatMatrixW3D(matrix,x,y,z);
+		target.mX = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*w;
+		target.mY = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*w;
+		target.mZ = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*w;
 	}
 
 	public static final float[] createMatrixCopy(float[] src) {

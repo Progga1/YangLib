@@ -22,9 +22,9 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.graphics.util.Camera3D;
+import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.model.Boundaries3D;
 import yang.samples.statesystem.SampleState;
 
@@ -76,7 +76,7 @@ public class IcyTerrainState extends SampleState {
 	private DrawBatch mWaterBatch = null;
 	private DrawBatch mSkyBoxBatch = null;
 
-	private Camera3D mCamera = new Camera3D();
+	private LegacyCamera3D mCamera = new LegacyCamera3D();
 	private float mWorldAngle = 0;
 	private Vector3f mWorldShift = new Vector3f();
 	private float mCubeTop = 1;
@@ -307,7 +307,7 @@ public class IcyTerrainState extends SampleState {
 		if(mFirstFrame) {
 			mShadowHelper.init(mGraphics3D,1024);
 			mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
-			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR));
+			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR),true);
 			mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR,4),1,1.5f);
 		}
 
@@ -337,7 +337,8 @@ public class IcyTerrainState extends SampleState {
 			mGraphics.clear(0,0,0,1,GLMasks.DEPTH_BUFFER_BIT);
 
 			mGraphics3D.setCamera(mCamera);
-			mGraphics3D.mCameraMatrix.mirrorAtPlane(-(float)Math.sin(mWorldAngle),(float)Math.cos(mWorldAngle),0, mWorldShift);
+			mGraphics3D.mViewProjectionTransform.mirrorAtPlane(-(float)Math.sin(mWorldAngle),(float)Math.cos(mWorldAngle),0, mWorldShift);
+			//mGraphics3D.refreshCameraTransform();
 
 			drawSky();
 
@@ -360,7 +361,6 @@ public class IcyTerrainState extends SampleState {
 			waterTex = mEnvironmentMap.mTargetTexture;
 			mGraphics.checkErrorInst("Post environment mapping");
 
-			mGraphics3D.mCameraMatrix.loadIdentity();
 		}
 
 		//Begin real drawing
@@ -382,6 +382,7 @@ public class IcyTerrainState extends SampleState {
 		mGraphics.checkErrorInst("Draw sky");
 
 		drawWater(pX,pY,pZ);
+
 		if(USE_LIGHTMAPS)
 			//drawTerrainLightmap();
 			drawTerrainSpecular();

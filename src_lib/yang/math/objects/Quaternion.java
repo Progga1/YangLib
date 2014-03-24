@@ -1,7 +1,6 @@
 package yang.math.objects;
 
 import yang.math.MathConst;
-import yang.math.objects.matrix.YangMatrix;
 
 public class Quaternion {
 

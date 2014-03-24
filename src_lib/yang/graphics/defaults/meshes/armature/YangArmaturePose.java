@@ -3,7 +3,7 @@ package yang.graphics.defaults.meshes.armature;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 

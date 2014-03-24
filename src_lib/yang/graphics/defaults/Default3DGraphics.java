@@ -6,18 +6,20 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
+import yang.graphics.camera.Camera3D;
+import yang.graphics.camera.projection.OrthogonalProjection;
+import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.graphics.defaults.geometrycreators.LineDrawer3D;
 import yang.graphics.defaults.geometrycreators.SphereCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.util.Camera3D;
+import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
+import yang.math.objects.YangMatrix;
 
 
 public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
@@ -40,23 +42,19 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public static final float[] CUBE_BOTTOM = swapCoords(CUBE_FRONT,1,-3,2);
 
 	protected boolean mBillboardMode;
-	public YangMatrixCameraOps mCameraMatrix;
-	public YangMatrixCameraOps mOriginalCameraMatrix;
 	private final YangMatrix mInterMatrix;
 	public YangMatrix mSavedCamera;
 	public YangMatrix mSavedProjection;
 	public float[] mSavedInvGameProjection;
 	public float mDebugAxisWidthFactor = 1;
-	private final Point3f mCameraPosition = new Point3f();
 
 	private Basic3DProgram mDefaultProgram;
 	private final SphereCreator mSphereCreator;
 	public final LineDrawer3D mLineDrawer;
 
-	protected boolean mCurIsPerspective;
-	private float mCurNear,mCurFar,mCurFovy,mCurZoom;
-	public float mSensorZ = 0.05f;
+	private Camera3D mCamera3D = new Camera3D();
 
+	public float mSensorZ = 0.05f;
 
 	//Temp vars
 	private final float[] mTemp4f = new float[4];
@@ -82,14 +80,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public Default3DGraphics(GraphicsTranslator translator) {
 		super(translator,3);
 		mCurrentZ = 0;
-		mCameraMatrix = new YangMatrixCameraOps();
-		mOriginalCameraMatrix = new YangMatrixCameraOps();
 		mInterMatrix = mTranslator.createTransformationMatrix();
-		mCameraMatrix.set(3,3, 1);
 		mSphereCreator = new SphereCreator(this);
 		mBillboardMode = false;
 		mLineDrawer = new LineDrawer3D(this);
-		refreshCamera();
 	}
 
 	@Override
@@ -149,34 +143,29 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
-		mCurIsPerspective = false;
-		mCurNear = near;
-		mCurFar = far;
-		mCurZoom = 1;
-		mProjectionTransform.setOrthogonalProjection(-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
-		mProjectionTransform.asInverted(invGameProjection);
+		OrthogonalProjection.getTransform(mCamera3D.getProjectionTransformReference(),-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
+		mCamera3D.setProjectionUpdated();
+		if(mAutoRefreshCameraTransform)
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setOrthogonalProjection(float near,float far,float zoom) {
-		setOrthogonalProjection(mTranslator.mCurrentSurface.getSurfaceRatioX()*zoom*2,mTranslator.mCurrentSurface.getSurfaceRatioY()*zoom*2,near,far);
-		mCurZoom = zoom;
+		setOrthogonalProjection(zoom*2,zoom*2,near,far);
 	}
-
 
 	public void setOrthogonalProjection(float near,float far) {
 		setOrthogonalProjection(near,far,1);
 	}
 
 	public void setOrthogonalProjection() {
-		setOrthogonalProjection(YangMatrix.DEFAULT_NEAR,YangMatrix.DEFAULT_FAR);
+		setOrthogonalProjection(OrthogonalProjection.DEFAULT_NEAR,OrthogonalProjection.DEFAULT_FAR);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
-		mCurIsPerspective = true;
-		mCurNear = near;
-		mCurFar = far;
-		mCurFovy = fovy;
-		mProjectionTransform.setPerspectiveProjectionFovy(fovy, mTranslator.mCurrentSurface.getSurfaceRatioX()*stretchX,mTranslator.mCurrentSurface.getSurfaceRatioY(), near, far);
+		PerspectiveProjection.getTransformFovy(mCamera3D.getProjectionTransformReference(),fovy, stretchX,1, near, far);
+		mCamera3D.setProjectionUpdated();
+		if(mAutoRefreshCameraTransform)
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
@@ -184,7 +173,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setPerspectiveProjection(float range) {
-		setPerspectiveProjection(0.6f,0.02f,range);
+		setPerspectiveProjection(0.6f,0.02f,range+0.02f);
 	}
 
 //	public void drawRectZ(float worldX1, float worldY1, float worldX2, float worldY2, float z, TransformationMatrix textureTransform) {
@@ -207,68 +196,61 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		drawRectZ(x1,y1,x2,y2,z,mTexIdentity);
 	}
 
-	private void refreshCamera() {
-		mOriginalCameraMatrix.set(mCameraMatrix);
-		final boolean stereo = mTranslator.isStereo();
-		if(mTranslator.getRenderTargetStackLevel()<=(stereo?0:-1)) {
-			if(mTranslator.mSensorCameraEnabled) {
-				mCameraMatrix.postTranslate(0, 0, mSensorZ);
-				mCameraMatrix.multiplyLeft(mTranslator.mSensorCameraMatrix);
-				mCameraMatrix.postTranslate(0, 0, -mSensorZ);
-
-			}
-			if(stereo) {
-				mCameraMatrix.postTranslate(-mTranslator.mCameraShiftX, 0);
-			}
-		}
-	}
+//	@Override
+//	protected void refreshCamera() {
+//		mOriginalCameraMatrix.set(mCameraMatrix);
+//		final boolean stereo = mTranslator.isStereo();
+//		if(mTranslator.getRenderTargetStackLevel()<=(stereo?0:-1)) {
+//			if(mTranslator.mSensorCameraEnabled) {
+//				mCameraMatrix.postTranslate(0, 0, mSensorZ);
+//				mCameraMatrix.multiplyLeft(mTranslator.mSensorCameraMatrix);
+//				mCameraMatrix.postTranslate(0, 0, -mSensorZ);
+//			}
+//			if(stereo) {
+//				mCameraMatrix.postTranslate(-mTranslator.mCameraShiftX, 0);
+//			}
+//		}
+//	}
 
 	public void setCameraLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
-		mTranslator.flush();
-		mCameraPosition.set(eyeX,eyeY,eyeZ);
-		mCameraMatrix.setLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, upX,upY,upZ);
-		refreshCamera();
+		mCamera3D.setLookAt(eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ);
+		if(mAutoRefreshCameraTransform)
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setCameraLookAt(float eyeX,float eyeY, float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
 		setCameraLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, 0,1,0);
 	}
 
-	public void setCamera(Camera3D camera) {
+	public void setCamera(LegacyCamera3D camera) {
 		setCameraLookAt(camera.mEyeX,camera.mEyeY,camera.mEyeZ, camera.mLookAtX,camera.mLookAtY,camera.mLookAtZ, camera.mUpX,camera.mUpY,camera.mUpZ);
 	}
 
 	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
-		mTranslator.flush();
-		mCameraMatrix.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance, mCameraPosition);
-		refreshCamera();
+		mCamera3D.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
+		if(mAutoRefreshCameraTransform)
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
 	public void setCameraAlphaBeta(float alpha, float beta, float distance) {
 		setCameraAlphaBeta(0,0,0, alpha,beta, distance);
 	}
 
-	public void setCameraByTransform(YangMatrix cameraTransform) {
-		cameraTransform.getTranslation(mCameraPosition);
-		cameraTransform.asInverted(mCameraMatrix.mValues);
-		refreshCamera();
+	public void setViewByTransform(YangMatrix cameraTransform) {
+		mCamera3D.setViewByTransform(cameraTransform);
+		if(mAutoRefreshCameraTransform)
+			mCameraProjection.copyFrom(mCamera3D);
 	}
 
-	@Override
-	public void setCamera2D(float x, float y, float zoom, float rotation) {
-		// TODO Auto-generated method stub
-		setCameraLookAt(x, y, zoom, x, y, 0);
-	}
-
-	@Override
-	public void refreshViewTransform() {
-		if(mBillboardMode) {
-			mCameraProjectionMatrix.set(mCameraMatrix);
-			mCameraProjectionMatrix.setTranslationOnly();
-			mCameraProjectionMatrix.multiplyLeft(mProjectionTransform);
-		}else
-			mCameraProjectionMatrix.multiply(mProjectionTransform,mCameraMatrix);
-	}
+//	@Override
+//	public void refreshViewTransform() {
+//		if(mBillboardMode) {
+//			mCameraProjectionMatrix.set(mCameraMatrix);
+//			mCameraProjectionMatrix.setTranslationOnly();
+//			mCameraProjectionMatrix.multiplyLeft(mViewProjectionTransform);
+//		}else
+//			mCameraProjectionMatrix.multiply(mViewProjectionTransform,mCameraMatrix);
+//	}
 
 	public void putCubePart(float[] array,Vector3f norm,YangMatrix transform) {
 		mCurrentVertexBuffer.beginQuad();
@@ -451,31 +433,16 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 //		invGameProjection = mSavedInvGameProjection;
 //	}
 
-	@Override
-	public void onSurfaceSizeChanged(int width,int height) {
-		if(mCurIsPerspective) {
-			setPerspectiveProjection(mCurFovy,mCurNear,mCurFar);
-		}else{
-			setOrthogonalProjection(mCurNear,mCurFar,mCurZoom);
-		}
-	}
-
 	public void getCameraRightVector(Vector3f target) {
-		final float[] mat = this.mCameraMatrix.mValues;
-		target.mX = mat[0];
-		target.mY = mat[4];
-		target.mZ = mat[8];
+		mCameraProjection.getRightVector(target);
 	}
 
 	public void getCameraUpVector(Vector3f target) {
-		final float[] mat = this.mCameraMatrix.mValues;
-		target.mX = mat[1];
-		target.mY = mat[5];
-		target.mZ = mat[9];
+		mCameraProjection.getUpVector(target);
 	}
 
-	public Point3f getCameraPosition() {
-		return mCameraPosition;
+	public void getCameraForwardVector(Vector3f target) {
+		mCameraProjection.getUpVector(target);
 	}
 
 	public static float DEBUG_AXIS_WIDTH = 0.03f;
@@ -553,10 +520,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	private final Vector3f tempVec1 = new Vector3f();
 	private final Vector3f tempVec2 = new Vector3f();
-	private final YangMatrixCameraOps mProjectionMatrix = new YangMatrixCameraOps();
+	private final YangMatrix mProjectionMatrix = new YangMatrix();
 
 	public void prepareProjection() {
-		this.getToScreenTransform(mProjectionMatrix);
+		this.getUnprojection(mProjectionMatrix);
 	}
 
 	public float getProjectedPositionAndRadius(Vector3f target, float x, float y, float z, float radius) {
@@ -573,18 +540,6 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void getProjectedPosition(Vector3f target, float x,float y,float z) {
 		mProjectionMatrix.apply3D(x,y,z,target);
-	}
-
-	public float getCurFovy() {
-		return mCurFovy;
-	}
-
-	public float getCurNear() {
-		return mCurNear;
-	}
-
-	public float getCurFar() {
-		return mCurFar;
 	}
 
 }

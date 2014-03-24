@@ -1,6 +1,6 @@
 package yang.graphics.util;
 
-import yang.math.objects.matrix.YangMatrix;
+import yang.math.objects.YangMatrix;
 
 public class HeadMovement {
 

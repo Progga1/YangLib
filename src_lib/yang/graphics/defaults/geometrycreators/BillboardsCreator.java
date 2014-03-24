@@ -16,10 +16,10 @@ public class BillboardsCreator extends GeometryCreator<Default3DGraphics>{
 	}
 
 	private void putApplied(float x,float y,float z,float rectX,float rectY) {
-		final float[] cameraMat = mGraphics.mCameraMatrix.mValues;
-		final float appX = x + cameraMat[0]*rectX + cameraMat[1]*rectY;
-		final float appY = y + cameraMat[4]*rectX + cameraMat[5]*rectY;
-		final float appZ = z + cameraMat[8]*rectX + cameraMat[9]*rectY;
+		final float[] viewMat = mGraphics.getCameraProjection().getViewTransformReference().mValues;
+		final float appX = x + viewMat[0]*rectX + viewMat[1]*rectY;
+		final float appY = y + viewMat[4]*rectX + viewMat[5]*rectY;
+		final float appZ = z + viewMat[8]*rectX + viewMat[9]*rectY;
 		mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, appX, appY, appZ);
 	}
 

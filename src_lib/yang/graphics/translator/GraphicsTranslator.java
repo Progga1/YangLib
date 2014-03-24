@@ -6,6 +6,7 @@ import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
+import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.listeners.DrawListener;
 import yang.graphics.listeners.SurfaceListener;
 import yang.graphics.model.FloatColor;
@@ -25,15 +26,14 @@ import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.graphics.translator.glconsts.GLTex;
 import yang.math.objects.Bounds;
-import yang.math.objects.matrix.YangMatrix;
-import yang.math.objects.matrix.YangMatrixCameraOps;
-import yang.model.ScreenInfo;
+import yang.math.objects.YangMatrix;
+import yang.model.SurfaceParameters;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
 import yang.model.state.GraphicsState;
 import yang.util.YangList;
 
-public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,ScreenInfo {
+public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,SurfaceParameters {
 
 	public static int MAX_NESTED_RENDERTARGETS = 128;
 
@@ -67,7 +67,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public boolean mFlushDisabled;
 	public int mDrawMode;
 	public DrawListener mCurDrawListener;
-	public ScreenInfo mCurrentSurface;
+	public SurfaceParameters mCurrentSurface;
 	public float mTimer;
 	public float mShaderTimer;
 	private long mLstTimestamp;
@@ -84,7 +84,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mMinForceWireFrameRenderTargetDepth = -1;
 
 	//Matrices
-	public YangMatrixCameraOps mProjScreenTransform;
+	public YangMatrix mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
 
 	//Counters
@@ -192,7 +192,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public GraphicsTranslator() {
 		INSTANCE = this;
 		mCurrentTextures = new Texture[MAX_TEXTURES];
-		mProjScreenTransform = new YangMatrixCameraOps();
+		mProjScreenTransform = new YangMatrix();
 		mSensorCameraMatrix = new YangMatrix();
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
@@ -203,7 +203,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mPrograms = new YangList<AbstractProgram>();
 		mCurDrawListener = null;
 		appInstance = this;
-		setCurrentSurface(this);
+		setSurfaceParameters(this);
 		mNoTexture = new Texture(this);
 		mScreenListeners = new YangList<SurfaceListener>();
 		mRenderTargets = new YangList<TextureRenderTarget>();
@@ -416,12 +416,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return mRatioY;
 	}
 
-	public float toNormX(float x) {
-		return (x/mCurrentSurface.getSurfaceWidth()-0.5f)  * 2*mCurrentSurface.getSurfaceRatioX();
+	public float toNormX(float surfaceX) {
+		return (surfaceX/mCurrentSurface.getSurfaceWidth()-0.5f)  * 2*mCurrentSurface.getSurfaceRatioX();
 	}
 
-	public float toNormY(float y) {
-		return -(y/mCurrentSurface.getSurfaceHeight()-0.5f) * 2*mCurrentSurface.getSurfaceRatioY();
+	public float toNormY(float surfaceY) {
+		return -(surfaceY/mCurrentSurface.getSurfaceHeight()-0.5f) * 2*mCurrentSurface.getSurfaceRatioY();
 	}
 
 	public IndexedVertexBuffer createUninitializedVertexBuffer(boolean dynamicVertices,boolean dynamicIndices,int maxIndices,int maxVertices) {
@@ -692,7 +692,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private void refreshProjScreenTransform() {
 		final float rx = mCurrentSurface.getSurfaceRatioX();
 		final float ry = mCurrentSurface.getSurfaceRatioY();
-		mProjScreenTransform.setOrthogonalProjection(-rx,rx, ry,-ry, -1,1);
+		OrthogonalProjection.getTransform(mProjScreenTransform,-rx,rx, ry,-ry, -1,1);
 		mProjScreenTransform.refreshInverted();
 	}
 
@@ -744,11 +744,16 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 	}
 
-	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {
+	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings,boolean useScreenParameters) {
 		final Texture texture = createEmptyTexture(width,height,textureSettings);
 		final TextureRenderTarget result = derivedCreateRenderTarget(texture);
+		result.setUseScreenParameters(useScreenParameters);
 		mRenderTargets.add(result);
 		return result;
+	}
+
+	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {
+		return createRenderTarget(width, height, textureSettings,false);
 	}
 
 	public TextureRenderTarget createRenderTarget(int width,int height) {
@@ -759,7 +764,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return createRenderTarget(widthAndHeight,widthAndHeight);
 	}
 
-	private void setCurrentSurface(ScreenInfo surface) {
+	private void setSurfaceParameters(SurfaceParameters surface) {
+		if(surface==mCurrentSurface)
+			return;
 		mCurrentSurface = surface;
 		refreshProjScreenTransform();
 	}
@@ -767,7 +774,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {
 		flush();
 		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;
-		setCurrentSurface(renderTarget);
+		setSurfaceParameters(renderTarget.mSurfaceParameters);
 		setViewPort(renderTarget.mTargetTexture.mWidth,renderTarget.mTargetTexture.mHeight);
 		derivedSetTextureRenderTarget(renderTarget);
 		unbindTextures();
@@ -777,7 +784,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public void setTextureRenderTargetOnlySurfaceValues(TextureRenderTarget renderTarget) {
 		flush();
 		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;
-		setCurrentSurface(renderTarget);
+		setSurfaceParameters(renderTarget);
 	}
 
 	public void leaveTextureRenderTarget() {
@@ -788,7 +795,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			unbindTextures();
 		}else{
 			mRenderTargetStackPos = -1;
-			setCurrentSurface(this);
+			setSurfaceParameters(this);
 			if(mStereo)
 				setViewPort(mScreenWidth*2,mScreenHeight);
 			else
@@ -905,6 +912,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			return false;
 		else
 			return mForceStereo || mStereo;
+	}
+
+	@Override
+	public float getCameraShift() {
+		return mCameraShiftX;
 	}
 
 
