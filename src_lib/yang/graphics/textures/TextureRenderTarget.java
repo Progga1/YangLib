@@ -3,9 +3,10 @@ package yang.graphics.textures;
 import yang.graphics.translator.Texture;
 import yang.model.SurfaceParameters;
 
-public class TextureRenderTarget implements SurfaceParameters{
+public class TextureRenderTarget implements SurfaceParameters {
 
 	public boolean mStereoEnabled = false;
+	public SurfaceParameters mSurfaceParameters;
 	public Texture mTargetTexture;
 	public int mFrameBufferId;
 	public int mDepthBufferId;
@@ -19,6 +20,13 @@ public class TextureRenderTarget implements SurfaceParameters{
 		mFrameBufferId = frameBufferId;
 		mDepthBufferId = depthBufferId;
 		fakeDimensions(targetTexture.mWidth,targetTexture.mHeight);
+	}
+
+	public void setUseScreenParameters(boolean useScreenParameters) {
+		if(useScreenParameters)
+			mSurfaceParameters = mTargetTexture.mGraphics;
+		else
+			mSurfaceParameters = this;
 	}
 
 	public TextureRenderTarget(Texture targetTexture) {

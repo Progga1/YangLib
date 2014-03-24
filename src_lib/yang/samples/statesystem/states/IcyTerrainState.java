@@ -307,7 +307,7 @@ public class IcyTerrainState extends SampleState {
 		if(mFirstFrame) {
 			mShadowHelper.init(mGraphics3D,1024);
 			mLightmapHelper.init(mShadowHelper,512,terrainDimX,terrainDimY,STATIC_SHADOWS);
-			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR));
+			mEnvironmentMap = mGraphics.createRenderTarget(512, 512, new TextureProperties(TextureWrap.CLAMP,TextureFilter.LINEAR),true);
 			mHeightTexture = mTerrain.createCoastTexture(heights, 0, new SqrtKernel().init(COAST_KERNELSIZE), new TextureProperties(TextureFilter.LINEAR_MIP_LINEAR,4),1,1.5f);
 		}
 
@@ -332,7 +332,7 @@ public class IcyTerrainState extends SampleState {
 
 		if(ENVIRONMENT_MAPPING) {
 			mGraphics.checkErrorInst("Pre environment mapping");
-			mGraphics.setTextureRenderTarget(mEnvironmentMap,true);
+			mGraphics.setTextureRenderTarget(mEnvironmentMap);
 			mGraphics.mForceStereo = true;
 			mGraphics.clear(0,0,0,1,GLMasks.DEPTH_BUFFER_BIT);
 

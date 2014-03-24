@@ -744,11 +744,16 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 	}
 
-	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {
+	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings,boolean useScreenParameters) {
 		final Texture texture = createEmptyTexture(width,height,textureSettings);
 		final TextureRenderTarget result = derivedCreateRenderTarget(texture);
+		result.setUseScreenParameters(useScreenParameters);
 		mRenderTargets.add(result);
 		return result;
+	}
+
+	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {
+		return createRenderTarget(width, height, textureSettings,false);
 	}
 
 	public TextureRenderTarget createRenderTarget(int width,int height) {
@@ -760,23 +765,20 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	private void setSurfaceParameters(SurfaceParameters surface) {
+		if(surface==mCurrentSurface)
+			return;
 		mCurrentSurface = surface;
 		refreshProjScreenTransform();
 	}
 
-	public void setTextureRenderTarget(TextureRenderTarget renderTarget,boolean keepSurfaceParameters) {
+	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {
 		flush();
 		mRenderTargetStack[++mRenderTargetStackPos] = renderTarget;
-		if(!keepSurfaceParameters)
-			setSurfaceParameters(renderTarget);
+		setSurfaceParameters(renderTarget.mSurfaceParameters);
 		setViewPort(renderTarget.mTargetTexture.mWidth,renderTarget.mTargetTexture.mHeight);
 		derivedSetTextureRenderTarget(renderTarget);
 		unbindTextures();
 		assert checkErrorInst("Set texture render target");
-	}
-
-	public void setTextureRenderTarget(TextureRenderTarget renderTarget) {
-		setTextureRenderTarget(renderTarget,false);
 	}
 
 	public void setTextureRenderTargetOnlySurfaceValues(TextureRenderTarget renderTarget) {
