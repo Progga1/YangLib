@@ -368,7 +368,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public void drawRectCentered(float centerX, float centerY, float width, float height, float texX1, float texY1, float texX2, float texY2) {
 		mCurrentVertexBuffer.beginQuad();
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,centerX-width*0.5f,centerY-height*0.5f,centerX+width*0.5f,centerY+height*0.5f,mCurrentZ);
-		mCurrentVertexBuffer.putVec4(ID_TEXTURES, texX1,texY1,texX2,texY2);
+		this.putTextureRect(texX1, texY1, texX2, texY2);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
