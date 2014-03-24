@@ -12,6 +12,10 @@ public class Point3f {
 		set(0,0,0);
 	}
 
+	public Point3f(Point3f p) {
+		set(p.mX, p.mY, p.mZ);
+	}
+
 	public Point3f(float x,float y,float z) {
 		set(x,y,z);
 	}

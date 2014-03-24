@@ -232,7 +232,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		return mOrthoHeight;
 	}
 
-	public void setCamera(float x, float y, float zoom, float rotation) {
+	public void setCamera2D(float x, float y, float zoom, float rotation) {
 		if(Thread.currentThread().getId()==mTranslator.mThreadId)
 			mTranslator.flush();
 		mCamX = x;
@@ -242,21 +242,21 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		refreshCamera();
 	}
 
-	public void setCamera(float x, float y, float zoom) {
-		setCamera(x,y,zoom,mCamRot);
+	public void setCamera2D(float x, float y, float zoom) {
+		setCamera2D(x,y,zoom,mCamRot);
 	}
 
-	public void setCamera(Camera2D camera) {
-		setCamera(camera.getX(),camera.getY(),camera.getZoom(),camera.getRotation());
+	public void setCamera2D(Camera2D camera) {
+		setCamera2D(camera.getX(),camera.getY(),camera.getZoom(),camera.getRotation());
 	}
 
-	public float normToScreenX(float x) {
-		return x;
-	}
-
-	public float normToScreenY(float y) {
-		return y;
-	}
+//	public float normToScreenX(float x) {
+//		return x;
+//	}
+//
+//	public float normToScreenY(float y) {
+//		return y;
+//	}
 
 	public float normToGameX(float x,float y) {
 		return invGameProjection[0] * mTranslator.mInvRatioX * x + invGameProjection[4] * y + invGameProjection[12];
@@ -365,22 +365,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	public void resetCamera() {
-		setCamera(0,0,1);
-	}
-
-	public float getCamX() {
-		return mCamX;
-	}
-
-	public float getCamY() {
-		return mCamY;
-	}
-
-	public float getCamZoom() {
-		return mZoom;
-	}
-
-	public float getCamRot() {
-		return mCamRot;
+		setCamera2D(0,0,1);
 	}
 }

@@ -104,7 +104,7 @@ public class Animator implements YangEventListener {
 		final float gray = 0.1f;
 		mGraphics.clear(gray, gray, gray);
 		mGraphics2D.switchGameCoordinates(true);
-		mGraphics2D.setCamera(mCamera);
+		mGraphics2D.setCamera2D(mCamera);
 
 		//Floor
 		mGraphics.bindTexture(null);

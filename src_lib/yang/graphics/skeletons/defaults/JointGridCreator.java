@@ -51,6 +51,7 @@ public class JointGridCreator {
 				Joint newJoint = new Joint(mJointNamePrefix+j+"-"+i);
 				float x = (float)i/(countX-1) * mRatio;
 				transform.apply3D(x,y,0, newJoint);
+				newJoint.setInitialValues();
 				mJoints[j][i] = newJoint;
 				newJoint.mRadius = mJointRadius;
 				mMassAggregation.addJoint(newJoint);
@@ -123,6 +124,10 @@ public class JointGridCreator {
 
 	public float columnToNorm(int columnIndex) {
 		return (float)columnIndex/(mColCount-1)*mRatio;
+	}
+
+	public float getRatio() {
+		return mRatio;
 	}
 
 	//--------DRAWING--------

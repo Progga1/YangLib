@@ -13,6 +13,7 @@ import yang.graphics.programs.BasicProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.util.Camera2D;
 import yang.math.MatrixOps;
 import yang.math.objects.Quadruple;
 import yang.math.objects.matrix.YangMatrix;
@@ -660,4 +661,9 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		string.draw(x,y,lineHeight,rotation);
 	}
 
+	public abstract void setCamera2D(float x, float y, float zoom, float rotation);
+
+	public void setCamera2D(Camera2D camera) {
+		setCamera2D(camera.getX(),camera.getY(),camera.getZoom(),camera.getRotation());
+	}
 }

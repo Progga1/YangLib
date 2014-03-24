@@ -255,6 +255,12 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	@Override
+	public void setCamera2D(float x, float y, float zoom, float rotation) {
+		// TODO Auto-generated method stub
+		setCameraLookAt(x, y, zoom, x, y, 0);
+	}
+
+	@Override
 	public void refreshViewTransform() {
 		if(mBillboardMode) {
 			mCameraProjectionMatrix.set(mCameraMatrix);
