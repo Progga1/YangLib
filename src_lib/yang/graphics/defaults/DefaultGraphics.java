@@ -716,12 +716,15 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			posX += mWorldTransform.get(12);
 			posY += mWorldTransform.get(13);
 		}
+		float rx = mTranslator.mCurrentSurface.getSurfaceRatioX();
+		float ry = mTranslator.mCurrentSurface.getSurfaceRatioY();
 		if(mCurViewProjTransform==mViewProjectionTransform)
-			return posX<=mCameraProjection.normToWorld2DX(getNormRight(), 0) &&
-					posY<=mCameraProjection.normToWorld2DY(0, getNormTop()) &&
-					(posX+width>=mCameraProjection.normToWorld2DX(getNormLeft(), 0)) &&
-					(posY+height>=mCameraProjection.normToWorld2DY(0, getNormBottom()));
-		else
-			return posX<=mTranslator.mRatioX && posY<=mTranslator.mRatioY && (posX>=-mTranslator.mRatioX-width) && (posY>=-mTranslator.mRatioY-height);
+			return posX<=mCameraProjection.normToWorld2DX(rx, 0) &&
+					posY<=mCameraProjection.normToWorld2DY(0, ry) &&
+					(posX+width>=mCameraProjection.normToWorld2DX(-rx, 0)) &&
+					(posY+height>=mCameraProjection.normToWorld2DY(0, -ry));
+		else{
+			return posX<=rx && posY<=ry && (posX>=-rx-width) && (posY>=-ry-height);
+		}
 	}
 }

@@ -5,8 +5,6 @@ import yang.math.objects.YangMatrix;
 
 public class DefaultCamera extends YangCamera {
 
-	protected boolean mProjectionUpdated = true;
-
 	float[] mTempMat = new float[16];
 
 	@Override
@@ -61,12 +59,6 @@ public class DefaultCamera extends YangCamera {
 
 	public YangMatrix getProjectionTransformReference() {
 		return mProjectionTransform;
-	}
-
-	public YangMatrix getInvProjection() {
-		if(mProjectionUpdated)
-			mProjectionTransform.asInverted(mInvProjectionTransform.mValues);
-		return mInvProjectionTransform;
 	}
 
 	@Override

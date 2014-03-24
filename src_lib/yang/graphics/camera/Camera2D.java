@@ -7,7 +7,6 @@ public class Camera2D extends DefaultCamera {
 
 	public float mZoom;
 	public float mRotation;
-	public float mRatioX = 1,mRatioY = 1;
 
 	public Camera2D() {
 		super();
@@ -25,6 +24,7 @@ public class Camera2D extends DefaultCamera {
 		mNear = OrthogonalProjection.DEFAULT_NEAR;
 		mFar = OrthogonalProjection.DEFAULT_FAR;
 		mViewTransform.loadIdentity();
+		refreshViewTransform();
 		refreshProjectionTransform();
 	}
 
@@ -41,8 +41,8 @@ public class Camera2D extends DefaultCamera {
 	protected void refreshProjectionTransform() {
 		mProjectionUpdated = true;
 		OrthogonalProjection.getTransform(mProjectionTransform,
-				-mRatioX * mZoom, mRatioX * mZoom,
-				mRatioY * mZoom, -mRatioY * mZoom,
+				-1, 1,
+				1, -1,
 				mNear,mFar
 				);
 	}

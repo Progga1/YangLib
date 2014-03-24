@@ -12,7 +12,10 @@ public abstract class CameraTransformations {
 	protected YangMatrix mViewProjectTransform = new YangMatrix(),mUnprojectCameraTransform = new YangMatrix();
 	protected YangMatrix mProjectionTransform = new YangMatrix();
 	protected YangMatrix mInvProjectionTransform = new YangMatrix();
+	protected YangMatrix mPostUnprojection = null;
 	protected Point3f mPosition = new Point3f();
+
+	protected boolean mProjectionUpdated = true;
 
 	public float getX() {
 		return mPosition.mX;
@@ -45,6 +48,17 @@ public abstract class CameraTransformations {
 		target.mX = mat[2];
 		target.mY = mat[6];
 		target.mZ = mat[10];
+	}
+
+	public YangMatrix getUnprojection() {
+		if(mProjectionUpdated) {
+			mProjectionTransform.asInverted(mInvProjectionTransform.mValues);
+			if(mPostUnprojection!=null) {
+				mInvProjectionTransform.multiplyLeft(mPostUnprojection.mValues);
+			}
+			mProjectionUpdated = false;
+		}
+		return mInvProjectionTransform;
 	}
 
 	public Point3f getPositionReference() {

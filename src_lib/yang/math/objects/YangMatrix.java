@@ -160,6 +160,10 @@ public class YangMatrix {
 		setTranslation(translation.mX,translation.mY,translation.mZ);
 	}
 
+	public void setTranslationNegative(Point3f translation) {
+		setTranslation(-translation.mX,-translation.mY,-translation.mZ);
+	}
+
 	public void setScale(float x, float y, float z) {
 		loadIdentity();
 		mValues[0] = x;

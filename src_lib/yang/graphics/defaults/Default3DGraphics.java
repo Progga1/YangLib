@@ -8,7 +8,6 @@ import java.nio.ShortBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.camera.Camera3D;
 import yang.graphics.camera.projection.OrthogonalProjection;
-import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.graphics.defaults.geometrycreators.LineDrawer3D;
 import yang.graphics.defaults.geometrycreators.SphereCreator;
 import yang.graphics.model.FloatColor;
@@ -143,8 +142,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
-		OrthogonalProjection.getTransform(mCamera3D.getProjectionTransformReference(),-width*0.5f,width*0.5f,height*0.5f,-height*0.5f,near,far);
-		mCamera3D.setProjectionUpdated();
+		mCamera3D.setOrthogonalProjection(width, height, near, far);
 		if(mAutoRefreshCameraTransform)
 			mCameraProjection.copyFrom(mCamera3D);
 	}
@@ -162,8 +160,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
-		PerspectiveProjection.getTransformFovy(mCamera3D.getProjectionTransformReference(),fovy, stretchX,1, near, far);
-		mCamera3D.setProjectionUpdated();
+		mCamera3D.setPerspectiveProjection(fovy, near, far, stretchX);
 		if(mAutoRefreshCameraTransform)
 			mCameraProjection.copyFrom(mCamera3D);
 	}

@@ -42,10 +42,12 @@ public class Camera2DSmooth extends Camera2D {
 		this.mTarZoom = zoom;
 	}
 
+	@Override
 	public float getX(){
 		return mPosition.mX;
 	}
 
+	@Override
 	public float getY(){
 		return mPosition.mY;
 	}
@@ -98,6 +100,7 @@ public class Camera2DSmooth extends Camera2D {
 		return false;
 	}
 
+	@Override
 	public void set(float x, float y, float zoom, float rotation) {
 		setPos(x,y);
 		setZoom(zoom);
