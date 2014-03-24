@@ -42,7 +42,7 @@ public class JointGridCreator {
 			mMassAggregation.mLowerLimit = -128;
 		}
 
-		mRatio = (float)countX/countY;
+		mRatio = (float)(countX-1)/(countY-1);
 
 		for(int j=0;j<countY;j++) {
 			float y = (float)j/(countY-1);
