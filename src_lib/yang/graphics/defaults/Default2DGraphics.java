@@ -3,7 +3,7 @@ package yang.graphics.defaults;
 import yang.graphics.camera.Camera2D;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.util.LegacyCamera2D;
+import yang.graphics.util.Camera2DSmooth;
 import yang.math.MatrixOps;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
@@ -57,7 +57,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		setCamera(x,y,zoom,0);
 	}
 
-	public void setCamera(LegacyCamera2D camera) {
+	public void setCamera(Camera2DSmooth camera) {
 		setCamera(camera.getX(),camera.getY(),camera.getZoom(),camera.getRotation());
 	}
 
