@@ -22,4 +22,10 @@ public class DefaultFunctions {
 				}
 			};	
 	
+	public static Function SPLAT_SCALE = new Function() {
+				public float evaluate(float x) {
+					return (float)(Math.min(1, x*80+0.1f));
+				}
+			};	
+	
 }
