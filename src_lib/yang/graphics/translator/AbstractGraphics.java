@@ -470,7 +470,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 
 	protected float get2DStereoShift(float eyeDistance) {
-		return (1f/(eyeDistance+1))*mTranslator.mCameraShiftX;
+		return (1f/(eyeDistance+1));
 	}
 
 }

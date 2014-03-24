@@ -73,6 +73,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	//Objects
 	protected CameraProjection mCameraProjection;
+	protected YangMatrix mLeftEyeTranform;
+	protected YangMatrix mRightEyeTranform;
 
 	public void shareBuffers(DefaultGraphics<?> graphics) {
 		initDynamicBuffer();

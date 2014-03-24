@@ -1,6 +1,7 @@
 package yang.graphics.textures;
 
 import yang.graphics.translator.Texture;
+import yang.math.objects.YangMatrix;
 import yang.model.SurfaceParameters;
 
 public class TextureRenderTarget implements SurfaceParameters {
@@ -69,11 +70,8 @@ public class TextureRenderTarget implements SurfaceParameters {
 	}
 
 	@Override
-	public float getCameraShift() {
-		if(mStereoEnabled)
-			return mTargetTexture.mGraphics.mCameraShiftX;
-		else
-			return 0;
+	public YangMatrix getViewPostTransform() {
+		return null;
 	}
 
 }

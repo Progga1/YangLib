@@ -165,11 +165,11 @@ public class DefaultMetaEventListener implements YangEventListener {
 			if(code=='x')
 				mSurface.mStereoVision.mLensShift += 0.01f;
 			if(code=='t')
-				mSurface.mStereoVision.mInterOcularDistance += 0.002f;
+				mSurface.mStereoVision.setInterOcularDistance(mSurface.mStereoVision.getInterOcularDistance()+0.002f);
 			if(code=='r')
-				mSurface.mStereoVision.mInterOcularDistance -= 0.002f;
+				mSurface.mStereoVision.setInterOcularDistance(mSurface.mStereoVision.getInterOcularDistance()-0.002f);
 			if(code=='p')
-				System.out.println("scale="+stereoShader.mScaleX+":"+stereoShader.mScaleY+", scaleToLens="+stereoShader.mScaleToLens+", shift="+mSurface.mStereoVision.mLensShift+", distance="+mSurface.mStereoVision.mInterOcularDistance);
+				System.out.println("scale="+stereoShader.mScaleX+":"+stereoShader.mScaleY+", scaleToLens="+stereoShader.mScaleToLens+", shift="+mSurface.mStereoVision.mLensShift+", distance="+mSurface.mStereoVision.getInterOcularDistance());
 
 		}
 	}

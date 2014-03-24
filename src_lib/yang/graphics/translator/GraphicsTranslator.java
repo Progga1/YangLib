@@ -13,7 +13,7 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.AbstractProgram;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.programs.GLProgramFactory;
-import yang.graphics.stereovision.StereoVision;
+import yang.graphics.stereovision.StereoRendering;
 import yang.graphics.textures.TextureData;
 import yang.graphics.textures.TextureHolder;
 import yang.graphics.textures.TextureProperties;
@@ -80,12 +80,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private long mTargetTime = 0;
 	private final TextureRenderTarget[] mRenderTargetStack = new TextureRenderTarget[MAX_NESTED_RENDERTARGETS];
 	private int mRenderTargetStackPos = -1;
-	public float mCameraShiftX = 0;
 	public float mMinForceWireFrameRenderTargetDepth = -1;
 
 	//Matrices
 	public YangMatrix mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
+	public YangMatrix mStereoTransform = null;
 
 	//Counters
 	public int mPolygonCount;
@@ -711,7 +711,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}else
 			mRatioY = 1;
 		if(stereo)
-			mRatioX *= StereoVision.RATIO_FAC;
+			mRatioX *= StereoRendering.RATIO_FAC;
 		mInvRatioX = 1/mRatioX;
 		mInvRatioY = 1/mRatioY;
 
@@ -915,8 +915,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	@Override
-	public float getCameraShift() {
-		return mCameraShiftX;
+	public YangMatrix getViewPostTransform() {
+		if(mStereo)
+			return mStereoTransform;
+		else
+			return null;
 	}
 
 

@@ -17,9 +17,8 @@ import yang.graphics.font.BitmapFont;
 import yang.graphics.interfaces.Clock;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
-import yang.graphics.stereovision.StereoVision;
+import yang.graphics.stereovision.StereoRendering;
 import yang.graphics.translator.AbstractGFXLoader;
-import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MathConst;
 import yang.model.App;
@@ -90,7 +89,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	private boolean mLoadedOnce = false;
 
 	private boolean mUseStereoVision = false;
-	public StereoVision mStereoVision = null;
+	public StereoRendering mStereoVision = null;
 	private int mStereoResolution = 1024;
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
@@ -453,15 +452,18 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		if(mUseStereoVision) {
 			//STEREO VISION
 			if(mStereoVision == null) {
-				mStereoVision = new StereoVision();
+				mStereoVision = new StereoRendering();
 				mStereoVision.init(mGraphics,mStereoResolution);
 			}
 			try{
 				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
-				mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
+//				mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
+				mGraphics.mStereoTransform = mStereoVision.getLeftEyeTransform();
+
 				drawContent(true);
 				mGraphics.leaveTextureRenderTarget();
-				mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
+//				mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
+				mGraphics.mStereoTransform = mStereoVision.getRightEyeTransform();
 				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
 				drawContent(false);
 			}finally{
