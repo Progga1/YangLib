@@ -155,7 +155,7 @@ public class GFXDebug implements PrintInterface {
 		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString.equals("")) && (mSurface.mMacro==null || !YangSurface.SHOW_MACRO_SIGN || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS)
 			return;
 
-		final float right = mGraphics.getScreenRight()-mDebugOffsetX;
+		final float right = mGraphics.getNormRight()-mDebugOffsetX;
 
 		mTranslator.flush();
 		final DrawListener prevDrawer = mTranslator.mCurDrawListener;
@@ -167,7 +167,7 @@ public class GFXDebug implements PrintInterface {
 		mGraphics.resetGlobalTransform();
 
 		if(YangSurface.SHOW_MACRO_SIGN && mSurface.mMacro!=null && !mSurface.mMacro.mFinished && ((System.currentTimeMillis()/500)%2==0)) {
-			mExecMacroString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY-mFontSize*2, mFontSize);
+			mExecMacroString.draw(right, mGraphics.getNormTop()-mDebugOffsetY-mFontSize*2, mFontSize);
 		}
 
 		if(playSpeed!=1) {
@@ -183,7 +183,7 @@ public class GFXDebug implements PrintInterface {
 					mSpeedString.appendInt((int)playSpeed);
 
 				}
-			mSpeedString.draw(right, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize*2f);
+			mSpeedString.draw(right, mGraphics.getNormTop()-mDebugOffsetY, mFontSize*2f);
 		}
 
 		if(DebugYang.stateString!=null && DebugYang.stateString!="") {
@@ -195,7 +195,7 @@ public class GFXDebug implements PrintInterface {
 			if(uString.length()>=c)
 				uString = uString.substring(uString.length()-c, uString.length());
 			mStateString.setString(uString);
-			mStateString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenBottom()+mDebugOffsetY, mFontSize);
+			mStateString.draw(mGraphics.getNormLeft()+mDebugOffsetX, mGraphics.getNormBottom()+mDebugOffsetY, mFontSize);
 		}
 
 		if(mExceptionString==null) {
@@ -212,11 +212,11 @@ public class GFXDebug implements PrintInterface {
 				}
 				mRefreshCount++;
 				mGraphics.setColor(mFontColor);
-				mTempPrintString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+				mTempPrintString.draw(mGraphics.getNormLeft()+mDebugOffsetX, mGraphics.getNormTop()-mDebugOffsetY, mFontSize);
 			}
 		}else{
 			mGraphics.setColor(FloatColor.RED);
-			mExceptionString.draw(mGraphics.getScreenLeft()+mDebugOffsetX, mGraphics.getScreenTop()-mDebugOffsetY, mFontSize);
+			mExceptionString.draw(mGraphics.getNormLeft()+mDebugOffsetX, mGraphics.getNormTop()-mDebugOffsetY, mFontSize);
 		}
 
 		if(DebugYang.DRAW_POINTERS) {

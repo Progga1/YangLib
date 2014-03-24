@@ -109,7 +109,7 @@ public class Animator implements YangEventListener {
 		//Floor
 		mGraphics.bindTexture(null);
 		mGraphics2D.setColor(0.5f);
-		mGraphics2D.drawRect(mGraphics2D.normToWorldX(mGraphics2D.getScreenLeft()), 0, mGraphics2D.normToWorldX(mGraphics2D.getScreenRight()), mGraphics2D.normToWorldY(mGraphics2D.getScreenBottom()));
+		mGraphics2D.drawRect(mGraphics2D.normToWorldX(mGraphics2D.getNormLeft()), 0, mGraphics2D.normToWorldX(mGraphics2D.getNormRight()), mGraphics2D.normToWorldY(mGraphics2D.getNormBottom()));
 		mGraphics2D.setColor(0.2f);
 		mGraphics2D.drawLine(-100, 1, 100, 1, 0.01f);
 		mGraphics2D.drawLine(-100, 2, 100, 2, 0.01f);

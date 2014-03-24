@@ -250,10 +250,10 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 		}
 
 		if(m3D) {
-			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"LeftShoulderConstraint",mLeftShoulderJoint,mBreastJoint)));
-			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"RightShoulderConstraint",mRightShoulderJoint,mBreastJoint)));
-			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"LeftLegConstraint",mLeftLegJoint,mHipJoint)));
-			addConstraint(new DistanceConstraint(new CartoonBone(mGraphics.mTranslator,"RightLegConstraint",mRightLegJoint,mHipJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mG.mTranslator,"LeftShoulderConstraint",mLeftShoulderJoint,mBreastJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mG.mTranslator,"RightShoulderConstraint",mRightShoulderJoint,mBreastJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mG.mTranslator,"LeftLegConstraint",mLeftLegJoint,mHipJoint)));
+			addConstraint(new DistanceConstraint(new CartoonBone(mG.mTranslator,"RightLegConstraint",mRightLegJoint,mHipJoint)));
 		}
 
 		mBreastJoint.mFixed = true;

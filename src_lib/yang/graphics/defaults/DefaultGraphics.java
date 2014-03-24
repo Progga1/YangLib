@@ -113,6 +113,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		return DEFAULT_NEUTRAL_ELEMENTS;
 	}
 
+	public void beginQuad(boolean wireFrames) {
+		mCurrentVertexBuffer.beginQuad(wireFrames);
+	}
+
 	@Override
 	public void bindBuffers() {
 		assert mTranslator.preCheck("bind buffers 2D");
@@ -695,5 +699,27 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public CameraProjection getCameraProjection() {
 		return mCameraProjection;
+	}
+
+	public void setStereoZDistance(float f) {
+		//TODO
+	}
+
+	public boolean rectInScreen2D(float posX, float posY, Rect rect) {
+		return inScreen2D(posX+rect.mLeft, posY+rect.mBottom, rect.getWidth(), rect.getHeight());
+	}
+
+	public boolean inScreen2D(float posX, float posY, float width, float height) {
+		if(mWorldTransformEnabled) {
+			posX += mWorldTransform.get(12);
+			posY += mWorldTransform.get(13);
+		}
+		if(mCurViewProjTransform==mViewProjectionTransform)
+			return posX<=mCameraProjection.normToWorld2DX(getNormRight(), 0) &&
+					posY<=mCameraProjection.normToWorld2DY(0, getNormTop()) &&
+					(posX+width>=mCameraProjection.normToWorld2DX(getNormLeft(), 0)) &&
+					(posY+height>=mCameraProjection.normToWorld2DY(0, getNormBottom()));
+		else
+			return posX<=mTranslator.mRatioX && posY<=mTranslator.mRatioY && (posX>=-mTranslator.mRatioX-width) && (posY>=-mTranslator.mRatioY-height);
 	}
 }

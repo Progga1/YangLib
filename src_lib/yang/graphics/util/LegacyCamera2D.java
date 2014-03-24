@@ -1,7 +1,7 @@
 package yang.graphics.util;
 
 import yang.graphics.camera.Camera2D;
-import yang.math.objects.Point2f;
+import yang.math.objects.Point3f;
 
 
 /**
@@ -13,17 +13,15 @@ public class LegacyCamera2D extends Camera2D {
 	private static final float MAX_ZOOM = 30;
 	private static final float MIN_ZOOM = 1;
 	private static final float ZOOM_STEP = 1;
-	private Point2f mPos;
-	public Point2f mTarPos;
+	public Point3f mTarPos;
 	private float mTarRotation;
 
-	private float mZoom;
 	private float mTarZoom;
 	public float mAdaption;
 
-	public LegacyCamera2D(float startX, float startY, float zoom){
-		mPos = new Point2f(startX,startY);
-		mTarPos = new Point2f(mPos);
+	public LegacyCamera2D(float startX, float startY, float zoom) {
+		mPosition.set(startX,startY);
+		mTarPos = new Point3f(mPosition);
 
 		this.mZoom = zoom;
 		this.setZoom(zoom);
@@ -45,11 +43,11 @@ public class LegacyCamera2D extends Camera2D {
 	}
 
 	public float getX(){
-		return mPos.mX;
+		return mPosition.mX;
 	}
 
 	public float getY(){
-		return mPos.mY;
+		return mPosition.mY;
 	}
 
 	public void setPos(float x, float y) {
@@ -57,7 +55,7 @@ public class LegacyCamera2D extends Camera2D {
 	}
 
 	public void setPosInstant(float x, float y) {
-		mPos.set(x,y);
+		mPosition.set(x,y);
 		mTarPos.set(x,y);
 	}
 
@@ -66,8 +64,9 @@ public class LegacyCamera2D extends Camera2D {
 	}
 
 	public void update(){
-		mPos.interpolate(mTarPos, mAdaption);
+		mPosition.lerp(mTarPos, mAdaption);
 		mZoom = (1-mAdaption) * mZoom + (mAdaption)*mTarZoom;
+		refreshViewTransform();
 	}
 
 	public void zoomOut(){
@@ -95,7 +94,7 @@ public class LegacyCamera2D extends Camera2D {
 	}
 
 	public boolean isAdjusting() {
-		if(mTarPos.getDistance(mPos)>0.1f) return true;
+		if(mTarPos.getDistance(mPosition)>0.1f) return true;
 		return false;
 	}
 
@@ -110,8 +109,8 @@ public class LegacyCamera2D extends Camera2D {
 	}
 
 	public void scrollInstant(float x, float y) {
-		mPos.mX += x;
-		mPos.mY += y;
+		mPosition.mX += x;
+		mPosition.mY += y;
 		mTarPos.mX += x;
 		mTarPos.mY += y;
 	}

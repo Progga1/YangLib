@@ -52,14 +52,14 @@ public class TextureAtlasSampleState extends SampleState {
 
 
 		mGraphics2D.setSuppData(mSkyBounds);
-		mGraphics2D.drawRect(mGraphics2D.getScreenLeft(),-1,mGraphics2D.getScreenRight(),1, 0,mSkyBounds.getHeight(),mSkyBounds.getWidth()*2,0);
+		mGraphics2D.drawRect(mGraphics2D.getNormLeft(),-1,mGraphics2D.getNormRight(),1, 0,mSkyBounds.getHeight(),mSkyBounds.getWidth()*2,0);
 
 		mGraphics2D.setSuppData(mGrassBounds);
 		final float SIZE = 0.5f;
 		mGraphics2D.drawRect(-SIZE,-SIZE,SIZE,SIZE, 0,2,2,0);
 
 		mGraphics2D.setSuppData(Quadruple.Q0011);
-		mGraphics2D.drawRect(mGraphics2D.getScreenRight()-0.7f,mGraphics2D.getScreenTop()-0.7f,mGraphics2D.getScreenRight()-0.03f,mGraphics2D.getScreenTop()-0.03f);
+		mGraphics2D.drawRect(mGraphics2D.getNormRight()-0.7f,mGraphics2D.getNormTop()-0.7f,mGraphics2D.getNormRight()-0.03f,mGraphics2D.getNormTop()-0.03f);
 	}
 
 	@Override

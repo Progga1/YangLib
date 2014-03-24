@@ -25,7 +25,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	//Persistent
 	private boolean mInitialized;
 	public GraphicsTranslator mTranslator;
-	public DefaultGraphics<?> mGraphics;
+	public DefaultGraphics<?> mG;
 
 	//GFX data
 	public DrawBatch mMesh;
@@ -65,8 +65,8 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			return;
 		mCarrier = carrier;
 
-		mGraphics = graphics;
-		mTranslator = mGraphics.mTranslator;
+		mG = graphics;
+		mTranslator = mG.mTranslator;
 
 		mCurJointId = 0;
 		build();
@@ -87,7 +87,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	}
 
 	public void drawEditing2D(SkeletonEditing skeletonEditing) {
-		drawDebug2D(mGraphics,skeletonEditing);
+		drawDebug2D(mG,skeletonEditing);
 	}
 
 	public void texCoordsIntoRect(float rectLeft,float rectTop,float rectWidth,float rectHeight) {
@@ -150,14 +150,14 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				}
 			}
 			final int indexCount = mBones.size()*6*2;
-			mVertexBuffer = mGraphics.createVertexBuffer(true, false, indexCount, mVertexCount);
+			mVertexBuffer = mG.createVertexBuffer(true, false, indexCount, mVertexCount);
 			mVertexBuffer.setIndexPosition(0);
 			for(short i=0;i<mVertexCount;i+=4)
 				mVertexBuffer.beginQuad(false,i);
 			mVertexBuffer.mFinishedIndexCount = indexCount;
 			mVertexBuffer.mFinishedVertexCount = mVertexCount;
 			mVertexBuffer.reset();
-			mMesh = new DrawBatch(mGraphics,mVertexBuffer);
+			mMesh = new DrawBatch(mG,mVertexBuffer);
 			mUpdateColor = true;
 			mUpdateTexCoords = true;
 		}
@@ -251,7 +251,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		}
 
 		if(mTextureHolder!=null) {
-			mGraphics.bindTextureInHolder(mTextureHolder);
+			mG.bindTextureInHolder(mTextureHolder);
 		}
 
 		mMesh.draw();

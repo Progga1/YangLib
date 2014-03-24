@@ -3,19 +3,18 @@ package yang.graphics.particles;
 import java.util.ListIterator;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.programs.BasicProgram;
 
-public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extends AbstractParticleRingBuffer<Default2DGraphics,ParticleType> {
+public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extends AbstractParticleRingBuffer<DefaultGraphics,ParticleType> {
 
 	public BasicProgram mProgram;
 	public float mCelShadingX=1,mCelShadingY=1;
 
 	@Override
-	public ParticleRingBuffer2D<ParticleType> init(Default2DGraphics graphics,int maxParticleCount) {
+	public ParticleRingBuffer2D<ParticleType> init(DefaultGraphics graphics,int maxParticleCount) {
 		super.init(graphics,maxParticleCount);
-		mProgram = graphics.getDefaultProgram();
+		mProgram = (BasicProgram) graphics.getDefaultProgram();
 		return this;
 	}
 

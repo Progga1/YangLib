@@ -67,7 +67,7 @@ public class StringSampleState extends SampleState {
 		mGraphics2D.setColor(1, 0.8f, 0);
 		mFromStringXML.draw(-0.2f, 0.3f, 0.2f, 0.3f);
 		mGraphics2D.setColor(0,0.7f,0);
-		mNumberString.draw(mGraphics2D.getScreenRight(),mGraphics2D.getScreenTop(), 0.2f);
+		mNumberString.draw(mGraphics2D.getNormRight(),mGraphics2D.getNormTop(), 0.2f);
 		mGraphics2D.setColor(1,0,0);
 		mAnimatedString.draw(-1.2f, -0.3f, 0.2f, -0.3f);
 		mGraphics2D.setWhite();

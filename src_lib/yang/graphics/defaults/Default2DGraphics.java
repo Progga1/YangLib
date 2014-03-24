@@ -5,7 +5,6 @@ import yang.graphics.programs.BasicProgram;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.LegacyCamera2D;
 import yang.math.MatrixOps;
-import yang.model.Rect;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 
@@ -32,17 +31,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mCamera2D = new Camera2D();
 		mDefaultProgram = new BasicProgram();
 		mTranslator.addProgram(mDefaultProgram);
-	}
-
-	public boolean inScreen2D(float posX,float posY,float width, float height) {
-		if(mWorldTransformEnabled) {
-			posX += mWorldTransform.get(12);
-			posY += mWorldTransform.get(13);
-		}
-		if(mCurViewProjTransform==mViewProjectionTransform)
-			return posX<=normRightToWorldX() && posY<=normTopToWorldY() && (posX>=normLeftToWorldX()-width) && (posY>=normBottomToWorldY()-height);
-		else
-			return posX<=mTranslator.mRatioX && posY<=mTranslator.mRatioY && (posX>=-mTranslator.mRatioX-width) && (posY>=-mTranslator.mRatioY-height);
 	}
 
 	//TODO does nothing
@@ -131,14 +119,6 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 
 	public float normCenterToWorldX() {
 		return mInvViewProjectionTransform.mValues[13];
-	}
-
-	public boolean rectInScreen2D(float posX,float posY,Rect mRect) {
-		return  posX+mRect.mLeft<=normRightToWorldX() && posY+mRect.mBottom<=normTopToWorldY() && (posX+mRect.mRight>=normLeftToWorldX()) && (posY+mRect.mTop>=normBottomToWorldY());
-	}
-
-	public void beginQuad(boolean wireFrames) {
-		mCurrentVertexBuffer.beginQuad(wireFrames);
 	}
 
 	@Override

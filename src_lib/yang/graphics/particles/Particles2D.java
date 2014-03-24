@@ -1,16 +1,17 @@
 package yang.graphics.particles;
 
-import yang.graphics.defaults.Default2DGraphics;
+import yang.graphics.defaults.DefaultGraphics;
 
 public class Particles2D<ParticleType extends Particle> extends ParticleRingBuffer2D<ParticleType> {
 
 	private Class<ParticleType> mParticleClass;
-	
+
 	public Particles2D(Class<ParticleType> particleClass) {
 		mParticleClass = particleClass;
 	}
-	
-	public Particles2D<ParticleType> init(Default2DGraphics graphics, int maxParticleCount) {
+
+	@Override
+	public Particles2D<ParticleType> init(DefaultGraphics graphics, int maxParticleCount) {
 		super.init(graphics, maxParticleCount);
 		return this;
 	}
@@ -27,6 +28,6 @@ public class Particles2D<ParticleType extends Particle> extends ParticleRingBuff
 		return null;
 	}
 
-	
-	
+
+
 }

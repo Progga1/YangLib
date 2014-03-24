@@ -68,13 +68,19 @@ public abstract class CameraTransformations {
 	}
 
 	public float worldToNorm2DX(float worldX,float worldY) {
-		final float x = MatrixOps.applyFloatMatrixX2D(mViewProjectTransform.mValues, worldX, worldY);
-		return x;
+		return MatrixOps.applyFloatMatrixX2D(mViewProjectTransform.mValues, worldX, worldY);
 	}
 
 	public float worldToNorm2DY(float worldX,float worldY) {
-		final float y = MatrixOps.applyFloatMatrixY2D(mViewProjectTransform.mValues, worldX, worldY);
-		return y;
+		return MatrixOps.applyFloatMatrixY2D(mViewProjectTransform.mValues, worldX, worldY);
+	}
+
+	public float normToWorld2DX(float normX,float normY) {
+		return MatrixOps.applyFloatMatrixX2D(mUnprojectCameraTransform.mValues, normX, normY);
+	}
+
+	public float normToWorld2DY(float normX,float normY) {
+		return MatrixOps.applyFloatMatrixY2D(mUnprojectCameraTransform.mValues, normX, normY);
 	}
 
 	public void worldToNorm(float x,float y,float z,Point3f target) {
@@ -84,5 +90,4 @@ public abstract class CameraTransformations {
 	public void normToWorld(float x,float y,float z,Point3f target) {
 		mUnprojectCameraTransform.apply3DNormalized(x, y, z, target);
 	}
-
 }

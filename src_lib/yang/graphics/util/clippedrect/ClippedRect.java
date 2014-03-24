@@ -1,7 +1,7 @@
 package yang.graphics.util.clippedrect;
 
-import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.SurfacePointerEvent;
+import yang.events.eventtypes.YangEvent;
 import yang.events.listeners.PointerEventListener;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Bounds;
