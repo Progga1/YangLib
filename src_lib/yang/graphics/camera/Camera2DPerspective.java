@@ -26,7 +26,7 @@ public class Camera2DPerspective extends DefaultCamera {
 //		YangMatrix temp = new YangMatrix();
 //		temp.translate(camera2D.getPositionReference());
 //		temp.rot
-		float zoom = camera2D.mPosition.mZ;
+		float zoom = camera2D.mZoom;
 		mPosition.mX = camera2D.mPosition.mX;
 		mPosition.mY = camera2D.mPosition.mY;
 		mPosition.mZ = mRatio*zoom;
