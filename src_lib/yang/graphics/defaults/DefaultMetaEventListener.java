@@ -10,7 +10,9 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.stereovision.LensDistortionShader;
-import yang.graphics.util.HeadMovement;
+import yang.graphics.util.EulerOrientation;
+import yang.math.objects.Point3f;
+import yang.math.objects.Vector3f;
 import yang.model.DebugYang;
 import yang.surface.YangSurface;
 
@@ -20,7 +22,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 	private boolean mRecording = false;
 	private boolean mCtrlPressed = false;
 	private boolean mShiftPressed = false;
-	private final HeadMovement mHead = new HeadMovement();
+	private final EulerOrientation mOrientation = new EulerOrientation();
 
 	public DefaultMetaEventListener(YangSurface surface) {
 		mSurface = surface;
@@ -41,10 +43,14 @@ public class DefaultMetaEventListener implements YangEventListener {
 	public void pointerDown(float x, float y, SurfacePointerEvent event) {
 		if(mCtrlPressed) {
 			if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
-				mSurface.mGraphics.mSensorCameraEnabled = false;
-				mHead.reset();
+				mOrientation.reset();
+				mSurface.mGraphics.setDebugPostCameraOrientation(mOrientation.getUpdatedMatrix());
 			}
-
+		}
+		if(mShiftPressed) {
+			if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
+				mSurface.mGraphics.setDebugPostCameraPosition(Point3f.ZERO);
+			}
 		}
 	}
 
@@ -55,24 +61,46 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void pointerDragged(float x, float y, SurfacePointerEvent event) {
-//		if(mCtrlPressed) {
-//			mSurface.mGraphics.mSensorCameraEnabled = true;
-//			if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
-//				mHead.mYaw += event.mDeltaX;
-//				mHead.mPitch += event.mDeltaY;
-//			}
-//			if(event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
-//				mHead.mRoll += event.mDeltaX;
-//				mHead.mPitch += event.mDeltaY;
-//			}
-//			mSurface.mGraphics.mStereoCameraMatrix.set(mHead.getUpdatedMatrix());
-//		}
+		if(mCtrlPressed || mShiftPressed) {
+			mSurface.mGraphics.setDebugPostCameraEnabled(true);
+			float MOVE_SCALE = 1;
+
+			if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
+				if(mShiftPressed) {
+					mTempVec.set(-event.mDeltaX,-event.mDeltaY,-event.mDeltaZ);
+				}else if(mCtrlPressed) {
+					mTempVec.set(-event.mDeltaX,0,event.mDeltaY);
+				}else
+					return;
+				mTempVec.scale(MOVE_SCALE);
+				mOrientation.getUpdatedMatrix().apply3D(mTempVec,mResVec);
+				mSurface.mGraphics.moveDebugPostCamera(mResVec, null);
+			}
+
+			if(event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
+				mSurface.mGraphics.setDebugPostCameraEnabled(true);
+				if(mShiftPressed) {
+					mOrientation.mYaw -= event.mDeltaX*MOVE_SCALE;
+					mOrientation.mPitch += event.mDeltaY*MOVE_SCALE;
+				}else if(mCtrlPressed) {
+					mOrientation.mRoll -= event.mDeltaX*MOVE_SCALE;
+					mOrientation.mPitch += event.mDeltaY*MOVE_SCALE;
+				}else
+					return;
+				mSurface.mGraphics.setDebugPostCameraOrientation(mOrientation.getUpdatedQuaternion());
+			}
+		}
+
+
 	}
 
 	@Override
 	public void pointerUp(float x, float y, SurfacePointerEvent event) {
 
 	}
+
+	private Vector3f mTempVec = new Vector3f();
+	private Vector3f mResVec = new Vector3f();
 
 	@Override
 	public void keyDown(int code) {
@@ -130,6 +158,9 @@ public class DefaultMetaEventListener implements YangEventListener {
 			else
 				mSurface.setStereoVision(1024);
 		}
+		if(code==Keys.F10) {
+			mSurface.stopMacro();
+		}
 		if(code==Keys.F11) {
 			if(!mRecording) {
 				mRecording = true;
@@ -156,6 +187,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 				stereoShader.mScaleY += STEPS;
 			if(code=='w')
 				stereoShader.mScaleY -= STEPS;
+
 			if(code=='q')
 				stereoShader.mScaleToLens += STEPS;
 			if(code=='e')
@@ -184,7 +216,9 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void zoom(float factor) {
-
+		mTempVec.set(0,0,factor);
+		mOrientation.getUpdatedMatrix().apply3D(mTempVec,mResVec);
+		mSurface.mGraphics.moveDebugPostCamera(mResVec, null);
 	}
 
 	@Override

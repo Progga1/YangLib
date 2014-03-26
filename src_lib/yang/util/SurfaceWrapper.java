@@ -37,8 +37,6 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 	}
 
 	public void updateTexture() {
-		final boolean prevForceMono = mTranslator.mForceMono;
-		mTranslator.mForceMono = true;
 		mTranslator.setTextureRenderTarget(mTexTarget);
 
 		if(!mInitialized) {
@@ -57,7 +55,6 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 		mTranslator.setCullMode(false);
 		mGraphics.setColorFactor(1);
 		mGraphics.setWhite();
-		mTranslator.mForceMono = prevForceMono;
 	}
 
 	public void handleEvent(YangEvent event) {

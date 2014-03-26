@@ -4,9 +4,10 @@ import yang.events.eventtypes.YangEvent;
 import yang.events.listeners.RawEventListener;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.Texture;
+import yang.model.Extents;
 import yang.model.callback.Drawable;
 
-public class YangTextureDrawer implements Drawable,RawEventListener {
+public class YangTextureDrawer implements Drawable,RawEventListener,Extents {
 
 	public Texture mTexture;
 	public float mWidth,mHeight;
@@ -36,6 +37,26 @@ public class YangTextureDrawer implements Drawable,RawEventListener {
 	@Override
 	public boolean rawEvent(YangEvent event) {
 		return true;
+	}
+
+	@Override
+	public float getLeft() {
+		return 0;
+	}
+
+	@Override
+	public float getBottom() {
+		return 0;
+	}
+
+	@Override
+	public float getRight() {
+		return mWidth;
+	}
+
+	@Override
+	public float getTop() {
+		return mHeight;
 	}
 
 }

@@ -40,12 +40,12 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 
 		mTransform.loadIdentity();
 		mGraphics3D.drawDebugCoordinateAxes();
-		if(mUseDebugTransform) {
-			mTransform.set(mGraphics.mSensorOrientationMatrix);
-		}else{
-			mTransform.rotateY((float)mStateTimer);
+//		if(mUseDebugTransform) {
+//			mTransform.set(mGraphics.mDebugPostCameraTransform);
+//		}else{
+		mTransform.rotateY((float)mStateTimer);
 			//mTransform.scale(0.5f);
-		}
+//		}
 		//mTransform.scale(1,1,0.5f);
 
 		mGraphics3D.setWhite();

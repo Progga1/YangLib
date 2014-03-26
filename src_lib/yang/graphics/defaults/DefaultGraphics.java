@@ -76,6 +76,9 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	protected YangMatrix mLeftEyeTranform;
 	protected YangMatrix mRightEyeTranform;
 
+	//Temp
+	private Point3f mTempPnt1 = new Point3f();
+
 	public void shareBuffers(DefaultGraphics<?> graphics) {
 		initDynamicBuffer();
 		mDynamicVertexBuffer.linkBuffer(ID_POSITIONS, graphics.mDynamicVertexBuffer, ID_POSITIONS);
@@ -185,22 +188,17 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 //		target.postScale(mTranslator.mRatioX, mTranslator.mRatioY, 1);
 	}
 
-	Point3f mTempPnt1 = new Point3f();
-
 	protected void updateProgramProjection() {
 		assert mTranslator.preCheck("Set program projection");
 		final BasicProgram program = mCurrentProgram;
 		if (program != null) {
 			if(mCurViewProjTransform == mTranslator.mProjScreenTransform) {
 				mCameraProjectionMatrix.set(mTranslator.mProjScreenTransform);
-				if(mTranslator.isStereo()) {
-					//mCameraProjectionMatrix.postTranslate(-get2DStereoShift(mStereoScreenDistance),0);
-					YangMatrix trafo = mTranslator.mCurrentSurface.getViewPostTransform();
-					if(trafo!=null) {
-						trafo.getTranslation(mTempPnt1);
-						float f = get2DStereoShiftFactor(mStereoScreenDistance);
-						mCameraProjectionMatrix.postTranslate(-mTempPnt1.mX*f,-mTempPnt1.mY*f);
-					}
+				YangMatrix trafo = mTranslator.mCurrentSurface.getViewPostTransform();
+				if(trafo!=null) {
+					trafo.getTranslation(mTempPnt1);
+					float f = get2DStereoShiftFactor(mNoCameraTransformStereoDistance);
+					mCameraProjectionMatrix.postTranslate(-mTempPnt1.mX*f,-mTempPnt1.mY*f);
 				}
 			}else
 				refreshViewTransform();

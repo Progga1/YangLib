@@ -108,8 +108,9 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 		}else
 			return;
 		if(mAutoApplySensorToCamera) {
-			mGraphics.mSensorCameraEnabled = true;
-			mGraphics.mSensorOrientationMatrix.asInverted(mGraphics.mSensorCameraMatrix.mValues);
+			mGraphics.setDebugPostCameraEnabled(true);
+//			mGraphics.mSensorOrientationMatrix.asInverted(mGraphics.mSensorCameraMatrix.mValues);
+			mGraphics.setDebugPostCameraOrientation(uMat);
 		}
 
 	}

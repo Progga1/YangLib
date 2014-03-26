@@ -47,7 +47,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	protected float mBold;
 	public float[] mCurColor;
 	public float[] mCurSuppData;
-	public float mStereoScreenDistance = 0.15f;
+	public float mNoCameraTransformStereoDistance = 0.15f;
 
 	//Persistent attributes
 	public GraphicsTranslator mTranslator;

@@ -18,6 +18,7 @@ import yang.graphics.interfaces.Clock;
 import yang.graphics.interfaces.InitializationCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.stereovision.StereoRendering;
+import yang.graphics.stereovision.StereoVision;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MathConst;
@@ -55,13 +56,14 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
 
-	public int mMaxStepsPerCycle = 64;
+	public int mMaxStepsPerCycle = 100;
 
 	private UpdateMode mUpdateMode;
 	protected boolean mInitialized = false;
 	protected Object mInitializedNotifier;
 	protected InitializationCallback mInitCallback;
 
+	//Time
 	protected long mCatchUpTime;
 	public double mProgramTime;
 	public int mStepCount;
@@ -71,26 +73,31 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	protected int mRuntimeState = 0;
 	protected boolean mInactive = false;
 
+	//Properties
+	public boolean mForceMetaMode = false;
+	public float mPlaySpeed = 1;
+	public float mFastForwardToTime = -1;
+	public String mMacroFilename;
+	private int mStereoResolution = 1024;
+	private boolean mForceStereoVision = false;
+
+	//State
+	public boolean mPaused = false;
+	private boolean mResuming = false;
+	private boolean mLoadedOnce = false;
+	private int mActiveEye = StereoVision.EYE_MONO;
+	public boolean mException = false;
+	private int mStartupSteps = 1;
+	private int mLoadingSteps = 1;
+	private int mLoadingState = 0;
+
+	//Objects
 	private Thread mUpdateThread = null;
 	public YangEventListener mEventListener;
 	public YangEventListener mMetaEventListener;
 	public YangEventQueue mEventQueue;
 	public int mDebugSwitchKey = -1;
-	public boolean mPaused = false;
-	public float mPlaySpeed = 1;
-	public float mFastForwardToTime = -1;
-	public String mMacroFilename;
-	public boolean mException = false;
-	private int mStartupSteps = 1;
-	private int mLoadingSteps = 1;
-	private int mLoadingState = 0;
-	private int mInitSteps = 0;
-	private boolean mResuming = false;
-	private boolean mLoadedOnce = false;
-
-	private boolean mUseStereoVision = false;
 	public StereoRendering mStereoVision = null;
-	private int mStereoResolution = 1024;
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
 
@@ -122,9 +129,9 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 
 	public void setStereoVision(int resolution) {
 		if(resolution==0) {
-			mUseStereoVision = false;
+			mForceStereoVision = false;
 		}else{
-			mUseStereoVision = true;
+			mForceStereoVision = true;
 			mStereoResolution = resolution;
 		}
 		if(mGraphics!=null)
@@ -132,9 +139,12 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 
 	}
 
+	public int getActiveEye() {
+		return mActiveEye;
+	}
+
 	protected void setStartupSteps(int loadingSteps,int initSteps) {
 		mLoadingSteps = loadingSteps;
-		mInitSteps = initSteps;
 		mStartupSteps = initSteps+loadingSteps;
 	}
 
@@ -289,7 +299,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 
 	public void onSurfaceChanged(int width,int height) {
 		try{
-			mGraphics.setSurfaceSize(width, height, mUseStereoVision);
+			mGraphics.setSurfaceSize(width, height);
 			if(mGFXDebug!=null)
 				mGFXDebug.surfaceChanged();
 			if(mStereoVision!=null)
@@ -448,22 +458,26 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 
 	public final void drawFrame() {
-		if(mUseStereoVision) {
+		if(mForceStereoVision) {
 			//STEREO VISION
 			if(mStereoVision == null) {
 				mStereoVision = new StereoRendering();
 				mStereoVision.init(mGraphics,mStereoResolution);
 			}
+			mStereoVision.mPostTransform = mGraphics.getViewPostTransform();
+			mStereoVision.refreshTransforms();
 			try{
 				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
 //				mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
 //				mGraphics.setStereoTransform(mStereoVision.getLeftEyeTransform());
 
+				mActiveEye = StereoVision.EYE_LEFT;
 				drawContent(true);
 				mGraphics.leaveTextureRenderTarget();
 //				mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
 //				mGraphics.setStereoTransform(mStereoVision.getRightEyeTransform());
 				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
+				mActiveEye = StereoVision.EYE_RIGHT;
 				drawContent(false);
 			}finally{
 				mGraphics.leaveTextureRenderTarget();
@@ -471,6 +485,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 
 			mStereoVision.draw();
 		}else{
+			mActiveEye = StereoVision.EYE_MONO;
 			drawContent(true);
 		}
 
@@ -567,8 +582,14 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		return mMacro!=null && !mMacro.mFinished;
 	}
 
+	public void stopMacro() {
+		mMacro.close();
+		mMacro = null;
+		refreshMetaMode();
+	}
+
 	protected void refreshMetaMode() {
-		mEventQueue.mMetaMode = mPaused || (mMacro!=null && !mMacro.mFinished);
+		mEventQueue.mMetaMode = mPaused || (mMacro!=null && !mMacro.mFinished) || mForceMetaMode;
 	}
 
 	public void stop() {
@@ -665,7 +686,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 
 	public boolean isStereoVision() {
-		return mUseStereoVision;
+		return mForceStereoVision;
 	}
 
 	@Override

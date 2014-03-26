@@ -26,6 +26,9 @@ import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.graphics.translator.glconsts.GLTex;
 import yang.math.objects.Bounds;
+import yang.math.objects.Point3f;
+import yang.math.objects.Quaternion;
+import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
 import yang.model.SurfaceParameters;
 import yang.model.TransformationFactory;
@@ -54,10 +57,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public float mMinRatioX = 1;
 	public float mMaxTime = 60;
 	private int mMaxTextureId = -1;
-	public boolean mStereo = false;
-	public boolean mForceMono = false;
-	public boolean mForceStereo = false;
-	public YangMatrix mSensorCameraMatrix;
+
+	//Debug camera
+	private YangMatrix mDebugPostCameraTransform = new YangMatrix();
+	private YangMatrix mDebugPostCameraTransformRef = null;
+	private Point3f mDebugCamShift = new Point3f();
+	private Quaternion mDebugCamOrientation = new Quaternion();
 
 	//State
 	private boolean mInitialized = false;
@@ -84,8 +89,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public YangMatrix mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
 	private CameraProjection mCameraTransform = new CameraProjection();
-	private YangMatrix mCameraPostTransformRef = null;
-	private YangMatrix mCameraPostTransform = new YangMatrix();
 
 	//Counters
 	public int mPolygonCount;
@@ -115,7 +118,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected final int[] mTempIntArray = new int[128];
 	public int mRestartCount = 0;
 	public AbstractProgram mCurrentProgram = null;
-	public boolean mSensorCameraEnabled = false;
 	public YangMatrix mSensorOrientationMatrix = new YangMatrix();
 
 	public abstract void setClearColor(float r, float g, float b,float a);
@@ -193,7 +195,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		INSTANCE = this;
 		mCurrentTextures = new Texture[MAX_TEXTURES];
 		mProjScreenTransform = new YangMatrix();
-		mSensorCameraMatrix = new YangMatrix();
 		mStaticTransformation = createTransformationMatrix();
 		mStaticTransformation.loadIdentity();
 		mFlushDisabled = false;
@@ -696,11 +697,9 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mProjScreenTransform.refreshInverted();
 	}
 
-	public void setSurfaceSize(int width, int height, boolean stereo) {
-		mStereo = stereo;
+	public void setSurfaceSize(int width, int height) {
 		setViewPort(width,height);
-//		if(stereo)
-//			width = width/2;
+
 		this.mScreenWidth = width;
 		this.mScreenHeight = height;
 		this.mRatioX = (float) width / height;
@@ -710,8 +709,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mRatioX = 1;
 		}else
 			mRatioY = 1;
-//		if(stereo)
-//			mRatioX *= StereoRendering.RATIO_FAC;
+
 		mInvRatioX = 1/mRatioX;
 		mInvRatioY = 1/mRatioY;
 
@@ -913,26 +911,42 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return mRenderTargetStackPos;
 	}
 
-	public boolean isStereo() {
-		if(mForceMono)
-			return false;
-		else
-			return mForceStereo || mStereo;
+	private void refreshDebugCamera() {
+		mDebugPostCameraTransform.setTranslation(mDebugCamShift);
+		mDebugPostCameraTransform.multiplyQuaternionRight(mDebugCamOrientation);
+	}
+
+	public void setDebugPostCameraPosition(Point3f position) {
+		mDebugCamShift.set(position);
+		refreshDebugCamera();
+	}
+
+	public void setDebugPostCameraOrientation(Quaternion orientation) {
+		mDebugCamOrientation.set(orientation);
+		refreshDebugCamera();
+	}
+
+	public void setDebugPostCameraOrientation(YangMatrix orientation) {
+		mDebugCamOrientation.setFromMatrix(orientation.mValues);
+		refreshDebugCamera();
+	}
+
+	public void moveDebugPostCamera(Vector3f shift,Quaternion orientation) {
+		if(shift!=null)
+			mDebugCamShift.add(shift);
+		if(orientation!=null)
+			mDebugCamOrientation.multRight(orientation);
+		refreshDebugCamera();
+	}
+
+	public void setDebugPostCameraEnabled(boolean enabled) {
+		mDebugPostCameraTransformRef = enabled?mDebugPostCameraTransform:null;
 	}
 
 	@Override
 	public YangMatrix getViewPostTransform() {
-		return mCameraPostTransformRef;
+		return mDebugPostCameraTransformRef;
 	}
-
-//	protected void refreshPostCameraTransform() {
-//		if(mStereo) {
-//			mCameraPostTransform.set(mStereoTransform);
-//			mCameraPostTransformRef = mCameraPostTransform;
-//		}else{
-//			mCameraPostTransformRef = null;
-//		}
-//	}
 
 	public CameraProjection getCurrentCamera() {
 		return mCameraTransform;

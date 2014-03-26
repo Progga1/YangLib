@@ -53,8 +53,8 @@ public class StereoRendering extends StereoVision {
 		mStereoLeftRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(WRAP_MODE,TextureFilter.LINEAR),false);
 		mStereoRightRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(WRAP_MODE,TextureFilter.LINEAR),false);
 
-		mStereoLeftRenderTarget.mPostCameraTransform = super.mLeftTransform;
-		mStereoRightRenderTarget.mPostCameraTransform = super.mRightTransform;
+		mStereoLeftRenderTarget.mPostCameraTransform = mLeftResultTransform;
+		mStereoRightRenderTarget.mPostCameraTransform = mRightResultTransform;
 		surfaceChanged(graphics);
 	}
 
