@@ -165,8 +165,16 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mCameraProjectionMatrix.postScale(1f/mTranslator.mCurrentSurface.getSurfaceRatioX(),1f/mTranslator.mCurrentSurface.getSurfaceRatioY(),1);
 	}
 
+//	protected void updateCameraProjectionPostTransform() {
+//		if(mTranslator.mCurrentSurface.getViewPostTransform()!=null) {
+//			mCameraProjection.mPostCameraTransform.set(mTranslator.mCurrentSurface.getViewPostTransform());
+//		}else
+//			mCameraProjection.mPostCameraTransform.loadIdentity();
+//	}
+
 	public void setCamera(YangCamera camera) {
-		mCameraProjection.copyFrom(camera);
+		YangMatrix trafo = mTranslator.mCurrentSurface.getViewPostTransform();
+		mCameraProjection.copyFrom(camera,trafo);
 	}
 
 	public void getUnprojection(YangMatrix target) {
@@ -177,6 +185,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 //		target.postScale(mTranslator.mRatioX, mTranslator.mRatioY, 1);
 	}
 
+	Point3f mTempPnt1 = new Point3f();
+
 	protected void updateProgramProjection() {
 		assert mTranslator.preCheck("Set program projection");
 		final BasicProgram program = mCurrentProgram;
@@ -184,7 +194,13 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			if(mCurViewProjTransform == mTranslator.mProjScreenTransform) {
 				mCameraProjectionMatrix.set(mTranslator.mProjScreenTransform);
 				if(mTranslator.isStereo()) {
-					mCameraProjectionMatrix.postTranslate(-get2DStereoShift(mStereoScreenDistance),0);
+					//mCameraProjectionMatrix.postTranslate(-get2DStereoShift(mStereoScreenDistance),0);
+					YangMatrix trafo = mTranslator.mCurrentSurface.getViewPostTransform();
+					if(trafo!=null) {
+						trafo.getTranslation(mTempPnt1);
+						float f = get2DStereoShiftFactor(mStereoScreenDistance);
+						mCameraProjectionMatrix.postTranslate(-mTempPnt1.mX*f,-mTempPnt1.mY*f);
+					}
 				}
 			}else
 				refreshViewTransform();
@@ -729,4 +745,5 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			return posX<=rx && posY<=ry && (posX>=-rx-width) && (posY>=-ry-height);
 		}
 	}
+
 }

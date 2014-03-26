@@ -17,19 +17,11 @@ public class StereoCamera extends StereoVision {
 	public StereoCamera(YangCamera baseCamera) {
 		super();
 		mBaseCamera = baseCamera;
-		refreshTransforms();
-	}
-
-	@Override
-	public void refreshTransforms() {
-
 	}
 
 	public void refreshCameras() {
-		mLeftCameraProjection.mPostCameraTransform = mLeftTransform;
-		mLeftCameraProjection.mPostCameraTransform = mRightTransform;
-		mLeftCameraProjection.copyFrom(mBaseCamera);
-		mRightCameraProjection.copyFrom(mBaseCamera);
+		mLeftCameraProjection.copyFrom(mBaseCamera,mLeftTransform);
+		mRightCameraProjection.copyFrom(mBaseCamera,mRightTransform);
 	}
 
 }

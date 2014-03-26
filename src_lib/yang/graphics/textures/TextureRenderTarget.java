@@ -8,6 +8,7 @@ public class TextureRenderTarget implements SurfaceParameters {
 
 	public boolean mStereoEnabled = false;
 	public SurfaceParameters mSurfaceParameters;
+	public boolean mKeepSurfaceParameters = false;
 	public Texture mTargetTexture;
 	public int mFrameBufferId;
 	public int mDepthBufferId;
@@ -15,6 +16,7 @@ public class TextureRenderTarget implements SurfaceParameters {
 	public int mHeight;
 	public float mRatioX;
 	public float mRatioY;
+	public YangMatrix mPostCameraTransform = null;
 
 	public TextureRenderTarget(Texture targetTexture,int frameBufferId,int depthBufferId) {
 		mTargetTexture = targetTexture;
@@ -28,6 +30,7 @@ public class TextureRenderTarget implements SurfaceParameters {
 			mSurfaceParameters = mTargetTexture.mGraphics;
 		else
 			mSurfaceParameters = this;
+		mKeepSurfaceParameters = useScreenParameters;
 	}
 
 	public TextureRenderTarget(Texture targetTexture) {
@@ -71,7 +74,7 @@ public class TextureRenderTarget implements SurfaceParameters {
 
 	@Override
 	public YangMatrix getViewPostTransform() {
-		return null;
+		return mPostCameraTransform;
 	}
 
 }

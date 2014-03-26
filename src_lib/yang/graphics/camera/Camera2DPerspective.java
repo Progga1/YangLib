@@ -1,9 +1,8 @@
 package yang.graphics.camera;
 
 import yang.graphics.camera.projection.PerspectiveProjection;
-import yang.math.objects.YangMatrix;
 
-public class Camera2DPerspective extends DefaultCamera {
+public class Camera2DPerspective extends YangCamera {
 
 	private float mRatio = 1;
 
@@ -22,32 +21,15 @@ public class Camera2DPerspective extends DefaultCamera {
 	}
 
 	public void set(Camera2D camera2D) {
-		//TODO invert
-//		YangMatrix temp = new YangMatrix();
-//		temp.translate(camera2D.getPositionReference());
-//		temp.rot
 		float zoom = camera2D.mZoom;
 		mPosition.mX = camera2D.mPosition.mX;
 		mPosition.mY = camera2D.mPosition.mY;
 		mPosition.mZ = mRatio*zoom;
 
-//		mViewTransform.setTranslationNegative(mPosition);
 		mCameraTransform.setTranslation(mPosition);
 		if(camera2D.mRotation!=0) {
 			mCameraTransform.rotateZ(camera2D.mRotation);
 		}
-
-		if(mPostUnprojection==null)
-			mPostUnprojection = new YangMatrix();
-
-		float ratio = 2f/(mFar-mNear);
-		mPostUnprojection.loadIdentity();
-//		mPostUnprojection.translate(0,0,-1);
-//		mPostUnprojection.scale(0,0,ratio);
-//		mPostUnprojection.translate(0,0,-mNear);
-//		mPostUnprojection.translate(0,0,mPosition.mZ);
-//		mPostUnprojection.translate(0,0,0.95f);
-		mProjectionUpdated = true;
 	}
 
 }

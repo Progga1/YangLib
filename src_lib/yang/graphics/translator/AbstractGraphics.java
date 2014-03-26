@@ -396,7 +396,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 
 
-	//---Screen-data---
+	//---Norm-data---
 	public float getNormRight() {
 		return mTranslator.mCurrentSurface.getSurfaceRatioX();
 	}
@@ -469,7 +469,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 
 	}
 
-	protected float get2DStereoShift(float eyeDistance) {
+	protected float get2DStereoShiftFactor(float eyeDistance) {
 		return (1f/(eyeDistance+1));
 	}
 

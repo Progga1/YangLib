@@ -144,7 +144,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setOrthogonalProjection(float width,float height,float near,float far) {
 		mCamera3D.setOrthogonalProjection(width, height, near, far);
 		if(mAutoRefreshCameraTransform)
-			mCameraProjection.copyFrom(mCamera3D);
+			super.setCamera(mCamera3D);
 	}
 
 	public void setOrthogonalProjection(float near,float far,float zoom) {
@@ -162,7 +162,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
 		mCamera3D.setPerspectiveProjection(fovy, near, far, stretchX);
 		if(mAutoRefreshCameraTransform)
-			mCameraProjection.copyFrom(mCamera3D);
+			super.setCamera(mCamera3D);
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
@@ -212,7 +212,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setCameraLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
 		mCamera3D.setLookAt(eyeX, eyeY, eyeZ, lookAtX, lookAtY, lookAtZ, upX, upY, upZ);
 		if(mAutoRefreshCameraTransform)
-			mCameraProjection.copyFrom(mCamera3D);
+			super.setCamera(mCamera3D);
 	}
 
 	public void setCameraLookAt(float eyeX,float eyeY, float eyeZ, float lookAtX,float lookAtY,float lookAtZ) {
@@ -226,7 +226,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
 		mCamera3D.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
 		if(mAutoRefreshCameraTransform)
-			mCameraProjection.copyFrom(mCamera3D);
+			super.setCamera(mCamera3D);
 	}
 
 	public void setCameraAlphaBeta(float alpha, float beta, float distance) {
@@ -236,7 +236,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void setViewByTransform(YangMatrix cameraTransform) {
 		mCamera3D.setViewByTransform(cameraTransform);
 		if(mAutoRefreshCameraTransform)
-			mCameraProjection.copyFrom(mCamera3D);
+			super.setCamera(mCamera3D);
 	}
 
 //	@Override

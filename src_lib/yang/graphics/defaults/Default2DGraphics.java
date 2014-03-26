@@ -34,11 +34,12 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	//TODO does nothing
+	@Override
 	public void setStereoZDistance(float distance) {
-		flush();
-		mStereoGameDistance = distance;
-		if(mAutoRefreshCameraTransform)
-			mCameraProjection.copyFrom(mCamera2D);
+//		flush();
+//		mStereoGameDistance = distance;
+//		if(mAutoRefreshCameraTransform)
+//			super.setCamera(mCamera2D);
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mTranslator.flush();
 		mCamera2D.set(x,y,zoom,rotation);
 		if(mAutoRefreshCameraTransform)
-			mCameraProjection.copyFrom(mCamera2D);
+			super.setCamera(mCamera2D);
 	}
 
 	public void setCamera(float x, float y, float zoom) {
@@ -98,19 +99,19 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 	}
 
 	public float normLeftToWorldX() {
-		return normToWorldX(-mTranslator.mRatioX);
+		return normToWorldX(-mTranslator.mCurrentSurface.getSurfaceRatioX());
 	}
 
 	public float normRightToWorldX() {
-		return normToWorldX(mTranslator.mRatioX);
+		return normToWorldX(mTranslator.mCurrentSurface.getSurfaceRatioX());
 	}
 
 	public float normTopToWorldY() {
-		return normToWorldY(mTranslator.mRatioY);
+		return normToWorldY(mTranslator.mCurrentSurface.getSurfaceRatioY());
 	}
 
 	public float normBottomToWorldY() {
-		return normToWorldY(-mTranslator.mRatioY);
+		return normToWorldY(-mTranslator.mCurrentSurface.getSurfaceRatioY());
 	}
 
 	public float normCenterToWorldY() {
