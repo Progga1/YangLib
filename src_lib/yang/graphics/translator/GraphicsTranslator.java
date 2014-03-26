@@ -742,12 +742,16 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 	}
 
-	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings,boolean useScreenParameters) {
-		final Texture texture = createEmptyTexture(width,height,textureSettings);
+	public TextureRenderTarget createRenderTarget(Texture texture,boolean useScreenParameters) {
 		final TextureRenderTarget result = derivedCreateRenderTarget(texture);
 		result.setUseScreenParameters(useScreenParameters);
 		mRenderTargets.add(result);
 		return result;
+	}
+
+	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings,boolean useScreenParameters) {
+		final Texture texture = createEmptyTexture(width,height,textureSettings);
+		return createRenderTarget(texture, useScreenParameters);
 	}
 
 	public TextureRenderTarget createRenderTarget(int width,int height,TextureProperties textureSettings) {
