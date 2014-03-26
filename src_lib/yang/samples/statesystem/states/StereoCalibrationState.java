@@ -69,8 +69,8 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 		}
 
 		mGraphics3D.switchGameCoordinates(false);
-		final float width = mGraphics.getSurfaceRatioX()-mBorder;
-		final float height = mGraphics.getSurfaceRatioY()-mBorder;
+		final float width = mGraphics.mCurrentSurface.getSurfaceRatioX()-mBorder;
+		final float height = mGraphics.mCurrentSurface.getSurfaceRatioY()-mBorder;
 		mGraphics3D.setColor(FloatColor.YELLOW);
 		mGraphics3D.drawLineRect(-width, -height, width, height, 0.08f, null);
 

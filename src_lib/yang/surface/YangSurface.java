@@ -121,7 +121,6 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 
 	public void setStereoVision(int resolution) {
-		final int widthFac = mUseStereoVision?2:1;
 		if(resolution==0) {
 			mUseStereoVision = false;
 		}else{
@@ -129,7 +128,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			mStereoResolution = resolution;
 		}
 		if(mGraphics!=null)
-			this.onSurfaceChanged(mGraphics.mScreenWidth*widthFac, mGraphics.mScreenHeight);
+			this.onSurfaceChanged(mGraphics.mScreenWidth, mGraphics.mScreenHeight);
 
 	}
 
@@ -456,15 +455,15 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 				mStereoVision.init(mGraphics,mStereoResolution);
 			}
 			try{
-				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
+				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
 //				mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
-				mGraphics.mStereoTransform = mStereoVision.getLeftEyeTransform();
+//				mGraphics.setStereoTransform(mStereoVision.getLeftEyeTransform());
 
 				drawContent(true);
 				mGraphics.leaveTextureRenderTarget();
 //				mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
-				mGraphics.mStereoTransform = mStereoVision.getRightEyeTransform();
-				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
+//				mGraphics.setStereoTransform(mStereoVision.getRightEyeTransform());
+				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
 				drawContent(false);
 			}finally{
 				mGraphics.leaveTextureRenderTarget();

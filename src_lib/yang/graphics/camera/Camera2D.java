@@ -2,7 +2,7 @@ package yang.graphics.camera;
 
 import yang.graphics.camera.projection.OrthogonalProjection;
 
-public class Camera2D extends DefaultCamera {
+public class Camera2D extends YangCamera {
 
 	public float mZoom;
 	public float mRotation;

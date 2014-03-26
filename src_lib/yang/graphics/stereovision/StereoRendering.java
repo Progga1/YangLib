@@ -50,9 +50,11 @@ public class StereoRendering extends StereoVision {
 //		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, FloatColor.WHITE.mValues,2*4);
 		mStereoVertexBuffer.finishUpdate();
 
-		mStereoLeftRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(WRAP_MODE,TextureFilter.LINEAR));
-		mStereoRightRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(WRAP_MODE,TextureFilter.LINEAR));
+		mStereoLeftRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(WRAP_MODE,TextureFilter.LINEAR),false);
+		mStereoRightRenderTarget = graphics.createRenderTarget(resolution,resolution, new TextureProperties(WRAP_MODE,TextureFilter.LINEAR),false);
 
+		mStereoLeftRenderTarget.mPostCameraTransform = super.mLeftTransform;
+		mStereoRightRenderTarget.mPostCameraTransform = super.mRightTransform;
 		surfaceChanged(graphics);
 	}
 
@@ -102,8 +104,8 @@ public class StereoRendering extends StereoVision {
 	public void surfaceChanged(SurfaceParameters screenInfo) {
 		if(mStereoLeftRenderTarget==null)
 			return;
-		mStereoLeftRenderTarget.fakeDimensions(screenInfo);
-		mStereoRightRenderTarget.fakeDimensions(screenInfo);
+		mStereoLeftRenderTarget.fakeDimensions(screenInfo.getSurfaceWidth()/2,screenInfo.getSurfaceHeight(),screenInfo.getSurfaceRatioX()/2*RATIO_FAC,1);
+		mStereoRightRenderTarget.fakeDimensions(screenInfo.getSurfaceWidth()/2,screenInfo.getSurfaceHeight(),screenInfo.getSurfaceRatioX()/2*RATIO_FAC,1);
 	}
 
 }
