@@ -662,7 +662,11 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	}
 
 	public void drawRect(YangMatrix transform,TextureCoordinatesQuad texCoords) {
-
+		mCurrentVertexBuffer.beginQuad();
+		mCurrentVertexBuffer.putTransformedArray3D(ID_POSITIONS, RECT_POSITIONS, 4, transform.mValues);
+		mCurrentVertexBuffer.putArray(ID_TEXTURES, texCoords.mAppliedCoordinates);
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,mCurColor,4);
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,mCurSuppData,4);
 	}
 
 	public void drawRect(Rect rect, TextureCoordinatesQuad texCoords) {

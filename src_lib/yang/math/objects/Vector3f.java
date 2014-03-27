@@ -206,4 +206,8 @@ public class Vector3f extends Point3f{
 		return (mX<0?-mX:mX)+(mY<0?-mY:mY)+(mZ<0?-mZ:mZ);
 	}
 
+	public float magnXY() {
+		return (float)Math.sqrt(mX*mX + mY*mY);
+	}
+
 }

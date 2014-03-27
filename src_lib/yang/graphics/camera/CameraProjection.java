@@ -18,7 +18,7 @@ public class CameraProjection extends CameraTransformations {
 			mCameraTransform.getTranslation(mPosition);
 		}else{
 			//Pure copy
-			camera.calcTransformations();
+			camera.updateTransformations(true,true);
 			mCameraTransform.set(camera.mCameraTransform);
 			mViewTransform.set(camera.mViewTransform);
 			mViewProjectTransform.set(camera.mViewProjectTransform);

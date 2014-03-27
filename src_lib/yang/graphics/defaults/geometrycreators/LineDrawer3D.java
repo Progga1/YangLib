@@ -36,7 +36,7 @@ public class LineDrawer3D extends GeometryCreator<Default3DGraphics> {
 		vec3.normalize();
 		transform.translate(startX, startY, startZ);
 		transform.multiplyBaseVectorsRight(vec2,vec1,vec3);
-		mCylinder.putPositions(transform, startWidth, endWidth);
+		mCylinder.putPositionsAndIndices(transform, startWidth, endWidth);
 	}
 
 	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ) {

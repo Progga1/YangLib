@@ -41,15 +41,12 @@ public class DefaultMetaEventListener implements YangEventListener {
 
 	@Override
 	public void pointerDown(float x, float y, SurfacePointerEvent event) {
-		if(mCtrlPressed) {
+		if(mCtrlPressed || mShiftPressed) {
 			if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
 				mOrientation.reset();
 				mSurface.mGraphics.setDebugPostCameraOrientation(mOrientation.getUpdatedMatrix());
-			}
-		}
-		if(mShiftPressed) {
-			if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
 				mSurface.mGraphics.setDebugPostCameraPosition(Point3f.ZERO);
+				mSurface.mGraphics.setDebugPostCameraEnabled(false);
 			}
 		}
 	}
@@ -218,6 +215,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 	public void zoom(float factor) {
 		mTempVec.set(0,0,factor);
 		mOrientation.getUpdatedMatrix().apply3D(mTempVec,mResVec);
+		mSurface.mGraphics.setDebugPostCameraEnabled(true);
 		mSurface.mGraphics.moveDebugPostCamera(mResVec, null);
 	}
 

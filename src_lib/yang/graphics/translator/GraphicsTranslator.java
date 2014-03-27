@@ -6,7 +6,6 @@ import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
-import yang.graphics.camera.CameraProjection;
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.listeners.DrawListener;
 import yang.graphics.listeners.SurfaceListener;
@@ -88,7 +87,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	//Matrices
 	public YangMatrix mProjScreenTransform;
 	public YangMatrix mStaticTransformation;
-	private CameraProjection mCameraTransform = new CameraProjection();
 
 	//Counters
 	public int mPolygonCount;
@@ -950,10 +948,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	@Override
 	public YangMatrix getViewPostTransform() {
 		return mDebugPostCameraTransformRef;
-	}
-
-	public CameraProjection getCurrentCamera() {
-		return mCameraTransform;
 	}
 
 }

@@ -29,16 +29,20 @@ public abstract class YangCamera extends CameraTransformations {
 		return mInvProjectionTransform;
 	}
 
-	public void calcTransformations() {
+	public void updateTransformations(boolean updateWorldToNorm,boolean updateNormToWorld) {
 
 //		mViewProjectTransform.multiply(mProjectionTransform,mViewTransform);
 //		mViewProjectTransform.asInverted(mUnprojectCameraTransform.mValues);
 //		mViewTransform.asInverted(mCameraTransform.mValues);
 
-		mCameraTransform.asInverted(mViewTransform.mValues);
-		mViewProjectTransform.multiply(mProjectionTransform,mViewTransform);
-		mUnprojectCameraTransform.multiply(mCameraTransform,getUnprojection());
-		mCameraTransform.getTranslation(mPosition);
+		if(updateWorldToNorm) {
+			mCameraTransform.asInverted(mViewTransform.mValues);
+			mViewProjectTransform.multiply(mProjectionTransform,mViewTransform);
+		}
+		if(updateNormToWorld) {
+			mUnprojectCameraTransform.multiply(mCameraTransform,getUnprojection());
+			mCameraTransform.getTranslation(mPosition);
+		}
 	}
 
 	@Override
