@@ -7,5 +7,6 @@ public class GLOps {
 	public static int CULL_FACE = 2884;
 	public static int STENCIL_TEST = 2960;
 	public static int SCISSOR_TEST = 3089;
-	
+	public static int POLYGON_OFFSET_FILL = 32823;
+
 }

@@ -14,7 +14,6 @@ public class PlaneConstraint extends Constraint{
 	public Point3f mBasePosition = new Point3f();
 	public Vector3f mPlaneVector = new Vector3f(0,1,0);
 	private Vector3f mTempVec = new Vector3f();
-	public float mStrength = 100;
 
 	public PlaneConstraint(Point3f basePosition,Vector3f planeVector) {
 		mBasePosition.set(basePosition);
@@ -42,7 +41,7 @@ public class PlaneConstraint extends Constraint{
 	}
 
 	@Override
-	public Constraint cloneInto(MassAggregation target) {
+	public PlaneConstraint cloneInto(MassAggregation target) {
 		PlaneConstraint newConstraint = new PlaneConstraint();
 		for(Joint joint:mJoints) {
 			newConstraint.addJoint(target.getJointByName(joint.mName));

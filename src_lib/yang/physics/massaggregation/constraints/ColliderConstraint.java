@@ -44,7 +44,7 @@ public class ColliderConstraint extends Constraint{
 			fac = Joint.TOWARDS_FACTOR;
 		else
 			fac = (dVX*fX+dVY*fY<0)?Joint.AWAY_FACTOR:Joint.TOWARDS_FACTOR;
-		fac *= 2;
+		fac *= mStrength;
 		if(mJoint1.mFixed!=mJoint2.mFixed)
 			fac *= FIXED_FACTOR;
 		if(!mJoint1.mFixed)
@@ -54,9 +54,11 @@ public class ColliderConstraint extends Constraint{
 	}
 
 	@Override
-	public Constraint cloneInto(MassAggregation target) {
-		//TODO implement me!
-		return null;
+	public ColliderConstraint cloneInto(MassAggregation target) {
+		ColliderConstraint newConstraint = new ColliderConstraint(target.getJointByName(mJoint1.mName),target.getJointByName(mJoint2.mName));
+		newConstraint.m3D = m3D;
+		newConstraint.mStrength = mStrength;
+		return newConstraint;
 	}
 
 }

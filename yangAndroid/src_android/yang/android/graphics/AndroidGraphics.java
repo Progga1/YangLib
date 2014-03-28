@@ -374,4 +374,14 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glDepthMask(enabled);
 	}
 
+	@Override
+	public void polygonOffset(float factor, float units) {
+		GLES20.glPolygonOffset(factor, units);
+	}
+
+	@Override
+	public void depthRange(float zNear, float zFar) {
+		GLES20.glDepthRangef(zNear, zFar);
+	}
+
 }

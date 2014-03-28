@@ -400,4 +400,13 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	public void switchZWriting(boolean enabled) {
 		gles2.glDepthMask(enabled);
 	}
+
+	@Override
+	public void polygonOffset(float factor,float units) {
+		gles2.glPolygonOffset(factor, units);
+	}
+
+	public void depthRange(float zNear,float zFar) {
+		gles2.glDepthRange(zNear,zFar);
+	}
 }

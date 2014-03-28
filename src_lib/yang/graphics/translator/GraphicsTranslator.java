@@ -146,6 +146,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void disable(int glConstant);
 	public abstract void setScissorRectI(int x,int y,int width,int height);
 	public abstract void switchZWriting(boolean enable);
+	public abstract void polygonOffset(float factor,float units);
+	public abstract void depthRange(float zNear,float zFar);
 
 	protected void postInit() { }
 	public void setSystemCursorEnabled(boolean enabled){ }
@@ -716,10 +718,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		for(final SurfaceListener surfaceListener:mScreenListeners) {
 			surfaceListener.onSurfaceSizeChanged(width, height);
 		}
-	}
-
-	public static YangMatrix newTransformationMatrix() {
-		return appInstance.createTransformationMatrix();
 	}
 
 	protected void updateTexture(Texture texture, ByteBuffer source, int left,int top, int width,int height) {
