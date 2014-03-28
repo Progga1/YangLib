@@ -14,7 +14,7 @@ public class PlaneConstraint extends Constraint{
 	public Point3f mBasePosition = new Point3f();
 	public Vector3f mPlaneVector = new Vector3f(0,1,0);
 	private Vector3f mTempVec = new Vector3f();
-	public boolean m3D = true;
+	public float mStrength = 100;
 
 	public PlaneConstraint(Point3f basePosition,Vector3f planeVector) {
 		mBasePosition.set(basePosition);
@@ -29,13 +29,12 @@ public class PlaneConstraint extends Constraint{
 		mJoints.add(joint);
 	}
 
-	//TODO extremely inaccurate
 	@Override
 	public void apply() {
 		for(Joint joint:mJoints) {
-			mTempVec.setFromToDirection(mBasePosition,joint);
+			mTempVec.setFromTo(mBasePosition,joint);
 			float dot = mTempVec.dot(mPlaneVector);
-			float f = -dot*20;
+			float f = -dot*mStrength;
 			joint.mForceX += mPlaneVector.mX*f;
 			joint.mForceY += mPlaneVector.mY*f;
 			joint.mForceZ += mPlaneVector.mZ*f;
@@ -44,8 +43,14 @@ public class PlaneConstraint extends Constraint{
 
 	@Override
 	public Constraint cloneInto(MassAggregation target) {
-		//TODO implement me!
-		return null;
+		PlaneConstraint newConstraint = new PlaneConstraint();
+		for(Joint joint:mJoints) {
+			newConstraint.addJoint(target.getJointByName(joint.mName));
+		}
+		newConstraint.mBasePosition.set(mBasePosition);
+		newConstraint.mPlaneVector.set(mPlaneVector);
+		newConstraint.mStrength = mStrength;
+		return newConstraint;
 	}
 
 }

@@ -14,6 +14,7 @@ public class RingCreator2D extends CylinderCreator {
 	@Override
 	public void putPositionsAndIndices(YangMatrix transform,float outerRadius,float innerRadius) {
 		mTempMat.set(transform);
+		mTempMat.rotateZ(PI);
 		mTempMat.rotateX(PI*0.5f);
 		mTempMat.scale(1,0);
 
