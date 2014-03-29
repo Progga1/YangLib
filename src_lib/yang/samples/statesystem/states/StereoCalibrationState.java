@@ -35,25 +35,26 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 
 		setCamera();
 		mGraphics3D.switchGameCoordinates(true);
-		mGraphics.switchZBuffer(true);
-		mGraphics.switchZWriting(true);
+		mGraphics.switchZBuffer(false);
+		mGraphics.switchZWriting(false);
 
 		mTransform.loadIdentity();
 		mGraphics3D.drawDebugCoordinateAxes();
 //		if(mUseDebugTransform) {
 //			mTransform.set(mGraphics.mDebugPostCameraTransform);
 //		}else{
-		mTransform.rotateY((float)mStateTimer);
+		mTransform.rotateY((float)mStateTimer*0);
 			//mTransform.scale(0.5f);
 //		}
 		//mTransform.scale(1,1,0.5f);
 
 		mGraphics3D.setWhite();
 		mGraphics.bindTexture(mStateSystem.mCubeTexture);
-
+		mGraphics.switchCulling(false);
 		if(!mDrawCross)
 			mGraphics3D.drawCubeCentered(mTransform);
-		mGraphics3D.flush();
+		mGraphics3D.sort();
+		mGraphics.flush();
 		mGraphics.switchZBuffer(false);
 
 		mGraphics3D.switchGameCoordinates(false);

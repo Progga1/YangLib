@@ -15,6 +15,7 @@ import yang.graphics.programs.BasicProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.util.VertexZSort;
 import yang.math.MatrixOps;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
@@ -75,6 +76,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	protected CameraProjection mCameraProjection;
 	protected YangMatrix mLeftEyeTranform;
 	protected YangMatrix mRightEyeTranform;
+	protected VertexZSort mVertexSort;
 
 	//Temp
 	private Point3f mTempPnt1 = new Point3f();
@@ -746,6 +748,16 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		else{
 			return posX<=rx && posY<=ry && (posX>=-rx-width) && (posY>=-ry-height);
 		}
+	}
+
+	public void sort(IndexedVertexBuffer buffer) {
+		if(mVertexSort==null)
+			mVertexSort = new VertexZSort(15000,15000);
+		mVertexSort.sort(buffer.mIndexBuffer, buffer.getFloatBuffer(ID_POSITIONS), mCameraProjection,mWorldTransformEnabled?mWorldTransform:null);
+	}
+
+	public void sort() {
+		sort(mCurrentVertexBuffer);
 	}
 
 }

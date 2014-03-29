@@ -14,8 +14,6 @@ import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
 import yang.model.DebugYang;
 
-
-
 public abstract class AbstractGraphics<ShaderType extends AbstractProgram> implements DrawListener,SurfaceListener {
 
 	//Constants
@@ -218,6 +216,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	}
 
 	public void startBatchRecording(DrawBatch batch) {
+		batch.mVertexBuffer.reset();
 		startBatchRecording(batch.mVertexBuffer);
 	}
 

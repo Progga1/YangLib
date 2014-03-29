@@ -15,6 +15,7 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.LegacyCamera3D;
+import yang.graphics.util.VertexZSort;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
@@ -258,10 +259,12 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		putTextureArray(RECT_TEXTURECOORDS);
 		putColorRect(mCurColor);
 		putSuppDataRect(mCurSuppData);
-		putNormal(norm.mX,norm.mY,norm.mZ);
-		putNormal(norm.mX,norm.mY,norm.mZ);
-		putNormal(norm.mX,norm.mY,norm.mZ);
-		putNormal(norm.mX,norm.mY,norm.mZ);
+		if(norm!=null) {
+			putNormal(norm.mX,norm.mY,norm.mZ);
+			putNormal(norm.mX,norm.mY,norm.mZ);
+			putNormal(norm.mX,norm.mY,norm.mZ);
+			putNormal(norm.mX,norm.mY,norm.mZ);
+		}
 	}
 
 	public void drawCubeCentered(YangMatrix transform) {
@@ -328,6 +331,8 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		//Set zero
 		final int endNormal = positions.position();
 		int firstNormalId = normalsTarget.position();
+//		firstNormalId = 0;
+//		normalsTarget.position(firstNormalId);
 		while(normalsTarget.position()<endNormal) {
 			normalsTarget.put(ZERO_FLOAT_3);
 		}
@@ -374,7 +379,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void fillNormals(int startIndex) {
-		fillNormals(mIndexBuffer,mPositions,mNormals,startIndex);
+		fillNormals(mIndexBuffer,mPositions,mCurrentVertexBuffer.getFloatBuffer(ID_NORMALS),startIndex);
 	}
 
 	public void fillNormals() {
@@ -382,22 +387,23 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void mergeNormals(int vertex1Id, int vertex2Id) {
-		mNormals.position(vertex1Id*POSITION_ELEM_SIZE);
-		mNormals.get(arr1);
+		FloatBuffer normals = mCurrentVertexBuffer.getFloatBuffer(ID_NORMALS);
+		normals.position(vertex1Id*POSITION_ELEM_SIZE);
+		normals.get(arr1);
 		vec1.set(arr1);
-		mNormals.position(vertex2Id*POSITION_ELEM_SIZE);
-		mNormals.get(arr2);
+		normals.position(vertex2Id*POSITION_ELEM_SIZE);
+		normals.get(arr2);
 		vec2.set(arr2);
 		vec1.add(vec1);
 		vec1.normalize();
-		mNormals.position(vertex1Id*POSITION_ELEM_SIZE);
-		mNormals.put(vec1.mX);
-		mNormals.put(vec1.mY);
-		mNormals.put(vec1.mZ);
-		mNormals.position(vertex2Id*POSITION_ELEM_SIZE);
-		mNormals.put(vec1.mX);
-		mNormals.put(vec1.mY);
-		mNormals.put(vec1.mZ);
+		normals.position(vertex1Id*POSITION_ELEM_SIZE);
+		normals.put(vec1.mX);
+		normals.put(vec1.mY);
+		normals.put(vec1.mZ);
+		normals.position(vertex2Id*POSITION_ELEM_SIZE);
+		normals.put(vec1.mX);
+		normals.put(vec1.mY);
+		normals.put(vec1.mZ);
 	}
 
 	@Override

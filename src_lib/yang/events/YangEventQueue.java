@@ -1,5 +1,7 @@
 package yang.events;
 
+import java.io.IOException;
+
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangInput3DEvent;
@@ -332,7 +334,11 @@ public class YangEventQueue {
 		while((event = pollEvent())!=null) {
 			if(mMacroWriters!=null) {
 				for(final MacroWriter writer:mMacroWriters) {
-					writer.writeEvent(event);
+					try {
+						writer.writeEvent(event);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
 				}
 			}
 			event.handle(eventInterface);

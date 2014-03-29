@@ -1,5 +1,6 @@
 package yang.graphics.defaults.meshes.loaders;
 
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureProperties;
@@ -24,7 +25,7 @@ public class YangSceneLoader {
 
 	//OBJECTS
 	public TextureProperties mTextureProperties;
-	public AbstractGraphics<?> mGraphics;
+	public DefaultGraphics<?> mGraphics;
 	public MeshMaterialHandles mHandles;
 	public AbstractGFXLoader mGFXLoader;
 
@@ -40,7 +41,7 @@ public class YangSceneLoader {
 	protected YangMaterialSection currentMatSec;
 	private TextureProperties prevTexProps;
 
-	public YangSceneLoader(AbstractGraphics<?> graphics,MeshMaterialHandles handles,TextureProperties textureProperties) {
+	public YangSceneLoader(DefaultGraphics<?> graphics,MeshMaterialHandles handles,TextureProperties textureProperties) {
 		if(workingPositions==null) {
 			workingPositions = new float[MAX_VERTICES*3];
 			workingTexCoords = new float[MAX_VERTICES*2];
@@ -88,7 +89,7 @@ public class YangSceneLoader {
 		return index;
 	}
 
-	public YangSceneLoader(AbstractGraphics<?> graphics,MeshMaterialHandles handles) {
+	public YangSceneLoader(DefaultGraphics<?> graphics,MeshMaterialHandles handles) {
 		this(graphics,handles,null);
 	}
 

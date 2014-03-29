@@ -27,7 +27,7 @@ public class YangMesh {
 
 	public static float PI = 3.1415926535f;
 
-	public AbstractGraphics<?> mGraphics;
+	public DefaultGraphics<?> mGraphics;
 	protected GraphicsTranslator mTranslator;
 
 	public int mVertexCount = 0;
@@ -55,6 +55,7 @@ public class YangMesh {
 	public YangList<YangMaterialSection> mMaterialSections;
 
 	//SETTINGS
+	public boolean mDrawBackToFront = false;
 	protected final MeshMaterialHandles mHandles;
 	public TextureProperties mTextureProperties;
 	public boolean mUseShaders = true;
@@ -72,7 +73,7 @@ public class YangMesh {
 	protected Point3f tempPoint = new Point3f();
 	private YangMatrix tempMat = new YangMatrix();
 
-	public YangMesh(AbstractGraphics<?> graphics,MeshMaterialHandles handles,TextureProperties textureProperties) {
+	public YangMesh(DefaultGraphics<?> graphics,MeshMaterialHandles handles,TextureProperties textureProperties) {
 		mGraphics = graphics;
 		mTranslator = graphics.mTranslator;
 		mHandles = handles;
@@ -232,6 +233,8 @@ public class YangMesh {
 
 	private void drawBuffer(IndexedVertexBuffer vertexBuffer) {
 		mTranslator.setVertexBuffer(vertexBuffer);
+		if(mDrawBackToFront)
+			mGraphics.sort();
 		mTranslator.prepareDraw();
 		mTranslator.mFlushDisabled = true;
 		final GLProgram program = mGraphics.mCurrentProgram.mProgram;

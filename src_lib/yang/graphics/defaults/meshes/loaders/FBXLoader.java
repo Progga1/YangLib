@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshes.scenes.LimbObject;
 import yang.graphics.defaults.meshes.scenes.MeshDeformer;
 import yang.graphics.defaults.meshes.scenes.MeshObject;
@@ -57,7 +58,7 @@ public class FBXLoader extends YangSceneLoader {
 
 	//private targetObject mTempProperties = new targetObject();
 
-	public FBXLoader(AbstractGraphics<?> graphics, MeshMaterialHandles handles) {
+	public FBXLoader(DefaultGraphics<?> graphics, MeshMaterialHandles handles) {
 		super(graphics,handles);
 		if(tempFloats==null) {
 			tempFloats = new float[MAX_VERTICES*2];
