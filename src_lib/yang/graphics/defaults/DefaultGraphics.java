@@ -750,14 +750,14 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		}
 	}
 
-	public void sort(IndexedVertexBuffer buffer) {
+	public void sort(IndexedVertexBuffer buffer,float normShift) {
 		if(mVertexSort==null)
 			mVertexSort = new VertexZSort(15000,15000);
-		mVertexSort.sort(buffer.mIndexBuffer, buffer.getFloatBuffer(ID_POSITIONS), mCameraProjection,mWorldTransformEnabled?mWorldTransform:null);
+		mVertexSort.sort(buffer.mIndexBuffer, buffer.getFloatBuffer(ID_POSITIONS),buffer.getFloatBuffer(ID_NORMALS),normShift, mCameraProjection,mWorldTransformEnabled?mWorldTransform:null);
 	}
 
 	public void sort() {
-		sort(mCurrentVertexBuffer);
+		sort(mCurrentVertexBuffer,0.002f);
 	}
 
 }
