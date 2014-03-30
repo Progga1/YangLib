@@ -21,6 +21,7 @@ public class JointGridCreator {
 	public float mStrength = 40;
 	public float mFriction = 0.98f;
 	public float mJointRadius = 0.1f;
+	public boolean mDrawSorted = false;
 
 	//Drawing
 	public GridCreator<?> mGridDrawer;

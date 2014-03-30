@@ -35,7 +35,7 @@ public class Joint extends Point3f {
 	public boolean mEnabled;
 	public float mInitialX,mInitialY,mInitialZ;
 	public Quaternion mOrientation = null;
-	public float mDragDelay = 0.05f;
+	public float mDragDelay = 0.01f;
 	public boolean mDragKeepDistance = false;
 	//public boolean mDisableAnimation = false;
 

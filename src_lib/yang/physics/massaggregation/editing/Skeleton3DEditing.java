@@ -18,7 +18,7 @@ public class Skeleton3DEditing {
 	public static int SPHERE_VERTICES_X = 24;
 	public static int SPHERE_VERTICES_Y = 16;
 
-	public static int MAX_JOINTS = 512;
+	public static int MAX_JOINTS = 2048;
 	//public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
 	public static FloatColor jointColor = new FloatColor(0.6f,0.6f,0.6f);
 	public static FloatColor jointFixedColor = new FloatColor(0.9f,0.2f,0.2f);

@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import yang.graphics.camera.CameraTransformations;
 import yang.math.objects.YangMatrix;
+import yang.model.DebugYang;
 
 public class VertexZSort {
 
@@ -78,13 +79,17 @@ public class VertexZSort {
 			short id3 = indices.get();
 			float avrgZ = (mZValues[id1]+mZValues[id2]+mZValues[id3])*0.33333f;
 			int index = ((int)avrgZ)*3;
-			if(index>=maxIndex) {
+			if(index>maxIndex) {
 				while(mDepthIndices[index]>-1)
 					index-=3;
-				maxIndex = index;
+				maxIndex = index-3;
 			}else{
-				while(mDepthIndices[index]>-1)
+				int startIndex = index;
+				while(mDepthIndices[index]>-1) {
 					index+=3;
+				}
+				if(index>=maxIndex)
+					maxIndex = startIndex-3;
 			}
 
 			mDepthIndices[index] = id1;

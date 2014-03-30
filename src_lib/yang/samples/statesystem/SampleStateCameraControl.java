@@ -22,7 +22,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 		if(mOrthogonalProjection)
 			mGraphics3D.setOrthogonalProjection(-2, 20, mCamera.mZoom);
 		else
-			mGraphics3D.setPerspectiveProjection(20);
+			mGraphics3D.setPerspectiveProjection(100);
 	}
 
 	@Override

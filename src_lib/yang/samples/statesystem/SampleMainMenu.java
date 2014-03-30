@@ -22,6 +22,7 @@ import yang.samples.statesystem.states.StringSampleState;
 import yang.samples.statesystem.states.StrokeDrawerSampleState;
 import yang.samples.statesystem.states.TailSampleState;
 import yang.samples.statesystem.states.TextureAtlasSampleState;
+import yang.samples.statesystem.states.TowelSampleState;
 import yang.samples.statesystem.states.TrajectorySampleState;
 import yang.util.YangList;
 import yang.util.gui.BasicGUI;
@@ -71,6 +72,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("3D skeleton", new Skeleton3DSampleState());
 		addMenuItem("Stereo calibration",new StereoCalibrationState());
 		addMenuItem("Trajectory",new TrajectorySampleState());
+		addMenuItem("Towel",new TowelSampleState());
 
 		refreshLayout();
 	}
