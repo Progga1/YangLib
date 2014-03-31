@@ -32,6 +32,7 @@ import yang.samples.statesystem.SampleStateCameraControl;
 public class TowelSampleState extends SampleStateCameraControl {
 
 	public static FloatColor COLOR = new FloatColor(0.8f,0.8f,0.95f,0.87f);
+	public static boolean SEMI_TRANSPARENT = true;
 	public static boolean NEUTRAL = false;
 	public static boolean SKY = false;
 
@@ -42,7 +43,7 @@ public class TowelSampleState extends SampleStateCameraControl {
 	private LightProperties mLight;
 	private boolean mMultiSelect = false;
 
-	private float mForceAngle = 0.8f;
+	private float mForceAngle = 0.6f;
 	private float mForceAmplitude = 0.08f;
 	private float mForceFreq = 0.4f;
 	private Texture mTex;
@@ -57,8 +58,17 @@ public class TowelSampleState extends SampleStateCameraControl {
 		YangMatrix transform = new YangMatrix();
 		transform.scale(2);
 		transform.translate(-0.5f,0);
-		mTowel.mStrength = 10;
-		mSkeleton = mTowel.create(26,26, transform);
+		mTowel.mStrength = 8;
+		if(mStateSystem.mPlatformKey.startsWith("PC")) {
+			mSkeleton = mTowel.create(18,18, transform);
+			mSkeleton.mAccuracy = 30;
+		}else{
+			SEMI_TRANSPARENT = false;
+			mSkeleton = mTowel.create(11,11, transform);
+			mSkeleton.mAccuracy = 8;
+		}
+		if(!SEMI_TRANSPARENT)
+			COLOR.setAlpha(1);
 		mTowel.initGraphics(mGraphics3D);
 		mSkeleton3D = new Skeleton3DEditing(mGraphics3D,mSkeleton).initLines();
 		mLight = new LightProperties();
@@ -118,7 +128,7 @@ public class TowelSampleState extends SampleStateCameraControl {
 		mGraphics3D.activate();
 
 		mGraphics.clear(0f,0f,0.3f, GLMasks.DEPTH_BUFFER_BIT);
-		mGraphics.switchZBuffer(false);
+		mGraphics.switchZBuffer(!SEMI_TRANSPARENT);
 		mGraphics.switchCulling(false);
 		mGraphics3D.setWhite();
 		mGraphics3D.setColorFactor(1);
@@ -137,7 +147,8 @@ public class TowelSampleState extends SampleStateCameraControl {
 		mLight.mDiffuse.set(0.95f);
 
 		mTowel.drawDefault(COLOR, null);
-		mGraphics3D.sort();
+		if(SEMI_TRANSPARENT)
+			mGraphics3D.sort();
 	}
 
 	@Override

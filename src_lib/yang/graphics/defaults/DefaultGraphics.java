@@ -752,7 +752,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public void sort(IndexedVertexBuffer buffer,float normShift) {
 		if(mVertexSort==null)
-			mVertexSort = new VertexZSort(20000,30000);
+			mVertexSort = new VertexZSort(10000,30000);
 		mVertexSort.sort(buffer.mIndexBuffer, buffer.getFloatBuffer(ID_POSITIONS),buffer.getFloatBuffer(ID_NORMALS),normShift, mCameraProjection,mWorldTransformEnabled?mWorldTransform:null);
 	}
 

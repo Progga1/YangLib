@@ -40,8 +40,13 @@ public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 						float y = mData[c++];
 						if(x!=Float.MAX_VALUE) {
 							if(weight!=1) {
-								x = x*weight + interpolationPose.mData[c-2]*dWeight;
-								y = y*weight + interpolationPose.mData[c-1]*dWeight;
+								float interX = interpolationPose.mData[c-2];
+								float interY = interpolationPose.mData[c-1];
+								if(interX==Float.MAX_VALUE) {
+									continue;
+								}
+								x = x*weight + interX*dWeight;
+								y = y*weight + interY*dWeight;
 							}
 							if(skeleton.mRotation==0) {
 								joint.mX = x;
@@ -69,6 +74,10 @@ public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 								angle += 2*PI;
 							if(weight!=1) {
 								float prevAngle = interpolationPose.mData[c];
+								if(prevAngle==Float.MAX_VALUE) {
+									c++;
+									continue;
+								}
 								while(prevAngle>PI)
 									prevAngle -= 2*PI;
 								while(prevAngle<-PI)
@@ -128,7 +137,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 					}
 				}else{
 					//By angle
-					if(joint.mAnimDisabled) {
+					if(!joint.mAnimDisabled) {
 						float angle = joint.getParentAngle();
 						while(angle>MathConst.PI)
 							angle -= MathConst.PI*2;

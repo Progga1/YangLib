@@ -106,7 +106,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		mCurrentAnimation = animation;
 		mCurrentAnimationTime = 0;
 		proceed(0);
-		mLockedAnimation = mCurrentAnimation.mBlocking;
+		mLockedAnimation = mCurrentAnimation!=null && mCurrentAnimation.mBlocking;
 	}
 
 	public void crossAnimation(AnimationType animation) {

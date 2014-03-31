@@ -20,10 +20,10 @@ public class KeyFrame {
 		this(pose,1);
 	}
 
-	public String toSourceCode(int frameNr) {
+	public String toSourceCode() {
 		if(mCloned)
 			return "";
-		final String res = "public static KeyFrame frame"+frameNr+" = new KeyFrame(new "+mPose.getClassName()+"("+mPose.toSourceCode()+"),"+mDuration+");";
+		final String res = "new KeyFrame(new "+mPose.getClassName()+"("+mPose.toSourceCode()+"),"+mDuration+")";
 		return res;
 	}
 

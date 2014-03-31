@@ -218,7 +218,7 @@ public class Animator implements YangEventListener {
 		mCurAnimationPlayer.setAnimation(mCurAnimation);
 		mAnimationIndex = index;
 		selectKeyFrame(0,true);
-		mCurSkeleton.setJointAnimationsEnabled(mCurAnimation);
+//		mCurSkeleton.setJointAnimationsEnabled(mCurAnimation);
 	}
 
 	public void selectKeyFrame(int index,boolean apply) {
@@ -233,6 +233,20 @@ public class Animator implements YangEventListener {
 				mCurFrame.mPose.applyPosture(mCurSkeleton);
 		}
 
+
+		float[] data = mCurFrame.mPose.mData;
+		int c = 0;
+		for(final Joint joint:mCurSkeleton.mJoints) {
+			if(joint.mAnimate) {
+				if(joint.mAngleParent==null) {
+					float x = data[c++];
+					float y = data[c++];
+					joint.mAnimDisabled = x==Float.MAX_VALUE || y==Float.MAX_VALUE;
+				}else{
+					joint.mAnimDisabled = data[c++]==Float.MAX_VALUE;
+				}
+			}
+		}
 	}
 
 	public void reselect() {

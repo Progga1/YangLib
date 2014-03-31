@@ -55,6 +55,7 @@ public class JointGridCreator {
 				newJoint.setInitialValues();
 				mJoints[j][i] = newJoint;
 				newJoint.mRadius = mJointRadius;
+				newJoint.mMass = 0.5f;
 				mMassAggregation.addJoint(newJoint);
 				JointConnection boneX = null;
 				JointConnection boneY = null;

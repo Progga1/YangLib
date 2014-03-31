@@ -22,6 +22,10 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 		if(mCurrentAnimation!=null)
 			cleanUp();
 
+		if(animation==null) {
+			super.setAnimation(null);
+			return;
+		}
 		animation.startPhysics(mBody);
 		if(!mOnlyPhysics) {
 			animation.startVisuals(mBody);
@@ -48,9 +52,9 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 
 	@Override
 	public void proceed(float deltaTime) {
+		super.proceed(deltaTime);
 		if(mCurrentAnimation==null)
 			return;
-		super.proceed(deltaTime);
 		mCurrentAnimation.stepPhysics(mBody,mCurrentAnimationTime,deltaTime);
 		if(!mOnlyPhysics)
 			mCurrentAnimation.stepVisuals(mBody,mCurrentAnimationTime,deltaTime);

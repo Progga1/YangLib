@@ -135,14 +135,15 @@ public class Animation<CarrierType> {
 	}
 
 	public String toSourceCode() {
-		String res = "";
+		String res = "public static KeyFrame[] frames = {\n";
 		int c = 0;
 		for(final KeyFrame keyFrame:mKeyFrames) {
-			if(res!="")
-				res += "\n";
-			res += keyFrame.toSourceCode(c);
+			if(c>0)
+				res += ",\n";
+			res += '\t'+keyFrame.toSourceCode();
 			c++;
 		}
+		res += "\n};\n";
 		return res;
 	}
 
