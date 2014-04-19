@@ -18,7 +18,7 @@ import android.opengl.GLES20;
 
 public class AndroidGraphics extends GraphicsTranslator {
 
-	public static boolean ALWAYS_RGBA = true;
+	public static boolean ALWAYS_RGBA = false;
 	public static boolean USE_TEXTURE_COMPRESSION = false;
 
 	public Context mContext;
@@ -157,7 +157,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 		}
 
 		if(USE_TEXTURE_COMPRESSION && properties.mCompressIfPossible && channels==3 && buffer!=null) {
-
+System.out.println("CONPRESSSSS: "+width+" "+height+ " " + properties);
 			ByteBuffer tempBuf = ByteBuffer.allocateDirect(width*height*3);
 			int minSize = ETC1.getEncodedDataSize(4,4);
 			int size = minSize;

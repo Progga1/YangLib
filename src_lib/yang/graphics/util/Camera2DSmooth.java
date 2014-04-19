@@ -14,7 +14,6 @@ public class Camera2DSmooth extends Camera2D {
 	private static final float MIN_ZOOM = 1;
 	private static final float ZOOM_STEP = 1;
 	public Point3f mTarPos;
-	private float mTarRotation;
 
 	private float mTarZoom;
 	public float mAdaption;
@@ -26,7 +25,7 @@ public class Camera2DSmooth extends Camera2D {
 		this.mZoom = zoom;
 		this.setZoom(zoom);
 
-		mTarRotation = 0;
+		mRotation = 0;
 		mAdaption = 0.1f;
 	}
 
@@ -62,7 +61,11 @@ public class Camera2DSmooth extends Camera2D {
 	}
 
 	public void setRotation(float rotation) {
-		mTarRotation = rotation;
+		mRotation = rotation;
+	}
+
+	public float getRotation() {
+		return mRotation;
 	}
 
 	public void update(){
@@ -118,12 +121,18 @@ public class Camera2DSmooth extends Camera2D {
 		mTarPos.mY += y;
 	}
 
-	public float getRotation() {
-		return mTarRotation;
-	}
-
 	public void move(float deltaX, float deltaY) {
 		mTarPos.mX += deltaX;
 		mTarPos.mY += deltaY;
+	}
+
+	@Override
+	public void set(Camera2D prefaceCam) {
+		mTarPos.set(prefaceCam.getPositionReference());
+		mTarZoom = prefaceCam.mZoom;
+		mRotation = prefaceCam.mRotation;
+		mPreShiftEnabled = prefaceCam.mPreShiftEnabled;
+		mPreShiftX = prefaceCam.mPreShiftX;
+		mPreShiftY = prefaceCam.mPreShiftY;
 	}
 }

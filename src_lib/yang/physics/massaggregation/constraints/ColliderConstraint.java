@@ -9,6 +9,7 @@ public class ColliderConstraint extends Constraint{
 
 	public Joint mJoint1;
 	public Joint mJoint2;
+	public float mFriction = 1;
 	public boolean m3D = true;
 
 	public ColliderConstraint(Joint joint1,Joint joint2) {
@@ -22,7 +23,7 @@ public class ColliderConstraint extends Constraint{
 		if(dist==0)
 			return;
 
-		float minDist = mJoint1.mRadius+mJoint2.mRadius;
+		float minDist = mJoint1.mRadius*mJoint1.mMassAggregation.mScale+mJoint2.mRadius*mJoint2.mMassAggregation.mScale;
 
 		float diff = dist - minDist;
 
@@ -51,6 +52,15 @@ public class ColliderConstraint extends Constraint{
 			mJoint1.addForce(fX*fac,fY*fac,fZ*fac);
 		if(!mJoint2.mFixed)
 			mJoint2.addForce(-fX*fac,-fY*fac,-fZ*fac);
+
+		if(mFriction!=1) {
+			mJoint1.mVelX *= mFriction;
+			mJoint1.mVelY *= mFriction;
+			mJoint1.mVelZ *= mFriction;
+			mJoint2.mVelX *= mFriction;
+			mJoint2.mVelY *= mFriction;
+			mJoint2.mVelZ *= mFriction;
+		}
 	}
 
 	@Override

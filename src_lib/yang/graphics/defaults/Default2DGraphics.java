@@ -58,8 +58,11 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		setCamera(x,y,zoom,0);
 	}
 
-	public void setCamera(Camera2DSmooth camera) {
-		setCamera(camera.getX(),camera.getY(),camera.getZoom(),camera.getRotation());
+	public void setCamera(Camera2D camera) {
+		mTranslator.flush();
+		mCamera2D.set(camera);
+		if(mAutoRefreshCameraTransform)
+			super.setCamera(mCamera2D);
 	}
 
 	public float normToWorldX(float x,float y) {

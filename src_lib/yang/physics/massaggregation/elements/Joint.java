@@ -162,6 +162,10 @@ public class Joint extends Point3f {
 		return mMassAggregation.getJointWorldZ(this);
 	}
 
+	public float getWorldRadius() {
+		return mRadius*mMassAggregation.mScale*mMassAggregation.mCarrier.getScale();
+	}
+
 	public boolean isSubChildOf(Joint joint) {
 		return childDistance(joint)>=0;
 	}
@@ -578,8 +582,44 @@ public class Joint extends Point3f {
 		mVelZ = 0;
 	}
 
+	public boolean intersects2D(Joint joint) {
+		float dx = mX-joint.mX;
+		float dy = mY-joint.mY;
+		return dx*dx + dy*dy < mRadius+joint.mRadius;
+	}
+
+	public boolean intersects(Joint joint) {
+		float dx = mX-joint.mX;
+		float dy = mY-joint.mY;
+		float dz = mZ-joint.mZ;
+		return dx*dx + dy*dy + dz*dz < mRadius+joint.mRadius;
+	}
+
+	public boolean worldIntersects2D(Joint joint) {
+		float dx = joint.getWorldX()-getWorldX();
+		float dy = joint.getWorldY()-getWorldY();
+		float r = getWorldRadius()+joint.getWorldRadius();
+		return dx*dx + dy*dy <= r*r;
+	}
+
+	public boolean worldIntersects(Joint joint) {
+		float dx = joint.getWorldX()-getWorldX();
+		float dy = joint.getWorldY()-getWorldY();
+		float dz = joint.getWorldZ()-getWorldZ();
+		float r = getWorldRadius()+joint.getWorldRadius();
+		return dx*dx + dy*dy + dz*dz < r*r;
+	}
+
 	public void dragTo(float x,float y,float z) {
 		this.dragLocal(x-mX, y-mY, z-mZ);
+	}
+
+	public float calcVelocity() {
+		return (float)Math.sqrt(mVelX*mVelX+mVelY*mVelY+mVelZ*mVelZ);
+	}
+
+	public float calcSqrVelocity() {
+		return mVelX*mVelX+mVelY*mVelY+mVelZ*mVelZ;
 	}
 
 }

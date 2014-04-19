@@ -7,6 +7,7 @@ public class JointNormalConstraint extends Joint{
 	public CartoonBone mBone;
 	public float mRelativeX,mRelativeY;
 	public float mWeightJoint1,mWeightJoint2;
+	public float mStrength = 1;
 
 	public float mForcePosX,mForcePosY;
 
@@ -57,8 +58,8 @@ public class JointNormalConstraint extends Joint{
 		if(dist>0) {
 			mForceX += fX;
 			mForceY += fY;
-			fX *= 0.8f;
-			fY *= 0.8f;
+			fX *= mStrength;
+			fY *= mStrength;
 			if(!mBone.mJoint1.mFixed) {
 				mBone.mJoint1.mForceX -= fX*mWeightJoint1;
 				mBone.mJoint1.mForceY -= fY*mWeightJoint1;

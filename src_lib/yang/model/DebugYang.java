@@ -98,16 +98,6 @@ public class DebugYang {
 			stateString = object.toString();
 	}
 
-	public static void stateString(int i) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			stateString = ""+i;
-	}
-
-	public static void stateString(float f) {
-		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-			stateString = ""+f;
-	}
-
 	public static void stateString(boolean b) {
 		if(DEBUG_LEVEL>=curStateStringDebugLevel)
 			stateString = ""+b;

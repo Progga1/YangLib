@@ -1,11 +1,14 @@
 package yang.graphics.camera;
 
 import yang.graphics.camera.projection.OrthogonalProjection;
+import yang.math.objects.Vector3f;
 
 public class Camera2D extends YangCamera {
 
 	public float mZoom;
 	public float mRotation;
+	public float mPreShiftX = 0,mPreShiftY = 0;
+	public boolean mPreShiftEnabled = false;
 
 	public Camera2D() {
 		super();
@@ -36,10 +39,14 @@ public class Camera2D extends YangCamera {
 //		mViewTransform.postScale(1/mZoom);
 
 		mCameraTransform.setTranslation(mPosition.mX,mPosition.mY);
-		mCameraTransform.scale(mZoom,mZoom,1);
+
 		if(mRotation!=0) {
 			mCameraTransform.rotateZ(-mRotation);
 		}
+		if(mPreShiftEnabled) {
+			mCameraTransform.translate(mPreShiftX,mPreShiftY);
+		}
+		mCameraTransform.scale(mZoom,mZoom,1);
 	}
 
 	protected void refreshProjectionTransform() {
@@ -57,6 +64,16 @@ public class Camera2D extends YangCamera {
 		mPosition.mZ = zoom;
 		mZoom = zoom;
 		mRotation = rotation;
+		refreshViewTransform();
+	}
+
+	public void set(Camera2D prefaceCam) {
+		mPosition.set(prefaceCam.mPosition);
+		mZoom = prefaceCam.mZoom;
+		mRotation = prefaceCam.mRotation;
+		mPreShiftEnabled = prefaceCam.mPreShiftEnabled;
+		mPreShiftX = prefaceCam.mPreShiftX;
+		mPreShiftY = prefaceCam.mPreShiftY;
 		refreshViewTransform();
 	}
 

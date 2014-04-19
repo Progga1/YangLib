@@ -143,6 +143,11 @@ public class MassAggregation {
 		return addJoint("JOINT",parent,x,y,z);
 	}
 
+	public void addJoints(YangList<Joint> joints) {
+		for(Joint joint:joints)
+			addJoint(joint);
+	}
+
 	public void addConstraint(Constraint constraint) {
 		mConstraints.add(constraint);
 	}
@@ -499,8 +504,8 @@ public class MassAggregation {
 		for(final Joint joint:massAggregation.mJoints) {
 			if(joint.mEnabled && joint.mAngleParent!=null) {
 				graphics.drawLine(
-						worldPosX + joint.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint.mWorldPosition.mY*scale,
-						worldPosX + joint.mAngleParent.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint.mAngleParent.mWorldPosition.mY*scale,
+						worldPosX + joint.mWorldPosition.mX * mirrorFac, worldPosY + joint.mWorldPosition.mY,
+						worldPosX + joint.mAngleParent.mWorldPosition.mX * mirrorFac, worldPosY + joint.mAngleParent.mWorldPosition.mY,
 						0.015f
 						);
 			}
@@ -513,8 +518,8 @@ public class MassAggregation {
 				Joint joint2 = bone.mJoint2;
 				if(joint1.mEnabled && joint2.mEnabled) {
 					graphics.drawLine(
-							worldPosX + joint1.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint1.mWorldPosition.mY*scale,
-							worldPosX + joint2.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint2.mWorldPosition.mY*scale,
+							worldPosX + joint1.mWorldPosition.mX * mirrorFac, worldPosY + joint1.mWorldPosition.mY,
+							worldPosX + joint2.mWorldPosition.mX * mirrorFac, worldPosY + joint2.mWorldPosition.mY,
 							0.015f
 							);
 				}
@@ -532,9 +537,19 @@ public class MassAggregation {
 				if(!joint.isAnimated()) {
 					graphics.multColor(0.55f);
 				}
-				graphics.drawRectCentered(worldPosX + joint.mWorldPosition.mX*scale * mirrorFac, worldPosY + joint.mWorldPosition.mY*scale, joint.getOutputRadius()*2);
+				graphics.drawRectCentered(worldPosX + joint.mWorldPosition.mX * mirrorFac, worldPosY + joint.mWorldPosition.mY, joint.getOutputRadius()*2*scale);
 			}
 
+	}
+
+	public float getMaxVel() {
+		float maxVel = 0;
+		for(Joint joint:mJoints) {
+			float v = joint.calcSqrVelocity();
+			if(v>maxVel)
+				maxVel = v;
+		}
+		return (float)Math.sqrt(maxVel);
 	}
 
 	public void drawDebug2D(DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing) {

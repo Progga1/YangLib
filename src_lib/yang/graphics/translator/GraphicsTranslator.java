@@ -705,8 +705,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		this.mRatioX = (float) width / height;
 
 		if(mRatioX<mMinRatioX){
-			this.mRatioY = 1/mRatioX;
-			mRatioX = 1;
+			mRatioY = mMinRatioX/mRatioX;
+			mRatioX = mMinRatioX;
 		}else
 			mRatioY = 1;
 
