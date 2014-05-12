@@ -15,7 +15,6 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		setOnKeyListener(this);
-		setKeepScreenOn(true);
 	}
 
 	@Override

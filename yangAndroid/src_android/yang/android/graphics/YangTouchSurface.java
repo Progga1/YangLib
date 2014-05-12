@@ -20,12 +20,13 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class YangTouchSurface extends GLSurfaceView{
+public class YangTouchSurface extends GLSurfaceView {
 
 	public YangEventQueue mEventQueue;
 	public YangSceneRenderer mSceneRenderer;
 	public Context mContext;
 	public YangActivity mActivity;
+	public static boolean keepScreenOn = true;
 
 	public YangTouchSurface(YangActivity activity) {
 		super(activity.getApplicationContext());
@@ -33,6 +34,7 @@ public class YangTouchSurface extends GLSurfaceView{
 		mContext = activity.getApplicationContext();
 		mEventQueue = null;
 		initGL(mContext);
+		setKeepScreenOn(keepScreenOn);
 	}
 
 	@TargetApi(11)
