@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 
+import yang.events.Keys;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.buffers.UniversalVertexBuffer;
 import yang.graphics.camera.projection.OrthogonalProjection;
@@ -946,6 +947,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	@Override
 	public YangMatrix getViewPostTransform() {
 		return mDebugPostCameraTransformRef;
+	}
+
+	public int getDefaultMetaBaseKey() {
+		return Keys.F1;
 	}
 
 }

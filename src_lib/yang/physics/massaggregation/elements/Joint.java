@@ -622,4 +622,10 @@ public class Joint extends Point3f {
 		return mVelX*mVelX+mVelY*mVelY+mVelZ*mVelZ;
 	}
 
+	public void setVelocity(Joint template) {
+		mVelX = template.mVelX;
+		mVelY = template.mVelY;
+		mVelZ = template.mVelZ;
+	}
+
 }

@@ -11,6 +11,7 @@ import yang.systemdependent.YangSensor;
 
 public abstract class DefaultSurface extends YangSurface implements YangEventListener{
 
+	public static boolean INIT_DEFAULT_META_KEYS = true;
 	public boolean mExitOnEsc = true;
 
 	public Default2DGraphics mGraphics2D;
@@ -24,7 +25,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 		mInit2DGraphics = init2DGraphics;
 		mInit3DGraphics = init3DGraphics;
 		mEventListener = this;
-		mMetaEventListener = new DefaultMetaEventListener(this);
+
 	}
 
 	@Override
@@ -47,6 +48,8 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 				mGraphics3D.setDefaultProgram();
 			}
 		}
+		if(INIT_DEFAULT_META_KEYS)
+			mMetaEventListener = new DefaultMetaEventListener(this,mGraphics.getDefaultMetaBaseKey());
 	}
 
 	protected void initDebugOutput(BitmapFont font) {

@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 
 import yang.android.io.AndroidGFXLoader;
+import yang.events.Keys;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
@@ -77,6 +78,11 @@ public class AndroidGraphics extends GraphicsTranslator {
 	@Override
 	public void postInit() {
 		GLES20.glDepthFunc(GLES20.GL_LEQUAL);
+	}
+
+	@Override
+	public int getDefaultMetaBaseKey() {
+		return '1';
 	}
 
 	@Override

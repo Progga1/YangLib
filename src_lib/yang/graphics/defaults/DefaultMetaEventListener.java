@@ -23,15 +23,17 @@ public class DefaultMetaEventListener implements YangEventListener {
 	private boolean mCtrlPressed = false;
 	private boolean mShiftPressed = false;
 	private final EulerOrientation mOrientation = new EulerOrientation();
+	public int mMetaBaseKey = Keys.F1;
 
-	public DefaultMetaEventListener(YangSurface surface) {
+	public DefaultMetaEventListener(YangSurface surface,int metaBaseKey) {
 		mSurface = surface;
+		mMetaBaseKey = metaBaseKey;
 		initMetaKeys();
 	}
 
 	protected void initMetaKeys() {
 		final YangEventQueue eventQueue = mSurface.mEventQueue;
-		eventQueue.setMetaKeys(Keys.F1,12);
+		eventQueue.setMetaKeys(mMetaBaseKey,12);
 	}
 
 	@Override
@@ -106,59 +108,60 @@ public class DefaultMetaEventListener implements YangEventListener {
 		if(code==Keys.CTRL)
 			mCtrlPressed = true;
 
-		if(code==Keys.F1) {
+		int base = mMetaBaseKey-1;
+		if(code==base+1) {
 			if(mSurface.isInactive())
 				mSurface.simulateResume();
 			else
 				mSurface.simulateStop();
 		}
-		if(code==Keys.F2)
+		if(code==base+2)
 			DebugYang.DRAW_GFX_VALUES ^= true;
-		if(code==Keys.F3) {
+		if(code==base+3) {
 			mSurface.setPaused(!mSurface.isPaused());
 //			if(mSurface.isInactive())
 //				mSurface.simulateResume();
 //			else
 //				mSurface.simulatePause();
 		}
-		if(code==Keys.F4) {
+		if(code==base+4) {
 			if(mSurface.mPlaySpeed<32)
 				mSurface.mPlaySpeed *= 2;
 			else{
 				mSurface.mPlaySpeed = 0;
 			}
 		}
-		if(code==Keys.F5) {
+		if(code==base+5) {
 			mSurface.setPaused(false);
 			mSurface.mPlaySpeed = 1;
 			mSurface.mFastForwardToTime = -1;
 		}
-		if(code==Keys.F6) {
+		if(code==base+6) {
 			if(mSurface.mPlaySpeed>0.125f*0.25f)
 				mSurface.mPlaySpeed *= 0.5f;
 			else if(mSurface.mPlaySpeed==0) {
 				mSurface.mPlaySpeed = 32;
 			}
 		}
-		if(code==Keys.F7) {
+		if(code==base+7) {
 			mSurface.proceed();
 		}
-		if(code==Keys.F8) {
+		if(code==base+8) {
 			if(mSurface.mGFXDebug!=null) {
 				DebugYang.DRAW_POINTERS ^= true;
 
 			}
 		}
-		if(code==Keys.F9) {
+		if(code==base+9) {
 			if(mSurface.isStereoVision())
 				mSurface.setStereoVision(0);
 			else
 				mSurface.setStereoVision(1024);
 		}
-		if(code==Keys.F10) {
+		if(code==base+10) {
 			mSurface.stopMacro();
 		}
-		if(code==Keys.F11) {
+		if(code==base+11) {
 			if(!mRecording) {
 				mRecording = true;
 				try {
@@ -169,7 +172,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 			}
 		}
 
-		if(code==Keys.F12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
+		if(code==base+12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
 			mSurface.playMacro("macro.ym");
 
 

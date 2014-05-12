@@ -30,7 +30,8 @@ public class JointNormalConstraint extends Joint{
 	public void recalculate() {
 		super.recalculate();
 		mWeightJoint1 = 1-Math.min(1, Math.max(0,mRelativeX));
-		mWeightJoint2 = Math.min(1, Math.max(0,mRelativeX));
+		//mWeightJoint2 = Math.min(1, Math.max(0,mRelativeX));
+		mWeightJoint2 = 1-mWeightJoint1;
 	}
 
 	public void refreshConstraintPos() {

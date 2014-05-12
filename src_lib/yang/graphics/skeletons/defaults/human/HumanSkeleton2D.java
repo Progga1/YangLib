@@ -9,7 +9,7 @@ import yang.physics.massaggregation.elements.JointNormalConstraint;
 
 public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 
-	public static final float HEADTOPSHIFT = 0.05f;
+	public static final float HEADTOPSHIFT = 0.2f;
 	public static final float HEADBOTTOMSHIFT = -0.06f;
 
 	public static final float PI = (float)Math.PI;
@@ -69,7 +69,7 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 		float midX = 0;
 
 		mBreastJoint = new Joint("Breast",null,midX, 1.5f*locScaleY, 0.1f*locScaleX);
-		mHeadJoint = new Joint("Head",mBreastJoint,midX,2*locScaleY, 0.1f*locScaleX);
+		mHeadJoint = new Joint("Head",mBreastJoint,midX,1.85f*locScaleY, 0.1f*locScaleX);
 		mHipJoint = new Joint("Hip",mBreastJoint,midX,0.9f*locScaleY, 0.1f*locScaleX);
 		mLeftKneeJoint = new Joint("LeftKnee",null,midX-(legDist+legShift)*locScaleX, 0.5f*locScaleY-kneeDist, 0.1f*locScaleX);
 		mRightKneeJoint = new Joint("RightKnee",null,midX+(legDist+legShift)*locScaleX, 0.5f*locScaleY+kneeDist, 0.1f*locScaleX);

@@ -1,5 +1,6 @@
 package yang.physics.massaggregation.constraints;
 
+import yang.math.objects.Point3f;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 
@@ -7,10 +8,14 @@ public class ColliderConstraint extends Constraint{
 
 	public static float FIXED_FACTOR = 2;
 
+	public static float IN_FACTOR = 500;
+	public static float OUT_FACTOR = 50;
+
 	public Joint mJoint1;
 	public Joint mJoint2;
 	public float mFriction = 1;
 	public boolean m3D = true;
+//	private Point3f mTempPnt1 = new Point3f(),mTempPnt2 = new Point3f();
 
 	public ColliderConstraint(Joint joint1,Joint joint2) {
 		mJoint1 = joint1;
@@ -19,7 +24,9 @@ public class ColliderConstraint extends Constraint{
 
 	@Override
 	public void apply() {
-		float dist = mJoint1.getDistance(mJoint2);
+		Point3f point1 = mJoint1.mWorldPosition;
+		Point3f point2 = mJoint2.mWorldPosition;
+		float dist = point1.getDistance(point2);
 		if(dist==0)
 			return;
 
@@ -31,9 +38,9 @@ public class ColliderConstraint extends Constraint{
 			return;
 
 		float dDist = 1/dist;
-		float normDirX = (mJoint2.mX-mJoint1.mX)*dDist;
-		float normDirY = (mJoint2.mY-mJoint1.mY)*dDist;
-		float normDirZ = (mJoint2.mZ-mJoint1.mZ)*dDist;
+		float normDirX = (point2.mX-point1.mX)*dDist;
+		float normDirY = (point2.mY-point1.mY)*dDist;
+		float normDirZ = (point2.mZ-point1.mZ)*dDist;
 
 		float fX = normDirX * diff * mStrength;
 		float fY = normDirY * diff * mStrength;
@@ -44,7 +51,7 @@ public class ColliderConstraint extends Constraint{
 		if(m3D)
 			fac = Joint.TOWARDS_FACTOR;
 		else
-			fac = (dVX*fX+dVY*fY<0)?Joint.AWAY_FACTOR:Joint.TOWARDS_FACTOR;
+			fac = (dVX*fX+dVY*fY<0)?OUT_FACTOR:IN_FACTOR;
 		fac *= mStrength;
 		if(mJoint1.mFixed!=mJoint2.mFixed)
 			fac *= FIXED_FACTOR;

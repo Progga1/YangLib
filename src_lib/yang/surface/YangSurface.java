@@ -516,9 +516,11 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 
 			if(mRuntimeState>0 && !mResuming) {
 				mResuming = mLoadedOnce;
-				mGraphics.restart();
-				if(mGraphics.mCurDrawListener!=null)
-					mGraphics.mCurDrawListener.onRestartGraphics();
+				if(mLoadedOnce) {
+					mGraphics.restart();
+					if(mGraphics.mCurDrawListener!=null)
+						mGraphics.mCurDrawListener.onRestartGraphics();
+				}
 			}
 
 			assert mGraphics.preCheck("Catchup");
