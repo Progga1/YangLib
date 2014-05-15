@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import yang.model.App;
-import yang.pc.fileio.PCResourceManager;
 import yang.pc.fileio.PCSoundManager;
 import yang.surface.YangSurface;
 
@@ -25,10 +24,6 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 	}
 
 	public void present() {
-		if(App.soundManager!=null)
-			mSurface.mSounds = App.soundManager;
-		else
-			mSurface.mSounds = new PCSoundManager(new PCResourceManager());
 		setLocationRelativeTo(null);
 		setVisible(true);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

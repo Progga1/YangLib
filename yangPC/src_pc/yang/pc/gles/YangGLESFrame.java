@@ -3,9 +3,16 @@ package yang.pc.gles;
 import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
+import yang.model.App;
 import yang.model.DebugYang;
 import yang.pc.PCEventHandler;
 import yang.pc.PCFrame;
+import yang.pc.PCSensorFrame;
+import yang.pc.PCSystemCalls;
+import yang.pc.PCVibrator;
+import yang.pc.fileio.PCDataStorage;
+import yang.pc.fileio.PCResourceManager;
+import yang.pc.fileio.PCSoundManager;
 import yang.surface.YangSurface;
 
 public class YangGLESFrame extends PCFrame{
@@ -34,9 +41,18 @@ public class YangGLESFrame extends PCFrame{
 			frameDecorator = false;
 		}
 		setUndecorated(!frameDecorator);
-		final FullGraphicsInitializer initializer = new FullGraphicsInitializer();
-		initializer.init(width, height);
-		mGraphics = initializer.mTranslator;
+		mGraphics = new PCGL2ES2Graphics(width,height);
+
+		if(App.sensor==null)
+			App.sensor = new PCSensorFrame();
+		App.storage = new PCDataStorage();
+		App.gfxLoader = mGraphics.mGFXLoader;
+		App.resourceManager = new PCResourceManager();
+		if(App.soundManager==null)
+			App.soundManager = new PCSoundManager();
+		App.vibrator = new PCVibrator();
+		App.systemCalls = new PCSystemCalls();
+
 		mGraphics.setMaxFPS(DEFAULT_MAX_FPS);
 
 		if(autoBuild) {
@@ -63,7 +79,8 @@ public class YangGLESFrame extends PCFrame{
 
 	public void setSurface(YangSurface surface) {
 		mSurface = surface;
-		mSurface.setGraphics(mGraphics);
+
+		mSurface.setBackend(mGraphics);
 		mGraphics.setSurface(mSurface);
 
 		if(surface instanceof EventQueueHolder)

@@ -1,25 +1,30 @@
 package yang.sound;
 
+import java.io.File;
 import java.util.HashMap;
 
 import yang.model.DebugYang;
+import yang.sound.nosound.NoMusic;
+import yang.sound.nosound.NoSound;
+import yang.systemdependent.AbstractResourceManager;
 
 public abstract class AbstractSoundManager {
 
 	protected boolean mSoundMute;
 	protected boolean mMusicMute;
+	protected AbstractResourceManager mResources;
 
 	protected float mSoundVolume;
 	protected float mMusicVolume;
 
 	protected static final String[] SOUND_EXT 	= {".mp3",".wav"};
-	protected String SOUND_PATH 				= "sounds/";
+	protected String SOUND_PATH[] 				= {"sounds"+File.separatorChar};
 
 	protected HashMap<String, AbstractSound> mSounds;
 	protected HashMap<String, AbstractMusic> mMusics;
 
-	protected abstract AbstractSound loadSound(String name);
-	protected abstract AbstractMusic loadMusic(String name);
+	protected abstract AbstractSound derivedLoadSound(String name);
+	protected abstract AbstractMusic derivedLoadMusic(String name);
 
 	public AbstractSoundManager() {
 		if (DebugYang.showStart) DebugYang.showStackTrace("1", 1);
@@ -31,6 +36,32 @@ public abstract class AbstractSoundManager {
 
 		mSoundVolume = 1.0f;
 		mMusicVolume = 1.0f;
+	}
+
+	public void init(AbstractResourceManager resources) {
+		mResources = resources;
+	}
+
+	public String getSoundAssetFilename(String name) {
+		return mResources.getAssetFilename(name, SOUND_PATH, SOUND_EXT);
+	}
+
+	protected AbstractSound loadSound(String name) {
+		String filename = getSoundAssetFilename(name);
+		if(filename==null) {
+			DebugYang.printerr("sound not found: "+name, 1);
+			return new NoSound(this);
+		}else
+			return derivedLoadSound(filename);
+	}
+
+	protected AbstractMusic loadMusic(String name) {
+		String filename = getSoundAssetFilename(name);
+		if(filename==null) {
+			DebugYang.printerr("music not found: "+name, 1);
+			return new NoMusic(this);
+		}else
+			return derivedLoadMusic(filename);
 	}
 
 	public AbstractSound getSound(String name, float volume) {

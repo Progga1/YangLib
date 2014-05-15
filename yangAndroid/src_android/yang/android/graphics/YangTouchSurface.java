@@ -64,6 +64,7 @@ public class YangTouchSurface extends GLSurfaceView {
 
 	public void setSurface(YangSurface surface) {
 		surface.mPlatformKey = "ANDROID";
+
 		mSceneRenderer.setSurface(surface);
 
 		if (surface instanceof EventQueueHolder)

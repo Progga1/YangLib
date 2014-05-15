@@ -31,13 +31,14 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 	}
 
 	@Override
-	public AbstractSound loadSound(String name) {
+	public AbstractSound derivedLoadSound(String filename) {
 		AndroidSound sound = null;
 		int sId = -1;
 		try {
-			sId = mSoundPool.load(mContext.getAssets().openFd(SOUND_PATH + name + SOUND_EXT), 1);
+			sId = mSoundPool.load(mContext.getAssets().openFd(filename), 1);
 		} catch (IOException e) {
-			System.err.println("failed loading sound: "+name);
+			sId = -1;
+			System.err.println("failed loading sound: "+filename);
 		}
 		sound = new AndroidSound(this, sId, mSoundPool);
 		mAndroidSounds.put(sId, sound);
@@ -45,23 +46,24 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 	}
 
 	@Override
-	protected AbstractMusic loadMusic(String name) {
+	protected AbstractMusic derivedLoadMusic(String filename) {
 		MediaPlayer player = new MediaPlayer();
 		AndroidMusic music = null;
 		try {
-			FileDescriptor fd = mContext.getAssets().openFd(SOUND_PATH + name + SOUND_EXT).getFileDescriptor();
+			FileDescriptor fd = mContext.getAssets().openFd(filename).getFileDescriptor();
 			player.setDataSource(fd);
 			player.prepareAsync();
 		} catch (Exception e) {
 			player.release();
 			player = null;
-			System.err.println("failed loading sound: "+name);
+			System.err.println("failed loading sound: "+filename);
 		}
 
 		music = new AndroidMusic(player, this);
 		return music;
 	}
 
+	@Override
 	public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
 		if (status != 0) return;
 		AndroidSound sound = null;

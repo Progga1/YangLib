@@ -26,8 +26,10 @@ import yang.model.App;
 import yang.model.DebugYang;
 import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
+import yang.sound.nosound.NoSoundManager;
 import yang.systemdependent.AbstractResourceManager;
 import yang.systemdependent.AbstractVibrator;
+import yang.systemdependent.NoSensor;
 import yang.systemdependent.YangSensor;
 import yang.systemdependent.YangSystemCalls;
 import yang.util.Util;
@@ -188,8 +190,13 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		return 2048;
 	}
 
-	public void setGraphics(GraphicsTranslator graphics) {
+	public void setBackend(GraphicsTranslator graphics) {
 		mGraphics = graphics;
+		mGFXLoader = mGraphics.mGFXLoader;
+		mResources = mGraphics.mGFXLoader.mResources;
+		mSounds = App.soundManager==null?new NoSoundManager():App.soundManager;
+		mSounds.init(mResources);
+		mSensor = App.sensor==null?new NoSensor():App.sensor;
 	}
 
 	protected boolean assertMessage() {
@@ -228,10 +235,9 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			assert assertMessage();
 			mGraphics.init();
 		}
-		mGFXLoader = mGraphics.mGFXLoader;
-		mResources = mGraphics.mGFXLoader.mResources;
-		mSounds = App.soundManager;
-		mSensor = App.sensor;
+
+//		mSounds = App.soundManager;
+
 		if(mainSurface) {
 			mSensor.init(this);
 			mEventQueue.setGraphics(mGraphics);

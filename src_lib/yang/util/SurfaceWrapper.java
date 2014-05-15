@@ -15,14 +15,16 @@ import yang.util.window.YangTextureDrawer;
 public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTextureDrawer {
 
 	public GraphicsTranslator mTranslator;
+	public YangSurface mSurface;
 	public SurfaceType mInnerSurface;
 	public TextureRenderTarget mTexTarget;
 	private int mSurfWidth,mSurfHeight;
 	private boolean mInitialized = false;
 	public int mIdShift = 0;
 
-	public SurfaceWrapper(DefaultGraphics<?> graphics,SurfaceType surface) {
+	public SurfaceWrapper(DefaultGraphics<?> graphics,YangSurface topLevelSurface,SurfaceType surface) {
 		super(graphics);
+		mSurface = topLevelSurface;
 		mInnerSurface = surface;
 	}
 
@@ -40,7 +42,7 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 		mTranslator.setTextureRenderTarget(mTexTarget);
 
 		if(!mInitialized) {
-			mInnerSurface.setGraphics(mTranslator);
+			mInnerSurface.setBackend(mTranslator);
 			mInnerSurface.onSurfaceCreated(false);
 			mInitialized = true;
 		}

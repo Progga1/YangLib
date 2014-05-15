@@ -108,22 +108,12 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			return derivedLoadImageData(filename,forceRGBA);
 	}
 
-	public String createExistingFilename(String name) {
-		for(final String path:IMAGE_PATH) {
-			if(mResources.assetExists(path+name))
-				return path+name;
-			for(final String ext:IMAGE_EXT) {
-				if(mResources.assetExists(path+name+ext))
-					return path+name+ext;
-			}
-		}
-
-		//throw new RuntimeException("Image not found: "+name);
-		return null;
+	public String getImageAssetFilename(String name) {
+		return mResources.getAssetFilename(name,IMAGE_PATH,IMAGE_EXT);
 	}
 
 	protected TextureData loadImageData(String name,boolean forceRGBA) {
-		final String filename = createExistingFilename(name);
+		final String filename = getImageAssetFilename(name);
 		if(filename==null)
 			return null;
 		return derivedLoadImageData(filename,forceRGBA);
@@ -143,7 +133,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public SubTexture loadIntoTexture(Texture target,String name,int x,int y) {
 		final SubTexture result = new SubTexture(target);
 		result.setPosition(x,y);
-		final String filename = createExistingFilename(name);
+		final String filename = getImageAssetFilename(name);
 		ResourceEntry resource = mTextures.get(filename);
 		if(resource==null) {
 			resource = new ResourceEntry();
@@ -241,7 +231,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 
 	public synchronized Texture getImage(String name,TextureProperties textureProperties,boolean alphaMap) {
-		final String filename = createExistingFilename(name);
+		final String filename = getImageAssetFilename(name);
 		ResourceEntry entry = mTextures.get(filename);
 		if(entry==null) {
 			entry = new ResourceEntry();
@@ -270,7 +260,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	}
 
 	public void freeTexture(String name) {
-		final String filename = createExistingFilename(name);
+		final String filename = getImageAssetFilename(name);
 		final ResourceEntry entry = mTextures.get(filename);
 		if(entry==null)
 			return;

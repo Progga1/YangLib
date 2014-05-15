@@ -123,4 +123,16 @@ public abstract class AbstractResourceManager {
 		throw new RuntimeException("Asset output stream not supported.");
 	}
 
+	public String getAssetFilename(String name, String[] paths, String[] extensions) {
+		for(final String path:paths) {
+			if(assetExists(path+name))
+				return path+name;
+			for(final String ext:extensions) {
+				if(assetExists(path+name+ext))
+					return path+name+ext;
+			}
+		}
+		return null;
+	}
+
 }

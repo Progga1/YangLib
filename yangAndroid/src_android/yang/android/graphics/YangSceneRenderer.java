@@ -19,7 +19,7 @@ public class YangSceneRenderer implements GLSurfaceView.Renderer {
 
 	public void setSurface(YangSurface surface) {
 		mSurface = surface;
-		mSurface.setGraphics(mGraphicsTranslator);
+		mSurface.setBackend(mGraphicsTranslator);
 	}
 
 	@Override

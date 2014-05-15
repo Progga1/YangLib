@@ -369,7 +369,7 @@ public class FBXLoader extends YangSceneLoader {
 						break;
 					if(mReader.isWord("FileName")) {
 						mReader.nextWord(true);
-						String filename = mGFXLoader.createExistingFilename(mReader.wordToString());
+						String filename = mGFXLoader.getImageAssetFilename(mReader.wordToString());
 						if(filename!=null) {
 							Texture texture = mGFXLoader.getImage(filename,mTextureProperties);
 							if(texture!=null) {
