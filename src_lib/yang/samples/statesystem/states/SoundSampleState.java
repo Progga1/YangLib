@@ -27,10 +27,10 @@ public class SoundSampleState extends SampleState {
 
 	@Override
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
-//		mSound.play();
 		mLoopSound.playLoop();
 	}
 
+	@Override
 	public void pointerUp(float x,float y, SurfacePointerEvent event) {
 		mLoopSound.stop();
 	}
@@ -38,15 +38,8 @@ public class SoundSampleState extends SampleState {
 	@Override
 	public void keyDown(int code) {
 		super.keyDown(code);
-//		if(code=='p')
-//			mLoopSound.playLoop();
-	}
-
-	@Override
-	public void keyUp(int code) {
-		super.keyUp(code);
-		if(code=='p')
-			mLoopSound.stop();
+		if(code=='s')
+			mSound.play();
 	}
 
 }

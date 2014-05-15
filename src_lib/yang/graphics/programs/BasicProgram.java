@@ -48,7 +48,7 @@ public class BasicProgram extends AbstractProgram {
 			"varying vec2 texCoord;\r\n" +
 			"varying vec4 color;\r\n" +
 			"\r\n" +
-			"void main() {\r\n"+
+			"void main() {\r\n" +
 			"	gl_FragColor = texture2D(texSampler, texCoord) * color;\r\n" +
 			"}\r\n";
 

@@ -40,7 +40,7 @@ public class YangTouchSurface extends GLSurfaceView {
 	@TargetApi(11)
 	protected void initGL(Context context) {
 		super.setEGLContextClientVersion(2);
-		super.setEGLConfigChooser(8,8,8,0, 16,0);
+		super.setEGLConfigChooser(8,8,8,8, 16,0);
 		//HTC working: RGBA_8888
 		super.getHolder().setFormat(PixelFormat.RGBA_8888);
 		if (Build.VERSION.SDK_INT>=11 && !AndroidSystemCalls.ALWAYS_RELOAD_AFTER_PAUSE)

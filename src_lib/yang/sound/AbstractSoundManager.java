@@ -12,7 +12,7 @@ public abstract class AbstractSoundManager {
 	protected float mSoundVolume;
 	protected float mMusicVolume;
 
-	protected static final String SOUND_EXT 	= ".mp3";
+	protected static final String[] SOUND_EXT 	= {".mp3",".wav"};
 	protected String SOUND_PATH 				= "sounds/";
 
 	protected HashMap<String, AbstractSound> mSounds;

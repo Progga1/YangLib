@@ -235,6 +235,10 @@ public class YangMesh {
 		mTranslator.setVertexBuffer(vertexBuffer);
 		if(mDrawBackToFront)
 			mGraphics.sort();
+		else{
+			mTranslator.switchZBuffer(true);
+			mTranslator.switchZWriting(true);
+		}
 		mTranslator.prepareDraw();
 		mTranslator.mFlushDisabled = true;
 		final GLProgram program = mGraphics.mCurrentProgram.mProgram;

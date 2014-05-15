@@ -13,6 +13,7 @@
         android:label="Yang samples"
         android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:largeHeap="true"
         >
         <activity
             android:name=".SampleStateSystemActivity"

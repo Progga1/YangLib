@@ -24,7 +24,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public static boolean REUSE_BUFFER = true;
 	public static int MAX_TEXTURES = 1024;
 
-	public static final String[] IMAGE_EXT	= new String[]{".png",".jpg",".bmp"};
+	public static final String[] IMAGE_EXT	= {".png",".jpg",".bmp"};
 	public static final String SHADER_EXT	= ".txt";
 
 	protected String SHADER_PATH	= "shaders" + File.separatorChar;

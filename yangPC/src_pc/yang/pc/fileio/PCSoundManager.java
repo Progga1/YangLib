@@ -26,15 +26,23 @@ public class PCSoundManager extends AbstractSoundManager {
 		fxPanel = new JFXPanel();
 	}
 
+	private File getSoundFile(String name) {
+		File file = null;
+		for(int i=0;i<SOUND_EXT.length;i++) {
+			file = mResources.getAssetFile(SOUND_PATH+ name + SOUND_EXT[i]);
+			if(file!=null && file.exists())
+				return file;
+		}
+		return null;
+	}
+
 	@Override
 	public synchronized AbstractSound loadSound(String name) {
 		AudioClip clip = null;
-		try {
-			final File file = mResources.getAssetFile(SOUND_PATH+ name + SOUND_EXT);
-			if (!file.exists()) throw new RuntimeException();
+
+		final File file = getSoundFile(name);
+		if (file!=null) {System.out.println(file);
 			clip = new AudioClip(file.toURI().toString());
-		} catch (final Exception e) {
-			System.err.println("failed loading sound: "+name);
 		}
 		return new PCSound(this, clip);
 	}
@@ -42,12 +50,10 @@ public class PCSoundManager extends AbstractSoundManager {
 	@Override
 	protected AbstractMusic loadMusic(String name) {
 		MediaPlayer player = null;
-		try {
-			final File file = mResources.getAssetFile(SOUND_PATH + name + SOUND_EXT);
-			if (!file.exists()) throw new RuntimeException();
+
+		final File file = getSoundFile(name);
+		if (file!=null) {
 			player = new MediaPlayer(new Media(file.toURI().toString()));
-		} catch (final Exception e) {
-			System.err.println("failed loading sound: "+name);
 		}
 		return new PCMusic(this, player);
 	}
