@@ -1,5 +1,7 @@
 package samplesurface;
 
+import yang.graphics.defaults.DefaultSurface;
+
 
 public class SampleSurface extends DefaultSurface {
 
