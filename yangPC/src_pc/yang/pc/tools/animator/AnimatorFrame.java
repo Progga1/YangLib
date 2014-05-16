@@ -64,10 +64,10 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 
 		mKeyMainMenu = new KeyMainMenu(mFrame,this);
 		mKeyMainMenu.nextSubMenu("Edit");
-		mKeyMainMenu.addItem("PREVIOUSFRAME", "Next Frame").setShortCut('1');
-		mKeyMainMenu.addItem("NEXTFRAME", "Previous Frame").setShortCut('2');
-		mKeyMainMenu.addItem("PREVIOUSFRAMENOTLOAD", "Next Frame no loading").setShortCut('3');
-		mKeyMainMenu.addItem("NEXTFRAMENOTLOAD", "Previous Frame no loading").setShortCut('4');
+		mKeyMainMenu.addItem("PREVIOUSFRAME", "Previous frame").setShortCut('1');
+		mKeyMainMenu.addItem("NEXTFRAME", "Next frame").setShortCut('2');
+		mKeyMainMenu.addItem("PREVIOUSFRAMENOTLOAD", "Previous frame no loading").setShortCut('3');
+		mKeyMainMenu.addItem("NEXTFRAMENOTLOAD", "Next frame no loading").setShortCut('4');
 		mKeyMainMenu.addSeparator();
 		mKeyMainMenu.addItem("UNFIX", "Unfix all joints").setShortCut('F');
 		mKeyMainMenu.addItem("UNDO", "Undo").setShortCut('Z');
