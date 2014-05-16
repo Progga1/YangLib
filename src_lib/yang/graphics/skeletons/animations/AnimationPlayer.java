@@ -17,7 +17,6 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public int mCurFrame;
 	public AbstractSoundManager mSound;
 	public float mAnimationSpeed;
-	public boolean mLockedAnimation;
 	protected KeyFrame mCurrentPrevFrame,mCurrentNextFrame;
 
 
@@ -48,7 +47,6 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 				newTime -= mCurrentAnimation.mFrameCount;
 			else{
 				if(mCurrentAnimation.mWrap==WrapMode.CALL_STOP) {
-					mLockedAnimation = false;
 					stopNode();
 					return;
 				}else{
@@ -62,7 +60,6 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 				newTime += mCurrentAnimation.mFrameCount;
 			else{
 				if(mCurrentAnimation.mWrap==WrapMode.CALL_STOP) {
-					mLockedAnimation = false;
 					stopNode();
 					return;
 				}else
@@ -101,12 +98,9 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	}
 
 	public void setAnimation(AnimationType animation) {
-		if(mLockedAnimation)
-			return;
 		mCurrentAnimation = animation;
 		mCurrentAnimationTime = 0;
 		proceed(0);
-		mLockedAnimation = mCurrentAnimation!=null && mCurrentAnimation.mBlocking;
 	}
 
 	public void crossAnimation(AnimationType animation) {
@@ -128,10 +122,6 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 
 	public void stopNode() {
 
-	}
-
-	public void interruptAnimation() {
-		mLockedAnimation = false;
 	}
 
 	public void setNormalizedAnimationTime(float normalAnimationTime) {

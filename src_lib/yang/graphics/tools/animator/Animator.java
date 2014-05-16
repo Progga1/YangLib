@@ -214,7 +214,6 @@ public class Animator implements YangEventListener {
 		saveChangedPose();
 		mCurAnimation = mCurAnimationSystem.mAnimations.get(index);
 		mCurAnimation.mAutoAnimate = true;
-		mCurAnimationPlayer.mLockedAnimation = false;
 		mCurAnimationPlayer.setAnimation(mCurAnimation);
 		mAnimationIndex = index;
 		selectKeyFrame(0,true);

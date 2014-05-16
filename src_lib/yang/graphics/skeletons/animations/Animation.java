@@ -23,7 +23,6 @@ public class Animation<CarrierType> {
 	public float mTotalDuration;
 	public boolean mInterpolate;
 	public boolean mAutoSetAnimationTime = true;
-	public boolean mBlocking = false;
 	public int mKeyFrameCount = -1;
 	public int mTags = 0;
 	public boolean mDebug = false;

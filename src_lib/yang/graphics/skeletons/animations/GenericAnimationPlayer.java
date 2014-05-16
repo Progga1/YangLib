@@ -17,8 +17,6 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 	public void setAnimation(AnimationType animation) {
 		if(animation==mCurrentAnimation)
 			return;
-		if(mLockedAnimation)
-			return;
 		if(mCurrentAnimation!=null)
 			cleanUp();
 
