@@ -86,6 +86,7 @@ public class Point2f {
 		mY -= toSub.mY;
 	}
 
+	/** higher weight means faster interpolation to <b>otherPoint</b> [0-1] */
 	public void interpolate(Point2f otherPoint, float weight) {
 		mX += (otherPoint.mX-mX)*weight;
 		mY += (otherPoint.mY-mY)*weight;
