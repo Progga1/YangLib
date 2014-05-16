@@ -14,10 +14,11 @@ public class PointListIterator {
 	private Vector2f dir;
 	private Vector2f curDir;
 	
-	private float mTime;
 	private float mSpeed; //Units per second
 	private float mThresDistSq;
-	private float mMixIn; 
+	private float mMixIn;
+	private boolean mJittery;
+	private float mJitterAmount; 
 	
 	
 	public PointListIterator() {
@@ -27,12 +28,26 @@ public class PointListIterator {
 		tarInd			= 0;
 		dir		 		= new Vector2f();
 		
-		float f = 20;
-		
-		mTime 			= 0;
-		mSpeed			= 0.5f * f;
-		mThresDistSq	= 0.01f * f;
+		mSpeed			= 0.5f;
+		mThresDistSq	= 0.01f;
 		mMixIn			= 0.1f;
+	}
+	
+	/**
+	 * Set parameters of interpolation
+	 * @param speed Set the speed of the interpolation
+	 * @param thresholdDistance How close the interpolator should come to a target point, before the next point will be targeted
+	 * @param sharpEdgeAmount between 0 and 1, amount of direction that will be added to the current direction
+	 */
+	public void setParams(float speed, float thresholdDistance, float sharpEdgeAmount) {
+		mSpeed 			= speed;
+		mThresDistSq 	= thresholdDistance;
+		mMixIn 			= sharpEdgeAmount;		
+	}
+	
+	public void enableJitter(float amount) {
+		mJittery = true;
+		mJitterAmount = amount;
 	}
 	
 	public void addPoints(YangList<Point2f> pointsToAdd) {
@@ -51,7 +66,6 @@ public class PointListIterator {
 	
 	public void update(float deltaTime) {
 		if(mPointList.size() == 0) return;
-		mTime += deltaTime;
 		
 		// new direction
 		dir.set(tar);
@@ -59,9 +73,9 @@ public class PointListIterator {
 		dir.setMagnitude(mSpeed*deltaTime);
 		
 		
-		float a = -0.001f;
-		float b = 0.001f;
-		dir.add(MathFunc.randomF(a, b), MathFunc.randomF(a, b));
+		if(mJittery){
+			dir.add(MathFunc.randomF(-mJitterAmount, mJitterAmount), MathFunc.randomF(-mJitterAmount, mJitterAmount));
+		}
 		
 		// merge with current direction
 		curDir.interpolate(dir, mMixIn);
