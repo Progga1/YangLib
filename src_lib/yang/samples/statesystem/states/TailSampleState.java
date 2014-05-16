@@ -1,7 +1,7 @@
 package yang.samples.statesystem.states;
 
 import yang.events.eventtypes.SurfacePointerEvent;
-import yang.graphics.tail.Tail;
+import yang.graphics.tail.YangTail;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
@@ -10,14 +10,14 @@ import yang.samples.statesystem.SampleState;
 
 public class TailSampleState extends SampleState {
 
-	private Tail mTail;
+	private YangTail mTail;
 	private Texture mTailTexture;
 	private float mCurX = Float.MAX_VALUE,mCurY;
 	private boolean mShowNodes;
 	
 	@Override
 	protected void initGraphics() {
-		mTail = new Tail(mGraphics2D,100,true);
+		mTail = new YangTail(mGraphics2D,100,true);
 		mTail.setColor(0.7f, 0.7f, 0.99f);
 		mTailTexture = mGFXLoader.getAlphaMap("trans_invsqrt",new TextureProperties(TextureWrap.REPEAT, TextureWrap.MIRROR,TextureFilter.LINEAR_MIP_LINEAR));
 		mTail.setWidth(0.085f);

@@ -8,7 +8,7 @@ import yang.math.Geometry;
 import yang.model.DebugYang;
 import yang.util.Util;
 
-public class Tail {
+public class YangTail {
 
 	private final float[] mStdTexCoords = { 0, 0, 0, 2};
 	private final float[] mDoubleTexCoords = { 0, 0, 0, 2, 0, 1};
@@ -53,7 +53,7 @@ public class Tail {
 	public StripCreator mSingleStrips,mDoubleStrips;
 	public float mMaxWidthAtCount = 5;
 
-	public Tail(DefaultGraphics<?> graphics,int capacity,boolean subTails) {
+	public YangTail(DefaultGraphics<?> graphics,int capacity,boolean subTails) {
 		mGraphics = graphics;
 		mSingleStrips = new StripCreator(graphics);
 		mDoubleStrips = new DoubleStripCreator(graphics);
