@@ -26,8 +26,6 @@ class FontDrawPanel extends JPanel {
 	private BufferedImage canvas;
 	private int mGlobalB;
 	private int mGlobalT;
-	private int mStartID;
-	private int mEndID;
 	private int mLetters;
 	private LetterBox mBoxes[];
 	private int mCharHeight;
@@ -45,6 +43,8 @@ class FontDrawPanel extends JPanel {
 	private boolean code;
 	private int mAvgWidth;
 	private String mArgs;
+	private Integer[] mCharIndicesToRender;
+	private boolean mReplaceUndefinedChars;
 
 	public FontDrawPanel() {
 		mGlobalB = 0;
@@ -61,7 +61,7 @@ class FontDrawPanel extends JPanel {
     	mTransparent = new Color(0,0,0,0);
     }
     
-    public void setParameters(String userInput,String fontName, int outputWidth, int outputHeight, int asciiStartID, int asciiEndID, int kernBoxes, int fontSize, String filename, int pixelBorderHor, int pixelBorderVer, int debug){
+    public void setParameters(String userInput,String fontName, int outputWidth, int outputHeight, Integer charIndicesToRender[], int kernBoxes, int fontSize, String filename, int pixelBorderHor, int pixelBorderVer, int debug, boolean replaceUndefinedChars){
     	mArgs = userInput;
     	mFontName = fontName;
     	mWidth	  = outputWidth;
@@ -74,12 +74,12 @@ class FontDrawPanel extends JPanel {
     	
     	mLeftStart = mWidth / 2;
     	
-    	mStartID = asciiStartID;
-    	mEndID = asciiEndID;
-    	mLetters = mEndID-mStartID ;
+    	mCharIndicesToRender = charIndicesToRender;
+    	mLetters = mCharIndicesToRender.length;
     	
     	mBoxes = new LetterBox[mLetters];
     	mKernBoxes = kernBoxes;
+    	mReplaceUndefinedChars = replaceUndefinedChars;
     	
     	mFilename = filename;
     	
@@ -159,8 +159,8 @@ class FontDrawPanel extends JPanel {
 		else
 			out.println("charHeight = "+ ((float)(mGlobalB-mGlobalT))/mHeight);
 		
-		out.println("firstCharID = " + mStartID);
-		out.println("lastCharID = " + (mEndID-1));
+		out.println("firstCharID = " + mCharIndicesToRender[0]);
+		out.println("lastCharID = " + (mCharIndicesToRender[mCharIndicesToRender.length-1]));
 		
 		if(savePixelCoords) out.println("spaceWidth = " + (mAvgWidth/2));
 		else out.println("spaceWidth = " + ((float)mAvgWidth/mWidth/2));
@@ -219,7 +219,7 @@ class FontDrawPanel extends JPanel {
 	private void WriteCodeSnippet(PrintWriter out) {
     	out.println("public int mKernBoxes = "+mKernBoxes+";");
         out.println("public int mHeight = "+(mGlobalB-mGlobalT)+";");
-        out.println("public int mFirstChar = " + mStartID + ";"); 
+        out.println("public int mFirstChar = " + mCharIndicesToRender[0] + ";"); 
         out.println("public TextureCoordinate mLetterCoords[] = {");
         		        
         int i=0;
@@ -271,9 +271,9 @@ class FontDrawPanel extends JPanel {
     	g2.setColor(mTransparent);
         g2.clearRect(0, 0, mWidth, mHeight);           
     	
-    	for(int i=mStartID; i<mEndID; i++){
-    		LetterBox box = mBoxes[i-mStartID];
-    		int res = placeLetter(g2,g, x,y, (char)i, box);
+    	for(int i=0; i<mCharIndicesToRender.length; i++){
+    		LetterBox box = mBoxes[i];
+    		int res = placeLetter(g2,g, x,y, (char) mCharIndicesToRender[i].intValue(), box);
     		if(res == 0) {
     			x+= box.w;
     			
@@ -287,11 +287,16 @@ class FontDrawPanel extends JPanel {
 	}
 
 	private int placeLetter(Graphics2D g2, Graphics g,int x, int y, char symbol, LetterBox box) {
+		char oldsym = symbol;
+		symbol = lookUpForReplacement(symbol);
 		
 		if(x/*-box.l*/+box.w > mWidth) return 1;
 		
 		g2.setColor(Color.WHITE);
-		g2.drawString( String.valueOf(symbol) , x - box.l, y); 
+		g2.drawString( String.valueOf(symbol) , x - box.l, y);
+		
+		//This line adds the character to the image, which will be taken for kerning
+		//g2.drawString( String.valueOf(lookUpForKernReplacement(oldsym)) , x - box.l, y); 
 		
 		if(mShowTextureBoxes) {
 			if(((int)symbol%2) == 0)
@@ -319,15 +324,44 @@ class FontDrawPanel extends JPanel {
 		return 0;		
 	}
 
+	private char lookUpForReplacement(char symbol) {
+		if(!mReplaceUndefinedChars) return symbol;
+		
+		switch(symbol) {
+			case 'ä' : return 'a';
+			case 'ö' : return 'o';
+			case 'ü' : return 'u';
+			case 'Ä' : return 'A';
+			case 'Ö' : return 'O';
+			case 'Ü' : return 'U';
+			default: return symbol;
+		}
+	}
+	
+	private char lookUpForKernReplacement(char symbol) {
+		if(!mReplaceUndefinedChars) return symbol;
+		
+		switch(symbol) {
+			case 'ä' : return 'T';
+			case 'ö' : return 'T';
+			case 'ü' : return 'T';
+			case 'Ä' : return 'T';
+			case 'Ö' : return 'T';
+			case 'Ü' : return 'T';
+			default: return symbol;
+		}
+	}
+
 	private void ScanEachLetter(Graphics2D g2, Graphics g) {    	
 		
 		g2.setFont(new Font(FontCreator.mFontName, FontCreator.mFontStyle , mFontSize));
 		
-    	for(int i=mStartID; i<mEndID; i++){
-	        LetterBox box = drawLetter((char)i,g2);
-	        mBoxes[i-mStartID] = box;
+    	for(int i=0; i<mCharIndicesToRender.length; i++){
+    		System.out.println((char)mCharIndicesToRender[i].intValue() + " <-> " + mCharIndicesToRender[i]);
+	        LetterBox box = drawLetter((char)mCharIndicesToRender[i].intValue(),g2);
+	        mBoxes[i] = box;
 	        
-	        if(i == '.')
+	        if((char)mCharIndicesToRender[i].intValue() == '.')
 	        	g.drawImage(canvas, 0,0,this);
 	        	        
 			if(box.t < mGlobalT) mGlobalT = box.t;
@@ -343,18 +377,20 @@ class FontDrawPanel extends JPanel {
 		
 		g2.setFont(new Font(FontCreator.mFontName, FontCreator.mFontStyle , mFontSize));
 		
-    	for(int i=mStartID; i<mEndID; i++){
+    	for(int i=0; i<mCharIndicesToRender.length; i++){
     		g2.setColor(Color.WHITE);
             g2.fillRect(0, 0, mWidth, mHeight);
             g2.setColor(Color.BLACK);        
             
             // Draw Text
-            if(i == 0x20) // SPACE sign
+            if((char)mCharIndicesToRender[i].intValue() == 0x20) // SPACE sign
             	g2.drawString( "l" , mLeftStart ,mBaseLine);
-            else
-            	g2.drawString( String.valueOf((char)i) , mLeftStart ,mBaseLine); 
+            else {
+            	g2.drawString( ""+(lookUpForReplacement((char)mCharIndicesToRender[i].intValue())) , mLeftStart ,mBaseLine);
+            	g2.drawString( ""+(lookUpForKernReplacement((char)mCharIndicesToRender[i].intValue())) , mLeftStart ,mBaseLine);
+            }
 	        
-            KernBox box = getKernBox(canvas, mBoxes[i-mStartID]);
+            KernBox box = getKernBox(canvas, mBoxes[i]);
 	        					
         }    	
     	
@@ -372,8 +408,10 @@ class FontDrawPanel extends JPanel {
         // Draw Text
         if(c == 0x20) //If SPACE sign
         	g2.drawString( "l" , mLeftStart ,mBaseLine);
-        else
-        	g2.drawString( String.valueOf(c) , mLeftStart ,mBaseLine);        
+        else {
+        	g2.drawString( String.valueOf(lookUpForReplacement(c)) , mLeftStart ,mBaseLine);
+        	g2.drawString( ""+(lookUpForKernReplacement(c)) , mLeftStart ,mBaseLine);
+        }
         
         LetterBox box = getBoundingBox(canvas, c);
         

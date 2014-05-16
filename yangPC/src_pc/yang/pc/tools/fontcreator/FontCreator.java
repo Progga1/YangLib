@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -47,6 +48,12 @@ public class FontCreator {
 		private static int mBorderVertical;
 		public static int mFontStyle = java.awt.Font.PLAIN;	  
 		private static int paramCount;
+
+		private static LinkedList<Integer> mCharList;
+
+		private static Integer[] mCharIndicesToRender;
+
+		private static boolean mReplaceUndefinedChars;
 	
 		public static void printParam(String param,String defaultVal) {
 			System.out.print((++paramCount)+". ");
@@ -59,6 +66,8 @@ public class FontCreator {
 		}
 		
 	    public static void main(String[] args) {
+	    	
+	    	mCharList = new LinkedList<Integer>();
 	    	
 	    	if(!loadArgs(args)) {
 //	    		System.out.println("Please give parameters: " +
@@ -80,9 +89,10 @@ public class FontCreator {
 	    		printParam("font size","112 @resolution=1024");
 	    		printParam("extra border x:y","9:7 @fontSize=112");
 	    		printParam("kern boxes",""+DEFAULT_KERN_BOXES);
-	    		printParam("ascii range","23-123");
+	    		printParam("ascii range","33-122");
 	    		printParam("generation loc","workspace");
 	    		printParam("output name","font name + style");
+	    		printParam("replace undef. chars","false, use \"true\" to activate");
 	    		System.out.println("\nPlease enter:");
 	    		System.out.flush();
 	    		System.out.flush();
@@ -175,19 +185,39 @@ public class FontCreator {
 	    		
 	    		
 	    		if(args.length>= 6) {
-	    			res = args[5].split("-");
-		    		mAsciiStartID   = Integer.valueOf( res[0] );
-		    		if(res.length>1)
-		    			mAsciiEndID     = Integer.valueOf( res[1] );
-		    		else
-		    			mAsciiEndID 	= 123;
+	    			
+	    			String[] arrays = args[5].split(",");
+	    			
+	    			for(String array: arrays) {
+		    			res = array.split("-");
+			    		mAsciiStartID   = Integer.valueOf( res[0] );
+			    		if(res.length>1)
+			    			mAsciiEndID     = Integer.valueOf( res[1] );
+			    		else {
+			    			mAsciiEndID     = Integer.valueOf( res[0] );
+			    		}
+			    			
+			    		for(int i = mAsciiStartID; i<= mAsciiEndID; i++) {
+			    			Integer toAdd = new Integer(i);
+			    			
+							if(!mCharList.contains(toAdd))
+								mCharList.add(toAdd);
+			    		}	
+	    			}	    			
+	    			
+	    			mCharIndicesToRender = mCharList.toArray(new Integer[0]);
+	    			
 	    		}
 	    		if(args.length>=7) {
 	    			mPath		    = args[6];
 	    		}
 	    		if(args.length>=8) {
 	    			mFilename = args[7];
-	    		}else{
+	    		} if(args.length>= 9) {
+	    			mReplaceUndefinedChars = args[8].equals("true");
+	    			
+	    			
+	    		} else{
 	    			mFilename = fontName[0].trim().toLowerCase();
 	    			if((mFontStyle & Font.BOLD)!=0)
 	    				mFilename += "_bold";
@@ -208,7 +238,7 @@ public class FontCreator {
 	        JFrame f = new JFrame("Swing Paint Demo");
 	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        FontDrawPanel panel = new FontDrawPanel();
-	        panel.setParameters(mArgs, mFontName, mOutputWidth, mOutputHeight, mAsciiStartID, mAsciiEndID, mKernBoxes, mFontSize, mFilename, mBorderHorizontal, mBorderVertical, mDebug);	
+	        panel.setParameters(mArgs, mFontName, mOutputWidth, mOutputHeight, mCharIndicesToRender, mKernBoxes, mFontSize, mFilename, mBorderHorizontal, mBorderVertical, mDebug, mReplaceUndefinedChars);	
 	        
 	        f.add(panel);
 	        f.pack();

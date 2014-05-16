@@ -22,6 +22,11 @@ public class Vector2f extends Point2f{
 		return mX*mX+mY*mY;
 	}
 	
+	public Vector2f norm() {
+		scale(1f/getMagnitude());
+		return this;
+	}
+	
 	/** 
 	 * returns the absolute angle between to vectors 
 	 * @param to
@@ -54,6 +59,11 @@ public class Vector2f extends Point2f{
 	public void scale(float f) {
 		mX *= f;
 		mY *= f;
+	}
+
+	/** Normalized the vector and scales it to a new length */
+	public void setMagnitude(float newLength) {
+		scale(newLength/getMagnitude());
 	}
 
 	
