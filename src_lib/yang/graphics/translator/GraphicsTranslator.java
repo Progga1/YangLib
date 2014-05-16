@@ -30,6 +30,7 @@ import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
+import yang.model.DebugYang;
 import yang.model.SurfaceParameters;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
@@ -533,6 +534,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public void setMaxFPS(int fps) {
 		if(fps<=0)
 			fps = Integer.MAX_VALUE;
+		else
+			DebugYang.FPS_BAR_MAX_FRAMES = fps;
 		mMaxFPS = fps;
 		mMinDrawFrameIntervalNanos = 1000000000/fps;
 	}

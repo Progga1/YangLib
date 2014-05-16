@@ -80,13 +80,13 @@ public class OBJSampleState extends SampleState {
 			mObj[++mObjCount] = loader.getMesh();
 			loader.mTextureProperties = null;
 
-//			transform.loadIdentity();
-//			transform.translate(0, 0.3f);
-//			transform.rotateY((float)Math.PI/2);
-//			transform.rotateX(-0.3f);
-//			transform.scale(0.2f);
-//			loader.loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),transform,true,true);
-//			mObj[++mObjCount] = loader.getMesh();
+			transform.loadIdentity();
+			transform.translate(0, 0.3f);
+			transform.rotateY((float)Math.PI/2);
+			transform.rotateX(-0.3f);
+			transform.scale(0.2f);
+			loader.loadOBJ(mResources.getAssetInputStream("models/SuperMario.obj"),transform,true,true);
+			mObj[++mObjCount] = loader.getMesh();
 
 			transform.loadIdentity();
 			transform.scale(0.42f);

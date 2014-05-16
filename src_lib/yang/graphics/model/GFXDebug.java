@@ -152,7 +152,7 @@ public class GFXDebug implements PrintInterface {
 
 		final float playSpeed = mSurface.mPlaySpeed;
 
-		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString.equals("")) && (mSurface.mMacro==null || !YangSurface.SHOW_MACRO_SIGN || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS)
+		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString.equals("")) && (mSurface.mMacro==null || !YangSurface.SHOW_MACRO_SIGN || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS && !DebugYang.DRAW_FPS_BAR)
 			return;
 
 		final float right = mGraphics.getNormRight()-mDebugOffsetX;
@@ -256,8 +256,17 @@ public class GFXDebug implements PrintInterface {
 			assert mGraphics.mTranslator.checkErrorInst("Draw pointers");
 		}
 
+
+		mTranslator.bindTexture(null);
+
+		if(DebugYang.DRAW_FPS_BAR && DebugYang.FPS_BAR_MAX_FRAMES>0) {
+			float s = mTranslator.mFPS/DebugYang.FPS_BAR_MAX_FRAMES * mTranslator.mRatioX*2;
+			mGraphics.setColor(DebugYang.FPS_BAR_COLOR);
+			mGraphics.drawRect(-mTranslator.mRatioX,-mTranslator.mRatioY, -mTranslator.mRatioX+s,-mTranslator.mRatioY+DebugYang.FPS_BAR_HEIGHT);
+			mGraphics.setColor(1,1,1,1);
+		}
+
 		prevDrawer.activate();
-		mGraphics.mTranslator.bindTexture(null);
 	}
 
 	public void setErrorString(String error) {

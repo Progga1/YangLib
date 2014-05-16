@@ -2,8 +2,9 @@ package yang.model;
 
 import java.io.IOException;
 
-public class DebugYang {
+import yang.graphics.model.FloatColor;
 
+public class DebugYang {
 
 	public static boolean AUTO_RECORD_MACRO = true;
 
@@ -14,6 +15,10 @@ public class DebugYang {
 	public static boolean showStart = false;
 	public static boolean drawTails = true;
 	public static boolean DRAW_GFX_VALUES = false;
+	public static boolean DRAW_FPS_BAR = false;
+	public static int FPS_BAR_MAX_FRAMES = 60;
+	public static float FPS_BAR_HEIGHT = 0.025f;
+	public static FloatColor FPS_BAR_COLOR = new FloatColor(0.1f,0.8f,0.1f);
 	public static boolean DRAW_POINTERS = false;
 	public static String PLAY_MACRO_FILENAME = null;
 
@@ -126,21 +131,6 @@ public class DebugYang {
 			stateString += "\n";
 		}
 	}
-
-//	public static void appendState(int i) {
-//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-//			appendState(""+i);
-//	}
-//
-//	public static void appendState(float f) {
-//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-//			appendState(""+f);
-//	}
-//
-//	public static void appendState(boolean b) {
-//		if(DEBUG_LEVEL>=curStateStringDebugLevel)
-//			appendState(""+b);
-//	}
 
 	public static void clearState() {
 		stateString = null;
