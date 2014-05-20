@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
@@ -36,14 +37,14 @@ public class PCGFXLoader extends AbstractGFXLoader {
 	}
 
 	@Override
-	public TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
+	public TextureData loadImageData(InputStream stream,boolean forceRGBA) {
 		BufferedImage image = null;
 
-		final String path =((PCResourceManager)mResources).getAssetFile(filename).getAbsolutePath();
+//		final String path =((PCResourceManager)mResources).getAssetFile(filename).getAbsolutePath();
 		try {
-			image = ImageIO.read(new File(path));
+			image = ImageIO.read(stream);
 		} catch (final IOException e) {
-			throw new RuntimeException("Image not found: "+path);
+			throw new RuntimeException(e);
 		}
 
 		final int width = image.getWidth();

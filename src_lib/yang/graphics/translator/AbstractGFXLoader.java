@@ -2,6 +2,7 @@ package yang.graphics.translator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
@@ -25,9 +26,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public static int MAX_TEXTURES = 1024;
 
 	public static final String[] IMAGE_EXT	= {".png",".jpg",".bmp"};
-	public static final String SHADER_EXT	= ".txt";
+	public static final String[] SHADER_EXT	= {".txt"};
 
-	protected String SHADER_PATH	= "shaders" + File.separatorChar;
+	protected String[] SHADER_PATHS	= {"shaders" + File.separatorChar,"models"+File.separatorChar};
 	protected String[] IMAGE_PATH		= new String[]{"","textures"+File.separatorChar,"models"+File.separatorChar};
 	protected String MATERIAL_PATH  = "models" + File.separatorChar;
 
@@ -65,7 +66,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	public AbstractResourceManager mResources;
 
-	protected abstract TextureData derivedLoadImageData(String filename,boolean forceRGBA);
+	public abstract TextureData loadImageData(InputStream stream,boolean forceRGBA);
 	protected abstract void getImageDimensions(String filename,Dimensions2i result);
 
 	public AbstractGFXLoader(GraphicsTranslator graphics,AbstractResourceManager resources) {
@@ -100,27 +101,29 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return result;
 	}
 
-	public TextureData loadImageData(String path,String name,String ext,boolean forceRGBA) {
-		final String filename = path + File.separatorChar+name+"."+ext;
-		if(!mResources.assetExists(filename))
-			return null;
-		else
-			return derivedLoadImageData(filename,forceRGBA);
-	}
-
 	public String getImageAssetFilename(String name) {
 		return mResources.getAssetFilename(name,IMAGE_PATH,IMAGE_EXT);
 	}
 
-	protected TextureData loadImageData(String name,boolean forceRGBA) {
+	protected TextureData loadAssetImageData(String name,boolean forceRGBA) {
 		final String filename = getImageAssetFilename(name);
 		if(filename==null)
 			return null;
-		return derivedLoadImageData(filename,forceRGBA);
+
+		InputStream stream = mResources.getAssetInputStream(filename);
+
+		return loadImageData(stream,forceRGBA);
 	}
 
-	public TextureData loadImageData(String name) {
-		return loadImageData(name,false);
+	public TextureData loadAssetImageData(String name) {
+		return loadAssetImageData(name,false);
+	}
+
+	protected TextureData loadExternalImageData(String filename,boolean forceRGBA) {
+		InputStream stream = mResources.getExternalInputStream(filename);
+		if(stream==null)
+			return null;
+		return loadImageData(stream,forceRGBA);
 	}
 
 	protected ByteBuffer getOrCreateTempBuffer(int width,int height,int channels) {
@@ -144,7 +147,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			result.setExtents(mTempDim.mWidth,mTempDim.mHeight);
 			enqueue(filename,result);
 		}else{
-			final TextureData imageData = loadImageData(filename,target.mProperties.mChannels>3);
+			final TextureData imageData = loadAssetImageData(filename,target.mProperties.mChannels>3);
 			result.update(imageData);
 		}
 		resource.mSubTextures.add(result);
@@ -185,7 +188,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			final AbstractTexture tex = mTexQueue[mTexQueueId];
 			if(tex.isFinished())
 				continue;
-			TextureData data = loadImageData(texKey,tex.getChannels()>3);
+			TextureData data = loadAssetImageData(texKey,tex.getChannels()>3);
 			if(data==null)
 				System.err.println("Image not found: "+texKey);
 			if(tex.mIsAlphaMap)
@@ -219,7 +222,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			enqueue(filename,result);
 			return result;
 		}else{
-			final TextureData data = derivedLoadImageData(filename,alphaMap);
+			final TextureData data = loadAssetImageData(filename,alphaMap);
 			if(alphaMap)
 				data.redToAlpha();
 			textureProperties.mChannels = data.mChannels;
@@ -319,9 +322,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		String shader = mShaders.get(name);
 		if (shader != null)
 			return shader;
-		if(!name.endsWith(SHADER_EXT))
-			name += SHADER_EXT;
-		shader = mResources.textFileToString(SHADER_PATH+name);
+		String filename = mResources.getAssetFilename(name, SHADER_PATHS, SHADER_EXT);
+		shader = mResources.textFileToString(filename);
 		mShaders.put(name, shader);
 		return shader;
 	}
