@@ -1,7 +1,7 @@
 package yang.graphics.defaults;
 
 
-import java.io.FileNotFoundException;
+import java.nio.ByteBuffer;
 
 import yang.events.Keys;
 import yang.events.YangEventQueue;
@@ -9,14 +9,16 @@ import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
+import yang.graphics.interfaces.ScreenshotCallback;
 import yang.graphics.stereovision.LensDistortionShader;
+import yang.graphics.textures.TextureData;
 import yang.graphics.util.EulerOrientation;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.model.DebugYang;
 import yang.surface.YangSurface;
 
-public class DefaultMetaEventListener implements YangEventListener {
+public class DefaultMetaEventListener implements YangEventListener,ScreenshotCallback {
 
 	public YangSurface mSurface;
 	private boolean mRecording = false;
@@ -24,6 +26,7 @@ public class DefaultMetaEventListener implements YangEventListener {
 	private boolean mShiftPressed = false;
 	private final EulerOrientation mOrientation = new EulerOrientation();
 	public int mMetaBaseKey = Keys.F1;
+	private TextureData mScreenshotTarget;
 
 	public DefaultMetaEventListener(YangSurface surface,int metaBaseKey) {
 		mSurface = surface;
@@ -171,19 +174,23 @@ public class DefaultMetaEventListener implements YangEventListener {
 		if(code==base+10) {
 			mSurface.stopMacro();
 		}
-		if(code==base+11) {
-			if(!mRecording) {
-				mRecording = true;
-				try {
-					mSurface.recordMacro("macro.ym");
-				} catch (final FileNotFoundException e) {
-					DebugYang.exception(e);
-				}
-			}
-		}
+//		if(code==base+11) {
+//			if(!mRecording) {
+//				mRecording = true;
+//				try {
+//					mSurface.recordMacro("macro.ym");
+//				} catch (final FileNotFoundException e) {
+//					DebugYang.exception(e);
+//				}
+//			}
+//		}
+//
+//		if(code==base+12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
+//			mSurface.playMacro("macro.ym");
 
-		if(code==base+12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
-			mSurface.playMacro("macro.ym");
+		if(code==base+11) {
+			mSurface.makeScreenshot(this);
+		}
 
 
 		if(mSurface.mStereoVision!=null) {
@@ -235,6 +242,23 @@ public class DefaultMetaEventListener implements YangEventListener {
 	@Override
 	public void sensorChanged(YangSensorEvent event) {
 
+	}
+
+	@Override
+	public TextureData getScreenshotTarget(int originalWidth, int originalHeight) {
+		int tarWidth = originalWidth;
+		int tarHeight = originalHeight;
+		if(mScreenshotTarget==null)
+			mScreenshotTarget = new TextureData(tarWidth,tarHeight,4);
+		else if(tarWidth!=originalWidth || tarHeight!=originalHeight) {
+			mScreenshotTarget.resize(tarWidth,tarHeight,false);
+		}
+		return mScreenshotTarget;
+	}
+
+	@Override
+	public void onScreenshot(TextureData data) {
+		mSurface.mResources.saveImage("screenshots/screen.png", data, true);
 	}
 
 }

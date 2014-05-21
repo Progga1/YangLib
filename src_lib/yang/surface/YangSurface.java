@@ -16,14 +16,17 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.interfaces.Clock;
 import yang.graphics.interfaces.InitializationCallback;
+import yang.graphics.interfaces.ScreenshotCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.stereovision.StereoRendering;
 import yang.graphics.stereovision.StereoVision;
+import yang.graphics.textures.TextureData;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MathConst;
 import yang.model.App;
 import yang.model.DebugYang;
+import yang.model.enums.ByteFormat;
 import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
 import yang.sound.nosound.NoSoundManager;
@@ -92,6 +95,8 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	private int mStartupSteps = 1;
 	private int mLoadingSteps = 1;
 	private int mLoadingState = 0;
+	private ScreenshotCallback mScreenshotCallback = null;
+	private boolean mMakingScreenshot = false;
 
 	//Objects
 	private Thread mUpdateThread = null;
@@ -464,6 +469,13 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 
 	public final void drawFrame() {
+
+		mMakingScreenshot = mScreenshotCallback!=null;
+		TextureData screenShotData = null;
+		if(mMakingScreenshot) {
+			screenShotData = mScreenshotCallback.getScreenshotTarget(mGraphics.mScreenWidth,mGraphics.mScreenHeight);
+		}
+
 		if(mForceStereoVision) {
 			//STEREO VISION
 			if(mStereoVision == null) {
@@ -495,6 +507,12 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			drawContent(true);
 		}
 
+		if(mMakingScreenshot) {
+			mGraphics.readPixels(screenShotData.mData,4,ByteFormat.UNSIGNED_BYTE);
+			mScreenshotCallback.onScreenshot(screenShotData);
+			mScreenshotCallback = null;
+			mMakingScreenshot = false;
+		}
 	}
 
 	public final void drawContent(boolean callPreDraw) {
@@ -705,6 +723,22 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	@Override
 	public double getTime() {
 		return mProgramTime;
+	}
+
+	/**
+	 * @return True, if and only if, there is no screenshot to be made at the moment.
+	 */
+	public boolean makeScreenshot(ScreenshotCallback callback) {
+		if(mScreenshotCallback!=null)
+			return false;
+		else{
+			mScreenshotCallback = callback;
+			return true;
+		}
+	}
+
+	public boolean isMakingScreenshot() {
+		return mMakingScreenshot;
 	}
 
 }

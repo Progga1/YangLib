@@ -1,8 +1,10 @@
 package yang.android.io;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import yang.systemdependent.AbstractResourceManager;
 import android.content.Context;
@@ -53,4 +55,28 @@ public class AndroidResourceManager extends AbstractResourceManager {
 		}
 		throw new RuntimeException("external storage not available");
 	}
+
+//	@Override
+//	public boolean saveImage(String filename,ByteBuffer data) {
+//		final File folder = new File(Environment.getExternalStorageDirectory() + directory);
+//		boolean success = true;
+//		if (!folder.exists()) {
+//			success = folder.mkdirs();
+//		}
+//
+//		if (!success) {
+//			return false;
+//		}
+//		File f = new File(folder.getAbsolutePath() + filename + ".jpg");
+//
+//		try {
+//			f.createNewFile();
+//			FileOutputStream fo = new FileOutputStream(f);
+//			fo.write(data);
+//			fo.close();
+//
+//		} catch (IOException e) {
+//			return false;
+//		}
+//	}
 }

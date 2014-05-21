@@ -743,7 +743,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	}
 
-	public void deleteTexture(int id) {
+	protected void deleteTexture(int id) {
 		assert preCheck("Delete texture");
 		mTempInt[0] = id;
 		deleteTextures(mTempInt);
@@ -846,19 +846,19 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		readPixels(0,0,mScreenWidth,mScreenHeight,channels,byteFormat,pixels);
 	}
 
-	public void readPixels(ByteBuffer pixels) {
-		readPixels(0,0,mScreenWidth,mScreenHeight,4,ByteFormat.BYTE,pixels);
+	public void readPixels(ByteBuffer target) {
+		readPixels(0,0,mScreenWidth,mScreenHeight,4,ByteFormat.BYTE,target);
 	}
 
-	public ByteBuffer makeScreenshot(int channels,ByteFormat byteFormat) {
-		final ByteBuffer screenData = ByteBuffer.allocateDirect(mScreenWidth*mScreenHeight*channels*byteFormatBytes(byteFormat));
-		readPixels(screenData,channels,byteFormat);
-		return screenData;
-	}
-
-	public ByteBuffer makeScreenshot() {
-		return makeScreenshot(4,ByteFormat.UNSIGNED_BYTE);
-	}
+//	public ByteBuffer createByteBufferWithScreenData(int channels,ByteFormat byteFormat) {
+//		final ByteBuffer screenData = ByteBuffer.allocateDirect(mScreenWidth*mScreenHeight*channels*byteFormatBytes(byteFormat));
+//		readPixels(screenData,channels,byteFormat);
+//		return screenData;
+//	}
+//
+//	public ByteBuffer createByteBufferWithScreenData() {
+//		return createByteBufferWithScreenData(4,ByteFormat.UNSIGNED_BYTE);
+//	}
 
 	public void resetTimer() {
 		mTimer = 0;

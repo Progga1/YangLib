@@ -77,4 +77,8 @@ public class TextureRenderTarget implements SurfaceParameters {
 		return mPostCameraTransform;
 	}
 
+	public boolean isFreed() {
+		return mTargetTexture.isFreed();
+	}
+
 }
