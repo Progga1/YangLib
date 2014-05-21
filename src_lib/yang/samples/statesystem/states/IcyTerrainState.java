@@ -420,6 +420,8 @@ public class IcyTerrainState extends SampleState {
 		mGraphics3D.resetGlobalTransform();
 		mGraphics3D.resetCamera();
 		mGraphics3D.resetProjection();
+
+		mShadowHelper.free();
 	}
 
 	@Override

@@ -150,6 +150,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void switchZWriting(boolean enable);
 	public abstract void polygonOffset(float factor,float units);
 	public abstract void depthRange(float zNear,float zFar);
+	protected abstract void deleteBuffers(int[] bufIds);
+	protected abstract void deleteFrameBuffers(int[] bufIds);
 
 	protected void postInit() { }
 	public void setSystemCursorEnabled(boolean enabled){ }
@@ -212,6 +214,19 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mRenderTargets = new YangList<TextureRenderTarget>();
 		mRegisteredTextures = new YangList<Texture>();
 		setMaxFPS(0);
+	}
+
+	public void deleteRenderTarget(TextureRenderTarget renderTarget) {
+		assert preCheck("Delete render target");
+		mTempInt[0] = renderTarget.mFrameBufferId;
+		deleteBuffers(mTempInt);
+		assert checkErrorInst("Delete frame buffer");
+		mTempInt[0] = renderTarget.mDepthBufferId;
+		deleteFrameBuffers(mTempInt);
+		assert checkErrorInst("Delete depth buffer");
+		mRenderTargets.remove(renderTarget);
+		mRegisteredTextures.remove(renderTarget.mTargetTexture);
+		renderTarget.mTargetTexture.free();
 	}
 
 	public void addScreenListener(SurfaceListener listener) {

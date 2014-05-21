@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import javax.media.opengl.GL2;
@@ -324,6 +325,16 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
+	protected void deleteBuffers(int[] bufIds) {
+		gles2.glDeleteBuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
+	protected void deleteFrameBuffers(int[] bufIds) {
+		gles2.glDeleteFramebuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
 	public void derivedSetScreenRenderTarget() {
 		gles2.glBindFramebuffer(GL2ES2.GL_FRAMEBUFFER, 0);
 	}
@@ -406,7 +417,9 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		gles2.glPolygonOffset(factor, units);
 	}
 
+	@Override
 	public void depthRange(float zNear,float zFar) {
 		gles2.glDepthRange(zNear,zFar);
 	}
+
 }

@@ -280,6 +280,16 @@ System.out.println("CONPRESSSSS: "+width+" "+height+ " " + properties);
 	}
 
 	@Override
+	protected void deleteBuffers(int[] bufIds) {
+		GLES20.glDeleteBuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
+	protected void deleteFrameBuffers(int[] bufIds) {
+		GLES20.glDeleteFramebuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
 	public void derivedSetScreenRenderTarget() {
 		assert preCheck("Set screen render target");
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
@@ -291,6 +301,7 @@ System.out.println("CONPRESSSSS: "+width+" "+height+ " " + properties);
 		assert preCheck("Create render target");
 		GLES20.glGenFramebuffers(1, mTempInt, 0);
 		GLES20.glGenRenderbuffers(1, mTempInt2, 0);
+		assert checkError("Create render target buffers");
 		int frameId = mTempInt[0];
 		int depthId = mTempInt2[0];
 		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthId);
