@@ -1,6 +1,8 @@
 package yang.graphics.defaults.geometrycreators;
 
+import yang.graphics.buffers.AbstractVertexBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
+import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 
@@ -12,6 +14,7 @@ public class FanCreator {
 	
 	protected int id = 0;
 	private int d;
+	private short mStartID;
 	
 	/**
 	 * initializes a FanCreator to a certain degree (1-lowest)
@@ -36,7 +39,8 @@ public class FanCreator {
 	public void startFan(float x, float y) {
 		id = 0;
 		mVertexBuffer = mGraphics.mCurrentVertexBuffer;
-		mGraphics.putPosition(x, y);		
+		mGraphics.putPosition(x, y);
+		mStartID = (short)( mGraphics.getCurrentVertexBuffer().getBufferPosition(DefaultGraphics.ID_POSITIONS)-3);		
 	}
 	
 	/**
@@ -55,19 +59,19 @@ public class FanCreator {
 		} else {			
 			
 			if(id % d == 1 || d==1) {
-				mVertexBuffer.putRelativeIndex(0);
-				mVertexBuffer.putRelativeIndex(-d);
-				mVertexBuffer.putRelativeIndex(-id);			
+				mVertexBuffer.putIndex((short)(mStartID+id));
+				mVertexBuffer.putIndex((short)(mStartID+id-d));
+				mVertexBuffer.putIndex((short)(mStartID+id-id));			
 				
 			} else {
 				
-				mVertexBuffer.putRelativeIndex(0);
-				mVertexBuffer.putRelativeIndex(-1);
-				mVertexBuffer.putRelativeIndex(-d);
+				mVertexBuffer.putIndex((short)(mStartID+id));
+				mVertexBuffer.putIndex((short)(mStartID+id-1));
+				mVertexBuffer.putIndex((short)(mStartID+id-d));
 				
-				mVertexBuffer.putRelativeIndex(-1);
-				mVertexBuffer.putRelativeIndex(-d-1);
-				mVertexBuffer.putRelativeIndex(-d);
+				mVertexBuffer.putIndex((short)(mStartID+id-1));
+				mVertexBuffer.putIndex((short)(mStartID+id-d-1));
+				mVertexBuffer.putIndex((short)(mStartID+id-d));
 			}
 			
 			mGraphics.putPosition(x,y);			
@@ -79,19 +83,22 @@ public class FanCreator {
 	 * connects the first with the last column
 	 */
 	public void closeFan() {
+
+		short a = 1;
 		
-		mVertexBuffer.putRelativeIndex(-id-1);
-		mVertexBuffer.putRelativeIndex(-id);
-		mVertexBuffer.putRelativeIndex(-d);
+		mVertexBuffer.putIndex((short)(mStartID+id-id-1+a));
+		mVertexBuffer.putIndex((short)(mStartID+id-id+a));
+		mVertexBuffer.putIndex((short)(mStartID+id-d+a));
+		
 		
 		for(int i = 1; i<d; i++) {			
-			mVertexBuffer.putRelativeIndex( -i-1);
-			mVertexBuffer.putRelativeIndex( -i);
-			mVertexBuffer.putRelativeIndex(-id+d-i);
+			mVertexBuffer.putIndex((short)(mStartID+id -i-1+a));
+			mVertexBuffer.putIndex((short)(mStartID+id -i+a));
+			mVertexBuffer.putIndex((short)(mStartID+id-id+d-i+a));
 			
-			mVertexBuffer.putRelativeIndex( -i-1);
-			mVertexBuffer.putRelativeIndex( -id+d-i-1);
-			mVertexBuffer.putRelativeIndex(-id+d-i);	
+			mVertexBuffer.putIndex((short)(mStartID+id -i-1+a));
+			mVertexBuffer.putIndex((short)(mStartID+id -id+d-i-1+a));
+			mVertexBuffer.putIndex((short)(mStartID+id-id+d-i+a));	
 			
 		}
 	}
