@@ -96,6 +96,10 @@ public class Texture extends AbstractTexture {
 			mStatus = STATUS_GENERATED;
 	}
 
+	public void resize(int width, int height) {
+		update(null,width,height);
+	}
+
 	/**
 	 * No mipmaps are generated
 	 * @param x

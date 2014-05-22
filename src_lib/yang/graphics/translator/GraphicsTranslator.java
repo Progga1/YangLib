@@ -134,7 +134,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void setViewPort(int width,int height);
 	public abstract void setCullMode(boolean drawClockwise);
 	protected abstract void derivedSetScreenRenderTarget();
-	public abstract TextureRenderTarget derivedCreateRenderTarget(Texture texture);
+	public abstract void initRenderTarget(TextureRenderTarget target);
 	protected abstract void derivedSetTextureRenderTarget(TextureRenderTarget renderTarget);
 	public abstract void setDepthFunction(boolean less);
 	public abstract void generateMipMap();
@@ -292,7 +292,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		start();
 		for(final TextureRenderTarget renderTarget:mRenderTargets) {
-			derivedCreateRenderTarget(renderTarget.mTargetTexture);
+			initRenderTarget(renderTarget);
 		}
 		mRestartCount++;
 	}
@@ -758,7 +758,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public TextureRenderTarget createRenderTarget(Texture texture,boolean useScreenParameters) {
-		final TextureRenderTarget result = derivedCreateRenderTarget(texture);
+		final TextureRenderTarget result = new TextureRenderTarget(texture);
+		initRenderTarget(result);
 		result.setUseScreenParameters(useScreenParameters);
 		mRenderTargets.add(result);
 		return result;
@@ -779,6 +780,19 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	public TextureRenderTarget createRenderTarget(int widthAndHeight) {
 		return createRenderTarget(widthAndHeight,widthAndHeight);
+	}
+
+	public void resizeRenderTarget(TextureRenderTarget renderTarget, int width,int height) {
+		assert preCheck("Delete render target");
+		mTempInt[0] = renderTarget.mFrameBufferId;
+		deleteBuffers(mTempInt);
+		assert checkErrorInst("Delete frame buffer");
+		mTempInt[0] = renderTarget.mDepthBufferId;
+		deleteFrameBuffers(mTempInt);
+		assert checkErrorInst("Delete depth buffer");
+		renderTarget.mTargetTexture.resize(width,height);
+		initRenderTarget(renderTarget);
+		assert checkErrorInst("Resize render target");
 	}
 
 	private void setSurfaceParameters(SurfaceParameters surface) {
@@ -843,11 +857,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public void readPixels(ByteBuffer pixels,int channels,ByteFormat byteFormat) {
-		readPixels(0,0,mScreenWidth,mScreenHeight,channels,byteFormat,pixels);
+		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),channels,byteFormat,pixels);
 	}
 
 	public void readPixels(ByteBuffer target) {
-		readPixels(0,0,mScreenWidth,mScreenHeight,4,ByteFormat.BYTE,target);
+		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),4,ByteFormat.BYTE,target);
 	}
 
 //	public ByteBuffer createByteBufferWithScreenData(int channels,ByteFormat byteFormat) {

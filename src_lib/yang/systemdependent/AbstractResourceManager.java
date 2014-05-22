@@ -143,8 +143,15 @@ public abstract class AbstractResourceManager {
 	}
 
 	public boolean saveImage(String filename,TextureData image,boolean flipY) {
-		new File(filename).mkdir();
-		return saveImage(getExternalOutputStream(filename),filename.split("\\.")[1],image.mData,image.mWidth,image.mHeight,flipY);
+		String[] split = filename.split("\\.");
+		String format;
+		if(split.length<2) {
+			format = "png";
+			filename += ".png";
+		}else
+			format = split[1];
+//		new File(filename).mkdirs();
+		return saveImage(getExternalOutputStream(filename),format,image.mData,image.mWidth,image.mHeight,flipY);
 	}
 
 }

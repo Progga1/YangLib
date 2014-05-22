@@ -20,7 +20,6 @@ import yang.graphics.interfaces.ScreenshotCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.stereovision.StereoRendering;
 import yang.graphics.stereovision.StereoVision;
-import yang.graphics.textures.TextureData;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MathConst;
@@ -35,6 +34,7 @@ import yang.systemdependent.AbstractVibrator;
 import yang.systemdependent.NoSensor;
 import yang.systemdependent.YangSensor;
 import yang.systemdependent.YangSystemCalls;
+import yang.util.ImageCaptureData;
 import yang.util.Util;
 
 public abstract class YangSurface implements EventQueueHolder,RawEventListener,Clock {
@@ -434,6 +434,10 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		}
 	}
 
+	protected void catchUpTimer() {
+		mCatchUpTime = 0;
+	}
+
 	protected void step(float deltaTime) {
 
 	}
@@ -471,9 +475,10 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	public final void drawFrame() {
 
 		mMakingScreenshot = mScreenshotCallback!=null;
-		TextureData screenShotData = null;
+		ImageCaptureData screenShotData = null;
 		if(mMakingScreenshot) {
-			screenShotData = mScreenshotCallback.getScreenshotTarget(mGraphics.mScreenWidth,mGraphics.mScreenHeight);
+			screenShotData = mScreenshotCallback.getScreenshotTarget(mGraphics.mScreenWidth,mGraphics.mScreenHeight,mGraphics.mMinRatioX);
+			mGraphics.setTextureRenderTarget(screenShotData.mRenderTarget);
 		}
 
 		if(mForceStereoVision) {
@@ -508,10 +513,12 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		}
 
 		if(mMakingScreenshot) {
-			mGraphics.readPixels(screenShotData.mData,4,ByteFormat.UNSIGNED_BYTE);
-			mScreenshotCallback.onScreenshot(screenShotData);
+			mGraphics.readPixels(screenShotData.mImage.mData,4,ByteFormat.UNSIGNED_BYTE);
+			mScreenshotCallback.onScreenshot(screenShotData.mImage);
+			mGraphics.leaveTextureRenderTarget();
 			mScreenshotCallback = null;
 			mMakingScreenshot = false;
+			catchUpTimer();
 		}
 	}
 
@@ -532,7 +539,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			if(mException) {
 				mGraphics.beginFrame();
 				mGraphics.clear(0.1f,0,0);
-				if(mGFXDebug!=null)
+				if(mGFXDebug!=null && !mMakingScreenshot)
 					mGFXDebug.draw();
 				mGraphics.endFrame();
 				return;
@@ -552,7 +559,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 				catchUp();
 			assert mGraphics.checkErrorInst("Catchup");
 
-			if(mLoadingState>=mStartupSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+			if(mLoadingState>=mStartupSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null && !mMakingScreenshot) {
 				assert mGraphics.preCheck("Debug values");
 				mGFXDebug.reset();
 				if(DebugYang.DRAW_GFX_VALUES)
@@ -565,7 +572,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 				if(callPreDraw)
 					preDraw();
 				draw();
-				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null && !mMakingScreenshot) {
 					mGFXDebug.draw();
 				}
 			}else{

@@ -340,16 +340,16 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
-	public TextureRenderTarget derivedCreateRenderTarget(Texture texture) {
+	public void initRenderTarget(TextureRenderTarget target) {
 		assert preCheck("Create render target");
 		gles2.glGenFramebuffers(1, mTempInt, 0);
 		gles2.glGenRenderbuffers(1, mTempInt2, 0);
 		final int frameId = mTempInt[0];
 		final int depthId = mTempInt2[0];
 		gles2.glBindRenderbuffer(GL2ES2.GL_RENDERBUFFER, depthId);
-		gles2.glRenderbufferStorage(GL2ES2.GL_RENDERBUFFER, GL2ES2.GL_DEPTH_COMPONENT32, texture.getWidth(), texture.getHeight());
+		gles2.glRenderbufferStorage(GL2ES2.GL_RENDERBUFFER, GL2ES2.GL_DEPTH_COMPONENT32, target.mTargetTexture.getWidth(), target.mTargetTexture.getHeight());
 		assert checkErrorInst("Create render target");
-		return new TextureRenderTarget(texture,frameId,depthId);
+		target.set(frameId,depthId);
 	}
 
 	@Override
