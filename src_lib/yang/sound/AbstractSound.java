@@ -10,6 +10,10 @@ public abstract class AbstractSound {
 		mVolume = 1.0f;
 	}
 
+	public abstract void play();
+	public abstract void playLoop();
+	public abstract void stop();
+
 	public void play(float volume, float balance, float speed, int repeat) {
 		setVolume(volume);
 		setBalance(balance);
@@ -17,11 +21,18 @@ public abstract class AbstractSound {
 		setRepeatCount(repeat);
 		play();
 	}
-
-	public abstract void play();
-	public abstract void playLoop();
-	public abstract void stop();
-
+	
+	public void play(float volume) {
+		setVolume(volume);
+		play();
+	}
+	
+	public void play(float volume,float balance) {
+		setVolume(volume);
+		setBalance(balance);
+		play();
+	}
+	
 	/**
 	 * Sets the volume of this sound file.
 	 * @param volume range: 0.0 - 1.0
