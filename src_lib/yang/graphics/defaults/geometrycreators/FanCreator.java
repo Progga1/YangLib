@@ -1,8 +1,6 @@
 package yang.graphics.defaults.geometrycreators;
 
-import yang.graphics.buffers.AbstractVertexBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
-import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 
@@ -56,22 +54,24 @@ public class FanCreator {
 		if( id <= d ) { 
 			mGraphics.putPosition(x,y);			
 			
-		} else {			
+		} else {
+			
+			final int offs = mStartID+id;
 			
 			if(id % d == 1 || d==1) {
-				mVertexBuffer.putIndex((short)(mStartID+id));
-				mVertexBuffer.putIndex((short)(mStartID+id-d));
-				mVertexBuffer.putIndex((short)(mStartID+id-id));			
+				mVertexBuffer.putIndex((short)(offs));
+				mVertexBuffer.putIndex((short)(offs-d));
+				mVertexBuffer.putIndex((short)(offs-id));			
 				
 			} else {
 				
-				mVertexBuffer.putIndex((short)(mStartID+id));
-				mVertexBuffer.putIndex((short)(mStartID+id-1));
-				mVertexBuffer.putIndex((short)(mStartID+id-d));
+				mVertexBuffer.putIndex((short)(offs));
+				mVertexBuffer.putIndex((short)(offs-1));
+				mVertexBuffer.putIndex((short)(offs-d));
 				
-				mVertexBuffer.putIndex((short)(mStartID+id-1));
-				mVertexBuffer.putIndex((short)(mStartID+id-d-1));
-				mVertexBuffer.putIndex((short)(mStartID+id-d));
+				mVertexBuffer.putIndex((short)(offs-1));
+				mVertexBuffer.putIndex((short)(offs-d-1));
+				mVertexBuffer.putIndex((short)(offs-d));
 			}
 			
 			mGraphics.putPosition(x,y);			
@@ -83,23 +83,19 @@ public class FanCreator {
 	 * connects the first with the last column
 	 */
 	public void closeFan() {
-
-		short a = 1;
 		
-		mVertexBuffer.putIndex((short)(mStartID+id-id-1+a));
-		mVertexBuffer.putIndex((short)(mStartID+id-id+a));
-		mVertexBuffer.putIndex((short)(mStartID+id-d+a));
-		
+		mVertexBuffer.putIndex((short)(mStartID));
+		mVertexBuffer.putIndex((short)(mStartID + 1));
+		mVertexBuffer.putIndex((short)(mStartID +id - d + 1));		
 		
 		for(int i = 1; i<d; i++) {			
-			mVertexBuffer.putIndex((short)(mStartID+id -i-1+a));
-			mVertexBuffer.putIndex((short)(mStartID+id -i+a));
-			mVertexBuffer.putIndex((short)(mStartID+id-id+d-i+a));
+			mVertexBuffer.putIndex((short)(mStartID + id - i	));
+			mVertexBuffer.putIndex((short)(mStartID + id - i + 1));
+			mVertexBuffer.putIndex((short)(mStartID + d  - i + 1));
 			
-			mVertexBuffer.putIndex((short)(mStartID+id -i-1+a));
-			mVertexBuffer.putIndex((short)(mStartID+id -id+d-i-1+a));
-			mVertexBuffer.putIndex((short)(mStartID+id-id+d-i+a));	
-			
+			mVertexBuffer.putIndex((short)(mStartID + id - i	));
+			mVertexBuffer.putIndex((short)(mStartID + d  - i	));
+			mVertexBuffer.putIndex((short)(mStartID + d  - i + 1));			
 		}
 	}
 	
