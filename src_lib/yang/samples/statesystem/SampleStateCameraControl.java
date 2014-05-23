@@ -1,20 +1,20 @@
 package yang.samples.statesystem;
 
 import yang.events.eventtypes.SurfacePointerEvent;
-import yang.graphics.util.Camera3DControllable;
+import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.math.objects.Vector3f;
 
 public abstract class SampleStateCameraControl extends SampleState {
 
 	protected Vector3f mCamRight = new Vector3f();
 	protected Vector3f mCamUp = new Vector3f();
-	protected Camera3DControllable mCamera;
+	protected Camera3DControl mCamera;
 	protected char mSwitchPerspectiveKey = 'p';
 	protected char mInvertViewKey = 'v';
 
 	@Override
 	protected void initGraphics() {
-		mCamera = new Camera3DControllable(mStateSystem);
+		mCamera = new Camera3DControl(mStateSystem);
 	}
 
 
@@ -24,7 +24,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 	}
 
 	protected void setCamera() {
-		mGraphics3D.setCamera(mCamera.getUpdatedCamera());
+		mGraphics3D.setCamera(mCamera.getUpdatedCameraInstance());
 	}
 
 	@Override
