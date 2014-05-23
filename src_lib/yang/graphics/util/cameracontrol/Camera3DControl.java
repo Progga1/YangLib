@@ -15,6 +15,8 @@ public class Camera3DControl extends CameraControl {
 	public boolean 	mInvertView = false;
 	public boolean mOrthogonalProjection = true;
 	public float mViewDelay = 0.3f;
+	public char mSwitchPerspectiveKey = 'p';
+	public char mInvertViewKey = 'v';
 
 	//State
 	public float mTargetViewAlpha = 0,mTargetViewBeta = 0;
@@ -111,6 +113,16 @@ public class Camera3DControl extends CameraControl {
 			mTargetViewBeta = -MAX_BETA;
 		if(mTargetViewBeta>MAX_BETA)
 			mTargetViewBeta = MAX_BETA;
+	}
+
+	@Override
+	public void keyDown(int code) {
+		super.keyDown(code);
+		if(code==mSwitchPerspectiveKey)
+			mOrthogonalProjection ^= true;
+		if(code==mInvertViewKey)
+			mInvertView ^= true;
+
 	}
 
 }
