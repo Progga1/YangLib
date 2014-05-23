@@ -45,7 +45,7 @@ public class Particle3DSampleState extends SampleStateCameraControl {
 		mWeather.init(particles.init(mGraphics3D, 1000), props);
 		mWeather.mBoundaries.set(-6,6, -16,9, -6,6);
 		mWeather.createRandomParticles(1000);
-		mOrthogonalProjection = false;
+		mCamera.mOrthogonalProjection = false;
 	}
 
 	@Override

@@ -5,19 +5,20 @@ import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
+import yang.graphics.camera.Camera3D;
 import yang.math.MathConst;
 import yang.math.objects.Vector3f;
 import yang.surface.YangSurface;
 
 
-public class Camera3DControllable extends Camera3DAlphaBeta implements YangEventListener {
+public class Camera3DControllable implements YangEventListener {
 
 	final float MAX_BETA = MathConst.PI/2-0.01f;
 
 	//State
 	public boolean mShiftMode = false;
 	protected int mCurPointerDownCount = 0;
-	public float mTargetZoom = 1,mTargetViewAlpha,mTargetViewBeta;
+	public float mTargetZoom = 1,mTargetViewAlpha = 0,mTargetViewBeta = 0;
 
 	//Settings
 	public float mMinZoom = 0.3f;
@@ -26,9 +27,16 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 	public int mMoveCameraButton = SurfacePointerEvent.BUTTON_MIDDLE;
 	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
 	public int mShiftKey = Keys.SHIFT;
+	public boolean mOrthogonalProjection = true;
 
 	//Objects
+	protected Camera3D mCamera;
 	private final YangSurface mSurface;
+
+	public float mViewAlpha,mViewBeta;
+	public float mZoom;
+	public float mFocusX,mFocusY,mFocusZ;
+	public boolean 	mInvertView = false;
 
 	//Temp
 	private final Vector3f mCamRight = new Vector3f();
@@ -36,6 +44,7 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 
 	public Camera3DControllable(YangSurface surface) {
 		mSurface = surface;
+		mCamera = new Camera3D();
 		setZoom(1);
 	}
 
@@ -49,6 +58,34 @@ public class Camera3DControllable extends Camera3DAlphaBeta implements YangEvent
 		mZoom += (mTargetZoom-mZoom)*mZoomDelay;
 		mViewAlpha += (mTargetViewAlpha-mViewAlpha)*mViewDelay;
 		mViewBeta += (mTargetViewBeta-mViewBeta)*mViewDelay;
+	}
+
+	public Camera3D getUpdatedCamera() {
+		if(mOrthogonalProjection)
+			mCamera.setOrthogonalProjection(-2, 20, mZoom);
+		else
+			mCamera.setPerspectiveProjection(0.6f,100);
+		if(mInvertView)
+			mCamera.setLookOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+		else
+			mCamera.setLookAtAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+		return mCamera;
+	}
+
+	public Camera3D getCameraInstance() {
+		return mCamera;
+	}
+
+	public void setFocus(float x,float y,float z) {
+		mFocusX = x;
+		mFocusY = y;
+		mFocusZ = z;
+	}
+
+	public void shiftFocus(float dx, float dy, float dz) {
+		mFocusX += dx;
+		mFocusY += dy;
+		mFocusZ += dz;
 	}
 
 	public void setZoom(float zoom) {

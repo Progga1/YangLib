@@ -1,6 +1,7 @@
 package yang.samples.statesystem.states;
 
 import yang.graphics.buffers.DrawBatch;
+import yang.graphics.camera.Camera3D;
 import yang.graphics.defaults.geometrycreators.grids.TerrainCreator;
 import yang.graphics.defaults.kernels.SqrtKernel;
 import yang.graphics.defaults.particles.DefaultParticles3D;
@@ -22,7 +23,6 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
 import yang.model.Boundaries3D;
@@ -76,7 +76,7 @@ public class IcyTerrainState extends SampleState {
 	private DrawBatch mWaterBatch = null;
 	private DrawBatch mSkyBoxBatch = null;
 
-	private LegacyCamera3D mCamera = new LegacyCamera3D();
+	private Camera3D mCamera = new Camera3D();
 	private float mWorldAngle = 0;
 	private Vector3f mWorldShift = new Vector3f();
 	private float mCubeTop = 1;
@@ -328,7 +328,7 @@ public class IcyTerrainState extends SampleState {
 		float pY = 1.5f+(float)Math.sin(mStateTimer*fac*6) + GLOBAL_SHIFT;
 		float pZ = (float)Math.cos(mStateTimer*fac)*rad;
 
-		mGraphics3D.setPerspectiveProjection(0.6f,0.1f,100.5f);
+		mCamera.setPerspectiveProjection(0.6f,0.1f,100.5f);
 
 		if(ENVIRONMENT_MAPPING) {
 			mGraphics.checkErrorInst("Pre environment mapping");
@@ -366,7 +366,7 @@ public class IcyTerrainState extends SampleState {
 		//Begin real drawing
 		mGraphics.clear(0,0,0.25f,1,GLMasks.DEPTH_BUFFER_BIT);
 
-		mCamera.set(pX,pY,pZ, 0,0,0, 0,1,0);
+		mCamera.setLookAt(pX,pY,pZ, 0,0,0, 0,1,0);
 		mGraphics3D.setCamera(mCamera);
 
 //		if(true) {

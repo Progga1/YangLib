@@ -1,10 +1,9 @@
 package yang.graphics.util;
 
+import yang.graphics.camera.Camera3D;
 import yang.math.MathConst;
 
-public class Camera3DAlphaBeta {
-
-	protected LegacyCamera3D mCamera;
+public class Camera3DAlphaBeta extends Camera3D {
 
 	public float mViewAlpha,mViewBeta;
 	public float mZoom;
@@ -12,20 +11,15 @@ public class Camera3DAlphaBeta {
 	public boolean 	mInvertView = false;
 
 	public Camera3DAlphaBeta() {
-		mCamera = new LegacyCamera3D();
+
 	}
 
-	public LegacyCamera3D getUpdatedCamera() {
+	public Camera3DAlphaBeta update() {
 		if(mInvertView)
-			mCamera.setOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+			setLookOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
 		else
-			mCamera.setAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
-		return mCamera;
-	}
-
-
-	public LegacyCamera3D getCameraInstance() {
-		return mCamera;
+			setLookAtAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+		return this;
 	}
 
 	public void setFocus(float x,float y,float z) {

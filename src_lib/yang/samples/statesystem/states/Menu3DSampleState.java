@@ -54,7 +54,7 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 	@Override
 	protected void initGraphics() {
 		super.initGraphics();
-		super.mOrthogonalProjection = false;
+		mCamera.mOrthogonalProjection = false;
 		super.mCamera.mInvertView = true;
 		super.mCamera.mFocusZ = 1;
 	}
