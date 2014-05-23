@@ -75,5 +75,9 @@ public class MathFunc {
 	public static float randomAngle() {
 		return (float)(Math.random()*MathConst.PI2);
 	}
+
+	public static float sqrt(float v) {
+		return (float) Math.sqrt(v);
+	}
 	
 }
