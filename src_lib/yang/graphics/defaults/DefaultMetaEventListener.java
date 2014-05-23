@@ -21,15 +21,31 @@ import yang.math.objects.Vector3f;
 import yang.model.DebugYang;
 import yang.surface.YangSurface;
 import yang.util.ImageCaptureData;
+import yang.util.Util;
 
 public class DefaultMetaEventListener implements YangEventListener,ScreenshotCallback {
 
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH_mm_ss");
 	public static String SCREENSHOT_PREFIX = "yang ";
-	public static float SCREENSHOT_RES_FACTOR = 1;
+	public static float SCREENSHOT_RES_FACTOR = 3;
 	public static int SCREENSHOT_FORCE_RES_X = -1;
 	public static int SCREENSHOT_FORCE_RES_Y = -1;
 	public static int SCREENSHOT_FORCE_MIN_RATIO_X = -1;
+	public static boolean SCREENSHOTS_THREADED = true;
+
+	private class ScreenshotThread extends Thread {
+
+		public File mFile = null;
+		public TextureData mData = null;
+		public boolean mRunning = false;
+
+		@Override
+		public void run() {
+			mRunning = true;
+			mSurface.mResources.saveImage(mFile.getAbsolutePath(), mData, true);
+			mRunning = false;
+		}
+	}
 
 	public YangSurface mSurface;
 	private boolean mCtrlPressed = false;
@@ -37,6 +53,7 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 	private final EulerOrientation mOrientation = new EulerOrientation();
 	public int mMetaBaseKey = Keys.F1;
 	private ImageCaptureData mScreenshotTarget;
+	private ScreenshotThread mScreenshotThread;
 
 	public static void forceScreenShotResolution(int width,int height) {
 		SCREENSHOT_FORCE_RES_X = width;
@@ -274,6 +291,7 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 
 	@Override
 	public void onScreenshot(TextureData data) {
+
 		Date date = new Date();
 		File folder = new File("screenshots");
 		if(!folder.exists()) {
@@ -286,7 +304,20 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 			i++;
 			file = new File(filename+'('+i+").png");
 		}
-		mSurface.mResources.saveImage(file.getAbsolutePath(), data, true);
+
+		if(SCREENSHOTS_THREADED) {
+			if(mScreenshotThread!=null) {
+				while(mScreenshotThread.mRunning) {
+					Util.sleep(20);
+				}
+			}
+			mScreenshotThread = new ScreenshotThread();
+			mScreenshotThread.mFile = file;
+			mScreenshotThread.mData = data;
+			mScreenshotThread.start();
+		}else{
+			mSurface.mResources.saveImage(file.getAbsolutePath(), data, true);
+		}
 	}
 
 }
