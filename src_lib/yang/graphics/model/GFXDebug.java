@@ -262,7 +262,7 @@ public class GFXDebug implements PrintInterface {
 		if(DebugYang.DRAW_FPS_BAR && DebugYang.FPS_BAR_MAX_FRAMES>0) {
 			float s = mTranslator.mFPS/DebugYang.FPS_BAR_MAX_FRAMES * mTranslator.mRatioX*2;
 			mGraphics.setColor(DebugYang.FPS_BAR_COLOR);
-			mGraphics.drawRect(-mTranslator.mRatioX,-mTranslator.mRatioY, -mTranslator.mRatioX+s,-mTranslator.mRatioY+DebugYang.FPS_BAR_HEIGHT);
+			mGraphics.drawRect(-mTranslator.mRatioX,mTranslator.mRatioY-DebugYang.FPS_BAR_HEIGHT, -mTranslator.mRatioX+s,mTranslator.mRatioY);
 			mGraphics.setColor(1,1,1,1);
 		}
 

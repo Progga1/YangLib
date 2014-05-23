@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import javax.media.opengl.GL2;
@@ -324,21 +325,31 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
+	protected void deleteBuffers(int[] bufIds) {
+		gles2.glDeleteBuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
+	protected void deleteFrameBuffers(int[] bufIds) {
+		gles2.glDeleteFramebuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
 	public void derivedSetScreenRenderTarget() {
 		gles2.glBindFramebuffer(GL2ES2.GL_FRAMEBUFFER, 0);
 	}
 
 	@Override
-	public TextureRenderTarget derivedCreateRenderTarget(Texture texture) {
+	public void initRenderTarget(TextureRenderTarget target) {
 		assert preCheck("Create render target");
 		gles2.glGenFramebuffers(1, mTempInt, 0);
 		gles2.glGenRenderbuffers(1, mTempInt2, 0);
 		final int frameId = mTempInt[0];
 		final int depthId = mTempInt2[0];
 		gles2.glBindRenderbuffer(GL2ES2.GL_RENDERBUFFER, depthId);
-		gles2.glRenderbufferStorage(GL2ES2.GL_RENDERBUFFER, GL2ES2.GL_DEPTH_COMPONENT32, texture.getWidth(), texture.getHeight());
+		gles2.glRenderbufferStorage(GL2ES2.GL_RENDERBUFFER, GL2ES2.GL_DEPTH_COMPONENT32, target.mTargetTexture.getWidth(), target.mTargetTexture.getHeight());
 		assert checkErrorInst("Create render target");
-		return new TextureRenderTarget(texture,frameId,depthId);
+		target.set(frameId,depthId);
 	}
 
 	@Override
@@ -406,7 +417,9 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		gles2.glPolygonOffset(factor, units);
 	}
 
+	@Override
 	public void depthRange(float zNear,float zFar) {
 		gles2.glDepthRange(zNear,zFar);
 	}
+
 }

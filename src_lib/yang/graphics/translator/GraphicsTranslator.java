@@ -134,7 +134,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void setViewPort(int width,int height);
 	public abstract void setCullMode(boolean drawClockwise);
 	protected abstract void derivedSetScreenRenderTarget();
-	public abstract TextureRenderTarget derivedCreateRenderTarget(Texture texture);
+	public abstract void initRenderTarget(TextureRenderTarget target);
 	protected abstract void derivedSetTextureRenderTarget(TextureRenderTarget renderTarget);
 	public abstract void setDepthFunction(boolean less);
 	public abstract void generateMipMap();
@@ -150,6 +150,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void switchZWriting(boolean enable);
 	public abstract void polygonOffset(float factor,float units);
 	public abstract void depthRange(float zNear,float zFar);
+	protected abstract void deleteBuffers(int[] bufIds);
+	protected abstract void deleteFrameBuffers(int[] bufIds);
 
 	protected void postInit() { }
 	public void setSystemCursorEnabled(boolean enabled){ }
@@ -212,6 +214,19 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		mRenderTargets = new YangList<TextureRenderTarget>();
 		mRegisteredTextures = new YangList<Texture>();
 		setMaxFPS(0);
+	}
+
+	public void deleteRenderTarget(TextureRenderTarget renderTarget) {
+		assert preCheck("Delete render target");
+		mTempInt[0] = renderTarget.mFrameBufferId;
+		deleteBuffers(mTempInt);
+		assert checkErrorInst("Delete frame buffer");
+		mTempInt[0] = renderTarget.mDepthBufferId;
+		deleteFrameBuffers(mTempInt);
+		assert checkErrorInst("Delete depth buffer");
+		mRenderTargets.remove(renderTarget);
+		mRegisteredTextures.remove(renderTarget.mTargetTexture);
+		renderTarget.mTargetTexture.free();
 	}
 
 	public void addScreenListener(SurfaceListener listener) {
@@ -277,7 +292,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 		start();
 		for(final TextureRenderTarget renderTarget:mRenderTargets) {
-			derivedCreateRenderTarget(renderTarget.mTargetTexture);
+			initRenderTarget(renderTarget);
 		}
 		mRestartCount++;
 	}
@@ -728,7 +743,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	}
 
-	public void deleteTexture(int id) {
+	protected void deleteTexture(int id) {
 		assert preCheck("Delete texture");
 		mTempInt[0] = id;
 		deleteTextures(mTempInt);
@@ -743,7 +758,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public TextureRenderTarget createRenderTarget(Texture texture,boolean useScreenParameters) {
-		final TextureRenderTarget result = derivedCreateRenderTarget(texture);
+		final TextureRenderTarget result = new TextureRenderTarget(texture);
+		initRenderTarget(result);
 		result.setUseScreenParameters(useScreenParameters);
 		mRenderTargets.add(result);
 		return result;
@@ -764,6 +780,19 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	public TextureRenderTarget createRenderTarget(int widthAndHeight) {
 		return createRenderTarget(widthAndHeight,widthAndHeight);
+	}
+
+	public void resizeRenderTarget(TextureRenderTarget renderTarget, int width,int height) {
+		assert preCheck("Delete render target");
+		mTempInt[0] = renderTarget.mFrameBufferId;
+		deleteBuffers(mTempInt);
+		assert checkErrorInst("Delete frame buffer");
+		mTempInt[0] = renderTarget.mDepthBufferId;
+		deleteFrameBuffers(mTempInt);
+		assert checkErrorInst("Delete depth buffer");
+		renderTarget.mTargetTexture.resize(width,height);
+		initRenderTarget(renderTarget);
+		assert checkErrorInst("Resize render target");
 	}
 
 	private void setSurfaceParameters(SurfaceParameters surface) {
@@ -828,22 +857,22 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public void readPixels(ByteBuffer pixels,int channels,ByteFormat byteFormat) {
-		readPixels(0,0,mScreenWidth,mScreenHeight,channels,byteFormat,pixels);
+		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),channels,byteFormat,pixels);
 	}
 
-	public void readPixels(ByteBuffer pixels) {
-		readPixels(0,0,mScreenWidth,mScreenHeight,4,ByteFormat.BYTE,pixels);
+	public void readPixels(ByteBuffer target) {
+		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),4,ByteFormat.BYTE,target);
 	}
 
-	public ByteBuffer makeScreenshot(int channels,ByteFormat byteFormat) {
-		final ByteBuffer screenData = ByteBuffer.allocateDirect(mScreenWidth*mScreenHeight*channels*byteFormatBytes(byteFormat));
-		readPixels(screenData,channels,byteFormat);
-		return screenData;
-	}
-
-	public ByteBuffer makeScreenshot() {
-		return makeScreenshot(4,ByteFormat.UNSIGNED_BYTE);
-	}
+//	public ByteBuffer createByteBufferWithScreenData(int channels,ByteFormat byteFormat) {
+//		final ByteBuffer screenData = ByteBuffer.allocateDirect(mScreenWidth*mScreenHeight*channels*byteFormatBytes(byteFormat));
+//		readPixels(screenData,channels,byteFormat);
+//		return screenData;
+//	}
+//
+//	public ByteBuffer createByteBufferWithScreenData() {
+//		return createByteBufferWithScreenData(4,ByteFormat.UNSIGNED_BYTE);
+//	}
 
 	public void resetTimer() {
 		mTimer = 0;

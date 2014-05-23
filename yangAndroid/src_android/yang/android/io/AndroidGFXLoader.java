@@ -40,23 +40,22 @@ public class AndroidGFXLoader extends AbstractGFXLoader {
 	}
 
 	@Override
-	protected TextureData derivedLoadImageData(String filename,boolean forceRGBA) {
-		AssetManager mgr = mContext.getAssets();
-		InputStream is = null;
-
-		try {
-			is = mgr.open(filename);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+	public TextureData loadImageData(InputStream stream,boolean forceRGBA) {
+//		AssetManager mgr = mContext.getAssets();
+//		InputStream is = null;
+//		try {
+//			is = mgr.open(stream);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 
 //		BitmapFactory.Options opt = new BitmapFactory.Options();
 //		opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		Bitmap bmp = BitmapFactory.decodeStream(is);
+		Bitmap bmp = BitmapFactory.decodeStream(stream);
 
 		try {
-			is.close();
-			is = null;
+			stream.close();
+			stream = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

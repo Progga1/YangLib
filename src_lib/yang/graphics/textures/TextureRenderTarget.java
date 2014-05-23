@@ -17,12 +17,17 @@ public class TextureRenderTarget implements SurfaceParameters {
 	public float mRatioX;
 	public float mRatioY;
 	public YangMatrix mPostCameraTransform = null;
+	public float mMinRatioX = 1;
 
 	public TextureRenderTarget(Texture targetTexture,int frameBufferId,int depthBufferId) {
 		mTargetTexture = targetTexture;
-		mFrameBufferId = frameBufferId;
-		mDepthBufferId = depthBufferId;
-		fakeDimensions(targetTexture.mWidth,targetTexture.mHeight);
+		set(-1,-1);
+	}
+
+	public void set(int frameId, int depthId) {
+		mFrameBufferId = frameId;
+		mDepthBufferId = depthId;
+		fakeDimensions(mTargetTexture.mWidth,mTargetTexture.mHeight);
 	}
 
 	public void setUseScreenParameters(boolean useScreenParameters) {
@@ -65,7 +70,15 @@ public class TextureRenderTarget implements SurfaceParameters {
 	}
 
 	public void fakeDimensions(int width, int height) {
-		fakeDimensions(width,height,(float)width/height,1);
+		mWidth = width;
+		mHeight = height;
+		mRatioX = (float) width / height;
+
+		if(mRatioX<mMinRatioX){
+			mRatioY = mMinRatioX/mRatioX;
+			mRatioX = mMinRatioX;
+		}else
+			mRatioY = 1;
 	}
 
 	public void fakeDimensions(SurfaceParameters surface) {
@@ -75,6 +88,18 @@ public class TextureRenderTarget implements SurfaceParameters {
 	@Override
 	public YangMatrix getViewPostTransform() {
 		return mPostCameraTransform;
+	}
+
+	public boolean isFreed() {
+		return mTargetTexture.isFreed();
+	}
+
+	public int getWidth() {
+		return mTargetTexture.mWidth;
+	}
+
+	public int getHeight() {
+		return mTargetTexture.mHeight;
 	}
 
 }

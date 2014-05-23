@@ -1,10 +1,10 @@
 package yang.util.pools;
 
-public class YangPool<ElemType> extends AbstractYangPool<ElemType> {
+public class YangRingBuffer<ElemType> extends AbstractYangRingBuffer<ElemType> {
 
 	private Class<ElemType> mClass;
 
-	public YangPool(int capacity,Class<ElemType> elemClass) {
+	public YangRingBuffer(int capacity,Class<ElemType> elemClass) {
 		mClass = elemClass;
 		recreate(capacity);
 	}

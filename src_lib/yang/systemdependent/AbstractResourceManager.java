@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.Properties;
+
+import yang.graphics.textures.TextureData;
 
 public abstract class AbstractResourceManager {
 
@@ -133,6 +136,22 @@ public abstract class AbstractResourceManager {
 			}
 		}
 		return null;
+	}
+
+	public boolean saveImage(OutputStream stream, String extension, ByteBuffer data,int width,int height,boolean flipY) {
+		return false;
+	}
+
+	public boolean saveImage(String filename,TextureData image,boolean flipY) {
+		String[] split = filename.split("\\.");
+		String format;
+		if(split.length<2) {
+			format = "png";
+			filename += ".png";
+		}else
+			format = split[1];
+//		new File(filename).mkdirs();
+		return saveImage(getExternalOutputStream(filename),format,image.mData,image.mWidth,image.mHeight,flipY);
 	}
 
 }

@@ -4,13 +4,11 @@ import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 
 import yang.android.io.AndroidGFXLoader;
-import yang.events.Keys;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.translator.Texture;
 import yang.model.DebugYang;
 import yang.model.enums.ByteFormat;
 import android.content.Context;
@@ -280,6 +278,16 @@ System.out.println("CONPRESSSSS: "+width+" "+height+ " " + properties);
 	}
 
 	@Override
+	protected void deleteBuffers(int[] bufIds) {
+		GLES20.glDeleteBuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
+	protected void deleteFrameBuffers(int[] bufIds) {
+		GLES20.glDeleteFramebuffers(bufIds.length,bufIds,0);
+	}
+
+	@Override
 	public void derivedSetScreenRenderTarget() {
 		assert preCheck("Set screen render target");
 		GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
@@ -287,23 +295,17 @@ System.out.println("CONPRESSSSS: "+width+" "+height+ " " + properties);
 	}
 
 	@Override
-	public TextureRenderTarget derivedCreateRenderTarget(Texture texture) {
+	public void initRenderTarget(TextureRenderTarget target) {
 		assert preCheck("Create render target");
 		GLES20.glGenFramebuffers(1, mTempInt, 0);
 		GLES20.glGenRenderbuffers(1, mTempInt2, 0);
+		assert checkError("Create render target buffers");
 		int frameId = mTempInt[0];
 		int depthId = mTempInt2[0];
 		GLES20.glBindRenderbuffer(GLES20.GL_RENDERBUFFER, depthId);
-		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, texture.getWidth(), texture.getHeight());
-//		while(GLES20.glCheckFramebufferStatus(depthId)==0 && GLES20.glCheckFramebufferStatus(frameId)==0) {System.out.println(GLES20.glCheckFramebufferStatus(depthId)+GLES20.glCheckFramebufferStatus(frameId));
-//			try {
-//				Thread.sleep(10);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		GLES20.glRenderbufferStorage(GLES20.GL_RENDERBUFFER, GLES20.GL_DEPTH_COMPONENT16, target.getWidth(), target.getHeight());
+		target.set(frameId,depthId);
 		assert checkError("Create render target");
-		return new TextureRenderTarget(texture,frameId,depthId);
 	}
 
 	@Override

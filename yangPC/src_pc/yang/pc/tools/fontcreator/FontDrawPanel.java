@@ -328,12 +328,12 @@ class FontDrawPanel extends JPanel {
 		if(!mReplaceUndefinedChars) return symbol;
 		
 		switch(symbol) {
-			case 'ä' : return 'a';
-			case 'ö' : return 'o';
-			case 'ü' : return 'u';
-			case 'Ä' : return 'A';
-			case 'Ö' : return 'O';
-			case 'Ü' : return 'U';
+			case 228 : return 'a';
+			case 246 : return 'o';
+			case 252 : return 'u';
+			case 196 : return 'A';
+			case 214 : return 'O';
+			case 220 : return 'U';
 			default: return symbol;
 		}
 	}
@@ -342,12 +342,12 @@ class FontDrawPanel extends JPanel {
 		if(!mReplaceUndefinedChars) return symbol;
 		
 		switch(symbol) {
-			case 'ä' : return 'T';
-			case 'ö' : return 'T';
-			case 'ü' : return 'T';
-			case 'Ä' : return 'T';
-			case 'Ö' : return 'T';
-			case 'Ü' : return 'T';
+			case 228 : return 'T';
+			case 246 : return 'T';
+			case 252 : return 'T';
+			case 196 : return 'T';
+			case 214 : return 'T';
+			case 220 : return 'T';
 			default: return symbol;
 		}
 	}

@@ -124,4 +124,8 @@ public class ShadowHelper {
 		return mDepthMap.mTargetTexture;
 	}
 
+	public void free() {
+		mGraphics.deleteRenderTarget(mDepthMap);
+	}
+
 }

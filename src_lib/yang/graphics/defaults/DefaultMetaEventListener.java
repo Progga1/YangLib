@@ -1,7 +1,10 @@
 package yang.graphics.defaults;
 
 
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import yang.events.Keys;
 import yang.events.YangEventQueue;
@@ -9,21 +12,53 @@ import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
+import yang.graphics.interfaces.ScreenshotCallback;
 import yang.graphics.stereovision.LensDistortionShader;
+import yang.graphics.textures.TextureData;
 import yang.graphics.util.EulerOrientation;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.model.DebugYang;
 import yang.surface.YangSurface;
+import yang.util.ImageCaptureData;
+import yang.util.Util;
 
-public class DefaultMetaEventListener implements YangEventListener {
+public class DefaultMetaEventListener implements YangEventListener,ScreenshotCallback {
+
+	public static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH_mm_ss");
+	public static String SCREENSHOT_PREFIX = "yang ";
+	public static float SCREENSHOT_RES_FACTOR = 3;
+	public static int SCREENSHOT_FORCE_RES_X = -1;
+	public static int SCREENSHOT_FORCE_RES_Y = -1;
+	public static int SCREENSHOT_FORCE_MIN_RATIO_X = -1;
+	public static boolean SCREENSHOTS_THREADED = true;
+
+	private class ScreenshotThread extends Thread {
+
+		public File mFile = null;
+		public TextureData mData = null;
+		public boolean mRunning = false;
+
+		@Override
+		public void run() {
+			mRunning = true;
+			mSurface.mResources.saveImage(mFile.getAbsolutePath(), mData, true);
+			mRunning = false;
+		}
+	}
 
 	public YangSurface mSurface;
-	private boolean mRecording = false;
 	private boolean mCtrlPressed = false;
 	private boolean mShiftPressed = false;
 	private final EulerOrientation mOrientation = new EulerOrientation();
 	public int mMetaBaseKey = Keys.F1;
+	private ImageCaptureData mScreenshotTarget;
+	private ScreenshotThread mScreenshotThread;
+
+	public static void forceScreenShotResolution(int width,int height) {
+		SCREENSHOT_FORCE_RES_X = width;
+		SCREENSHOT_FORCE_RES_Y = height;
+	}
 
 	public DefaultMetaEventListener(YangSurface surface,int metaBaseKey) {
 		mSurface = surface;
@@ -171,19 +206,23 @@ public class DefaultMetaEventListener implements YangEventListener {
 		if(code==base+10) {
 			mSurface.stopMacro();
 		}
-		if(code==base+11) {
-			if(!mRecording) {
-				mRecording = true;
-				try {
-					mSurface.recordMacro("macro.ym");
-				} catch (final FileNotFoundException e) {
-					DebugYang.exception(e);
-				}
-			}
-		}
+//		if(code==base+11) {
+//			if(!mRecording) {
+//				mRecording = true;
+//				try {
+//					mSurface.recordMacro("macro.ym");
+//				} catch (final FileNotFoundException e) {
+//					DebugYang.exception(e);
+//				}
+//			}
+//		}
+//
+//		if(code==base+12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
+//			mSurface.playMacro("macro.ym");
 
-		if(code==base+12 && mSurface.mResources.fileExistsInFileSystem("macro.ym"))
-			mSurface.playMacro("macro.ym");
+		if(code==base+11) {
+			mSurface.makeScreenshot(this);
+		}
 
 
 		if(mSurface.mStereoVision!=null) {
@@ -235,6 +274,50 @@ public class DefaultMetaEventListener implements YangEventListener {
 	@Override
 	public void sensorChanged(YangSensorEvent event) {
 
+	}
+
+	@Override
+	public ImageCaptureData getScreenshotTarget(int originalWidth, int originalHeight, float minRatioX) {
+		int tarWidth = SCREENSHOT_FORCE_RES_X>0?SCREENSHOT_FORCE_RES_X:(int)(originalWidth*SCREENSHOT_RES_FACTOR);
+		int tarHeight = SCREENSHOT_FORCE_RES_Y>0?SCREENSHOT_FORCE_RES_Y:(int)(originalHeight*SCREENSHOT_RES_FACTOR);
+		if(mScreenshotTarget==null)
+			mScreenshotTarget = new ImageCaptureData(mSurface.mGraphics).init(tarWidth,tarHeight);
+		else if(tarWidth!=mScreenshotTarget.getWidth() || tarHeight!=mScreenshotTarget.getHeight()) {
+			mScreenshotTarget.resize(tarWidth,tarHeight,false);
+		}
+		mScreenshotTarget.setMinRatioX(SCREENSHOT_FORCE_MIN_RATIO_X>0?SCREENSHOT_FORCE_MIN_RATIO_X:minRatioX);
+		return mScreenshotTarget;
+	}
+
+	@Override
+	public void onScreenshot(TextureData data) {
+
+		Date date = new Date();
+		File folder = new File("screenshots");
+		if(!folder.exists()) {
+			folder.mkdir();
+		}
+		String filename = "screenshots/"+SCREENSHOT_PREFIX+dateFormat.format(date);
+		File file = new File(filename+".png");
+		int i=0;
+		while(file.exists()) {
+			i++;
+			file = new File(filename+'('+i+").png");
+		}
+
+		if(SCREENSHOTS_THREADED) {
+			if(mScreenshotThread!=null) {
+				while(mScreenshotThread.mRunning) {
+					Util.sleep(20);
+				}
+			}
+			mScreenshotThread = new ScreenshotThread();
+			mScreenshotThread.mFile = file;
+			mScreenshotThread.mData = data;
+			mScreenshotThread.start();
+		}else{
+			mSurface.mResources.saveImage(file.getAbsolutePath(), data, true);
+		}
 	}
 
 }

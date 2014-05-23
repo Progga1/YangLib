@@ -373,12 +373,19 @@ public class YangMesh {
 		int i=0;
 		if(mPosIndices!=null) {
 			for(final int posInd:mPosIndices) {
-				final int posId = posInd*3;
+				if(posInd>=0) {
+					final int posId = posInd*3;
 
-				vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, positions[posId],positions[posId+1],positions[posId+2]);
+					vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, positions[posId],positions[posId+1],positions[posId+2]);
 
-				if(mColors!=null)
-					vertexBuffer.putArray(DefaultGraphics.ID_COLORS, mColors, posInd*4, 4);
+					if(mColors!=null)
+						vertexBuffer.putArray(DefaultGraphics.ID_COLORS, mColors, posInd*4, 4);
+				}else{
+					vertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, 0,0,0);
+					if(mColors!=null)
+						vertexBuffer.putArray(DefaultGraphics.ID_COLORS, mColors, 0, 4);
+				}
+				i++;
 			}
 		}else
 			vertexBuffer.putArray(DefaultGraphics.ID_POSITIONS, mPositions);

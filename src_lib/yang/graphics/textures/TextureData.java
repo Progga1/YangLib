@@ -16,25 +16,28 @@ public class TextureData {
 	public int mWidth;
 	public int mHeight;
 	public int mChannels;
-	private final byte mInterColors[] = new byte[4];
+	private int mCapacity;
+	private static byte[] tempArray = new byte[4];
 
 	public TextureData(ByteBuffer data,int width,int height,int channels) {
 		mData = data;
-		mTemp = data.duplicate();
 		mWidth = width;
 		mHeight = height;
 		mChannels = channels;
+		mCapacity = width*height*channels;
 	}
 
 	public TextureData(int width,int height,int channels) {
-		mData = ByteBuffer.allocateDirect(width*height*channels);
-		mWidth = width;
-		mHeight = height;
-		mChannels = channels;
+		this(ByteBuffer.allocateDirect(width*height*channels),width,height,channels);
 	}
 
 	public TextureData(int width,int height) {
 		this(width,height,4);
+	}
+
+	private void initTemp() {
+		if(mTemp==null)
+			mTemp = mData.duplicate();
 	}
 
 	public void copyRect(int left,int top,int width,int height, ByteBuffer source, int sourceChannels,int sourceLeft,int sourceTop,int sourceBufferWidth, int downScale) {
@@ -52,10 +55,10 @@ public class TextureData {
 			}
 		}else{
 			//Copy converted
-			mInterColors[0] = 0;
-			mInterColors[1] = 0;
-			mInterColors[2] = 0;
-			mInterColors[3] = 0;
+			tempArray[0] = 0;
+			tempArray[1] = 0;
+			tempArray[2] = 0;
+			tempArray[3] = 0;
 			width/=downScale;
 			height/=downScale;
 
@@ -65,10 +68,10 @@ public class TextureData {
 				for(int j=0;j<width;j++) {
 					for(int d=0;d<downScale;d++)
 						for(int c=0;c<sourceChannels;c++) {
-							mInterColors[c] = source.get();
+							tempArray[c] = source.get();
 						}
 					for(int c=0;c<mChannels;c++) {
-						mData.put(mInterColors[c]);
+						mData.put(tempArray[c]);
 					}
 				}
 			}
@@ -86,7 +89,7 @@ public class TextureData {
 	private void copyFromWorkingBuffer(int pixels) {
 		mTemp.limit(mTemp.position()+pixels*mChannels);
 		mData.put(mTemp);
-		mTemp.limit(mTemp.capacity());
+		mTemp.limit(mCapacity);
 	}
 
 	public void copyRect(int left,int top, TextureData source, int downScale) {
@@ -125,9 +128,8 @@ public class TextureData {
 		return this;
 	}
 
-	private static byte[] tempArray = new byte[4];
-
 	public TextureCoordBounds createBiasBorder(int left,int top,int width,int height, int borderX, int borderY, TextureWrap wrapX,TextureWrap wrapY) {
+		initTemp();
 		left += borderX;
 		top += borderY;
 		width -= borderX*2;
@@ -262,5 +264,30 @@ public class TextureData {
 			}
 		}
 	}
+
+	public void resize(int newWidth, int newHeight,boolean forceRecreation) {
+		mCapacity = newWidth*newHeight*4;
+		if(forceRecreation || newWidth>=mWidth || newHeight>=mHeight)
+			mData = ByteBuffer.allocateDirect(newWidth*newHeight*4);
+		mData.limit(mCapacity);
+		mWidth = newWidth;
+		mHeight = newHeight;
+	}
+
+//	public void toABGR() {
+//		mData.rewind();
+//		int cap = mWidth*mHeight*mChannels;
+//		for (int i=0; i<cap; i+=4) {
+//			int r = mData.get();
+//			int g = mData.get();
+//			int b = mData.get();
+//			int a = mData.get();
+//			mData.position(i);
+//			mData.put((byte)a);
+//			mData.put((byte)b);
+//			mData.put((byte)g);
+//			mData.put((byte)r);
+//		}
+//	}
 
 }

@@ -16,6 +16,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.font.BitmapFont;
 import yang.graphics.interfaces.Clock;
 import yang.graphics.interfaces.InitializationCallback;
+import yang.graphics.interfaces.ScreenshotCallback;
 import yang.graphics.model.GFXDebug;
 import yang.graphics.stereovision.StereoRendering;
 import yang.graphics.stereovision.StereoVision;
@@ -24,6 +25,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MathConst;
 import yang.model.App;
 import yang.model.DebugYang;
+import yang.model.enums.ByteFormat;
 import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
 import yang.sound.nosound.NoSoundManager;
@@ -32,6 +34,7 @@ import yang.systemdependent.AbstractVibrator;
 import yang.systemdependent.NoSensor;
 import yang.systemdependent.YangSensor;
 import yang.systemdependent.YangSystemCalls;
+import yang.util.ImageCaptureData;
 import yang.util.Util;
 
 public abstract class YangSurface implements EventQueueHolder,RawEventListener,Clock {
@@ -92,6 +95,8 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	private int mStartupSteps = 1;
 	private int mLoadingSteps = 1;
 	private int mLoadingState = 0;
+	private ScreenshotCallback mScreenshotCallback = null;
+	private boolean mMakingScreenshot = false;
 
 	//Objects
 	private Thread mUpdateThread = null;
@@ -429,6 +434,10 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		}
 	}
 
+	protected void catchUpTimer() {
+		mCatchUpTime = 0;
+	}
+
 	protected void step(float deltaTime) {
 
 	}
@@ -464,6 +473,14 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 
 	public final void drawFrame() {
+
+		mMakingScreenshot = mScreenshotCallback!=null;
+		ImageCaptureData screenShotData = null;
+		if(mMakingScreenshot) {
+			screenShotData = mScreenshotCallback.getScreenshotTarget(mGraphics.mScreenWidth,mGraphics.mScreenHeight,mGraphics.mMinRatioX);
+			mGraphics.setTextureRenderTarget(screenShotData.mRenderTarget);
+		}
+
 		if(mForceStereoVision) {
 			//STEREO VISION
 			if(mStereoVision == null) {
@@ -495,6 +512,14 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			drawContent(true);
 		}
 
+		if(mMakingScreenshot) {
+			mGraphics.readPixels(screenShotData.mImage.mData,4,ByteFormat.UNSIGNED_BYTE);
+			mScreenshotCallback.onScreenshot(screenShotData.mImage);
+			mGraphics.leaveTextureRenderTarget();
+			mScreenshotCallback = null;
+			mMakingScreenshot = false;
+			catchUpTimer();
+		}
 	}
 
 	public final void drawContent(boolean callPreDraw) {
@@ -514,7 +539,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			if(mException) {
 				mGraphics.beginFrame();
 				mGraphics.clear(0.1f,0,0);
-				if(mGFXDebug!=null)
+				if(mGFXDebug!=null && !mMakingScreenshot)
 					mGFXDebug.draw();
 				mGraphics.endFrame();
 				return;
@@ -534,7 +559,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 				catchUp();
 			assert mGraphics.checkErrorInst("Catchup");
 
-			if(mLoadingState>=mStartupSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+			if(mLoadingState>=mStartupSteps && DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null && !mMakingScreenshot) {
 				assert mGraphics.preCheck("Debug values");
 				mGFXDebug.reset();
 				if(DebugYang.DRAW_GFX_VALUES)
@@ -547,7 +572,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 				if(callPreDraw)
 					preDraw();
 				draw();
-				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null) {
+				if(DebugYang.DEBUG_LEVEL>0 && mGFXDebug!=null && !mMakingScreenshot) {
 					mGFXDebug.draw();
 				}
 			}else{
@@ -705,6 +730,22 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	@Override
 	public double getTime() {
 		return mProgramTime;
+	}
+
+	/**
+	 * @return True, if and only if, there is no screenshot to be made at the moment.
+	 */
+	public boolean makeScreenshot(ScreenshotCallback callback) {
+		if(mScreenshotCallback!=null)
+			return false;
+		else{
+			mScreenshotCallback = callback;
+			return true;
+		}
+	}
+
+	public boolean isMakingScreenshot() {
+		return mMakingScreenshot;
 	}
 
 }
