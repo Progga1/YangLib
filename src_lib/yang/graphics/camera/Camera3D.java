@@ -20,6 +20,10 @@ public class Camera3D extends YangCamera {
 		setOrthogonalProjection(near,far,1);
 	}
 
+	public void setOrthogonalProjection() {
+		setOrthogonalProjection(OrthogonalProjection.DEFAULT_NEAR,OrthogonalProjection.DEFAULT_FAR);
+	}
+
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
 		PerspectiveProjection.getTransformFovy(mProjectionTransform,fovy, stretchX,1, near, far);
 		mProjectionUpdated = true;
@@ -27,6 +31,10 @@ public class Camera3D extends YangCamera {
 
 	public void setPerspectiveProjection(float fovy, float near, float far) {
 		setPerspectiveProjection(fovy,near,far,1);
+	}
+
+	public void setPerspectiveProjection(float fovy, float range) {
+		setPerspectiveProjection(fovy,PerspectiveProjection.DEFAULT_NEAR,PerspectiveProjection.DEFAULT_NEAR+range);
 	}
 
 	public void setPerspectiveProjection(float fovy) {
@@ -42,8 +50,20 @@ public class Camera3D extends YangCamera {
 		setLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, 0,1,0);
 	}
 
-	public void setLookAtAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
+	public void setLookAtAlphaBeta(float alpha, float beta, float distance, float lookAtX, float lookAtY, float lookAtZ) {
 		MatrixOps.setLookAtAlphaBeta(mCameraTransform.mValues, lookAtX,lookAtY,lookAtZ,alpha,beta,distance, mPosition);
+	}
+
+	public void setLookAtAlphaBeta(float alpha, float beta, float distance) {
+		setLookAtAlphaBeta(alpha,beta, distance, 0,0,0);
+	}
+
+	public void setLookOutwardsAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {
+		setLookAt(focusX,focusY,focusZ,
+				focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance,
+				focusY+(float)Math.sin(beta)*distance,
+				focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance,
+				0,1,0);
 	}
 
 	public void setViewByTransform(YangMatrix cameraTransform) {

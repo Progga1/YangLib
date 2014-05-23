@@ -8,14 +8,13 @@ import java.nio.ShortBuffer;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.camera.Camera3D;
 import yang.graphics.camera.projection.OrthogonalProjection;
+import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.graphics.defaults.geometrycreators.LineDrawer3D;
 import yang.graphics.defaults.geometrycreators.SphereCreator;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.util.LegacyCamera3D;
-import yang.graphics.util.VertexZSort;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
@@ -170,8 +169,12 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		setPerspectiveProjection(fovy,near,far,1);
 	}
 
-	public void setPerspectiveProjection(float range) {
-		setPerspectiveProjection(0.6f,0.02f,range+0.02f);
+	public void setPerspectiveProjection(float fovy, float range) {
+		setPerspectiveProjection(fovy,PerspectiveProjection.DEFAULT_NEAR,PerspectiveProjection.DEFAULT_NEAR+range);
+	}
+
+	public void setPerspectiveProjection(float fovy) {
+		setPerspectiveProjection(fovy,PerspectiveProjection.DEFAULT_NEAR,PerspectiveProjection.DEFAULT_FAR);
 	}
 
 //	public void drawRectZ(float worldX1, float worldY1, float worldX2, float worldY2, float z, TransformationMatrix textureTransform) {
@@ -220,18 +223,14 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		setCameraLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, 0,1,0);
 	}
 
-	public void setCamera(LegacyCamera3D camera) {
-		setCameraLookAt(camera.mEyeX,camera.mEyeY,camera.mEyeZ, camera.mLookAtX,camera.mLookAtY,camera.mLookAtZ, camera.mUpX,camera.mUpY,camera.mUpZ);
-	}
-
-	public void setCameraAlphaBeta(float lookAtX, float lookAtY, float lookAtZ, float alpha, float beta, float distance) {
+	public void setCameraAlphaBeta(float alpha, float beta, float distance, float lookAtX, float lookAtY, float lookAtZ) {
 		mCamera3D.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
 		if(mAutoRefreshCameraTransform)
 			super.setCamera(mCamera3D);
 	}
 
 	public void setCameraAlphaBeta(float alpha, float beta, float distance) {
-		setCameraAlphaBeta(0,0,0, alpha,beta, distance);
+		setCameraAlphaBeta(alpha,beta, distance, 0,0,0);
 	}
 
 	public void setViewByTransform(YangMatrix cameraTransform) {

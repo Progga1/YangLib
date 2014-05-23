@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
+import yang.graphics.camera.Camera3D;
 import yang.graphics.defaults.meshes.loaders.MeshMaterialHandles;
 import yang.graphics.defaults.meshes.loaders.OBJLoader;
 import yang.graphics.defaults.meshes.loaders.YangMesh;
@@ -23,7 +24,6 @@ import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.glconsts.GLMasks;
-import yang.graphics.util.LegacyCamera3D;
 import yang.math.objects.YangMatrix;
 import yang.model.wrappers.FloatWrapper;
 import yang.samples.statesystem.SampleState;
@@ -37,7 +37,7 @@ public class OBJSampleState extends SampleState {
 	private DefaultObjShader mToonObjProgram;
 	private LightProperties mLightProperties;
 	private int mCurObjIndex = 0;
-	private final LegacyCamera3D mCamera = new LegacyCamera3D();
+	private final Camera3D mCamera = new Camera3D();
 	private int mObjCount = 0;
 	private MeshMaterialHandles mMatHandles;
 	private Texture mToonRamp1;
@@ -123,7 +123,9 @@ public class OBJSampleState extends SampleState {
 		mGraphics3D.activate();
 		mGraphics3D.setWhite();
 
-		mGraphics3D.setCamera(mCamera.setAlphaBeta(0*0.05f,0.4f,2));mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
+		mCamera.setLookAtAlphaBeta(0*0.05f,0.4f,2);
+		mGraphics3D.setCamera(mCamera);
+		mGraphics3D.setPerspectiveProjection(0.6f, 0.1f, 100);
 		if(false) {
 			mGraphics3D.setShaderProgram(mLightProgram);
 			mLightProgram.setLightDirectionNormalized(0.407f, -0.207f, -0.407f);

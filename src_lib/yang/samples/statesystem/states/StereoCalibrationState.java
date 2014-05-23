@@ -21,7 +21,7 @@ public class StereoCalibrationState extends SampleStateCameraControl {
 	@Override
 	protected void initGraphics() {
 		super.initGraphics();
-		super.mOrthogonalProjection = false;
+		mCamera.mOrthogonalProjection = false;
 		mCamera.setZoom(3);
 	}
 

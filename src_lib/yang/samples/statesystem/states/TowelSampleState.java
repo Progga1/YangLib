@@ -87,7 +87,6 @@ public class TowelSampleState extends SampleStateCameraControl {
 		mCamera.mFocusY = 0.6f;
 		if(!NEUTRAL)
 			mCamera.setViewAngle(0.1f, 0.1f);
-		refreshCamera();
 
 		if(!NEUTRAL) {
 			mSkeleton.mConstantForceY = -0.2f;
@@ -133,7 +132,7 @@ public class TowelSampleState extends SampleStateCameraControl {
 		mGraphics3D.setWhite();
 		mGraphics3D.setColorFactor(1);
 
-		super.mOrthogonalProjection = false;
+		mCamera.mOrthogonalProjection = false;
 		super.setCamera();
 
 		if(SKY) {

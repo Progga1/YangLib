@@ -1,29 +1,22 @@
 package yang.samples.statesystem;
 
 import yang.events.eventtypes.SurfacePointerEvent;
-import yang.graphics.util.Camera3DControllable;
+import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.math.objects.Vector3f;
 
 public abstract class SampleStateCameraControl extends SampleState {
 
-	protected boolean mOrthogonalProjection = true;
 	protected Vector3f mCamRight = new Vector3f();
 	protected Vector3f mCamUp = new Vector3f();
-	protected Camera3DControllable mCamera;
+	protected Camera3DControl mCamera;
 	protected char mSwitchPerspectiveKey = 'p';
 	protected char mInvertViewKey = 'v';
 
 	@Override
 	protected void initGraphics() {
-		mCamera = new Camera3DControllable(mStateSystem);
+		mCamera = new Camera3DControl(mStateSystem);
 	}
 
-	protected void refreshCamera() {
-		if(mOrthogonalProjection)
-			mGraphics3D.setOrthogonalProjection(-2, 20, mCamera.mZoom);
-		else
-			mGraphics3D.setPerspectiveProjection(100);
-	}
 
 	@Override
 	protected void step(float deltaTime) {
@@ -31,8 +24,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 	}
 
 	protected void setCamera() {
-		refreshCamera();
-		mGraphics3D.setCamera(mCamera.getUpdatedCamera());
+		mGraphics3D.setCamera(mCamera.getUpdatedCameraInstance());
 	}
 
 	@Override
@@ -60,7 +52,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 		super.keyDown(code);
 		mCamera.keyDown(code);
 		if(code==mSwitchPerspectiveKey)
-			mOrthogonalProjection ^= true;
+			mCamera.mOrthogonalProjection ^= true;
 		if(code==mInvertViewKey)
 			mCamera.mInvertView ^= true;
 	}

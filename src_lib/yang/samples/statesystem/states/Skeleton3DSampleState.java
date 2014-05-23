@@ -56,7 +56,6 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mSkeleton.setFriction(0.98f);
 		mCamera.setZoom(1.5f);
 		mCamera.mFocusY = 1;
-		refreshCamera();
 	}
 
 	@Override

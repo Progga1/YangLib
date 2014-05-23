@@ -52,7 +52,6 @@ public class Rotations3DSampleState extends SampleStateCameraControl {
 		mCamera.mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_LEFT;
 		mCamera.setZoom(3);
 		mCubeTex = mGFXLoader.getImage("cube");
-		refreshCamera();
 	}
 
 	@Override
