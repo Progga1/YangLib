@@ -9,6 +9,7 @@ public class CubeSkeletonCreator {
 
 	public MassAggregation mSkeleton;
 	public String mNamePrefix = "CUBE_";
+	public float mStrength = 500;
 
 	public Joint mLeftBottomFrontJoint,mRightBottomFrontJoint,mLeftTopFrontJoint,mRightTopFrontJoint, mLeftBottomBackJoint,mRightBottomBackJoint,mLeftTopBackJoint,mRightTopBackJoint;
 	public Joint[] mJoints = new Joint[8];
@@ -43,22 +44,27 @@ public class CubeSkeletonCreator {
 
 		for(Joint joint:mJoints) {
 			joint.applyTransform(transform);
+			joint.mMass = 2;
 		}
 
-//		mSkeleton.createRigidBody(mJoints,"",10);
-		final float SPRING_STRENGTH = 5;
-		for(int i=0;i<7;i++) {
-			mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mJoints[i],mJoints[i+1]), SPRING_STRENGTH);
-		}
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mLeftTopBackJoint,mLeftBottomBackJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mLeftTopFrontJoint,mLeftBottomFrontJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mRightTopFrontJoint,mRightTopBackJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mRightBottomFrontJoint,mRightBottomBackJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mLeftBottomFrontJoint,mLeftBottomBackJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mRightTopFrontJoint,mLeftBottomBackJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mLeftTopFrontJoint,mRightBottomBackJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mRightBottomFrontJoint,mLeftTopBackJoint), SPRING_STRENGTH);
-		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mLeftBottomFrontJoint,mRightTopBackJoint), SPRING_STRENGTH);
+		mSkeleton.createRigidBody(mJoints,"",10);
+//		for(int i=0;i<7;i++) {
+//			mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mJoints[i],mJoints[i+1]), mStrength);
+//		}
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mLeftTopBackJoint,mLeftBottomBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mLeftTopFrontJoint,mLeftBottomFrontJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mRightTopFrontJoint,mRightTopBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mRightBottomFrontJoint,mRightBottomBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE",mLeftBottomFrontJoint,mLeftBottomBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mRightTopFrontJoint,mLeftBottomBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mLeftTopFrontJoint,mRightBottomBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mRightBottomFrontJoint,mLeftTopBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG",mLeftBottomFrontJoint,mRightTopBackJoint), mStrength);
+//
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG_FACE",mLeftTopBackJoint,mLeftBottomFrontJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG_FACE",mRightTopBackJoint,mRightBottomFrontJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG_FACE",mLeftTopBackJoint,mRightBottomBackJoint), mStrength);
+//		mSkeleton.addSpringBone(new JointConnection("CUBE_BONE_DIAG_FACE",mLeftTopFrontJoint,mRightBottomFrontJoint), mStrength);
 
 		return mSkeleton;
 	}

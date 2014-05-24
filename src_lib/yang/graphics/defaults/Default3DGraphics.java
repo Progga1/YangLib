@@ -466,6 +466,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mLineDrawer.drawLine(mTempVec1, mTempVec2, DEBUG_AXIS_WIDTH*mDebugAxisWidthFactor,0);
 		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
 		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount);
+		fillBuffers();
 	}
 
 	public void drawDebugVector(float baseX,float baseY,float baseZ, Vector3f vector,FloatColor color,float scale,float alpha,YangMatrix transform) {

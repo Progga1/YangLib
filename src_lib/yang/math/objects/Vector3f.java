@@ -1,5 +1,7 @@
 package yang.math.objects;
 
+import yang.math.Geometry;
+
 
 public class Vector3f extends Point3f{
 
@@ -208,6 +210,20 @@ public class Vector3f extends Point3f{
 
 	public float magnXY() {
 		return (float)Math.sqrt(mX*mX + mY*mY);
+	}
+
+	public float magnXZ() {
+		return (float)Math.sqrt(mX*mX + mZ*mZ);
+	}
+
+	public float getAngleXY(Vector3f otherVector) {
+		float fac = this.mX*otherVector.mY>this.mY*otherVector.mX?1:-1;
+		return fac*(float)Math.acos((mX*otherVector.mX + mY*otherVector.mY)/(this.magnXY()*otherVector.magnXY()));
+	}
+
+	public float getAngleXZ(Vector3f otherVector) {
+		float fac = this.mX*otherVector.mZ>this.mZ*otherVector.mX?1:-1;
+		return fac*(float)Math.acos((mX*otherVector.mX + mZ*otherVector.mZ)/(this.magnXZ()*otherVector.magnXZ()));
 	}
 
 }

@@ -695,9 +695,9 @@ public class YangMatrix {
 		mValues[10] = dz;
 		mValues[11] = 0;
 
-		mValues[12] = 0;
-		mValues[13] = 0;
-		mValues[14] = 0;
+		mValues[12] = basePoint.mX;
+		mValues[13] = basePoint.mY;
+		mValues[14] = basePoint.mZ;
 		mValues[15] = 1;
 	}
 
@@ -809,19 +809,19 @@ public class YangMatrix {
 
 	public void getRightVector(Vector3f target) {
 		target.mX = mValues[0];
-		target.mY = mValues[4];
-		target.mZ = mValues[8];
+		target.mY = mValues[1];
+		target.mZ = mValues[2];
 	}
 
 	public void getUpVector(Vector3f target) {
-		target.mX = mValues[1];
+		target.mX = mValues[4];
 		target.mY = mValues[5];
-		target.mZ = mValues[9];
+		target.mZ = mValues[6];
 	}
 
 	public void getForwardVector(Vector3f target) {
-		target.mX = mValues[2];
-		target.mY = mValues[6];
+		target.mX = mValues[8];
+		target.mY = mValues[9];
 		target.mZ = mValues[10];
 	}
 

@@ -26,6 +26,7 @@ import yang.util.Util;
 public class DefaultMetaEventListener implements YangEventListener,ScreenshotCallback {
 
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH_mm_ss");
+	public static String SCREENSHOT_DIRECTORY = "../screenshots/";
 	public static String SCREENSHOT_PREFIX = "yang ";
 	public static float SCREENSHOT_RES_FACTOR = 1.5f;
 	public static int SCREENSHOT_FORCE_RES_X = -1;
@@ -293,11 +294,11 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 	public void onScreenshot(TextureData data) {
 
 		Date date = new Date();
-		File folder = new File("screenshots");
+		File folder = new File(SCREENSHOT_DIRECTORY);
 		if(!folder.exists()) {
 			folder.mkdir();
 		}
-		String filename = "screenshots/"+SCREENSHOT_PREFIX+dateFormat.format(date);
+		String filename = SCREENSHOT_DIRECTORY+SCREENSHOT_PREFIX+dateFormat.format(date);
 		File file = new File(filename+".png");
 		int i=0;
 		while(file.exists()) {

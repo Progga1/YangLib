@@ -86,6 +86,8 @@ public class Joint extends Point3f {
 		this(name,parent,position.mX,position.mY,position.mZ, radius);
 	}
 
+	public void applyConstraint() { }
+
 	public void setMassAggregation(MassAggregation massAggregation) {
 		mMassAggregation = massAggregation;
 		mId = mMassAggregation.getNextJointId();
@@ -361,7 +363,11 @@ public class Joint extends Point3f {
 		this.mForceZ += fZ;
 	}
 
-	public void applyConstraint() { }
+	public void addForce(Vector3f force) {
+		this.mForceX += force.mX;
+		this.mForceY += force.mY;
+		this.mForceZ += force.mZ;
+	}
 
 	public void setNormalDirection(float worldX, float worldY,Joint parent,float distance,boolean ortho,boolean invert,float xOffset,float yOffset) {
 		if(parent == null)
@@ -627,5 +633,7 @@ public class Joint extends Point3f {
 		mVelY = template.mVelY;
 		mVelZ = template.mVelZ;
 	}
+
+
 
 }
