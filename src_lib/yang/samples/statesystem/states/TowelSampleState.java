@@ -16,7 +16,7 @@ import yang.graphics.model.FloatColor;
 import yang.graphics.programs.permutations.BasicSubShader;
 import yang.graphics.programs.permutations.ShaderPermutations;
 import yang.graphics.programs.permutations.SubShader;
-import yang.graphics.skeletons.defaults.JointGridCreator;
+import yang.graphics.skeletons.defaults.creators.JointGridCreator;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;

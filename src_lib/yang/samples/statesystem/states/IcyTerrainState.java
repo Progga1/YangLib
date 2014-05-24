@@ -273,7 +273,7 @@ public class IcyTerrainState extends SampleState {
 			transfMatrix.scaleZ(0.3f);
 			mTerrain.initBatch(PATCHES_X, PATCHES_Y,terrainDimX,terrainDimY);
 			mTerrain.beginDraw();
-			mTerrain.putIndices();
+			mTerrain.putAllIndices();
 			mTerrain.putGridNeutralColors();
 			if(USE_LIGHTMAPS)
 				mTerrain.putGridTextureNormalRect(false);
@@ -284,7 +284,7 @@ public class IcyTerrainState extends SampleState {
 
 			mTerrain.initBatch(PATCHES_X, PATCHES_Y,terrainDimX,terrainDimY);
 			mTerrain.beginDraw();
-			mTerrain.putIndices();
+			mTerrain.putAllIndices();
 			mTerrain.putGridNeutralColors();
 			mTerrain.putGridTextureCoordinates(1.5f);
 			mTerrain.putTerrainPositionRect(heights,transfMatrix);
@@ -293,7 +293,7 @@ public class IcyTerrainState extends SampleState {
 
 			mTerrain.initBatch(WATER_PATCHES_X, WATER_PATCHES_Y,terrainDimX,terrainDimY);
 			mTerrain.beginDraw();
-			mTerrain.putIndices();
+			mTerrain.putAllIndices();
 			mTerrain.putTerrainPositionRect(new float[WATER_PATCHES_X][WATER_PATCHES_Y],transfMatrix);
 			mTerrain.putGridTextureNormalRect(false);
 			mGraphics3D.fillBuffers();

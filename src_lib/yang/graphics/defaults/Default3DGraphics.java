@@ -301,7 +301,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void drawSphere(int verticesAlpha,int verticesBeta,YangMatrix transform,float textureCoordFactorX,float textureCoordFactorY) {
 		mSphereCreator.init(verticesAlpha,verticesBeta,1,1,1);
 		mSphereCreator.beginDraw();
-		mSphereCreator.putIndices();
+		mSphereCreator.putAllIndices();
 		mSphereCreator.putPositions(transform,true);
 		mSphereCreator.putGridTextureRect(0,0,textureCoordFactorX,textureCoordFactorY);
 		mSphereCreator.putGridColor(mCurColor);

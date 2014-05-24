@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.defaults;
+package yang.graphics.skeletons.defaults.creators;
 
 import yang.graphics.skeletons.CartoonBone;
 import yang.physics.massaggregation.MassAggregation;

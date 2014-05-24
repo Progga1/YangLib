@@ -34,7 +34,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		mCurValues = null;
 	}
 
-	public void putIndices() {
+	public void putAllIndices() {
 		mGraphics.getCurrentVertexBuffer().putGridIndices(mCurXCount,mCurYCount);
 	}
 

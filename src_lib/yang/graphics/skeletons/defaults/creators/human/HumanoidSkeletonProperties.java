@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.defaults.human;
+package yang.graphics.skeletons.defaults.creators.human;
 
 public class HumanoidSkeletonProperties {
 

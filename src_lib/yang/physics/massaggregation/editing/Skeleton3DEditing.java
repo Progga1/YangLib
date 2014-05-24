@@ -67,6 +67,8 @@ public class Skeleton3DEditing {
 	}
 
 	public void draw() {
+		if(mLineDrawer==null)
+			initLines(8,0.1f);
 		if(!mVisible)
 			return;
 		mGraphics3D.mTranslator.switchZBuffer(true);
@@ -77,7 +79,7 @@ public class Skeleton3DEditing {
 			final SphereCreator sphere = new SphereCreator(mGraphics3D);
 			sphere.initBatch(SPHERE_VERTICES_X,SPHERE_VERTICES_Y, 1,1);
 			sphere.beginDraw();
-			sphere.putIndices();
+			sphere.putAllIndices();
 			sphere.putPositions();
 			mSphereBatch = sphere.finishBatch();
 		}
@@ -93,9 +95,10 @@ public class Skeleton3DEditing {
 		//mGraphics3D.mWorldTransform.scale(mSkeleton.mScale);
 
 		for(Joint joint:mSkeleton.mJoints) {
-			JointEditData jointData = mJointData[joint.mId];
 			if(joint==null)
 				continue;
+			JointEditData jointData = mJointData[joint.mId];
+
 			if(jointData.mVisible && joint.mAngleParent!=null){
 				final Joint parent = joint.mAngleParent;
 				mJointColor1.set(1,1,1,mAlpha);
@@ -116,6 +119,8 @@ public class Skeleton3DEditing {
 			if(!bone.connectsChildParent()) {
 				Joint joint1 = bone.mJoint1;
 				Joint joint2 = bone.mJoint2;
+				if(joint1==null || joint2==null)
+					continue;
 				JointEditData jointData1 = getJointEditData(joint1);
 				JointEditData jointData2 = getJointEditData(joint2);
 				if(jointData1.mVisible && jointData2.mVisible) {

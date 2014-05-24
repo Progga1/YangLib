@@ -63,6 +63,21 @@ public class MassAggregation {
 	protected int mCurJointId = 0;
 	public float mCurJointScale = 1;
 
+	public static void getRigidTransform(YangMatrix target,Joint baseJoint, Joint rightJoint, Joint topJoint, Joint frontJoint) {
+		target.setFromAxis(baseJoint, rightJoint, topJoint, frontJoint, true);
+	}
+
+	public static void getAverageWorldPosition(Point3f targetPoint, Joint[] joints) {
+		if(joints.length<1)
+			throw new RuntimeException("Empty joint array");
+		targetPoint.setZero();
+		for(Joint joint:joints) {
+			targetPoint.mX += joint.getWorldX();
+			targetPoint.mY += joint.getWorldY();
+			targetPoint.mZ += joint.getWorldZ();
+		}
+		targetPoint.scale(1f/joints.length);
+	}
 
 	public MassAggregation() {
 		mJoints = new YangList<Joint>();
@@ -554,6 +569,16 @@ public class MassAggregation {
 
 	public void drawDebug2D(DefaultGraphics<?> graphics,SkeletonEditing skeletonEditing) {
 		drawDebug2D(this,graphics,skeletonEditing,0,0,1);
+	}
+
+	public void createRigidBody(Joint[] joints,String namePrefix,float strength) {
+		for(Joint joint1:joints) {
+			for(Joint joint2:joints) {
+				if(joint1==joint2)
+					continue;
+				addSpringBone(new JointConnection(namePrefix+joint1.mName+"-"+joint2.mName,joint1,joint2),strength);
+			}
+		}
 	}
 
 }

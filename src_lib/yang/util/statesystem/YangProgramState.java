@@ -50,9 +50,12 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 
 	public final YangProgramState<StateSystemType> init(StateSystemType stateSystem) {
 		mStateSystem = stateSystem;
-		mGraphics = stateSystem.mGraphics2D.mTranslator;
 		mGraphics2D = stateSystem.mGraphics2D;
 		mGraphics3D = stateSystem.mGraphics3D;
+		if(mGraphics2D!=null)
+			mGraphics = stateSystem.mGraphics2D.mTranslator;
+		else
+			mGraphics = stateSystem.mGraphics3D.mTranslator;
 		mGFXLoader = stateSystem.mGFXLoader;
 		mResources = stateSystem.mResources;
 		mSounds = stateSystem.mSounds;

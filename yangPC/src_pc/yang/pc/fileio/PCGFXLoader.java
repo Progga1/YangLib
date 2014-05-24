@@ -23,6 +23,8 @@ public class PCGFXLoader extends AbstractGFXLoader {
 	@Override
 	public void getImageDimensions(String filename,Dimensions2i result) {
 
+		if(filename==null)
+			throw new RuntimeException("Image does not exist");
 		final File file = ((PCResourceManager)mResources).getAssetFile(filename);
 		if(file==null) {
 			throw new RuntimeException("Image not found: "+filename);

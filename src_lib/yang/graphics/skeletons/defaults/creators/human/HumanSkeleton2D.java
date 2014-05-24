@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.defaults.human;
+package yang.graphics.skeletons.defaults.creators.human;
 
 import yang.graphics.skeletons.CartoonBone;
 import yang.graphics.skeletons.CartoonSkeleton2D;

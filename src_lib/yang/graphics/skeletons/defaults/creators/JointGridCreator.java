@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.defaults;
+package yang.graphics.skeletons.defaults.creators;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
@@ -158,7 +158,7 @@ public class JointGridCreator {
 		if(texCoords==null)
 			texCoords = TextureCoordinatesQuad.FULL_TEXTURE;
 		mGridDrawer.beginDraw();
-		mGridDrawer.putIndices();
+		mGridDrawer.putAllIndices();
 		putPositions();
 		mGridDrawer.putGridColor(color.mValues);
 		mGridDrawer.putGridSuppData(FloatColor.BLACK.mValues);

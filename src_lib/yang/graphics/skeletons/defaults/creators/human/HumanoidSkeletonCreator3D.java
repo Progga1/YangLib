@@ -1,4 +1,4 @@
-package yang.graphics.skeletons.defaults.human;
+package yang.graphics.skeletons.defaults.creators.human;
 
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Bone3D;

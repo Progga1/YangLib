@@ -644,8 +644,61 @@ public class YangMatrix {
 		MatrixOps.createDirectionTrafo(mValues, dx,dy,dz, upVector.mX,upVector.mY,upVector.mZ);
 	}
 
-	public void setBase(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+	public void setFromAxis(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
 		setBase4f(mValues,vec1,vec2,vec3);
+	}
+
+	public void setFromAxis(Point3f basePoint, Point3f rightPoint, Point3f topPoint, Point3f frontPoint,boolean normalize) {
+		float dx = rightPoint.mX-basePoint.mX;
+		float dy = rightPoint.mY-basePoint.mY;
+		float dz = rightPoint.mZ-basePoint.mZ;
+		if(normalize) {
+			float dist = (float)Math.sqrt(dx*dx+dy*dy+dz*dz);
+			if(dist!=1) {
+				dx /= dist;
+				dy /= dist;
+				dz /= dist;
+			}
+		}
+		mValues[0] = dx;
+		mValues[1] = dy;
+		mValues[2] = dz;
+		mValues[3] = 0;
+		dx = topPoint.mX-basePoint.mX;
+		dy = topPoint.mY-basePoint.mY;
+		dz = topPoint.mZ-basePoint.mZ;
+		if(normalize) {
+			float dist = (float)Math.sqrt(dx*dx+dy*dy+dz*dz);
+			if(dist!=1) {
+				dx /= dist;
+				dy /= dist;
+				dz /= dist;
+			}
+		}
+		mValues[4] = dx;
+		mValues[5] = dy;
+		mValues[6] = dz;
+		mValues[7] = 0;
+		dx = frontPoint.mX-basePoint.mX;
+		dy = frontPoint.mY-basePoint.mY;
+		dz = frontPoint.mZ-basePoint.mZ;
+		if(normalize) {
+			float dist = (float)Math.sqrt(dx*dx+dy*dy+dz*dz);
+			if(dist!=1) {
+				dx /= dist;
+				dy /= dist;
+				dz /= dist;
+			}
+		}
+		mValues[8] = dx;
+		mValues[9] = dy;
+		mValues[10] = dz;
+		mValues[11] = 0;
+
+		mValues[12] = 0;
+		mValues[13] = 0;
+		mValues[14] = 0;
+		mValues[15] = 1;
 	}
 
 	public void multiplyBaseVectorsRight(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
@@ -752,6 +805,24 @@ public class YangMatrix {
 		h = mValues[l1+3];
 		mValues[l1+3] = mValues[l2+3];
 		mValues[l2+3] = h;
+	}
+
+	public void getRightVector(Vector3f target) {
+		target.mX = mValues[0];
+		target.mY = mValues[4];
+		target.mZ = mValues[8];
+	}
+
+	public void getUpVector(Vector3f target) {
+		target.mX = mValues[1];
+		target.mY = mValues[5];
+		target.mZ = mValues[9];
+	}
+
+	public void getForwardVector(Vector3f target) {
+		target.mX = mValues[2];
+		target.mY = mValues[6];
+		target.mZ = mValues[10];
 	}
 
 	public void applyInverted(Point3f position, Vector3f mTempVec1) {

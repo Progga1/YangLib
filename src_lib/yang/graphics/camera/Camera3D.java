@@ -3,6 +3,7 @@ package yang.graphics.camera;
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.math.MatrixOps;
+import yang.math.objects.Point3f;
 import yang.math.objects.YangMatrix;
 
 public class Camera3D extends YangCamera {
@@ -52,6 +53,10 @@ public class Camera3D extends YangCamera {
 
 	public void setLookAtAlphaBeta(float alpha, float beta, float distance, float lookAtX, float lookAtY, float lookAtZ) {
 		MatrixOps.setLookAtAlphaBeta(mCameraTransform.mValues, lookAtX,lookAtY,lookAtZ,alpha,beta,distance, mPosition);
+	}
+
+	public void setLookAtAlphaBeta(float alpha, float beta, float distance, Point3f lookAtPoint) {
+		MatrixOps.setLookAtAlphaBeta(mCameraTransform.mValues, lookAtPoint.mX,lookAtPoint.mY,lookAtPoint.mZ,alpha,beta,distance, mPosition);
 	}
 
 	public void setLookAtAlphaBeta(float alpha, float beta, float distance) {
