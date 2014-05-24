@@ -79,6 +79,14 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 
 	@Override
+	public void setMaxFPS(int fps) {
+		if(fps>=60)
+			return;
+		else
+			super.setMaxFPS(fps);
+	}
+
+	@Override
 	public int getDefaultMetaBaseKey() {
 		return '1';
 	}
@@ -161,7 +169,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 		}
 
 		if(USE_TEXTURE_COMPRESSION && properties.mCompressIfPossible && channels==3 && buffer!=null) {
-System.out.println("CONPRESSSSS: "+width+" "+height+ " " + properties);
+
 			ByteBuffer tempBuf = ByteBuffer.allocateDirect(width*height*3);
 			int minSize = ETC1.getEncodedDataSize(4,4);
 			int size = minSize;
