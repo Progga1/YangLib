@@ -82,6 +82,7 @@ public class Camera2DSmooth extends Camera2D {
 	public void setPosInstant(float x, float y) {
 		mPosition.set(x,y);
 		mTarPos.set(x,y);
+		refreshViewTransform();
 	}
 
 	public void move(float deltaX, float deltaY) {
