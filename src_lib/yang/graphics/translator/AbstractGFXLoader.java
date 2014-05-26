@@ -105,7 +105,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return mResources.getAssetFilename(name,IMAGE_PATH,IMAGE_EXT);
 	}
 
-	protected TextureData loadAssetImageData(String name,boolean forceRGBA) {
+	public TextureData loadAssetImageData(String name,boolean forceRGBA) {
 		final String filename = getImageAssetFilename(name);
 		if(filename==null)
 			return null;
@@ -119,7 +119,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return loadAssetImageData(name,false);
 	}
 
-	protected TextureData loadExternalImageData(String filename,boolean forceRGBA) {
+	public TextureData loadExternalImageData(String filename,boolean forceRGBA) {
 		InputStream stream = mResources.getExternalInputStream(filename);
 		if(stream==null)
 			return null;

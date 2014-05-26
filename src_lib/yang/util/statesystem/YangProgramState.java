@@ -11,6 +11,7 @@ import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.sound.AbstractSoundManager;
 import yang.surface.StringsXML;
+import yang.surface.YangSurface;
 import yang.systemdependent.AbstractResourceManager;
 
 public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener,Clock {
@@ -90,6 +91,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 			initGraphics();
 			mRestartCount = mGraphics.mRestartCount;
 			start();
+			step(YangSurface.deltaTimeSeconds);
 		}
 		if(mRestartCount<mGraphics.mRestartCount) {
 			restartGraphics();

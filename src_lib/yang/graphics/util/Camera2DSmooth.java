@@ -13,7 +13,7 @@ public class Camera2DSmooth extends Camera2D {
 	private static final float MAX_ZOOM = 30;
 	private static final float MIN_ZOOM = 1;
 	private static final float ZOOM_STEP = 1;
-	public Point3f mTarPos;
+	private Point3f mTarPos;
 
 	private float mTarZoom;
 	public float mAdaption;
@@ -60,6 +60,20 @@ public class Camera2DSmooth extends Camera2D {
 		mTarPos.set(x,y);
 	}
 
+	public void move(float deltaX, float deltaY) {
+		mTarPos.mX += deltaX;
+		mTarPos.mY += deltaY;
+	}
+
+	public void moveInstant(float deltaX, float deltaY) {
+		mTarPos.mX += deltaX;
+		mTarPos.mY += deltaY;
+
+		mPosition.mX = mTarPos.mX;
+		mPosition.mY = mTarPos.mY;
+		refreshViewTransform();
+	}
+
 	public void setRotation(float rotation) {
 		mRotation = rotation;
 	}
@@ -88,11 +102,6 @@ public class Camera2DSmooth extends Camera2D {
 		if(mTarZoom < MIN_ZOOM) mTarZoom = MIN_ZOOM;
 	}
 
-	public void scroll(float x, float y) {
-		mTarPos.mX += x;
-		mTarPos.mY += y;
-	}
-
 	public void zoom(float factor) {
 		mTarZoom += factor;
 		limitZoom();
@@ -112,18 +121,6 @@ public class Camera2DSmooth extends Camera2D {
 
 	public void set(float x, float y, float zoom) {
 		set(x,y,zoom,0);
-	}
-
-	public void scrollInstant(float x, float y) {
-		mPosition.mX += x;
-		mPosition.mY += y;
-		mTarPos.mX += x;
-		mTarPos.mY += y;
-	}
-
-	public void move(float deltaX, float deltaY) {
-		mTarPos.mX += deltaX;
-		mTarPos.mY += deltaY;
 	}
 
 	@Override
