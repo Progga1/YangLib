@@ -20,7 +20,6 @@ public class Skeleton3DEditing {
 
 	public static int MAX_JOINTS = 2048;
 	//public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
-	public static FloatColor jointColor = new FloatColor(0.6f,0.6f,0.6f);
 	public static FloatColor jointFixedColor = new FloatColor(0.9f,0.2f,0.2f);
 //	public static FloatColor hoverColor = new FloatColor(1,0.3f,0.04f);
 	public static FloatColor selectedColor = new FloatColor(1,0.5f,0);
@@ -159,7 +158,7 @@ public class Skeleton3DEditing {
 			if(joint.mFixed)
 				mJointColor1.set(jointFixedColor);
 			else
-				mJointColor1.set(jointColor);
+				mJointColor1.set(jointData.mDefaultColor);
 			if(jointData.mSelectionGroup>=0)
 				mJointColor1.add(jointSelectedAddColor);
 			if(mJointDrawCallback!=null) {

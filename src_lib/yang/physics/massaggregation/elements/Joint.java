@@ -503,9 +503,21 @@ public class Joint extends Point3f {
 		mVelY = velY;
 	}
 
+	public void setVelocity(float velX,float velY,float velZ) {
+		mVelX = velX;
+		mVelY = velY;
+		mVelZ = velZ;
+	}
+
 	public void addVelocity(float velX, float velY) {
 		mVelX += velX;
 		mVelY += velY;
+	}
+
+	public void addVelocity(float velX, float velY,float velZ) {
+		mVelX += velX;
+		mVelY += velY;
+		mVelZ += velZ;
 	}
 
 	public float getWorldDistance(float worldX, float worldY) {

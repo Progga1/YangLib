@@ -44,7 +44,6 @@ public class CubeSkeletonCreator {
 
 		for(Joint joint:mJoints) {
 			joint.applyTransform(transform);
-			joint.mMass = 2;
 		}
 
 		mSkeleton.createRigidBody(mJoints,"",10);

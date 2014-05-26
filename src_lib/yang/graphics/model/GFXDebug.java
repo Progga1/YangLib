@@ -70,7 +70,7 @@ public class GFXDebug implements PrintInterface {
 		mSpeedString = new DrawableString(32).setProperties(properties).setRightTopJustified();
 		mExecMacroString = new DrawableString("Macro...").setProperties(properties).setRightTopJustified().setConstant();
 
-		mStateString = new DrawableString(1600);
+		mStateString = new DrawableString(1600).setProperties(properties);
 		mStateString.setLeftBottomJustified();
 		reset();
 	}
@@ -87,7 +87,6 @@ public class GFXDebug implements PrintInterface {
 	private int mDynamicPolygonCount;
 	private int mBatchPolygonCount;
 	private int mDrawCount;
-	private int mDynamicDrawCount;
 	private int mStaticDrawCount;
 	private int mTexBindCount;
 	private int mShaderSwitchCount;
@@ -205,7 +204,7 @@ public class GFXDebug implements PrintInterface {
 					mDynamicPolygonCount = mTranslator.mDynamicPolygonCount;
 					mBatchPolygonCount = mTranslator.mBatchPolygonCount;
 					mDrawCount = mTranslator.mDrawCount;
-					mDynamicDrawCount = mTranslator.mFlushCount;
+//					mDynamicDrawCount = mTranslator.mFlushCount;
 					mStaticDrawCount = mTranslator.mBatchCount;
 					mTexBindCount = mTranslator.mTexBindCount;
 					mShaderSwitchCount = mTranslator.mShaderSwitchCount;

@@ -1,5 +1,6 @@
 package yang.physics.massaggregation.editing;
 
+import yang.graphics.model.FloatColor;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.physics.massaggregation.constraints.DistanceConstraint;
@@ -27,6 +28,7 @@ public class JointEditData {
 
 	public Point3f mPrevPos = new Point3f();
 	public Vector3f mMovement = new Vector3f();
+	public FloatColor mDefaultColor = new FloatColor(0.8f,0.8f,0.8f);
 
 	public void set(Joint joint,Skeleton3DEditing skeletonEdit) {
 		mJoint = joint;

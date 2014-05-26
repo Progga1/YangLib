@@ -82,4 +82,12 @@ public class Rect {
 		return "LTRB("+mLeft+","+mBottom+","+mRight+","+mTop+")";
 	}
 
+	public float normX(float x) {
+		return (x-mLeft)/(mRight-mLeft);
+	}
+
+	public float normZ(float y) {
+		return (y-mBottom)/(mTop-mBottom);
+	}
+
 }
