@@ -51,6 +51,30 @@ public class Camera2DSmooth extends Camera2D {
 		return mPosition.mY;
 	}
 
+	public float getTargetX(){
+		return mTarPos.mX;
+	}
+
+	public float getTargetY(){
+		return mTarPos.mY;
+	}
+
+	public void setX(float x) {
+		mTarPos.mX = x;
+	}
+
+	public void setY(float y) {
+		mTarPos.mY = y;
+	}
+
+	public void addX(float deltaX) {
+		mTarPos.mX += deltaX;
+	}
+
+	public void addY(float deltaY) {
+		mTarPos.mY += deltaY;
+	}
+
 	public void setPos(float x, float y) {
 		mTarPos.set(x,y);
 	}
