@@ -14,17 +14,17 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 	public float mWindForceX,mWindForceY,mWindForceZ;
 	public float mWindVelX,mWindVelY,mWindVelZ;
 	public float mWindFriction = 0.99f;
-	
+
 	public Boundaries3D mBoundaries;
-	
+
 	public Weather3D(Boundaries3D boundaries) {
 		mBoundaries = boundaries;
 	}
-	
+
 	public Weather3D() {
 		this(new Boundaries3D(1,1,1));
 	}
-	
+
 	public Weather3D<RingBufferType> init(RingBufferType ringBuffer,EffectParticleProperties particleProperties) {
 		mGraphics3D = ringBuffer.mGraphics;
 		mGraphics = mGraphics3D.mTranslator;
@@ -32,14 +32,14 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 		mParticleProperties = particleProperties;
 		return this;
 	}
-	
+
 	public void createRandomParticles(int amount) {
 		for(int i=0;i<amount;i++) {
 			EffectParticle particle = mParticleProperties.spawnParticle(mParticleBuffer,mBoundaries.getRandomX(), mBoundaries.getRandomY(), mBoundaries.getRandomZ());
 		}
 		mParticleBuffer.refreshParticleCount();
 	}
-	
+
 	public void step(float deltaTime) {
 		if(mUseWind) {
 			mWindVelX += mWindForceX;
@@ -48,16 +48,18 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 			mWindVelX *= mWindFriction;
 			mWindVelY *= mWindFriction;
 			mWindVelZ *= mWindFriction;
-			for(Particle particle:mParticleBuffer.mParticles) {
+			for(final Object particleObj:mParticleBuffer.mParticles) {
+				Particle particle = (Particle)particleObj;
 				particle.mPosX += mWindVelX * deltaTime;
 				particle.mPosY += mWindVelY * deltaTime;
 				particle.mPosZ += mWindVelZ * deltaTime;
 			}
 		}
-		
+
 		mParticleBuffer.step();
-		for(Particle particle:mParticleBuffer.mParticles) {
-			
+		for(final Object particleObj:mParticleBuffer.mParticles) {
+			Particle particle = (Particle)particleObj;
+
 			if(particle.mPosX<mBoundaries.mMinX) {
 				float delta = particle.mPosX-mBoundaries.mMinX;
 				particle.mPosX = mBoundaries.mMaxX+delta;
@@ -90,17 +92,17 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 			}
 		}
 	}
-	
+
 	public void draw() {
 		mParticleBuffer.draw();
 	}
-	
+
 	public void setWind(float windForceX,float windForceY,float windForceZ) {
 		mWindForceX = windForceX;
 		mWindForceY = windForceY;
 		mWindForceZ = windForceZ;
 	}
-	
+
 	public void removeParticles(int maxAmount) {
 		mParticleBuffer.removeParticles(maxAmount);
 	}
@@ -108,9 +110,9 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 	public void clear() {
 		mParticleBuffer.clear();
 	}
-	
+
 	public int getParticleCount() {
 		return mParticleBuffer.mParticleCount;
 	}
-	
+
 }

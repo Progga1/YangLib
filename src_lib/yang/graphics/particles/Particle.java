@@ -115,7 +115,7 @@ public class Particle {
 		return shiftPosition2D(minRadius,maxRadius, direction-spreadAngle*0.5f, direction+spreadAngle*0.5f);
 	}
 
-	public void spawn(float posX, float posY, float posZ) {
+	protected void spawn(float posX, float posY, float posZ) {
 		mNormLifeTime = 0;
 		mExists = true;
 		mRotation = 0;

@@ -22,7 +22,8 @@ public abstract class ParticleRingBuffer3D<ParticleType extends Particle>  exten
 		mGraphics.setBlack();
 
 		//mBillboardsCreator.begin();
-		for(final ParticleType particle:mParticles) {
+		for(int i=mParticles.length-1;i>0;i--) {
+			ParticleType particle = (ParticleType)mParticles[i];
 			if(particle.mExists) {
 				if(mAlphaSpeed==0) {
 					mGraphics.setColor(particle.mColor);

@@ -32,7 +32,8 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 		mGraphics.setShaderProgram(mProgram);
 		mGraphics.setBlack();
 		if(mCelShadingX!=1 && mCelShadingY!=1) {
-			for(final ParticleType particle:mParticles) {
+			for(final Object particleObj:mParticles) {
+				ParticleType particle = (ParticleType)particleObj;
 				if(particle.mExists) {
 					float uScale;
 					if(mScaleSpeed==0) {
@@ -53,9 +54,8 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 			}
 		}
 
-		final ListIterator<ParticleType> iter = mParticles.listIteratorLast();
-		ParticleType particle;
-		while((particle=iter.previous())!=null) {
+		for(int i=mParticles.length-1;i>=0;i--) {
+			ParticleType particle = (ParticleType)mParticles[i];
 			if(particle.mExists) {
 				if(mAlphaSpeed==0) {
 					mGraphics.setColor(particle.mColor);
