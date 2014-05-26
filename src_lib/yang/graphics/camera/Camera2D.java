@@ -1,7 +1,6 @@
 package yang.graphics.camera;
 
 import yang.graphics.camera.projection.OrthogonalProjection;
-import yang.math.objects.Vector3f;
 
 public class Camera2D extends YangCamera {
 

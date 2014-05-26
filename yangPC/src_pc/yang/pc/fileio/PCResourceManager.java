@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 

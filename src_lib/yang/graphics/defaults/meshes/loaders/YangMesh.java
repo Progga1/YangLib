@@ -15,7 +15,6 @@ import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
-import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.glconsts.GLDrawModes;
 import yang.math.objects.Point3f;

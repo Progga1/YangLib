@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import javax.media.opengl.GL2;

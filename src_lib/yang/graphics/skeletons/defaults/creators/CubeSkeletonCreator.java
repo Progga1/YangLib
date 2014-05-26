@@ -3,7 +3,6 @@ package yang.graphics.skeletons.defaults.creators;
 import yang.math.objects.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
-import yang.physics.massaggregation.elements.JointConnection;
 
 public class CubeSkeletonCreator {
 

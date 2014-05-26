@@ -5,7 +5,6 @@ import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.AbstractGFXLoader;
-import yang.graphics.translator.AbstractGraphics;
 
 public class YangSceneLoader {
 

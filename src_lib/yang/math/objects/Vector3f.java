@@ -1,6 +1,5 @@
 package yang.math.objects;
 
-import yang.math.Geometry;
 
 
 public class Vector3f extends Point3f{

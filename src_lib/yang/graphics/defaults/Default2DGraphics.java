@@ -3,7 +3,6 @@ package yang.graphics.defaults;
 import yang.graphics.camera.Camera2D;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.translator.GraphicsTranslator;
-import yang.graphics.util.Camera2DSmooth;
 import yang.math.MatrixOps;
 
 public class Default2DGraphics extends DefaultGraphics<BasicProgram>{

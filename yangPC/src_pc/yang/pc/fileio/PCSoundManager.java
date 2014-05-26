@@ -6,7 +6,6 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import yang.model.PathSpecs;
 import yang.pc.PCMusic;
 import yang.pc.PCSound;
 import yang.sound.AbstractMusic;

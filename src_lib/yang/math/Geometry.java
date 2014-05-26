@@ -1,6 +1,5 @@
 package yang.math;
 
-import yang.math.objects.Vector3f;
 
 public class Geometry {
 
