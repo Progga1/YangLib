@@ -1,14 +1,19 @@
 package yang.android.graphics;
 
 import yang.android.AndroidSensor;
+import yang.android.io.AndroidResourceManager;
 import yang.model.App;
 import yang.model.DebugYang;
 import yang.model.callback.ExitCallback;
 import yang.surface.YangSurface;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 
 public abstract class YangActivity extends Activity implements ExitCallback {
 
@@ -118,4 +123,30 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 		super.onConfigurationChanged(config);
 		activityOut("CONFIG_CHANGED: "+config);
 	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case AndroidResourceManager.IMAGE_SELECT_CODE:
+				if (resultCode == Activity.RESULT_OK) {
+					Uri uri = data.getData();
+					String name;
+				    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+				    if (cursor == null) {
+				    	name = uri.getPath();
+				    } else {
+				        cursor.moveToFirst();
+				        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+				        name = cursor.getString(idx);
+				        cursor.close();
+				    }
+					mGLView.mSceneRenderer.mSurface.mResources.onFileSelected(name);
+				}
+				break;
+			default:
+				System.err.println("onActivityResult received unknown requestCode:"+requestCode);
+				break;
+		}
+	}
+
 }

@@ -29,9 +29,9 @@ public class YangTouchSurface extends GLSurfaceView {
 	public static boolean keepScreenOn = true;
 
 	public YangTouchSurface(YangActivity activity) {
-		super(activity.getApplicationContext());
+		super(activity);
 		mActivity = activity;
-		mContext = activity.getApplicationContext();
+		mContext = activity;
 		mEventQueue = null;
 		initGL(mContext);
 		setKeepScreenOn(keepScreenOn);

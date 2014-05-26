@@ -13,8 +13,12 @@ import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+
 import yang.model.PathSpecs;
 import yang.systemdependent.AbstractResourceManager;
+import yang.systemdependent.OnFileSelectedListener;
 
 public class PCResourceManager extends AbstractResourceManager {
 
@@ -149,4 +153,36 @@ public class PCResourceManager extends AbstractResourceManager {
 		return true;
 	}
 
+	final static String[] allowedImageExt = new String[]{".jpg",".jpeg",".png", ".bmp"};
+
+	@Override
+	public void selectImageDialog(OnFileSelectedListener listener) {
+		super.selectImageDialog(listener);
+		JFileChooser fc = new JFileChooser(new File(PathSpecs.getMainAssetPath()));
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		fc.setFileFilter(new FileFilter() {
+			@Override
+			public String getDescription() {
+				return "images";
+			}
+
+			@Override
+			public boolean accept(File file) {
+				if (file.isDirectory()) return true;
+				String ext = file.getName();
+				for (String allowedExt : allowedImageExt) {
+					if (ext.endsWith(allowedExt)) return true;
+				}
+				return false;
+			}
+		});
+
+		int val = fc.showOpenDialog(null);
+		switch (val) {
+			case JFileChooser.APPROVE_OPTION:
+				this.onFileSelected(fc.getSelectedFile().getAbsolutePath());
+			default:
+				this.onFileSelected(fc.getSelectedFile().getAbsolutePath());
+		}
+	}
 }

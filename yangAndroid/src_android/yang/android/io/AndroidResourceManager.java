@@ -1,17 +1,19 @@
 package yang.android.io;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 import yang.systemdependent.AbstractResourceManager;
+import yang.systemdependent.OnFileSelectedListener;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 
 public class AndroidResourceManager extends AbstractResourceManager {
 
+	public static final int IMAGE_SELECT_CODE = 53;
 	private final Context mContext;
 
 	public AndroidResourceManager(Context context) {
@@ -79,4 +81,11 @@ public class AndroidResourceManager extends AbstractResourceManager {
 //			return false;
 //		}
 //	}
+
+	@Override
+	public void selectImageDialog(OnFileSelectedListener listener) {
+		super.selectImageDialog(listener);
+		Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		((Activity)mContext).startActivityForResult(i, IMAGE_SELECT_CODE);
+	}
 }

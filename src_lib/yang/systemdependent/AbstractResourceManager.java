@@ -16,6 +16,8 @@ import yang.graphics.textures.TextureData;
 
 public abstract class AbstractResourceManager {
 
+	private OnFileSelectedListener mFileSelectedListener;
+
 	public abstract String[] getFileList(String directory) throws IOException;
 	public abstract InputStream getAssetInputStream(String filename);
 	public abstract File getSystemFile(String filename);
@@ -152,6 +154,14 @@ public abstract class AbstractResourceManager {
 			format = split[1];
 //		new File(filename).mkdirs();
 		return saveImage(getExternalOutputStream(filename),format,image.mData,image.mWidth,image.mHeight,flipY);
+	}
+
+	public void selectImageDialog(OnFileSelectedListener listener) {
+		mFileSelectedListener = listener;
+	}
+
+	public void onFileSelected(String name) {
+		if (mFileSelectedListener != null) mFileSelectedListener.onFileSelected(name);
 	}
 
 }

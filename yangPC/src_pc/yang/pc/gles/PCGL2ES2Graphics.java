@@ -130,7 +130,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 			return GL2ES2.GL_RGB;
 		case 4:
 			return GL2ES2.GL_RGBA;
-			default: throw new RuntimeException(channels + " channels not supported.");
+		default: throw new RuntimeException(channels + " channels not supported.");
 		}
 	}
 
