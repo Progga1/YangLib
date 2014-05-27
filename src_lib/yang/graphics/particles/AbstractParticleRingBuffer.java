@@ -86,7 +86,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		return particle;
 	}
 
-	public ParticleType spawnParticle(float posX,float posY, float posZ, TextureCoordinatesQuad texCoords) {
+	protected ParticleType spawnParticle(float posX,float posY, float posZ, TextureCoordinatesQuad texCoords) {
 		final ParticleType particle = getNextParticle();
 		particle.spawn(posX, posY, posZ);
 		particle.mTextureCoordinates = texCoords;
@@ -96,7 +96,7 @@ public abstract class AbstractParticleRingBuffer<GraphicsType extends AbstractGr
 		return particle;
 	}
 
-	public ParticleType spawnParticle(float posX,float posY, TextureCoordinatesQuad texCoords) {
+	protected ParticleType spawnParticle(float posX,float posY, TextureCoordinatesQuad texCoords) {
 		return spawnParticle(posX,posY,0,texCoords);
 	}
 

@@ -8,6 +8,7 @@ import yang.surface.YangSurface;
 public class PhysicalParticle extends Particle {
 
 	public boolean mRotationByVelo = false;
+	public float mRotV;
 	public float mFriction;
 	public float mVelX,mVelY,mVelZ;
 	public float mAccelerationX,mAccelerationY,mAccelerationZ;
@@ -24,7 +25,8 @@ public class PhysicalParticle extends Particle {
 	public void derivedStep() {
 		if(mRotationByVelo) {
 			mRotation = Geometry.getAngle(mVelX,mVelY) + MathConst.PI*0.5f + mRotOffset;
-		}
+		}else
+			mRotation += mRotV;
 		mPosX += mVelX;
 	    mPosY += mVelY;
 	    mPosZ += mVelZ;

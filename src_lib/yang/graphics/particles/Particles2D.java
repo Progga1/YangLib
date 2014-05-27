@@ -1,6 +1,7 @@
 package yang.graphics.particles;
 
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.textures.TextureCoordinatesQuad;
 
 public class Particles2D<ParticleType extends Particle> extends ParticleRingBuffer2D<ParticleType> {
 
@@ -14,6 +15,11 @@ public class Particles2D<ParticleType extends Particle> extends ParticleRingBuff
 	public Particles2D<ParticleType> init(DefaultGraphics graphics, int maxParticleCount) {
 		super.init(graphics, maxParticleCount);
 		return this;
+	}
+
+	@Override
+	public ParticleType spawnParticle(float posX,float posY, TextureCoordinatesQuad texCoords) {
+		return super.spawnParticle(posX,posY,0,texCoords);
 	}
 
 	@Override
