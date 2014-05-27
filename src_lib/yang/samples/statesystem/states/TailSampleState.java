@@ -14,7 +14,7 @@ public class TailSampleState extends SampleState {
 	private Texture mTailTexture;
 	private float mCurX = Float.MAX_VALUE,mCurY;
 	private boolean mShowNodes;
-	
+
 	@Override
 	protected void initGraphics() {
 		mTail = new YangTail(mGraphics2D,100,true);
@@ -26,7 +26,7 @@ public class TailSampleState extends SampleState {
 		mTail.mAutoInterruptSmallDistances = false;
 		mTail.setDoubled(true);
 	}
-	
+
 	@Override
 	public void step(float deltaTime) {
 		if(mTail==null)
@@ -43,12 +43,17 @@ public class TailSampleState extends SampleState {
 	@Override
 	public void draw() {
 		mGraphics.clear(0, 0, 0.1f);
-		
+		mGraphics2D.activate();
+		mGraphics2D.setWhite();
+		mGraphics2D.setColorFactor(1);
+		mGraphics2D.switchGameCoordinates(false);
+		mGraphics.switchCulling(true);
+
 		if(mTail==null)
 			return;
 		mGraphics.bindTexture(mTailTexture);
 		mTail.drawWholeTail();
-		
+
 		if(mShowNodes) {
 			mGraphics.bindTexture(mStateSystem.mCircleTexture);
 			mGraphics2D.setWhite();
@@ -63,18 +68,19 @@ public class TailSampleState extends SampleState {
 			}
 		}
 	}
-	
+
 	@Override
 	public void pointerDragged(float x,float y,SurfacePointerEvent event) {
 		//mTail.refreshFront(x, y);
 		mCurX = x;
 		mCurY = y;
 	}
-	
+
+	@Override
 	public void pointerUp(float x,float y,SurfacePointerEvent event) {
 		mCurX = Float.MAX_VALUE;
 	}
-	
+
 	@Override
 	public void keyUp(int code) {
 		super.keyUp(code);

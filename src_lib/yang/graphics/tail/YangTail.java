@@ -116,11 +116,11 @@ public class YangTail {
 		mCurColor[3] = a;
 		mGlobAlpha = a;
 	}
-	
+
 	public void setColor(FloatColor color) {
 		setColor(color.mValues[0], color.mValues[1], color.mValues[2], color.mValues[3]);
 	}
-	
+
 	public void setColor(FloatColor color, float alpha) {
 		setColor(color.mValues[0], color.mValues[1], color.mValues[2], alpha);
 	}
@@ -333,7 +333,7 @@ public class YangTail {
 			else
 				mGraphics.putTextureCoord(curTailTexX, 0);
 		}else{
-			mStrips.continueStrip(mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale,mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale);
+			mStrips.continueStrip(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale, mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
 			if(mTexXRepeat==0)
 				mGraphics.putTextureArray(mTexCoords);
 			else{
@@ -461,5 +461,5 @@ public class YangTail {
 
 	public void setTexShiftBySize() {
 		mTexXShift = -getTailLength()%mTexXRepeat;
-	}	
+	}
 }

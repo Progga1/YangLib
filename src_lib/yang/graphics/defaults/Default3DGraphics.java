@@ -224,7 +224,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void setCameraAlphaBeta(float alpha, float beta, float distance, float lookAtX, float lookAtY, float lookAtZ) {
-		mCamera3D.setLookAtAlphaBeta(lookAtX,lookAtY,lookAtZ, alpha,beta, distance);
+		mCamera3D.setLookAtAlphaBeta(alpha,beta, distance, lookAtX,lookAtY,lookAtZ);
 		if(mAutoRefreshCameraTransform)
 			super.setCamera(mCamera3D);
 	}

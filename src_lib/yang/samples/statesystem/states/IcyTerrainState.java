@@ -263,6 +263,9 @@ public class IcyTerrainState extends SampleState {
 
 		mGraphics3D.activate();
 
+		mGraphics3D.setWhite();
+		mGraphics3D.setColorFactor(1);
+
 		mGraphics.switchZBuffer(true);
 		mGraphics.switchCulling(true);
 

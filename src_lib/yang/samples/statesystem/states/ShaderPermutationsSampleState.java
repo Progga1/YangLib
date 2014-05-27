@@ -53,8 +53,8 @@ public class ShaderPermutationsSampleState extends SampleState {
 		mGraphics3D.setWhite();
 		mGraphics.switchZBuffer(true);
 		mGraphics.switchCulling(true);
+		mGraphics3D.setPerspectiveProjection(0.6f,100);
 		mGraphics3D.setCameraAlphaBeta((float)mStateTimer*0.3f, 0.4f, 2);
-		mGraphics3D.setPerspectiveProjection(100);
 		mGraphics3D.setShaderProgram(mShader1);
 
 		mLightProperties.mDirection.setAlphaBeta((float)mStateTimer,0.5f);

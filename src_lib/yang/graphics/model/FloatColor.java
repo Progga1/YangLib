@@ -214,10 +214,14 @@ public class FloatColor extends Quadruple {
 	}
 
 	/**
-	 * Each value 0-255 
+	 * Each value 0-255
 	 * */
 	public static FloatColor fromIntRGB(int r, int g, int b) {
 		return new FloatColor(r/255f, g/255f,  b/255f);
+	}
+
+	public static FloatColor fromIntRGBA(int r, int g, int b,int a) {
+		return new FloatColor(r/255f, g/255f,  b/255f, a/255f);
 	}
 
 }

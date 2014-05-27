@@ -5,22 +5,22 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 
 public class StripCreator {
-	
+
 	public DefaultGraphics<?> mGraphics;
 	public GraphicsTranslator mTranslator;
 	public IndexedVertexBuffer mVertexBuffer;
-	
+
 	protected boolean mFstStrip = false;
 	protected boolean mStripSinglePoint = false;
-	
+
 	public StripCreator(DefaultGraphics<?> graphics) {
 		setGraphics(graphics);
 	}
-	
+
 	public StripCreator() {
-		
+
 	}
-	
+
 	public void setGraphics(DefaultGraphics<?> graphics) {
 		mGraphics = graphics;
 		mTranslator = graphics.mTranslator;
@@ -37,7 +37,7 @@ public class StripCreator {
 		mGraphics.putPosition(x1, y1);
 		mGraphics.putPosition(x2, y2);
 	}
-	
+
 	public void continueStripSinglePoint() {
 		mStripSinglePoint = true;
 		if (mFstStrip) {
@@ -48,12 +48,12 @@ public class StripCreator {
 		mVertexBuffer.putRelativeIndex(-1);
 		mVertexBuffer.putRelativeIndex(0);
 	}
-	
+
 	public void continueStripSinglePoint(float x,float y) {
 		continueStripSinglePoint();
 		mGraphics.putPosition(x,y);
 	}
-	
+
 	public void continueStrip() {
 		if (mFstStrip) {
 			mFstStrip = false;
@@ -75,5 +75,5 @@ public class StripCreator {
 		mGraphics.putPosition(x1, y1);
 		mGraphics.putPosition(x2, y2);
 	}
-	
+
 }
