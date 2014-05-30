@@ -86,7 +86,7 @@ public class Rect {
 		return (x-mLeft)/(mRight-mLeft);
 	}
 
-	public float normZ(float y) {
+	public float normY(float y) {
 		return (y-mBottom)/(mTop-mBottom);
 	}
 

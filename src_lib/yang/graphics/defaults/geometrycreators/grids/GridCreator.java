@@ -18,6 +18,8 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 	protected float mCurDimY;
 	public boolean mSwapXY;
 
+	protected int mStartRow;
+	protected int mStartColumn;
 	protected float mRelationX;
 	protected float mRelationY;
 	private float[][] mCurValues;
@@ -168,15 +170,17 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		putGridTextureRect(0,0,1,1);
 	}
 
-	protected void compRelations(float[][] values) {
+	protected void compRelations(float[][] values,int startRow,int startColumn,int rows,int columns) {
 		mCurValues = values;
+		mStartRow = startRow;
+		mStartColumn = startColumn;
 		if(values!=null) {
 			if(mSwapXY) {
-				mRelationX = (float)(values.length-1) / (mCurXCount-1);
-				mRelationY = (float)(values[0].length-1) / (mCurYCount-1);
+				mRelationX = (float)(rows-1) / (mCurXCount-1);
+				mRelationY = (float)(columns-1) / (mCurYCount-1);
 			}else{
-				mRelationX = (float)values[0].length / mCurXCount;
-				mRelationY = (float)values.length / mCurYCount;
+				mRelationX = (float)(columns-1) / (mCurXCount-1);
+				mRelationY = (float)(rows-1) / (mCurYCount-1);
 			}
 		}else{
 			mRelationX = 1;
@@ -184,14 +188,21 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		}
 	}
 
+	protected void compRelations(float[][] values) {
+		if(values==null)
+			compRelations(null,0,0,0,0);
+		else
+			compRelations(values,0,0,values.length,values[0].length);
+	}
+
 	protected float interpolate(int row,int column) {
 		if(mCurValues==null)
 			return 1;
 		else{
 			if(mSwapXY)
-				return Interpolation.bilinInterpolate(mCurValues, column*mRelationX, row*mRelationY);
+				return Interpolation.bilinInterpolate(mCurValues, mStartColumn+column*mRelationX, mStartRow+row*mRelationY);
 			else
-				return Interpolation.bilinInterpolate(mCurValues, row*mRelationY, column*mRelationX);
+				return Interpolation.bilinInterpolate(mCurValues, mStartRow+row*mRelationY, mStartColumn+column*mRelationX);
 		}
 	}
 

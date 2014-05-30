@@ -38,7 +38,6 @@ public class GeometryCreator<GraphicsType extends AbstractGraphics<?>> {
 	}
 
 	public void putNormals() {
-		//TODO make normals graphics 3D independent
 		if(mGraphics instanceof Default3DGraphics)
 			((Default3DGraphics)mGraphics).fillNormals(mIndexStartId);
 	}

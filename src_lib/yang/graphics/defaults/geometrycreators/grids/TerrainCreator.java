@@ -13,14 +13,15 @@ public class TerrainCreator extends Grid3DCreator {
 		super(graphics);
 	}
 
-	public void putTerrainPositionRect(float[][] heightValues,YangMatrix transform) {
+	public void putTerrainPositionRect(float[][] heightValues,int startRow,int startColumn,int rows,int columns,YangMatrix transform) {
 		final float left = -mCurDimX*0.5f;
 		final float top = mCurDimY*0.5f;
-		compRelations(heightValues);
+
+		compRelations(heightValues,startRow,startColumn,rows,columns);
 		for(int row=0;row<mCurYCount;row++) {
 			final float y = top - mCurDimY + (float)row/(mCurYCount-1)*mCurDimY;
 			for(int col=0;col<mCurXCount;col++) {
-				final float x = left + (float)col/(mCurXCount-1)*mCurDimX;
+				final float x = left + (float)(col)/(mCurXCount-1)*mCurDimX;
 				final float z = interpolate(row,col);
 				if(transform!=null)
 					mGraphics.putPosition(x,y,z,transform);
@@ -30,6 +31,10 @@ public class TerrainCreator extends Grid3DCreator {
 		}
 		if(mAutoFillNormals)
 			putNormals();
+	}
+
+	public void putTerrainPositionRect(float[][] heightValues,YangMatrix transform) {
+		putTerrainPositionRect(heightValues,0,0,heightValues.length,heightValues[0].length,transform);
 	}
 
 	public void putTerrainPositionRect(float[][] heightValues) {

@@ -46,6 +46,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	public float[] mCurColor;
 	public float[] mCurSuppData;
 	public float mNoCameraTransformStereoDistance = 0.15f;
+	private DrawBatch mCurBatch;
 
 	//Persistent attributes
 	public GraphicsTranslator mTranslator;
@@ -209,15 +210,16 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		setVertexBuffer(mDynamicVertexBuffer);
 	}
 
-	public void startBatchRecording(IndexedVertexBuffer vertexBuffer) {
-		mBatchRecording = true;
-		mTranslator.mFlushDisabled = true;
-		setVertexBuffer(vertexBuffer);
-	}
-
 	public void startBatchRecording(DrawBatch batch) {
 		batch.mVertexBuffer.reset();
-		startBatchRecording(batch.mVertexBuffer);
+		mCurBatch = batch;
+		mBatchRecording = true;
+		mTranslator.mFlushDisabled = true;
+		setVertexBuffer(batch.mVertexBuffer);
+	}
+
+	public void startBatchRecording(IndexedVertexBuffer vertexBuffer) {
+		startBatchRecording(new DrawBatch(this,vertexBuffer));
 	}
 
 	public void startBatchRecording(int maxIndices,int maxVertices,boolean dynamicIndices,boolean dynamicVertices) {
@@ -234,11 +236,10 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 
 	public DrawBatch finishBatchRecording() {
 		mTranslator.mCurrentVertexBuffer.finishUpdate();
-		final DrawBatch result = new DrawBatch(this,mCurrentVertexBuffer);
 		resetVertexBuffer();
 		mBatchRecording = false;
 		mTranslator.mFlushDisabled = false;
-		return result;
+		return mCurBatch;
 	}
 
 	public void switchGameCoordinates(boolean enable) {
