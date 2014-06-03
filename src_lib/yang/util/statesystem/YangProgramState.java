@@ -28,7 +28,7 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 	public boolean mBlockSteps = false;
 
 	public double mStateTimer = 0;
-	protected GraphicsTranslator mGraphics;
+	public GraphicsTranslator mGraphics;
 	protected Default2DGraphics mGraphics2D;
 	protected Default3DGraphics mGraphics3D;
 	protected AbstractSoundManager mSounds;

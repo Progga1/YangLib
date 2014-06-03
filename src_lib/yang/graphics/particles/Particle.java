@@ -87,6 +87,11 @@ public class Particle {
 		mScaleY = mScaleX;
 	}
 
+	public void setScale(float scale) {
+		mScaleX = scale;
+		mScaleY = scale;
+	}
+
 	public void setScaleX(float minScale, float maxScale) {
 		mScaleX = MathFunc.randomF(minScale, maxScale);
 	}
