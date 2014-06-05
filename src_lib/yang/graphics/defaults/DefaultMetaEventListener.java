@@ -145,11 +145,12 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 			mCtrlPressed = true;
 
 		int base = mMetaBaseKey-1;
+
 		if(code==base+1) {
-			if(mSurface.isInactive())
-				mSurface.simulateResume();
-			else
-				mSurface.simulateStop();
+			if(mSurface.mGFXDebug!=null) {
+				DebugYang.DRAW_POINTERS ^= true;
+
+			}
 		}
 		if(code==base+2) {
 			if(DebugYang.DRAW_GFX_VALUES) {
@@ -193,10 +194,7 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 			mSurface.proceed();
 		}
 		if(code==base+8) {
-			if(mSurface.mGFXDebug!=null) {
-				DebugYang.DRAW_POINTERS ^= true;
-
-			}
+			mSurface.stopMacro();
 		}
 		if(code==base+9) {
 			if(mSurface.isStereoVision())
@@ -205,7 +203,10 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 				mSurface.setStereoVision(1024);
 		}
 		if(code==base+10) {
-			mSurface.stopMacro();
+			if(mSurface.isInactive())
+				mSurface.simulateResume();
+			else
+				mSurface.simulateStop();
 		}
 //		if(code==base+11) {
 //			if(!mRecording) {
