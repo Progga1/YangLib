@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import yang.events.Keys;
 import yang.events.eventtypes.YangEvent;
+import yang.samples.statesystem.states.FanSampleState;
 import yang.samples.statesystem.states.GUISampleState;
 import yang.samples.statesystem.states.IcyTerrainState;
 import yang.samples.statesystem.states.MatrixStackSampleState;
@@ -73,6 +74,7 @@ public class SampleMainMenu extends YangProgramState<YangProgramStateSystem> imp
 		addMenuItem("Stereo calibration",new StereoCalibrationState());
 		addMenuItem("Trajectory",new TrajectorySampleState());
 		addMenuItem("Towel",new TowelSampleState());
+		addMenuItem("Fan",new FanSampleState());
 
 		refreshLayout();
 	}
