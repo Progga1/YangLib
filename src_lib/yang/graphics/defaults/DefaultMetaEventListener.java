@@ -255,6 +255,8 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 				System.out.println("scale="+stereoShader.mScaleX+":"+stereoShader.mScaleY+", scaleToLens="+stereoShader.mScaleToLens+", shift="+mSurface.mStereoVision.mLensShift+", distance="+mSurface.mStereoVision.getInterOcularDistance());
 
 		}
+		if(code=='f')
+			mSurface.mGraphics.mForceWireFrames ^= true;
 	}
 
 	@Override
