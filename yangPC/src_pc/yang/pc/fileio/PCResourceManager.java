@@ -170,7 +170,7 @@ public class PCResourceManager extends AbstractResourceManager {
 				if (file.isDirectory()) return true;
 				String ext = file.getName();
 				for (String allowedExt : allowedImageExt) {
-					if (ext.endsWith(allowedExt)) return true;
+					if (ext.toLowerCase().endsWith(allowedExt)) return true;
 				}
 				return false;
 			}
