@@ -22,6 +22,14 @@ public class JointConnection {
 		refreshGeometry();
 	}
 
+
+	public float calcAngle2D() {
+		if(mNormDirY<0)
+			return -(float)Math.acos(mNormDirX);
+		else
+			return (float)Math.acos(mNormDirX);
+	}
+
 	public void refreshGeometry() {
 		mDistX = mJoint2.mX - mJoint1.mX;
 		mDistY = mJoint2.mY - mJoint1.mY;
