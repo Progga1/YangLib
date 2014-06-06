@@ -252,6 +252,12 @@ public class Joint extends Point3f {
 		setPosByAngle2D(mAngleParent,mParentDistance,angle);
 	}
 
+	public void scaleDistance(Joint pivotJoint,float factor) {
+		mX = pivotJoint.mX + (mX-pivotJoint.mX)*factor;
+		mY = pivotJoint.mY + (mY-pivotJoint.mY)*factor;
+		mZ = pivotJoint.mZ + (mZ-pivotJoint.mZ)*factor;
+	}
+
 	public void rotate(float angle) {
 		setPosByAngle2D(mParentCurAngle+angle);
 	}

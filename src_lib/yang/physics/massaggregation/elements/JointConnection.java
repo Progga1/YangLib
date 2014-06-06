@@ -67,4 +67,6 @@ public class JointConnection {
 		return mJoint1.mAngleParent==mJoint2 || mJoint2.mAngleParent==mJoint1;
 	}
 
+
+
 }
