@@ -6,6 +6,7 @@ import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.textures.enums.TextureWrap;
 import yang.graphics.translator.Texture;
+import yang.model.DebugYang;
 import yang.samples.statesystem.SampleState;
 
 public class TailSampleState extends SampleState {
@@ -67,6 +68,7 @@ public class TailSampleState extends SampleState {
 				mGraphics2D.drawRectCentered(mTail.mPosX[i]-mTail.mDirX[i]*DIR_SCALE, mTail.mPosY[i]-mTail.mDirY[i]*DIR_SCALE, 0.008f);
 			}
 		}
+
 	}
 
 	@Override
