@@ -361,11 +361,11 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 	}
 
 	@Override
-	public void setDepthFunction(boolean less) {
+	public void setDepthFunction(boolean less,boolean equal) {
 		if(less)
-			gles2.glDepthFunc(GL2ES2.GL_LESS);
+			gles2.glDepthFunc(equal?GL2ES2.GL_LEQUAL:GL2ES2.GL_LESS);
 		else
-			gles2.glDepthFunc(GL2ES2.GL_GREATER);
+			gles2.glDepthFunc(equal?GL2ES2.GL_GEQUAL:GL2ES2.GL_GREATER);
 	}
 
 	@Override

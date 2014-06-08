@@ -326,11 +326,11 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 
 	@Override
-	public void setDepthFunction(boolean less) {
+	public void setDepthFunction(boolean less,boolean equal) {
 		if(less)
-			GLES20.glDepthFunc(GLES20.GL_LESS);
+			GLES20.glDepthFunc(equal?GLES20.GL_LEQUAL:GLES20.GL_LESS);
 		else
-			GLES20.glDepthFunc(GLES20.GL_GREATER);
+			GLES20.glDepthFunc(equal?GLES20.GL_GEQUAL:GLES20.GL_GREATER);
 		assert checkError("Set depth function");
 	}
 

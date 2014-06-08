@@ -136,7 +136,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void derivedSetScreenRenderTarget();
 	public abstract void initRenderTarget(TextureRenderTarget target);
 	protected abstract void derivedSetTextureRenderTarget(TextureRenderTarget renderTarget);
-	public abstract void setDepthFunction(boolean less);
+	public abstract void setDepthFunction(boolean less,boolean equal);
 	public abstract void generateMipMap();
 	protected abstract void bindTexture(int texId, int level);
 	public abstract void readPixels(int x,int y,int width,int height,int channels,ByteFormat byteFormat,ByteBuffer pixels);
