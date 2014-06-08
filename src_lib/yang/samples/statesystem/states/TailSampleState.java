@@ -68,7 +68,7 @@ public class TailSampleState extends SampleState {
 				mGraphics2D.drawRectCentered(mTail.mPosX[i]-mTail.mDirX[i]*DIR_SCALE, mTail.mPosY[i]-mTail.mDirY[i]*DIR_SCALE, 0.008f);
 			}
 		}
-
+		DebugYang.stateString("Length = "+mTail.getCurrentTotalDistance());
 	}
 
 	@Override

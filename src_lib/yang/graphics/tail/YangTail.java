@@ -4,6 +4,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.DoubleStripCreator;
 import yang.graphics.defaults.geometrycreators.StripCreator;
 import yang.graphics.model.FloatColor;
+import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.Geometry;
 import yang.model.DebugYang;
 import yang.util.Util;
@@ -21,9 +22,7 @@ public class YangTail {
 	public float mGlobAlpha;
 	public float mScaleFallOff;
 	public boolean mAutoInterruptSmallDistances = true;
-	public float mTexXShift = 0;
-	public int mTexXRepeat = 0;
-	public float mTexYRepeat = 2;
+	public float mTexCoordsBottom = 2;
 	public float mSuppData[];
 	public float mMinDist;
 	public float mMinScalarDist;
@@ -31,6 +30,7 @@ public class YangTail {
 	protected final boolean mSubTails;
 	protected boolean mInverted;
 	protected int mCreateNodeFreq;
+	public float mTexCoordFactor = 0;
 
 	//DATA
 	protected int[] mCounts;
@@ -40,18 +40,27 @@ public class YangTail {
 	public float[] mDirY;
 	public float[] mDist;
 
+	//TEXTURE COORDINATES
+	private float mTexCoordsWidth;
+	private float mTexCoordsLeft;
+	private float mTexCoordsTop;
+	private float mTexCoordsMiddle;
+
 	//STATE
-	private int mRingPos;
+	public int mRingPos;
 	private boolean mFilled;
 	public double mTotalDistance;
 	private int mCountRingPos;
 	private int mUpdateCount;
 	private int mPrevIndex;
+	private float mCurNormDist;
+	private float mInvTotalDist;
 	private float mLastNodeX;
 	private float mLastNodeY;
 	private float mCurNormX;
 	private float mCurNormY;
 	private final int mCountLength;
+	private float mCurTexXFactor;
 
 	//OBJECTS
 	private final DefaultGraphics<?> mGraphics;
@@ -60,7 +69,7 @@ public class YangTail {
 
 	//TEMPS
 	private final float[] mCurColor;
-	private float[] mTexCoords;
+	private float[] mCurTexCoords;
 
 
 	public YangTail(DefaultGraphics<?> graphics,int capacity,boolean subTails) {
@@ -87,16 +96,35 @@ public class YangTail {
 		mSubTails = subTails;
 		mScaleFallOff = 0.25f;
 		mMinScalar = 0.3f;
+		setTextureCoordinates(0,0,1,2);
 		clear();
+	}
+
+	public void setTextureCoordinates(float left,float top,float width,float height) {
+		mTexCoordsLeft = left;
+		mTexCoordsTop = top;
+		mTexCoordsWidth = width;
+		mTexCoordsBottom = top+height;
+		mTexCoordsMiddle = (mTexCoordsTop+mTexCoordsBottom)*0.5f;
+	}
+
+	public void setTextureCoordinates(TextureCoordinatesQuad texCoords) {
+		setTextureCoordinates(texCoords.getBiasedLeft(),texCoords.getBiasedTop(),texCoords.getBiasedWidth(),texCoords.getBiasedHeight());
+	}
+
+	public void setTexYRepeat(float repeat) {
+		mTexCoordsBottom = repeat;
+		mStdTexCoords[3] = repeat;
+		mDoubleTexCoords[3] = repeat;
 	}
 
 	public void setDoubled(boolean doubled) {
 		if(doubled) {
 			mStrips = mDoubleStrips;
-			mTexCoords = mDoubleTexCoords;
+			mCurTexCoords = mDoubleTexCoords;
 		}else{
 			mStrips = mSingleStrips;
-			mTexCoords = mStdTexCoords;
+			mCurTexCoords = mStdTexCoords;
 		}
 	}
 
@@ -112,12 +140,6 @@ public class YangTail {
 			mCountRingPos = 0;
 			mTotalDistance = 0;
 		}
-	}
-
-	public void setTexYRepeat(float repeat) {
-		mTexYRepeat = repeat;
-		mStdTexCoords[3] = repeat;
-		mDoubleTexCoords[3] = repeat;
 	}
 
 	public void setColor(float r,float g,float b,float a) {
@@ -256,9 +278,10 @@ public class YangTail {
 				mLastNodeY = y;
 
 				mTotalDistance += dist;
-				mDist[mRingPos] = dist;
-			}
 
+				mDist[mRingPos==0?mCapacity-1:mRingPos-1] = dist;
+			}
+			mDist[mRingPos] = dist;
 			mPosX[mRingPos] = x;
 			mPosY[mRingPos] = y;
 			mDirX[mRingPos] = forceDirX;
@@ -330,31 +353,24 @@ public class YangTail {
 		return getPointCount();
 	}
 
-	private float mCurTailTexX;
-	private float mTailTexXStep;
-
 	protected void putTailVertices(float scale,float alpha) {
 		if(putPos<0) {
 			putPos = mCapacity-1;
 		}
 		mCurColor[3] = mGlobAlpha * alpha;
+		float texX = mTexCoordsLeft+(mInverted?1-mCurNormDist:mCurNormDist)*mCurTexXFactor;
 		//mCurColor[3] = 1;
 		if(scale==0) {
 			mStrips.continueStripSinglePoint(mPosX[putPos], mPosY[putPos]);
-			if(mTexXRepeat==0)
-				mGraphics.putTextureCoord(0, 1);
-			else
-				mGraphics.putTextureCoord(mCurTailTexX, 0);
+			mGraphics.putTextureCoord(texX,mTexCoordsMiddle);
 		}else{
 			mStrips.continueStrip(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale, mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
-			if(mTexXRepeat==0)
-				mGraphics.putTextureArray(mTexCoords);
-			else{
-				mGraphics.putTextureCoord(mCurTailTexX, 0);
-				mGraphics.putTextureCoord(mCurTailTexX, mTexYRepeat);
-				if(mStrips==mDoubleStrips)
-					mGraphics.putTextureCoord(mCurTailTexX, mDoubleTexCoords[5]);
-			}
+
+			mGraphics.putTextureCoord(texX, 0);
+			mGraphics.putTextureCoord(texX, mTexCoordsBottom);
+			if(mStrips==mDoubleStrips)
+				mGraphics.putTextureCoord(texX, mDoubleTexCoords[5]);
+
 			mGraphics.putColor(mCurColor);
 			mGraphics.putSuppData(mSuppData);
 			if(mStrips==mDoubleStrips) {
@@ -364,7 +380,7 @@ public class YangTail {
 		}
 		mGraphics.putColor(mCurColor);
 		mGraphics.putSuppData(mSuppData);
-		mCurTailTexX += mTailTexXStep;
+		mCurNormDist += mDist[putPos]*mInvTotalDist;
 		putPos--;
 	}
 
@@ -376,12 +392,15 @@ public class YangTail {
 	}
 
 	public void drawWholeTail() {
-		if(!DebugYang.drawTails)
+		if(!DebugYang.drawTails || mTotalDistance==0)
 			return;
 
-		if(mTexXRepeat>0) {
-			mTailTexXStep = 1f/mTexXRepeat;
-			mCurTailTexX = mTexXShift * mTailTexXStep;
+		mCurNormDist = 0;
+		float totalDist = (float)mTotalDistance+mDist[mRingPos];
+		mInvTotalDist = 1/totalDist;
+		mCurTexXFactor = mTexCoordsWidth;
+		if(mTexCoordFactor>0) {
+			mCurTexXFactor *= mTexCoordFactor*totalDist;
 		}
 
 		synchronized(this) {
@@ -408,7 +427,7 @@ public class YangTail {
 					}
 				}else {
 					//changed from curCount>2
-					if(curCount>1) {
+					if(curCount>2) {
 						float countFac;
 						if(curCount<mMaxWidthAtCount)
 							countFac = curCount/mMaxWidthAtCount;
@@ -473,7 +492,8 @@ public class YangTail {
 		mGlobAlpha = alpha;
 	}
 
-	public void setTexShiftBySize() {
-		mTexXShift = -getPointCount()%mTexXRepeat;
+	public float getCurrentTotalDistance() {
+		return (float)mTotalDistance+mDist[mRingPos];
 	}
+
 }
