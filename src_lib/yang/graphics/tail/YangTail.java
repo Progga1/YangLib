@@ -96,20 +96,25 @@ public class YangTail {
 		mSubTails = subTails;
 		mScaleFallOff = 0.25f;
 		mMinScalar = 0.3f;
-		setTextureCoordinates(0,0,1,2);
+		setTextureCoordinates(0,0,1,2,false);
 		clear();
 	}
 
-	public void setTextureCoordinates(float left,float top,float width,float height) {
-		mTexCoordsLeft = left;
+	public void setTextureCoordinates(float left,float top,float width,float height,boolean flipX) {
 		mTexCoordsTop = top;
-		mTexCoordsWidth = width;
 		mTexCoordsBottom = top+height;
 		mTexCoordsMiddle = (mTexCoordsTop+mTexCoordsBottom)*0.5f;
+		if(flipX) {
+			mTexCoordsLeft = left+width;
+			mTexCoordsWidth = -width;
+		}else{
+			mTexCoordsLeft = left;
+			mTexCoordsWidth = width;
+		}
 	}
 
 	public void setTextureCoordinates(TextureCoordinatesQuad texCoords) {
-		setTextureCoordinates(texCoords.getBiasedLeft(),texCoords.getBiasedTop(),texCoords.getBiasedWidth(),texCoords.getBiasedHeight());
+		setTextureCoordinates(texCoords.getBiasedLeft(),texCoords.getBiasedTop(),texCoords.getBiasedWidth(),texCoords.getBiasedHeight(),texCoords.isFlippedX());
 	}
 
 	public void setTexYRepeat(float repeat) {
@@ -369,7 +374,7 @@ public class YangTail {
 			mGraphics.putTextureCoord(texX, 0);
 			mGraphics.putTextureCoord(texX, mTexCoordsBottom);
 			if(mStrips==mDoubleStrips)
-				mGraphics.putTextureCoord(texX, mDoubleTexCoords[5]);
+				mGraphics.putTextureCoord(texX, mTexCoordsMiddle);
 
 			mGraphics.putColor(mCurColor);
 			mGraphics.putSuppData(mSuppData);

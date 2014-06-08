@@ -90,6 +90,15 @@ public class TextureCoordinatesQuad {
 		return mModifier & 0xFF;
 	}
 
+	public boolean isFlippedX() {
+		final int uMirror = mModifier/256;
+		return uMirror%2==1;
+	}
+
+	public boolean isFlippedY() {
+		return mModifier/512==1;
+	}
+
 	public TextureCoordinatesQuad setFlipped(boolean flipX,boolean flipY) {
 		return setModifier((mModifier & 0xFF) + (flipX?FLIP_HORIZONTALLY:0) + (flipY?FLIP_VERTICALLY:0));
 	}
@@ -316,11 +325,11 @@ public class TextureCoordinatesQuad {
 	public float getBiasedHeight() {
 		return mHeight-mBiasY*2;
 	}
-	
+
 	public float getCenterX() {
 		return mWidth*0.5f + mLeft;
 	}
-	
+
 	public float getCenterY() {
 		return mHeight*0.5f + mTop;
 	}
