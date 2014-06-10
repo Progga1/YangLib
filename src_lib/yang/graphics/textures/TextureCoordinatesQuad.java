@@ -15,10 +15,14 @@ public class TextureCoordinatesQuad {
 	public static final int ROTATE_CCW90 = 3;
 	public static final int FLIP_HORIZONTALLY = 1 << 8;
 	public static final int FLIP_VERTICALLY = 1 << 9;
-	public static final int ID_X1 = 4;
-	public static final int ID_Y1 = 5;
-	public static final int ID_X2 = 2;
-	public static final int ID_Y2 = 3;
+	public static final int ID_LEFT_BOTTOM_X = 0;
+	public static final int ID_LEFT_BOTTOM_Y = 1;
+	public static final int ID_RIGHT_BOTTOM_X = 2;
+	public static final int ID_RIGHT_BOTTOM_Y = 3;
+	public static final int ID_LEFT_TOP_X = 4;
+	public static final int ID_LEFT_TOP_Y = 5;
+	public static final int ID_RIGHT_TOP_X = 6;
+	public static final int ID_RIGHT_TOP_Y = 7;
 
 	public float mLeft;
 	public float mTop;
@@ -27,7 +31,7 @@ public class TextureCoordinatesQuad {
 	public float mBiasX=0,mBiasY=0;
 	public float mRatioWidth;
 	public float mRatio;
-	public float[] mAppliedCoordinates;
+	public float[] mAppliedCoordinates = new float[8];
 	private int mModifier;
 
 	public static TextureCoordinatesQuad[] createSequence(TextureCoordinatesQuad texCoords,int countX,int countY) {
@@ -112,7 +116,6 @@ public class TextureCoordinatesQuad {
 	}
 
 	public void refreshCoordArray() {
-		mAppliedCoordinates = new float[8];
 		final int uMirror = mModifier/256;
 		final boolean flipX = uMirror%2==1;
 		final boolean flipY = uMirror/2>=1;
@@ -130,14 +133,14 @@ public class TextureCoordinatesQuad {
 			y = y2;
 			y2 = swap;
 		}
-		mAppliedCoordinates[0] = x;
-		mAppliedCoordinates[1] = y2;
-		mAppliedCoordinates[2] = x2;
-		mAppliedCoordinates[3] = y2;
-		mAppliedCoordinates[4] = x;
-		mAppliedCoordinates[5] = y;
-		mAppliedCoordinates[6] = x2;
-		mAppliedCoordinates[7] = y;
+		mAppliedCoordinates[ID_LEFT_BOTTOM_X] = x;
+		mAppliedCoordinates[ID_LEFT_BOTTOM_Y] = y2;
+		mAppliedCoordinates[ID_RIGHT_BOTTOM_X] = x2;
+		mAppliedCoordinates[ID_RIGHT_BOTTOM_Y] = y2;
+		mAppliedCoordinates[ID_LEFT_TOP_X] = x;
+		mAppliedCoordinates[ID_LEFT_TOP_Y] = y;
+		mAppliedCoordinates[ID_RIGHT_TOP_X] = x2;
+		mAppliedCoordinates[ID_RIGHT_TOP_Y] = y;
 		final int uRot = mModifier & 0xFF;
 		if(uRot!=0) {
 			for(int i=0;i<uRot;i++) {
