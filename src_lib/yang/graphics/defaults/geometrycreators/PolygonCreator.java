@@ -267,7 +267,7 @@ public class PolygonCreator {
 
 	public void putTextureCoordinates(float offsetX,float offsetY,float scaleX,float scaleY) {
 		for(int i=0;i<mPointCount;i++) {
-			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, offsetX+mPositions[i*mElemsPerPos]*scaleX, offsetY+mPositions[i*mElemsPerPos+1]*scaleY);
+			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, offsetX+mPositions[i*mElemsPerPos]*scaleX, offsetY-mPositions[i*mElemsPerPos+1]*scaleY);
 		}
 	}
 
