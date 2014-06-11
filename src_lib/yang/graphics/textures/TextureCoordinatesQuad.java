@@ -159,7 +159,6 @@ public class TextureCoordinatesQuad {
 	}
 
 	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float biasX, float biasY, int rotation) {
-
 		if(x2<x1) {
 			final float swap = x1;
 			x1 = x2;

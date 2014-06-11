@@ -28,7 +28,7 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 	public static DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH_mm_ss");
 	public static String SCREENSHOT_DIRECTORY = "../screenshots/";
 	public static String SCREENSHOT_PREFIX = "yang ";
-	public static float SCREENSHOT_RES_FACTOR = 1.5f;
+	public static float SCREENSHOT_RES_FACTOR = 1.0f;
 	public static int SCREENSHOT_FORCE_RES_X = -1;
 	public static int SCREENSHOT_FORCE_RES_Y = -1;
 	public static int SCREENSHOT_FORCE_MIN_RATIO_X = -1;

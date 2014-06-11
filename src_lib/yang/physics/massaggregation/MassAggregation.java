@@ -252,11 +252,11 @@ public class MassAggregation {
 	}
 
 	public float toJointX(float x) {
-		return (x-mCarrier.getWorldX())*mCarrier.getScale();
+		return (x-mCarrier.getWorldX())*mCarrier.getScale()*mScale;
 	}
 
 	public float toJointY(float y) {
-		return (y-mCarrier.getWorldY())*mCarrier.getScale();
+		return (y-mCarrier.getWorldY())*mCarrier.getScale()*mScale;
 	}
 
 	public void calcForces() {

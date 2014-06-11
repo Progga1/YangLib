@@ -11,22 +11,22 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class FontCreator {
-    
+
 		static final int DEFAULT_KERN_BOXES = 8;
-	
+
 		/*
 		// BELLIGERENT SETUP
 		static String mFontName 			= "Belligerent Madness";
 		private static String mFileFontName = "belligerent";
 		private static int mOutputWidth 	= 512;
 		private static int mOutputHeight 	= 512;
-		
+
 		private static int mAsciiStartID 	= 0x21; // "!"
 		private static int mAsciiEndID 		= 0x7b; // "z"
 		private static int mKernBoxes		= 8;
 		private static int mFontSize		= 58;
 		//*/
-		
+
 		//*
 		// DEBUG FONT SETUP
 		static String mFontName 			= "Myriad Pro Light";
@@ -34,19 +34,19 @@ public class FontCreator {
 		private static String mFileFontName = "console";
 		private static int mOutputWidth 	= 256;
 		private static int mOutputHeight 	= 128;
-		
+
 		private static int mAsciiStartID 	= 0x21; // "!"
 		private static int mAsciiEndID 		= 0x7b; // "z"
 		private static int mKernBoxes		= 1;
 		private static int mFontSize		= 24;
 		//*/
-		
-		private static String mPath 		= "C:"+File.separatorChar+"temp"+File.separatorChar;		
+
+		private static String mPath 		= "C:"+File.separatorChar+"temp"+File.separatorChar;
 		private static String mFilename		= mPath+mFileFontName;
 		private static int mDebug;
 		private static int mBorderHorizontal;
 		private static int mBorderVertical;
-		public static int mFontStyle = java.awt.Font.PLAIN;	  
+		public static int mFontStyle = java.awt.Font.PLAIN;
 		private static int paramCount;
 
 		private static LinkedList<Integer> mCharList;
@@ -54,7 +54,7 @@ public class FontCreator {
 		private static Integer[] mCharIndicesToRender;
 
 		private static boolean mReplaceUndefinedChars;
-	
+
 		public static void printParam(String param,String defaultVal) {
 			System.out.print((++paramCount)+". ");
 			while(param.length()<26)
@@ -64,11 +64,11 @@ public class FontCreator {
 				System.out.print("[DEFAULT = "+defaultVal+"]");
 			System.out.print("\n");
 		}
-		
+
 	    public static void main(String[] args) {
-	    	
+
 	    	mCharList = new LinkedList<Integer>();
-	    	
+
 	    	if(!loadArgs(args)) {
 //	    		System.out.println("Please give parameters: " +
 //	    				"\n\t[ 1] font name e.g        : Arial" +
@@ -96,7 +96,7 @@ public class FontCreator {
 	    		System.out.println("\nPlease enter:");
 	    		System.out.flush();
 	    		System.out.flush();
-	    		
+
 	    		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 	    	      String toSplit = null;
@@ -109,29 +109,30 @@ public class FontCreator {
 	    	         System.out.println("Error while reading line!");
 	    	         System.exit(1);
 	    	      }
-	    	      
+
 	    	      args = toSplit.split(" ");
 	    	      if(!loadArgs(args)) System.exit(1);
 	    	}
-	    	
+
 	        SwingUtilities.invokeLater(new Runnable() {
-	            public void run() {
+	            @Override
+				public void run() {
 	                createAndShowGUI();
 	            }
 	        });
 	    }
-	    
+
 	    private static boolean loadArgs(String[] args) {
 	    	mAsciiStartID = 33;
 	    	mAsciiEndID = 123;
 	    	mKernBoxes = DEFAULT_KERN_BOXES;
 	    	mFontStyle = Font.PLAIN;
 	    	mPath = "../../";
-	    	
+
 	    	if(args.length >= 1){
 	    		String[] fontName = args[0].split(":");
 	    		mFontName 		= fontName[0].replace("_", " ");
-	    		
+
 	    		if(fontName.length>1) {
 	    			String style = fontName[1].trim().toUpperCase();
 	    			if(style.equals("BOLD"))
@@ -141,7 +142,7 @@ public class FontCreator {
 	    			if(style.equals("ITALIC_BOLD") || style.equals("BOLD_ITALIC"))
 	    				mFontStyle = Font.BOLD | Font.ITALIC;
 	    		}
-	    		
+
 	    		String[] res;
 	    		if(args.length>=2)
 	    			res = args[1].split("x");
@@ -152,12 +153,12 @@ public class FontCreator {
 	    			mOutputHeight 	= Integer.valueOf( res[1] );
 	    		else
 	    			mOutputHeight = mOutputWidth;
-	    		
+
 	    		if(args.length>=3)
 	    			mFontSize		= Integer.valueOf( args[2] );
 	    		else
-	    			mFontSize 		= (int)((float)mOutputWidth/1024*(mFontStyle&(Font.ITALIC | Font.BOLD))!=0?112:124);
-	    		
+	    			mFontSize 		= (float)mOutputWidth/1024*(mFontStyle&(Font.ITALIC | Font.BOLD))!=0?112:124;
+
 //	    		if(args.length>=4) {
 //	    			String style = args[3].trim().toUpperCase();
 //	    			if(style.equals("BOLD"))
@@ -167,11 +168,11 @@ public class FontCreator {
 //	    			if(style.equals("ITALIC_BOLD") || style.equals("BOLD_ITALIC"))
 //	    				mFontStyle = Font.BOLD | Font.ITALIC;
 //	    		}
-	    		
+
 	    		if(args.length>=4) {
 	    			String[] borders = args[3].split(":");
 	    			mBorderHorizontal			= Integer.valueOf( borders[0] );
-	    			if(borders.length>1) 
+	    			if(borders.length>1)
 	    				mBorderVertical 		= Integer.valueOf( borders[1] );
 	    			else
 	    				mBorderVertical			= (int)(mBorderHorizontal*0.9f);
@@ -179,15 +180,15 @@ public class FontCreator {
 	    			mBorderHorizontal			= (int)((float)mFontSize/112*((mFontStyle&Font.ITALIC)!=0?11:9));
 	    			mBorderVertical				= (int)((float)mFontSize/112*7);
 	    		}
-	    		
+
 	    		if(args.length>=5)
 	    			mKernBoxes		= Integer.valueOf( args[4] );
-	    		
-	    		
+
+
 	    		if(args.length>= 6) {
-	    			
+
 	    			String[] arrays = args[5].split(",");
-	    			
+
 	    			for(String array: arrays) {
 		    			res = array.split("-");
 			    		mAsciiStartID   = Integer.valueOf( res[0] );
@@ -196,17 +197,17 @@ public class FontCreator {
 			    		else {
 			    			mAsciiEndID     = Integer.valueOf( res[0] );
 			    		}
-			    			
+
 			    		for(int i = mAsciiStartID; i<= mAsciiEndID; i++) {
 			    			Integer toAdd = new Integer(i);
-			    			
+
 							if(!mCharList.contains(toAdd))
 								mCharList.add(toAdd);
-			    		}	
-	    			}	    			
-	    			
+			    		}
+	    			}
+
 	    			mCharIndicesToRender = mCharList.toArray(new Integer[0]);
-	    			
+
 	    		}
 	    		if(args.length>=7) {
 	    			mPath		    = args[6];
@@ -215,8 +216,8 @@ public class FontCreator {
 	    			mFilename = args[7];
 	    		} if(args.length>= 9) {
 	    			mReplaceUndefinedChars = args[8].equals("true");
-	    			
-	    			
+
+
 	    		} else{
 	    			mFilename = fontName[0].trim().toLowerCase();
 	    			if((mFontStyle & Font.BOLD)!=0)
@@ -224,26 +225,32 @@ public class FontCreator {
 	    			if((mFontStyle & Font.ITALIC)!=0)
 	    				mFilename += "_italic";
 	    		}
-	    		
+
 	    		mFilename = mPath + File.separatorChar + mFilename;
-	    		mArgs = args[0] + " " + mOutputWidth+"x"+mOutputHeight + " " + mFontSize + " " + mBorderHorizontal+":"+mBorderVertical + " " + mKernBoxes + " " + mAsciiStartID+"-"+mAsciiEndID + " ";
+//	    		mArgs = args[0] + " " + mOutputWidth+"x"+mOutputHeight + " " + mFontSize + " " + mBorderHorizontal+":"+mBorderVertical + " " + mKernBoxes + " " + mAsciiStartID+"-"+mAsciiEndID + " ";
+	    		mArgs = "";
+	    		for(String s:args) {
+	    			if(mArgs!="")
+	    				mArgs+=" ";
+	    			mArgs += s;
+	    		}
 	    		return true;
 	    	}
-	    	
+
 			return false;
 		}
 
 		private static void createAndShowGUI() {
-	    	
+
 	        JFrame f = new JFrame("Swing Paint Demo");
 	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        FontDrawPanel panel = new FontDrawPanel();
-	        panel.setParameters(mArgs, mFontName, mOutputWidth, mOutputHeight, mCharIndicesToRender, mKernBoxes, mFontSize, mFilename, mBorderHorizontal, mBorderVertical, mDebug, mReplaceUndefinedChars);	
-	        
+	        panel.setParameters(mArgs, mFontName, mOutputWidth, mOutputHeight, mCharIndicesToRender, mKernBoxes, mFontSize, mFilename, mBorderHorizontal, mBorderVertical, mDebug, mReplaceUndefinedChars);
+
 	        f.add(panel);
 	        f.pack();
 	        f.setVisible(true);
 	    }
     }
-    
-    
+
+

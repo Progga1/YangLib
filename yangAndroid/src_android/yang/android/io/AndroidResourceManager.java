@@ -3,6 +3,8 @@ package yang.android.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import yang.systemdependent.AbstractResourceManager;
 import yang.systemdependent.OnFileSelectedListener;

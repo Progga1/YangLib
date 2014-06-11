@@ -378,8 +378,8 @@ public class Joint extends Point3f {
 	public void setNormalDirection(float worldX, float worldY,Joint parent,float distance,boolean ortho,boolean invert,float xOffset,float yOffset) {
 		if(parent == null)
 			return;
-		final float baseX = parent.mX;
-		final float baseY = parent.mY;
+		final float baseX = parent.mX*mMassAggregation.mScale;
+		final float baseY = parent.mY*mMassAggregation.mScale;
 		float deltaX = mMassAggregation.toJointX(worldX)-baseX;
 		float deltaY = mMassAggregation.toJointY(worldY)-baseY;
 		if(invert) {
