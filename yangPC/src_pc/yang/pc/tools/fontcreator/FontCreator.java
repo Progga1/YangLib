@@ -242,7 +242,7 @@ public class FontCreator {
 
 		private static void createAndShowGUI() {
 
-	        JFrame f = new JFrame("Swing Paint Demo");
+	        JFrame f = new JFrame("Font creator");
 	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        FontDrawPanel panel = new FontDrawPanel();
 	        panel.setParameters(mArgs, mFontName, mOutputWidth, mOutputHeight, mCharIndicesToRender, mKernBoxes, mFontSize, mFilename, mBorderHorizontal, mBorderVertical, mDebug, mReplaceUndefinedChars);

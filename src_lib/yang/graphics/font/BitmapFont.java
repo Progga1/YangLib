@@ -11,13 +11,13 @@ import yang.systemdependent.AbstractResourceManager;
 
 
 public class BitmapFont {
-	
+
 	public static boolean LOAD_DEBUG_FONTS = false;
-	
+
 	public static String[] ASCII = createASCIIArray();
-	
+
 	public static TextureFilter TEXTURE_FILTER = TextureFilter.LINEAR_MIP_LINEAR;
-	
+
 	public TextureCoordinatesQuad[] mCoordinates;
 	public float[][] mPositions2D;
 	public float[][] mPositions3D;
@@ -34,7 +34,7 @@ public class BitmapFont {
 	public float[] mKerningMinX;
 	public float[] mKerningMaxX;
 
-	
+
 	public static String[] createASCIIArray() {
 		String[] result = new String[255];
 		for(int i=0;i<255;i++) {
@@ -42,11 +42,11 @@ public class BitmapFont {
 		}
 		return result;
 	}
-	
+
 	public BitmapFont() {
-		
+
 	}
-	
+
 	public BitmapFont init(Texture texture,String fontFilename,AbstractResourceManager resourceManager) {
 		mTexture = texture;
 		Properties properties = resourceManager.loadPropertiesFile("textures"+File.separatorChar+fontFilename+".txt");
@@ -54,7 +54,7 @@ public class BitmapFont {
 		float textureH = Float.parseFloat(properties.getProperty("textureH", ""+textureW));
 		float dWidth = 1/textureW;
 		float dHeight = 1/textureH;
-		
+
 		float charHeight = Float.parseFloat(properties.getProperty("charHeight", ""+(0.1f*textureH)))*dHeight;
 		float defaultCharWidth = Float.parseFloat(properties.getProperty("defaultCharWidth",""+charHeight*0.5f));
 		mCharNormalizeFactorY = 1f/charHeight;
@@ -65,7 +65,7 @@ public class BitmapFont {
 		mConstantCharDistance =  Float.parseFloat(properties.getProperty("constCharDistance", ""+defaultCharWidth/charHeight*1.0f*textureW))*dWidth;
 		mSpaceWidth = Float.parseFloat(properties.getProperty("spaceWidth", ""+(0.25f*textureW)))*dWidth*mCharNormalizeFactorX;
 		mSpacing = Float.parseFloat(properties.getProperty("spacing", ""+(0.035f*textureW)))*dWidth*mCharNormalizeFactorY;
-		
+
 		int len = lastCharID+1;
 		mCoordinates = new TextureCoordinatesQuad[len];
 		mKerningValues = new float[len][mKernBoxes*2];
@@ -75,9 +75,11 @@ public class BitmapFont {
 		mPositions3D = new float[len][12];
 		mWidths = new float[len];
 		mHeights = new float[len];
-		
+
 		for(int i=firstCharID;i<=lastCharID;i++) {
 			String values = properties.getProperty(ASCII[i]);
+			if(values==null)
+				continue;
 			String[] valuesSplit = values.split(" ");
 			TextureCoordinatesQuad newCoordinates = new TextureCoordinatesQuad();
 			if(valuesSplit.length>=2) {
@@ -94,7 +96,7 @@ public class BitmapFont {
 					for(int k=0;k<count;k++) {
 						kerningArray[k] = Float.parseFloat(valuesSplit[k+4]) * dWidth * mCharNormalizeFactorX;
 					}
-					
+
 					float[] boxes = mKerningValues[i];
 					float minKern = 100;
 					float maxKern = 0;
@@ -142,7 +144,7 @@ public class BitmapFont {
 
 		return this;
 	}
-	
+
 	public BitmapFont init(String filename,AbstractGFXLoader gfxLoader) {
 		Texture tex = null;
 		if(LOAD_DEBUG_FONTS && gfxLoader.mResources.assetExists(filename+"Debug"))
@@ -151,5 +153,5 @@ public class BitmapFont {
 			tex = gfxLoader.getImage(filename, TEXTURE_FILTER);
 		return init(tex,filename,gfxLoader.mResources);
 	}
-	
+
 }

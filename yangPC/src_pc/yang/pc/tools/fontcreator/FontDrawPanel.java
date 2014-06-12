@@ -337,6 +337,8 @@ class FontDrawPanel extends JPanel {
 			return 'o';
 		if(symbol>=249 && symbol<=252)
 			return 'u';
+		if(symbol>=236 && symbol<=239)
+			return 'i';
 		if(symbol>=241)
 			return 'n';
 		if(symbol>=200 && symbol<=203)
@@ -347,8 +349,16 @@ class FontDrawPanel extends JPanel {
 			return 'O';
 		if(symbol>=217 && symbol<=220)
 			return 'U';
-		if(symbol>=209)
+		if(symbol>=204 && symbol<=207)
+			return 'I';
+		if(symbol==209)
 			return 'N';
+		if(symbol==223)
+			return 'B';
+		if(symbol==199)
+			return 'C';
+		if(symbol==231)
+			return 'c';
 		return symbol;
 	}
 
@@ -356,7 +366,7 @@ class FontDrawPanel extends JPanel {
 		if(!mReplaceUndefinedChars) return symbol;
 
 		if(lookUpForReplacement(symbol)!=symbol)
-			return 'T';
+			return 't';
 		else
 			return symbol;
 	}
