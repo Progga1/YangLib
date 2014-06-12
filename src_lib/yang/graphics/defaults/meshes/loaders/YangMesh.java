@@ -232,9 +232,9 @@ public class YangMesh {
 
 	private void drawBuffer(IndexedVertexBuffer vertexBuffer) {
 		mTranslator.setVertexBuffer(vertexBuffer);
-		if(mDrawBackToFront)
+		if(mDrawBackToFront && !mWireFrames) {
 			mGraphics.sort();
-		else{
+		}else{
 			mTranslator.switchZBuffer(true);
 			mTranslator.switchZWriting(true);
 		}

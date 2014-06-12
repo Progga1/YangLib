@@ -4,8 +4,9 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Arrays;
 
-import yang.graphics.camera.CameraTransformations;
+import yang.graphics.camera.CameraProjection;
 import yang.math.objects.YangMatrix;
+import yang.model.DebugYang;
 
 public class VertexZSort {
 
@@ -32,13 +33,13 @@ public class VertexZSort {
 
 		float minZ = Float.MAX_VALUE;
 		float maxZ = -Float.MAX_VALUE;
-		positions.position(0);
+		positions.position(0);DebugYang.clearState();
 		if(normals!=null)
 			normals.position(0);
 		for(int i=0;i<endPosition;i++) {
 			float x = positions.get();
 			float y = positions.get();
-			float z = positions.get();
+			float z = positions.get();normShift = 0;
 			if(normShift!=0) {
 				x += normals.get()*normShift;
 				y += normals.get()*normShift;
@@ -48,6 +49,18 @@ public class VertexZSort {
 //				positions.put(y);
 //				positions.put(z);
 			}
+//			float sX = matrix[12];
+//			float sY = matrix[13];
+//			float sZ = matrix[14];
+//			float w = matrix[3]*x + matrix[7]*y + matrix[11]*z + matrix[15];
+//			float xVal = matrix[0]*x + matrix[4]*y + matrix[8]*z + matrix[12];
+//			float yVal = matrix[1]*x + matrix[5]*y + matrix[9]*z + matrix[13];
+//			float zVal = matrix[2]*x + matrix[6]*y + matrix[10]*z + matrix[14] + 1;
+//			xVal /= w;
+//			yVal /= w;
+//			zVal /= w;
+//			zVal = (float)Math.sqrt(zVal*zVal + xVal*xVal + yVal*yVal);
+
 			float zVal = matrix[2]*x + matrix[6]*y + matrix[10]*z + matrix[14];
 
 			if(zVal<minZ)
@@ -108,10 +121,11 @@ public class VertexZSort {
 //		indices.put(mDepthIndices);
 	}
 
-	public void sort(ShortBuffer indices,FloatBuffer positions,FloatBuffer normals,float normShift,CameraTransformations camera,YangMatrix modelTransform) {
+	public void sort(ShortBuffer indices,FloatBuffer positions,FloatBuffer normals,float normShift,CameraProjection camera,YangMatrix modelTransform) {
 		mTempModelViewTransform.set(camera.getViewTransformReference());
 		if(modelTransform!=null)
 			mTempModelViewTransform.multiplyRight(modelTransform);
+//		mTempModelViewTransform.multiplyLeft(camera.getProjectionTransformReference());
 		sort(indices,positions,normals,normShift,mTempModelViewTransform);
 	}
 

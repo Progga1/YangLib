@@ -25,7 +25,8 @@ public class CameraProjection extends CameraTransformations {
 			mUnprojectCameraTransform.set(camera.mUnprojectCameraTransform);
 			mPosition.set(camera.mPosition);
 		}
-
+		mProjectionTransform.set(camera.mProjectionTransform.mValues);
+		mInvProjectionTransform.set(camera.mInvProjectionTransform.mValues);
 
 	}
 

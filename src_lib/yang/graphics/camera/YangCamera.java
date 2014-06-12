@@ -7,8 +7,6 @@ import yang.math.objects.YangMatrix;
 
 public abstract class YangCamera extends CameraTransformations {
 
-	protected YangMatrix mProjectionTransform = new YangMatrix();
-	protected YangMatrix mInvProjectionTransform = new YangMatrix();
 	protected boolean mProjectionUpdated = true;
 
 	public boolean mAutoRefreshInverted = true;
@@ -71,10 +69,6 @@ public abstract class YangCamera extends CameraTransformations {
 
 	public void setProjectionUpdated() {
 		mProjectionUpdated = true;
-	}
-
-	public YangMatrix getProjectionTransformReference() {
-		return mProjectionTransform;
 	}
 
 	@Override

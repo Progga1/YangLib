@@ -47,6 +47,7 @@ public class SkinnedSkeleton {
 		if(mMesh==null)
 			return;
 		mMesh.mWireFrames = mWireFrames;
+		mGraphics.mTranslator.switchCulling(!mWireFrames);
 		if(mSkeleton!=null) {
 			if(mAutoRefresh)
 				refresh();
