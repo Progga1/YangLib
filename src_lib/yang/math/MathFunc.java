@@ -79,5 +79,9 @@ public class MathFunc {
 	public static float sqrt(float v) {
 		return (float) Math.sqrt(v);
 	}
+
+	public static int round(float f) {		
+		return Math.round(f);
+	}
 	
 }

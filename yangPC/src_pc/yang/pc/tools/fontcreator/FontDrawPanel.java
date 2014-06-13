@@ -161,9 +161,18 @@ class FontDrawPanel extends JPanel {
 		else
 			out.println("charHeight = "+ ((float)(mGlobalB-mGlobalT))/mHeight);
 
-		out.println("firstCharID = " + mCharIndicesToRender[0]);
-		out.println("lastCharID = " + (mCharIndicesToRender[mCharIndicesToRender.length-1]));
-
+		
+		int lastCharId = 0;
+		int firstCharId = 32000;
+		for(Integer i: mCharIndicesToRender) {
+			lastCharId  = Math.max(lastCharId,  i);
+			firstCharId = Math.min(firstCharId, i);
+		}
+		
+		out.println("firstCharID = " + firstCharId);
+		out.println("lastCharID = " + lastCharId);
+		out.println("amountChars = " + mCharIndicesToRender.length);
+		
 		if(savePixelCoords) out.println("spaceWidth = " + (mAvgWidth/2));
 		else out.println("spaceWidth = " + ((float)mAvgWidth/mWidth/2));
 
@@ -289,7 +298,6 @@ class FontDrawPanel extends JPanel {
 	}
 
 	private int placeLetter(Graphics2D g2, Graphics g,int x, int y, char symbol, LetterBox box) {
-		char oldsym = symbol;
 		symbol = lookUpForReplacement(symbol);
 
 		if(x/*-box.l*/+box.w > mWidth) return 1;
@@ -409,7 +417,7 @@ class FontDrawPanel extends JPanel {
             	g2.drawString( ""+(lookUpForKernReplacement((char)mCharIndicesToRender[i].intValue())) , mLeftStart ,mBaseLine);
             }
 
-            KernBox box = getKernBox(canvas, mBoxes[i]);
+            getKernBox(canvas, mBoxes[i]); // Maybe removable
 
         }
 
@@ -457,7 +465,6 @@ class FontDrawPanel extends JPanel {
 		int endX 	= startX+box.w;
 
 		int minY = mBaseLine + mGlobalT;
-		int maxY = mBaseLine + mGlobalB;
 
 		int startY = 0;
 		int endY = 0;
