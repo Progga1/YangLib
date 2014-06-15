@@ -15,4 +15,15 @@ public class SpecularMatProperties extends ColorMatProperties {
 		this(new FloatColor(0.5f),16);
 	}
 
+	@Override
+	public SpecularMatProperties clone() {
+		SpecularMatProperties result = new SpecularMatProperties(mColor.clone(),mExponent);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return mColor.toString()+", "+mExponent;
+	}
+
 }

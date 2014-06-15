@@ -25,7 +25,6 @@ public class VertexZSort {
 
 		Arrays.fill(mDepthIndices,(short)-1);
 
-
 		int endIndex = indices.position();
 		int endPosition = positions.position();
 
@@ -33,7 +32,7 @@ public class VertexZSort {
 
 		float minZ = Float.MAX_VALUE;
 		float maxZ = -Float.MAX_VALUE;
-		positions.position(0);DebugYang.clearState();
+		positions.position(0);
 		if(normals!=null)
 			normals.position(0);
 		for(int i=0;i<endPosition;i++) {

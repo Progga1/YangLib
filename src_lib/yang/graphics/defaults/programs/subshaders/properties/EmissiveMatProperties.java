@@ -8,9 +8,14 @@ public class EmissiveMatProperties extends ColorMatProperties {
 	public EmissiveMatProperties(FloatColor color) {
 		super(color);
 	}
-	
+
 	public EmissiveMatProperties() {
 		this(new FloatColor(Quadruple.ZERO));
 	}
-	
+
+	@Override
+	public EmissiveMatProperties clone() {
+		return new EmissiveMatProperties(mColor.clone());
+	}
+
 }

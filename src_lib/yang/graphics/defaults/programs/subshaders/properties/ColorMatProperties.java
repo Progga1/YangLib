@@ -7,13 +7,18 @@ public class ColorMatProperties {
 
 	public FloatColor mColor = new FloatColor(FloatColor.ZERO);
 	public Texture mTexture = null;
-	
+
 	public ColorMatProperties(FloatColor color) {
 		mColor = color;
 	}
-	
+
 	public ColorMatProperties() {
 		this(FloatColor.WHITE.clone());
 	}
-	
+
+	@Override
+	public String toString() {
+		return mColor.toString();
+	}
+
 }

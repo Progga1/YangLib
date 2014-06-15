@@ -14,21 +14,21 @@ import yang.util.filereader.TokenReader;
 public class YangMaterialSet {
 
 	private static String[] KEYWORDS = {"newmtl","Ka","Kd","Ks","Ns","Ke","map_Kd","map_Ks","map_Ke"};
-	
+
 	public YangList<YangMaterial> mMaterials;
-	
+
 	public static TextureProperties diffuseTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
 	public static TextureProperties specularTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
 	public static TextureProperties emissiveTextureProperties = new TextureProperties(TextureWrap.REPEAT,TextureFilter.LINEAR_MIP_LINEAR);
-	
+
 	private TokenReader reader;
 	private AbstractGFXLoader mGFXLoader;
-	
+
 	public YangMaterialSet(AbstractGFXLoader gfxLoader) {
 		mGFXLoader = gfxLoader;
 		mMaterials = new YangList<YangMaterial>();
 	}
-	
+
 	private void readColor(FloatColor targetColor,float defaultAlpha) throws IOException {
 		targetColor.mValues[0] = reader.readFloat(false);
 		targetColor.mValues[1] = reader.readFloat(false);
@@ -39,15 +39,15 @@ public class YangMaterialSet {
 		}else
 			targetColor.mValues[3] = defaultAlpha;
 	}
-	
+
 	private void readColor(FloatColor targetColor) throws IOException {
 		readColor(targetColor,1);
 	}
-	
+
 	public void loadFromStream(InputStream inputStream) throws IOException {
 		reader = new TokenReader(inputStream);
 		YangMaterial curMat = null;
-		
+
 		while(!reader.eof()) {
 			reader.nextWord(true);
 			String filename;
@@ -89,7 +89,7 @@ public class YangMaterialSet {
 		}
 
 	}
-	
+
 	@Override
 	public String toString() {
 		return mMaterials.toString();
@@ -103,5 +103,5 @@ public class YangMaterialSet {
 		}
 		return null;
 	}
-	
+
 }

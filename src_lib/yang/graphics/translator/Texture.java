@@ -16,6 +16,7 @@ public class Texture extends AbstractTexture {
 	public static final int STATUS_FREE = 3;
 
 	public GraphicsTranslator mGraphics;
+	public String mName;
 	public int mId;
 	public TextureProperties mProperties;
 	public int mStatus = STATUS_UNINITIALIZED;
@@ -163,7 +164,7 @@ public class Texture extends AbstractTexture {
 
 	@Override
 	public String toString() {
-		return "STATUS="+statusToString()+", PROPS=("+mProperties.toString()+"), ALPHAMAP="+mIsAlphaMap;
+		return mName+": STATUS="+statusToString()+", PROPS=("+mProperties.toString()+"), ALPHAMAP="+mIsAlphaMap;
 	}
 
 }

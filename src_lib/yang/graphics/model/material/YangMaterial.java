@@ -19,7 +19,7 @@ public class YangMaterial {
 		mSpecularProps = new SpecularMatProperties();
 		mEmissiveProps = new EmissiveMatProperties();
 	}
-	
+
 	@Override
 	public String toString() {
 		String result = "Diffuse: "+mDiffuseColor+"\n"+"Ambient: "+mDiffuseColor+"\n"+"Specular: "+mSpecularProps+"\n"+"Emissive: "+mEmissiveColor+"\n";
@@ -29,5 +29,18 @@ public class YangMaterial {
 			result = "Name: '"+mName+"'\n"+result;
 		return result;
 	}
-	
+
+	@Override
+	public YangMaterial clone() {
+		YangMaterial result = new YangMaterial();
+		result.mName = mName;
+		result.mDiffuseColor.set(mDiffuseColor);
+		result.mAmbientColor.set(mAmbientColor);
+		result.mEmissiveColor.set(mEmissiveColor);
+		result.mDiffuseTexture = mDiffuseTexture;
+		result.mSpecularProps = mSpecularProps.clone();
+		result.mEmissiveProps = mEmissiveProps.clone();
+		return result;
+	}
+
 }

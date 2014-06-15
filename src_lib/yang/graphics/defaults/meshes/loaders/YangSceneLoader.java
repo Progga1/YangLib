@@ -5,6 +5,7 @@ import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.AbstractGFXLoader;
+import yang.model.DebugYang;
 
 public class YangSceneLoader {
 
@@ -103,7 +104,7 @@ public class YangSceneLoader {
 		curSmoothGroup = -1;
 
 		mCurrentMesh = currentMesh;
-		currentMatSec = new YangMaterialSection(0,0,DEFAULT_MATERIAL);
+		currentMatSec = new YangMaterialSection(0,0,new YangMaterial());
 		currentMesh.mMaterialSections.clear();
 		currentMesh.mMaterialSections.add(currentMatSec);
 		currentMesh.mDrawBatch = null;
