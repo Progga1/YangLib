@@ -1,11 +1,14 @@
 package yang.util.pools;
 
+import yang.model.DebugYang;
+
 public abstract class AbstractYangRingBuffer<ElemType> {
 
 	protected Object[] mBuffer;
 	private int mCapacity;
 	protected int mPointer;
 	public int mResetPointer = 0;
+	public static int allocCount = 0;
 
 	protected abstract ElemType createElement();
 
@@ -28,6 +31,7 @@ public abstract class AbstractYangRingBuffer<ElemType> {
 		ElemType elem = (ElemType)mBuffer[mPointer++];
 		if(mPointer>=mCapacity)
 			mPointer = mResetPointer;
+		allocCount++;
 		return elem;
 	}
 
