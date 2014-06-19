@@ -531,6 +531,10 @@ public class YangMatrix {
 		MatrixOps.applyFloatMatrix3D(mValues, point.mX,point.mY,point.mZ, target);
 	}
 
+	public void apply3D(Point3f target) {
+		MatrixOps.applyFloatMatrix3D(mValues, target.mX,target.mY,target.mZ, target);
+	}
+
 	public void apply3DNormalized(float x, float y, float z, float[] target, int targetOffset) {
 		MatrixOps.applyFloatMatrix3DNormalized(mValues,x,y,z,target,targetOffset);
 	}
@@ -828,6 +832,12 @@ public class YangMatrix {
 	public void applyInverted(Point3f position, Vector3f mTempVec1) {
 		asInverted(mBackMatrix);
 		MatrixOps.applyFloatMatrix3D(mBackMatrix, position, mTempVec1);
+	}
+
+	public void clearTranslation() {
+		mValues[12] = 0;
+		mValues[13] = 0;
+		mValues[14] = 0;
 	}
 
 }

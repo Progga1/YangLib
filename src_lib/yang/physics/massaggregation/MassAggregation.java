@@ -103,6 +103,9 @@ public class MassAggregation {
 	public void refreshTransform() {
 		mTransform.asInverted(mInvTransform.mValues);
 		mInvTransform.asTransposed(mVectorTransform.mValues);
+		mVectorTransform.mValues[3] = 0;
+		mVectorTransform.mValues[7] = 0;
+		mVectorTransform.mValues[11] = 0;
 		mVectorTransform.asInverted(mInvVectorTransform.mValues);
 	}
 
@@ -579,6 +582,13 @@ public class MassAggregation {
 				addSpringBone(new JointConnection(namePrefix+joint1.mName+"-"+joint2.mName,joint1,joint2),strength);
 			}
 		}
+	}
+
+	public void linkTransform(MassAggregation skeleton) {
+		mTransform = skeleton.mTransform;
+		mInvTransform = skeleton.mInvTransform;
+		mVectorTransform = skeleton.mVectorTransform;
+		mInvVectorTransform = skeleton.mInvVectorTransform;
 	}
 
 }

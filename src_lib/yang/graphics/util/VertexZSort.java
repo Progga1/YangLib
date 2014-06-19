@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 import yang.graphics.camera.CameraProjection;
 import yang.math.objects.YangMatrix;
-import yang.model.DebugYang;
 
 public class VertexZSort {
 

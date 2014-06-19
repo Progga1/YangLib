@@ -1,7 +1,5 @@
 package yang.graphics.particles;
 
-import java.util.ListIterator;
-
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.programs.BasicProgram;

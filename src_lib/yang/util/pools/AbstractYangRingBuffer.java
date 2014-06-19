@@ -5,6 +5,7 @@ public abstract class AbstractYangRingBuffer<ElemType> {
 	protected Object[] mBuffer;
 	private int mCapacity;
 	protected int mPointer;
+	public int mResetPointer = 0;
 
 	protected abstract ElemType createElement();
 
@@ -26,8 +27,12 @@ public abstract class AbstractYangRingBuffer<ElemType> {
 		@SuppressWarnings("unchecked")
 		ElemType elem = (ElemType)mBuffer[mPointer++];
 		if(mPointer>=mCapacity)
-			mPointer = 0;
+			mPointer = mResetPointer;
 		return elem;
+	}
+
+	public void protectPreviousInstances() {
+		mResetPointer = mPointer;
 	}
 
 }

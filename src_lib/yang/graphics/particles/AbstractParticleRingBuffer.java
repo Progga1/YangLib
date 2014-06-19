@@ -4,7 +4,6 @@ import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
-import yang.util.YangList;
 import yang.util.lookuptable.Function;
 import yang.util.lookuptable.LookUpTable;
 
