@@ -5,9 +5,6 @@ import yang.surface.YangSurface;
 
 public class EffectParticle extends PhysicalParticle {
 
-//	public float mAlphaV;
-
-
 	public void setEffects(float rotationSpeed,float alphaSpeed) {
 		mRotV = rotationSpeed;
 		mColor[3] = alphaSpeed;

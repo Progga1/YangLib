@@ -19,6 +19,7 @@ public class Particle {
 	public float mScaleLifeTimeFactor;
 	public float mLifeTimeNormFactor;
 	public float[] mColor;
+	public boolean mVisible = true;
 
 	public float mRotation;
 	public float mScaleX,mScaleY;

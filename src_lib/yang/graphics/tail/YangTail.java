@@ -100,6 +100,21 @@ public class YangTail {
 		clear();
 	}
 
+	public void clear() {
+		synchronized(this) {
+			mFilled = false;
+			mRingPos = 0;
+			mUpdateCount = 0;
+			mCountRingPos = 0;
+			mTotalDistance = 0;
+			mDist[0] = 0;
+			mDirX[0] = 0;
+			mDirY[0] = 0;
+			mPosX[0] = 0;
+			mPosY[0] = 0;
+		}
+	}
+
 	public void setTextureCoordinates(float left,float top,float width,float height,boolean flipX) {
 		mTexCoordsTop = top;
 		mTexCoordsBottom = top+height;
@@ -135,16 +150,6 @@ public class YangTail {
 
 	public boolean isDoubled() {
 		return mStrips==mDoubleStrips;
-	}
-
-	public void clear() {
-		synchronized(this) {
-			mFilled = false;
-			mRingPos = 0;
-			mUpdateCount = 0;
-			mCountRingPos = 0;
-			mTotalDistance = 0;
-		}
 	}
 
 	public void setColor(float r,float g,float b,float a) {

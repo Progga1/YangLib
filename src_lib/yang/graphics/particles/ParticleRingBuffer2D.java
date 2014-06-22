@@ -32,7 +32,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 		if(mCelShadingX!=1 && mCelShadingY!=1) {
 			for(final Object particleObj:mParticles) {
 				ParticleType particle = (ParticleType)particleObj;
-				if(particle.mExists) {
+				if(particle.mExists && particle.mVisible) {
 					float uScale;
 					if(mScaleSpeed==0) {
 						uScale = 1;
@@ -54,7 +54,7 @@ public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extend
 
 		for(int i=mParticles.length-1;i>=0;i--) {
 			ParticleType particle = (ParticleType)mParticles[i];
-			if(particle.mExists) {
+			if(particle.mExists && particle.mVisible) {
 				if(mAlphaSpeed==0) {
 					mGraphics.setColor(particle.mColor);
 				}else{

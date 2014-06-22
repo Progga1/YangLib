@@ -616,6 +616,8 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 
 	public void stopMacro() {
+		if(mMacro==null)
+			return;
 		mMacro.close();
 		mMacro = null;
 		refreshMetaMode();
