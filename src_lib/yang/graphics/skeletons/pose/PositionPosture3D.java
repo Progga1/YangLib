@@ -6,15 +6,26 @@ import yang.util.Util;
 
 public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation> {
 
-	public PositionPosture3D(float[] data) {
+	public boolean mRelative;
+
+	public PositionPosture3D(float[] data,boolean relative) {
 		super(data);
+		mRelative = relative;
 	}
 
-	public PositionPosture3D(MassAggregation skeleton) {
-		super(new float[skeleton.calcAnimatedJointCount()*3]);
+	public PositionPosture3D(float[] data) {
+		this(data,false);
+	}
+
+	public PositionPosture3D(MassAggregation skeleton,boolean relative) {
+		this(new float[skeleton.calcAnimatedJointCount()*3],relative);
 		for(int i=0;i<mData.length;i++) {
 			mData[i] = Float.MAX_VALUE;
 		}
+	}
+
+	public PositionPosture3D(MassAggregation skeleton) {
+		this(skeleton,false);
 	}
 
 	@Override
@@ -33,6 +44,9 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 						joint.mY = mData[c+1]*weight + interpolationPose.mData[c+1]*dWeight;
 						joint.mZ = mData[c+2]*weight + interpolationPose.mData[c+2]*dWeight;
 						c += 3;
+					}
+					if(mRelative && joint.mAngleParent!=null) {
+						joint.add(joint.mAngleParent);
 					}
 				}else
 					c += 3;

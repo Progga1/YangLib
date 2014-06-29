@@ -9,6 +9,7 @@ public class YangArmature {
 
 	public Vector3f[] mInitialVectors;
 	public Point3f[] mInitialPositions;
+	public float[] mInitialDistances;
 
 	public YangArmature() {
 
@@ -18,6 +19,7 @@ public class YangArmature {
 		int l = boneCount;
 		mInitialVectors = new Vector3f[l];
 		mInitialPositions = new Point3f[l];
+		mInitialDistances = new float[l];
 		for(int i=0;i<l;i++) {
 			mInitialVectors[i] = new Vector3f();
 			mInitialPositions[i] = new Point3f();
@@ -37,7 +39,7 @@ public class YangArmature {
 			mInitialPositions[i].set(joint.mX,joint.mY,joint.mZ);
 			if(joint.mAngleParent!=null) {
 				mInitialVectors[i].set(joint.mX-joint.mAngleParent.mX,joint.mY-joint.mAngleParent.mY,joint.mZ-joint.mAngleParent.mZ);
-				mInitialVectors[i].normalize();
+				mInitialDistances[i] = mInitialVectors[i].normalize();
 			}
 			i++;
 		}

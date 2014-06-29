@@ -120,9 +120,9 @@ public class TextureCoordinatesQuad {
 		final boolean flipX = uMirror%2==1;
 		final boolean flipY = uMirror/2>=1;
 		float x = mLeft+mBiasX;
-		float x2 = mLeft+mWidth-mBiasX;
+		float x2 = mLeft+mWidth-mBiasX*2;
 		float y = mTop+mBiasY;
-		float y2 = mTop+mHeight-mBiasY;
+		float y2 = mTop+mHeight-mBiasY*2;
 		if(flipX) {
 			final float swap = x;
 			x = x2;
@@ -313,11 +313,13 @@ public class TextureCoordinatesQuad {
 	}
 
 	public float getBiasedRight() {
-		return mLeft+mWidth-2*mBiasX;
+		return mAppliedCoordinates[ID_RIGHT_BOTTOM_X];
+//		return mLeft+mWidth-2*mBiasX;
 	}
 
 	public float getBiasedBottom() {
-		return mTop+mHeight-2*mBiasY;
+		return mAppliedCoordinates[ID_RIGHT_BOTTOM_Y];
+//		return mTop+mHeight-2*mBiasY;
 	}
 
 	public float getBiasedWidth() {

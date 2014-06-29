@@ -25,6 +25,7 @@ public class YangArmaturePose {
 	public void refreshMatrices(MassAggregation skeleton) {
 		Vector3f[] initialVectors = mArmature.mInitialVectors;
 		Point3f[] initialPositions = mArmature.mInitialPositions;
+		float[] initialDistances = mArmature.mInitialDistances;
 
 		int i = 0;
 		for(Joint joint:skeleton.mJoints) {
@@ -35,9 +36,11 @@ public class YangArmaturePose {
 				//transform.translate(joint.mAngleParent.mWorldPosition);
 				transform.translate(parent.mX,parent.mY,parent.mZ);
 				mTempVec.set(joint.mX-parent.mX,joint.mY-parent.mY,joint.mZ-parent.mZ);
-				mTempVec.normalize();
+				float dist = mTempVec.normalize();
+				float scale = dist/initialDistances[i];
 				mTempQuat.setFromToRotation(initialVectors[i], mTempVec);
 				transform.multiplyQuaternionRight(mTempQuat);
+				transform.scale(scale);
 				transform.translate(-parent.mX,-parent.mY,-parent.mZ);
 				transform.translate(parent.mX-initialPositions[parent.mId].mX,parent.mY-initialPositions[parent.mId].mY,parent.mZ-initialPositions[parent.mId].mZ);
 			}else{
