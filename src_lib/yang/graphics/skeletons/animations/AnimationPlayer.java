@@ -1,6 +1,7 @@
 package yang.graphics.skeletons.animations;
 
 import yang.model.App;
+import yang.model.DebugYang;
 import yang.physics.massaggregation.MassAggregation;
 import yang.sound.AbstractSoundManager;
 

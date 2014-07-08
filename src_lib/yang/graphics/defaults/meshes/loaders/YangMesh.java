@@ -61,7 +61,7 @@ public class YangMesh {
 	protected int mSkinJointsPerVertex = 4;
 	public boolean mAutoSkinningUpdate = true;
 	public boolean mBlockTextures = false;
-	public boolean mNormalizeNormals = false;
+	public boolean mNormalizeNormals = true;
 	public YangArmaturePose mCurArmature = null;
 	public boolean mWireFrames = false;
 
@@ -412,6 +412,7 @@ public class YangMesh {
 			else
 				for(final int normInd:mNormIndices) {
 					i = normInd*3;
+
 					if(i<0)
 						vertexBuffer.putVec3(Default3DGraphics.ID_NORMALS, 0,0,0);
 					else

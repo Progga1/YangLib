@@ -64,7 +64,7 @@ public class JointConnection {
 	}
 
 	public boolean connectsChildParent() {
-		return mJoint1.mAngleParent==mJoint2 || mJoint2.mAngleParent==mJoint1;
+		return mJoint1.mParent==mJoint2 || mJoint2.mParent==mJoint1;
 	}
 
 

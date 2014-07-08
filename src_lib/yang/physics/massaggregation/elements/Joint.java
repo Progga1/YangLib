@@ -24,7 +24,7 @@ public class Joint extends Point3f {
 	public float mMass;
 	public float mInitialMass;
 	public MassAggregation mMassAggregation;
-	public Joint mAngleParent;
+	public Joint mParent;
 	public float mParentDistance;
 	public YangList<Joint> mChildren;
 	public boolean mSavePose;
@@ -48,6 +48,7 @@ public class Joint extends Point3f {
 	public Point3f mPrevDrag = new Point3f();
 	public Point3f mCurResDrag = new Point3f();
 	public Vector3f mDragVec = new Vector3f();
+	public Vector3f mParentSpatial = new Vector3f();
 	public boolean mDragging;
 	public float mParentCurAngle;
 	public boolean mAnimDisabled = false;
@@ -121,17 +122,17 @@ public class Joint extends Point3f {
 	}
 
 	public void setParent(Joint parent) {
-		mAngleParent = parent;
+		mParent = parent;
 		mParentDistance = getDistance(parent);
 		if(parent!=null)
 			parent.mChildren.add(this);
 	}
 
 	public void refreshParentAngle() {
-		if(mAngleParent==null)
+		if(mParent==null)
 			mParentCurAngle = 0;
 		else
-			mParentCurAngle = getAngle2D(mAngleParent);
+			mParentCurAngle = getAngle2D(mParent);
 	}
 
 	/**
@@ -143,7 +144,7 @@ public class Joint extends Point3f {
 		int count = 0;
 		Joint check = this;
 		while(check!=null && check!=joint) {
-			check = check.mAngleParent;
+			check = check.mParent;
 			count++;
 		}
 		if(check==null)
@@ -249,7 +250,7 @@ public class Joint extends Point3f {
 	}
 
 	public void setPosByAngle2D(float angle) {
-		setPosByAngle2D(mAngleParent,mParentDistance,angle);
+		setPosByAngle2D(mParent,mParentDistance,angle);
 	}
 
 	public void scaleDistance(Joint pivotJoint,float factor) {
@@ -263,14 +264,14 @@ public class Joint extends Point3f {
 	}
 
 	private void refreshResDrag() {
-		if(mDragKeepDistance && mAngleParent!=null) {
-			float dist = mAngleParent.getDistance(mDragTo.mX,mDragTo.mY,mDragTo.mZ);
+		if(mDragKeepDistance && mParent!=null) {
+			float dist = mParent.getDistance(mDragTo.mX,mDragTo.mY,mDragTo.mZ);
 			if(dist!=0) {
 				dist = 1/dist*mParentDistance;
-				float dx = (mDragTo.mX-mAngleParent.mX);
-				float dy = (mDragTo.mY-mAngleParent.mY);
-				float dz = (mDragTo.mZ-mAngleParent.mZ);
-				mCurResDrag.set(mAngleParent.mX+dx*dist,mAngleParent.mY+dy*dist,mAngleParent.mZ+dz*dist);
+				float dx = (mDragTo.mX-mParent.mX);
+				float dy = (mDragTo.mY-mParent.mY);
+				float dz = (mDragTo.mZ-mParent.mZ);
+				mCurResDrag.set(mParent.mX+dx*dist,mParent.mY+dy*dist,mParent.mZ+dz*dist);
 			}else{
 				mCurResDrag.set(mDragTo);
 			}
@@ -413,11 +414,11 @@ public class Joint extends Point3f {
 	}
 
 	public void setNormalDirection(float worldX, float worldY,boolean ortho,float xOffset,float yOffset) {
-		setNormalDirection(worldX,worldY,mAngleParent,mParentDistance,ortho,xOffset,yOffset);
+		setNormalDirection(worldX,worldY,mParent,mParentDistance,ortho,xOffset,yOffset);
 	}
 
 	public void setNormalDirection(float worldX, float worldY) {
-		setNormalDirection(worldX,worldY,mAngleParent,mParentDistance,false,0,0);
+		setNormalDirection(worldX,worldY,mParent,mParentDistance,false,0,0);
 	}
 
 	public void setPos(float x, float y) {
@@ -441,8 +442,8 @@ public class Joint extends Point3f {
 		mX = posX;
 		mY = posY;
 
-		final float baseX = mAngleParent.mAngleParent.mX;
-		final float baseY = mAngleParent.mAngleParent.mY;
+		final float baseX = mParent.mParent.mX;
+		final float baseY = mParent.mParent.mY;
 
 		float deltaX = posX - baseX;
 		float deltaY = posY - baseY;
@@ -459,7 +460,7 @@ public class Joint extends Point3f {
 		float shiftY;
 		if(dist==0) {
 			shiftX = 0;
-			shiftY = this.mAngleParent.mParentDistance;
+			shiftY = this.mParent.mParentDistance;
 		}else{
 			final float shift = (float)Math.sqrt(mParentDistance*mParentDistance - dist*dist*0.25f);
 			final float nX = deltaX/dist;
@@ -467,15 +468,15 @@ public class Joint extends Point3f {
 			shiftX = nY*shift;
 			shiftY = -nX*shift;
 		}
-		mAngleParent.setPos(
+		mParent.setPos(
 				baseX + deltaX/2 + shiftX,
 				baseY + deltaY/2 + shiftY
 				);
 	}
 
 	public void setNormalDirectionIK(float relativeX, float relativeY, CartoonSkeleton2D skeleton, float straight, float orthoOffset) {
-		final float shoulderX = skeleton.getJointWorldX(mAngleParent.mAngleParent);
-		final float shoulderY = skeleton.getJointWorldY(mAngleParent.mAngleParent);
+		final float shoulderX = skeleton.getJointWorldX(mParent.mParent);
+		final float shoulderY = skeleton.getJointWorldY(mParent.mParent);
 		float dirX = relativeX - shoulderX;
 		float dirY = relativeY - shoulderY;
 		final float dist = Geometry.getDistance(dirX, dirY);
@@ -493,15 +494,15 @@ public class Joint extends Point3f {
 		final float normY = dirY/dist;
 		final float armLength = mParentDistance*2*straight;
 
-		this.setPosIK(mAngleParent.mAngleParent.mX+normX*armLength, mAngleParent.mAngleParent.mY+normY*armLength);
+		this.setPosIK(mParent.mParent.mX+normX*armLength, mParent.mParent.mY+normY*armLength);
 	}
 
 	public float getParentAngle() {
-		return getAngle2D(mAngleParent);
+		return getAngle2D(mParent);
 	}
 
 	public void recalculate() {
-		mParentDistance = getDistance(mAngleParent);
+		mParentDistance = getDistance(mParent);
 	}
 
 	public void setVelocity(float velX,float velY) {

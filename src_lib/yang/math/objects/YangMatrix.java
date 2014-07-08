@@ -829,9 +829,9 @@ public class YangMatrix {
 		target.mZ = mValues[10];
 	}
 
-	public void applyInverted(Point3f position, Vector3f mTempVec1) {
+	public void applyInverted(Point3f position, Point3f target) {
 		asInverted(mBackMatrix);
-		MatrixOps.applyFloatMatrix3D(mBackMatrix, position, mTempVec1);
+		MatrixOps.applyFloatMatrix3D(mBackMatrix, position, target);
 	}
 
 	public void clearTranslation() {

@@ -237,7 +237,7 @@ public class Animator implements YangEventListener {
 		int c = 0;
 		for(final Joint joint:mCurSkeleton.mJoints) {
 			if(joint.mAnimate) {
-				if(joint.mAngleParent==null) {
+				if(joint.mParent==null) {
 					float x = data[c++];
 					float y = data[c++];
 					joint.mAnimDisabled = x==Float.MAX_VALUE || y==Float.MAX_VALUE;

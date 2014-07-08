@@ -556,8 +556,8 @@ public class MatrixOps {
 		}
 	}
 
-	public static final void applyFloatMatrix3D(float[] matrix, Point3f point, Point3f targetVector) {
-		applyFloatMatrix3D(matrix,point.mX,point.mY,point.mZ,targetVector);
+	public static final void applyFloatMatrix3D(float[] matrix, Point3f point, Point3f target) {
+		applyFloatMatrix3D(matrix,point.mX,point.mY,point.mZ,target);
 	}
 
 	public static final void applyFloatMatrix3DNormalized(float[] matrix, float x, float y, float z, float[] target, int targetOffset) {

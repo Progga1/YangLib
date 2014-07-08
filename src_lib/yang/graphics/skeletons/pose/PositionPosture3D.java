@@ -1,5 +1,6 @@
 package yang.graphics.skeletons.pose;
 
+import yang.model.DebugYang;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 import yang.util.Util;
@@ -34,19 +35,28 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 		final float dWeight = 1-weight;
 		for(final Joint joint:skeleton.mJoints) {
 			if(joint.mAnimate) {
-				if(mData[c]!=Float.MAX_VALUE && !joint.mAnimDisabled) {
-					if(weight==1 || interpolationPose==null) {
-						joint.mX = mData[c++];
-						joint.mY = mData[c++];
-						joint.mZ = mData[c++];
-					}else{
-						joint.mX = mData[c]*weight + interpolationPose.mData[c]*dWeight;
-						joint.mY = mData[c+1]*weight + interpolationPose.mData[c+1]*dWeight;
-						joint.mZ = mData[c+2]*weight + interpolationPose.mData[c+2]*dWeight;
+				if(mData[c]!=Float.MAX_VALUE || joint.mParent!=null) {
+					if(joint.mAnimDisabled || mData[c]==Float.MAX_VALUE) {
+						if(mRelative && joint.mParent!=null) {DebugYang.stateString(joint.mParentSpatial);
+							joint.mX = joint.mParent.mX + joint.mParentSpatial.mX;
+							joint.mY = joint.mParent.mY + joint.mParentSpatial.mY;
+							joint.mZ = joint.mParent.mZ + joint.mParentSpatial.mZ;
+						}
 						c += 3;
-					}
-					if(mRelative && joint.mAngleParent!=null) {
-						joint.add(joint.mAngleParent);
+					}else{
+						if(weight==1 || interpolationPose==null) {
+							joint.mX = mData[c++];
+							joint.mY = mData[c++];
+							joint.mZ = mData[c++];
+						}else{
+							joint.mX = mData[c]*weight + interpolationPose.mData[c]*dWeight;
+							joint.mY = mData[c+1]*weight + interpolationPose.mData[c+1]*dWeight;
+							joint.mZ = mData[c+2]*weight + interpolationPose.mData[c+2]*dWeight;
+							c += 3;
+						}
+						if(mRelative && joint.mParent!=null) {
+							joint.add(joint.mParent);
+						}
 					}
 				}else
 					c += 3;

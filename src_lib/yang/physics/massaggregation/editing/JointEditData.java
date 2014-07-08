@@ -33,8 +33,8 @@ public class JointEditData {
 	public void set(Joint joint,Skeleton3DEditing skeletonEdit) {
 		mJoint = joint;
 		mSkeletonEdit = skeletonEdit;
-		if(mJoint.mAngleParent!=null)
-			mParentConnection = mJoint.mMassAggregation.getDistanceConstraint(mJoint.mAngleParent,mJoint);
+		if(mJoint.mParent!=null)
+			mParentConnection = mJoint.mMassAggregation.getDistanceConstraint(mJoint.mParent,mJoint);
 		else
 			mParentConnection = null;
 	}

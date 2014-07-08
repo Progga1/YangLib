@@ -98,8 +98,8 @@ public class Skeleton3DEditing {
 				continue;
 			JointEditData jointData = mJointData[joint.mId];
 
-			if(jointData.mVisible && joint.mAngleParent!=null){
-				final Joint parent = joint.mAngleParent;
+			if(jointData.mVisible && joint.mParent!=null){
+				final Joint parent = joint.mParent;
 				mJointColor1.set(1,1,1,mAlpha);
 				float r;
 				if(mJointDrawCallback!=null) {

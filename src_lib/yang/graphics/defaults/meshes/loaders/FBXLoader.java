@@ -503,7 +503,7 @@ public class FBXLoader extends YangSceneLoader {
 				newJoint.setParent(parentJoint);
 				final float boneStrength = 10;
 				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mName,newJoint,parentJoint),boneStrength);
-				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mAngleParent.mName,newJoint,parentJoint.mAngleParent),boneStrength);
+				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mParent.mName,newJoint,parentJoint.mParent),boneStrength);
 				for(Joint sibling:parentJoint.mChildren) {
 					if(sibling.mName.startsWith("TRANS"))
 						targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+sibling.mName,newJoint,sibling),boneStrength);

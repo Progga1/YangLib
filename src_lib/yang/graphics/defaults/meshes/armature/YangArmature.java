@@ -37,8 +37,8 @@ public class YangArmature {
 		int i = 0;
 		for(Joint joint:skeleton.mJoints) {
 			mInitialPositions[i].set(joint.mX,joint.mY,joint.mZ);
-			if(joint.mAngleParent!=null) {
-				mInitialVectors[i].set(joint.mX-joint.mAngleParent.mX,joint.mY-joint.mAngleParent.mY,joint.mZ-joint.mAngleParent.mZ);
+			if(joint.mParent!=null) {
+				mInitialVectors[i].set(joint.mX-joint.mParent.mX,joint.mY-joint.mParent.mY,joint.mZ-joint.mParent.mZ);
 				mInitialDistances[i] = mInitialVectors[i].normalize();
 			}
 			i++;

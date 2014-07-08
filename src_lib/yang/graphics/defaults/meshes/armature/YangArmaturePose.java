@@ -30,7 +30,7 @@ public class YangArmaturePose {
 		int i = 0;
 		for(Joint joint:skeleton.mJoints) {
 			YangMatrix transform = mTransforms[i];
-			Joint parent = joint.mAngleParent;
+			Joint parent = joint.mParent;
 			if(parent!=null) {
 				transform.loadIdentity();
 				//transform.translate(joint.mAngleParent.mWorldPosition);

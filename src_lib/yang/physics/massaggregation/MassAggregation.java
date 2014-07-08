@@ -463,9 +463,9 @@ public class MassAggregation {
 		}
 
 		for(Joint joint:massAggregation.mJoints) {
-			if(joint.mAngleParent!=null) {
+			if(joint.mParent!=null) {
 				Joint joint1 = getJointByName(joint.mName);
-				Joint parent = getJointByName(joint.mAngleParent.mName);
+				Joint parent = getJointByName(joint.mParent.mName);
 				joint1.setParent(parent);
 			}
 		}
@@ -530,10 +530,10 @@ public class MassAggregation {
 		translator.bindTexture(null);
 		graphics.setColor(0.8f,0.1f,0, 0.8f);
 		for(final Joint joint:massAggregation.mJoints) {
-			if(joint.mEnabled && joint.mAngleParent!=null) {
+			if(joint.mEnabled && joint.mParent!=null) {
 				graphics.drawLine(
 						worldPosX + joint.mWorldPosition.mX * mirrorFac, worldPosY + joint.mWorldPosition.mY,
-						worldPosX + joint.mAngleParent.mWorldPosition.mX * mirrorFac, worldPosY + joint.mAngleParent.mWorldPosition.mY,
+						worldPosX + joint.mParent.mWorldPosition.mX * mirrorFac, worldPosY + joint.mParent.mWorldPosition.mY,
 						0.015f
 						);
 			}

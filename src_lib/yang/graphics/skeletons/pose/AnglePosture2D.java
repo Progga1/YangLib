@@ -32,7 +32,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 			if(joint instanceof JointNormalConstraint) {
 				((JointNormalConstraint)joint).setPosByConstraint();
 			}else{
-				final Joint parent = joint.mAngleParent;
+				final Joint parent = joint.mParent;
 				if(parent==null) {
 					//By position
 					if(joint.mAnimate) {
@@ -111,7 +111,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 		//get array length
 		for(final Joint joint:skeleton.mJoints) {
 			if(!(joint instanceof JointNormalConstraint)) {
-				final Joint parent = joint.mAngleParent;
+				final Joint parent = joint.mParent;
 				if(parent==null) {
 					c+=2;
 				}else{
@@ -125,7 +125,7 @@ public class AnglePosture2D extends Posture<AnglePosture2D,Skeleton2D>{
 		for(final Joint joint:skeleton.mJoints) {
 			//By normal constraint
 			if(!(joint instanceof JointNormalConstraint)) {
-				final Joint parent = joint.mAngleParent;
+				final Joint parent = joint.mParent;
 				if(parent==null) {
 					//By position
 					if(joint.mAnimDisabled) {
