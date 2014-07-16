@@ -316,21 +316,31 @@ public class YangMesh {
 			float normResY = 0;
 			float normResZ = 0;
 
-			for(int k=0;k<mSkinJointsPerVertex;k++) {
-				int jointId = mSkinIds[weightBaseId+k];
-				if(jointId<0)
-					break;
-				float weight = mSkinWeights[weightBaseId+k];
+			if(mSkinIds[weightBaseId]<0) {
+				resX = x;
+				resY = y;
+				resZ = z;
+				normResX = normX;
+				normResY = normY;
+				normResZ = normZ;
+			}else{
+				for(int k=0;k<mSkinJointsPerVertex;k++) {
+					int jointId = mSkinIds[weightBaseId+k];
+					if(jointId<0) {
+						break;
+					}
+					float weight = mSkinWeights[weightBaseId+k];
 
-				float[] matrix = armaturePose.mTransforms[jointId].mValues;
+					float[] matrix = armaturePose.mTransforms[jointId].mValues;
 
-				normResX += (matrix[0] * normX + matrix[4] * normY + matrix[8] * normZ)*weight;
-				normResY += (matrix[1] * normX + matrix[5] * normY + matrix[9] * normZ)*weight;
-				normResZ += (matrix[2] * normX + matrix[6] * normY + matrix[10] * normZ)*weight;
+					normResX += (matrix[0] * normX + matrix[4] * normY + matrix[8] * normZ)*weight;
+					normResY += (matrix[1] * normX + matrix[5] * normY + matrix[9] * normZ)*weight;
+					normResZ += (matrix[2] * normX + matrix[6] * normY + matrix[10] * normZ)*weight;
 
-				resX += (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*weight;
-				resY += (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*weight;
-				resZ += (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*weight;
+					resX += (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12])*weight;
+					resY += (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13])*weight;
+					resZ += (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14])*weight;
+				}
 			}
 
 			if(mNormalizeNormals) {
