@@ -48,7 +48,7 @@ public abstract class DefaultSurface extends YangSurface implements YangEventLis
 				mGraphics3D.setDefaultProgram();
 			}
 		}
-		if(INIT_DEFAULT_META_KEYS)
+		if(INIT_DEFAULT_META_KEYS && mMetaEventListener==null)
 			mMetaEventListener = new DefaultMetaEventListener(this,mGraphics.getDefaultMetaBaseKey());
 	}
 

@@ -38,7 +38,8 @@ public class PositionPosture3D extends Posture<PositionPosture3D,MassAggregation
 				if(mData[c]!=Float.MAX_VALUE || joint.mParent!=null) {
 					if(joint.mAnimDisabled || mData[c]==Float.MAX_VALUE) {
 //						if(mRelative && joint.mParent!=null) {
-						if(mData[c]!=Float.MAX_VALUE) {
+//						mData[c]!=Float.MAX_VALUE &&
+						if(joint.mParent!=null) {
 							joint.mX = joint.mParent.mX + joint.mParentSpatial.mX;
 							joint.mY = joint.mParent.mY + joint.mParentSpatial.mY;
 							joint.mZ = joint.mParent.mZ + joint.mParentSpatial.mZ;
