@@ -81,6 +81,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 		glCapabilities.setDoubleBuffered(true);
 		glCapabilities.setHardwareAccelerated(true);
 		glCapabilities.setOnscreen(true);
+		glCapabilities.setDepthBits(24);
 
 		if(!USE_DISPLAY) {
 			if(!useGLPanel) {

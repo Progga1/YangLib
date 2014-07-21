@@ -45,7 +45,7 @@ public class Point3f {
 		mZ = point.mZ;
 	}
 
-	public void setNegative(Joint point) {
+	public void setNegative(Point3f point) {
 		mX = -point.mX;
 		mY = -point.mY;
 		mZ = -point.mZ;
