@@ -421,6 +421,7 @@ public class MassAggregation {
 		mJoints.clear();
 		mBones.clear();
 		mConstraints.clear();
+		mCurJointId = 0;
 	}
 
 	public float getJointMinY() {
