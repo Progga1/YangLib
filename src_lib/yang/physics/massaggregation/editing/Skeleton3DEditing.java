@@ -55,7 +55,7 @@ public class Skeleton3DEditing {
 	public Skeleton3DEditing initLines(int cylinderSamples,float lineWidth) {
 		mLineDrawer = new LineDrawer3D(mGraphics3D);
 		mLineDrawer.setSamples(cylinderSamples);
-		mLineDrawer.mLineWidth = lineWidth;
+		mLineDrawer.mDefaultLineWidth = lineWidth;
 		return this;
 	}
 

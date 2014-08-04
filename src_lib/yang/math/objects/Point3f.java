@@ -198,4 +198,11 @@ public class Point3f {
 		mZ *= scaleVector.mZ;
 	}
 
+	public float getSqrDistance(float x,float y,float z) {
+		float dx = x-mX;
+		float dy = y-mY;
+		float dz = z-mZ;
+		return dx*dx + dy*dy + dz*dz;
+	}
+
 }

@@ -7,13 +7,13 @@ import yang.math.objects.YangMatrix;
 
 public class LineDrawer3D extends GeometryCreator<Default3DGraphics> {
 
-	public float mLineWidth;
+	public float mDefaultLineWidth;
 	public final CylinderCreator mCylinder;
 
 
 	public LineDrawer3D(Default3DGraphics graphics) {
 		super(graphics);
-		mLineWidth = 0.05f;
+		mDefaultLineWidth = 0.05f;
 		mCylinder = new CylinderCreator(graphics);
 		setSamples(8);
 	}
@@ -40,11 +40,11 @@ public class LineDrawer3D extends GeometryCreator<Default3DGraphics> {
 	}
 
 	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ) {
-		drawLine(startX,startY,startZ, endX,endY,endZ, mLineWidth, mLineWidth);
+		drawLine(startX,startY,startZ, endX,endY,endZ, mDefaultLineWidth, mDefaultLineWidth);
 	}
 
 	public void drawLine(Point3f startPoint,Point3f endPoint) {
-		drawLine(startPoint.mX,startPoint.mY,startPoint.mZ, endPoint.mX,endPoint.mY,endPoint.mZ, mLineWidth,mLineWidth);
+		drawLine(startPoint.mX,startPoint.mY,startPoint.mZ, endPoint.mX,endPoint.mY,endPoint.mZ, mDefaultLineWidth,mDefaultLineWidth);
 	}
 
 	public void drawLine(Point3f startPoint,Point3f endPoint, float startWidth,float endWidth) {
