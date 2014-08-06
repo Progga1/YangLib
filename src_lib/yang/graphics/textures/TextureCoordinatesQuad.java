@@ -338,18 +338,20 @@ public class TextureCoordinatesQuad {
 		return mHeight*0.5f + mTop;
 	}
 
-	public void rotateCW() {
+	public TextureCoordinatesQuad rotateCW() {
 		int rot = getRotation()+1;
 		if(rot>3)
 			rot = 0;
 		setRotation(rot);
+		return this;
 	}
 
-	public void rotateCCW() {
+	public TextureCoordinatesQuad rotateCCW() {
 		int rot = getRotation()-1;
 		if(rot<0)
 			rot = 3;
 		setRotation(rot);
+		return this;
 	}
 
 }

@@ -57,7 +57,7 @@ public class CylinderCreator extends GeometryCreator<Default3DGraphics> {
 
 	public void putTextureCoordinates(TextureCoordinatesQuad texCoords) {
 		float steps = mClosed?1f/mSamples:1f/(mSamples-1);
-		steps /= texCoords.getBiasedWidth();
+		steps *= texCoords.getBiasedWidth();
 		final IndexedVertexBuffer vertexBuffer = mGraphics.getCurrentVertexBuffer();
 		final float x1 = texCoords.getBiasedLeft();
 		final float y1 = texCoords.getBiasedBottom();
