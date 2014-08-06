@@ -52,4 +52,8 @@ public abstract class Posture<InterpolationPoseType extends Posture,SkeletonType
 
 	}
 
+	public void copyFrom(Posture template) {
+		System.arraycopy(mData,0,template.mData,0,mData.length);
+	}
+
 }

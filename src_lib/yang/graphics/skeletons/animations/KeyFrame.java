@@ -44,4 +44,8 @@ public class KeyFrame {
 		return this;
 	}
 
+	public void copyFrom(KeyFrame template) {
+		mPose.copyFrom(template.mPose);
+	}
+
 }
