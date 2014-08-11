@@ -68,6 +68,20 @@ public class Vector3f extends Point3f{
 		}
 	}
 
+	public void setNormalized(Vector3f vector) {
+		float dist = (float)Math.sqrt(vector.mX*vector.mX+vector.mY*vector.mY+vector.mZ*vector.mZ);
+		if(dist==0) {
+			mX = 0;
+			mY = 0;
+			mZ = 0;
+		}else{
+			dist = 1/dist;
+			mX = vector.mX*dist;
+			mY = vector.mY*dist;
+			mZ = vector.mZ*dist;
+		}
+	}
+
 	public float normalize() {
 		final float d = (float)(Math.sqrt(mX*mX+mY*mY+mZ*mZ));
 		if(d!=0) {
