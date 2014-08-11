@@ -256,8 +256,13 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 
 			mDefaultMacroIO = new DefaultMacroIO(this);
 			if(mainSurface) {
-				if(mMacroFilename!=null && mResources.fileExistsInFileSystem(mMacroFilename))
-					playMacro(mMacroFilename);
+				if(mMacroFilename!=null) {
+					if(!mResources.fileExistsInFileSystem(mMacroFilename))
+						mMacroFilename += ".ym";
+					if(mResources.fileExistsInFileSystem(mMacroFilename)) {
+						playMacro(mMacroFilename);
+					}
+				}
 				if(mMacro==null && DebugYang.AUTO_RECORD_MACRO) {
 					String filename = "run.ym";
 					if(NO_MACRO_OVERWRITE) {
