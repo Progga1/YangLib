@@ -15,7 +15,7 @@ import yang.pc.fileio.PCResourceManager;
 import yang.pc.fileio.PCSoundManager;
 import yang.surface.YangSurface;
 
-public class YangGLESFrame extends PCFrame{
+public class YangGLESFrame extends PCFrame {
 
 	public static int DEFAULT_MAX_FPS = 60;
 	private static final long serialVersionUID = 1L;
@@ -93,6 +93,7 @@ public class YangGLESFrame extends PCFrame{
 			addKeyListener(eventHandler);
 			mGraphics.getPanel().addKeyListener(eventHandler);
 			mGraphics.getPanel().addFocusListener(this);
+			mGraphics.getPanel().setFocusTraversalKeysEnabled(false);
 			mEventListener = eventListener;
 			mPCEventHandler = eventHandler;
 		}
