@@ -479,13 +479,16 @@ public class FBXLoader extends YangSceneLoader {
 	public void subSkel(MassAggregation targetSkeleton,LimbObject baseObj,Joint parentJoint,float radScale,int idOffset) {
 		YangMatrix transform = baseObj.mGlobalTransform;
 		radScale *= baseObj.mScale.mX;
+		boolean noBone = false;
 
 		//ASSUME: parentJoint==null <=> root bone of mesh
 		boolean createParentJoint = false;
 		if((baseObj.mParent instanceof LimbObject) && parentJoint!=null) {
 			float delta = baseObj.mTranslation.mX-((LimbObject)baseObj.mParent).mLimbLength;
-			if(Math.abs(delta)>0.01f)
+			if(Math.abs(delta)>0.01f) {
 				createParentJoint = true;
+				noBone = true;
+			}
 		}
 
 		if(parentJoint==null || createParentJoint) {
@@ -502,8 +505,8 @@ public class FBXLoader extends YangSceneLoader {
 			if(createParentJoint) {
 				newJoint.setParent(parentJoint);
 				final float boneStrength = 10;
-				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mName,newJoint,parentJoint),boneStrength);
-				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mParent.mName,newJoint,parentJoint.mParent),boneStrength);
+//				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mName,newJoint,parentJoint),boneStrength);
+//				targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+parentJoint.mParent.mName,newJoint,parentJoint.mParent),boneStrength);
 //				for(Joint sibling:parentJoint.mChildren) {
 //					if(sibling.mName.startsWith("TRANS"))
 //						targetSkeleton.addSpringBone(new JointConnection("CON_"+newJoint.mName+"-"+sibling.mName,newJoint,sibling),boneStrength);
@@ -521,7 +524,8 @@ public class FBXLoader extends YangSceneLoader {
 		joint.setParent(parentJoint);
 		baseObj.setDeformerIndex(joint.mId);
 
-		targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
+//		if(!noBone)
+			targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
 
 		for(SceneObject obj:baseObj.getChildren()) {
 			if(obj instanceof LimbObject) {

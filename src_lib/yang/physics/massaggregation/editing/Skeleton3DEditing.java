@@ -109,13 +109,13 @@ public class Skeleton3DEditing {
 					r = jointData.getOutputRadius();
 				mJointColor1.clamp();
 
-				mLineDrawer.drawLine(joint.mWorldPosition, parent.mWorldPosition, r*0.5f,parent.getOutputRadius()*0.5f);
+				mLineDrawer.drawLine(joint.mWorldPosition, parent.mWorldPosition, r*0.25f,parent.getOutputRadius()*0.25f);
 				mLineDrawer.mCylinder.putColor(mJointColor1.mValues);
 			}
 		}
 
 		for(JointConnection bone:mSkeleton.mBones) {
-			if(!bone.connectsChildParent()) {
+//			if(!bone.connectsChildParent()) {
 				Joint joint1 = bone.mJoint1;
 				Joint joint2 = bone.mJoint2;
 				if(joint1==null || joint2==null)
@@ -144,7 +144,7 @@ public class Skeleton3DEditing {
 					mLineDrawer.drawLine(joint1.mWorldPosition, joint2.mWorldPosition, r1*0.5f,r2*0.5f);
 					mLineDrawer.mCylinder.putStartEndColors(mJointColor1.mValues,mJointColor2.mValues);
 				}
-			}
+//			}
 		}
 
 		mGraphics3D.fillNormals(indStart);
