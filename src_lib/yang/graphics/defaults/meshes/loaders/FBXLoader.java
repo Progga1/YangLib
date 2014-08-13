@@ -430,6 +430,7 @@ public class FBXLoader extends YangSceneLoader {
 
 	public boolean load(String filename) throws IOException, ParseException {
 	//	mGFXLoader = gfxLoader;
+		mName = filename;
 		InputStream stream = mGFXLoader.mResources.getAssetInputStream(filename);
 		if(stream==null)
 			return false;

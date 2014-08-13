@@ -164,4 +164,27 @@ public abstract class AbstractResourceManager {
 		if (mFileSelectedListener != null) mFileSelectedListener.onFileSelected(name);
 	}
 
+	public File createNonExistingExternalFile(String filename,String format,int minDigits,boolean forceEnum) {
+
+		if(!forceEnum && !this.fileExistsInExternalFileSystem(filename)) {
+			return new File(filename);
+		}
+
+		if(!format.startsWith("."))
+			format = "."+format;
+		if(filename.endsWith(format))
+			filename = filename.substring(0,filename.length()-format.length()-1);
+		String resFilename;
+		int i=1;
+		do{
+			String digits = ""+i;
+			while(digits.length()<minDigits)
+				digits = "0"+digits;
+			resFilename = filename+digits+format;
+			i++;
+		}while(fileExistsInExternalFileSystem(resFilename));
+
+		return new File(resFilename);
+	}
+
 }

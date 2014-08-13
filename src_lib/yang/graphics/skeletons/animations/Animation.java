@@ -1,5 +1,13 @@
 package yang.graphics.skeletons.animations;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import yang.graphics.skeletons.animations.interpolation.ConstantInterpolation;
 import yang.graphics.skeletons.animations.interpolation.Interpolation;
 import yang.graphics.skeletons.pose.Posture;
@@ -213,6 +221,47 @@ public class Animation<CarrierType> {
 
 	public int getJointCount() {
 		return mActiveJoints.length;
+	}
+
+	//TODO load and save attributs
+
+	public void saveToFile(File file, int frameCount, boolean saveDurations) throws IOException {
+		DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
+
+		if(frameCount<0)
+			frameCount = mKeyFrames.length;
+		stream.writeInt(frameCount);
+		stream.writeInt(saveDurations?1:0);
+//		stream.writeInt(mTags);
+//		stream.writeBoolean(mAutoAnimate);
+		for(int i=0;i<=frameCount;i++) {
+			KeyFrame keyFrame = mKeyFrames[i];
+			if(saveDurations)
+				stream.writeInt(keyFrame.mDuration);
+			for(float val:keyFrame.mPose.mData) {
+				stream.writeFloat(val);
+			}
+		}
+
+		stream.close();
+	}
+
+	public int loadFromFile(File file) throws IOException {
+		DataInputStream stream = new DataInputStream(new FileInputStream(file));
+		int frameCount = stream.readInt();
+		boolean loadDurations = stream.readInt()!=0;
+		for(int i=0;i<=frameCount;i++) {
+			KeyFrame keyFrame = mKeyFrames[i];
+			if(loadDurations)
+				keyFrame.mDuration = stream.readInt();
+			float[] data = keyFrame.mPose.mData;
+			for(int j=0;j<data.length;j++) {
+				data[j] = stream.readFloat();
+			}
+		}
+		stream.close();
+		refreshKeyFrames();
+		return frameCount;
 	}
 
 }

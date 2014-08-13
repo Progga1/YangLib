@@ -22,6 +22,8 @@ public class YangSceneLoader {
 	protected static int[] normalIndices;
 	protected static int[] smoothIndices;
 
+	public String mName = null;
+
 	//OBJECTS
 	public TextureProperties mTextureProperties;
 	public DefaultGraphics<?> mGraphics;
