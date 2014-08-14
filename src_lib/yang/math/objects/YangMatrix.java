@@ -543,11 +543,11 @@ public class YangMatrix {
 		MatrixOps.applyFloatMatrix3DNormalized(mValues,x,y,z,target);
 	}
 
-	protected void setColumn(int col, Vector3f values) {
+	public void setColumn(int col, Vector3f values) {
 		setColumn(col,values.mX,values.mY,values.mZ);
 	}
 
-	protected void setRow(int row, Vector3f values) {
+	public void setRow(int row, Vector3f values) {
 		setRow(row,values.mX,values.mY,values.mZ);
 	}
 

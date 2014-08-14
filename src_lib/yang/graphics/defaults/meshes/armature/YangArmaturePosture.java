@@ -7,14 +7,14 @@ import yang.math.objects.YangMatrix;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 
-public class YangArmaturePose {
+public class YangArmaturePosture {
 
 	private YangArmature mArmature;
 	public YangMatrix[] mTransforms;
 	private Quaternion mTempQuat = new Quaternion();
 	private Vector3f mTempVec = new Vector3f();
 
-	public YangArmaturePose(YangArmature armature) {
+	public YangArmaturePosture(YangArmature armature) {
 		mArmature = armature;
 		int l = mArmature.getBoneCount();
 		mTransforms = new YangMatrix[l];
@@ -32,14 +32,18 @@ public class YangArmaturePose {
 			if(parent!=null) {
 				LimbNeutralData parentLimbData = mArmature.mLimbData[parent.mId];
 				transform.loadIdentity();
-				//transform.translate(joint.mAngleParent.mWorldPosition);
+
 				transform.translate(parent.mX,parent.mY,parent.mZ);
 				mTempVec.set(joint.mX-parent.mX,joint.mY-parent.mY,joint.mZ-parent.mZ);
 				float dist = mTempVec.normalize();
 				float scale = dist/limbData.mForwardDistance;
-				mTempQuat.setFromToRotation(limbData.mForward, mTempVec);
-				transform.multiplyQuaternionRight(mTempQuat);
-				transform.scale(scale);
+				if(joint.mUpJoint!=null && joint.mRightJoint!=null && false) {
+
+				}else{
+					mTempQuat.setFromToRotation(limbData.mForwardDir, mTempVec);
+					transform.multiplyQuaternionRight(mTempQuat);
+					transform.scale(scale);
+				}
 				transform.translate(-parent.mX,-parent.mY,-parent.mZ);
 				transform.translate(parent.mX-parentLimbData.mPosition.mX,parent.mY-parentLimbData.mPosition.mY,parent.mZ-parentLimbData.mPosition.mZ);
 			}else{

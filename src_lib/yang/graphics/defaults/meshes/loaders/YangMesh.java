@@ -8,7 +8,7 @@ import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshes.armature.LimbNeutralData;
 import yang.graphics.defaults.meshes.armature.YangArmature;
-import yang.graphics.defaults.meshes.armature.YangArmaturePose;
+import yang.graphics.defaults.meshes.armature.YangArmaturePosture;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
 import yang.graphics.defaults.programs.subshaders.SpecularLightBasicSubShader;
 import yang.graphics.model.FloatColor;
@@ -63,7 +63,7 @@ public class YangMesh {
 	public boolean mAutoSkinningUpdate = true;
 	public boolean mBlockTextures = false;
 	public boolean mNormalizeNormals = true;
-	public YangArmaturePose mCurArmature = null;
+	public YangArmaturePosture mCurArmature = null;
 	public boolean mWireFrames = false;
 
 
@@ -300,7 +300,7 @@ public class YangMesh {
 		mGraphics.resetVertexBuffer();
 	}
 
-	public void updateSkinningVertices(YangArmaturePose armaturePose) {
+	public void updateSkinningVertices(YangArmaturePosture armaturePose) {
 		if(mResultPositions==null)
 			initResultValues();
 		int weightBaseId = 0;

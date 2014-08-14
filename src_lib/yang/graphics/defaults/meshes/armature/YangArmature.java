@@ -34,9 +34,13 @@ public class YangArmature {
 			LimbNeutralData limbData = mLimbData[i];
 			limbData.mPosition.set(joint.mX,joint.mY,joint.mZ);
 			if(joint.mParent!=null) {
-				limbData.mForward.set(joint.mX-joint.mParent.mX,joint.mY-joint.mParent.mY,joint.mZ-joint.mParent.mZ);
-				limbData.mForwardDistance = limbData.mForward.normalize();
+				limbData.mForward.setFromTo(joint.mParent,joint);
+				if(joint.mRightJoint!=null)
+					limbData.mRight.setFromTo(joint,joint.mRightJoint);
+				if(joint.mUpJoint!=null)
+					limbData.mUp.setFromTo(joint,joint.mUpJoint);
 			}
+			limbData.finish();
 			i++;
 		}
 	}

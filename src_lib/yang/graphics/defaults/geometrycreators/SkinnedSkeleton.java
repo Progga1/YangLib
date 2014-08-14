@@ -1,7 +1,7 @@
 package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.defaults.meshes.armature.YangArmature;
-import yang.graphics.defaults.meshes.armature.YangArmaturePose;
+import yang.graphics.defaults.meshes.armature.YangArmaturePosture;
 import yang.graphics.defaults.meshes.loaders.YangMesh;
 import yang.graphics.translator.AbstractGraphics;
 import yang.physics.massaggregation.MassAggregation;
@@ -11,7 +11,7 @@ public class SkinnedSkeleton {
 	public boolean mWireFrames = false;
 	public AbstractGraphics<?> mGraphics;
 	public YangArmature mArmature;
-	public YangArmaturePose mArmaturePose;
+	public YangArmaturePosture mArmaturePose;
 	public MassAggregation mSkeleton;
 	public YangMesh mMesh;
 	public boolean mAutoRefresh = true;
@@ -27,7 +27,7 @@ public class SkinnedSkeleton {
 		if(mSkeleton!=null) {
 			mArmature = new YangArmature();
 			mArmature.initBySkeleton(skeleton);
-			mArmaturePose = new YangArmaturePose(mArmature);
+			mArmaturePose = new YangArmaturePosture(mArmature);
 			if(mMesh!=null && !mMesh.hasArmatureWeights())
 				mMesh.generateArmatureWeights(mArmature);
 		}
