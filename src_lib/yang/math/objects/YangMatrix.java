@@ -36,6 +36,44 @@ public class YangMatrix {
 	public static float TO_RAD_FACTOR = (float) Math.PI / 180;
 	public static float TO_DEG_FACTOR = 180 / (float) Math.PI;
 
+	public static void setBase4f(float[] target,Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+		target[0] = vec1.mX;
+		target[1] = vec1.mY;
+		target[2] = vec1.mZ;
+		target[3] = 0;
+		target[4] = vec2.mX;
+		target[5] = vec2.mY;
+		target[6] = vec2.mZ;
+		target[7] = 0;
+		target[8] = vec3.mX;
+		target[9] = vec3.mY;
+		target[10] = vec3.mZ;
+		target[11] = 0;
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
+	}
+
+	public static void setBase4f(float[] target,Vector3f vec1, Vector3f vec2, Vector3f vec3, Point3f position) {
+		target[0] = vec1.mX;
+		target[1] = vec1.mY;
+		target[2] = vec1.mZ;
+		target[3] = 0;
+		target[4] = vec2.mX;
+		target[5] = vec2.mY;
+		target[6] = vec2.mZ;
+		target[7] = 0;
+		target[8] = vec3.mX;
+		target[9] = vec3.mY;
+		target[10] = vec3.mZ;
+		target[11] = 0;
+		target[12] = position.mX;
+		target[13] = position.mY;
+		target[14] = position.mZ;
+		target[15] = 1;
+	}
+
 	public YangMatrix() {
 		mValues = new float[16];
 		mBackMatrix = new float[16];
@@ -596,25 +634,6 @@ public class YangMatrix {
 		return MatrixOps.matToString(mValues);
 	}
 
-	public static void setBase4f(float[] target,Vector3f vec1, Vector3f vec2, Vector3f vec3) {
-		target[0] = vec1.mX;
-		target[1] = vec1.mY;
-		target[2] = vec1.mZ;
-		target[3] = 0;
-		target[4] = vec2.mX;
-		target[5] = vec2.mY;
-		target[6] = vec2.mZ;
-		target[7] = 0;
-		target[8] = vec3.mX;
-		target[9] = vec3.mY;
-		target[10] = vec3.mZ;
-		target[11] = 0;
-		target[12] = 0;
-		target[13] = 0;
-		target[14] = 0;
-		target[15] = 1;
-	}
-
 	public void setPointToDirection(Vector3f direction) {
 		MatrixOps.createDirectionTrafo(mValues, direction.mX,direction.mY,direction.mZ);
 	}
@@ -650,6 +669,10 @@ public class YangMatrix {
 
 	public void setFromAxis(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
 		setBase4f(mValues,vec1,vec2,vec3);
+	}
+
+	public void setFromAxisAndPosition(Vector3f right,Vector3f up, Vector3f forward, Point3f position) {
+		setBase4f(mValues,right,up,forward,position);
 	}
 
 	public void setFromAxis(Point3f basePoint, Point3f rightPoint, Point3f topPoint, Point3f frontPoint,boolean normalize) {

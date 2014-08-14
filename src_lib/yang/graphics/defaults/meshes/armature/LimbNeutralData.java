@@ -29,11 +29,7 @@ public class LimbNeutralData {
 		mRightDir.set(mRight);
 		mRightDistance = mRightDir.normalize();
 
-		mTransform.loadIdentity();
-		mTransform.translate(mPosition);
-		mTransform.setColumn(0, mRight);
-		mTransform.setColumn(1, mUp);
-		mTransform.setColumn(2, mForward);
+		mTransform.setFromAxisAndPosition(mRight,mUp,mForward, mPosition);
 
 		mTransform.asInverted(mInvTransform.mValues);
 	}
