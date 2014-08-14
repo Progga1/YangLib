@@ -54,6 +54,8 @@ public class Joint extends Point3f {
 	public boolean mAnimDisabled = false;
 
 	private Vector3f tempVec = new Vector3f(), tempVec2 = new Vector3f();
+	public Joint mUpJoint = null;
+	public Joint mRightJoint = null;
 
 	public Joint(String name,Joint parent,float posX,float posY,float posZ,float radius) {
 		super(posX,posY,posZ);

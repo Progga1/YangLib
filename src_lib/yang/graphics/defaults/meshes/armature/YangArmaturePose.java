@@ -23,28 +23,27 @@ public class YangArmaturePose {
 	}
 
 	public void refreshMatrices(MassAggregation skeleton) {
-		Vector3f[] initialVectors = mArmature.mInitialVectors;
-		Point3f[] initialPositions = mArmature.mInitialPositions;
-		float[] initialDistances = mArmature.mInitialDistances;
 
 		int i = 0;
 		for(Joint joint:skeleton.mJoints) {
+			LimbNeutralData limbData = mArmature.mLimbData[i];
 			YangMatrix transform = mTransforms[i];
 			Joint parent = joint.mParent;
 			if(parent!=null) {
+				LimbNeutralData parentLimbData = mArmature.mLimbData[parent.mId];
 				transform.loadIdentity();
 				//transform.translate(joint.mAngleParent.mWorldPosition);
 				transform.translate(parent.mX,parent.mY,parent.mZ);
 				mTempVec.set(joint.mX-parent.mX,joint.mY-parent.mY,joint.mZ-parent.mZ);
 				float dist = mTempVec.normalize();
-				float scale = dist/initialDistances[i];
-				mTempQuat.setFromToRotation(initialVectors[i], mTempVec);
+				float scale = dist/limbData.mForwardDistance;
+				mTempQuat.setFromToRotation(limbData.mForward, mTempVec);
 				transform.multiplyQuaternionRight(mTempQuat);
 				transform.scale(scale);
 				transform.translate(-parent.mX,-parent.mY,-parent.mZ);
-				transform.translate(parent.mX-initialPositions[parent.mId].mX,parent.mY-initialPositions[parent.mId].mY,parent.mZ-initialPositions[parent.mId].mZ);
+				transform.translate(parent.mX-parentLimbData.mPosition.mX,parent.mY-parentLimbData.mPosition.mY,parent.mZ-parentLimbData.mPosition.mZ);
 			}else{
-				transform.setTranslation(joint.mX-initialPositions[i].mX,joint.mY-initialPositions[i].mY,joint.mZ-initialPositions[i].mZ);
+				transform.setTranslation(joint.mX-limbData.mPosition.mX,joint.mY-limbData.mPosition.mY,joint.mZ-limbData.mPosition.mZ);
 			}
 
 			i++;

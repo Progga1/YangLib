@@ -36,6 +36,9 @@ public class FBXLoader extends YangSceneLoader {
 	private static int[] tempInts;
 	private static int[] polygonIndices;
 
+	//SETTINGS
+	public float mSkeletonRigidJointsScale = 0.3f;
+
 	private int polyId = 0;
 
 	public YangList<MeshDeformer> mDeformers = new YangList<MeshDeformer>();
@@ -493,7 +496,7 @@ public class FBXLoader extends YangSceneLoader {
 		}
 
 		if(parentJoint==null || createParentJoint) {
-			Joint newJoint = new Joint((createParentJoint?"TRANS_":"ROOT_")+baseObj.mName);
+			Joint newJoint = new Joint(baseObj.mName+(createParentJoint?"_TRANS":"_ROOT"));
 			//parentJoint.set(baseObj.mTranslation);
 			newJoint.applyTransform(transform);
 			targetSkeleton.addJoint(newJoint);
@@ -521,12 +524,36 @@ public class FBXLoader extends YangSceneLoader {
 		joint.mX = baseObj.mLimbLength;
 		joint.applyTransform(transform);
 		targetSkeleton.addJoint(joint);
-		joint.setRadius(getRadius(baseObj.getMinAdjescentLimbLength())*radScale);
+		float rad = getRadius(baseObj.getMinAdjescentLimbLength())*radScale;
+		joint.setRadius(rad);
 		joint.setParent(parentJoint);
 		baseObj.setDeformerIndex(joint.mId);
 
-//		if(!noBone)
-			targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
+		if(mSkeletonRigidJointsScale>0) {
+
+			final float rigidRad = rad*0.5f;
+
+			Joint upJoint = new Joint(baseObj.mName+"_UP");
+			upJoint.mX = baseObj.mLimbLength;
+			upJoint.mZ = mSkeletonRigidJointsScale;
+			upJoint.applyTransform(transform);
+			targetSkeleton.addJoint(upJoint);
+			upJoint.setRadius(rigidRad);
+			upJoint.setParent(joint);
+
+			Joint rightJoint = new Joint(baseObj.mName+"_RIGHT");
+			rightJoint.mX = baseObj.mLimbLength;
+			rightJoint.mY = mSkeletonRigidJointsScale;
+			rightJoint.applyTransform(transform);
+			targetSkeleton.addJoint(rightJoint);
+			rightJoint.setRadius(rigidRad);
+			rightJoint.setParent(joint);
+
+			joint.mUpJoint = upJoint;
+			joint.mRightJoint = rightJoint;
+		}
+
+		targetSkeleton.addSpringBone(new JointConnection(baseObj.mName,joint,parentJoint));
 
 		for(SceneObject obj:baseObj.getChildren()) {
 			if(obj instanceof LimbObject) {

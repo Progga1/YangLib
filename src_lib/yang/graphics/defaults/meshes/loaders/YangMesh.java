@@ -6,6 +6,7 @@ import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.defaults.meshes.armature.LimbNeutralData;
 import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.armature.YangArmaturePose;
 import yang.graphics.defaults.programs.subshaders.EmissiveSubShader;
@@ -193,7 +194,8 @@ public class YangMesh {
 			tempPoint.set(mPositions[i*3],mPositions[i*3+1],mPositions[i*3+2]);
 
 			int j = 0;
-			for(Point3f point:armature.mInitialPositions) {
+			for(LimbNeutralData limbData:armature.mLimbData) {
+				Point3f point = limbData.mPosition;
 				float dist = point.getDistance(tempPoint);
 				float resWeight = 0;
 				if(dist<=0.00001f) {

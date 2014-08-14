@@ -7,9 +7,7 @@ import yang.physics.massaggregation.elements.Joint;
 
 public class YangArmature {
 
-	public Vector3f[] mInitialVectors;
-	public Point3f[] mInitialPositions;
-	public float[] mInitialDistances;
+	public LimbNeutralData[] mLimbData;
 
 	public YangArmature() {
 
@@ -17,12 +15,9 @@ public class YangArmature {
 
 	public YangArmature init(int boneCount) {
 		int l = boneCount;
-		mInitialVectors = new Vector3f[l];
-		mInitialPositions = new Point3f[l];
-		mInitialDistances = new float[l];
+		mLimbData = new LimbNeutralData[l];
 		for(int i=0;i<l;i++) {
-			mInitialVectors[i] = new Vector3f();
-			mInitialPositions[i] = new Point3f();
+			mLimbData[i] = new LimbNeutralData();
 		}
 		return this;
 	}
@@ -36,17 +31,18 @@ public class YangArmature {
 	public void setInitialValues(MassAggregation skeleton) {
 		int i = 0;
 		for(Joint joint:skeleton.mJoints) {
-			mInitialPositions[i].set(joint.mX,joint.mY,joint.mZ);
+			LimbNeutralData limbData = mLimbData[i];
+			limbData.mPosition.set(joint.mX,joint.mY,joint.mZ);
 			if(joint.mParent!=null) {
-				mInitialVectors[i].set(joint.mX-joint.mParent.mX,joint.mY-joint.mParent.mY,joint.mZ-joint.mParent.mZ);
-				mInitialDistances[i] = mInitialVectors[i].normalize();
+				limbData.mForward.set(joint.mX-joint.mParent.mX,joint.mY-joint.mParent.mY,joint.mZ-joint.mParent.mZ);
+				limbData.mForwardDistance = limbData.mForward.normalize();
 			}
 			i++;
 		}
 	}
 
 	public int getBoneCount() {
-		return mInitialPositions.length;
+		return mLimbData.length;
 	}
 
 
