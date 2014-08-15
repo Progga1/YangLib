@@ -656,6 +656,10 @@ public class YangMatrix {
 		MatrixOps.createDirectionTrafo(mValues, dirX,dirY,dirZ, upX,upY,upZ);
 	}
 
+	public void setPointToDirection(Vector3f direction,Vector3f up) {
+		MatrixOps.createDirectionTrafo(mValues, direction.mX,direction.mY,direction.mZ, up.mX,up.mY,up.mZ);
+	}
+
 	public void setPointFromTo(Point3f fromPoint, Point3f toPoint, Vector3f upVector) {
 		float dx = toPoint.mX - fromPoint.mX;
 		float dy = toPoint.mY - fromPoint.mY;
