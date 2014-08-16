@@ -1,5 +1,9 @@
 package yang.physics.massaggregation;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
@@ -600,6 +604,22 @@ public class MassAggregation {
 		mInvTransform = skeleton.mInvTransform;
 		mVectorTransform = skeleton.mVectorTransform;
 		mInvVectorTransform = skeleton.mInvVectorTransform;
+	}
+
+	public void writePosture(DataOutputStream stream) throws IOException {
+		for(Joint joint:mJoints) {
+			stream.writeFloat(joint.mX);
+			stream.writeFloat(joint.mY);
+			stream.writeFloat(joint.mZ);
+		}
+	}
+
+	public void readPosture(DataInputStream stream) throws IOException {
+		for(Joint joint:mJoints) {
+			joint.mX = stream.readFloat();
+			joint.mY = stream.readFloat();
+			joint.mZ = stream.readFloat();
+		}
 	}
 
 }

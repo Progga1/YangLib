@@ -223,11 +223,24 @@ public class Animation<CarrierType> {
 		return mActiveJoints.length;
 	}
 
-	//TODO load and save attributs
+	//TODO load and save attributes
 
-	public void saveToFile(File file, int frameCount, boolean saveDurations) throws IOException {
+	public void saveToFile(File file, int frameCount, boolean saveDurations, MassAggregation skeletonPosture) throws IOException {
 		DataOutputStream stream = new DataOutputStream(new FileOutputStream(file));
 
+		if(skeletonPosture!=null) {
+			stream.writeInt(skeletonPosture.getJointCount());
+			skeletonPosture.writePosture(stream);
+		}else{
+			stream.writeInt(0);
+		}
+		
+		if(mKeyFrames.length<=0 || frameCount<=0) {
+			stream.writeInt(0);
+			stream.close();
+			return;
+		}
+		
 		if(frameCount<0)
 			frameCount = mKeyFrames.length;
 		stream.writeInt(frameCount);
@@ -246,9 +259,21 @@ public class Animation<CarrierType> {
 		stream.close();
 	}
 
-	public int loadFromFile(File file) throws IOException {
+	public int loadFromFile(File file,MassAggregation skeletonPosture) throws IOException {
 		DataInputStream stream = new DataInputStream(new FileInputStream(file));
+		int readPosture = stream.readInt();
+		if(readPosture>0) {
+			if(skeletonPosture!=null) {
+				skeletonPosture.readPosture(stream);
+			}else{
+				stream.skipBytes(readPosture*3);
+			}
+		}
 		int frameCount = stream.readInt();
+		if(frameCount<=0) {
+			stream.close();
+			return -1;
+		}
 		boolean loadDurations = stream.readInt()!=0;
 		for(int i=0;i<=frameCount;i++) {
 			KeyFrame keyFrame = mKeyFrames[i];
