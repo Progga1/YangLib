@@ -234,13 +234,13 @@ public class Animation<CarrierType> {
 		}else{
 			stream.writeInt(0);
 		}
-		
+
 		if(mKeyFrames.length<=0 || frameCount<=0) {
 			stream.writeInt(0);
 			stream.close();
 			return;
 		}
-		
+
 		if(frameCount<0)
 			frameCount = mKeyFrames.length;
 		stream.writeInt(frameCount);
@@ -272,19 +272,29 @@ public class Animation<CarrierType> {
 		int frameCount = stream.readInt();
 		if(frameCount<=0) {
 			stream.close();
-			return -1;
+		}else{
+			boolean loadDurations = stream.readInt()!=0;
+			for(int i=0;i<=frameCount;i++) {
+				KeyFrame keyFrame = mKeyFrames[i];
+				if(loadDurations)
+					keyFrame.mDuration = stream.readInt();
+				float[] data = keyFrame.mPose.mData;
+				for(int j=0;j<data.length;j++) {
+					data[j] = stream.readFloat();
+				}
+			}
+			stream.close();
 		}
-		boolean loadDurations = stream.readInt()!=0;
-		for(int i=0;i<=frameCount;i++) {
+		for(int i=frameCount+1;i<mKeyFrames.length;i++) {
 			KeyFrame keyFrame = mKeyFrames[i];
-			if(loadDurations)
-				keyFrame.mDuration = stream.readInt();
+			if(keyFrame==null)
+				continue;
 			float[] data = keyFrame.mPose.mData;
 			for(int j=0;j<data.length;j++) {
-				data[j] = stream.readFloat();
+				data[j] = Float.MAX_VALUE;
 			}
 		}
-		stream.close();
+
 		refreshKeyFrames();
 		return frameCount;
 	}
