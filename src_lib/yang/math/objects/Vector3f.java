@@ -75,10 +75,9 @@ public class Vector3f extends Point3f{
 			mY = 0;
 			mZ = 0;
 		}else{
-			dist = 1/dist;
-			mX = vector.mX*dist;
-			mY = vector.mY*dist;
-			mZ = vector.mZ*dist;
+			mX = vector.mX/dist;
+			mY = vector.mY/dist;
+			mZ = vector.mZ/dist;
 		}
 		return dist;
 	}
