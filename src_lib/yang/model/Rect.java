@@ -31,6 +31,13 @@ public class Rect {
 	public float getHeight() {
 		return mTop-mBottom;
 	}
+	
+	public void move(float deltaX, float deltaY) {
+		mLeft += deltaX;
+		mRight += deltaX;
+		mBottom += deltaY;
+		mTop += deltaY;
+	}
 
 	public void set(float left,float bottom,float right, float top) {
 		mLeft = left;
