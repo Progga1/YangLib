@@ -3,6 +3,7 @@ package yang.physics.massaggregation;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.SkeletonCarrier;
@@ -84,7 +85,7 @@ public class MassAggregation {
 	}
 
 	public MassAggregation() {
-		mJoints = new YangList<Joint>();
+		mJoints = new YangList<Joint>(16);
 		mBones = new YangList<JointConnection>();
 		mConstraints = new YangList<Constraint>();
 
@@ -607,7 +608,9 @@ public class MassAggregation {
 	}
 
 	public void writePosture(DataOutputStream stream) throws IOException {
-		for(Joint joint:mJoints) {
+		Iterator<Joint> iter = mJoints.iterator(12);
+		while(iter.hasNext()) {
+			Joint joint = iter.next();
 			stream.writeFloat(joint.mX);
 			stream.writeFloat(joint.mY);
 			stream.writeFloat(joint.mZ);
@@ -615,7 +618,9 @@ public class MassAggregation {
 	}
 
 	public void readPosture(DataInputStream stream) throws IOException {
-		for(Joint joint:mJoints) {
+		Iterator<Joint> iter = mJoints.iterator(12);
+		while(iter.hasNext()) {
+			Joint joint = iter.next();
 			joint.mX = stream.readFloat();
 			joint.mY = stream.readFloat();
 			joint.mZ = stream.readFloat();

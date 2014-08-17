@@ -204,6 +204,12 @@ public class YangList<E> implements List<E> {
 		iterator.prepare(0);
 		return iterator;
 	}
+	
+	public Iterator<E> iterator(int index) {
+		YangListIterator<E> iterator = iterators[index];
+		iterator.prepare(0);
+		return iterator;
+	}
 
 	@Override
 	public int lastIndexOf(Object o) {
