@@ -91,4 +91,12 @@ public class Point2f {
 		mX += (otherPoint.mX-mX)*weight;
 		mY += (otherPoint.mY-mY)*weight;
 	}
+
+	public void setLerp(Point2f point1, Point2f point2, float weight) {
+		mX = point1.mX*(1-weight) + point2.mX*weight;
+		mY = point1.mY*(1-weight) + point2.mY*weight;
+	}
+
+
+
 }
