@@ -59,4 +59,9 @@ public class AndroidSystemCalls extends YangSystemCalls {
 		});
 	}
 
+	@Override
+	public void exit() {
+		mActivity.finish();
+	}
+
 }
