@@ -334,10 +334,12 @@ public class YangEventQueue {
 		while((event = pollEvent())!=null) {
 			if(mMacroWriters!=null) {
 				for(final MacroWriter writer:mMacroWriters) {
-					try {
-						writer.writeEvent(event);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
+					if (writer.isOpen()) {
+						try {
+							writer.writeEvent(event);
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						}
 					}
 				}
 			}

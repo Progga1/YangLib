@@ -18,12 +18,14 @@ public class MacroWriter {
 	protected AbstractMacroIO mMacroIO;
 	protected long mEventCount;
 	protected double mLastFlush;
+	protected boolean mOpened;
 
 	public MacroWriter(OutputStream writer,AbstractMacroIO macroIO) {
 		mWriter = new DataOutputStream(writer);
 		mSurface = macroIO.mSurface;
 		mMacroIO = macroIO;
 		start();
+		mOpened = true;
 	}
 
 	public void start() {
@@ -43,9 +45,14 @@ public class MacroWriter {
 
 	public void close() {
 		try {
+			mOpened = false;
 			mWriter.close();
 		} catch (IOException e) {
 			DebugYang.exception(e);
 		}
+	}
+
+	public boolean isOpen() {
+		return mOpened;
 	}
 }
