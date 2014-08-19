@@ -692,11 +692,14 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		return mPaused;
 	}
 
-	public void exit() {
+	public void dispose() {
 		mEventQueue.close();
 		if(mMacro!=null)
 			mMacro.close();
-		System.exit(0);
+	}
+
+	public void exit() {
+		App.systemCalls.exit();
 	}
 
 	public void handleArgs(String[] args,int startIndex) {

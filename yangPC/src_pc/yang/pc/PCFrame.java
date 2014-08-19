@@ -28,8 +28,15 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 		this.addFocusListener(this);
 	}
 
-	protected void close() {
-		mSurface.exit();
+	public void close() {
+		mSurface.dispose();
+
+		new Thread(){
+			@Override
+			public void run() {
+				dispose();
+			}
+		}.start();
 	}
 
 	@Override
@@ -39,7 +46,7 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-
+		System.exit(0);
 	}
 
 	@Override

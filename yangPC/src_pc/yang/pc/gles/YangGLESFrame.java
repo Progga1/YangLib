@@ -51,7 +51,7 @@ public class YangGLESFrame extends PCFrame {
 		if(App.soundManager==null)
 			App.soundManager = new PCSoundManager();
 		App.vibrator = new PCVibrator();
-		App.systemCalls = new PCSystemCalls();
+		App.systemCalls = new PCSystemCalls(this);
 
 		mGraphics.setMaxFPS(DEFAULT_MAX_FPS);
 
@@ -100,9 +100,9 @@ public class YangGLESFrame extends PCFrame {
 	}
 
 	@Override
-	protected void close() {
-		super.close();
+	public void close() {
 		mGraphics.stop();
+		super.close();
 	}
 
 }

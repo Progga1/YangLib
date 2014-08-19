@@ -20,4 +20,8 @@ public class YangSystemCalls {
 
 	}
 
+	public void exit() {
+
+	}
+
 }
