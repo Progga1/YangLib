@@ -568,6 +568,10 @@ public class YangMatrix {
 	public void apply3D(Point3f point,Point3f target) {
 		MatrixOps.applyFloatMatrix3D(mValues, point.mX,point.mY,point.mZ, target);
 	}
+	
+	public void apply3DTransposed(Point3f point, Point3f target) {
+		MatrixOps.applyFloatMatrix3DTransposed(mValues, point.mX,point.mY,point.mZ, target);
+	}
 
 	public void apply3D(Point3f target) {
 		MatrixOps.applyFloatMatrix3D(mValues, target.mX,target.mY,target.mZ, target);
@@ -865,6 +869,50 @@ public class YangMatrix {
 		mValues[12] = 0;
 		mValues[13] = 0;
 		mValues[14] = 0;
+	}
+
+	public void setNormalized(YangMatrix matrix) {
+		float[] tempValues = matrix.mValues;
+		float magnX = 1/(float)Math.sqrt(tempValues[0]*tempValues[0] + tempValues[1]*tempValues[1] + tempValues[2]*tempValues[2]);
+		float magnY = 1/(float)Math.sqrt(tempValues[4]*tempValues[4] + tempValues[5]*tempValues[5] + tempValues[6]*tempValues[6]);
+		float magnZ = 1/(float)Math.sqrt(tempValues[8]*tempValues[8] + tempValues[9]*tempValues[9] + tempValues[10]*tempValues[10]);
+		this.mValues[0] = tempValues[0]*magnX;
+		this.mValues[1] = tempValues[1]*magnX;
+		this.mValues[2] = tempValues[2]*magnX;
+		this.mValues[3] = 0;
+		this.mValues[4] = tempValues[4]*magnY;
+		this.mValues[5] = tempValues[5]*magnY;
+		this.mValues[6] = tempValues[6]*magnY;
+		this.mValues[7] = 0;
+		this.mValues[8] = tempValues[8]*magnZ;
+		this.mValues[9] = tempValues[9]*magnZ;
+		this.mValues[10] = tempValues[10]*magnZ;
+		this.mValues[11] = 0;
+		this.mValues[12] = 0;
+		this.mValues[13] = 0;
+		this.mValues[14] = 0;
+		this.mValues[15] = 1;
+		
+//		float[] values = matrix.mValues;
+//		float magnX = 1/(float)Math.sqrt(values[0]*values[0] + values[4]*values[4] + values[8]*values[8]);
+//		float magnY = 1/(float)Math.sqrt(values[1]*values[1] + values[5]*values[5] + values[9]*values[9]);
+//		float magnZ = 1/(float)Math.sqrt(values[2]*values[2] + values[6]*values[6] + values[10]*values[10]);
+//		this.mValues[0] = values[0]*magnX;
+//		this.mValues[1] = values[1]*magnY;
+//		this.mValues[2] = values[2]*magnZ;
+//		this.mValues[3] = 0;
+//		this.mValues[4] = values[4]*magnX;
+//		this.mValues[5] = values[5]*magnY;
+//		this.mValues[6] = values[6]*magnZ;
+//		this.mValues[7] = 0;
+//		this.mValues[8] = values[8]*magnX;
+//		this.mValues[9] = values[9]*magnY;
+//		this.mValues[10] = values[10]*magnZ;
+//		this.mValues[11] = 0;
+//		this.mValues[12] = 0;
+//		this.mValues[13] = 0;
+//		this.mValues[14] = 0;
+//		this.mValues[15] = 1;
 	}
 
 }
