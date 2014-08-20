@@ -243,11 +243,11 @@ public class Quaternion {
 		mW *= scalar;
 	}
 
-	public void applyToVector(Vector3f target, Vector3f vector) {
-		final float x = mW * vector.mX + mY * vector.mZ - mZ * vector.mY;
-		final float y = mW * vector.mY - mX * vector.mZ + mZ * vector.mX;
-		final float z = mW * vector.mZ + mX * vector.mY - mY * vector.mX;
-		final float w = -mX * vector.mX - mY * vector.mY - mZ * vector.mZ;
+	public void apply(Point3f target, Point3f source) {
+		final float x = mW * source.mX + mY * source.mZ - mZ * source.mY;
+		final float y = mW * source.mY - mX * source.mZ + mZ * source.mX;
+		final float z = mW * source.mZ + mX * source.mY - mY * source.mX;
+		final float w = -mX * source.mX - mY * source.mY - mZ * source.mZ;
 		target.mX = -w * mX + x * mW - y * mZ + z * mY;
 		target.mY = -w * mY + x * mZ + y * mW - z * mX;
 		target.mZ = -w * mZ - x * mY + y * mX + z * mW;
@@ -261,6 +261,16 @@ public class Quaternion {
 		// vQuat.conjugate();
 		// quat3.setConcat(quat2, vQuat);
 		// target.set(quat3.mX,quat3.mY,quat3.mZ);
+	}
+
+	public void apply(Point3f target) {
+		final float x = mW * target.mX + mY * target.mZ - mZ * target.mY;
+		final float y = mW * target.mY - mX * target.mZ + mZ * target.mX;
+		final float z = mW * target.mZ + mX * target.mY - mY * target.mX;
+		final float w = -mX * target.mX - mY * target.mY - mZ * target.mZ;
+		target.mX = -w * mX + x * mW - y * mZ + z * mY;
+		target.mY = -w * mY + x * mZ + y * mW - z * mX;
+		target.mZ = -w * mZ - x * mY + y * mX + z * mW;
 	}
 
 	public void setConcat(Quaternion lhq, Quaternion rhq) {
