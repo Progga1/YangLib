@@ -408,8 +408,12 @@ public class YangMesh {
 				for(final int texInd:mTexCoordIndices) {
 					if(texInd<0)
 						vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[i], mTexCoords[i+1]);
-					else
-						vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[texInd*2], mTexCoords[texInd*2+1]);
+					else{
+//						if(texInd*2>=mTexCoords.length) {
+//							vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, 0,0);
+//						}else
+							vertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, mTexCoords[texInd*2], mTexCoords[texInd*2+1]);
+					}
 					i += 2;
 				}
 			}else

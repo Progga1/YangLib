@@ -159,8 +159,8 @@ public class FBXLoader extends YangSceneLoader {
 						tempTexCoords[texId++] = 1-valY;
 					}
 					mReader.holdWord();
-//				}else if(mReader.isWord("UVIndex")) {
-//					mReader.readArray(tempInts,0);
+				}else if(mReader.isWord("UVIndex")) {
+					mReader.readArray(texCoordIndices,0);
 				}else
 					mReader.toLineEnd();
 			}
@@ -202,7 +202,8 @@ public class FBXLoader extends YangSceneLoader {
 		for(int i=0;i<posId;i++) {
 			positionIndices[i] = i;
 			normalIndices[i] = i;
-			texCoordIndices[i] = i;
+			if(texCoordIndices[i]<0)
+				texCoordIndices[i] = i;
 		}
 
 		for(int i=0;i<polyId;i++) {
