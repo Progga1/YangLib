@@ -138,7 +138,7 @@ public class Vector3f extends Point3f{
 	}
 
 	public void applyQuaternion(Quaternion quaternion, Vector3f vector) {
-		quaternion.applyToVector(this,vector);
+		quaternion.apply(this,vector);
 	}
 
 	public boolean isZero() {
