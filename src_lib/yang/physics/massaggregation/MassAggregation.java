@@ -476,6 +476,12 @@ public class MassAggregation {
 				Joint parent = getJointByName(joint.mParent.mName);
 				joint1.setParent(parent);
 			}
+			if(joint.mUpJoint!=null) {
+				getJointByName(joint.mName).mUpJoint = getJointByName(joint.mUpJoint.mName);
+			}
+			if(joint.mRightJoint!=null) {
+				getJointByName(joint.mName).mRightJoint = getJointByName(joint.mRightJoint.mName);
+			}
 		}
 
 		for(JointConnection bone:massAggregation.mBones) {
