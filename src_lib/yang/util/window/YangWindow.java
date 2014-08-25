@@ -36,6 +36,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable & Exten
 	public boolean mDrawDebugPoints = false;
 	public boolean mVisible = true;
 	public float mMaxEventZ = 0.18f,mMinEventZ = -0.1f;
+	public FloatColor mColor = FloatColor.WHITE.clone();
 
 	public boolean mSolid = false;
 
@@ -97,6 +98,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable & Exten
 		mGraphics.setGlobalTransformEnabled(true);
 		mGraphics.mWorldTransform.stackPush();
 		mGraphics.mWorldTransform.set(mTransform);
+		mGraphics.setColorFactor(mColor);
 
 		if(drawPass==PASS_BACKGROUND) {
 			drawBackground();
@@ -121,6 +123,7 @@ public class YangWindow<InternalType extends RawEventListener & Drawable & Exten
 			}
 		}
 		mGraphics.mTranslator.flush();
+		mGraphics.setFactorWhite();
 
 		mGraphics.mWorldTransform.stackPop();
 	}
