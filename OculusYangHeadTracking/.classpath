@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all-mobile.jar"/>
 	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all-noawt.jar"/>
 	<classpathentry kind="lib" path="libs_yang/opengl/jogl.all.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Progga/workspace/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
