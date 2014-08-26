@@ -61,17 +61,6 @@ public class Point2f {
 		return (x-mX)*(x-mX) + (y-mY)*(y-mY);
 	}
 
-	/**
-	 * Mixes the old and the new position
-	 * @param amountOfNew between 0 and 1 the higher, the faster the new position will be set
-	 * @param newX new position X
-	 * @param newY new position Y
-	 */
-	public void mixIn(final float amountOfNew, final float newX, final float newY) {
-		final float inv = 1 - amountOfNew;
-		set(newX*amountOfNew + mX*inv,newY*amountOfNew + mY*inv);
-	}
-
 	public float angleTo(float mHeadX, float mHeadY) {
 		float dy = (mHeadY-mY);
 		float dx = (mHeadX-mX);
@@ -90,6 +79,12 @@ public class Point2f {
 	public void interpolate(Point2f otherPoint, float weight) {
 		mX += (otherPoint.mX-mX)*weight;
 		mY += (otherPoint.mY-mY)*weight;
+	}
+
+	/** higher weight means faster interpolation to <b>otherPoint</b> [0-1] */
+	public void interpolate(float newX, float newY, float weight) {
+		mX += (newX-mX)*weight;
+		mY += (newY-mY)*weight;
 	}
 
 	public void setLerp(Point2f point1, Point2f point2, float weight) {
