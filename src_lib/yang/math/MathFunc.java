@@ -83,5 +83,13 @@ public class MathFunc {
 	public static int round(float f) {		
 		return Math.round(f);
 	}
+
+	public static int floor(float val) {		
+		return (int) Math.floor(val);
+	}
+	
+	public static int ceil(float val) {		
+		return (int) Math.ceil(val);
+	}
 	
 }
