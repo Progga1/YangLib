@@ -45,6 +45,12 @@ public class Point3f {
 		mZ = point.mZ;
 	}
 
+	public void set(Point3f point,Vector3f addVector) {
+		mX = point.mX+addVector.mX;
+		mY = point.mY+addVector.mY;
+		mZ = point.mZ+addVector.mZ;
+	}
+
 	public void setNegative(Point3f point) {
 		mX = -point.mX;
 		mY = -point.mY;
