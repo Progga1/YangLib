@@ -228,7 +228,7 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 
 
 		if(mSurface.mStereoVision!=null) {
-			final LensDistortionShader stereoShader = mSurface.mStereoVision.mLensDistortionShader;
+			final LensDistortionShader stereoShader = mSurface.mStereoVision.mUsedDistortionShader;
 			final float STEPS = 0.01f;
 			if(code=='a')
 				stereoShader.mScaleX += STEPS;

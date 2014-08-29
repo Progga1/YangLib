@@ -18,11 +18,14 @@ public class StereoRendering extends StereoVision {
 	public static float RATIO_FAC = 1.6f;
 	public static TextureWrap WRAP_MODE = TextureWrap.CLAMP;
 	public static boolean LENS_DISTORTION = true;
+	public static boolean LENS_ABERRATION = false;
 
 	public int mResolution;
 	private GraphicsTranslator mGraphics;
 	private MinimumTexShader mMinimumShader;
 	public LensDistortionShader mLensDistortionShader;
+	public LensAberrationShader mLensAberrationShader;
+	public LensDistortionShader mUsedDistortionShader;
 	public IndexedVertexBuffer mStereoVertexBuffer = null;
 	public TextureRenderTarget mStereoLeftRenderTarget = null;
 	public TextureRenderTarget mStereoRightRenderTarget = null;
@@ -39,6 +42,7 @@ public class StereoRendering extends StereoVision {
 		mGraphics = graphics;
 		mMinimumShader = mGraphics.addProgram(new MinimumTexShader());
 		mLensDistortionShader = mGraphics.addProgram(new LensDistortionShader());
+		mLensAberrationShader = mGraphics.addProgram(new LensAberrationShader());
 		mStereoVertexBuffer = mGraphics.createUninitializedVertexBuffer(true, true, 2*6, 2*4);
 		mStereoVertexBuffer.init(new int[]{3,2}, null);
 		mStereoVertexBuffer.putQuadIndicesMultiple(2);
@@ -63,9 +67,10 @@ public class StereoRendering extends StereoVision {
 		final IndexedVertexBuffer buf = mGraphics.mCurrentVertexBuffer;
 		final AbstractProgram prevShader = mGraphics.mCurrentProgram;
 
+		mUsedDistortionShader = LENS_ABERRATION?mLensAberrationShader:mLensDistortionShader;
 		MinimumTexShader stereoShader;
 		if(LENS_DISTORTION) {
-			stereoShader = mLensDistortionShader;
+			stereoShader = mUsedDistortionShader;
 		}else
 			stereoShader = mMinimumShader;
 		//Activate stereo state
@@ -84,10 +89,10 @@ public class StereoRendering extends StereoVision {
 		mGraphics.clear(0,0,0, GLMasks.DEPTH_BUFFER_BIT);
 		mGraphics.bindTextureNoFlush(mStereoLeftRenderTarget.mTargetTexture, 0);
 		if(LENS_DISTORTION)
-			mLensDistortionShader.setShiftX(-mLensShift);
+			mUsedDistortionShader.setShiftX(-mLensShift);
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 0,6, GLDrawModes.TRIANGLES);
 		if(LENS_DISTORTION)
-			mLensDistortionShader.setShiftX(mLensShift);
+			mUsedDistortionShader.setShiftX(mLensShift);
 		mGraphics.bindTextureNoFlush(mStereoRightRenderTarget.mTargetTexture, 0);
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 6,6, GLDrawModes.TRIANGLES);
 
