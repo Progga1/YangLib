@@ -14,6 +14,21 @@ public class Vector2f extends Point2f{
 		return mX*vector.mX + mY*vector.mY;
 	}
 
+	public float dot(float x,float y) {
+		return mX*x + mY*y;
+	}
+
+//	public float project(float x,float y) {
+//		float dot =  mX*x + mY*y;
+//		mX = mX*dot;
+//		mY = mY*dot;
+//		return dot;
+//	}
+//
+//	public float project(Vector2f vec) {
+//		return project(vec.mX,vec.mY);
+//	}
+
 	public float getMagnitude() {
 		return (float)Math.sqrt(mX*mX+mY*mY);
 	}
@@ -47,8 +62,8 @@ public class Vector2f extends Point2f{
 //			return (float) Math.PI - angle;
 	}
 
-	public float cross(Vector2f b) {
-		return mX*b.mY - mY*b.mX;
+	public float cross(Vector2f vec) {
+		return mX*vec.mY - mY*vec.mX;
 	}
 
 	public void add(Vector2f direction, float magnitude) {
@@ -83,6 +98,15 @@ public class Vector2f extends Point2f{
 		return magn;
 	}
 
-
-
+	public float normalize() {
+		float dist = (float)Math.sqrt(mX*mX + mY*mY);
+		if(dist==0) {
+			mX = 0;
+			mY = 0;
+		}else{
+			mX /= dist;
+			mY /= dist;
+		}
+		return dist;
+	}
 }
