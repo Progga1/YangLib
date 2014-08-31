@@ -18,7 +18,7 @@ public class StereoRendering extends StereoVision {
 	public static float RATIO_FAC = 1.6f;
 	public static TextureWrap WRAP_MODE = TextureWrap.CLAMP;
 	public static boolean LENS_DISTORTION = true;
-	public static boolean LENS_ABERRATION = true;
+	public static boolean LENS_ABERRATION = false;
 
 	public int mResolution;
 	private GraphicsTranslator mGraphics;

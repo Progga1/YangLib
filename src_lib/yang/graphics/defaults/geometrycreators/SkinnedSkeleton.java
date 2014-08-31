@@ -1,5 +1,6 @@
 package yang.graphics.defaults.geometrycreators;
 
+import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.armature.YangArmaturePosture;
 import yang.graphics.defaults.meshes.loaders.YangMesh;
@@ -9,7 +10,7 @@ import yang.physics.massaggregation.MassAggregation;
 public class SkinnedSkeleton {
 
 	public boolean mWireFrames = false;
-	public AbstractGraphics<?> mGraphics;
+	public DefaultGraphics<?> mGraphics;
 	public YangArmature mArmature;
 	public YangArmaturePosture mArmaturePose;
 	public MassAggregation mSkeleton;
@@ -38,7 +39,7 @@ public class SkinnedSkeleton {
 
 	}
 
-	public SkinnedSkeleton setGraphics(AbstractGraphics<?> graphics) {
+	public SkinnedSkeleton setGraphics(DefaultGraphics<?> graphics) {
 		mGraphics = graphics;
 		return this;
 	}

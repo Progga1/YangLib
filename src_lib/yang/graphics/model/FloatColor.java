@@ -25,6 +25,7 @@ public class FloatColor extends Quadruple {
 	public static final FloatColor GREEN = new FloatColor(0,1,0);
 	public static final FloatColor BLUE = new FloatColor(0,0,1);
 	public static final FloatColor YELLOW = new FloatColor(1,1,0);
+	public static final FloatColor ZERO = new FloatColor(0,0,0,0);
 
 	public FloatColor(float red,float green,float blue,float alpha) {
 		set(red,green,blue,alpha);
@@ -154,7 +155,7 @@ public class FloatColor extends Quadruple {
 				((rgba >> 8) 	& 0xff) / 255f,
 				((rgba) 		& 0xff) / 255f);
 	}
-	
+
 	public static FloatColor fromHexRGB(int rgb) {
 		return new FloatColor(
 				((rgb >> 16) 	& 0xff) / 255f,
