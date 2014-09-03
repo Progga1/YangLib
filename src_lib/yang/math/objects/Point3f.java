@@ -1,6 +1,5 @@
 package yang.math.objects;
 
-import yang.physics.massaggregation.elements.Joint;
 
 
 public class Point3f {
@@ -158,6 +157,12 @@ public class Point3f {
 	public float getDistanceXZ(Point3f point) {
 		final float dX = mX-point.mX;
 		final float dZ = mZ-point.mZ;
+		return (float)Math.sqrt(dX*dX+dZ*dZ);
+	}
+
+	public float getDistanceXZ(float x, float z) {
+		final float dX = mX-x;
+		final float dZ = mZ-z;
 		return (float)Math.sqrt(dX*dX+dZ*dZ);
 	}
 
