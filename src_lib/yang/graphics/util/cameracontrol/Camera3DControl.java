@@ -22,6 +22,7 @@ public class Camera3DControl extends CameraControl {
 	public float mTargetViewAlpha = 0,mTargetViewBeta = 0;
 	public float mViewAlpha,mViewBeta;
 	public float mFocusX,mFocusY,mFocusZ;
+	public float mVelAlpha = 0,mVelBeta = 0;
 
 	//Objects
 	protected Camera3D mCamera;
@@ -35,15 +36,13 @@ public class Camera3DControl extends CameraControl {
 		mCamera = new Camera3D();
 	}
 
-	public void pointerDown(SurfacePointerEvent event) {
-		mCurPointerDownCount++;
-		if(event.mId!=0)
-			return;
-	}
-
 	@Override
-	public void step() {
-		super.step();
+	public void step(float deltaTime) {
+		super.step(deltaTime);
+		if(mCurPointerDownCount==0) {
+			mTargetViewAlpha += mVelAlpha*deltaTime;
+			mTargetViewBeta += mVelBeta*deltaTime;
+		}
 		mViewAlpha += (mTargetViewAlpha-mViewAlpha)*mViewDelay;
 		mViewBeta += (mTargetViewBeta-mViewBeta)*mViewDelay;
 	}

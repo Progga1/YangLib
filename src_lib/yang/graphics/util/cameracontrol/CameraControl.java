@@ -39,7 +39,7 @@ public abstract class CameraControl implements YangEventListener {
 		mZoom = 1;
 	}
 
-	public void step() {
+	public void step(float deltaTime) {
 		mZoom += (mTargetZoom-mZoom)*mZoomDelay;
 	}
 
@@ -59,9 +59,10 @@ public abstract class CameraControl implements YangEventListener {
 	}
 
 
-	@Override
 	public void pointerDown(float x, float y, SurfacePointerEvent event) {
-
+		mCurPointerDownCount++;
+		if(event.mId!=0)
+			return;
 	}
 
 	@Override

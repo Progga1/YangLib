@@ -20,7 +20,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 
 	@Override
 	protected void step(float deltaTime) {
-		mCamera.step();
+		mCamera.step(deltaTime);
 	}
 
 	protected void setCamera() {
@@ -29,7 +29,7 @@ public abstract class SampleStateCameraControl extends SampleState {
 
 	@Override
 	public void pointerDown(float x,float y,SurfacePointerEvent event) {
-		mCamera.pointerDown(event);
+		mCamera.pointerDown(x,y,event);
 	}
 
 	@Override

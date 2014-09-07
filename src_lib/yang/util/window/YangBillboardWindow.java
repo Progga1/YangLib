@@ -19,14 +19,18 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 	public YangBillboardWindow(InternalType internalObject,DefaultGraphics<?> graphics) {
 		super(internalObject,graphics);
 	}
-
-	@Override
-	public void step(float deltaTime) {
+	
+	private void refreshTransform() {
 		mTargetPoint.lerp(mLookAtPoint.mX,mLookAtPoint.mY*mBetaWeight+mPosition.mY*(1-mBetaWeight),mLookAtPoint.mZ,mDelay);
 		mTransform.setPointFromTo(mPosition,mTargetPoint,Vector3f.UP);
 		mTransform.scale(mScale);
 		mTransform.postTranslate(mPosition);
 		updateTransform();
+	}
+
+	@Override
+	public void step(float deltaTime) {
+		refreshTransform();
 	}
 
 	@Override
@@ -37,31 +41,37 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 	public void setLookAtPointReference(Point3f point) {
 		mLookAtPoint = point;
 		mTargetPoint.set(point);
+		refreshTransform();
 	}
 
 	public void snap() {
 		//mTargetPoint.set(mLookAtPoint);
 		mTargetPoint.set(mLookAtPoint.mX,mLookAtPoint.mY*mBetaWeight+mPosition.mY*(1-mBetaWeight),mLookAtPoint.mZ);
+		refreshTransform();
 	}
 
 	public void setLookAtPoint(float x,float y,float z) {
 		if(mLookAtPoint==null)
 			mLookAtPoint = new Point3f();
 		mLookAtPoint.set(x,y,z);
+		refreshTransform();
 	}
 
 	public void setScale(float x,float y,float z) {
 		mScale.set(x,y,z);
+		refreshTransform();
 	}
 
 	public void setScale(float x,float y) {
 		mScale.mX = x;
 		mScale.mY = y;
+		refreshTransform();
 	}
 
 	public void setScale(float xy) {
 		mScale.mX = xy;
 		mScale.mY = xy;
+		refreshTransform();
 	}
 
 }
