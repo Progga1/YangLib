@@ -126,6 +126,12 @@ public class FloatColor extends Quadruple {
 		return new FloatColor(this);
 	}
 
+	public FloatColor clone(float brightness) {
+		FloatColor res = new FloatColor(this);
+		res.multBrightness(brightness);
+		return res;
+	}
+
 	public void set(float brightness) {
 		set(brightness,brightness,brightness,1);
 	}
