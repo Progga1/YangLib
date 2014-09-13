@@ -124,4 +124,9 @@ public class Camera3DControl extends CameraControl {
 
 	}
 
+	@Override
+	public String toString() {
+		return "yaw = "+mViewAlpha+" pitch = "+mViewBeta+" zoom = "+mZoom+" focus = ("+mFocusX+" "+mFocusY+" "+mFocusZ+")";
+	}
+
 }

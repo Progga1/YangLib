@@ -82,6 +82,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	public boolean mForceMetaMode = false;
 	public float mPlaySpeed = 1;
 	public float mFastForwardToTime = -1;
+	public boolean mFreezeAfterFastForward = false;
 	public String mMacroFilename;
 	private int mStereoResolution = 1024;
 	private boolean mForceStereoVision = false;
@@ -394,6 +395,10 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		if(mFastForwardToTime>0 && mFastForwardToTime<mProgramTime) {
 			mPlaySpeed = 1;
 			mFastForwardToTime = -1;
+			if(mFreezeAfterFastForward) {
+				setPaused(true);
+				return;
+			}
 		}
 
 		if(mCatchUpTime==0)
