@@ -249,13 +249,13 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 //			mCameraProjectionMatrix.multiply(mViewProjectionTransform,mCameraMatrix);
 //	}
 
-	public void putCubePart(float[] array,Vector3f norm,YangMatrix transform) {
+	public void putCubePart(float[] array,Vector3f norm,YangMatrix transform,float[] texCoords) {
 		mCurrentVertexBuffer.beginQuad();
 		if(transform==null)
 			mCurrentVertexBuffer.putArray(ID_POSITIONS,array);
 		else
 			mCurrentVertexBuffer.putTransformedArray3D(ID_POSITIONS,array,4,transform.mValues);
-		putTextureArray(RECT_TEXTURECOORDS);
+		putTextureArray(texCoords);
 		putColorRect(mCurColor);
 		putSuppDataRect(mCurSuppData);
 		if(norm!=null) {
@@ -264,6 +264,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			putNormal(norm.mX,norm.mY,norm.mZ);
 			putNormal(norm.mX,norm.mY,norm.mZ);
 		}
+	}
+	
+	public void putCubePart(float[] array,Vector3f norm,YangMatrix transform) {
+		putCubePart(array,norm,transform,RECT_TEXTURECOORDS);
 	}
 
 	public void drawCubeCentered(YangMatrix transform) {
