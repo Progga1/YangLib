@@ -856,8 +856,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return mStaticTransformation;
 	}
 
-	public void readPixels(ByteBuffer pixels,int channels,ByteFormat byteFormat) {
-		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),channels,byteFormat,pixels);
+	public void readPixels(ByteBuffer target,int channels,ByteFormat byteFormat) {
+		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),channels,byteFormat,target);
 	}
 
 	public void readPixels(ByteBuffer target) {

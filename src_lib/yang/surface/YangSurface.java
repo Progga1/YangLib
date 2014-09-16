@@ -25,6 +25,7 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MathConst;
 import yang.model.App;
 import yang.model.DebugYang;
+import yang.model.Rect;
 import yang.model.enums.ByteFormat;
 import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
@@ -60,6 +61,10 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	public YangSystemCalls mSystemCalls;
 	public GFXDebug mGFXDebug;
 	public String mPlatformKey = "";
+	public float mScreenShotLeft = 0;
+	public float mScreenShotTop = 0;
+	public float mScreenShotWidth = 1;
+	public float mScreenShotHeight = 1;
 
 	public int mMaxStepsPerCycle = 100;
 
@@ -523,7 +528,16 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		}
 
 		if(mMakingScreenshot) {
-			mGraphics.readPixels(screenShotData.mImage.mData,4,ByteFormat.UNSIGNED_BYTE);
+			int surfW = mGraphics.mCurrentSurface.getSurfaceWidth();
+			int surfH = mGraphics.mCurrentSurface.getSurfaceHeight();
+			int l = (int)(mScreenShotLeft*surfW);
+			int t = (int)(mScreenShotTop*surfH);
+			int w = (int)(mScreenShotWidth*surfW);
+			int h = (int)(mScreenShotHeight*surfH);
+			screenShotData.mImage.mWidth = w;
+			screenShotData.mImage.mHeight = h;
+			mGraphics.readPixels(l,t,w,w, 4,ByteFormat.UNSIGNED_BYTE,screenShotData.mImage.mData);
+//			mGraphics.readPixels(screenShotData.mImage.mData,4,ByteFormat.UNSIGNED_BYTE);
 			mScreenshotCallback.onScreenshot(screenShotData.mImage);
 			mGraphics.leaveTextureRenderTarget();
 			mScreenshotCallback = null;

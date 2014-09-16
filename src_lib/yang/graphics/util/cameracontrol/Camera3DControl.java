@@ -22,7 +22,7 @@ public class Camera3DControl extends CameraControl {
 	public float mTargetViewAlpha = 0,mTargetViewBeta = 0;
 	public float mViewAlpha,mViewBeta;
 	public float mFocusX,mFocusY,mFocusZ;
-	public float mVelAlpha = 0,mVelBeta = 0;
+	public float mVelAlpha = 0,mVelBeta = 0,mVelZoom = 0;
 
 	//Objects
 	protected Camera3D mCamera;
@@ -42,6 +42,7 @@ public class Camera3DControl extends CameraControl {
 		if(mCurPointerDownCount==0) {
 			mTargetViewAlpha += mVelAlpha*deltaTime;
 			mTargetViewBeta += mVelBeta*deltaTime;
+			mTargetZoom += mVelZoom*deltaTime;
 		}
 		mViewAlpha += (mTargetViewAlpha-mViewAlpha)*mViewDelay;
 		mViewBeta += (mTargetViewBeta-mViewBeta)*mViewDelay;
