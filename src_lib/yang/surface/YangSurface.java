@@ -536,7 +536,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			int h = (int)(mScreenShotHeight*surfH);
 			screenShotData.mImage.mWidth = w;
 			screenShotData.mImage.mHeight = h;
-			mGraphics.readPixels(l,t,w,w, 4,ByteFormat.UNSIGNED_BYTE,screenShotData.mImage.mData);
+			mGraphics.readPixels(l,t,w,h, 4,ByteFormat.UNSIGNED_BYTE,screenShotData.mImage.mData);
 //			mGraphics.readPixels(screenShotData.mImage.mData,4,ByteFormat.UNSIGNED_BYTE);
 			mScreenshotCallback.onScreenshot(screenShotData.mImage);
 			mGraphics.leaveTextureRenderTarget();

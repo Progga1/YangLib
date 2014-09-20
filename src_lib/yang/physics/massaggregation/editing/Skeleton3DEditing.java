@@ -17,6 +17,7 @@ public class Skeleton3DEditing {
 
 	public static int SPHERE_VERTICES_X = 24;
 	public static int SPHERE_VERTICES_Y = 16;
+	public static boolean DRAW_PARENT_CONNECTIONS = true;
 
 	public static int MAX_JOINTS = 2048;
 	//public static FloatColor jointColor = new FloatColor(0.9f,0.2f,0.2f);
@@ -93,24 +94,26 @@ public class Skeleton3DEditing {
 		mGraphics3D.mWorldTransform.loadIdentity();
 		//mGraphics3D.mWorldTransform.scale(mSkeleton.mScale);
 
-		for(Joint joint:mSkeleton.mJoints) {
-			if(joint==null)
-				continue;
-			JointEditData jointData = mJointData[joint.mId];
+		if(DRAW_PARENT_CONNECTIONS) {
+			for(Joint joint:mSkeleton.mJoints) {
+				if(joint==null)
+					continue;
+				JointEditData jointData = mJointData[joint.mId];
 
-			if(jointData.mVisible && joint.mParent!=null){
-				final Joint parent = joint.mParent;
-				mJointColor1.set(1,1,1,mAlpha);
-				float r;
-				if(mJointDrawCallback!=null) {
-					mJointDrawCallback.getJointLineColor(jointData,mJointColor1);
-					r = mJointDrawCallback.getJointRadius(jointData);
-				}else
-					r = jointData.getOutputRadius();
-				mJointColor1.clamp();
+				if(jointData.mVisible && joint.mParent!=null){
+					final Joint parent = joint.mParent;
+					mJointColor1.set(1,1,1,mAlpha);
+					float r;
+					if(mJointDrawCallback!=null) {
+						mJointDrawCallback.getJointLineColor(jointData,mJointColor1);
+						r = mJointDrawCallback.getJointRadius(jointData);
+					}else
+						r = jointData.getOutputRadius();
+					mJointColor1.clamp();
 
-				mLineDrawer.drawLine(joint.mWorldPosition, parent.mWorldPosition, r*0.25f,parent.getOutputRadius()*0.25f);
-				mLineDrawer.mCylinder.putColor(mJointColor1.mValues);
+					mLineDrawer.drawLine(joint.mWorldPosition, parent.mWorldPosition, r*0.25f,parent.getOutputRadius()*0.25f);
+					mLineDrawer.mCylinder.putColor(mJointColor1.mValues);
+				}
 			}
 		}
 
