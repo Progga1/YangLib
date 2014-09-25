@@ -53,6 +53,18 @@ public class Geometry {
 	public static float getAngle(float dX,float dY) {
 		if(dX==0 && dY==0)
 			return 0;
+		if(dX==0) {
+			if(dY<0)
+				return MathConst.PI*0.5f;
+			else
+				return MathConst.PI*1.5f;
+		}
+		if(dY==0) {
+			if(dX<0)
+				return MathConst.PI;
+			else
+				return 0;
+		}
 		double distance = Math.sqrt(dX*dX + dY*dY);
 		if(dY>0)
 			return (float)Math.acos(dX/distance);
