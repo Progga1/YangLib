@@ -18,10 +18,10 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	public int mCurFrame;
 	public AbstractSoundManager mSound;
 	public float mAnimationSpeed;
-	protected KeyFrame mCurrentPrevFrame,mCurrentNextFrame;
+	protected KeyFrame mCurrentPrevFrame, mCurrentNextFrame;
+	public AnimationListener mListener = null;
 
-
-	public AnimationPlayer(MassAggregation skeleton,AnimationType startAnimation) {
+	public AnimationPlayer(MassAggregation skeleton, AnimationType startAnimation) {
 		mSkeleton = skeleton;
 		mStartAnimation = startAnimation;
 		mStartAnimation = startAnimation;
@@ -33,7 +33,7 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	}
 
 	public AnimationPlayer(MassAggregation skeleton) {
-		this(skeleton,null);
+		this(skeleton, null);
 	}
 
 	public void setAnimationTime(float newTime) {
@@ -41,12 +41,15 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 		if(mCurrentAnimation==null)
 			return;
 
+		boolean looped = false;
+
 		newTime *= mCurrentAnimation.mFramesPerSecond;
 
 		if(newTime>mCurrentAnimation.mFrameCount) {
-			if(mCurrentAnimation.mWrap==WrapMode.LOOP && mCurrentAnimation.mFrameCount>0)
+			if(mCurrentAnimation.mWrap==WrapMode.LOOP && mCurrentAnimation.mFrameCount>0){
 				newTime -= mCurrentAnimation.mFrameCount;
-			else{
+				looped = true;
+			}else{
 				if(mCurrentAnimation.mWrap==WrapMode.CALL_STOP) {
 					stopNode();
 					return;
@@ -57,14 +60,16 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 			mCurrentAnimationTime = newTime/mCurrentAnimation.mFramesPerSecond;
 		}
 		if(newTime<0) {
-			if(mCurrentAnimation.mWrap==WrapMode.LOOP && mCurrentAnimation.mFrameCount>0)
+			if(mCurrentAnimation.mWrap==WrapMode.LOOP && mCurrentAnimation.mFrameCount>0) {
 				newTime += mCurrentAnimation.mFrameCount;
-			else{
+				looped = true;
+			}else{
 				if(mCurrentAnimation.mWrap==WrapMode.CALL_STOP) {
 					stopNode();
 					return;
-				}else
+				}else{
 					newTime = 0;
+				}
 			}
 			mCurrentAnimationTime = newTime/mCurrentAnimation.mFramesPerSecond;
 		}
@@ -88,10 +93,12 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 			}
 		}
 
+		if(looped && mListener!=null)
+			mListener.onLoop(this);
 	}
 
 	public void addAnimationTime(float timeOffset) {
-		setAnimationTime(mCurrentAnimationTime+timeOffset);
+		setAnimationTime(mCurrentAnimationTime + timeOffset);
 	}
 
 	public void start() {
@@ -109,16 +116,16 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	}
 
 	public void proceed(float deltaTime) {
-		if(mCurrentAnimation==null)
+		if (mCurrentAnimation == null)
 			return;
 		deltaTime *= mAnimationSpeed;
-		if(mCurrentAnimation.mAutoSetAnimationTime)
-			setAnimationTime(mCurrentAnimationTime+deltaTime);
-//		if(mCurrentAnimation.mAutoRotation!=0) {
-//			mSkeleton.mRotation += mCurrentAnimation.mAutoRotation*deltaTime;
-//			if(!mOnlyPhysics)
-//				mSkeleton.reApplyPose();
-//		}
+		if (mCurrentAnimation.mAutoSetAnimationTime)
+			setAnimationTime(mCurrentAnimationTime + deltaTime);
+		// if(mCurrentAnimation.mAutoRotation!=0) {
+		// mSkeleton.mRotation += mCurrentAnimation.mAutoRotation*deltaTime;
+		// if(!mOnlyPhysics)
+		// mSkeleton.reApplyPose();
+		// }
 	}
 
 	public void stopNode() {
@@ -126,14 +133,14 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 	}
 
 	public void setNormalizedAnimationTime(float normalAnimationTime) {
-		setAnimationTime(normalAnimationTime*mCurrentAnimation.mTotalDuration);
+		setAnimationTime(normalAnimationTime * mCurrentAnimation.mTotalDuration);
 	}
 
 	public float getNormalizedAnimationTime() {
-		if(mCurrentAnimation==null)
+		if (mCurrentAnimation == null)
 			return 0;
 		else
-			return mCurrentAnimationTime/mCurrentAnimation.mTotalDuration;
+			return mCurrentAnimationTime / mCurrentAnimation.mTotalDuration;
 	}
 
 	public KeyFrame getCurrentPreviousKeyFrame() {
