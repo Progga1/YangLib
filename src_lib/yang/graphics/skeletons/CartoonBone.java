@@ -220,13 +220,17 @@ public class CartoonBone extends JointConnection {
 		mContourY4 += y2;
 	}
 
+	public void scale(float factorX,float factorY) {
+		mShiftX1 *= factorX;
+		mShiftY1 *= factorY;
+		mShiftX2 *= factorX;
+		mShiftY2 *= factorY;
+		mWidth1 *= factorX;
+		mWidth2 *= factorX;
+	}
+	
 	public void scale(float factor) {
-		mShiftX1 *= factor;
-		mShiftY1 *= factor;
-		mShiftX2 *= factor;
-		mShiftY2 *= factor;
-		mWidth1 *= factor;
-		mWidth2 *= factor;
+		scale(factor,factor);
 	}
 
 	public void addLength(float length) {

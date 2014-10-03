@@ -399,9 +399,13 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		}
 	}
 
+	public void scaleBone(CartoonBone bone,Joint peakJoint,float scaleFactorX,float scaleFactorY) {
+		bone.scale(scaleFactorX,scaleFactorY);
+		peakJoint.scaleDistance(bone.mJoint1==peakJoint?bone.mJoint2:bone.mJoint1,scaleFactorY);
+	}
+	
 	public void scaleBone(CartoonBone bone,Joint peakJoint,float scaleFactor) {
-		bone.scale(scaleFactor);
-		peakJoint.scaleDistance(bone.mJoint1==peakJoint?bone.mJoint2:bone.mJoint1,scaleFactor);
+		scaleBone(bone,peakJoint,scaleFactor,scaleFactor);
 	}
 
 }
