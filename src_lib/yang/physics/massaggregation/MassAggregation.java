@@ -634,5 +634,12 @@ public class MassAggregation {
 			joint.mZ = stream.readFloat();
 		}
 	}
+	
+	public void shiftJoints(float deltaX,float deltaY) {
+		for(Joint joint:mJoints) {
+			joint.mX += deltaX;
+			joint.mY += deltaY;
+		}
+	}
 
 }
