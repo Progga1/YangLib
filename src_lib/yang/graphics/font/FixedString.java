@@ -242,6 +242,7 @@ public class FixedString {
 			if(value<0) {
 				mChars[mMarker++] = '-';
 				value = -value;
+				c = 1;
 			}
 
 			while(value>0) {
@@ -284,12 +285,13 @@ public class FixedString {
 		value *= fac;
 		int intVal = (int)(value+0.4999999f);
 
+		int c=0;
 		if(intVal<0) {
 			mChars[mMarker++] = '-';
 			intVal = -intVal;
+			c = 1;
 		}
 
-		int c=0;
 		int lastVal = 0;
 		if(intVal<fac) {
 			intVal += fac;
