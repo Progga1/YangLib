@@ -235,14 +235,14 @@ public class FixedString {
 
 	public void appendInt(int value,int minCharacterCount) {
 		int c=0;
+		boolean neg = value<0;
 		if(value==0) {
 			mChars[mMarker++] = '0';
 			c = 1;
 		}else{
-			if(value<0) {
+			if(neg) {
 				mChars[mMarker++] = '-';
-				value = -value;
-				c = 1;
+				value = -value;				
 			}
 
 			while(value>0) {
@@ -260,6 +260,8 @@ public class FixedString {
 		}
 		if(minCharacterCount>0) {
 			minCharacterCount-=c;
+			if(neg)
+				minCharacterCount --;
 			for(int i=0;i<minCharacterCount;i++)
 				mChars[mMarker++] = 0;
 		}
@@ -286,10 +288,10 @@ public class FixedString {
 		int intVal = (int)(value+0.4999999f);
 
 		int c=0;
-		if(intVal<0) {
+		boolean neg = intVal<0;
+		if(neg) {
 			mChars[mMarker++] = '-';
 			intVal = -intVal;
-			c = 1;
 		}
 
 		int lastVal = 0;
@@ -318,6 +320,8 @@ public class FixedString {
 
 		if(minCharacterCount>0) {
 			minCharacterCount-=c+1;
+			if(neg)
+				minCharacterCount--;
 			for(int i=0;i<minCharacterCount;i++)
 				mChars[mMarker++] = 0;
 		}
