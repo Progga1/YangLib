@@ -228,7 +228,7 @@ public class CartoonBone extends JointConnection {
 		mWidth1 *= factorX;
 		mWidth2 *= factorX;
 	}
-	
+
 	public void scale(float factor) {
 		scale(factor,factor);
 	}
@@ -246,6 +246,15 @@ public class CartoonBone extends JointConnection {
 		for(final TextureCoordinatesQuad texCoords:mTexCoords) {
 			texCoords.intoRect(rectLeft, rectTop, rectWidth, rectHeight);
 		}
+	}
+
+	@Override
+	public CartoonBone clone() {
+		CartoonBone newBone = new CartoonBone(mGraphics,mName+"_copy",mJoint1,mJoint2);
+		newBone.setContour(mContourX1, mContourY1, mContourX2, mContourY2, mContourX3, mContourY3, mContourX4, mContourY4);
+		newBone.setShift(mShiftX1, mShiftY1, mShiftX2, mShiftY2);
+		newBone.setWidth(mWidth1, mWidth2);
+		return newBone;
 	}
 
 }
