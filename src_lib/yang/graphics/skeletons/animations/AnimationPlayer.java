@@ -87,7 +87,9 @@ public class AnimationPlayer<AnimationType extends Animation<?>> {
 				if(nextFrame==null) {
 					prevFrame.mPose.applyPosture(mSkeleton);
 				}else{
-					final float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mTimeFactor;
+					float t = (newTime-prevFrame.mFirstFrame)*prevFrame.mTimeFactor;
+					if(mCurrentAnimation.mInterpolation!=null)
+						t = mCurrentAnimation.mInterpolation.getInterpolated(t);
 					nextFrame.mPose.applyPosture(mSkeleton, prevFrame.mPose, t);
 				}
 			}

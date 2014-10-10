@@ -56,7 +56,7 @@ public class Animation<CarrierType> {
 		mAutoAnimate = true;
 		mWrap = DEFAULT_WRAP_MODE;
 		mFramesPerSecond = 1;
-		mInterpolation = ConstantInterpolation.INSTANCE;
+		mInterpolation = null;
 		mFrameCount = -1;
 		mTotalDuration = -1;
 		mInterpolate = false;
