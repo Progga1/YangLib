@@ -16,18 +16,22 @@ import yang.math.objects.Dimensions2i;
 
 public class PCGFXLoader extends AbstractGFXLoader {
 
+	public static int FORCE_GET_IMAGE_DIMENSIONS = 0;
+	
 	public PCGFXLoader(GraphicsTranslator graphics) {
 		super(graphics,new PCResourceManager());
 	}
 
 	@Override
 	public void getImageDimensions(String filename,Dimensions2i result) {
-
 		if(filename==null)
 			throw new RuntimeException("Image does not exist");
 		final File file = ((PCResourceManager)mResources).getAssetFile(filename);
 		if(file==null) {
 			throw new RuntimeException("Image not found: "+filename);
+		}
+		if(FORCE_GET_IMAGE_DIMENSIONS>0) {
+			result.set(FORCE_GET_IMAGE_DIMENSIONS,FORCE_GET_IMAGE_DIMENSIONS);
 		}
 		final String path = file.getAbsolutePath();
 		try {
