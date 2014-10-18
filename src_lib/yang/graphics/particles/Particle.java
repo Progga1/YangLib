@@ -79,9 +79,12 @@ public class Particle {
 	    derivedStep();
 
 	    if(mNormLifeTime>1) {
+	    	onLifeTimeOver();
 	    	mExists = false;
 	    }
 	}
+
+	public void onLifeTimeOver() {}
 
 	public void setScale(float minScale, float maxScale) {
 		mScaleX = MathFunc.randomF(minScale, maxScale);
