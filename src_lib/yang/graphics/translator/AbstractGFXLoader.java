@@ -62,8 +62,6 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	public int mMaxQueueLoadingBytes = -1;
 	private final Dimensions2i mTempDim = new Dimensions2i();
 
-	public int mDefaultApproxTextureSize = 256;
-
 	public AbstractResourceManager mResources;
 
 	public abstract TextureData loadImageData(InputStream stream,boolean forceRGBA);

@@ -3,6 +3,7 @@ package yang.graphics.font;
 import java.io.File;
 import java.util.Properties;
 
+import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.enums.TextureFilter;
 import yang.graphics.translator.AbstractGFXLoader;
@@ -112,34 +113,9 @@ public class BitmapFont {
 					mKerningMaxX[i] = maxKern;
 				}
 			}
-			newCoordinates.refreshCoordArray();
+
 			mCoordinates[i] = newCoordinates;
-			float w = (newCoordinates.mWidth)*mCharNormalizeFactorX;
-			float h = (newCoordinates.mHeight)*mCharNormalizeFactorY;
-			mWidths[i] = w;
-			mHeights[i] = h;
-			float[] positions = mPositions2D[i];
-			positions[0] = -w*0.5f;
-			positions[1] = -h*0.5f;
-			positions[2] = w*0.5f;
-			positions[3] = -h*0.5f;
-			positions[4] = -w*0.5f;
-			positions[5] = h*0.5f;
-			positions[6] = w*0.5f;
-			positions[7] = h*0.5f;
-			positions = mPositions3D[i];
-			positions[0] = -w*0.5f;
-			positions[1] = -h*0.5f;
-			positions[2] = 0;
-			positions[3] = w*0.5f;
-			positions[4] = -h*0.5f;
-			positions[5] = 0;
-			positions[6] = -w*0.5f;
-			positions[7] = h*0.5f;
-			positions[8] = 0;
-			positions[9] = w*0.5f;
-			positions[10] = h*0.5f;
-			positions[11] = 0;
+			refreshChar(i);
 		}
 
 		return this;
@@ -152,6 +128,52 @@ public class BitmapFont {
 		if(tex==null)
 			tex = gfxLoader.getImage(filename, TEXTURE_FILTER);
 		return init(tex,filename,gfxLoader.mResources);
+	}
+
+	private void refreshChar(int charId) {
+		TextureCoordinatesQuad coords = mCoordinates[charId];
+		coords.refreshCoordArray();
+		float w = (coords.mWidth)*mCharNormalizeFactorX;
+		float h = (coords.mHeight)*mCharNormalizeFactorY;
+		mWidths[charId] = w;
+		mHeights[charId] = h;
+		float[] positions = mPositions2D[charId];
+		positions[0] = -w*0.5f;
+		positions[1] = -h*0.5f;
+		positions[2] = w*0.5f;
+		positions[3] = -h*0.5f;
+		positions[4] = -w*0.5f;
+		positions[5] = h*0.5f;
+		positions[6] = w*0.5f;
+		positions[7] = h*0.5f;
+		positions = mPositions3D[charId];
+		positions[0] = -w*0.5f;
+		positions[1] = -h*0.5f;
+		positions[2] = 0;
+		positions[3] = w*0.5f;
+		positions[4] = -h*0.5f;
+		positions[5] = 0;
+		positions[6] = -w*0.5f;
+		positions[7] = h*0.5f;
+		positions[8] = 0;
+		positions[9] = w*0.5f;
+		positions[10] = h*0.5f;
+		positions[11] = 0;
+	}
+
+	public void intoRect(TextureCoordBounds bounds) {
+		 float w = bounds.getWidth();
+		 float h = bounds.getHeight();
+		 mCharNormalizeFactorX /= w;
+		 mCharNormalizeFactorY /= h;
+		 int length = mCoordinates.length;
+		 for (int i = 0; i < length; i++) {
+			 TextureCoordinatesQuad quad = mCoordinates[i];
+			 if (quad != null) {
+				 quad.intoRect(bounds);
+				 refreshChar(i);
+			 }
+		 }
 	}
 
 }
