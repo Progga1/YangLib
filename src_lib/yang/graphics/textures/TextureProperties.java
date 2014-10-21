@@ -71,11 +71,17 @@ public class TextureProperties {
 	@Override
 	public TextureProperties clone() {
 		TextureProperties result = new TextureProperties(mWrapX,mWrapY,mFilter,mChannels);
+		result.mCompressIfPossible = mCompressIfPossible;
 		return result;
 	}
 
 	public boolean isMipMap() {
 		return mFilter==TextureFilter.LINEAR_MIP_LINEAR || mFilter==TextureFilter.NEAREST_MIP_LINEAR;
+	}
+
+	public TextureProperties setCompress(boolean compressIfPossible) {
+		mCompressIfPossible = compressIfPossible;
+		return this;
 	}
 
 }
