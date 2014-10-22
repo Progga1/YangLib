@@ -136,8 +136,9 @@ public class FloatColor extends Quadruple {
 		set(brightness,brightness,brightness,1);
 	}
 
-	public void setAlpha(float alpha) {
+	public FloatColor setAlpha(float alpha) {
 		mValues[3] = alpha;
+		return this;
 	}
 
 	public static FloatColor fromHex(String hexString) {
@@ -174,7 +175,7 @@ public class FloatColor extends Quadruple {
 		return new FloatColor(mValues[0],mValues[1],mValues[2],alpha);
 	}
 
-	public void multBrightness(float factor) {
+	public FloatColor multBrightness(float factor) {
 		if(factor<1) {
 			mValues[0] *= factor;
 			mValues[1] *= factor;
@@ -186,6 +187,7 @@ public class FloatColor extends Quadruple {
 			mValues[1] += (1-mValues[1])*dFactor;
 			mValues[2] += (1-mValues[2])*dFactor;
 		}
+		return this;
 	}
 
 	public void setBlend(FloatColor startColor,FloatColor endColor,float weight) {
