@@ -30,7 +30,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	//GFX data
 	public DrawBatch mMesh;
 	protected IndexedVertexBuffer mVertexBuffer;
-	protected float[] mSkeletonColor;
 	protected float[] mContourColor;
 	protected float[] mSuppData;
 	public YangList<YangList<CartoonBone>> mLayersList;
@@ -49,11 +48,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	public CartoonSkeleton2D() {
 		super();
 		mLayersList = new YangList<YangList<CartoonBone>>();
-		mSkeletonColor = new float[4];
 		mContourColor = new float[4];
 		mSuppData = new float[4];
 		mInterColor = new float[4];
-		setFillColor(1,1,1);
+//		setFillColor(1,1,1);
 		mDrawContour = true;
 		mDrawFill = true;
 		mInitialized = false;
@@ -181,7 +179,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 						}
 					}
 				//Fill
-				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mSkeletonColor,4*layer.length);
+				for(final CartoonBone bone:layer) {
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, bone.mColor.mValues,4);
+				}
+//				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mSkeletonColor,4*layer.length);
 				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4*layer.length);
 				//mInterColor[3] += zInc;
 				//mInterColor[3] += 0.05f;
@@ -273,25 +274,25 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		return resJoint;
 	}
 
-	public void setFillColor(float r,float g,float b,float a) {
-		mSkeletonColor[0] = r;
-		mSkeletonColor[1] = g;
-		mSkeletonColor[2] = b;
-		mSkeletonColor[3] = a;
-		mUpdateColor = true;
-	}
-
-	public void setFillColor(float r,float g,float b) {
-		setFillColor(r,g,b,1);
-	}
-
-	public void setFillColor(float brightness) {
-		mSkeletonColor[0] = brightness;
-		mSkeletonColor[1] = brightness;
-		mSkeletonColor[2] = brightness;
-		mSkeletonColor[3] = 1;
-		mUpdateColor = true;
-	}
+//	public void setFillColor(float r,float g,float b,float a) {
+//		mSkeletonColor[0] = r;
+//		mSkeletonColor[1] = g;
+//		mSkeletonColor[2] = b;
+//		mSkeletonColor[3] = a;
+//		mUpdateColor = true;
+//	}
+//
+//	public void setFillColor(float r,float g,float b) {
+//		setFillColor(r,g,b,1);
+//	}
+//
+//	public void setFillColor(float brightness) {
+//		mSkeletonColor[0] = brightness;
+//		mSkeletonColor[1] = brightness;
+//		mSkeletonColor[2] = brightness;
+//		mSkeletonColor[3] = 1;
+//		mUpdateColor = true;
+//	}
 
 	public void setContourColor(float r, float g, float b) {
 		mContourColor[0] = r;
@@ -403,7 +404,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		bone.scale(scaleFactorX,scaleFactorY);
 		peakJoint.scaleDistance(bone.mJoint1==peakJoint?bone.mJoint2:bone.mJoint1,scaleFactorY);
 	}
-	
+
 	public void scaleBone(CartoonBone bone,Joint peakJoint,float scaleFactor) {
 		scaleBone(bone,peakJoint,scaleFactor,scaleFactor);
 	}

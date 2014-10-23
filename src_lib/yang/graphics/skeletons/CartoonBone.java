@@ -2,6 +2,7 @@ package yang.graphics.skeletons;
 
 import java.util.ArrayList;
 
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.physics.massaggregation.elements.Joint;
@@ -10,7 +11,7 @@ import yang.physics.massaggregation.elements.JointConnection;
 
 public class CartoonBone extends JointConnection {
 
-	public static float BIAS = 0.0035f;
+	public static float BIAS = 0.0015f;
 
 	//Properties
 	public GraphicsTranslator mGraphics;
@@ -23,6 +24,7 @@ public class CartoonBone extends JointConnection {
 	public float mAnchorX1,mAnchorY1,mAnchorX2,mAnchorY2;
 	public float mContourX1,mContourY1,mContourX2,mContourY2,mContourX3,mContourY3,mContourX4,mContourY4;
 	public boolean mCelShading;
+	public FloatColor mColor = FloatColor.WHITE.clone();
 
 	//State
 	public float mResShiftX1,mResShiftY1,mResShiftX2,mResShiftY2;
