@@ -629,6 +629,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		clear(GLMasks.COLOR_BUFFER_BIT | additionalMask);
 	}
 
+	public final void clear(FloatColor color) {
+		clear(color.mValues[0],color.mValues[1],color.mValues[2],color.mValues[3],0);
+	}
+
 	public final void clear(float r, float g, float b,int additionalMask) {
 		assert preCheck("clear");
 		setClearColor(r,g,b,1);

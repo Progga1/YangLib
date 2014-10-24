@@ -6,6 +6,7 @@ import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.DefaultAnimationPlayer;
+import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.CartoonSkeleton2D;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.animations.Animation;
@@ -26,6 +27,7 @@ public class Animator implements YangEventListener {
 	public static float FRICTION_EDIT = 0.98f;
 	public static float FRICTION_PHYSICS = Joint.DEFAULT_FRICTION;
 
+	public static FloatColor CLEAR_COLOR = new FloatColor(0.2f);
 	public AbstractSoundManager mSound;
 	public GraphicsTranslator mGraphics;
 	public Default2DGraphics mGraphics2D;
@@ -101,8 +103,7 @@ public class Animator implements YangEventListener {
 			mTextures.add(mSkeletons.get(mTextures.size()).getDefaultTexture(mGraphics.mGFXLoader));
 		}
 
-		final float gray = 0.1f;
-		mGraphics.clear(gray, gray, gray);
+		mGraphics.clear(CLEAR_COLOR);
 		mGraphics2D.switchGameCoordinates(true);
 		mGraphics2D.setCamera(mCamera);
 
