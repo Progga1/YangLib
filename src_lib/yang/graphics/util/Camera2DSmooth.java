@@ -10,8 +10,8 @@ import yang.math.objects.Point3f;
  */
 public class Camera2DSmooth extends Camera2D {
 
-	private static final float MAX_ZOOM = 30;
-	private static final float MIN_ZOOM = 1;
+	private static final float MAX_ZOOM = 100;
+	private static final float MIN_ZOOM = 1f;
 	private static final float ZOOM_STEP = 1;
 	private Point3f mTarPos;
 
