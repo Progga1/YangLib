@@ -120,9 +120,9 @@ public class TextureCoordinatesQuad {
 		final boolean flipX = uMirror%2==1;
 		final boolean flipY = uMirror/2>=1;
 		float x = mLeft+mBiasX;
-		float x2 = mLeft+mWidth-mBiasX*2;
+		float x2 = mLeft+mWidth-mBiasX;
 		float y = mTop+mBiasY;
-		float y2 = mTop+mHeight-mBiasY*2;
+		float y2 = mTop+mHeight-mBiasY;
 		if(flipX) {
 			final float swap = x;
 			x = x2;

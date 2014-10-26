@@ -654,6 +654,14 @@ public class Joint extends Point3f {
 		mVelY = template.mVelY;
 		mVelZ = template.mVelZ;
 	}
+	
+	public void shiftChildren(float shiftX, float shiftY) {
+		for(Joint child:mChildren) {
+			child.mX += shiftX;
+			child.mY += shiftY;
+			child.shiftChildren(shiftX,shiftY);
+		}
+	}
 
 
 

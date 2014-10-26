@@ -208,7 +208,7 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 		mLeftUpperArmBone.mContourX2 = 0.6f;
 		mLeftUpperArmBone.mContourX4 = 1.1f;
 		mRightUpperArmBone.setContour(1,0.5f,0.8f,0.8f);
-		mLeftLowerArmBone.setContour(1,0.25f,1,0.5f);
+		mLeftLowerArmBone.setContour(0.8f,0.5f,0.8f,0.5f);
 		mRightLowerArmBone.copyContour(mLeftLowerArmBone);
 		mLeftUpperLegBone.setContour(0.8f,-0.1f,0.65f,0.55f);
 		mLeftUpperLegBone.mContourX1 = 0.7f;
