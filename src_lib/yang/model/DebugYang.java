@@ -21,6 +21,7 @@ public class DebugYang {
 	public static FloatColor FPS_BAR_COLOR = new FloatColor(0.1f,0.8f,0.1f);
 	public static boolean DRAW_POINTERS = false;
 	public static String PLAY_MACRO_FILENAME = null;
+	public static String systemLanguage = null;
 
 	public static String stateString = null;
 

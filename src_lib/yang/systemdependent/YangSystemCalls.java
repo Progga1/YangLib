@@ -1,5 +1,7 @@
 package yang.systemdependent;
 
+import yang.model.DebugYang;
+
 public class YangSystemCalls {
 
 	public static boolean ALWAYS_RELOAD_AFTER_PAUSE = false;
@@ -24,4 +26,8 @@ public class YangSystemCalls {
 
 	}
 
+	public String getSystemLanguage() {
+		if (DebugYang.systemLanguage != null) return DebugYang.systemLanguage;
+		return "en";
+	}
 }
