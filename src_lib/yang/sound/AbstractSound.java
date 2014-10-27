@@ -21,18 +21,18 @@ public abstract class AbstractSound {
 		setRepeatCount(repeat);
 		play();
 	}
-	
+
 	public void play(float volume) {
 		setVolume(volume);
 		play();
 	}
-	
+
 	public void play(float volume,float balance) {
 		setVolume(volume);
 		setBalance(balance);
 		play();
 	}
-	
+
 	/**
 	 * Sets the volume of this sound file.
 	 * @param volume range: 0.0 - 1.0

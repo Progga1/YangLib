@@ -11,7 +11,7 @@ import yang.physics.massaggregation.elements.JointConnection;
 
 public class CartoonBone extends JointConnection {
 
-	public static float BIAS = 0.0015f;
+	public static float BIAS = 0.001f;
 
 	//Properties
 	public GraphicsTranslator mGraphics;

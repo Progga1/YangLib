@@ -76,12 +76,6 @@ public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,Animatio
 			mCurrentAnimation.cleanUpVisuals(mBody);
 	}
 
-
-	public void playSound(AbstractSound sound) {
-		if(mPlaySounds)
-			sound.play();
-	}
-
 	public void setFrame(int frame) {
 		if(frame!=mCurFrame)
 			mCurrentAnimation.mKeyFrames[frame].mPose.applyPosture(mSkeleton);
