@@ -1,5 +1,7 @@
 package yang.systemdependent;
 
+import java.util.Locale;
+
 import yang.model.DebugYang;
 
 public class YangSystemCalls {
@@ -28,6 +30,14 @@ public class YangSystemCalls {
 
 	public String getSystemLanguage() {
 		if (DebugYang.systemLanguage != null) return DebugYang.systemLanguage;
-		return "en";
+		/*
+		Locale.getDefault().getLanguage()       ---> en
+		Locale.getDefault().getISO3Language()   ---> eng
+		Locale.getDefault().getCountry()        ---> US
+		Locale.getDefault().getISO3Country()    ---> USA
+		Locale.getDefault().getDisplayCountry() ---> United States
+		Locale.getDefault().getDisplayName()    ---> English (United States)
+		 */
+		return Locale.getDefault().getLanguage();
 	}
 }
