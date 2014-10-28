@@ -39,6 +39,8 @@ public class PCSound extends AbstractSound {
 
 	@Override
 	public void stop() {
+		if(true)
+			return;
 		if (mSound == null) return;
 		mSound.stop();
 	}
