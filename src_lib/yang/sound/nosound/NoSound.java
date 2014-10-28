@@ -10,33 +10,12 @@ public class NoSound extends AbstractSound {
 	}
 
 	@Override
-	public void play() {
-
-	}
-
-	@Override
-	public void playLoop() {
-
-	}
-
-	@Override
 	public void stop() {
 
 	}
 
 	@Override
-	public void setSpeed(float speed) {
+	public void play(float volume, float balance, float speed, int repeat) {
 
 	}
-
-	@Override
-	public void setRepeatCount(int count) {
-
-	}
-
-	@Override
-	public void setBalance(float balance) {
-
-	}
-
 }
