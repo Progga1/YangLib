@@ -10,14 +10,9 @@ public class AndroidSound extends AbstractSound {
 	private int mId;
 	private int mPlayingId;
 	private boolean mIsLoaded;
-	private float mVolLeft;
-	private float mVolRight;
-	private float mSpeed;
-	private int mRepeatCount;
 
 	public AndroidSound(AbstractSoundManager mgr, int id, SoundPool soundPool) {
 		super(mgr);
-		setBalance(0.0f);
 		mId = id;
 		mIsLoaded = false;
 		mSoundPool = soundPool;
@@ -25,22 +20,6 @@ public class AndroidSound extends AbstractSound {
 
 	public void setLoaded() {
 		mIsLoaded = true;
-	}
-
-	@Override
-	public void play() {
-		if (mManager.isSoundMuted()) return;
-		if (!mIsLoaded) return;
-
-		mPlayingId = mSoundPool.play(mId, mVolLeft*mVolume*mManager.getSoundVolume(), mVolRight*mVolume*mManager.getSoundVolume(), 1, mRepeatCount, mSpeed);
-	}
-
-	@Override
-	public void playLoop() {
-		if (mManager.isSoundMuted()) return;
-		if (!mIsLoaded) return;
-
-		mPlayingId =  mSoundPool.play(mId, mVolLeft*mVolume*mManager.getSoundVolume(), mVolRight*mVolume*mManager.getSoundVolume(), 1, -1, mSpeed);
 	}
 
 	@Override
@@ -53,18 +32,12 @@ public class AndroidSound extends AbstractSound {
 	}
 
 	@Override
-	public void setSpeed(float speed) {
-		mSpeed = speed;
-	}
+	public void play(float volume, float balance, float speed, int repeat) {
+		if (mManager.isSoundMuted()) return;
+		if (!mIsLoaded) return;
 
-	@Override
-	public void setRepeatCount(int count) {
-		mRepeatCount = count;
-	}
-
-	@Override
-	public void setBalance(float balance) {
-		mVolLeft = (1-balance)/2;
-		mVolRight = (1+balance)/2;
+		float volLeft = (1-balance)/2;
+		float volRight = (1+balance)/2;
+		mPlayingId = mSoundPool.play(mId, volLeft*volume*mManager.getSoundVolume(), volRight*volume*mManager.getSoundVolume(), 1, repeat, speed);
 	}
 }
