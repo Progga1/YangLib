@@ -1,9 +1,6 @@
 package yang.android.io;
 
-import java.util.Locale;
-
 import yang.android.graphics.YangActivity;
-import yang.model.DebugYang;
 import yang.systemdependent.YangSystemCalls;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -65,19 +62,5 @@ public class AndroidSystemCalls extends YangSystemCalls {
 	@Override
 	public void exit() {
 		mActivity.finish();
-	}
-
-	@Override
-	public String getSystemLanguage() {
-		if (DebugYang.systemLanguage != null) return DebugYang.systemLanguage;
-		/*
-		Locale.getDefault().getLanguage()       ---> en
-		Locale.getDefault().getISO3Language()   ---> eng
-		Locale.getDefault().getCountry()        ---> US
-		Locale.getDefault().getISO3Country()    ---> USA
-		Locale.getDefault().getDisplayCountry() ---> United States
-		Locale.getDefault().getDisplayName()    ---> English (United States)
-		 */
-		return Locale.getDefault().getLanguage();
 	}
 }
