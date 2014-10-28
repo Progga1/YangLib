@@ -241,4 +241,10 @@ public class FloatColor extends Quadruple {
 		return new FloatColor(r/255f, g/255f,  b/255f, a/255f);
 	}
 
+	public static FloatColor createBlend(FloatColor color1, FloatColor color2, float weight) {
+		FloatColor result = new FloatColor();
+		result.setBlend(color1, color2, weight);
+		return result;
+	}
+
 }

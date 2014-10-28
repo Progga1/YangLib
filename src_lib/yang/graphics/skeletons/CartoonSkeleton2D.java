@@ -3,6 +3,7 @@ package yang.graphics.skeletons;
 import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.animations.Animation;
 import yang.graphics.textures.TextureCoordBounds;
 import yang.graphics.textures.TextureHolder;
@@ -37,6 +38,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	public CartoonBone[][] mLayers;
 	public CartoonBone[][] mFrontToBackLayers;
 	public TextureHolder mTextureHolder = null,mContourTextureHolder = null;
+	public FloatColor mContourColorFactor = FloatColor.BLACK.clone();
 
 	//State
 	protected boolean mUpdateColor;
@@ -174,7 +176,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				if(mDrawContour)
 					for(final CartoonBone bone:layer) {
 						if(bone.mCelShading) {
-							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, DefaultGraphics.BLACK,4);
+							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mContourColorFactor.mValues,4);
 							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mContourColor,4);
 						}
 					}
