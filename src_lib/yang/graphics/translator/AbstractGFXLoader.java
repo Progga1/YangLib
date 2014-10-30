@@ -22,6 +22,7 @@ import yang.util.YangList;
 
 public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
+	public static int FORCE_GET_IMAGE_DIMENSIONS = 0; //todo does not work
 	public static boolean REUSE_BUFFER = true;
 	public static int MAX_TEXTURES = 1024;
 
@@ -141,9 +142,13 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			mTextures.put(filename, resource);
 		}
 		if(mEnqueueMode) {
-			getImageDimensions(filename, mTempDim);
+
+			if(FORCE_GET_IMAGE_DIMENSIONS>0)
+				mTempDim.set(FORCE_GET_IMAGE_DIMENSIONS,FORCE_GET_IMAGE_DIMENSIONS);
+			else
+				getImageDimensions(filename, mTempDim);
 			result.setExtents(mTempDim.mWidth,mTempDim.mHeight);
-			enqueue(filename,result);
+			enqueue(filename,result,mTempDim);
 		}else{
 			final TextureData imageData = loadAssetImageData(filename,target.mProperties.mChannels>3);
 			result.update(imageData);
@@ -157,8 +162,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return new TextureCoordinatesQuad().initBiased(sub.mLeft, sub.mTop, sub.mLeft+sub.mWidth, sub.mTop+sub.mHeight, sub.mTexture.mWidth, sub.mTexture.mHeight, biasX, biasY);
 	}
 
-	private void enqueue(String key,AbstractTexture tex) {
-		int size = tex.getWidth()*tex.getHeight()*4;
+	private void enqueue(String key,AbstractTexture tex,Dimensions2i dim) {
+		int size = dim.mWidth*dim.mHeight*4;
 		if(size>mMaxTexBytes) {
 			mMaxTexBytes = size;
 		}
@@ -207,7 +212,10 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	private Texture loadTexture(String filename,TextureProperties textureProperties,boolean alphaMap) {
 		if(mEnqueueMode) {
 			final Texture result = mGraphics.createTexture(textureProperties.clone()).generate();
-			this.getImageDimensions(filename, mTempDim);
+			if(FORCE_GET_IMAGE_DIMENSIONS>0)
+				mTempDim.set(FORCE_GET_IMAGE_DIMENSIONS,FORCE_GET_IMAGE_DIMENSIONS);
+			else
+				this.getImageDimensions(filename, mTempDim);
 			//mTempDim.set(512, 512);
 			result.mWidth = mTempDim.mWidth;
 			result.mHeight = mTempDim.mHeight;
@@ -217,7 +225,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			}else{
 				result.mProperties.mChannels = 0;
 			}
-			enqueue(filename,result);
+			enqueue(filename,result,mTempDim);
 			return result;
 		}else{
 			final TextureData data = loadAssetImageData(filename,alphaMap);
@@ -369,12 +377,14 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		clearQueue();
 		for(final Entry<String,ResourceEntry> entry:mTextures.entrySet()) {
 			for(final Texture tex:entry.getValue().mTextures) {
+				mTempDim.set(tex.getWidth(),tex.getHeight());
 				if(!tex.isFinished())
-					enqueue(entry.getKey(),tex);
+					enqueue(entry.getKey(),tex,mTempDim);
 			}
 			for(final SubTexture tex:entry.getValue().mSubTextures) {
+				mTempDim.set(tex.getWidth(),tex.getHeight());
 				if(!tex.isFinished())
-					enqueue(entry.getKey(),tex);
+					enqueue(entry.getKey(),tex,mTempDim);
 			}
 		}
 	}

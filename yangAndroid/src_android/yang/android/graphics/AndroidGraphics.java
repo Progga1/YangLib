@@ -18,7 +18,7 @@ import android.opengl.GLES20;
 public class AndroidGraphics extends GraphicsTranslator {
 
 	public static boolean ALWAYS_RGBA = false;
-	public static boolean USE_TEXTURE_COMPRESSION = true;
+	public static boolean USE_TEXTURE_COMPRESSION = false;
 
 	public Context mContext;
 
