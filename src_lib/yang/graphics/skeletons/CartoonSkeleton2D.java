@@ -411,4 +411,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		scaleBone(bone,peakJoint,scaleFactor,scaleFactor);
 	}
 
+	public void setFillColor(float r,float g,float b,float a) {
+		for(CartoonBone bone:mCartoonBones) {
+			bone.mColor.set(r,g,b,a);
+		}
+	}
+
 }
