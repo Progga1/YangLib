@@ -14,6 +14,7 @@ public class JointConnection {
 	public float mDistX, mDistY, mDistZ;
 	public float mDistance;
 	public float mPrevNormDirX,mPrevNormDirY,mPrevNormDirZ;
+
 	public MassAggregation mMassAggregation;
 
 	public JointConnection(String name, Joint joint1, Joint joint2) {
@@ -66,6 +67,11 @@ public class JointConnection {
 
 	public boolean connectsChildParent() {
 		return mJoint1.mParent==mJoint2 || mJoint2.mParent==mJoint1;
+	}
+
+
+	public void recalculate() {
+
 	}
 
 

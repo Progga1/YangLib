@@ -27,6 +27,8 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	private boolean mInitialized;
 	public GraphicsTranslator mTranslator;
 	public DefaultGraphics<?> mG;
+	protected int mVertexCount;
+	protected int mIndexCount;
 
 	//GFX data
 	public DrawBatch mMesh;
@@ -42,7 +44,6 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	//State
 	protected boolean mUpdateColor;
 	protected boolean mUpdateTexCoords;
-	protected int mVertexCount;
 	protected float[] mInterColor;
 	public float mShiftX,mShiftY,mShiftZ;
 
@@ -147,17 +148,36 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			for(final YangList<CartoonBone> layer:mLayersList) {
 				//Contour
 				for(final CartoonBone bone:layer) {
-					if(mDrawContour && bone.mCelShading)
-						mVertexCount += 4;
-					mVertexCount += 4;
+					if(mDrawContour && bone.mCelShading) {
+						mVertexCount += bone.mVertexCount;
+						mIndexCount += bone.mIndexCount;
+					}
+					mVertexCount += bone.mVertexCount;
+					mIndexCount += bone.mIndexCount;
 				}
 			}
-			final int indexCount = mBones.size()*6*2;
-			mVertexBuffer = mG.createVertexBuffer(true, false, indexCount, mVertexCount);
+			mVertexBuffer = mG.createVertexBuffer(true, false, mIndexCount, mVertexCount);
 			mVertexBuffer.setIndexPosition(0);
-			for(short i=0;i<mVertexCount;i+=4)
-				mVertexBuffer.beginQuad(false,i);
-			mVertexBuffer.mFinishedIndexCount = indexCount;
+			short i = 0;
+			for(final YangList<CartoonBone> layer:mLayersList) {
+				//Contour
+//				short j = i;
+				for(final CartoonBone bone:layer) {
+					bone.mVertexBuffer = mVertexBuffer;
+					if(mDrawContour && bone.mCelShading) {
+						mVertexBuffer.beginQuad(false,i);
+						i += bone.mVertexCount;
+					}
+				}
+
+				for(final CartoonBone bone:layer) {
+					mVertexBuffer.beginQuad(false,i);
+					i += bone.mVertexCount;
+				}
+//				i = j;
+
+			}
+			mVertexBuffer.mFinishedIndexCount = mIndexCount;
 			mVertexBuffer.mFinishedVertexCount = mVertexCount;
 			mVertexBuffer.reset();
 			mMesh = new DrawBatch(mG,mVertexBuffer);
@@ -179,18 +199,15 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				if(mDrawContour)
 					for(final CartoonBone bone:layer) {
 						if(bone.mCelShading) {
-							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mContourColorFactor.mValues,4);
-							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mContourColor,4);
+							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mContourColorFactor.mValues,bone.mVertexCount);
+							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mContourColor,bone.mVertexCount);
 						}
 					}
 				//Fill
 				for(final CartoonBone bone:layer) {
-					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, bone.mColor.mValues,4);
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, bone.mColor.mValues,bone.mVertexCount);
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,bone.mVertexCount);
 				}
-//				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, mSkeletonColor,4*layer.length);
-				mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, mSuppData,4*layer.length);
-				//mInterColor[3] += zInc;
-				//mInterColor[3] += 0.05f;
 			}
 			mUpdateColor = false;
 		}
@@ -203,13 +220,13 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				if(mDrawContour) {
 					for(final CartoonBone bone:layer) {
 						if(bone.mCelShading) {
-							mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
+							bone.putContourTextureCoordinates();
 						}
 					}
 				}
 				//Fill
 				for(final CartoonBone bone:layer) {
-					mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,bone.getTextureCoordinates().mAppliedCoordinates);
+					bone.putTextureCoordinates();
 				}
 			}
 			mUpdateTexCoords = false;

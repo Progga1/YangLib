@@ -122,6 +122,9 @@ public class MassAggregation {
 		for(final Joint joint:mJoints) {
 			joint.recalculate();
 		}
+		for(final JointConnection jointConnection:mBones) {
+			jointConnection.recalculate();
+		}
 		for(final Constraint constraint:mConstraints)
 			constraint.recalculate();
 	}

@@ -27,16 +27,17 @@ public class CartoonBone extends JointConnection {
 	public float mContourX1,mContourY1,mContourX2,mContourY2,mContourX3,mContourY3,mContourX4,mContourY4;
 	public boolean mCelShading;
 	public FloatColor mColor = FloatColor.WHITE.clone();
+	public IndexedVertexBuffer mVertexBuffer;
 
 	//State
-	public float mResShiftX1,mResShiftY1,mResShiftX2,mResShiftY2;
 //	public float mVertX1,mVertY1,mVertX2,mVertY2,mVertX3,mVertY3,mVertX4,mVertY4;
 	public float mVertX[],mVertY[];
 	public float mWidthFac;
 	public boolean mVisible;
 
+	public int mVertexCount,mIndexCount;
 
-	public CartoonBone(GraphicsTranslator graphics,String name,Joint joint1,Joint joint2) {
+	protected CartoonBone(GraphicsTranslator graphics,String name,Joint joint1,Joint joint2,int vertexCount) {
 		super(name,joint1,joint2);
 		mGraphics = graphics;
 		mCurTexCoords = 0;
@@ -51,8 +52,15 @@ public class CartoonBone extends JointConnection {
 		setShift(0,0,0,0);
 		setContour(1);
 
-		mVertX = new float[4];
-		mVertY = new float[4];
+		mIndexCount = 6;
+
+		mVertexCount = vertexCount;
+		mVertX = new float[vertexCount];
+		mVertY = new float[vertexCount];
+	}
+
+	public CartoonBone(GraphicsTranslator graphics,String name,Joint joint1,Joint joint2) {
+		this(graphics,name,joint1,joint2,4);
 		refreshVisualVars();
 	}
 
@@ -65,6 +73,14 @@ public class CartoonBone extends JointConnection {
 
 	public TextureCoordinatesQuad getContourTextureCoordinates() {
 		return mContourTexCoords.get(mCurTexCoords);
+	}
+
+	protected void putTextureCoordinates() {
+		mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,mTexCoords.get(mCurTexCoords).mAppliedCoordinates);
+	}
+
+	protected void putContourTextureCoordinates() {
+		mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,mContourTexCoords.get(mCurTexCoords).mAppliedCoordinates);
 	}
 
 	public void setTextureCoordinatesIndex(int newIndex) {
@@ -136,10 +152,10 @@ public class CartoonBone extends JointConnection {
 		final float orthNormX = mNormDirY;
 		final float orthNormY = -mNormDirX;
 
-		mResShiftX1 = -orthNormX * mShiftX1 - mNormDirX * mShiftY1;
-		mResShiftY1 = -orthNormY * mShiftX1 - mNormDirY * mShiftY1;
-		mResShiftX2 = -orthNormX * mShiftX2 - mNormDirX * mShiftY2;
-		mResShiftY2 = -orthNormY * mShiftX2 - mNormDirY * mShiftY2;
+		float mResShiftX1 = -orthNormX * mShiftX1 - mNormDirX * mShiftY1;
+		float mResShiftY1 = -orthNormY * mShiftX1 - mNormDirY * mShiftY1;
+		float mResShiftX2 = -orthNormX * mShiftX2 - mNormDirX * mShiftY2;
+		float mResShiftY2 = -orthNormY * mShiftX2 - mNormDirY * mShiftY2;
 
 		final float posX1 = mJoint1.mX;
 		final float posY1 = mJoint1.mY;
