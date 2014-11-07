@@ -218,4 +218,9 @@ public class OrthoStrokeProperties {
 		putPatchCombined(UP | RIGHT | DOWN | LEFT, texPatchX,texPatchY, TextureCoordinatesQuad.ROTATE_NONE);
 	}
 
+	public void setPatchSize(float size) {
+		mPatchSizeX = size;
+		mPatchSizeY = size;
+	}
+
 }

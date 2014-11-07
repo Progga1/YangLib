@@ -198,7 +198,7 @@ public class MassAggregation {
 		return addSpringBone(bone,mDefaultBoneSpring);
 	}
 
-	public JointConnection addBone(JointConnection bone) {
+	public JointConnection addConnection(JointConnection bone) {
 		return addSpringBone(bone);
 	}
 

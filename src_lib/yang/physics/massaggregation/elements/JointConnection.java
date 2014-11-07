@@ -59,7 +59,7 @@ public class JointConnection {
 
 	public JointConnection cloneInto(MassAggregation massAggregation) {
 		JointConnection bone = new JointConnection(mName,massAggregation.getJointByName(mJoint1.mName),massAggregation.getJointByName(mJoint2.mName));
-		massAggregation.addBone(bone);
+		massAggregation.addConnection(bone);
 		return bone;
 	}
 

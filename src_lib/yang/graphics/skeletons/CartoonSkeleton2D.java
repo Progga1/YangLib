@@ -127,6 +127,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		return bone;
 	}
 
+	public JointConnection addConnection(JointConnection bone,int layer) {
+		return addSpringBone(bone,layer,0);
+	}
+
 	public JointConnection addSpringBone(JointConnection bone,int layer) {
 		return addSpringBone(bone,layer,mDefaultBoneSpring);
 	}
