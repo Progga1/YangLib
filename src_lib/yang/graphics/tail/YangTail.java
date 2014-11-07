@@ -22,7 +22,6 @@ public class YangTail {
 	public float mGlobAlpha;
 	public float mScaleFallOff;
 	public boolean mAutoInterruptSmallDistances = true;
-	public float mTexCoordsBottom = 2;
 	public float mSuppData[];
 	public float mMinDist;
 	public float mMinScalarDist;
@@ -45,6 +44,7 @@ public class YangTail {
 	private float mTexCoordsLeft;
 	private float mTexCoordsTop;
 	private float mTexCoordsMiddle;
+	public float mTexCoordsBottom = 2;
 
 	//STATE
 	public int mRingPos;
@@ -376,7 +376,7 @@ public class YangTail {
 		}else{
 			mStrips.continueStrip(mPosX[putPos]-mDirX[putPos]*scale, mPosY[putPos]-mDirY[putPos]*scale, mPosX[putPos]+mDirX[putPos]*scale, mPosY[putPos]+mDirY[putPos]*scale);
 
-			mGraphics.putTextureCoord(texX, 0);
+			mGraphics.putTextureCoord(texX, mTexCoordsTop);
 			mGraphics.putTextureCoord(texX, mTexCoordsBottom);
 			if(mStrips==mDoubleStrips)
 				mGraphics.putTextureCoord(texX, mTexCoordsMiddle);
