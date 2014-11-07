@@ -91,23 +91,23 @@ public class HumanoidSkeletonCreator3D {
 		mRightHandJoint = mSkeleton.addJoint("RightHand",mRightElbowJoint, -armX, handY, breastZ);
 
 		mSkeleton.mDefaultBoneSpring = 10;
-		mBodyBone = mSkeleton.addSpringBone(new Bone3D("Body",mBreastJoint,mHipJoint));
-		mHeadBone = mSkeleton.addSpringBone(new Bone3D("Head",mBreastJoint,mHeadJoint));
-		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftShoulder",mBreastJoint,mLeftShoulderJoint));
-		mRightUpperArmBone = mSkeleton.addSpringBone(new Bone3D("RightShoulder",mBreastJoint,mRightShoulderJoint));
-		mLeftUpperArmBone = mSkeleton.addSpringBone(new Bone3D("LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint));
-		mRightUpperArmBone = mSkeleton.addSpringBone(new Bone3D("RightUpperArm",mRightShoulderJoint,mRightElbowJoint));
-		mLeftLowerArmBone = mSkeleton.addSpringBone(new Bone3D("LeftLowerArm",mLeftElbowJoint,mLeftHandJoint));
-		mRightLowerArmBone = mSkeleton.addSpringBone(new Bone3D("RightLowerArm",mRightElbowJoint,mRightHandJoint));
-		mLeftLegBone = mSkeleton.addSpringBone(new Bone3D("LeftLeg",mHipJoint,mLeftLegJoint));
-		mRightLegBone = mSkeleton.addSpringBone(new Bone3D("RightLeg",mHipJoint,mRightLegJoint));
-		mLeftUpperLegBone = mSkeleton.addSpringBone(new Bone3D("LeftUpperLeg",mLeftLegJoint,mLeftKneeJoint));
-		mRightUpperLegBone = mSkeleton.addSpringBone(new Bone3D("RightUpperLeg",mRightLegJoint,mRightKneeJoint));
-		mLeftLowerLegBone = mSkeleton.addSpringBone(new Bone3D("LeftLowerLeg",mLeftKneeJoint,mLeftFootJoint));
-		mRightLowerLegBone = mSkeleton.addSpringBone(new Bone3D("RightLowerLeg",mRightKneeJoint,mRightFootJoint));
+		mBodyBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("Body",mBreastJoint,mHipJoint));
+		mHeadBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("Head",mBreastJoint,mHeadJoint));
+		mLeftUpperArmBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("LeftShoulder",mBreastJoint,mLeftShoulderJoint));
+		mRightUpperArmBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("RightShoulder",mBreastJoint,mRightShoulderJoint));
+		mLeftUpperArmBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("LeftUpperArm",mLeftShoulderJoint,mLeftElbowJoint));
+		mRightUpperArmBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("RightUpperArm",mRightShoulderJoint,mRightElbowJoint));
+		mLeftLowerArmBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("LeftLowerArm",mLeftElbowJoint,mLeftHandJoint));
+		mRightLowerArmBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("RightLowerArm",mRightElbowJoint,mRightHandJoint));
+		mLeftLegBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("LeftLeg",mHipJoint,mLeftLegJoint));
+		mRightLegBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("RightLeg",mHipJoint,mRightLegJoint));
+		mLeftUpperLegBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("LeftUpperLeg",mLeftLegJoint,mLeftKneeJoint));
+		mRightUpperLegBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("RightUpperLeg",mRightLegJoint,mRightKneeJoint));
+		mLeftLowerLegBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("LeftLowerLeg",mLeftKneeJoint,mLeftFootJoint));
+		mRightLowerLegBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("RightLowerLeg",mRightKneeJoint,mRightFootJoint));
 
-		mBreastBone = mSkeleton.addSpringBone(new Bone3D("Breast",mLeftShoulderJoint,mRightShoulderJoint));
-		mHipsBone = mSkeleton.addSpringBone(new Bone3D("Hips",mLeftLegJoint,mRightLegJoint));
+		mBreastBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("Breast",mLeftShoulderJoint,mRightShoulderJoint));
+		mHipsBone = (Bone3D)mSkeleton.addSpringBone(new Bone3D("Hips",mLeftLegJoint,mRightLegJoint));
 
 		return mSkeleton;
 	}

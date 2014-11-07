@@ -266,20 +266,20 @@ public abstract class HumanSkeleton2D extends CartoonSkeleton2D{
 	}
 
 	protected void buildDefaultLayers() {
-		super.addBone(mRightLowerArmBone,1);
-		super.addBone(mRightUpperArmBone,1);
-		super.addBone(mRightUpperLegBone,2);
-		super.addBone(mRightLowerLegBone,2);
-		super.addBone(mBodyBone,2);
-		super.addBone(mHeadBone,3);
-		super.addBone(mLeftUpperLegBone,4);
-		super.addBone(mLeftLowerLegBone,4);
-		super.addBone(mLeftLowerArmBone,6);
-		super.addBone(mLeftUpperArmBone,6);
+		super.addSpringBone(mRightLowerArmBone,1);
+		super.addSpringBone(mRightUpperArmBone,1);
+		super.addSpringBone(mRightUpperLegBone,2);
+		super.addSpringBone(mRightLowerLegBone,2);
+		super.addSpringBone(mBodyBone,2);
+		super.addSpringBone(mHeadBone,3);
+		super.addSpringBone(mLeftUpperLegBone,4);
+		super.addSpringBone(mLeftLowerLegBone,4);
+		super.addSpringBone(mLeftLowerArmBone,6);
+		super.addSpringBone(mLeftUpperArmBone,6);
 
 		if(mRightFootBone!=null) {
-			super.addBone(mRightFootBone,2);
-			super.addBone(mLeftFootBone,4);
+			super.addSpringBone(mRightFootBone,2);
+			super.addSpringBone(mLeftFootBone,4);
 		}
 	}
 
