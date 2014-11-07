@@ -164,7 +164,7 @@ public class Texture extends AbstractTexture {
 
 	@Override
 	public String toString() {
-		return mName+": STATUS="+statusToString()+", PROPS=("+mProperties.toString()+"), ALPHAMAP="+mIsAlphaMap;
+		return mName+": STATUS="+statusToString()+", PROPS=("+(mProperties==null?"null":mProperties.toString())+"), ALPHAMAP="+mIsAlphaMap;
 	}
 
 }
