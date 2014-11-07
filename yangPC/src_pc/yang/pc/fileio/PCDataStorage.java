@@ -74,42 +74,38 @@ public class PCDataStorage extends AbstractDataStorage {
 	@Override
 	public float getFloat(String key, float defaultValue) {
 		Properties props = load();
-		float toReturn = defaultValue;
 		try {
-			toReturn = Float.parseFloat(props.getProperty(key));
+			return Float.parseFloat(props.getProperty(key));
 		} catch (Exception e) {}
-		return toReturn;
+		return defaultValue;
 	}
 
 	@Override
 	public int getInt(String key, int defaultValue) {
 		Properties props = load();
-		int toReturn = defaultValue;
 		try {
-			toReturn = Integer.parseInt(props.getProperty(key));
-		} catch (Exception e) {}
-		return toReturn;
+			return Integer.parseInt(props.getProperty(key));
+		} catch (Exception e) { }
+		return defaultValue;
 	}
 
 	@Override
 	public boolean getBoolean(String key, boolean defaultValue) {
 		Properties props = load();
-		boolean toReturn = defaultValue;
-		try {
-			toReturn = Boolean.parseBoolean(props.getProperty(key));
-		} catch (Exception e) {}
-		return toReturn;
+		String prop = props.getProperty(key);
+		if (prop != null && prop.equalsIgnoreCase("false")) return false;
+		else if (prop != null && prop.equalsIgnoreCase("true")) return true;
+		else return defaultValue;
 	}
 
 	@Override
 	public String getString(String key, String defaultValue) {
 		Properties props = load();
-		String toReturn = defaultValue;
 		try {
 			String value = props.getProperty(key);
 			//need a null check here to deliver defaultValue if not existing
-			if (value != null) toReturn = value;
+			if (value != null) return value;
 		} catch (Exception e) {}
-		return toReturn;
+		return defaultValue;
 	}
 }
