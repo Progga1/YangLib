@@ -20,4 +20,9 @@ public class PCSystemCalls extends YangSystemCalls {
 	public void exit() {
 		mFrame.close();
 	}
+
+	@Override
+	public String getPlatfrom() {
+		return "PC";
+	}
 }

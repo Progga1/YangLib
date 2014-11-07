@@ -40,4 +40,8 @@ public class YangSystemCalls {
 		 */
 		return Locale.getDefault().getLanguage();
 	}
+
+	public String getPlatfrom() {
+		return "";
+	}
 }
