@@ -33,14 +33,16 @@ public class OrthoStrokeProperties {
 	public final static int ID_LEFT = 3;
 
 	//Properties
-	public float mTexBias = 0.005f;
+	public float mTexBiasX = 0.005f;
+	public float mTexBiasY = 0.005f;
 	public float mWidth = 0.1f;
 	public float mStretch = 1;
 	public float mStraightLineWidthFactor = 1;
 
 	public TextureCoordinatesQuad[] mTexCoordTable;
 	public TextureCoordinatesQuad[] mLineTexCoords;
-	protected float mPatchSize = 0.25f;
+	protected float mPatchSizeX = 0.25f;
+	protected float mPatchSizeY = 0.25f;
 	public float mLineTexFieldWidth;
 	public TextureCoordBounds mTexBounds;
 
@@ -51,11 +53,11 @@ public class OrthoStrokeProperties {
 		mTexCoordTable = new TextureCoordinatesQuad[256];
 		mLineTexCoords = new TextureCoordinatesQuad[4];
 
-		final TextureCoordinatesQuad defTexCoords = new TextureCoordinatesQuad().initBiased(0,0,0.25f,mTexBias);
+		final TextureCoordinatesQuad defTexCoords = new TextureCoordinatesQuad().initBiased(0,0,0.25f,mTexBiasX, mTexBiasY);
 		for(int i=0;i<256;i++)
 			mTexCoordTable[i] = defTexCoords;
 		for(int i=0;i<4;i++)
-			mLineTexCoords[i] = new TextureCoordinatesQuad().initBiased(0,0.5f,1,0.75f,mTexBias);
+			mLineTexCoords[i] = new TextureCoordinatesQuad().initBiased(0,0.5f,1,0.75f,mTexBiasX, mTexBiasY);
 	}
 
 	public OrthoStrokeProperties() {
@@ -72,10 +74,10 @@ public class OrthoStrokeProperties {
 	}
 
 	public void setLineTexCoords(float upperPatchYCoord,float rightPatchYCoord,float lowerPatchYCoord,float leftPatchYCoord) {
-		mLineTexCoords[ID_UP] = new TextureCoordinatesQuad().init(0,upperPatchYCoord*mPatchSize, 1,upperPatchYCoord*mPatchSize+mPatchSize).intoRect(mTexBounds);
-		mLineTexCoords[ID_RIGHT] = new TextureCoordinatesQuad().init(0,rightPatchYCoord*mPatchSize, 1,rightPatchYCoord*mPatchSize+mPatchSize).intoRect(mTexBounds);
-		mLineTexCoords[ID_DOWN] = new TextureCoordinatesQuad().init(0,lowerPatchYCoord*mPatchSize, 1,lowerPatchYCoord*mPatchSize+mPatchSize).intoRect(mTexBounds);
-		mLineTexCoords[ID_LEFT] = new TextureCoordinatesQuad().init(0,leftPatchYCoord*mPatchSize, 1,leftPatchYCoord*mPatchSize+mPatchSize).intoRect(mTexBounds);
+		mLineTexCoords[ID_UP] = new TextureCoordinatesQuad().init(0,upperPatchYCoord*mPatchSizeY, 1,upperPatchYCoord*mPatchSizeY+mPatchSizeY).intoRect(mTexBounds);
+		mLineTexCoords[ID_RIGHT] = new TextureCoordinatesQuad().init(0,rightPatchYCoord*mPatchSizeY, 1,rightPatchYCoord*mPatchSizeY+mPatchSizeY).intoRect(mTexBounds);
+		mLineTexCoords[ID_DOWN] = new TextureCoordinatesQuad().init(0,lowerPatchYCoord*mPatchSizeY, 1,lowerPatchYCoord*mPatchSizeY+mPatchSizeY).intoRect(mTexBounds);
+		mLineTexCoords[ID_LEFT] = new TextureCoordinatesQuad().init(0,leftPatchYCoord*mPatchSizeY, 1,leftPatchYCoord*mPatchSizeY+mPatchSizeY).intoRect(mTexBounds);
 		mLineTexFieldWidth = mTexBounds.getWidth()/mOffsets.length;
 	}
 
@@ -90,7 +92,7 @@ public class OrthoStrokeProperties {
 	}
 
 	private TextureCoordinatesQuad createTexCoords(float texPatchX,float texPatchY, int rotation) {
-		final TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(texPatchX*mPatchSize, texPatchY*mPatchSize, mPatchSize, mTexBias);
+		final TextureCoordinatesQuad texCoords = new TextureCoordinatesQuad().initBiased(texPatchX*mPatchSizeX, texPatchY*mPatchSizeY, texPatchX*mPatchSizeX+mPatchSizeX, texPatchY*mPatchSizeY+mPatchSizeY, mTexBiasX, mTexBiasY);
 		texCoords.intoRect(mTexBounds);
 		texCoords.setRotation(rotation);
 		return texCoords;
