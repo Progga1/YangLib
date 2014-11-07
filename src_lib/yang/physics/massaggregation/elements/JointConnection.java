@@ -14,6 +14,7 @@ public class JointConnection {
 	public float mDistX, mDistY, mDistZ;
 	public float mDistance;
 	public float mPrevNormDirX,mPrevNormDirY,mPrevNormDirZ;
+	public MassAggregation mMassAggregation;
 
 	public JointConnection(String name, Joint joint1, Joint joint2) {
 		mName = name;

@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.graphics.skeletons.defaults.NeutralSkeletonCarrier;
@@ -47,6 +48,7 @@ public class MassAggregation {
 	//Objects
 	public SkeletonCarrier mCarrier;
 	public ForceCallback mForceCallback = null;
+	protected IndexedVertexBuffer mVertexBuffer;
 
 	//Data
 	public YangList<Joint> mJoints;
@@ -179,6 +181,7 @@ public class MassAggregation {
 
 	public JointConnection addSpringBone(JointConnection bone,float constraintDistanceStrength) {
 		mBones.add(bone);
+		bone.mMassAggregation = this;
 		if(constraintDistanceStrength>0)
 			addConstraint(new DistanceConstraint(bone,constraintDistanceStrength));
 		return bone;
