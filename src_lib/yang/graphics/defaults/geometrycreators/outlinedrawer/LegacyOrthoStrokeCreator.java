@@ -263,10 +263,10 @@ public class LegacyOrthoStrokeCreator extends GeometryCreator<DefaultGraphics<?>
 			x2 = x1+(mProperties.mLineTexFieldWidth*fieldCount*texCoords.mWidth)-BIAS_X;
 		final float y2 = texCoords.mTop+texCoords.mHeight;
 		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
-				x1,texCoords.mTop+mProperties.mTexBias,
-				x2,texCoords.mTop+mProperties.mTexBias,
-				x1,y2-mProperties.mTexBias,
-				x2,y2-mProperties.mTexBias
+				x1,texCoords.mTop+mProperties.mTexBiasY,
+				x2,texCoords.mTop+mProperties.mTexBiasY,
+				x1,y2-mProperties.mTexBiasY,
+				x2,y2-mProperties.mTexBiasY
 				);
 //		mGraphics.mCurrentVertexBuffer.putVec8(DefaultGraphics.ID_TEXTURES,
 //				texCoords.x1,texCoords.y1,

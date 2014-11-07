@@ -63,4 +63,9 @@ public class AndroidSystemCalls extends YangSystemCalls {
 	public void exit() {
 		mActivity.finish();
 	}
+
+	@Override
+	public String getPlatfrom() {
+		return "Android";
+	}
 }

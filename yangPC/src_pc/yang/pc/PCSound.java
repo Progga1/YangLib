@@ -27,6 +27,7 @@ public class PCSound extends AbstractSound {
 
 	@Override
 	public void play(float volume, float balance, float speed, int repeat) {
+		if (mManager.isSoundMuted()) return;
 		if (mSound == null) return;
 		mSound.setCycleCount(repeat);
 		mSound.play(volume, balance, speed, 0, 1);
