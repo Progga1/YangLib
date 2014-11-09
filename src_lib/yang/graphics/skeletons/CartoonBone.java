@@ -71,16 +71,8 @@ public class CartoonBone extends JointConnection {
 			return mTexCoords.get(mCurTexCoords);
 	}
 
-	public TextureCoordinatesQuad getContourTextureCoordinates() {
-		return mContourTexCoords.get(mCurTexCoords);
-	}
-
-	protected void putTextureCoordinates() {
-		mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,mTexCoords.get(mCurTexCoords).mAppliedCoordinates);
-	}
-
-	protected void putContourTextureCoordinates() {
-		mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,mContourTexCoords.get(mCurTexCoords).mAppliedCoordinates);
+	protected void putTextureCoordBuffer(boolean contour) {
+		mVertexBuffer.putArray(DefaultGraphics.ID_TEXTURES,(contour?mContourTexCoords:mTexCoords).get(mCurTexCoords).mAppliedCoordinates);
 	}
 
 	public void setTextureCoordinatesIndex(int newIndex) {
@@ -281,6 +273,10 @@ public class CartoonBone extends JointConnection {
 		newBone.setShift(mShiftX1, mShiftY1, mShiftX2, mShiftY2);
 		newBone.setWidth(mWidth1, mWidth2);
 		return newBone;
+	}
+
+	public void putIndices(short startIndex,boolean contour) {
+		mVertexBuffer.beginQuad(false,startIndex);
 	}
 
 }

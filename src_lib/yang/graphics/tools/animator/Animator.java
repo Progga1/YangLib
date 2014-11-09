@@ -337,6 +337,8 @@ public class Animator implements YangEventListener {
 
 	@Override
 	public void pointerMoved(float x, float y, SurfacePointerEvent event) {
+		if(mCurSkeleton==null)
+			return;
 		mCurPntX = mGraphics2D.normToWorldX(x,y);
 		mCurPntY = mGraphics2D.normToWorldY(x,y);	//TODO moved from pointerDown
 		mHoverJoint = mCurSkeleton.pickJoint2D(mCurPntX,mCurPntY);

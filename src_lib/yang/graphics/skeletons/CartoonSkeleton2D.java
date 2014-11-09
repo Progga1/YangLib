@@ -161,21 +161,19 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			short i = 0;
 			for(final YangList<CartoonBone> layer:mLayersList) {
 				//Contour
-//				short j = i;
 				for(final CartoonBone bone:layer) {
 					bone.mVertexBuffer = mVertexBuffer;
 					if(mDrawContour && bone.mCelShading) {
-						mVertexBuffer.beginQuad(false,i);
+						bone.putIndices(i,true);
 						i += bone.mVertexCount;
 					}
 				}
 
+				//Fill
 				for(final CartoonBone bone:layer) {
-					mVertexBuffer.beginQuad(false,i);
+					bone.putIndices(i,false);
 					i += bone.mVertexCount;
 				}
-//				i = j;
-
 			}
 			mVertexBuffer.mFinishedIndexCount = mIndexCount;
 			mVertexBuffer.mFinishedVertexCount = mVertexCount;
@@ -220,13 +218,13 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				if(mDrawContour) {
 					for(final CartoonBone bone:layer) {
 						if(bone.mCelShading) {
-							bone.putContourTextureCoordinates();
+							bone.putTextureCoordBuffer(true);
 						}
 					}
 				}
 				//Fill
 				for(final CartoonBone bone:layer) {
-					bone.putTextureCoordinates();
+					bone.putTextureCoordBuffer(false);
 				}
 			}
 			mUpdateTexCoords = false;
@@ -280,7 +278,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 		if(mTextureHolder!=null) {
 			mG.bindTextureInHolder(mTextureHolder);
 		}
-
+//		mTranslator.bindTexture(null);
 		mMesh.draw();
 
 	}

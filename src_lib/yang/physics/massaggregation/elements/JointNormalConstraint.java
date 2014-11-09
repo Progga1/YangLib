@@ -36,8 +36,8 @@ public class JointNormalConstraint extends Joint{
 
 	public void refreshConstraintPos() {
 		mBone.refreshGeometry();
-		mForcePosX = mBone.mJoint1.mX + mBone.mDistX * mRelativeX + mBone.mNormDirY * mRelativeY;
-		mForcePosY = mBone.mJoint1.mY + mBone.mDistY * mRelativeX - mBone.mNormDirX * mRelativeY;
+		mForcePosX = mBone.mJoint1.mX + mBone.mDeltaX * mRelativeX + mBone.mNormDirY * mRelativeY;
+		mForcePosY = mBone.mJoint1.mY + mBone.mDeltaY * mRelativeX - mBone.mNormDirX * mRelativeY;
 	}
 
 	public void setPosByConstraint() {

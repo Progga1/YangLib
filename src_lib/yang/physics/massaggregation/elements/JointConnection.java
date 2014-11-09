@@ -11,7 +11,7 @@ public class JointConnection {
 
 	//State
 	public float mNormDirX,mNormDirY,mNormDirZ;
-	public float mDistX, mDistY, mDistZ;
+	public float mDeltaX, mDeltaY, mDeltaZ;
 	public float mDistance;
 	public float mPrevNormDirX,mPrevNormDirY,mPrevNormDirZ;
 
@@ -33,10 +33,10 @@ public class JointConnection {
 	}
 
 	public void refreshGeometry() {
-		mDistX = mJoint2.mX - mJoint1.mX;
-		mDistY = mJoint2.mY - mJoint1.mY;
-		mDistZ = mJoint2.mZ - mJoint1.mZ;
-		mDistance = (float)Math.sqrt(mDistX*mDistX + mDistY*mDistY + mDistZ*mDistZ);
+		mDeltaX = mJoint2.mX - mJoint1.mX;
+		mDeltaY = mJoint2.mY - mJoint1.mY;
+		mDeltaZ = mJoint2.mZ - mJoint1.mZ;
+		mDistance = (float)Math.sqrt(mDeltaX*mDeltaX + mDeltaY*mDeltaY + mDeltaZ*mDeltaZ);
 
 		mPrevNormDirX = mNormDirX;
 		mPrevNormDirY = mNormDirY;
@@ -44,9 +44,9 @@ public class JointConnection {
 
 		if(mDistance!=0) {
 			float d = 1 / mDistance;
-			mNormDirX = mDistX * d;
-			mNormDirY = mDistY * d;
-			mNormDirZ = mDistZ * d;
+			mNormDirX = mDeltaX * d;
+			mNormDirY = mDeltaY * d;
+			mNormDirZ = mDeltaZ * d;
 		}
 	}
 
