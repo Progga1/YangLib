@@ -194,6 +194,13 @@ public class CartoonBone extends JointConnection {
 		mShiftX2 = shiftX2;
 		mShiftY2 = shiftY2;
 	}
+	
+	public void setShift(CartoonBone template) {
+		mShiftX1 = template.mShiftX1;
+		mShiftY1 = template.mShiftY1;
+		mShiftX2 = template.mShiftX2;
+		mShiftY2 = template.mShiftY2;
+	}
 
 	public void setShiftX(float shift) {
 		mShiftX1 = shift;

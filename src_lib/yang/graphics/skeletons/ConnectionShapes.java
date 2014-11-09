@@ -39,22 +39,27 @@ public class ConnectionShapes {
 			float dy2 = positions[k+3]-y;
 			float d1 = (float)Math.sqrt(dx1*dx1+dy1*dy1);
 			float d2 = (float)Math.sqrt(dx2*dx2+dy2*dy2);
-			dx1 /= d1;
-			dy1 /= d1;
-			dx2 /= d2;
-			dy2 /= d2;
-
-			float dx = (dx1+dx2)*0.5f;
-			float dy = (dy1+dy2)*0.5f;
-			float d = (float)Math.sqrt(dx*dx+dy*dy);
-
-			dx /= d;
-			dy /= d;
-
-			targetScales[k] = -dy;
-			targetScales[k+1] = dx;
-
-			k += 2;
+			if(d1!=0 && d2!=0) {
+				
+				dx1 /= d1;
+				dy1 /= d1;
+				dx2 /= d2;
+				dy2 /= d2;
+	
+				float dx = (dx1+dx2)*0.5f;
+				float dy = (dy1+dy2)*0.5f;
+				float d = (float)Math.sqrt(dx*dx+dy*dy);
+	
+				if(d!=0) {
+					dx /= d;
+					dy /= d;
+		
+					targetScales[k] = -dy;
+					targetScales[k+1] = dx;
+				}
+	
+				k += 2;
+			}
 		}
 		targetScales[0] = targetScales[2];
 		targetScales[1] = targetScales[3];

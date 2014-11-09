@@ -95,6 +95,7 @@ public class CartoonSkeleton2D extends Skeleton2D {
 			if(bone instanceof CartoonBone)
 				((CartoonBone)bone).texCoordsIntoRect(rectLeft,rectTop,rectWidth,rectHeight);
 		}
+		mUpdateTexCoords = true;
 	}
 
 	public void texCoordsIntoRect(TextureCoordBounds bounds) {

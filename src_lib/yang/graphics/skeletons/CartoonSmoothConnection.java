@@ -87,16 +87,18 @@ public class CartoonSmoothConnection extends CartoonBone {
 	@Override
 	protected void putTextureCoordBuffer(boolean contour) {
 		TextureCoordinatesQuad texCoords = (contour?mTexCoords:mContourTexCoords).get(mCurTexCoords);
-		float left = texCoords.getBiasedLeft();
-		float top = texCoords.getBiasedTop();
-		float w = texCoords.getBiasedWidth();
-		float h = texCoords.getBiasedHeight();
+
+		float left = texCoords.mAppliedCoordinates[TextureCoordinatesQuad.ID_LEFT_TOP_X];
+		float top = texCoords.mAppliedCoordinates[TextureCoordinatesQuad.ID_LEFT_TOP_Y];
+		float w = texCoords.mAppliedCoordinates[TextureCoordinatesQuad.ID_RIGHT_TOP_X]-texCoords.mAppliedCoordinates[TextureCoordinatesQuad.ID_LEFT_TOP_X];
+		float h = texCoords.mAppliedCoordinates[TextureCoordinatesQuad.ID_RIGHT_BOTTOM_Y]-texCoords.mAppliedCoordinates[TextureCoordinatesQuad.ID_RIGHT_TOP_Y];
 		float d = 1f/(mSampleCount-1) * h;
 		for (int i = 0; i < mSampleCount; i++) {
 			float y = top+d*i;
 			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, left,y);
 			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, left+w,y);
 		}
+		
 	}
 
 	@Override
