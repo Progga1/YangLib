@@ -57,6 +57,7 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 
 	public String[] mTexKeyQueue;
 	public AbstractTexture[] mTexQueue;
+	private TextureData mToUpload;
 	protected int mTexQueueId = 0;
 	public boolean mEnqueueMode = false;
 	protected int mQueueBytes = 0;
@@ -64,6 +65,8 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 	private final Dimensions2i mTempDim = new Dimensions2i();
 
 	public AbstractResourceManager mResources;
+	private int mTotalQueueLoadingBytes;
+	private int mLastQueueId;
 
 	public abstract TextureData loadImageData(InputStream stream,boolean forceRGBA);
 	protected abstract void getImageDimensions(String filename,Dimensions2i result);
@@ -180,26 +183,25 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return tex;
 	}
 
-	public void loadEnqueuedTextures() {
+	public float loadEnqueuedTextures() {
 		if(REUSE_BUFFER && mTempBuffer==null && mMaxTexBytes>0) {
 			mTempBuffer = ByteBuffer.allocateDirect(mMaxTexBytes).order(ByteOrder.nativeOrder());
 		}
 		mEnqueueMode = false;
 		String texKey;
 		final int minBytes = mMaxQueueLoadingBytes>0?mQueueBytes - mMaxQueueLoadingBytes:-1;
-		while(mQueueBytes>minBytes && (texKey=pollQueue())!=null) {
+		if(mToUpload == null && mQueueBytes>minBytes && (texKey=pollQueue())!=null) {
 			final AbstractTexture tex = mTexQueue[mTexQueueId];
-			if(tex.isFinished())
-				continue;
-			TextureData data = loadAssetImageData(texKey,tex.getChannels()>3);
-			if(data==null)
-				System.err.println("Image not found: "+texKey);
-			if(tex.mIsAlphaMap)
-				data.redToAlpha();
-
-			tex.update(data);
-			data = null;
+			if(!tex.isFinished()) {
+				TextureData data = loadAssetImageData(texKey,tex.getChannels()>3);
+				if(data==null)
+					System.err.println("Image not found: "+texKey);
+				if(tex.mIsAlphaMap)
+					data.redToAlpha();
+				mToUpload = data;
+			}
 		}
+		return (mTotalQueueLoadingBytes-mQueueBytes)/(float)mTotalQueueLoadingBytes;
 	}
 
 	public void finishLoading() {
@@ -366,6 +368,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			mMaxQueueLoadingBytes = -1;
 		else
 			mMaxQueueLoadingBytes = mQueueBytes/steps;
+		mTotalQueueLoadingBytes = mQueueBytes;
+		mLastQueueId = mTexQueueId-1;
+		mToUpload = null;
 	}
 
 	public void clearQueue() {
@@ -386,6 +391,9 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 				if(!tex.isFinished())
 					enqueue(entry.getKey(),tex,mTempDim);
 			}
+		}
+		if (mTempBuffer != null) {
+			mTempBuffer.rewind();
 		}
 	}
 
@@ -423,4 +431,15 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 		return texturesToString();
 	}
 
+	public void uploadLoadedTextures() {
+		if (mToUpload != null) {
+			mTexQueue[mLastQueueId].update(mToUpload);
+			mToUpload = null;
+			mLastQueueId--;
+		}
+	}
+
+	public boolean loadingDone() {
+		return mLastQueueId == -1;
+	}
 }

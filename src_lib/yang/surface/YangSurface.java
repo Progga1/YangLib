@@ -25,7 +25,6 @@ import yang.graphics.translator.GraphicsTranslator;
 import yang.math.MathConst;
 import yang.model.App;
 import yang.model.DebugYang;
-import yang.model.Rect;
 import yang.model.enums.ByteFormat;
 import yang.model.enums.UpdateMode;
 import yang.sound.AbstractSoundManager;
@@ -113,6 +112,11 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	public StereoRendering mStereoVision = null;
 	public MacroExecuter mMacro;
 	public DefaultMacroIO mDefaultMacroIO;
+
+	//loading stuff
+	private Thread mLoaderThread;
+	private volatile float mLoadingProgress;
+	private boolean mInterrupted;
 
 	/**
 	 * GL-Thread
@@ -427,6 +431,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		}
 	}
 	boolean alt = false;
+
 	public void proceed() {
 
 		if(!mPaused && !mException) {
@@ -463,15 +468,32 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		if(mStartupSteps>0)
 			mGFXLoader.divideQueueLoading(mStartupSteps-1);
 		mGFXLoader.mEnqueueMode = false;
+		startLoadingThread();
 	}
 
-	protected void loadAssets(int loadState,boolean resuming) {
-		if(loadState>0 || mStartupSteps==1)
-			mGFXLoader.loadEnqueuedTextures();
+	private void stopLoadingThread() {
+		if (mLoaderThread != null && mLoaderThread.isAlive()) {
+			try {
+				mLoaderThread.join(1000);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
+	private void startLoadingThread() {
+		mLoaderThread = new Thread() {
+			@Override
+			public void run() {
+				while (!mGFXLoader.loadingDone() && !mInterrupted) {
+					mLoadingProgress = mGFXLoader.loadEnqueuedTextures();
+				}
+			}
+		};
+		mLoaderThread.start();
+	}
 	protected void initializeAssets(int initStep,boolean resuming) {
-		System.out.println(mLoadingState+" "+initStep);
+//		System.out.println(mLoadingState+" "+initStep);
 	}
 
 
@@ -600,33 +622,29 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 					mGFXDebug.draw();
 				}
 			}else{
-				if(mLoadingState==0)
+				if(mLoadingState==0) {
 					prepareLoading(mResuming);
-				if(mLoadingState>=mLoadingSteps)
+					mLoadingState = 1;
+				}
+				if(mGFXLoader.loadingDone()) {
 					initializeAssets(mLoadingState-mLoadingSteps,mResuming);
-				else
-					loadAssets(mLoadingState,mResuming);
-				if(mLoadingState==mStartupSteps-1) {
+					mLoadingState = mStartupSteps;
 					mGFXLoader.finishLoading();
 					mGraphics.unbindTextures();
 					onLoadingFinished(mResuming);
 					mLoadedOnce = true;
 					mEventQueue.clearEvents();
-					mRuntimeState = 0;
+					mRuntimeState = RUNTIME_STATE_RUNNING;
 					mResuming = false;
 					if(callPreDraw)
 						preDraw();
 					draw();
 				}else{
-					float progress;
-					if(mStartupSteps==2)
-						progress = 1;
-					else
-						progress = (float)mLoadingState/(mStartupSteps-2);
-					drawLoadingScreen(mLoadingState,progress,mResuming);
+					//upload new textures
+					mGFXLoader.uploadLoadedTextures();
+					drawLoadingScreen(0, mLoadingProgress,mResuming);	//TODO remove first param?
 				}
 				mCatchUpTime = 0;
-				mLoadingState++;
 			}
 			mGraphics.endFrame();
 
@@ -673,10 +691,13 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			mLoadingState = 0;
 		}
 		if(!mLoadedOnce) {
+			mInterrupted = true;
 			onLoadingInterrupted(false);
 		}
-		if(mResuming)
+		if(mResuming) {
+			mInterrupted = true;
 			onLoadingInterrupted(true);
+		}
 		if(mSensor!=null)
 			mSensor.pause();
 	}
@@ -696,7 +717,13 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			mLoadingState = 0;
 		}else{
 			mRuntimeState = RUNTIME_STATE_RUNNING;
-			mLoadingState = mLoadingSteps;
+			if (mInterrupted) {
+				mLoadingState = 0;
+				stopLoadingThread();
+				mInterrupted = false;
+			} else {
+				mLoadingState = mLoadingSteps;
+			}
 		}
 		if(mSensor!=null)
 			mSensor.resume();
