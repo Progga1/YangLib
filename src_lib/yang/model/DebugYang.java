@@ -28,6 +28,8 @@ public class DebugYang {
 	public static boolean useAltForMiddleButton = false;
 	public static boolean useCtrlForRightButton = false;
 
+	public static boolean useAlternativeParabola = false;
+
 	public static void setRelease() {
 		DEBUG_LEVEL = 0;
 		DRAW_GFX_VALUES = false;
