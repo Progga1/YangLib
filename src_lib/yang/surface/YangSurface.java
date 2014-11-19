@@ -97,7 +97,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	private boolean mLoadedOnce = false;
 	private int mActiveEye = StereoVision.EYE_MONO;
 	public boolean mException = false;
-	private int mStartupSteps = 1;
+	private int mStartupSteps = 2;
 	private int mLoadingSteps = 1;
 	private int mLoadingState = 0;
 	private ScreenshotCallback mScreenshotCallback = null;
