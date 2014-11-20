@@ -218,7 +218,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		mIndexBuffer.put((short)(c+1));
 	}
 
-	public void putStripIndices(short startIndex,int segmentCount) {
+	public void putStripSegmentIndices(short startIndex,int segmentCount) {
 		short c = (short)(startIndex+2);
 
 		for(int i=0;i<segmentCount;i++) {
@@ -229,6 +229,17 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			mIndexBuffer.put(c);
 			mIndexBuffer.put((short)(c-1));
 			c += 2;
+		}
+	}
+
+	public void putStripIndices(short startIndex,int triangleCount) {
+		short c = (short)(startIndex+2);
+
+		for(int i=0;i<triangleCount;i++) {
+			mIndexBuffer.put((short)(c-2));
+			mIndexBuffer.put((short)(c-1));
+			mIndexBuffer.put(c);
+			c += 1;
 		}
 	}
 
