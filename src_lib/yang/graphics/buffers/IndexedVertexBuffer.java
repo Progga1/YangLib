@@ -242,5 +242,4 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			c += 1;
 		}
 	}
-
 }

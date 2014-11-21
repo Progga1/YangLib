@@ -114,8 +114,11 @@ public class CartoonSkeleton2D extends Skeleton2D {
 	}
 
 	public void refreshVisualData() {
-		for(final CartoonBone bone:mCartoonBones)
-			bone.refreshVisualVars();
+		float contFactor = mDrawContour?mContourFactor:0;
+		for(final CartoonBone bone:mCartoonBones) {
+			if(bone.mVisible)
+				bone.refreshVisualVars(contFactor);
+		}
 	}
 
 	public JointConnection addSpringBone(JointConnection bone,int layer,float constraintDistanceStrength) {
@@ -244,16 +247,22 @@ public class CartoonSkeleton2D extends Skeleton2D {
 				for(final CartoonBone bone:layer) {
 					if(bone.mCelShading) {
 						if(bone.mVisible) {
-							final float contourOrthoX = bone.mNormDirY * mContourFactor;
-							final float contourOrthoY = -bone.mNormDirX * mContourFactor;
-							final float contourNormX = bone.mNormDirX * mContourFactor;
-							final float contourNormY = bone.mNormDirY * mContourFactor;
-							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[0]*scale + contourOrthoX*bone.mContourX3 + contourNormX*bone.mContourY4) * mirrorFac, worldPosY + bone.mVertY[0]*scale + contourOrthoY*bone.mContourX3 + contourNormY*bone.mContourY4, mShiftZ);
-							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[1]*scale - contourOrthoX*bone.mContourX4 + contourNormX*bone.mContourY3) * mirrorFac, worldPosY + bone.mVertY[1]*scale - contourOrthoY*bone.mContourX4 + contourNormY*bone.mContourY3, mShiftZ);
-							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[2]*scale + contourOrthoX*bone.mContourX1 - contourNormX*bone.mContourY1) * mirrorFac, worldPosY + bone.mVertY[2]*scale + contourOrthoY*bone.mContourX1 - contourNormY*bone.mContourY1, mShiftZ);
-							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[3]*scale - contourOrthoX*bone.mContourX2 - contourNormX*bone.mContourY2) * mirrorFac, worldPosY + bone.mVertY[3]*scale - contourOrthoY*bone.mContourX2 - contourNormY*bone.mContourY2, mShiftZ);
+//							final float contourOrthoX = bone.mNormDirY * mContourFactor;
+//							final float contourOrthoY = -bone.mNormDirX * mContourFactor;
+//							final float contourNormX = bone.mNormDirX * mContourFactor;
+//							final float contourNormY = bone.mNormDirY * mContourFactor;
+
+//							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[0]*scale + contourOrthoX*bone.mContourX3 + contourNormX*bone.mContourY4) * mirrorFac, worldPosY + bone.mVertY[0]*scale + contourOrthoY*bone.mContourX3 + contourNormY*bone.mContourY4, mShiftZ);
+//							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[1]*scale - contourOrthoX*bone.mContourX4 + contourNormX*bone.mContourY3) * mirrorFac, worldPosY + bone.mVertY[1]*scale - contourOrthoY*bone.mContourX4 + contourNormY*bone.mContourY3, mShiftZ);
+//							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[2]*scale + contourOrthoX*bone.mContourX1 - contourNormX*bone.mContourY1) * mirrorFac, worldPosY + bone.mVertY[2]*scale + contourOrthoY*bone.mContourX1 - contourNormY*bone.mContourY1, mShiftZ);
+//							mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[3]*scale - contourOrthoX*bone.mContourX2 - contourNormX*bone.mContourY2) * mirrorFac, worldPosY + bone.mVertY[3]*scale - contourOrthoY*bone.mContourX2 - contourNormY*bone.mContourY2, mShiftZ);
+
+							int l = bone.mContourVertX.length;
+							for(int i=0;i<l;i++) {
+								mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, worldPosX + bone.mContourVertX[i]*scale * mirrorFac, worldPosY + bone.mContourVertY[i]*scale, mShiftZ);
+							}
 						}else{
-							mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_12);
+							mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_3,bone.mContourVertX.length);
 						}
 					}
 				}
@@ -268,10 +277,10 @@ public class CartoonSkeleton2D extends Skeleton2D {
 //					mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX1*scale * mirrorFac , worldPosY + bone.mVertY1*scale, mShiftZ);
 					int l = bone.mVertX.length;
 					for(int i=0;i<l;i++) {
-						mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + bone.mVertX[i]*scale * mirrorFac , worldPosY + bone.mVertY[i]*scale, mShiftZ);
+						mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, worldPosX + bone.mVertX[i]*scale * mirrorFac, worldPosY + bone.mVertY[i]*scale, mShiftZ);
 					}
 				}else{
-					mVertexBuffer.putArray(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_12);
+					mVertexBuffer.putArrayMultiple(DefaultGraphics.ID_POSITIONS,DefaultGraphics.FLOAT_ZERO_3,bone.mVertX.length);
 				}
 			}
 		}

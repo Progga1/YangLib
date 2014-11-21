@@ -31,7 +31,7 @@ public class CartoonBone extends JointConnection {
 
 	//State
 //	public float mVertX1,mVertY1,mVertX2,mVertY2,mVertX3,mVertY3,mVertX4,mVertY4;
-	public float mVertX[],mVertY[];
+	public float mVertX[],mVertY[],mContourVertX[],mContourVertY[];
 	public float mWidthFac;
 	public boolean mVisible;
 
@@ -57,11 +57,13 @@ public class CartoonBone extends JointConnection {
 		mVertexCount = vertexCount;
 		mVertX = new float[vertexCount];
 		mVertY = new float[vertexCount];
+		mContourVertX = new float[vertexCount];
+		mContourVertY = new float[vertexCount];
 	}
 
 	public CartoonBone(GraphicsTranslator graphics,String name,Joint joint1,Joint joint2) {
 		this(graphics,name,joint1,joint2,4);
-		refreshVisualVars();
+		refreshVisualVars(0);
 	}
 
 	public TextureCoordinatesQuad getTextureCoordinates() {
@@ -138,7 +140,7 @@ public class CartoonBone extends JointConnection {
 		setContour(contour,contour);
 	}
 
-	public void refreshVisualVars() {
+	public void refreshVisualVars(float contourFactor) {
 		refreshGeometry();
 
 		final float orthNormX = mNormDirY;
@@ -163,6 +165,26 @@ public class CartoonBone extends JointConnection {
 		mVertX[3] = posX1+mResShiftX1-orthNormX*mWidth1 * mWidthFac;
 		mVertY[3] = posY1+mResShiftY1-orthNormY*mWidth1 * mWidthFac;
 
+		if(mCelShading) {
+			final float contourOrthoX = mNormDirY * contourFactor;
+			final float contourOrthoY = -mNormDirX * contourFactor;
+			final float contourNormX = mNormDirX * contourFactor;
+			final float contourNormY = mNormDirY * contourFactor;
+
+			mContourVertX[0] = mVertX[0] + contourOrthoX*mContourX3 + contourNormX*mContourY4;
+			mContourVertY[0] = mVertY[0] + contourOrthoY*mContourX3 + contourNormY*mContourY4;
+			mContourVertX[1] = mVertX[1] - contourOrthoX*mContourX4 + contourNormX*mContourY3;
+			mContourVertY[1] = mVertY[1] - contourOrthoY*mContourX4 + contourNormY*mContourY3;
+			mContourVertX[2] = mVertX[2] + contourOrthoX*mContourX1 - contourNormX*mContourY1;
+			mContourVertY[2] = mVertY[2] + contourOrthoY*mContourX1 - contourNormY*mContourY1;
+			mContourVertX[3] = mVertX[3] - contourOrthoX*mContourX2 - contourNormX*mContourY2;
+			mContourVertY[3] = mVertY[3] - contourOrthoY*mContourX2 - contourNormY*mContourY2;
+
+	//		mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[0]*scale + contourOrthoX*bone.mContourX3 + contourNormX*bone.mContourY4) * mirrorFac, worldPosY + bone.mVertY[0]*scale + contourOrthoY*bone.mContourX3 + contourNormY*bone.mContourY4, mShiftZ);
+	//		mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[1]*scale - contourOrthoX*bone.mContourX4 + contourNormX*bone.mContourY3) * mirrorFac, worldPosY + bone.mVertY[1]*scale - contourOrthoY*bone.mContourX4 + contourNormY*bone.mContourY3, mShiftZ);
+	//		mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[2]*scale + contourOrthoX*bone.mContourX1 - contourNormX*bone.mContourY1) * mirrorFac, worldPosY + bone.mVertY[2]*scale + contourOrthoY*bone.mContourX1 - contourNormY*bone.mContourY1, mShiftZ);
+	//		mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS,worldPosX + (bone.mVertX[3]*scale - contourOrthoX*bone.mContourX2 - contourNormX*bone.mContourY2) * mirrorFac, worldPosY + bone.mVertY[3]*scale - contourOrthoY*bone.mContourX2 - contourNormY*bone.mContourY2, mShiftZ);
+		}
 	}
 
 	public void setWidth(float width1,float width2) {

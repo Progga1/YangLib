@@ -48,6 +48,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public static final float[] BLACK = { 0, 0, 0, 1 };
 	public static final float[] WHITE = { 1, 1, 1, 1 };
 
+	public static final float[] FLOAT_ZERO_3 = {0,0,0};
 	public static final float[] FLOAT_ZERO_12 = {0,0,0,0,0,0,0,0,0,0,0,0};
 
 	public StripCreator mDefaultStripCreator;

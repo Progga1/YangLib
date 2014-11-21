@@ -25,7 +25,7 @@ public class CartoonSmoothTriangleConnection extends CartoonBone {
 		mIndexCount = mTriangleCount*3;
 
 		recalculate();
-		refreshVisualVars();
+		refreshVisualVars(0);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class CartoonSmoothTriangleConnection extends CartoonBone {
 	}
 
 	@Override
-	public void refreshVisualVars() {
+	public void refreshVisualVars(float contourFactor) {
 		// super.refreshVisualVars();
 
 		this.refreshGeometry();

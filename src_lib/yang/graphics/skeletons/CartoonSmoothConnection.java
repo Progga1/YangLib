@@ -15,7 +15,6 @@ public class CartoonSmoothConnection extends CartoonBone {
 
 	public CartoonSmoothConnection(GraphicsTranslator graphics, String name, Joint startJoint, Joint endJoint, Joint controlJoint, ConnectionShapes shapes) {
 		super(graphics, name, startJoint, endJoint, shapes.getSampleCount() * 2);
-		mCelShading = false;
 		mShapes = shapes;
 		mSampleCount = mShapes.getSampleCount();
 		mControlJoint = controlJoint;
@@ -23,7 +22,7 @@ public class CartoonSmoothConnection extends CartoonBone {
 		mIndexCount = shapes.getSegmentCount()*6;
 
 		recalculate();
-		refreshVisualVars();
+		refreshVisualVars(0);
 	}
 
 	@Override
@@ -33,7 +32,7 @@ public class CartoonSmoothConnection extends CartoonBone {
 	}
 
 	@Override
-	public void refreshVisualVars() {
+	public void refreshVisualVars(float contourFactor) {
 		// super.refreshVisualVars();
 
 		this.refreshGeometry();
@@ -66,14 +65,24 @@ public class CartoonSmoothConnection extends CartoonBone {
 			float x = (mShapes.mPositions1[k]*t1 + mShapes.mPositions2[k]*t2);
 			float y = mShapes.mPositions1[k+1]*t1 +  mShapes.mPositions2[k+1]*t2;
 
-			float resX = x + sX;
-			float resY = y + sY;
-			mVertX[k] = resX * rightX + resY * upX + mJoint1.mX;
-			mVertY[k] = resX * rightY + resY * upY + mJoint1.mY;
-			resX = x - sX;
-			resY = y - sY;
-			mVertX[k + 1] = resX * rightX + resY * upX + mJoint1.mX;
-			mVertY[k + 1] = resX * rightY + resY * upY + mJoint1.mY;
+			float resX1 = x + sX;
+			float resY1 = y + sY;
+			mVertX[k] = resX1 * rightX + resY1 * upX + mJoint1.mX;
+			mVertY[k] = resX1 * rightY + resY1 * upY + mJoint1.mY;
+			float resX2 = x - sX;
+			float resY2 = y - sY;
+			mVertX[k + 1] = resX2 * rightX + resY2 * upX + mJoint1.mX;
+			mVertY[k + 1] = resX2 * rightY + resY2 * upY + mJoint1.mY;
+
+			if(contourFactor>0) {
+				float fac = contourFactor * 2 * mContourY1;
+				float dx = mVertX[k+1] - mVertX[k];
+				float dy = mVertY[k+1] - mVertY[k];
+				mContourVertX[k] = mVertX[k] - dx*fac;
+				mContourVertY[k] = mVertY[k] - dy*fac;
+				mContourVertX[k+1] = mVertX[k+1] + dx*fac;
+				mContourVertY[k+1] = mVertY[k+1] + dy*fac;
+			}
 
 			k += 2;
 		}
