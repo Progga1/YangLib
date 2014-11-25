@@ -27,6 +27,13 @@ public class AndroidDataStorage extends AbstractDataStorage {
 	}
 
 	@Override
+	public void putLong(String key, long value) {
+		Editor prefs = mContext.getSharedPreferences(FILENAME, Context.MODE_PRIVATE).edit();
+		prefs.putLong(key, value);
+		prefs.commit();
+	}
+
+	@Override
 	public void putBoolean(String key, boolean value) {
 		Editor prefs = mContext.getSharedPreferences(FILENAME, Context.MODE_PRIVATE).edit();
 		prefs.putBoolean(key, value);
@@ -48,6 +55,11 @@ public class AndroidDataStorage extends AbstractDataStorage {
 	@Override
 	public int getInt(String key, int defaultValue) {
 		return mContext.getSharedPreferences(FILENAME, Context.MODE_PRIVATE).getInt(key, defaultValue);
+	}
+
+	@Override
+	public long getLong(String key, long defaultValue) {
+		return mContext.getSharedPreferences(FILENAME, Context.MODE_PRIVATE).getLong(key, defaultValue);
 	}
 
 	@Override

@@ -58,6 +58,13 @@ public class PCDataStorage extends AbstractDataStorage {
 	}
 
 	@Override
+	public void putLong(String key, long value) {
+		Properties props = load();
+		props.put(key, ""+value);
+		save(props);
+	}
+
+	@Override
 	public void putBoolean(String key, boolean value) {
 		Properties props = load();
 		props.put(key, ""+value);
@@ -85,6 +92,15 @@ public class PCDataStorage extends AbstractDataStorage {
 		Properties props = load();
 		try {
 			return Integer.parseInt(props.getProperty(key));
+		} catch (Exception e) { }
+		return defaultValue;
+	}
+
+	@Override
+	public long getLong(String key, long defaultValue) {
+		Properties props = load();
+		try {
+			return Long.parseLong(props.getProperty(key));
 		} catch (Exception e) { }
 		return defaultValue;
 	}
