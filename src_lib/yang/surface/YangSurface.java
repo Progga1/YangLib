@@ -432,6 +432,8 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 	boolean alt = false;
 
+	private boolean mStopLoadingThread;
+
 	public void proceed() {
 
 		if(!mPaused && !mException) {
@@ -474,7 +476,9 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	private void stopLoadingThread() {
 		if (mLoaderThread != null && mLoaderThread.isAlive()) {
 			try {
+				mStopLoadingThread = true;
 				mLoaderThread.join(1000);
+				mStopLoadingThread = false;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -485,7 +489,8 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 		mLoaderThread = new Thread() {
 			@Override
 			public void run() {
-				while (!mGFXLoader.loadingDone() && !mInterrupted) {
+				while (!mGFXLoader.loadingDone() && !mStopLoadingThread) {
+
 					mLoadingProgress = mGFXLoader.loadEnqueuedTextures();
 				}
 			}
