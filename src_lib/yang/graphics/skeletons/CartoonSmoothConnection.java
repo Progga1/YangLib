@@ -4,6 +4,7 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.physics.massaggregation.elements.Joint;
+import yang.physics.massaggregation.elements.JointConnection;
 
 public class CartoonSmoothConnection extends CartoonBone {
 
@@ -12,6 +13,7 @@ public class CartoonSmoothConnection extends CartoonBone {
 	private float mInitialDist;
 	public ConnectionShapes mShapes;
 	public int mMirrorY = -1;
+	public JointConnection mTwistBone1 = null,mTwistBone2 = null;
 
 	public CartoonSmoothConnection(GraphicsTranslator graphics, String name, Joint startJoint, Joint endJoint, Joint controlJoint, ConnectionShapes shapes) {
 		super(graphics, name, startJoint, endJoint, shapes.getSampleCount() * 2);
@@ -23,6 +25,8 @@ public class CartoonSmoothConnection extends CartoonBone {
 
 		recalculate();
 		refreshVisualVars(0);
+
+		mTwistBone1 = this;
 	}
 
 	@Override
@@ -55,15 +59,39 @@ public class CartoonSmoothConnection extends CartoonBone {
 		w *= 1.2f-Math.abs(0.5f-t1);
 		for (int i = 0; i < mSampleCount; i++) {
 
-			float sX = (mShapes.mScales1[k]*t1 + mShapes.mScales2[k]*t2)*w;
-			float sY = (mShapes.mScales1[k+1]*t1 + mShapes.mScales2[k+1]*t2)*w;
+			float s2x = mShapes.mScales2[k]*t2;
+			float s2y = mShapes.mScales2[k+1]*t2;
+
+			float sX = (mShapes.mScales1[k]*t1 + s2x)*w;
+			float sY = (mShapes.mScales1[k+1]*t1 + s2y)*w;
 //			float d = (float)Math.sqrt(sX*sX+sY*sY);
 //			d = 1/d*w;
 //			sX *= d;
 //			sY *= d;
 
+			if(mTwistBone2!=null) {
+				float dot = mTwistBone1.mNormDirX*mTwistBone2.mNormDirX + mTwistBone1.mNormDirY*mTwistBone2.mNormDirY;
+				float dist = (float)Math.sqrt(sX*sX + sY*sY);
+
+
+				float tw;
+				if(dot<0)
+					tw = Math.abs((float)Math.pow(dot,1)*0.1f);
+				else
+					tw = Math.abs((float)Math.pow(dot,1)*0.3f);
+				tw *=  (float)Math.pow(((float)i/(mSampleCount-1)),4);
+				float wX = dot<0?-1:1;
+				sX = sX*(1-tw) + wX*tw;
+				sY = sY*(1-tw) + 0*tw;
+				float newDist = (float)Math.sqrt(sX*sX + sY*sY);
+				sX *= dist/newDist;
+				sY *= dist/newDist;
+			}
+
 			float x = (mShapes.mPositions1[k]*t1 + mShapes.mPositions2[k]*t2);
 			float y = mShapes.mPositions1[k+1]*t1 +  mShapes.mPositions2[k+1]*t2;
+
+			x = x*(1+mShiftX2-mShiftX1)+mShiftX1;
 
 			float resX1 = x + sX;
 			float resY1 = y + sY;
