@@ -40,24 +40,24 @@ public class ConnectionShapes {
 			float d1 = (float)Math.sqrt(dx1*dx1+dy1*dy1);
 			float d2 = (float)Math.sqrt(dx2*dx2+dy2*dy2);
 			if(d1!=0 && d2!=0) {
-				
+
 				dx1 /= d1;
 				dy1 /= d1;
 				dx2 /= d2;
 				dy2 /= d2;
-	
+
 				float dx = (dx1+dx2)*0.5f;
 				float dy = (dy1+dy2)*0.5f;
 				float d = (float)Math.sqrt(dx*dx+dy*dy);
-	
+
 				if(d!=0) {
 					dx /= d;
 					dy /= d;
-		
+
 					targetScales[k] = -dy;
 					targetScales[k+1] = dx;
 				}
-	
+
 				k += 2;
 			}
 		}
@@ -65,6 +65,18 @@ public class ConnectionShapes {
 		targetScales[1] = targetScales[3];
 		targetScales[k] = targetScales[k-2];
 		targetScales[k+1] = targetScales[k-1];
+	}
+
+	public void normalizeScales(float[] targetScales) {
+		int k = 0;
+		for(int i=0;i<mSampleCount;i++) {
+			float d = (float)Math.sqrt(targetScales[k]*targetScales[k] + targetScales[k+1]*targetScales[k+1]);
+			if(d!=0) {
+				targetScales[k] /= d;
+				targetScales[k+1] /= d;
+			}
+			k += 2;
+		}
 	}
 
 }

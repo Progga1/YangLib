@@ -42,6 +42,7 @@ public class CartoonSmoothConnection extends CartoonBone {
 		this.refreshGeometry();
 
 		float t1 = mDistance/this.mInitialDist;
+
 		if (t1 < 0)
 			t1 = 0;
 		if (t1 > 1)
@@ -50,8 +51,8 @@ public class CartoonSmoothConnection extends CartoonBone {
 
 		float upX = -mNormDirY*mInitialDist*mMirrorY;
 		float upY = mNormDirX*mInitialDist*mMirrorY;
-		float rightX = mNormDirX*mInitialDist * 1.2f;
-		float rightY = mNormDirY*mInitialDist * 1.2f;
+		float rightX = mNormDirX*mInitialDist * 1.0f;
+		float rightY = mNormDirY*mInitialDist * 1.0f;
 		int k = 0;
 		float w = mWidth1*2;
 
@@ -70,6 +71,8 @@ public class CartoonSmoothConnection extends CartoonBone {
 //			sY *= d;
 
 			if(mTwistBone2!=null) {
+				mTwistBone1.refreshGeometry();
+				mTwistBone2.refreshGeometry();
 				float dot = mTwistBone1.mNormDirX*mTwistBone2.mNormDirX + mTwistBone1.mNormDirY*mTwistBone2.mNormDirY;
 				float dist = (float)Math.sqrt(sX*sX + sY*sY);
 
@@ -91,7 +94,7 @@ public class CartoonSmoothConnection extends CartoonBone {
 			float x = (mShapes.mPositions1[k]*t1 + mShapes.mPositions2[k]*t2);
 			float y = mShapes.mPositions1[k+1]*t1 +  mShapes.mPositions2[k+1]*t2;
 
-			x = x*(1+mShiftX2-mShiftX1)+mShiftX1;
+//			x = x*(1+mShiftX2-mShiftX1)+mShiftX1;
 
 			float resX1 = x + sX;
 			float resY1 = y + sY;
@@ -134,8 +137,8 @@ public class CartoonSmoothConnection extends CartoonBone {
 //			float posY = i*d;
 			float posY = mShapes.mPositions1[i*2] * h;
 			float y = top+posY;
-			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, left,y);
 			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, left+w,y);
+			mVertexBuffer.putVec2(DefaultGraphics.ID_TEXTURES, left,y);
 		}
 
 	}
