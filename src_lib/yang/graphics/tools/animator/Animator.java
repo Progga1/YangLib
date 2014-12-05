@@ -1,5 +1,6 @@
 package yang.graphics.tools.animator;
 
+import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;
@@ -404,12 +405,32 @@ public class Animator implements YangEventListener {
 
 	}
 
+	private void shiftJoints(float shiftX,float shiftY) {
+		mCurSkeleton.shiftJoints(shiftX,shiftY);
+		for(KeyFrame keyFrame:mCurAnimation.mKeyFrames) {
+			float[] data = keyFrame.mPose.mData;
+			data[0] += shiftX;
+			data[1] += shiftY;
+		}
+	}
+
 	@Override
 	public void keyDown(int code) {
 		if(code=='d') {
-			mHoverJoint.mAnimDisabled ^= true;
+			if(mHoverJoint!=null)
+				mHoverJoint.mAnimDisabled ^= true;
 			mPoseChanged = true;
 		}
+		float SHIFT = 0.02f;
+		if(code=='W')
+			shiftJoints(0,SHIFT);
+		if(code=='S')
+			shiftJoints(0,-SHIFT);
+		if(code=='A')
+			shiftJoints(-SHIFT,0);
+		if(code=='D')
+			shiftJoints(SHIFT,0);
+		mPoseChanged = true;
 	}
 
 	@Override

@@ -39,6 +39,8 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 	private AnimatorTimeBar mTimeBar;
 	private final JPanel mCenterPanel = new JPanel();
 
+	public float[] mCopyData = new float[128];
+
 	private class InitCallback implements InitializationCallback {
 
 		@Override
@@ -71,6 +73,8 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		mKeyMainMenu.addSeparator();
 		mKeyMainMenu.addItem("UNFIX", "Unfix all joints").setShortCut('F');
 		mKeyMainMenu.addItem("UNDO", "Undo").setShortCut('Z');
+		mKeyMainMenu.addItem("COPYFIXED", "Copy fixed joints").setShortCut('G');
+		mKeyMainMenu.addItem("PASTEFIXED", "Paste fixed joints").setShortCut('H');
 		mKeyMainMenu.nextSubMenu("Animation");
 		mKeyMainMenu.addItem("PLAY", "Play/Pause").setShortCut('W');
 		mKeyMainMenu.addItem("STOP", "Stop").setShortCut('Q');
@@ -172,6 +176,26 @@ public class AnimatorFrame implements InitializationCallback, KeyMenuListener, E
 		}
 		if(key=="UNDO") {
 			animator.reselect();
+		}
+		if(key=="COPYFIXED") {
+			int k = 0;
+			for(Joint joint:animator.mCurSkeleton.mJoints) {
+				if(joint.mFixed) {
+					mCopyData[k] = joint.mX;
+					mCopyData[k+1] = joint.mY;
+					k += 2;
+				}
+			}
+		}
+		if(key=="PASTEFIXED") {
+			int k = 0;
+			for(Joint joint:animator.mCurSkeleton.mJoints) {
+				if(joint.mFixed) {
+					joint.mX = mCopyData[k];
+					joint.mY = mCopyData[k+1];
+					k += 2;
+				}
+			}
 		}
 		if(key=="PLAY") {
 			if(animator.isPlaying())
