@@ -247,4 +247,9 @@ public class FloatColor extends Quadruple {
 		return result;
 	}
 
+	public void set(FloatColor color, float brightness) {
+		set(color);
+		multBrightness(brightness);
+	}
+
 }
