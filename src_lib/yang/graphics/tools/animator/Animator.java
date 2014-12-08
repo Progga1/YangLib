@@ -408,9 +408,11 @@ public class Animator implements YangEventListener {
 	private void shiftJoints(float shiftX,float shiftY) {
 		mCurSkeleton.shiftJoints(shiftX,shiftY);
 		for(KeyFrame keyFrame:mCurAnimation.mKeyFrames) {
-			float[] data = keyFrame.mPose.mData;
-			data[0] += shiftX;
-			data[1] += shiftY;
+			if(!keyFrame.mCloned) {
+				float[] data = keyFrame.mPose.mData;
+				data[0] += shiftX;
+				data[1] += shiftY;
+			}
 		}
 	}
 
