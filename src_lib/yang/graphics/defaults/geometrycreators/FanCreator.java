@@ -7,12 +7,12 @@ import yang.graphics.translator.GraphicsTranslator;
 public class FanCreator {
 
 	public DefaultGraphics<?> mGraphics;
-	public GraphicsTranslator mTranslator;
 	public IndexedVertexBuffer mVertexBuffer;
 
 	protected int id = 0;
 	private int d;
 	private short mStartID;
+	private float	mPosZ;
 
 	/**
 	 * initializes a FanCreator to a certain degree (1-lowest)
@@ -23,7 +23,6 @@ public class FanCreator {
 	 */
 	public FanCreator(DefaultGraphics<?> graphics, int degree) {
 		mGraphics = graphics;
-		mTranslator = graphics.mTranslator;
 
 		d = degree;
 	}
@@ -38,7 +37,23 @@ public class FanCreator {
 		id = 0;
 		mVertexBuffer = mGraphics.mCurrentVertexBuffer;
 		mGraphics.putPosition(x, y);
-		mStartID = (short)( mGraphics.getCurrentVertexBuffer().getCurrentVertexWriteCount()-1);
+		mStartID = (short)( mVertexBuffer.getCurrentVertexWriteCount()-1);
+	}
+	
+	/**
+	 * Sets the center of the fan, give the specific buffer for updating batches
+	 * @param x
+	 * @param y
+	 */
+	public void startFan(float x, float y, IndexedVertexBuffer buffer) {
+		id = 0;
+		mVertexBuffer = buffer;
+		
+		if(buffer == null) mVertexBuffer = mGraphics.mCurrentVertexBuffer;
+		
+		mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, x,y, mPosZ);
+//		mGraphics.putPosition(x, y);
+		mStartID = (short)( mVertexBuffer.getCurrentVertexWriteCount()-1);
 	}
 
 	/**
@@ -52,7 +67,9 @@ public class FanCreator {
 		id++;
 
 		if( id <= d ) {
-			mGraphics.putPosition(x,y);
+			mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, x,y, mPosZ);
+//			mGraphics.putPosition(x,y);
+			
 
 		} else {
 
@@ -74,7 +91,8 @@ public class FanCreator {
 				mVertexBuffer.putIndex((short)(offs-d));
 			}
 
-			mGraphics.putPosition(x,y);
+			mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, x,y, mPosZ);
+//			mGraphics.putPosition(x,y);
 		}
 	}
 
@@ -97,6 +115,11 @@ public class FanCreator {
 			mVertexBuffer.putIndex((short)(mStartID + d  - i	));
 			mVertexBuffer.putIndex((short)(mStartID + d  - i + 1));
 		}
+	}
+
+
+	public void setCurrentZ(float posZ) {
+		mPosZ = posZ; 
 	}
 
 
