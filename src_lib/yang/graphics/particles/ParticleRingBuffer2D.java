@@ -4,7 +4,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.programs.BasicProgram;
 
-public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extends AbstractParticleRingBuffer<DefaultGraphics,ParticleType> {
+public abstract class ParticleRingBuffer2D<ParticleType extends Particle> extends AbstractParticleRingBuffer<DefaultGraphics<BasicProgram>,ParticleType> {
 
 	public BasicProgram mProgram;
 	public float mCelShadingX=1,mCelShadingY=1;
