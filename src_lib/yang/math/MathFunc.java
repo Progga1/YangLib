@@ -91,5 +91,9 @@ public class MathFunc {
 	public static int ceil(float val) {		
 		return (int) Math.ceil(val);
 	}
+
+	public static float blend(float a, float b, float amountB) {		
+		return a + (b-a)*amountB;
+	}
 	
 }

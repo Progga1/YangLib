@@ -2,7 +2,6 @@ package yang.graphics.defaults.geometrycreators;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
-import yang.graphics.translator.GraphicsTranslator;
 
 public class FanCreator {
 
@@ -68,8 +67,7 @@ public class FanCreator {
 
 		if( id <= d ) {
 			mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, x,y, mPosZ);
-//			mGraphics.putPosition(x,y);
-			
+
 
 		} else {
 
@@ -92,10 +90,41 @@ public class FanCreator {
 			}
 
 			mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, x,y, mPosZ);
-//			mGraphics.putPosition(x,y);
 		}
 	}
+	
+	
+	public void continueFanIndex() {
+		id++;
 
+		if( id > d ) {
+
+			final int offs = mStartID+id;
+
+			if(id % d == 1 || d==1) {
+				mVertexBuffer.putIndex((short)(offs));
+				mVertexBuffer.putIndex((short)(offs-d));
+				mVertexBuffer.putIndex((short)(offs-id));
+
+			} else {
+
+				mVertexBuffer.putIndex((short)(offs));
+				mVertexBuffer.putIndex((short)(offs-1));
+				mVertexBuffer.putIndex((short)(offs-d));
+
+				mVertexBuffer.putIndex((short)(offs-1));
+				mVertexBuffer.putIndex((short)(offs-d-1));
+				mVertexBuffer.putIndex((short)(offs-d));
+			}
+			
+		}
+	}
+	
+		
+	public void fanPosition(float x, float y) { 
+		mVertexBuffer.putVec3(DefaultGraphics.ID_POSITIONS, x,y, mPosZ);
+	}
+	
 
 	/**
 	 * connects the first with the last column
