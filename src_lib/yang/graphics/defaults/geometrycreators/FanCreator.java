@@ -35,7 +35,7 @@ public class FanCreator {
 	public void startFan(float x, float y) {
 		id = 0;
 		mVertexBuffer = mGraphics.mCurrentVertexBuffer;
-		mGraphics.putPosition(x, y);
+		mGraphics.putPosition(x, y, mPosZ);
 		mStartID = (short)( mVertexBuffer.getCurrentVertexWriteCount()-1);
 	}
 	
