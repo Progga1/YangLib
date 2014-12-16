@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 public class AndroidSystemCalls extends YangSystemCalls {
 
@@ -67,5 +68,15 @@ public class AndroidSystemCalls extends YangSystemCalls {
 	@Override
 	public String getPlatfrom() {
 		return "Android";
+	}
+
+	@Override
+	public void makeText(final String text) {
+		mActivity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 }

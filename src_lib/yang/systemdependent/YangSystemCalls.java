@@ -44,4 +44,8 @@ public class YangSystemCalls {
 	public String getPlatfrom() {
 		return "";
 	}
+
+	public void makeText(String text) {
+		System.out.println(text);
+	}
 }
