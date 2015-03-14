@@ -25,6 +25,7 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 	private float mGravX,mGravY,mGravZ;
 	public float mCurYaw,mCurPitch,mCurRoll;
 	public float mSensitivity = 0.01f;
+	public float mAccFactor = 10;
 	public int mCurButton;
 
 	private final Quaternion tempQuat = new Quaternion();
@@ -87,7 +88,7 @@ public class PCSensorFrame extends YangSensor implements MouseListener,MouseMoti
 		mCurX = ev.getX();
 		mCurY = ev.getY();
 		if(mCurButton==MouseEvent.BUTTON1) {
-			accelerate(deltaX,deltaY,0);
+			accelerate(-deltaX*mAccFactor,deltaY*mAccFactor,0);
 		}
 		if(mCurButton==MouseEvent.BUTTON2) {
 			turn(-deltaX,-deltaY,0);

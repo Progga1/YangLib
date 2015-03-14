@@ -523,7 +523,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			mGraphics.setTextureRenderTarget(screenShotData.mRenderTarget);
 		}
 
-		if(mForceStereoVision) {
+		if(mForceStereoVision && mGraphics.mCurDrawListener!=null) {
 			//STEREO VISION
 			if(mStereoVision == null) {
 				mStereoVision = new StereoRendering();

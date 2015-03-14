@@ -11,7 +11,7 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 	protected RingBufferType mParticleBuffer;
 	public EffectParticleProperties mParticleProperties;
 	public boolean mUseWind = false;
-	public float mWindForceX,mWindForceY,mWindForceZ;
+	public float mWindAccX,mWindAccY,mWindAccZ;
 	public float mWindVelX,mWindVelY,mWindVelZ;
 	public float mWindFriction = 0.99f;
 
@@ -35,16 +35,34 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 
 	public void createRandomParticles(int amount) {
 		for(int i=0;i<amount;i++) {
-			EffectParticle particle = mParticleProperties.spawnParticle(mParticleBuffer,mBoundaries.getRandomX(), mBoundaries.getRandomY(), mBoundaries.getRandomZ());
+			mParticleProperties.spawnParticle(mParticleBuffer,mBoundaries.getRandomX(), mBoundaries.getRandomY(), mBoundaries.getRandomZ());
 		}
 		mParticleBuffer.refreshParticleCount();
 	}
 
+	public void setAbsoluteSpeed(float velX,float velY,float velZ) {
+		mWindVelX = velX;
+		mWindVelY = velY;
+		mWindVelZ = velZ;
+		mWindAccX = 0;
+		mWindAccY = 0;
+		mWindAccZ = 0;
+		mWindFriction = 1;
+		mUseWind = true;
+	}
+
+	public void resetWind() {
+		mWindVelX = 0;
+		mWindVelY = 0;
+		mWindVelZ = 0;
+		mUseWind = false;
+	}
+
 	public void step(float deltaTime) {
 		if(mUseWind) {
-			mWindVelX += mWindForceX;
-			mWindVelY += mWindForceY;
-			mWindVelZ += mWindForceZ;
+			mWindVelX += mWindAccX;
+			mWindVelY += mWindAccY;
+			mWindVelZ += mWindAccZ;
 			mWindVelX *= mWindFriction;
 			mWindVelY *= mWindFriction;
 			mWindVelZ *= mWindFriction;
@@ -98,9 +116,9 @@ public class Weather3D<RingBufferType extends ParticleRingBuffer3D<? extends Eff
 	}
 
 	public void setWind(float windForceX,float windForceY,float windForceZ) {
-		mWindForceX = windForceX;
-		mWindForceY = windForceY;
-		mWindForceZ = windForceZ;
+		mWindAccX = windForceX;
+		mWindAccY = windForceY;
+		mWindAccZ = windForceZ;
 	}
 
 	public void removeParticles(int maxAmount) {

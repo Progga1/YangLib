@@ -14,6 +14,7 @@ public class SkinnedSkeleton {
 	public YangArmature mArmature;
 	public YangArmaturePosture mArmaturePose;
 	public MassAggregation mSkeleton;
+	public boolean mCulling = true;
 	public YangMesh mMesh;
 	public boolean mAutoRefresh = true;
 
@@ -48,7 +49,7 @@ public class SkinnedSkeleton {
 		if(mMesh==null)
 			return;
 		mMesh.mWireFrames = mWireFrames;
-		mGraphics.mTranslator.switchCulling(!mWireFrames);
+		mGraphics.mTranslator.switchCulling(!mWireFrames && mCulling);
 		if(mMesh.mBlockTextures)
 			mGraphics.mTranslator.bindTexture(null);
 		if(mSkeleton!=null) {

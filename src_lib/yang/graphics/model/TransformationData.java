@@ -57,4 +57,10 @@ public class TransformationData {
 		return "t;r;s = "+mTranslation+";"+mOrientation+";"+mScale;
 	}
 
+	public YangMatrix createTransform() {
+		YangMatrix result = new YangMatrix();
+		setMatrix(result);
+		return result;
+	}
+
 }

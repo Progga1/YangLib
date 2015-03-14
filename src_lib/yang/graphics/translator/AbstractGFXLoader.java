@@ -44,7 +44,6 @@ public abstract class AbstractGFXLoader implements YangMaterialProvider{
 			mTextures.clear();
 			mSubTextures.clear();
 		}
-
 	}
 
 	public HashMap<String, ResourceEntry> mTextures;

@@ -28,6 +28,10 @@ public class SurfaceWrapper<SurfaceType extends YangSurface> extends YangTexture
 		mInnerSurface = surface;
 	}
 
+	public SurfaceWrapper(DefaultGraphics<?> graphics,SurfaceType surface) {
+		this(graphics,surface,surface);
+	}
+
 	public void init(int surfWidth,int surfHeight) {
 		mTranslator = mGraphics.mTranslator;
 		mSurfWidth = surfWidth;

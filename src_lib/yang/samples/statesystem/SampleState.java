@@ -10,5 +10,5 @@ public abstract class SampleState extends YangProgramState<SampleStateSystem> {
 		if(code==Keys.ESC)
 			mStateSystem.setState(mStateSystem.mMainMenu);
 	}
-	
+
 }

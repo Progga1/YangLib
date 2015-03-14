@@ -25,7 +25,7 @@ public class OBJLoader extends YangSceneLoader {
 		this(graphics,handles,null);
 	}
 
-	public void loadOBJ(InputStream modelStream,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {
+	public YangMesh loadOBJ(InputStream modelStream,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {
 		if(modelStream==null)
 			throw new RuntimeException("No stream given");
 
@@ -147,6 +147,8 @@ public class OBJLoader extends YangSceneLoader {
 		}
 
 		finishLoadingMesh(useNormals,staticMesh);
+
+		return mMesh;
 	}
 
 	public void draw() {

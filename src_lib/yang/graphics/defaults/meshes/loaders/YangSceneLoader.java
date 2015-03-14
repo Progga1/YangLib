@@ -164,7 +164,7 @@ public class YangSceneLoader {
 			mCurrentMesh.mEdgeIndices = new short[mEdgeIndexId];
 			System.arraycopy(edgeIndices, 0, mCurrentMesh.mEdgeIndices, 0, mEdgeIndexId);
 		}
-		mCurrentMesh.mSmoothIndices = new int[mCurrentMesh.mTriangleIndices.length];
+		mCurrentMesh.mSmoothIndices = new int[mVertexCount];
 		System.arraycopy(smoothIndices, 0, mCurrentMesh.mSmoothIndices, 0, mCurrentMesh.mSmoothIndices.length);
 		mCurrentMesh.mRedirectIndices = new int[mCurrentMesh.mTriangleIndices.length];
 		System.arraycopy(redirectIndices, 0, mCurrentMesh.mRedirectIndices, 0, mCurrentMesh.mRedirectIndices.length);
