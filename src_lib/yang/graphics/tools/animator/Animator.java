@@ -405,13 +405,15 @@ public class Animator implements YangEventListener {
 
 	}
 
-	private void shiftJoints(float shiftX,float shiftY) {
+	private void shiftJoints(float shiftX,float shiftY,boolean allKeyframes) {
 		mCurSkeleton.shiftJoints(shiftX,shiftY);
-		for(KeyFrame keyFrame:mCurAnimation.mKeyFrames) {
-			if(!keyFrame.mCloned) {
-				float[] data = keyFrame.mPose.mData;
-				data[0] += shiftX;
-				data[1] += shiftY;
+		if(allKeyframes) {
+			for(KeyFrame keyFrame:mCurAnimation.mKeyFrames) {
+				if(!keyFrame.mCloned) {
+					float[] data = keyFrame.mPose.mData;
+					data[0] += shiftX;
+					data[1] += shiftY;
+				}
 			}
 		}
 	}
@@ -424,14 +426,22 @@ public class Animator implements YangEventListener {
 			mPoseChanged = true;
 		}
 		float SHIFT = 0.02f;
+		if(code=='I')
+			shiftJoints(0,SHIFT,true);
+		if(code=='K')
+			shiftJoints(0,-SHIFT,true);
+		if(code=='J')
+			shiftJoints(-SHIFT,0,true);
+		if(code=='L')
+			shiftJoints(SHIFT,0,true);
 		if(code=='W')
-			shiftJoints(0,SHIFT);
+			shiftJoints(0,SHIFT,false);
 		if(code=='S')
-			shiftJoints(0,-SHIFT);
+			shiftJoints(0,-SHIFT,false);
 		if(code=='A')
-			shiftJoints(-SHIFT,0);
+			shiftJoints(-SHIFT,0,false);
 		if(code=='D')
-			shiftJoints(SHIFT,0);
+			shiftJoints(SHIFT,0,false);
 		mPoseChanged = true;
 	}
 
