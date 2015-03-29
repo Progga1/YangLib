@@ -65,7 +65,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	public float mScreenShotWidth = 1;
 	public float mScreenShotHeight = 1;
 
-	public int mMaxStepsPerCycle = 100;
+	public int mMaxStepsPerCycle = 10;
 
 	private UpdateMode mUpdateMode;
 	protected boolean mInitialized = false;

@@ -60,6 +60,8 @@ public class YangTouchSurface extends GLSurfaceView {
 		}else{
 			DebugYang.println("App references already set");
 		}
+
+		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_FOREGROUND);
 	}
 
 	public void setSurface(YangSurface surface) {

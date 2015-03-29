@@ -27,6 +27,7 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 
 	public void defaultInit(YangTouchSurface androidSurface) {
 		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_FOREGROUND);
 
 		activityOut("INIT");
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);

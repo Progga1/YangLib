@@ -26,14 +26,11 @@ public abstract class AbstractSound {
 	}
 
 	public void play(float volume) {
-		setVolume(volume);
-		play();
+		play(volume, mBalance, mSpeed, mRepeatCount);
 	}
 
 	public void play(float volume,float balance) {
-		setVolume(volume);
-		setBalance(balance);
-		play();
+		play(volume, balance, mSpeed, mRepeatCount);
 	}
 
 	/**
