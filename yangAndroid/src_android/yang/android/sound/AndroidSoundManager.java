@@ -71,6 +71,7 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 			try {Thread.sleep(30); } catch (Exception e) {};
 		}
 		sound.setLoaded();
+		sound.play(0);
 	}
 
 	public SoundPool getSoundPool() {
