@@ -8,15 +8,13 @@ public class BasicProgram extends AbstractProgram {
 	public static int COLOR_TEXTURE_LEVEL = 0;
 
 	public final static String VERTEX_SHADER =
-			"#ANDROID precision mediump float;\r\n" +
 			"uniform mat4 projTransform;\r\n" +
-			"uniform vec4 colorFactor;\r\n" +
-			"attribute vec4 vPosition;\r\n" +
-			"attribute vec2 vTexture;\r\n" +
-			"#ANDROID attribute lowp vec4 vColor;\r\n" +
-			"#PC attribute vec4 vColor;\r\n" +
-			"varying vec2 texCoord;\r\n" +
-			"#ANDROID varying lowp vec4 color;\r\n" +
+			"#LOWP uniform vec4 colorFactor;\r\n" +
+			"#MEDIUMP attribute vec4 vPosition;\r\n" +
+			"#HIGHP attribute vec2 vTexture;\r\n" +
+			"#MEDIUMP attribute vec4 vColor;\r\n" +
+			"#HIGHP varying vec2 texCoord;\r\n" +
+			"#ANDROID varying mediump vec4 color;\r\n" +
 			"#PC varying vec4 color;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
@@ -45,11 +43,9 @@ public class BasicProgram extends AbstractProgram {
 			"}\r\n";
 
 	public final static String FRAGMENT_SHADER =
-			"#ANDROID precision mediump float;\r\n" +
-			"uniform sampler2D texSampler;\r\n" +
-			"varying vec2 texCoord;\r\n" +
-			"#ANDROID varying lowp vec4 color;\r\n" +
-			"#PC varying vec4 color;\r\n" +
+			"#LOWP uniform sampler2D texSampler;\r\n" +
+			"#HIGHP varying vec2 texCoord;\r\n" +
+			"#MEDIUMP varying vec4 color;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
 			"	gl_FragColor = texture2D(texSampler, texCoord) * color;\r\n" +

@@ -155,10 +155,21 @@ public class AndroidGLProgram extends GLProgram {
 		GLES20.glUniform1i(handle, value);
 	}
 
+	private String insert(String line,String word) {
+		int i = line.indexOf(' ',1);
+		return line.substring(0,i)+" "+word+line.substring(i);
+	}
+
 	@Override
 	protected String evaluateMacro(String key, String value) {
 		if(key.equals("ANDROID"))
 			return value;
+		else if(key.equals("LOWP"))
+			return insert(value,"lowp");
+		else if(key.equals("MEDIUMP"))
+			return insert(value,"mediump");
+		else if(key.equals("HIGHP"))
+			return insert(value,"highp");
 		else
 			return null;
 	}
