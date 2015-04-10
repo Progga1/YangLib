@@ -10,6 +10,14 @@ public class Basic3DProgram extends BasicProgram {
 	public boolean mHasNormal = false;
 	public boolean mHasEyePosition = false;
 
+	public Basic3DProgram(int precPosition,int precTexCoord,int precColor) {
+		super(precPosition,precTexCoord,precColor);
+	}
+
+	public Basic3DProgram() {
+		super();
+	}
+
 	@Override
 	protected void initHandles() {
 		super.initHandles();

@@ -22,7 +22,7 @@ public class ShadowHelper {
 	private final DepthProgram mDepthProgram = new DepthProgram();
 	private static YangMatrix depthTrafoCorrection;
 	public static TextureProperties defaultTextureSettings = createTextureSettings();
-	public static float DEFAULT_BIAS = 0.0025f;
+	public static float DEFAULT_BIAS = 0.01f;
 
 	private GraphicsTranslator mGraphics;
 	public Default3DGraphics mGraphics3D;

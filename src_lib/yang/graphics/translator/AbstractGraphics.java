@@ -63,6 +63,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 
 	//Abstract methods
 	public abstract ShaderType getDefaultProgram();
+	public abstract void setNewDefaultProgram(ShaderType newDefaultProgram);
 	protected abstract int[] getBufferElementSizes();
 	protected abstract float[][] getNeutralBufferElements();
 

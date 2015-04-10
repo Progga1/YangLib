@@ -161,6 +161,11 @@ public class AndroidGLProgram extends GLProgram {
 	}
 
 	@Override
+	public boolean hasPrecision() {
+		return true;
+	}
+
+	@Override
 	protected String evaluateMacro(String key, String value) {
 		if(key.equals("ANDROID"))
 			return value;

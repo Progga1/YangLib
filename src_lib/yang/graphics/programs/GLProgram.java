@@ -48,8 +48,11 @@ public abstract class GLProgram {
 		return result.toString();
 	}
 
-	public final void compile(String vertexShaderCode, String fragmentShaderCode,Object sender) {
+	public boolean hasPrecision() {
+		return false;
+	}
 
+	public final void compile(String vertexShaderCode, String fragmentShaderCode,Object sender) {
 		final String vertexPreProc = preProcessCode(vertexShaderCode);
 		final String fragmentPreProc = preProcessCode(fragmentShaderCode);
 		derivedCompile(vertexPreProc,fragmentPreProc,sender);

@@ -6,16 +6,16 @@ import yang.graphics.translator.AbstractGFXLoader;
 public class BasicProgram extends AbstractProgram {
 
 	public static int COLOR_TEXTURE_LEVEL = 0;
+	public int mColorPrecision,mPositionPrecision,mTexCoordPrecision;
 
 	public final static String VERTEX_SHADER =
 			"uniform mat4 projTransform;\r\n" +
-			"#LOWP uniform vec4 colorFactor;\r\n" +
-			"#MEDIUMP attribute vec4 vPosition;\r\n" +
-			"#HIGHP attribute vec2 vTexture;\r\n" +
-			"#MEDIUMP attribute vec4 vColor;\r\n" +
-			"#HIGHP varying vec2 texCoord;\r\n" +
-			"#ANDROID varying mediump vec4 color;\r\n" +
-			"#PC varying vec4 color;\r\n" +
+			"uniform \\COLORP vec4 colorFactor;\r\n" +
+			"attribute \\POSITIONP vec4 vPosition;\r\n" +
+			"attribute \\TEXCOORDP vec2 vTexture;\r\n" +
+			"attribute \\COLORP vec4 vColor;\r\n" +
+			"varying \\TEXCOORDP vec2 texCoord;\r\n" +
+			"varying \\COLORP vec4 color;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
 			"	gl_Position = projTransform * vPosition;\r\n" +
@@ -26,13 +26,13 @@ public class BasicProgram extends AbstractProgram {
 
 	public final static String VERTEX_SHADER_SCREENPOS =
 			"uniform mat4 projTransform;\r\n" +
-			"uniform vec4 colorFactor;\r\n" +
-			"attribute vec4 vPosition;\r\n" +
-			"attribute vec2 vTexture;\r\n" +
-			"attribute vec4 vColor;\r\n" +
-			"varying vec2 texCoord;\r\n" +
-			"varying vec4 color;\r\n" +
-			"varying vec4 screenPos;\r\n" +
+			"uniform \\COLORP vec4 colorFactor;\r\n" +
+			"attribute \\POSITIONP vec4 vPosition;\r\n" +
+			"attribute \\TEXCOORDP vec2 vTexture;\r\n" +
+			"attribute \\COLORP vec4 vColor;\r\n" +
+			"varying \\TEXCOORDP vec2 texCoord;\r\n" +
+			"varying \\COLORP vec4 color;\r\n" +
+			"#MEDIUMP varying vec4 screenPos;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
 			"	gl_Position = projTransform * vPosition;\r\n" +
@@ -43,9 +43,9 @@ public class BasicProgram extends AbstractProgram {
 			"}\r\n";
 
 	public final static String FRAGMENT_SHADER =
-			"#LOWP uniform sampler2D texSampler;\r\n" +
-			"#HIGHP varying vec2 texCoord;\r\n" +
-			"#MEDIUMP varying vec4 color;\r\n" +
+			"uniform \\COLORP sampler2D texSampler;\r\n" +
+			"varying \\TEXCOORDP vec2 texCoord;\r\n" +
+			"varying \\COLORP vec4 color;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
 			"	gl_FragColor = texture2D(texSampler, texCoord) * color;\r\n" +
@@ -67,6 +67,16 @@ public class BasicProgram extends AbstractProgram {
 	public boolean mHasWorldTransform = false;
 	public boolean mHasColorFactor = false;
 
+	public BasicProgram(int precPosition,int precTexCoord,int precColor) {
+		mPositionPrecision = precPosition;
+		mTexCoordPrecision = precTexCoord;
+		mColorPrecision = precColor;
+	}
+
+	public BasicProgram() {
+		this(2,2,1);
+	}
+
 	protected String getSuppDataIdentifier() {
 		return "vSuppData";
 	}
@@ -83,6 +93,13 @@ public class BasicProgram extends AbstractProgram {
 		mColorFactorHandle = mProgram.getUniformLocation("colorFactor");
 		mTimeHandle = mProgram.getUniformLocation("time");
 		mTexSamplerHandle = mProgram.getUniformLocation("texSampler");
+	}
+
+	@Override
+	protected void preInit() {
+		addPrecisionVariable("POSITIONP",mPositionPrecision);
+		addPrecisionVariable("TEXCOORDP",mTexCoordPrecision);
+		addPrecisionVariable("COLORP",mColorPrecision);
 	}
 
 	@Override

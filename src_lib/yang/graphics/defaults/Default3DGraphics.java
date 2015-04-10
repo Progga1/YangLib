@@ -71,6 +71,11 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	@Override
+	public void setNewDefaultProgram(Basic3DProgram newDefaultProgram) {
+		mDefaultProgram = newDefaultProgram;
+	}
+
+	@Override
 	public void shareBuffers(DefaultGraphics<?> graphics) {
 		initDynamicBuffer();
 		mDynamicVertexBuffer.linkBuffer(DefaultGraphics.ID_POSITIONS, graphics.mDynamicVertexBuffer, DefaultGraphics.ID_POSITIONS);
@@ -265,7 +270,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			putNormal(norm.mX,norm.mY,norm.mZ);
 		}
 	}
-	
+
 	public void putCubePart(float[] array,Vector3f norm,YangMatrix transform) {
 		putCubePart(array,norm,transform,RECT_TEXTURECOORDS);
 	}

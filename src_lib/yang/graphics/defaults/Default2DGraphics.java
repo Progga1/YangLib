@@ -32,6 +32,11 @@ public class Default2DGraphics extends DefaultGraphics<BasicProgram>{
 		mTranslator.addProgram(mDefaultProgram);
 	}
 
+	@Override
+	public void setNewDefaultProgram(BasicProgram newDefaultProgram) {
+		mDefaultProgram = newDefaultProgram;
+	}
+
 	//TODO does nothing
 	@Override
 	public void setStereoZDistance(float distance) {
