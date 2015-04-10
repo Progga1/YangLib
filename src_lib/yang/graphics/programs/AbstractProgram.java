@@ -45,7 +45,7 @@ public abstract class AbstractProgram {
 			String key = "\\"+entry.getKey();
 			vertexShaderCode = vertexShaderCode.replace(key, entry.getValue());
 			fragmentShaderCode = fragmentShaderCode.replace(key, entry.getValue());
-		}System.out.println(vertexShaderCode);System.out.println(fragmentShaderCode);
+		}
 		mProgram.compile(vertexShaderCode, fragmentShaderCode,this);
 
 		initHandles();
