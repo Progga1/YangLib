@@ -43,12 +43,23 @@ public abstract class YangCamera extends CameraTransformations {
 		}
 	}
 
+	public void setPosition(float x, float y, float z) {
+		mPosition.set(x,y,z);
+	}
+
 	@Override
 	public void getRightVector(Vector3f target) {
 		final float[] mat = mViewTransform.mValues;
 		target.mX = mat[0];
 		target.mY = mat[4];
 		target.mZ = mat[8];
+	}
+
+	public void setRightVector(float x, float y, float z) {
+		final float[] mat = mViewTransform.mValues;
+		mat[0] = x;
+		mat[4] = y;
+		mat[8] = z;
 	}
 
 	@Override
@@ -59,12 +70,26 @@ public abstract class YangCamera extends CameraTransformations {
 		target.mZ = mat[9];
 	}
 
+	public void setUpVector(float x, float y, float z) {
+		final float[] mat = mViewTransform.mValues;
+		mat[1] = x;
+		mat[5] = y;
+		mat[9] = z;
+	}
+
 	@Override
 	public void getForwardVector(Vector3f target) {
 		final float[] mat = mViewTransform.mValues;
 		target.mX = mat[2];
 		target.mY = mat[6];
 		target.mZ = mat[10];
+	}
+
+	public void setForwardVector(float x, float y, float z) {
+		final float[] mat = mViewTransform.mValues;
+		mat[2] = x;
+		mat[6] = y;
+		mat[10] = z;
 	}
 
 	public void setProjectionUpdated() {

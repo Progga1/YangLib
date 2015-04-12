@@ -222,7 +222,7 @@ public class AndroidGraphics extends GraphicsTranslator {
 			}while(width>=1 && properties.isMipMap());
 
 		}else
-			GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, width, height, 0, outFormat, GLES20.GL_UNSIGNED_BYTE, buffer);
+			GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, format, width, height, 0, outFormat, properties.mSigned?GLES20.GL_BYTE:GLES20.GL_UNSIGNED_BYTE, buffer);
 		assert checkError("Pass texture data");
 
 	}

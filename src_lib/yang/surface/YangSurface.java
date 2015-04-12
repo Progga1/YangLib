@@ -750,6 +750,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	}
 
 	public void exit() {
+		onExit();
 		App.systemCalls.exit();
 	}
 
@@ -807,6 +808,10 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 
 	public boolean isMakingScreenshot() {
 		return mMakingScreenshot;
+	}
+
+	public void onExit() {
+
 	}
 
 }

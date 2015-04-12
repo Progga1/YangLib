@@ -102,6 +102,7 @@ public class YangGLESFrame extends PCFrame {
 	@Override
 	public void close() {
 		mGraphics.stop();
+		mSurface.onExit();
 		super.close();
 	}
 

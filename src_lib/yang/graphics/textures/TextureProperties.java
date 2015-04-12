@@ -14,6 +14,7 @@ public class TextureProperties {
 	public TextureFilter mFilter;
 	public int mChannels;
 	public boolean mCompressIfPossible = true;
+	public boolean mSigned = false;
 
 	public TextureProperties(TextureWrap wrapX,TextureWrap wrapY,TextureFilter filter,int channels) {
 		mWrapX = wrapX;

@@ -202,7 +202,7 @@ public class PCGL2ES2Graphics extends PCGraphics implements GLEventListener {
 
 		int channels = properties.mChannels;
 		final int format = channelsToConst(channels);
-		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, GL2ES2.GL_UNSIGNED_BYTE, data);
+		gles2.glTexImage2D(GL2ES2.GL_TEXTURE_2D, 0, format, width, height, 0, format, properties.mSigned?GL2ES2.GL_BYTE:GL2ES2.GL_UNSIGNED_BYTE, data);
 		assert checkErrorInst("Pass texture data with "+channels+" channels");
 	}
 
