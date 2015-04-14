@@ -55,12 +55,12 @@ public abstract class YangCamera extends CameraTransformations {
 		target.mZ = mat[8];
 	}
 
-	public void setRightVector(float x, float y, float z) {
-		final float[] mat = mViewTransform.mValues;
-		mat[0] = x;
-		mat[4] = y;
-		mat[8] = z;
-	}
+//	public void setRightVector(float x, float y, float z) {
+//		final float[] mat = mCameraTransform.mValues;
+//		mat[0] = x;
+//		mat[4] = y;
+//		mat[8] = z;
+//	}
 
 	@Override
 	public void getUpVector(Vector3f target) {
@@ -70,12 +70,12 @@ public abstract class YangCamera extends CameraTransformations {
 		target.mZ = mat[9];
 	}
 
-	public void setUpVector(float x, float y, float z) {
-		final float[] mat = mViewTransform.mValues;
-		mat[1] = x;
-		mat[5] = y;
-		mat[9] = z;
-	}
+//	public void setUpVector(float x, float y, float z) {
+//		final float[] mat = mCameraTransform.mValues;
+//		mat[1] = x;
+//		mat[5] = y;
+//		mat[9] = z;
+//	}
 
 	@Override
 	public void getForwardVector(Vector3f target) {
@@ -85,12 +85,12 @@ public abstract class YangCamera extends CameraTransformations {
 		target.mZ = mat[10];
 	}
 
-	public void setForwardVector(float x, float y, float z) {
-		final float[] mat = mViewTransform.mValues;
-		mat[2] = x;
-		mat[6] = y;
-		mat[10] = z;
-	}
+//	public void setForwardVector(float x, float y, float z) {
+//		final float[] mat = mCameraTransform.mValues;
+//		mat[2] = x;
+//		mat[6] = y;
+//		mat[10] = z;
+//	}
 
 	public void setProjectionUpdated() {
 		mProjectionUpdated = true;
@@ -99,6 +99,11 @@ public abstract class YangCamera extends CameraTransformations {
 	@Override
 	public YangMatrix getViewTransformReference() {
 		return mViewTransform;
+	}
+
+	public void setViewByTransform(YangMatrix cameraTransform) {
+		cameraTransform.getTranslation(mPosition);
+		mCameraTransform.set(cameraTransform);
 	}
 
 //	public Point3f normToWorld(float normX,float normY,float normZ) {

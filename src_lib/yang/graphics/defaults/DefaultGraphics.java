@@ -179,6 +179,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 //	}
 
 	public void setCamera(YangCamera camera) {
+		mTranslator.flush();
 		YangMatrix trafo = mTranslator.mCurrentSurface.getViewPostTransform();
 		mCameraProjection.copyFrom(camera,trafo);
 	}

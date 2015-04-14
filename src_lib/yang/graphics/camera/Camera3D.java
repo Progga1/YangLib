@@ -4,7 +4,6 @@ import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.math.MatrixOps;
 import yang.math.objects.Point3f;
-import yang.math.objects.YangMatrix;
 
 public class Camera3D extends YangCamera {
 
@@ -69,11 +68,6 @@ public class Camera3D extends YangCamera {
 				focusY+(float)Math.sin(beta)*distance,
 				focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance,
 				0,1,0);
-	}
-
-	public void setViewByTransform(YangMatrix cameraTransform) {
-		cameraTransform.getTranslation(mPosition);
-		mCameraTransform.set(cameraTransform);
 	}
 
 }
