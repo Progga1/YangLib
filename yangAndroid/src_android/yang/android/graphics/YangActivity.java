@@ -32,6 +32,8 @@ public abstract class YangActivity extends Activity implements ExitCallback {
 		activityOut("INIT");
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+		if (DebugYang.showMenuButton) getApplicationInfo().targetSdkVersion = 10;
+
 		mGLView = androidSurface;
 		if (mGLView.getParent() == null) setContentView(mGLView);
 	}
