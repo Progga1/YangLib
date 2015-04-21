@@ -2,11 +2,12 @@ package yang.util;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-
-public class YangList<E> implements List<E> {
+//Changed from implements List to be compatible with java 7 compilers
+public class YangList<E> extends LinkedList<E> {
 
 	private class Node {
 		E elem;
@@ -204,7 +205,7 @@ public class YangList<E> implements List<E> {
 		iterator.prepare(0);
 		return iterator;
 	}
-	
+
 	public Iterator<E> iterator(int index) {
 		YangListIterator<E> iterator = iterators[index];
 		iterator.prepare(0);
@@ -392,11 +393,13 @@ public class YangList<E> implements List<E> {
 		return size + " items " + list+"] ";
 	}
 
+	@Override
 	public E getFirst() {
 		if (first != null) return first.elem;
 		else return null;
 	}
 
+	@Override
 	public E getLast() {
 		if (last != null) return last.elem;
 		else return null;
