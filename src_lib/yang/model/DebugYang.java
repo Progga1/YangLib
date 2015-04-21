@@ -30,6 +30,8 @@ public class DebugYang {
 
 	public static boolean useAlternativeParabola = false;
 
+	public static boolean showMenuButton = false;
+
 	public static void setRelease() {
 		DEBUG_LEVEL = 0;
 		DRAW_GFX_VALUES = false;
