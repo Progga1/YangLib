@@ -35,7 +35,7 @@ public class ShadowHelper {
 	public float mAddLight = 0.1f;
 	public float mLightFactor = 1f;
 	public boolean mRenderToScreen = false;
-	public float mBias = DEFAULT_BIAS;
+	protected float mBias = DEFAULT_BIAS;
 
 	private static TextureProperties createTextureSettings() {
 		final TextureProperties result = new TextureProperties(TextureWrap.CLAMP,TextureWrap.CLAMP,TextureFilter.LINEAR);
@@ -54,13 +54,16 @@ public class ShadowHelper {
 		return mDepthProgram;
 	}
 
-	public synchronized YangMatrix getDepthTrafoCorrection() {
+	public synchronized YangMatrix refreshTransformation() {
 		if(depthTrafoCorrection==null) {
 			depthTrafoCorrection = mGraphics.createTransformationMatrix();
-			depthTrafoCorrection.loadIdentity();
-			depthTrafoCorrection.translate(0.5f, 0.5f, 0.5f+mBias);
-			depthTrafoCorrection.scale(0.5f, 0.5f, -0.5f);
 		}
+		depthTrafoCorrection.loadIdentity();
+		depthTrafoCorrection.translate(0.5f, 0.5f, 0.5f+mBias);
+		depthTrafoCorrection.scale(0.5f, 0.5f, -0.5f);
+		mDepthTransformation = mGraphics.createTransformationMatrix();
+		mDepthTransformation.setTranslation(0,0,-50);
+		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
 		return depthTrafoCorrection;
 	}
 
@@ -87,7 +90,7 @@ public class ShadowHelper {
 		mGraphics.bindTexture(getDepthMap(),ShadowProgram.DEPTH_TEXTURE_LEVEL);
 	}
 
-	public void setProperties(ShadowSubShader shadowSubShader) {
+	public void setPropertiesTo(ShadowSubShader shadowSubShader) {
 		mGraphics.bindTexture(mDepthMap.mTargetTexture,shadowSubShader.mTextureLevel);
 		shadowSubShader.mMainShader.mProgram.setUniformMatrix4f(shadowSubShader.mDepthMapTransformHandle, mDepthTransformation.mValues);
 	}
@@ -97,12 +100,9 @@ public class ShadowHelper {
 		mGraphics = graphics3D.mTranslator;
 		mSize = size;
 		mDepthMap = mGraphics.createRenderTarget(mSize, mSize, defaultTextureSettings);
-		mDepthMap.mTargetTexture.fillWithColor(FloatColor.BLACK);	//TODO necessary?
+//		mDepthMap.mTargetTexture.fillWithColor(FloatColor.BLACK);	//TODO necessary?
 		getDepthProgram();
-		getDepthTrafoCorrection();
-		mDepthTransformation = mGraphics.createTransformationMatrix();
-		mDepthTransformation.setTranslation(0,0,-50);
-		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
+		refreshTransformation();
 	}
 
 	public void beginDepthRendering() {
@@ -126,6 +126,11 @@ public class ShadowHelper {
 
 	public void free() {
 		mGraphics.deleteRenderTarget(mDepthMap);
+	}
+
+	public void setBias(float bias) {
+		mBias = bias;
+		refreshTransformation();
 	}
 
 }
