@@ -191,6 +191,13 @@ public class Point3f {
 		mZ = point1.mZ*dWeight + point2.mZ*weight;
 	}
 
+	public void setLerp(float x1,float y1,float z1, float x2,float y2,float z2, float weight) {
+		final float dWeight = 1-weight;
+		mX = x1*dWeight + x2*weight;
+		mY = y1*dWeight + y2*weight;
+		mZ = z1*dWeight + z2*weight;
+	}
+
 	public void scale(float scalar) {
 		mX *= scalar;
 		mY *= scalar;
@@ -214,6 +221,10 @@ public class Point3f {
 		float dy = y-mY;
 		float dz = z-mZ;
 		return dx*dx + dy*dy + dz*dz;
+	}
+
+	public boolean equals(Point3f point) {
+		return mX==point.mX && mY==point.mY && mZ==point.mZ;
 	}
 
 }
