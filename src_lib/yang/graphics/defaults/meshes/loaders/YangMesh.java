@@ -66,7 +66,6 @@ public class YangMesh {
 	public YangArmaturePosture mCurArmature = null;
 	public boolean mWireFrames = false;
 
-
 	public DrawBatch mDrawBatch;
 
 	//TEMP
@@ -228,7 +227,6 @@ public class YangMesh {
 			for(int k=0;k<weights;k++) {
 				mSkinWeights[skinBaseId+k] *= sum;
 			}
-
 		}
 	}
 

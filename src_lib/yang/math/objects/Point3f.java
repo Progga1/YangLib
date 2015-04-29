@@ -150,6 +150,13 @@ public class Point3f {
 		return dX+dY+dZ;
 	}
 
+	public float getSqrDistance(Point3f point) {
+		final float dX = mX-point.mX;
+		final float dY = mY-point.mY;
+		final float dZ = mZ-point.mZ;
+		return dX*dX+dY*dY+dZ*dZ;
+	}
+
 	public float getManhattanDistance(Point3f point) {
 		return getManhattanDistance(point.mX,point.mY,point.mZ);
 	}
