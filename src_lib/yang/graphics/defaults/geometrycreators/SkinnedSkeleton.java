@@ -4,7 +4,6 @@ import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.meshes.armature.YangArmature;
 import yang.graphics.defaults.meshes.armature.YangArmaturePosture;
 import yang.graphics.defaults.meshes.loaders.YangMesh;
-import yang.graphics.translator.AbstractGraphics;
 import yang.physics.massaggregation.MassAggregation;
 
 public class SkinnedSkeleton {
@@ -59,10 +58,13 @@ public class SkinnedSkeleton {
 
 			mGraphics.setGlobalTransformEnabled(true);
 			mGraphics.mWorldTransform.stackPush();
-			mGraphics.mWorldTransform.set(mSkeleton.mTransform);
+			mGraphics.mWorldTransform.multiplyRight(mSkeleton.mTransform);
 			mGraphics.mWorldTransform.scale(mSkeleton.getScale());
 
-			mMesh.drawDynamic();
+			if(mMesh.isDynamic())
+				mMesh.drawDynamic();
+			else
+				mMesh.drawStatic();
 
 			mGraphics.mWorldTransform.stackPop();
 		}else{

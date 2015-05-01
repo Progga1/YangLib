@@ -176,6 +176,9 @@ public class YangMesh {
 	}
 
 	public void generateArmatureWeights(YangArmature armature) {
+		if(armature.getBoneCount()<=0) {
+			return;
+		}
 		if(mPositions==null)
 			throw new RuntimeException("Cannot use armature on static mesh");
 		int weights = mSkinJointsPerVertex;
@@ -299,6 +302,8 @@ public class YangMesh {
 	}
 
 	public void updateSkinningVertices(YangArmaturePosture armaturePose) {
+		if(mSkinIds==null)
+			return;
 		if(mResultPositions==null)
 			initResultValues();
 		int weightBaseId = 0;
@@ -447,6 +452,10 @@ public class YangMesh {
 		putBuffers(vertexBuffer);
 
 		drawBuffer(vertexBuffer);
+	}
+
+	public boolean isDynamic() {
+		return mPositions!=null;
 	}
 
 	public void updateDrawBatch() {
