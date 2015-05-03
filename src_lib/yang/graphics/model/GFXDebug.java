@@ -43,6 +43,10 @@ public class GFXDebug implements PrintInterface {
 	public boolean mDrawPointerContours = true;
 	public float mPointerSize = 0.06f;
 	public FloatColor[] mPointerColors = DEFAULT_PALETTE;
+	public Texture mDisplayTexture;
+	public float mDisplayTextureHeight = 1;
+	public FloatColor mDisplayTextureColor = FloatColor.WHITE.clone();
+	public boolean mDisplayTextureFlipY = false;
 
 	//Object
 	public YangSurface mSurface;
@@ -151,7 +155,7 @@ public class GFXDebug implements PrintInterface {
 
 		final float playSpeed = mSurface.mPlaySpeed;
 
-		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString.equals("")) && (mSurface.mMacro==null || !YangSurface.SHOW_MACRO_SIGN || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS && !DebugYang.DRAW_FPS_BAR)
+		if(playSpeed==1 && mTempPrintString.mMarker==0 && (DebugYang.stateString==null || DebugYang.stateString.equals("")) && (mSurface.mMacro==null || !YangSurface.SHOW_MACRO_SIGN || mSurface.mMacro.mFinished) && mExceptionString==null && !DebugYang.DRAW_POINTERS && !DebugYang.DRAW_FPS_BAR && mDisplayTexture==null)
 			return;
 
 		final float right = mGraphics.getNormRight()-mDebugOffsetX;
@@ -167,6 +171,15 @@ public class GFXDebug implements PrintInterface {
 
 		if(YangSurface.SHOW_MACRO_SIGN && mSurface.mMacro!=null && !mSurface.mMacro.mFinished && ((System.currentTimeMillis()/500)%2==0)) {
 			mExecMacroString.draw(right, mGraphics.getNormTop()-mDebugOffsetY-mFontSize*2, mFontSize);
+		}
+
+		if(mDisplayTexture!=null) {
+			mGraphics.setColor(mDisplayTextureColor);
+			float r = (float)mDisplayTexture.getWidth()/mDisplayTexture.getHeight();
+			float h = mDisplayTextureHeight;
+			float sy = mDisplayTextureFlipY?1:0;
+			mTranslator.bindTexture(mDisplayTexture);
+			mGraphics.drawRect(mGraphics.getNormRight()-r*h, -1, mGraphics.getNormRight(), -1+h, 0,sy,1,1-sy);
 		}
 
 		if(playSpeed!=1) {

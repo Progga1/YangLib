@@ -9,6 +9,7 @@ import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.interfaces.Clock;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
+import yang.graphics.translator.Texture;
 import yang.sound.AbstractSoundManager;
 import yang.surface.StringsXML;
 import yang.surface.YangSurface;
@@ -64,6 +65,15 @@ public abstract class YangProgramState<StateSystemType extends YangProgramStateS
 		postInit();
 		mInitialized = true;
 		return this;
+	}
+
+	protected void setDisplayDebugTexture(Texture texture,boolean flipY) {
+		mStateSystem.mGFXDebug.mDisplayTexture = texture;
+		mStateSystem.mGFXDebug.mDisplayTextureFlipY = flipY;
+	}
+
+	protected void setDisplayDebugTexture(Texture texture) {
+		setDisplayDebugTexture(texture,false);
 	}
 
 	public boolean isInitialized() {
