@@ -306,7 +306,7 @@ public class YangMatrix {
 //		mMatrix[15] = 1;
 	}
 
-	public void mirrorAtPlane(float nx,float ny,float nz, Vector3f base) {
+	public void mirrorAtPlane(float nx,float ny,float nz, Point3f base) {
 		MatrixOps.createDirectionTrafo(mTempMat1, nx,ny,nz);
 		if(base!=null)
 			translate(base);
@@ -568,7 +568,7 @@ public class YangMatrix {
 	public void apply3D(Point3f point,Point3f target) {
 		MatrixOps.applyFloatMatrix3D(mValues, point.mX,point.mY,point.mZ, target);
 	}
-	
+
 	public void apply3DTransposed(Point3f point, Point3f target) {
 		MatrixOps.applyFloatMatrix3DTransposed(mValues, point.mX,point.mY,point.mZ, target);
 	}
@@ -892,7 +892,7 @@ public class YangMatrix {
 		this.mValues[13] = 0;
 		this.mValues[14] = 0;
 		this.mValues[15] = 1;
-		
+
 //		float[] values = matrix.mValues;
 //		float magnX = 1/(float)Math.sqrt(values[0]*values[0] + values[4]*values[4] + values[8]*values[8]);
 //		float magnY = 1/(float)Math.sqrt(values[1]*values[1] + values[5]*values[5] + values[9]*values[9]);

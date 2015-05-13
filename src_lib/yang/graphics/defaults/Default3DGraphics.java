@@ -554,4 +554,12 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mProjectionMatrix.apply3D(x,y,z,target);
 	}
 
+	public void mirrorCameraAtPlane(float nx,float ny,float nz, Point3f base) {
+		mCameraProjection.getViewProjReference().mirrorAtPlane(nx,ny,nz, base);
+	}
+
+	public void mirrorCameraAtPlane(Vector3f vector,Point3f base) {
+		mirrorCameraAtPlane(vector.mX,vector.mY,vector.mZ, base);
+	}
+
 }
