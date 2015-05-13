@@ -82,8 +82,8 @@ public class StereoRendering extends StereoVision {
 		mGraphics.enableAttributePointer(stereoShader.mTexCoordsHandle);
 		mGraphics.setAttributeBuffer(stereoShader.mPositionHandle, DefaultGraphics.ID_POSITIONS);
 		mGraphics.setAttributeBuffer(stereoShader.mTexCoordsHandle, DefaultGraphics.ID_TEXTURES);
-		mGraphics.setAttributeBuffer(stereoShader.mPositionHandle, DefaultGraphics.ID_POSITIONS);
-		mGraphics.setAttributeBuffer(stereoShader.mTexCoordsHandle, DefaultGraphics.ID_TEXTURES);
+//		mGraphics.setAttributeBuffer(stereoShader.mPositionHandle, DefaultGraphics.ID_POSITIONS);
+//		mGraphics.setAttributeBuffer(stereoShader.mTexCoordsHandle, DefaultGraphics.ID_TEXTURES);
 
 		//Draw
 		mGraphics.clear(0,0,0, GLMasks.DEPTH_BUFFER_BIT);
