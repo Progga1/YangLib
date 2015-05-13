@@ -20,7 +20,6 @@ public class StereoVision {
 	protected YangMatrix mRightEyeTransform = new YangMatrix();
 	public YangMatrix mPostTransform = null;
 
-
 	public StereoVision() {
 		setInterOcularDistance(DEFAULT_INTEROCULAR_DISTANCE);
 	}

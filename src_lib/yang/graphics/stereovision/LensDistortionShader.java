@@ -11,7 +11,7 @@ public class LensDistortionShader extends MinimumTexShader {
 	public int mShiftHandle;
 	//public float[] mLensParameters = new float[]{1.5f,1,1,1};
 	public float mScaleX = 0.36f,mScaleY = 0.6f;
-	public float mScaleToLens = 2;
+	public float mScaleToLens = 1.9f;
 	public float[] mLensParameters = new float[]{1,0.22f,0.24f,0};
 
 	public final static String VERTEX_SHADER =
