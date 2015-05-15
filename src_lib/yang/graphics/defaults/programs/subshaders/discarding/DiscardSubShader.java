@@ -1,4 +1,8 @@
-package yang.graphics.programs.permutations;
+package yang.graphics.defaults.programs.subshaders.discarding;
+
+import yang.graphics.programs.permutations.ShaderDeclarations;
+import yang.graphics.programs.permutations.ShaderPermutationsParser;
+import yang.graphics.programs.permutations.SubShader;
 
 
 public class DiscardSubShader extends SubShader {
