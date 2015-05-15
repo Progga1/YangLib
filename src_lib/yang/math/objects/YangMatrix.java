@@ -915,4 +915,16 @@ public class YangMatrix {
 //		this.mValues[15] = 1;
 	}
 
+	public void applyToPlane(float x,float y,float z, float nx,float ny,float nz, Point3f basePoint, Vector3f planeNormal) {
+//		float bx = MatrixOps.applyFloatMatrixX3D(mValues, x,y,z);
+//		float by = MatrixOps.applyFloatMatrixY3D(mValues, x,y,z);
+//		float bz = MatrixOps.applyFloatMatrixZ3D(mValues, x,y,z);
+//		float bnx = MatrixOps.applyFloatMatrixX3D(mValues, x,y,z);
+//		float bny = MatrixOps.applyFloatMatrixY3D(mValues, x,y,z);
+//		float bnz = MatrixOps.applyFloatMatrixZ3D(mValues, x,y,z);
+		this.apply3D(x,y,z, basePoint);
+		this.apply3D(x+nx, y+ny, y+nz, planeNormal);
+		planeNormal.sub(basePoint);
+	}
+
 }
