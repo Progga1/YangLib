@@ -19,6 +19,7 @@ public class StereoVision {
 	protected YangMatrix mLeftEyeTransform = new YangMatrix();
 	protected YangMatrix mRightEyeTransform = new YangMatrix();
 	public YangMatrix mPostTransform = null;
+	public float mEyeShiftFactor = 1;
 
 	public StereoVision() {
 		setInterOcularDistance(DEFAULT_INTEROCULAR_DISTANCE);
@@ -29,7 +30,7 @@ public class StereoVision {
 	}
 
 	public void refreshTransforms() {
-		mCameraShift = mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT*0.5f;
+		mCameraShift = mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT*0.5f * mEyeShiftFactor;System.out.println(mEyeShiftFactor);
 		mLeftEyeTransform.setTranslation(-mCameraShift, 0);
 		mRightEyeTransform.setTranslation(mCameraShift, 0);
 		mLeftResultTransform.set(mLeftEyeTransform);
