@@ -927,4 +927,30 @@ public class YangMatrix {
 		planeNormal.sub(basePoint);
 	}
 
+	public void normalizeScale() {
+		float d = (float)Math.sqrt(mValues[0]*mValues[0] + mValues[1]*mValues[1] + mValues[2]*mValues[2]);
+		if(d!=0) {
+			mValues[0] /= d;
+			mValues[1] /= d;
+			mValues[2] /= d;
+		}
+		d = (float)Math.sqrt(mValues[4]*mValues[4] + mValues[5]*mValues[5] + mValues[6]*mValues[6]);
+		if(d!=0) {
+			mValues[4] /= d;
+			mValues[5] /= d;
+			mValues[6] /= d;
+		}
+		d = (float)Math.sqrt(mValues[8]*mValues[8] + mValues[9]*mValues[9] + mValues[10]*mValues[10]);
+		if(d!=0) {
+			mValues[8] /= d;
+			mValues[9] /= d;
+			mValues[10] /= d;
+		}
+	}
+
+	public void fromToTransform(YangMatrix fromTransform, YangMatrix toTransform) {
+		fromTransform.asInverted(mValues);
+		this.multiplyLeft(toTransform);
+	}
+
 }
