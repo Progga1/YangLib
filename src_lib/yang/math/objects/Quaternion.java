@@ -196,17 +196,17 @@ public class Quaternion {
 	}
 
 	/**
+	 * Matrix must be orthogonal without flipping
+	 */
+	public void setFromMatrix(float[] matrix) {
+		setFromTransform(matrix[YangMatrix.M00], matrix[YangMatrix.M10], matrix[YangMatrix.M20], matrix[YangMatrix.M01], matrix[YangMatrix.M11], matrix[YangMatrix.M21], matrix[YangMatrix.M02], matrix[YangMatrix.M12], matrix[YangMatrix.M22]);
+	}
+
+	/**
 	 * Axes must form orthogonal basis with no flipping
 	 */
 	public void setFromAxes(Vector3f right, Vector3f up, Vector3f forward) {
 		setFromTransform(right.mX, right.mY, right.mZ, up.mX, up.mY, up.mZ, forward.mX, forward.mY, forward.mZ);
-	}
-
-	/**
-	 * Matrix must be orthogonal with no flipping
-	 */
-	public void setFromMatrix(float[] matrix) {
-		setFromTransform(matrix[YangMatrix.M00], matrix[YangMatrix.M10], matrix[YangMatrix.M20], matrix[YangMatrix.M01], matrix[YangMatrix.M11], matrix[YangMatrix.M21], matrix[YangMatrix.M02], matrix[YangMatrix.M12], matrix[YangMatrix.M22]);
 	}
 
 	public void normalize() {

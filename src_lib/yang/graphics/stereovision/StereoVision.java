@@ -30,7 +30,7 @@ public class StereoVision {
 	}
 
 	public void refreshTransforms() {
-		mCameraShift = mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT*0.5f * mEyeShiftFactor;System.out.println(mEyeShiftFactor);
+		mCameraShift = mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT*0.5f * mEyeShiftFactor;
 		mLeftEyeTransform.setTranslation(-mCameraShift, 0);
 		mRightEyeTransform.setTranslation(mCameraShift, 0);
 		mLeftResultTransform.set(mLeftEyeTransform);
