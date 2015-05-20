@@ -30,7 +30,7 @@ public class YangMatrix {
 	public float[] mInverted;
 	protected float[] mBackMatrix;
 	protected float[] mTempMat1,mTempMat2;
-	protected float[][] mStack;
+	public float[][] mStack;
 	public int mStackPointer;	//pre increment
 
 	public static float TO_RAD_FACTOR = (float) Math.PI / 180;
