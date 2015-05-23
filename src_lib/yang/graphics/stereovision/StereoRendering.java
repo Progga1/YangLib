@@ -29,6 +29,7 @@ public class StereoRendering extends StereoVision {
 	public IndexedVertexBuffer mStereoVertexBuffer = null;
 	public TextureRenderTarget mStereoLeftRenderTarget = null;
 	public TextureRenderTarget mStereoRightRenderTarget = null;
+	public boolean mDuplicateLeft = false;
 	public float mLensShift = 0.118f;
 
 	public void setLensParameters(float x,float y,float z,float w) {
@@ -93,7 +94,8 @@ public class StereoRendering extends StereoVision {
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 0,6, GLDrawModes.TRIANGLES);
 		if(LENS_DISTORTION)
 			mUsedDistortionShader.setShiftX(mLensShift);
-		mGraphics.bindTextureNoFlush(mStereoRightRenderTarget.mTargetTexture, 0);
+		if(!mDuplicateLeft)
+			mGraphics.bindTextureNoFlush(mStereoRightRenderTarget.mTargetTexture, 0);
 		mGraphics.drawBufferDirectly(mStereoVertexBuffer, 6,6, GLDrawModes.TRIANGLES);
 
 		//reset

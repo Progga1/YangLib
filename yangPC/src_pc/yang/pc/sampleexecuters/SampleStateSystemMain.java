@@ -4,6 +4,7 @@ import yang.model.DebugYang;
 import yang.model.PathSpecs;
 import yang.pc.gles.YangGLESFrame;
 import yang.samples.statesystem.SampleStateSystem;
+import yang.surface.YangSurface;
 
 public class SampleStateSystemMain {
 

@@ -44,6 +44,7 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 	public static boolean CATCH_EXCEPTIONS = false;
 	public static boolean NO_MACRO_OVERWRITE = false;
 	public static int ALWAYS_STEREO_VISION = 0;
+	public static boolean STEREO_DUPLICATE = false;
 	public static boolean SHOW_MACRO_SIGN = true;
 
 	public final static int RUNTIME_STATE_RUNNING = 0;
@@ -533,21 +534,26 @@ public abstract class YangSurface implements EventQueueHolder,RawEventListener,C
 			mStereoVision.refreshTransforms();
 			try{
 				mGraphics.setTextureRenderTarget(mStereoVision.mStereoLeftRenderTarget);
-//				mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
-//				mGraphics.setStereoTransform(mStereoVision.getLeftEyeTransform());
+				if(STEREO_DUPLICATE) {
+					mActiveEye = StereoVision.EYE_MONO;
+					drawContent(true);
+				}else{
+//					mGraphics.mCameraShiftX = mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
+//					mGraphics.setStereoTransform(mStereoVision.getLeftEyeTransform());
 
-				mActiveEye = StereoVision.EYE_LEFT;
-				drawContent(true);
-				mGraphics.leaveTextureRenderTarget();
-//				mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
-//				mGraphics.setStereoTransform(mStereoVision.getRightEyeTransform());
-				mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
-				mActiveEye = StereoVision.EYE_RIGHT;
-				drawContent(false);
+					mActiveEye = StereoVision.EYE_LEFT;
+					drawContent(true);
+					mGraphics.leaveTextureRenderTarget();
+//					mGraphics.mCameraShiftX = -mStereoVision.mInterOcularDistance*AbstractGraphics.METERS_PER_UNIT;
+//					mGraphics.setStereoTransform(mStereoVision.getRightEyeTransform());
+					mGraphics.setTextureRenderTarget(mStereoVision.mStereoRightRenderTarget);
+					mActiveEye = StereoVision.EYE_RIGHT;
+					drawContent(false);
+				}
 			}finally{
 				mGraphics.leaveTextureRenderTarget();
 			}
-
+			mStereoVision.mDuplicateLeft = STEREO_DUPLICATE;
 			mStereoVision.draw();
 		}else{
 			mActiveEye = StereoVision.EYE_MONO;
