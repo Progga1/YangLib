@@ -953,4 +953,16 @@ public class YangMatrix {
 		this.multiplyLeft(toTransform);
 	}
 
+	public float getScaleX() {
+		return (float)Math.sqrt(mValues[0]*mValues[0] + mValues[1]*mValues[1] + mValues[2]*mValues[2]);
+	}
+
+	public float getScaleY() {
+		return (float)Math.sqrt(mValues[4]*mValues[4] + mValues[5]*mValues[5] + mValues[6]*mValues[6]);
+	}
+
+	public float getScaleZ() {
+		return (float)Math.sqrt(mValues[8]*mValues[8] + mValues[9]*mValues[9] + mValues[10]*mValues[10]);
+	}
+
 }
