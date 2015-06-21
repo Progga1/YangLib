@@ -7,6 +7,9 @@ import yang.model.App;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.inputmethod.BaseInputConnection;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListener {
 
@@ -30,7 +33,7 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-		if ((keyCode == KeyEvent.KEYCODE_SEARCH && event.getAction() == KeyEvent.ACTION_UP) || (keyCode == KeyEvent.KEYCODE_MENU && event.isLongPress())) {
+		if ((keyCode == KeyEvent.KEYCODE_SEARCH && event.getAction() == KeyEvent.ACTION_UP) || (keyCode == KeyEvent.KEYCODE_MENU && event.isLongPress()) || (keyCode == KeyEvent.KEYCODE_BACK && event.isLongPress())) {
 			App.systemCalls.openKeyBoard();
 			return true;
 		}
@@ -45,37 +48,30 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 			switch (keyCode) {
 				case KeyEvent.KEYCODE_DEL: mEventQueue.putKeyEvent(Keys.BACKSPACE,action);	break;
 				case KeyEvent.KEYCODE_ENTER: mEventQueue.putKeyEvent(Keys.ENTER,action);	break;
-				//TODO more events
 			}
 		}
 
-
-//		if (keyCode == KeyEvent.KEYCODE_ENTER) {
-//			if (mEditText.getText().length() == 1) {
-//				mEventQueue.putKeyEvent(mEditText.getText().charAt(0),YangKeyEvent.ACTION_KEYDOWN);
-//				mEventQueue.putKeyEvent(mEditText.getText().charAt(0),YangKeyEvent.ACTION_KEYUP);
-//			} else if (mEditText.getText().length() > 1) {
-//
-//				//fkey parser
-//				String text = mEditText.getText().toString();
-//				boolean fKey = text.charAt(0) == 'f';
-//				if (fKey) {
-//					int num = -1;
-//					try {
-//						num = Integer.parseInt(text.substring(1, text.length()))-1;
-//						mEventQueue.putKeyEvent(Keys.F1+num,YangKeyEvent.ACTION_KEYDOWN);
-//						mEventQueue.putKeyEvent(Keys.F1+num,YangKeyEvent.ACTION_KEYUP);
-//					} catch (Exception e) {
-//
-//					}
-//				}
-//			}
-//			mEditText.setText("");
-//		}
 		return false;
 	}
 
 	public GraphicsTranslator getGraphics() {
 		return mSceneRenderer.getGraphics();
+	}
+
+
+	@Override
+	public boolean onCheckIsTextEditor() {
+		//needed for softkeyboard input
+		return true;
+	}
+
+	@Override
+	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+		//needed for softkeyboard input
+		outAttrs.imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI |     EditorInfo.IME_ACTION_NONE;
+		outAttrs.actionLabel = null;
+		outAttrs.initialCapsMode = 0;
+		outAttrs.initialSelEnd = outAttrs.initialSelStart = -1;
+		return new BaseInputConnection(this, false);
 	}
 }
