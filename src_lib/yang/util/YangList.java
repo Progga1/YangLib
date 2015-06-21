@@ -99,8 +99,8 @@ public class YangList<E> extends LinkedList<E> {
 		}
 	}
 
-	public Node first;
-	public Node last;
+	private Node first;
+	private Node last;
 	public int defaultIteratorIndex;
 	private YangListIterator<E>[] iterators;
 	private int size;
@@ -191,7 +191,7 @@ public class YangList<E> extends LinkedList<E> {
 			if (curr.elem.equals(o)) return idx;
 			curr = curr.next;
 		}
-		return idx;
+		return -1;
 	}
 
 	@Override
@@ -288,6 +288,10 @@ public class YangList<E> extends LinkedList<E> {
 			return curr.elem;
 		}
 		return null;
+	}
+
+	public E removeLast() {
+		return remove(size-1);
 	}
 
 	@Override
