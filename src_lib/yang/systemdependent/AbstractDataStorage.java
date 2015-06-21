@@ -2,7 +2,17 @@ package yang.systemdependent;
 
 public abstract class AbstractDataStorage {
 
-	protected static final String FILENAME = "storage";
+	private static final String FILENAME = "storage.str";
+	protected String mFilename;
+
+	public AbstractDataStorage() {
+		this(FILENAME);
+	}
+
+	public AbstractDataStorage(String name) {
+		mFilename = name;
+	}
+
 
 	public abstract void putFloat(String key, float value);
 	public abstract void putInt(String key, int value);

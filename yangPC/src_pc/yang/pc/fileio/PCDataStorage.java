@@ -1,30 +1,38 @@
 package yang.pc.fileio;
 
+import yang.systemdependent.AbstractDataStorage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import yang.systemdependent.AbstractDataStorage;
-
 
 public class PCDataStorage extends AbstractDataStorage {
+
+	public PCDataStorage(String name) {
+		super(name);
+	}
+
+	public PCDataStorage() {
+		super();
+	}
 
 	private Properties load() {
 		Properties props = new Properties();
 		try {
 
-			File f = new File(FILENAME);
+			File f = new File(mFilename);
 			if (!f.exists()) {
 				System.out.println("didnt exist, created");
 				f.createNewFile();
 			}
 
-			FileInputStream fis = new FileInputStream(FILENAME);
+			FileInputStream fis = new FileInputStream(mFilename);
 			props.load(fis);
 			fis.close();
 		} catch (Exception e) {
-			System.err.println("failed to read '"+FILENAME+"'");
+			System.err.println("failed to read '"+mFilename+"'");
 			System.exit(0);
 		}
 
@@ -33,11 +41,11 @@ public class PCDataStorage extends AbstractDataStorage {
 
 	private void save(Properties props) {
 		try {
-			FileOutputStream fos = new FileOutputStream(FILENAME);
+			FileOutputStream fos = new FileOutputStream(mFilename);
 			props.store(fos, null);
 			fos.close();
 		} catch (Exception e) {
-			System.err.println("failed to write '"+FILENAME+"'");
+			System.err.println("failed to write '"+mFilename+"'");
 			e.printStackTrace();
 			System.exit(0);
 		}
