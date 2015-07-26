@@ -12,6 +12,9 @@ public class ByteDataStorage extends AbstractDataStorage {
 
 	public void load(byte[] data) {
 		mProps = new Properties();
+		if (data != null && data.length > 0) {
+			return;
+		}
 		try {
 			ByteArrayInputStream stream = new ByteArrayInputStream(data);
 			mProps.load(stream);
