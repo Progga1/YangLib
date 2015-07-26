@@ -13,7 +13,9 @@ import android.view.inputmethod.InputConnection;
 
 public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListener {
 
-	public YangKeyTouchSurface(YangActivity activity) {
+    private boolean mBackHandled;
+
+    public YangKeyTouchSurface(YangActivity activity) {
 		super(activity);
 		setFocusable(true);
 		setFocusableInTouchMode(true);
@@ -35,11 +37,18 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 
 		if ((keyCode == KeyEvent.KEYCODE_SEARCH && event.getAction() == KeyEvent.ACTION_UP) || (keyCode == KeyEvent.KEYCODE_MENU && event.isLongPress()) || (keyCode == KeyEvent.KEYCODE_BACK && event.isLongPress())) {
 			App.systemCalls.openKeyBoard();
+            mBackHandled = keyCode == KeyEvent.KEYCODE_BACK && event.isLongPress();
 			return true;
 		}
 
 		//down or up
 		final int action = event.getAction()==KeyEvent.ACTION_DOWN?YangKeyEvent.ACTION_KEYDOWN:YangKeyEvent.ACTION_KEYUP;
+
+        // prevent onBackPressed if we just opened the keyboard using long press back
+        if (mBackHandled && action == YangKeyEvent.ACTION_KEYUP && keyCode == KeyEvent.KEYCODE_BACK) {
+            mBackHandled = false;
+            return true;
+        }
 
 		if (event.isPrintingKey()) {
 			mEventQueue.putKeyEvent((char)event.getUnicodeChar(),action);
@@ -58,7 +67,6 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 		return mSceneRenderer.getGraphics();
 	}
 
-
 	@Override
 	public boolean onCheckIsTextEditor() {
 		//needed for softkeyboard input
@@ -68,7 +76,7 @@ public class YangKeyTouchSurface extends YangTouchSurface implements OnKeyListen
 	@Override
 	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
 		//needed for softkeyboard input
-		outAttrs.imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI |     EditorInfo.IME_ACTION_NONE;
+		outAttrs.imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_NONE;
 		outAttrs.actionLabel = null;
 		outAttrs.initialCapsMode = 0;
 		outAttrs.initialSelEnd = outAttrs.initialSelStart = -1;
