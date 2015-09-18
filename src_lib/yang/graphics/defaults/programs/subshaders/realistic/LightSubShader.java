@@ -10,7 +10,6 @@ public class LightSubShader extends SubShader {
 
 	public int mLightDirHandle;
 	public int mLightDiffuseHandle;
-	public int mLightSpecularHandle;
 	public LightProperties mLightProperties;
 	public float mAddValue = 0.8f;
 

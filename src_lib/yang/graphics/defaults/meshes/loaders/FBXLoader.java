@@ -87,7 +87,7 @@ public class FBXLoader extends YangSceneLoader {
 			mReader.nextWord(true);
 			if(mReader.isWord("Lcl Translation")) {
 				mReader.skipWords(2);
-				readPoint3f(targetObject.mTranslation);
+				readPoint3f(targetObject.mPosition);
 			}else if(mReader.isWord("Lcl Rotation")) {
 				mReader.skipWords(2);
 				readPoint3f(tempVec);
@@ -489,7 +489,7 @@ public class FBXLoader extends YangSceneLoader {
 		//ASSUME: parentJoint==null <=> root bone of mesh
 		boolean createParentJoint = false;
 		if((baseObj.mParent instanceof LimbObject) && parentJoint!=null) {
-			float delta = baseObj.mTranslation.mX-((LimbObject)baseObj.mParent).mLimbLength;
+			float delta = baseObj.mPosition.mX-((LimbObject)baseObj.mParent).mLimbLength;
 			if(Math.abs(delta)>0.01f) {
 				createParentJoint = true;
 				noBone = true;

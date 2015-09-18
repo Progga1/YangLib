@@ -58,7 +58,7 @@ public class SceneObject extends TransformationData {
 
 	@Override
 	public String toString() {
-		return mName+": "+mTranslation;
+		return mName+": "+mPosition;
 	}
 
 }

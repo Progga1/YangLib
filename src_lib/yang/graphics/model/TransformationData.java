@@ -7,18 +7,18 @@ import yang.math.objects.YangMatrix;
 
 public class TransformationData {
 
-	public Point3f mTranslation = Point3f.ZERO.clone();
+	public Point3f mPosition = Point3f.ZERO.clone();
 	public Quaternion mOrientation = Quaternion.IDENTITY.clone();
 	public Vector3f mScale = Vector3f.ONE.clone();
 
 	public void loadIdentity() {
-		mTranslation.setZero();
+		mPosition.setZero();
 		mOrientation.setIdentity();
 		mScale.setOne();
 	}
 
 	public void concatTransform(TransformationData rightTransform) {
-		mTranslation.add(rightTransform.mTranslation);
+		mPosition.add(rightTransform.mPosition);
 		mOrientation.multRight(rightTransform.mOrientation);
 		mScale.scale(rightTransform.mScale);
 	}
@@ -27,19 +27,19 @@ public class TransformationData {
 	 * targetTransform = targetTransform * this
 	 */
 	public void applyToTransform(TransformationData targetTransform) {
-		targetTransform.mTranslation.add(mTranslation);
+		targetTransform.mPosition.add(mPosition);
 		targetTransform.mOrientation.multRight(mOrientation);
 		targetTransform.mScale.scale(mScale);
 	}
 
 	public void setMatrix(YangMatrix targetMatrix) {
-		targetMatrix.setTranslation(mTranslation);
+		targetMatrix.setTranslation(mPosition);
 		targetMatrix.multiplyQuaternionRight(mOrientation);
 		targetMatrix.scale(mScale);
 	}
 
 	public void multMatrix(YangMatrix targetMatrix) {
-		targetMatrix.translate(mTranslation);
+		targetMatrix.translate(mPosition);
 		targetMatrix.multiplyQuaternionRight(mOrientation);
 		targetMatrix.scale(mScale);
 	}
@@ -54,7 +54,7 @@ public class TransformationData {
 
 	@Override
 	public String toString() {
-		return "t;r;s = "+mTranslation+";"+mOrientation+";"+mScale;
+		return "t;r;s = "+mPosition+";"+mOrientation+";"+mScale;
 	}
 
 	public YangMatrix createTransform() {

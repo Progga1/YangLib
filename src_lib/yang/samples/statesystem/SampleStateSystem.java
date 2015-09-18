@@ -17,6 +17,7 @@ public class SampleStateSystem extends YangProgramStateSystem {
 
 	public SampleStateSystem() {
 		super(true, true);
+
 		super.setUpdateMode(UpdateMode.SYNCHRONOUS);
 		if(isStereoVision())
 			DebugYang.DRAW_POINTERS = true;
@@ -26,6 +27,7 @@ public class SampleStateSystem extends YangProgramStateSystem {
 
 	@Override
 	public void postInitGraphics() {
+		mGraphics.setMaxFPS(0);
 		DrawableString.DEFAULT_PROPERTIES = new StringProperties(mGraphics2D,mGFXLoader.loadFont("arial"));
 		super.initDebugOutput(DrawableString.DEFAULT_PROPERTIES.mFont);
 		mMainMenu = (SampleMainMenu)new SampleMainMenu().init(this);
