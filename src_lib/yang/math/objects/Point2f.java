@@ -70,6 +70,11 @@ public class Point2f {
 		return baseAngle;
 	}
 
+	public void sub(float subX, float subY) {
+		mX -= subX;
+		mY -= subY;
+	}
+
 	public void sub(Point2f toSub) {
 		mX -= toSub.mX;
 		mY -= toSub.mY;

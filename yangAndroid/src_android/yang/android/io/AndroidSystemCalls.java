@@ -22,7 +22,7 @@ public class AndroidSystemCalls extends YangSystemCalls {
 	@Override
 	public void openKeyBoard() {
 		final InputMethodManager inputMgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMgr.showSoftInput(mActivity.getWindow().getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+		inputMgr.showSoftInput(mActivity.getWindow().getCurrentFocus(), 0);
 	}
 
 	@Override
