@@ -32,7 +32,7 @@ public class TransformationData {
 		targetTransform.mScale.scale(mScale);
 	}
 
-	public void setMatrix(YangMatrix targetMatrix) {
+	public void getMatrix(YangMatrix targetMatrix) {
 		targetMatrix.setTranslation(mPosition);
 		targetMatrix.multiplyQuaternionRight(mOrientation);
 		targetMatrix.scale(mScale);
@@ -59,7 +59,7 @@ public class TransformationData {
 
 	public YangMatrix createTransform() {
 		YangMatrix result = new YangMatrix();
-		setMatrix(result);
+		getMatrix(result);
 		return result;
 	}
 
