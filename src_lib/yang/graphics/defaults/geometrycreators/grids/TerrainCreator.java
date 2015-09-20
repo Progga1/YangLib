@@ -5,6 +5,7 @@ import yang.graphics.interfaces.KernelFunction;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.TextureCreator;
+import yang.math.objects.Point3f;
 import yang.math.objects.YangMatrix;
 
 public class TerrainCreator extends Grid3DCreator {
@@ -19,12 +20,11 @@ public class TerrainCreator extends Grid3DCreator {
 		if(heightValues==null)
 			heightValues = ZERO_HEIGHT;
 
-		final float left = -mCurDimX*0.5f;
-		final float top = mCurDimY*0.5f;
-
-		compRelations(heightValues,startRow,startColumn,rows,columns);
-		float xFac = 1f/(mCurXCount-1)*mCurDimX;
-		float yFac = 1f/(mCurYCount-1)*mCurDimY;
+		prepareManual(heightValues,startRow,startColumn,rows,columns);
+		final float left = mCurLeft;
+		final float top = mCurTop;
+		float xFac = mCurXFac;
+		float yFac = mCurYFac;
 		for(int row=0;row<mCurYCount;row++) {
 			final float y = top - mCurDimY + row*yFac;
 			for(int col=0;col<mCurXCount;col++) {
@@ -38,6 +38,16 @@ public class TerrainCreator extends Grid3DCreator {
 		}
 		if(mAutoFillNormals)
 			putNormals();
+	}
+
+	public void calcPoint(int row,int column,Point3f target) {
+		target.mX = mCurLeft+column*mCurXFac;
+		target.mY = mCurTop - mCurDimY + row*mCurYFac;
+		target.mZ = interpolate(row,column);
+	}
+
+	public void calcPoint(int pointNr,Point3f target) {
+		calcPoint(pointNr/mCurXCount,pointNr%mCurXCount, target);
 	}
 
 	public void putTerrainPositionRect(float[][] heightValues,YangMatrix transform) {

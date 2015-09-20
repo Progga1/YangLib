@@ -447,30 +447,38 @@ public class YangMatrix {
 		mValues[column*4+row] = value;
 	}
 
-	public void setColumn(int i, float x, float y, float z) {
-		mValues[i*4] = x;
-		mValues[i*4+1] = y;
-		mValues[i*4+2] = z;
+	public void setColumn(int col, float x, float y, float z) {
+		mValues[col*4] = x;
+		mValues[col*4+1] = y;
+		mValues[col*4+2] = z;
 	}
 
-	public void setColumn(int i, float x, float y, float z, float w) {
-		mValues[i*4] = x;
-		mValues[i*4+1] = y;
-		mValues[i*4+2] = z;
-		mValues[i*4+3] = w;
+	public void setColumn(int col, float x, float y, float z, float w) {
+		mValues[col*4] = x;
+		mValues[col*4+1] = y;
+		mValues[col*4+2] = z;
+		mValues[col*4+3] = w;
 	}
 
-	public void setRow(int i, float x, float y, float z) {
-		mValues[i] = x;
-		mValues[4+i] = y;
-		mValues[8+i] = z;
+	public void setRow(int row, float x, float y, float z) {
+		mValues[row] = x;
+		mValues[4+row] = y;
+		mValues[8+row] = z;
 	}
 
-	public void setRow(int i, float x, float y, float z, float w) {
-		mValues[i] = x;
-		mValues[4+i] = y;
-		mValues[8+i] = z;
-		mValues[12+i] = w;
+	public void setRow(int row, float x, float y, float z, float w) {
+		mValues[row] = x;
+		mValues[4+row] = y;
+		mValues[8+row] = z;
+		mValues[12+row] = w;
+	}
+
+	public void setRow(int row, YangMatrix sourceMatrix,int sourceRow) {
+		float[] sourceVals = sourceMatrix.mValues;
+		mValues[row] = sourceVals[sourceRow];
+		mValues[4+row] = sourceVals[4+sourceRow];
+		mValues[8+row] = sourceVals[8+sourceRow];
+		mValues[12+row] = sourceVals[12+sourceRow];
 	}
 
 	public void setRowMajor(double[][] matrix) {
@@ -945,6 +953,17 @@ public class YangMatrix {
 			mValues[8] /= d;
 			mValues[9] /= d;
 			mValues[10] /= d;
+		}
+	}
+
+	public void normalizeHomogeneous() {
+		float d = mValues[15];
+		if(d!=0) {
+			d = 1/d;
+			for(int i=0;i<15;i++) {
+				mValues[i] *= d;
+			}
+			mValues[15] = 1;
 		}
 	}
 

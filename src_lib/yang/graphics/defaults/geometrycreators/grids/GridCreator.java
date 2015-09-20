@@ -16,6 +16,10 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 	protected int mCurYCount;
 	protected float mCurDimX;
 	protected float mCurDimY;
+	protected float mCurLeft;
+	protected float mCurTop;
+	protected float mCurXFac;
+	protected float mCurYFac;
 	public boolean mSwapXY;
 
 	protected int mStartRow;
@@ -170,7 +174,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		putGridTextureRect(0,0,1,1);
 	}
 
-	protected void compRelations(float[][] values,int startRow,int startColumn,int rows,int columns) {
+	public void prepareManual(float[][] values,int startRow,int startColumn,int rows,int columns) {
 		mCurValues = values;
 		mStartRow = startRow;
 		mStartColumn = startColumn;
@@ -186,13 +190,17 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 			mRelationX = 1;
 			mRelationY = 1;
 		}
+		mCurLeft = -mCurDimX*0.5f;
+		mCurTop = mCurDimY*0.5f;
+		mCurXFac = 1f/(mCurXCount-1)*mCurDimX;
+		mCurYFac = 1f/(mCurYCount-1)*mCurDimY;
 	}
 
-	protected void compRelations(float[][] values) {
+	public void prepareManual(float[][] values) {
 		if(values==null)
-			compRelations(null,0,0,0,0);
+			prepareManual(null,0,0,0,0);
 		else
-			compRelations(values,0,0,values.length,values[0].length);
+			prepareManual(values,0,0,values.length,values[0].length);
 	}
 
 	protected float interpolate(int row,int column) {
@@ -204,6 +212,10 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 			else
 				return Interpolation.bilinInterpolate(mCurValues, mStartRow+row*mRelationY, mStartColumn+column*mRelationX);
 		}
+	}
+
+	public int getCurrentVertexCount() {
+		return mCurXCount*mCurYCount;
 	}
 
 }

@@ -13,7 +13,7 @@ public class GridPipeCreator extends Grid3DCreator {
 	}
 
 	public void putPositions(float[][] radiusValues,YangMatrix transform,boolean loopNormals) {
-		compRelations(radiusValues);
+		prepareManual(radiusValues);
 		float top = mCurDimY*0.5f;
 		for(int row=0;row<mCurYCount;row++) {
 			for(int col=0;col<mCurXCount;col++) {

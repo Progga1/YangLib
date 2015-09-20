@@ -15,7 +15,7 @@ public class SphereCreator extends Grid3DCreator {
 	}
 
 	public void putPositions(float[][] radiusValues,YangMatrix transform,boolean loopNormals) {
-		compRelations(radiusValues);
+		prepareManual(radiusValues);
 		for(int row=0;row<mCurYCount;row++) {
 			//float beta = (float)Math.sin((float)row/(mCurYCount-1)*PI/2)*PI-PI/2;
 			float beta = (float)row/(mCurYCount-1)*PI-PI/2;

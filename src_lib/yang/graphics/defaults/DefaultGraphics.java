@@ -444,6 +444,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mCurrentVertexBuffer.putVec3(ID_POSITIONS, x, y, z);
 	}
 
+	public void putPosition(Point3f position) {
+		mCurrentVertexBuffer.putVec3(ID_POSITIONS, position.mX,position.mY,position.mZ);
+	}
+
 	public void putPosition(float x,float y,float z,YangMatrix transform) {
 		transform.apply3D(x, y, z, mInterArray, 0);
 		if(mInterArray[3]!=1) {
