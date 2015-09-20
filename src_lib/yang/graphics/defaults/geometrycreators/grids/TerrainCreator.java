@@ -40,14 +40,14 @@ public class TerrainCreator extends Grid3DCreator {
 			putNormals();
 	}
 
-	public void calcPoint(int row,int column,Point3f target) {
+	public float calcPoint(int row,int column,Point3f target) {
 		target.mX = mCurLeft+column*mCurXFac;
 		target.mY = mCurTop - mCurDimY + row*mCurYFac;
-		target.mZ = interpolate(row,column);
+		return target.mZ = interpolate(row,column);
 	}
 
-	public void calcPoint(int pointNr,Point3f target) {
-		calcPoint(pointNr/mCurXCount,pointNr%mCurXCount, target);
+	public float calcPoint(int pointNr,Point3f target) {
+		return calcPoint(pointNr/mCurXCount,pointNr%mCurXCount, target);
 	}
 
 	public void putTerrainPositionRect(float[][] heightValues,YangMatrix transform) {

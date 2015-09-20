@@ -4,6 +4,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.textures.TextureCoordinatesQuad;
+import yang.math.objects.Point3f;
 
 public class BillboardsCreator extends GeometryCreator<Default3DGraphics>{
 
@@ -42,7 +43,10 @@ public class BillboardsCreator extends GeometryCreator<Default3DGraphics>{
 			putApplied(x,y,z,-dirY,dirX);
 			putApplied(x,y,z,dirX,dirY);
 		}
+	}
 
+	public void putBillboardPositionsUniScale(Point3f position,float scale,float angle) {
+		putBillboardPositionsUniScale(position.mX,position.mY,position.mZ, scale, angle);
 	}
 
 	//TODO also for rotation
