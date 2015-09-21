@@ -675,7 +675,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		indices.position(indPos);
 	}
 
-	public void removeTrianglesBelowAngleDot(int indexStart,int indexEnd, float dot) {
+	public void removeTrianglesAboveAngleDot(int indexStart,int indexEnd, float dot) {
 		int c = indexStart;
 		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
 		int indPos = indices.position();
@@ -688,15 +688,23 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			float y1 = positions.get(curId+1);
 			float z1 = positions.get(curId+2);
 			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
-			mTempVec1.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
+			float x2 = positions.get(curId);
+			float y2 = positions.get(curId+1);
+			float z2 = positions.get(curId+2);
 			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
-			mTempVec2.setFromTo(mTempVec1.mX,mTempVec1.mY,mTempVec1.mZ, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
-			mTempVec3.setFromTo(mTempVec3,mTempVec1);
-			float dot1 = -mTempVec1.dot(mTempVec2);
-			float dot2 = -mTempVec2.dot(mTempVec3);
-			float dot3 = -mTempVec3.dot(mTempVec1);
-
-			if(dot1<dot || dot2<dot || dot3<dot) {
+			float x3 = positions.get(curId);
+			float y3 = positions.get(curId+1);
+			float z3 = positions.get(curId+2);
+			mTempVec1.setFromTo(x1,y1,z1, x2,y2,z2);
+			mTempVec2.setFromTo(x2,y2,z2, x3,y3,z3);
+			mTempVec3.setFromTo(x3,y3,z3, x1,y1,z1);
+			mTempVec1.normalize();
+			mTempVec2.normalize();
+			mTempVec3.normalize();//if(mTempVec1.magn()<=0)System.out.println("fnewklv");if(mTempVec2.magn()<=0)System.out.println("fnewklv");if(mTempVec3.magn()<=0)System.out.println("fnewklv");
+			float dot1 = Math.abs(mTempVec1.dot(mTempVec2));
+			float dot2 = Math.abs(mTempVec2.dot(mTempVec3));
+			float dot3 = Math.abs(mTempVec3.dot(mTempVec1));
+			if(dot1>dot || dot2>dot || dot3>dot) {
 				indices.position(c);
 				indices.put(startId);
 				indices.put(startId);

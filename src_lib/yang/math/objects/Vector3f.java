@@ -252,4 +252,10 @@ public class Vector3f extends Point3f{
 		return (float)Math.sqrt(x*x + y*y + z*z);
 	}
 
+	public void setSum(Vector3f vec1, Vector3f vec2) {
+		mX = vec1.mX + vec2.mX;
+		mY = vec1.mY + vec2.mY;
+		mZ = vec1.mZ + vec2.mZ;
+	}
+
 }
