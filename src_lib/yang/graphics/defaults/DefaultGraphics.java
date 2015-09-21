@@ -80,7 +80,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	protected VertexZSort mVertexSort;
 
 	//Temp
-	private Point3f mTempPnt1 = new Point3f();
+	protected Point3f mTempPnt1 = new Point3f();
 
 	public void shareBuffers(DefaultGraphics<?> graphics) {
 		initDynamicBuffer();

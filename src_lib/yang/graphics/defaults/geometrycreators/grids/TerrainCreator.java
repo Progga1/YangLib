@@ -1,16 +1,23 @@
 package yang.graphics.defaults.geometrycreators.grids;
 
+import java.nio.ShortBuffer;
+
+import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.interfaces.KernelFunction;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.TextureCreator;
 import yang.math.objects.Point3f;
+import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
 
 public class TerrainCreator extends Grid3DCreator {
 
 	public static final float[][] ZERO_HEIGHT = new float[1][1];
+	private Vector3f tempVec1 = new Vector3f();
+	private Vector3f tempVec2 = new Vector3f();
+	private Vector3f tempVec3 = new Vector3f();
 
 	public TerrainCreator(Default3DGraphics graphics) {
 		super(graphics);
@@ -39,6 +46,52 @@ public class TerrainCreator extends Grid3DCreator {
 		if(mAutoFillNormals)
 			putNormals();
 	}
+
+//	public void putIndicesDeltaThreshold(float[][] heightValues,float deltaThreshold) {
+//		IndexedVertexBuffer buffer = mGraphics.getCurrentVertexBuffer();
+//		ShortBuffer indices = buffer.mIndexBuffer;
+//
+//		int width = mCurXCount;
+//		int height = mCurYCount;
+//
+//		short c = (short)buffer.getCurrentVertexWriteCount();
+//		for(int row=0;row<height-1;row++) {
+//			for(int col=0;col<width-1;col++){
+//
+//				if(row>0 && col>0 && row<height-1 && col<width-1) {
+//					float z = interpolate(row,col);
+//					float zLeft = interpolate(row,col-1);
+//					float zTop = interpolate(row-1,col);
+//					float zRight = interpolate(row,col+1);
+//					float zBottom = interpolate(row+1,col);
+//					float dzLeft = Math.abs(z-zLeft);
+//					float dzTop = Math.abs(z-zTop);
+//					float dzRight = Math.abs(z-zRight);
+//					float dzBottom = Math.abs(z-zBottom);
+//					float dzLeftBottom = Math.abs(z-interpolate(row-1,col+1));
+//					float dzLeftTop = Math.abs(z-interpolate(row-1,col-1));
+//					float dzRightTop = Math.abs(z-interpolate(row+1,col-1));
+//					float dzRightBottom = Math.abs(z-interpolate(row+1,col+1));
+//					if(z<=0.01f || zRight<0.01f || zBottom<0.01f || dzLeft>deltaThreshold || dzTop>deltaThreshold || dzRight>deltaThreshold || dzBottom>deltaThreshold || dzLeftBottom>deltaThreshold || dzLeftTop>deltaThreshold || dzRightTop>deltaThreshold || dzRightBottom>deltaThreshold) {
+//						c++;
+//						continue;
+//					}
+//				}
+//
+//				indices.put(c);
+//				indices.put((short)(c+1));
+//				indices.put((short)(c+width));
+//				indices.put((short)(c+1+width));
+//				indices.put((short)(c+width));
+//				indices.put((short)(c+1));
+//				mGraphics.putTriangleIndicesMaxArea(c,(short)(c+1),(short)(c+width),0.1f);
+//				mGraphics.putTriangleIndicesMaxArea((short)(c+1+width),(short)(c+width),(short)(c+1),0.1f);
+//
+//				c++;
+//			}
+//			c++;
+//		}
+//	}
 
 	public float calcPoint(int row,int column,Point3f target) {
 		target.mX = mCurLeft+column*mCurXFac;

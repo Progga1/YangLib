@@ -190,6 +190,12 @@ public class Vector3f extends Point3f{
 		mZ = toPoint.mZ-fromPoint.mZ;
 	}
 
+	public void setFromTo(float x1,float y1,float z1, float x2,float y2,float z2) {
+		mX = x2-x1;
+		mY = y2-y1;
+		mZ = z2-z1;
+	}
+
 	public void setFromToDirection(Point3f fromPoint, Point3f toPoint) {
 		mX = toPoint.mX-fromPoint.mX;
 		mY = toPoint.mY-fromPoint.mY;
@@ -237,6 +243,13 @@ public class Vector3f extends Point3f{
 	public float getAngleXZ(Vector3f otherVector) {
 		float fac = this.mX*otherVector.mZ>this.mZ*otherVector.mX?1:-1;
 		return fac*(float)Math.acos((mX*otherVector.mX + mZ*otherVector.mZ)/(this.magnXZ()*otherVector.magnXZ()));
+	}
+
+	public static float crossMagn(Vector3f lhsVector, Vector3f rhsVector) {
+		float x = lhsVector.mY*rhsVector.mZ - lhsVector.mZ*rhsVector.mY;
+		float y = lhsVector.mZ*rhsVector.mX - lhsVector.mX*rhsVector.mZ;
+		float z = lhsVector.mX*rhsVector.mY - lhsVector.mY*rhsVector.mX;
+		return (float)Math.sqrt(x*x + y*y + z*z);
 	}
 
 }
