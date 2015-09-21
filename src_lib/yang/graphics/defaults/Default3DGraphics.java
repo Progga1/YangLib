@@ -626,4 +626,85 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		indices.position(indPos);
 	}
 
+	public void removeTrianglesBelowABRatio(int indexStart,int indexEnd, float ratio) {
+		int c = indexStart;
+		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
+		int indPos = indices.position();
+		short startId = indices.get(indexStart);
+		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
+		indices.position(indexStart);
+		while(c<indexEnd) {
+			short curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			float x1 = positions.get(curId);
+			float y1 = positions.get(curId+1);
+			float z1 = positions.get(curId+2);
+			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			mTempVec1.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
+			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			mTempVec2.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
+			float magn1 = mTempVec1.magn();
+			float magn2 = mTempVec2.magn();
+			float magn3 = mTempVec1.getDistance(mTempVec2);
+			float smallMagn = 0;
+			float largeMagn = 0;
+			if(magn1>=magn2 && magn1>=magn3)
+					largeMagn = magn1;
+			else if(magn2>=magn1 && magn2>=magn3)
+				largeMagn = magn2;
+			else if(magn3>=magn1 && magn3>=magn1)
+				largeMagn = magn3;
+			if(magn1<=magn2 && magn1<=magn3)
+				smallMagn = magn1;
+			else if(magn2<=magn1 && magn2<=magn3)
+				smallMagn = magn2;
+			else if(magn3<=magn1 && magn3<=magn1)
+				smallMagn = magn3;
+			float tRatio;
+			if(largeMagn==0)
+				tRatio = 0;
+			else
+				tRatio = smallMagn/largeMagn;
+			if(tRatio<ratio) {
+				indices.position(c);
+				indices.put(startId);
+				indices.put(startId);
+				indices.put(startId);
+			}
+			c += 3;
+		}
+		indices.position(indPos);
+	}
+
+	public void removeTrianglesBelowAngleDot(int indexStart,int indexEnd, float dot) {
+		int c = indexStart;
+		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
+		int indPos = indices.position();
+		short startId = indices.get(indexStart);
+		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
+		indices.position(indexStart);
+		while(c<indexEnd) {
+			short curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			float x1 = positions.get(curId);
+			float y1 = positions.get(curId+1);
+			float z1 = positions.get(curId+2);
+			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			mTempVec1.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
+			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			mTempVec2.setFromTo(mTempVec1.mX,mTempVec1.mY,mTempVec1.mZ, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
+			mTempVec3.setFromTo(mTempVec3,mTempVec1);
+			float dot1 = -mTempVec1.dot(mTempVec2);
+			float dot2 = -mTempVec2.dot(mTempVec3);
+			float dot3 = -mTempVec3.dot(mTempVec1);
+
+			if(dot1<dot || dot2<dot || dot3<dot) {
+				indices.position(c);
+				indices.put(startId);
+				indices.put(startId);
+				indices.put(startId);
+			}
+			c += 3;
+		}
+		indices.position(indPos);
+	}
+
 }
