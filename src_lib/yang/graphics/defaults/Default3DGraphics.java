@@ -683,15 +683,15 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
 		indices.position(indexStart);
 		while(c<indexEnd) {
-			short curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			int curId = (indices.get()*POSITION_ELEM_SIZE);
 			float x1 = positions.get(curId);
 			float y1 = positions.get(curId+1);
 			float z1 = positions.get(curId+2);
-			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			curId = (indices.get()*POSITION_ELEM_SIZE);
 			float x2 = positions.get(curId);
 			float y2 = positions.get(curId+1);
 			float z2 = positions.get(curId+2);
-			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			curId = (indices.get()*POSITION_ELEM_SIZE);
 			float x3 = positions.get(curId);
 			float y3 = positions.get(curId+1);
 			float z3 = positions.get(curId+2);
