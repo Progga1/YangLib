@@ -50,7 +50,7 @@ public class StereoRendering extends StereoVision {
 
 		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, -1,-1, 0,1, 0);
 		mStereoVertexBuffer.putRect3D(DefaultGraphics.ID_POSITIONS, 0,-1, 1,1, 0);
-		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_TEXTURES, DefaultGraphics.RECT_TEXTURECOORDS_INV,2);
+		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_TEXTURES, DefaultGraphics.RECT_TEXTURECOORDS_FLIP_X,2);
 //		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, FloatColor.WHITE.mValues,2*4);
 //		mStereoVertexBuffer.putArrayMultiple(DefaultGraphics.ID_SUPPDATA, FloatColor.WHITE.mValues,2*4);
 		mStereoVertexBuffer.finishUpdate();
