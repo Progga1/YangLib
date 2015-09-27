@@ -28,8 +28,8 @@ public class PlaneClipSubShader extends SubShader {
 	public void setVariables(ShaderPermutationsParser shaderParser,ShaderDeclarations vsDecl,ShaderDeclarations fsDecl) {
 		fsDecl.addUniform("vec3", "planeBase");
 		fsDecl.addUniform("vec3", "planeNormal");
-		shaderParser.appendLn(VAR_FS_MAIN,"vec3 posVec = worldPosition.xyz-planeBase;");
-		shaderParser.appendLn(VAR_FS_MAIN,"if(dot(planeNormal,posVec)<0.0) discard;");
+		shaderParser.appendLn(VAR_FS_MAIN,"vec3 posVec = worldPosition.xyz-planeBase");
+		shaderParser.appendLn(VAR_FS_MAIN,"if(dot(planeNormal,posVec)<0.0) discard");
 	}
 
 	@Override

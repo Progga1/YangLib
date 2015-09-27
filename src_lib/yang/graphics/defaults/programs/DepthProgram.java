@@ -5,7 +5,7 @@ import yang.graphics.translator.AbstractGFXLoader;
 
 public class DepthProgram extends Basic3DProgram {
 
-	public static String VERTEX_SHADER = 
+	public static String VERTEX_SHADER =
 			"uniform mat4 projTransform;\n"
 			+"\n"
 			+"attribute vec4 vPosition;\n"
@@ -16,8 +16,8 @@ public class DepthProgram extends Basic3DProgram {
 			+"	gl_Position = projTransform * vPosition;\n"
 			+"	depth = (-gl_Position.z/gl_Position.w+1.0)*0.5;\n"
 			+"}";
-	
-	public static String FRAGMENT_SHADER = 
+
+	public static String FRAGMENT_SHADER =
 			"#ANDROID precision mediump float;\n"
 			+"\n"
 			+"varying float depth;\n"
@@ -26,7 +26,7 @@ public class DepthProgram extends Basic3DProgram {
 			+"{\n"
 			+"	gl_FragColor = vec4(depth,depth,depth,1.0);\n"
 			+"}";
-	
+
 	@Override
 	protected String getVertexShader(AbstractGFXLoader gfxLoader) {
 		return VERTEX_SHADER;
@@ -36,11 +36,11 @@ public class DepthProgram extends Basic3DProgram {
 	protected String getFragmentShader(AbstractGFXLoader gfxLoader) {
 		return FRAGMENT_SHADER;
 	}
-	
+
 	@Override
 	public void initHandles() {
 		mPositionHandle = mProgram.getAttributeLocation("vPosition");
 		mProjHandle = mProgram.getUniformLocation("projTransform");
 	}
-	
+
 }

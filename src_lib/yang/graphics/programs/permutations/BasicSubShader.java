@@ -52,9 +52,9 @@ public class BasicSubShader extends SubShader {
 		shaderParser.addVarying("vec4","worldPosition");
 		if(mWorldTransform) {
 			vsDecl.addUniform("mat4","worldTransform");
-			shaderParser.appendVertexMain("vec4 worldPos = worldTransform * vPosition;");
-			shaderParser.appendVertexMain("worldPosition = worldPos;");
-			shaderParser.appendVertexMain("gl_Position = projTransform * worldPos;");
+			shaderParser.appendVertexMain("vec4 worldPos = worldTransform * vPosition");
+			shaderParser.appendVertexMain("worldPosition = worldPos");
+			shaderParser.appendVertexMain("gl_Position = projTransform * worldPos");
 		}else{
 			shaderParser.appendVertexMain("worldPosition = vPosition");
 			shaderParser.appendVertexMain("gl_Position = projTransform * vPosition");

@@ -28,11 +28,11 @@ public class SpecularLightBasicSubShader extends SubShader {
 		shaderParser.appendLn(VAR_FS_MAIN,"vec3 specVector = reflect(camDir,normal)");
 		if(!fsDecl.localVariableExists("vec4", "specColor"))
 			fsDecl.localDeclare("vec4", "specColor");
-		shaderParser.appendFragmentMain("if(mtSpecUseTex) {");
-		shaderParser.appendFragmentMain("specColor = texture2D(mtSpecSampler,texCoord)");
-		shaderParser.appendFragmentMain("}else{");
-		shaderParser.appendFragmentMain("specColor = mtSpecColor");
-		shaderParser.appendFragmentMain("}");
+		shaderParser.appendFragmentMain("if(mtSpecUseTex) {\n"
+									+ "specColor = texture2D(mtSpecSampler,texCoord);\n"
+									+ "}else{\n"
+									+ "specColor = mtSpecColor;\n"
+									+ "}");
 	}
 
 	@Override
