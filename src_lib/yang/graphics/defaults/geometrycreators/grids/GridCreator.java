@@ -1,5 +1,6 @@
 package yang.graphics.defaults.geometrycreators.grids;
 
+import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.GeometryCreator;
@@ -216,6 +217,10 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 
 	public int getCurrentVertexCount() {
 		return mCurXCount*mCurYCount;
+	}
+
+	public int getCurrentIndexCount() {
+		return mCurXCount*mCurYCount*6;
 	}
 
 }

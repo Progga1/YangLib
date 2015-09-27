@@ -2,6 +2,7 @@ package yang.graphics.defaults.geometrycreators.grids;
 
 import java.nio.ShortBuffer;
 
+import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.interfaces.KernelFunction;
