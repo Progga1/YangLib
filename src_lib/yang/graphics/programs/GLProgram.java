@@ -2,6 +2,7 @@ package yang.graphics.programs;
 
 import yang.graphics.textures.TextureData;
 import yang.math.objects.Point3f;
+import yang.math.objects.YangMatrix;
 
 
 public abstract class GLProgram {
@@ -46,6 +47,10 @@ public abstract class GLProgram {
 				result.append(line+"\n");
 		}
 		return result.toString();
+	}
+
+	public void setUniformMatrix4f(int handle,YangMatrix matrix) {
+		setUniformMatrix4f(handle, matrix.mValues);
 	}
 
 	public boolean hasPrecision() {

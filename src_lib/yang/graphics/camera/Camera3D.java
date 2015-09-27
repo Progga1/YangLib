@@ -50,6 +50,10 @@ public class Camera3D extends YangCamera {
 		setLookAt(eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, 0,1,0);
 	}
 
+	public void setLookAt(Point3f eye,Point3f lookAt) {
+		setLookAt(eye.mX,eye.mY,eye.mZ, lookAt.mX,lookAt.mY,lookAt.mZ);
+	}
+
 	public void setLookAtAlphaBeta(float alpha, float beta, float distance, float lookAtX, float lookAtY, float lookAtZ) {
 		MatrixOps.setLookAtAlphaBeta(mCameraTransform.mValues, lookAtX,lookAtY,lookAtZ,alpha,beta,distance, mPosition);
 	}

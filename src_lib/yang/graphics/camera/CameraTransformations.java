@@ -63,11 +63,15 @@ public abstract class CameraTransformations {
 		return mCameraTransform;
 	}
 
-	public YangMatrix getViewProjReference() {
+	public YangMatrix getViewProjectReference() {
 		return mViewProjectTransform;
 	}
 
-	public YangMatrix getUnprojCameraReference() {
+	public YangMatrix getResultTransformReference() {
+		return mViewProjectTransform;
+	}
+
+	public YangMatrix getUnprojectCameraReference() {
 		return mUnprojectCameraTransform;
 	}
 

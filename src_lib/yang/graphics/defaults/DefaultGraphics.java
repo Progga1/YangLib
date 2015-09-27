@@ -108,8 +108,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	protected void derivedInit() {
 		setColorFactor(1);
 		mCameraProjection = new CameraProjection();
-		mViewProjectionTransform = mCameraProjection.getViewProjReference();
-		mInvViewProjectionTransform = mCameraProjection.getUnprojCameraReference();
+		mViewProjectionTransform = mCameraProjection.getViewProjectReference();
+		mInvViewProjectionTransform = mCameraProjection.getUnprojectCameraReference();
 	}
 
 	@Override
