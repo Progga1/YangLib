@@ -13,7 +13,6 @@ import yang.surface.YangSurface;
 public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 
 	private static final long serialVersionUID = 42L;
-	private final boolean mFirstFocLost = true;
 
 	public YangSurface mSurface;
 
@@ -76,21 +75,12 @@ public class PCFrame extends JFrame implements WindowListener,FocusListener  {
 
 	@Override
 	public void focusGained(FocusEvent arg0) {
-		//mSurface.resume();
 
 	}
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-//		if(mFirstFocLost) {
-//			mFirstFocLost = false;
-//			return;
-//		}
-//		if(!mSurface.isInitialized())
-//			return;
-//		mSurface.mGraphics.deleteAllTextures();
-//		mSurface.pause();
-//		mSurface.stop();
+
 	}
 
 }
