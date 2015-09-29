@@ -9,42 +9,65 @@ import yang.graphics.programs.permutations.SubShader;
 
 public class ColorFactorSubShader extends SubShader {
 
-	public FloatColor mColor;
-	public int mColorFactorHandle;
-	
+	public FloatColor mFrontFaceColor;
+	public FloatColor mBackFaceColor;
+	public int mFrontColorFactorHandle;
+	public int mBackColorFactorHandle;
+	private boolean mFrontAndBackFace;
+
+	public ColorFactorSubShader(FloatColor frontFaceColor,FloatColor backFaceColor) {
+		mFrontFaceColor = frontFaceColor;
+		mBackFaceColor = backFaceColor;
+		mFrontAndBackFace = frontFaceColor!=backFaceColor;
+	}
+
 	public ColorFactorSubShader(FloatColor color) {
-		mColor = color;
+		this(color,color);
 	}
-	
+
 	public ColorFactorSubShader(float[] color) {
-		mColor = new FloatColor();
-		mColor.mValues = color;
+		this(new FloatColor(color));
 	}
-	
+
 	public ColorFactorSubShader(DefaultGraphics<?> graphics) {
 		this(graphics.mColorFactor);
 	}
-	
+
 	@Override
 	public void setVariables(ShaderPermutationsParser shaderParser, ShaderDeclarations vsDecl, ShaderDeclarations fsDecl) {
-		fsDecl.addUniform("vec4", "colorFactor");
-		//shaderParser.circumOp(VAR_VS_COLOR, "colorFactor","*");
-		shaderParser.appendOp(VAR_FRAGCOLOR, "colorFactor","*");
+		if(mFrontAndBackFace) {
+			fsDecl.addUniform("vec4", "frontColorFactor");
+			fsDecl.addUniform("vec4", "backColorFactor");
+			shaderParser.appendOp(VAR_FRAGCOLOR, "(gl_FrontFacing?frontColorFactor:backColorFactor)","*");
+		}else{
+			fsDecl.addUniform("vec4", "colorFactor");
+			shaderParser.appendOp(VAR_FRAGCOLOR, "colorFactor","*");
+		}
 	}
 
 	@Override
 	public void initHandles(GLProgram program) {
-		mColorFactorHandle = program.getUniformLocation("colorFactor");
+		if(mFrontAndBackFace) {
+			mFrontColorFactorHandle = program.getUniformLocation("frontColorFactor");
+			mBackColorFactorHandle = program.getUniformLocation("backColorFactor");
+		}else{
+			mFrontColorFactorHandle = program.getUniformLocation("colorFactor");
+			mBackColorFactorHandle = -1;
+		}
+
 	}
 
 	@Override
 	public void passData(GLProgram program) {
-		program.setUniform4f(mColorFactorHandle, mColor.mValues);
+		program.setUniform4f(mFrontColorFactorHandle, mFrontFaceColor.mValues);
+		if(mFrontAndBackFace) {
+			program.setUniform4f(mBackColorFactorHandle, mBackFaceColor.mValues);
+		}
 	}
 
 	@Override
 	public boolean passesData() {
-		return mColor!=null;
+		return mFrontFaceColor!=null;
 	}
-	
+
 }

@@ -6,7 +6,6 @@ import yang.graphics.defaults.programs.LightInterface;
 import yang.graphics.defaults.programs.ShadowInterface;
 import yang.graphics.defaults.programs.ShadowProgram;
 import yang.graphics.defaults.programs.subshaders.realistic.ShadowSubShader;
-import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
@@ -27,7 +26,7 @@ public class ShadowHelper {
 	private GraphicsTranslator mGraphics;
 	public Default3DGraphics mGraphics3D;
 	public TextureRenderTarget mDepthMap;
-	public YangMatrix mDepthTransformation;
+	public YangMatrix mDepthTransformation = new YangMatrix();
 	public float[] mLightDirection;
 	public int mSize;
 	public float mMinLight = 0.3f;
@@ -56,12 +55,12 @@ public class ShadowHelper {
 
 	public synchronized YangMatrix refreshTransformation() {
 		if(depthTrafoCorrection==null) {
-			depthTrafoCorrection = mGraphics.createTransformationMatrix();
+			depthTrafoCorrection = new YangMatrix();
 		}
 		depthTrafoCorrection.loadIdentity();
 		depthTrafoCorrection.translate(0.5f, 0.5f, 0.5f+mBias);
 		depthTrafoCorrection.scale(0.5f, 0.5f, -0.5f);
-		mDepthTransformation = mGraphics.createTransformationMatrix();
+		mDepthTransformation.loadIdentity();
 		mDepthTransformation.setTranslation(0,0,-50);
 		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
 		return depthTrafoCorrection;

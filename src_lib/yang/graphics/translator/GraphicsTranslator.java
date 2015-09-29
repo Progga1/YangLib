@@ -521,6 +521,15 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public <ShaderType extends AbstractProgram> ShaderType getProgram(Class<ShaderType> programClass) {
+		for(AbstractProgram program:mPrograms) {
+			if(program.getClass()==programClass)
+				return (ShaderType)program;
+		}
+		return null;
+	}
+
 	public void flush() {
 		assert checkErrorInst("PRE flush");
 		if(mFlushDisabled || mCurrentVertexBuffer==null)

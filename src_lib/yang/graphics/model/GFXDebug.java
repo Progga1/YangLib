@@ -246,12 +246,13 @@ public class GFXDebug implements PrintInterface {
 				final float x = tracker.mX;
 				final float y = tracker.mY;
 				float f;
+				final float CLICK_FACTOR = 1.6f;
 				if(i<l)
-					f = 2;
+					f = CLICK_FACTOR;
 				else if(time-tracker.mLastMovementRealtime>ANIM_TIME)
 					continue;
 				else
-					f = (float)(2-(time-tracker.mLastTouchRealtime)*2/ANIM_TIME);
+					f = (float)(CLICK_FACTOR-(time-tracker.mLastTouchRealtime)*CLICK_FACTOR/ANIM_TIME);
 
 				if(f<0.6f)
 					f = 0.6f;
