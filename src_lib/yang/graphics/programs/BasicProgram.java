@@ -8,6 +8,7 @@ public class BasicProgram extends AbstractProgram {
 	public static int COLOR_TEXTURE_LEVEL = 0;
 	public int mColorPrecision,mPositionPrecision,mTexCoordPrecision;
 
+
 	public final static String VERTEX_SHADER =
 			"uniform mat4 projTransform;\r\n" +
 			"uniform \\COLORP vec4 colorFactor;\r\n" +

@@ -77,6 +77,10 @@ public class YangGLESFrame extends PCFrame {
 		mGraphics.run();
 	}
 
+	public void waitUntilInitialized() {
+		mSurface.waitUntilInitialized();
+	}
+
 	public void setSurface(YangSurface surface) {
 		mSurface = surface;
 

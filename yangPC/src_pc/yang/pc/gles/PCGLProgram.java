@@ -14,7 +14,7 @@ import com.jogamp.common.nio.Buffers;
 public class PCGLProgram extends DefaultPCGLProgram {
 
 	private final GL2ES2 gl2;
-	private int mProgram;
+	public int mId;
 	private final IntBuffer intBuf = IntBuffer.allocate(1);
 
 	public PCGLProgram(GL2ES2 gl2) {
@@ -24,7 +24,7 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	@Override
 	public int getAttributeLocation(String attribute) {
 		assert PCGL2ES2Graphics.clearError(gl2);
-		final int result = gl2.glGetAttribLocation(mProgram, attribute);
+		final int result = gl2.glGetAttribLocation(mId, attribute);
 		assert PCGL2ES2Graphics.checkError(gl2, "Attribute (" + attribute + ")");
 		return result;
 	}
@@ -32,7 +32,7 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	@Override
 	public int getUniformLocation(String uniform) {
 		assert PCGL2ES2Graphics.clearError(gl2);
-		final int result = gl2.glGetUniformLocation(mProgram, uniform);
+		final int result = gl2.glGetUniformLocation(mId, uniform);
 		assert PCGL2ES2Graphics.checkError(gl2, "Uniform (" + uniform + ")");
 		return result;
 	}
@@ -55,14 +55,15 @@ public class PCGLProgram extends DefaultPCGLProgram {
 		default:
 			shaderName = "SHADER";
 		}
+		String senderString = sender==null?"":" in "+Util.getClassName(sender);
 		if(error) {
-			System.err.println("---!" + shaderName + " COMPILE ERROR in "+Util.getClassName(sender)+"!---");
+			System.err.println("---!" + shaderName + " COMPILE ERROR"+senderString+"!---");
 			System.out.println(Util.stringToLineNumbersString(shaderCode));
 			System.out.println();
 			System.err.println(errorString + "\n");
 			System.exit(0);
 		}else{
-			System.out.println("----" + shaderName + " COMPILE WARNING in "+Util.getClassName(sender)+"----");
+			System.out.println("----" + shaderName + " COMPILE WARNING"+senderString+"----");
 			System.out.println(Util.stringToLineNumbersString(shaderCode));
 			System.out.println();
 			System.out.println(errorString + "\n");
@@ -97,14 +98,14 @@ public class PCGLProgram extends DefaultPCGLProgram {
 	}
 
 	private void init(int vertexShaderHandle, int fragmentShaderHandle) {
-		gl2.glAttachShader(mProgram, vertexShaderHandle);
-		gl2.glAttachShader(mProgram, fragmentShaderHandle);
-		gl2.glLinkProgram(mProgram);
+		gl2.glAttachShader(mId, vertexShaderHandle);
+		gl2.glAttachShader(mId, fragmentShaderHandle);
+		gl2.glLinkProgram(mId);
 	}
 
 	@Override
 	protected void derivedCompile(String vertexShaderCode, String fragmentShaderCode,Object sender) {
-		mProgram = gl2.glCreateProgram();
+		mId = gl2.glCreateProgram();
 
 		final int vertexShaderHandle = compileShader(GL2ES2.GL_VERTEX_SHADER, vertexShaderCode,sender);
 		final int fragmentShaderHandle = compileShader(GL2ES2.GL_FRAGMENT_SHADER, fragmentShaderCode,sender);
@@ -112,12 +113,12 @@ public class PCGLProgram extends DefaultPCGLProgram {
 		init(vertexShaderHandle, fragmentShaderHandle);
 
 		final int[] statusLinker = new int[1];
-		gl2.glGetProgramiv(mProgram, GL2ES2.GL_LINK_STATUS, statusLinker, 0);
+		gl2.glGetProgramiv(mId, GL2ES2.GL_LINK_STATUS, statusLinker, 0);
 		if (statusLinker[0] == GL2ES2.GL_FALSE) {
 			final int infoLogLenght[] = new int[1];
-			gl2.glGetShaderiv(mProgram, GL2ES2.GL_INFO_LOG_LENGTH, IntBuffer.wrap(infoLogLenght));
+			gl2.glGetShaderiv(mId, GL2ES2.GL_INFO_LOG_LENGTH, IntBuffer.wrap(infoLogLenght));
 			final ByteBuffer infoLog = Buffers.newDirectByteBuffer(infoLogLenght[0]);
-			gl2.glGetShaderInfoLog(mProgram, infoLogLenght[0], null, infoLog);
+			gl2.glGetShaderInfoLog(mId, infoLogLenght[0], null, infoLog);
 			final byte[] infoBytes = new byte[infoLogLenght[0]];
 			infoLog.get(infoBytes);
 			System.out.println("---!SHADER LINK ERROR in "+Util.getClassName(sender)+"!---\n" + new String(infoBytes)+"\n");
@@ -178,7 +179,7 @@ public class PCGLProgram extends DefaultPCGLProgram {
 
 	@Override
 	public void activate() {
-		gl2.glUseProgram(mProgram);
+		gl2.glUseProgram(mId);
 
 	}
 

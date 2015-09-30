@@ -18,25 +18,25 @@ import yang.pc.PCEventHandler;
 
 import com.jogamp.opengl.util.Animator;
 
-public class PCGLEventListener implements GLEventListener {
+public class PCGLPanel implements GLEventListener {
 
 	private GL2ES2 mGles2;
 	private int mPanelId;
 	public PCGL2ES2Graphics mGraphics;
-	protected Component mPanel = null;
+	protected Component mComponent = null;
 	private Cursor mBlankCursor = null;
 	private Animator mGLAnimator;
 
-	public PCGLEventListener(PCGL2ES2Graphics graphics,GLCapabilities glCapabilities, boolean useGLPanel,int panelIndex) {
+	public PCGLPanel(PCGL2ES2Graphics graphics,GLCapabilities glCapabilities, boolean useGLPanel,int panelIndex) {
 		mGraphics = graphics;
 		mPanelId = panelIndex;
 
 		if(!useGLPanel) {
-			mPanel = new GLCanvas(glCapabilities);
-			((GLCanvas)mPanel).addGLEventListener(this);
+			mComponent = new GLCanvas(glCapabilities);
+			((GLCanvas)mComponent).addGLEventListener(this);
 		}else{
-			mPanel = new GLJPanel(glCapabilities);
-			((GLJPanel)mPanel).addGLEventListener(this);
+			mComponent = new GLJPanel(glCapabilities);
+			((GLJPanel)mComponent).addGLEventListener(this);
 		}
 	}
 
@@ -57,6 +57,8 @@ public class PCGLEventListener implements GLEventListener {
 			mGraphics.mGles2 = mGles2;
 			mGles2.glEnable(GL2.GL_TEXTURE_2D);
 			mGraphics.mSurface.onSurfaceCreated(true);
+
+			mGraphics.postInitMain(glAutoDrawable);
 		}
 	}
 
@@ -77,28 +79,32 @@ public class PCGLEventListener implements GLEventListener {
 
 	public void setSystemCursorEnabled(boolean enabled) {
 		if(mBlankCursor==null)
-			mBlankCursor = mPanel.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),"null");
+			mBlankCursor = mComponent.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),"null");
 		if(enabled)
-			mPanel.setCursor(Cursor.getDefaultCursor());
+			mComponent.setCursor(Cursor.getDefaultCursor());
 		else
-			mPanel.setCursor(mBlankCursor);
+			mComponent.setCursor(mBlankCursor);
 	}
 
 	public PCEventHandler setMouseEventListener(EventQueueHolder eventListener) {
 		final PCEventHandler eventHandler = new PCEventHandler(eventListener);
-		mPanel.addMouseListener(eventHandler);
-		mPanel.addMouseMotionListener(eventHandler);
-		mPanel.addMouseWheelListener(eventHandler);
+		mComponent.addMouseListener(eventHandler);
+		mComponent.addMouseMotionListener(eventHandler);
+		mComponent.addMouseWheelListener(eventHandler);
 		return eventHandler;
 	}
 
 	public void run() {
-		mGLAnimator = new Animator((GLAutoDrawable)mPanel);
+		mGLAnimator = new Animator((GLAutoDrawable)mComponent);
 	    mGLAnimator.start();
 	}
 
 	public void stop() {
 		mGLAnimator.stop();
+	}
+
+	public Component getComponent() {
+		return mComponent;
 	}
 
 }

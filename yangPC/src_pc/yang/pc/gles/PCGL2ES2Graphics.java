@@ -9,6 +9,7 @@ import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
+import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
 import yang.graphics.buffers.IndexedVertexBuffer;
@@ -22,16 +23,16 @@ import yang.pc.PCGraphics;
 import yang.pc.fileio.PCGFXLoader;
 import yang.surface.YangSurface;
 
-import com.jogamp.opengl.util.Animator;
-
 public class PCGL2ES2Graphics extends PCGraphics {
 
 	protected GL2ES2 mGles2;
 	YangSurface mSurface;
-	private PCGLEventListener mPanel;
+	private PCGLPanel mPanel;
+	public PCGLTextureDisplay mSecPanel;
 	public static boolean DEFAULT_USE_GLPANEL = false;
 	public static boolean USE_DISPLAY = false;
 	public boolean mStereo = false;
+	private GLCapabilities mGlCapabilities;
 
 	public static final boolean clearError(GL2ES2 gl2) {
 		gl2.glGetError();
@@ -67,27 +68,30 @@ public class PCGL2ES2Graphics extends PCGraphics {
 
 		final GLProfile glProfile = GLProfile.getDefault();
 
-		final GLCapabilities glCapabilities = new GLCapabilities(glProfile);
+		mGlCapabilities = new GLCapabilities(glProfile);
 //		glCapabilities.setDoubleBuffered(true);
-		glCapabilities.setHardwareAccelerated(true);
-		glCapabilities.setOnscreen(true);
-		glCapabilities.setDepthBits(24);
+		mGlCapabilities.setHardwareAccelerated(true);
+		mGlCapabilities.setOnscreen(true);
+		mGlCapabilities.setDepthBits(24);
 
 		if(!USE_DISPLAY) {
-			mPanel = new PCGLEventListener(this,glCapabilities,useGLPanel,0);
-	//		GLCanvas canvas = new GLCanvas(caps);
-	//	    canvas.addGLEventListener(this);
-	//
-	//		mPanel.add(canvas, BorderLayout.CENTER);
-	//
-	//	    Animator anim = new Animator(canvas);
-	//	    anim.start();
-
-			mPanel.mPanel.setPreferredSize(new Dimension(resolutionX,resolutionY));
+			mPanel = new PCGLPanel(this,mGlCapabilities,useGLPanel,0);
+			mPanel.mComponent.setPreferredSize(new Dimension(resolutionX,resolutionY));
 		}else{
 
 		}
 
+	}
+
+	protected void postInitMain(GLAutoDrawable drawable) {
+		mSecPanel = new PCGLTextureDisplay(this,drawable.getContext(),mGlCapabilities,1);
+		mSecPanel.mComponent.setPreferredSize(new Dimension(320,240));
+		mSecPanel.run();
+
+		JFrame secFrame = new JFrame();
+		secFrame.add(mSecPanel.getComponent());
+		secFrame.pack();
+		secFrame.setVisible(true);
 	}
 
 	public PCGL2ES2Graphics(int resolutionX,int resolutionY) {
@@ -225,11 +229,12 @@ public class PCGL2ES2Graphics extends PCGraphics {
 
 	public void stop() {
 		mPanel.stop();
+		mSecPanel.stop();
 	}
 
 	@Override
 	public Component getPanel() {
-		return mPanel.mPanel;
+		return mPanel.mComponent;
 	}
 
 	public PCEventHandler setMouseEventListener(EventQueueHolder eventListener) {
