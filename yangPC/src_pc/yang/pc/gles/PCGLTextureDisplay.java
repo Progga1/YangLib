@@ -1,10 +1,5 @@
 package yang.pc.gles;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
@@ -12,63 +7,52 @@ import javax.media.opengl.GLContext;
 import javax.media.opengl.GLES2;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.awt.GLJPanel;
-
-import model.globalassets.VeltTextures;
 
 import yang.graphics.buffers.UniversalVertexBuffer;
-import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 import yang.graphics.programs.BasicProgram;
 import yang.graphics.translator.Texture;
+import yang.graphics.translator.TextureDisplay;
 import yang.math.objects.YangMatrix;
 
-import com.jogamp.opengl.util.Animator;
+public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,TextureDisplay {
 
-public class PCGLTextureDisplay implements GLEventListener {
+	public Texture mTexture = null;
+	public FloatColor mColorFactor = FloatColor.WHITE.clone();
 
-	private GL2ES2 mGles2;
-	private int mPanelId;
+	//Objects
 	public PCGL2ES2Graphics mGraphics;
-	public static DefaultGraphics<?> mDefGraphics;
-	protected Component mComponent = null;
-	private Cursor mBlankCursor = null;
-	private Animator mGLAnimator;
-	public static Texture TEXTURE_TEST = null;
-
-	public BasicProgram mBProg;
-
-	public UniversalVertexBuffer buf;
+	public BasicProgram mProgram;
+	private UniversalVertexBuffer mVertices;
 
 	public PCGLTextureDisplay(PCGL2ES2Graphics graphics, GLContext context,GLCapabilities glCapabilities,int panelIndex) {
+		super(graphics,glCapabilities,false,panelIndex);
 		mGraphics = graphics;
 		mPanelId = panelIndex;
 
 		mComponent = new GLCanvas(glCapabilities,context);
 		((GLCanvas)mComponent).addGLEventListener(this);
-	}
 
-	public boolean isMainPanel() {
-		return mPanelId==0;
+		setFramed();
 	}
 
 	@Override
 	public void init(GLAutoDrawable glAutoDrawable) {
 		mGles2 = glAutoDrawable.getGL().getGL2();
 
-		buf = new UniversalVertexBuffer(true,true, 6,4);
-		buf.init(new int[]{3,2,4},new float[][]{{0,0,0},{0,0},{1,1,1,1}});
+		mVertices = new UniversalVertexBuffer(true,true, 6,4);
+		mVertices.init(new int[]{3,2,4},new float[][]{{0,0,0},{0,0},{1,1,1,1}});
 
-		float s = 0.5f;
-		buf.putVec12(0, -s,-s,0, s,-s,0, -s,s,0, s,s,0);
-		buf.putRect2D(1, 0,1,1,0);
-		buf.putArrayMultiple(2, new float[]{1,1,0.5f,1}, 4);
+		float s = 1;
+		mVertices.putVec12(0, -s,-s,0, s,-s,0, -s,s,0, s,s,0);
+		mVertices.putRect2D(1, 0,1,1,0);
+		mVertices.putArrayMultiple(2, new float[]{1,1,1,1}, 4);
 
-		buf.putRectIndices(0,1,2,3);
-		buf.reset();
+		mVertices.putRectIndices(0,1,2,3);
+		mVertices.reset();
 
-		mBProg = new BasicProgram();
-		mBProg.init(mGraphics);
-//		mProgram = new PCGLProgram(mGles2);
+		mProgram = new BasicProgram();
+		mProgram.init(mGraphics);
 	}
 
 	@Override
@@ -83,83 +67,75 @@ public class PCGLTextureDisplay implements GLEventListener {
 
 	public void bindBuf(int handle, int bufferIndex) {
 		mGles2.glEnableVertexAttribArray(handle);
-		mGles2.glVertexAttribPointer(handle, buf.mFloatBufferElementSizes[bufferIndex], GL2ES2.GL_FLOAT, false, 0, buf.getByteBuffer(bufferIndex));
+		mGles2.glVertexAttribPointer(handle, mVertices.mFloatBufferElementSizes[bufferIndex], GL2ES2.GL_FLOAT, false, 0, mVertices.getByteBuffer(bufferIndex));
 	}
 
 	public void unbindBuf(int handle) {
 		mGles2.glDisableVertexAttribArray(handle);
 	}
 
-	private void out(String msg) {
+	private void checkErr(String msg) {
 		int e = mGles2.glGetError();
 		if(e!=0)
-			System.out.println(msg+": "+e);
+			System.err.println(msg+": "+e);
 	}
 
 	@Override
 	public void display(GLAutoDrawable glAutoDrawable) {
-		if(mDefGraphics==null)
+		if(mGraphics.isClosed())
 			return;
-		mGles2.glClearColor(0f, .33f, 0.66f, 1f);
-		mGles2.glClearDepthf(1f);
-		mGles2.glClear(GLES2.GL_COLOR_BUFFER_BIT | GLES2.GL_DEPTH_BUFFER_BIT);
-		out("pre");
-		if(TEXTURE_TEST!=null) {
+
+		checkErr("pre");
+		if(mTexture!=null) {
 			mGles2.glActiveTexture(GL2ES2.GL_TEXTURE0);
-			mGles2.glBindTexture(GLES2.GL_TEXTURE_2D,VeltTextures.CUBE.mId);
-			out("bind");
+			mGles2.glBindTexture(GLES2.GL_TEXTURE_2D,mTexture.mId);
+			checkErr("bind");
+
+			PCGLProgram prog = (PCGLProgram)mProgram.mProgram;
+			mGles2.glUseProgram(prog.mId);
+			checkErr("program");
+
+			bindBuf(mProgram.mPositionHandle,0);
+			bindBuf(mProgram.mTextureHandle,1);
+			bindBuf(mProgram.mColorHandle,2);
+			checkErr("bindbuf");
+			prog.setUniformMatrix4f(mProgram.mProjHandle, YangMatrix.IDENTITY.mValues);
+			prog.setUniformInt(mProgram.mTexSamplerHandle, 0);
+			prog.setUniform4f(mProgram.mColorFactorHandle, mColorFactor.mValues);
+			checkErr("setUniform");
+
+			mVertices.reset();
+			mGles2.glDisable(GLES2.GL_CULL_FACE);
+			mGles2.glDrawElements(GLES2.GL_TRIANGLE_STRIP, 4, GL2ES2.GL_UNSIGNED_SHORT, mVertices.mIndexBuffer);
+
+			checkErr("draw");
+
+			mGles2.glFlush();
+
+			checkErr("flush");
+
+			unbindBuf(mProgram.mPositionHandle);
+			unbindBuf(mProgram.mColorHandle);
+			unbindBuf(mProgram.mTextureHandle);
+
+			checkErr("unbind");
+		}else{
+			mGles2.glClearColor(0, 0, 0.1f, 1);
+			mGles2.glClearDepthf(1f);
+			mGles2.glClear(GLES2.GL_COLOR_BUFFER_BIT | GLES2.GL_DEPTH_BUFFER_BIT);
 		}
 
-		PCGLProgram prog = (PCGLProgram)mBProg.mProgram;
-		mGles2.glUseProgram(prog.mId);
-		out("program");
-
-		bindBuf(mBProg.mPositionHandle,0);
-		bindBuf(mBProg.mTextureHandle,1);
-		bindBuf(mBProg.mColorHandle,2);
-		out("bindbuf");
-		prog.setUniformMatrix4f(mBProg.mProjHandle, YangMatrix.IDENTITY.mValues);
-		prog.setUniformInt(mBProg.mTexSamplerHandle, 0);
-		prog.setUniform4f(mBProg.mColorFactorHandle, 1,1,1,1);
-		out("setUniform");
-
-		buf.reset();
-		mGles2.glDisable(GLES2.GL_CULL_FACE);
-		mGles2.glDrawElements(GLES2.GL_TRIANGLE_STRIP, 4, GL2ES2.GL_UNSIGNED_SHORT, buf.mIndexBuffer);
-
-		out("draw");
-
-		mGles2.glFlush();
-
-		out("flush");
-
-		unbindBuf(mBProg.mPositionHandle);
-		unbindBuf(mBProg.mColorHandle);
-		unbindBuf(mBProg.mTextureHandle);
-
-		out("unbind");
+		checkErr("post");
 	}
 
-	public void setSystemCursorEnabled(boolean enabled) {
-		if(mBlankCursor==null)
-			mBlankCursor = mComponent.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),"null");
-		if(enabled)
-			mComponent.setCursor(Cursor.getDefaultCursor());
-		else
-			mComponent.setCursor(mBlankCursor);
+	@Override
+	public Texture getTexture() {
+		return mTexture;
 	}
 
-	public void run() {
-		mGLAnimator = new Animator((GLAutoDrawable)mComponent);
-	    mGLAnimator.start();
-	}
-
-	public void stop() {
-		mGLAnimator.stop();
-	}
-
-	public Component getComponent() {
-		return mComponent;
+	@Override
+	public void setTexture(Texture texture) {
+		mTexture = texture;
 	}
 
 }

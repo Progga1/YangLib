@@ -5,7 +5,7 @@ import yang.graphics.translator.AbstractGFXLoader;
 public class MinimalProgram extends BasicProgram {
 
 	public final static String MINIMAL_VERTEX_SHADER =
-			"attribute \\POSITIONP vec4 vPosition;\r\n" +
+			"attribute vec4 vPosition;\r\n" +
 			"\r\n" +
 			"void main() {\r\n" +
 			"	gl_Position = vPosition;\r\n" +

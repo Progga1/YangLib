@@ -4,12 +4,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
+import java.util.ArrayList;
 
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
-import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
 import yang.graphics.buffers.IndexedVertexBuffer;
@@ -17,6 +17,7 @@ import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.Texture;
+import yang.graphics.translator.TextureDisplay;
 import yang.model.enums.ByteFormat;
 import yang.pc.PCEventHandler;
 import yang.pc.PCGraphics;
@@ -28,11 +29,13 @@ public class PCGL2ES2Graphics extends PCGraphics {
 	protected GL2ES2 mGles2;
 	YangSurface mSurface;
 	private PCGLPanel mPanel;
-	public PCGLTextureDisplay mSecPanel;
 	public static boolean DEFAULT_USE_GLPANEL = false;
 	public static boolean USE_DISPLAY = false;
 	public boolean mStereo = false;
 	private GLCapabilities mGlCapabilities;
+	private boolean mClosed = false;
+
+	public ArrayList<PCGLTextureDisplay> mTextureDisplays = new ArrayList<PCGLTextureDisplay>(128);
 
 	public static final boolean clearError(GL2ES2 gl2) {
 		gl2.glGetError();
@@ -80,18 +83,10 @@ public class PCGL2ES2Graphics extends PCGraphics {
 		}else{
 
 		}
-
 	}
 
 	protected void postInitMain(GLAutoDrawable drawable) {
-		mSecPanel = new PCGLTextureDisplay(this,drawable.getContext(),mGlCapabilities,1);
-		mSecPanel.mComponent.setPreferredSize(new Dimension(320,240));
-		mSecPanel.run();
 
-		JFrame secFrame = new JFrame();
-		secFrame.add(mSecPanel.getComponent());
-		secFrame.pack();
-		secFrame.setVisible(true);
 	}
 
 	public PCGL2ES2Graphics(int resolutionX,int resolutionY) {
@@ -100,7 +95,7 @@ public class PCGL2ES2Graphics extends PCGraphics {
 
 	@Override
 	public void setSystemCursorEnabled(boolean enabled) {
-		mPanel.setSystemCursorEnabled(enabled);
+		mPanel.setCursorVisible(enabled);
 	}
 
 	public static int channelsToConst(int channels) {
@@ -228,8 +223,11 @@ public class PCGL2ES2Graphics extends PCGraphics {
 	}
 
 	public void stop() {
+		mClosed = true;
 		mPanel.stop();
-		mSecPanel.stop();
+		for(PCGLTextureDisplay texDisplay:mTextureDisplays) {
+			texDisplay.stop();
+		}
 	}
 
 	@Override
@@ -253,7 +251,7 @@ public class PCGL2ES2Graphics extends PCGraphics {
 	protected void updateTexture(Texture texture, ByteBuffer source, int left,int top, int width,int height) {
 		bindTexture(texture);
 
-		//gles2.glTexSubImage2D(GL2ES2.GL_TEXTURE_2D, 0, 0, 0, left, top, width, height, GL2ES2.GL_RGBA, GL2ES2.GL_UNSIGNED_BYTE,source);
+//		mGles2.glTexSubImage2D(GL2ES2.GL_TEXTURE_2D, 0, 0, 0, left, top, width, height, GL2ES2.GL_RGBA, GL2ES2.GL_UNSIGNED_BYTE,source);
 	}
 
 	@Override
@@ -357,6 +355,15 @@ public class PCGL2ES2Graphics extends PCGraphics {
 	@Override
 	public void depthRange(float zNear,float zFar) {
 		mGles2.glDepthRange(zNear,zFar);
+	}
+
+	public boolean isClosed() {
+		return mClosed;
+	}
+
+	@Override
+	public TextureDisplay createTextureDisplay() {
+		return new PCGLTextureDisplay(this,mGles2.getContext(),mGlCapabilities,1);
 	}
 
 }

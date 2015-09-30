@@ -2,6 +2,7 @@ package yang.pc.gles;
 
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
@@ -12,20 +13,23 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.awt.GLJPanel;
+import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
+import yang.graphics.translator.GLHolder;
 import yang.pc.PCEventHandler;
 
 import com.jogamp.opengl.util.Animator;
 
-public class PCGLPanel implements GLEventListener {
+public class PCGLPanel implements GLEventListener,GLHolder {
 
-	private GL2ES2 mGles2;
-	private int mPanelId;
+	protected GL2ES2 mGles2;
+	protected int mPanelId;
 	public PCGL2ES2Graphics mGraphics;
 	protected Component mComponent = null;
-	private Cursor mBlankCursor = null;
-	private Animator mGLAnimator;
+	protected Cursor mBlankCursor = null;
+	protected Animator mGLAnimator;
+	public JFrame mFrame;
 
 	public PCGLPanel(PCGL2ES2Graphics graphics,GLCapabilities glCapabilities, boolean useGLPanel,int panelIndex) {
 		mGraphics = graphics;
@@ -77,7 +81,7 @@ public class PCGLPanel implements GLEventListener {
 		mGraphics.mSurface.drawFrame();
 	}
 
-	public void setSystemCursorEnabled(boolean enabled) {
+	public void setCursorVisible(boolean enabled) {
 		if(mBlankCursor==null)
 			mBlankCursor = mComponent.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),"null");
 		if(enabled)
@@ -105,6 +109,33 @@ public class PCGLPanel implements GLEventListener {
 
 	public Component getComponent() {
 		return mComponent;
+	}
+
+	@Override
+	public void setProperties(String title, boolean undecorated,boolean alwaysOnTop, int screenId) {
+		mFrame.setTitle(title);
+		mFrame.setUndecorated(undecorated);
+		mFrame.setAlwaysOnTop(alwaysOnTop);
+	}
+
+	@Override
+	public void setBounds(int x, int y, int width, int height) {
+		mComponent.setPreferredSize(new Dimension(width,height));
+		mFrame.setLocation(new Point(x,y));
+
+		mFrame.pack();
+		mFrame.setVisible(true);
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		mFrame.setVisible(visible);
+	}
+
+	@Override
+	public void setFramed() {
+		mFrame = new JFrame();
+		mFrame.add(mComponent);
 	}
 
 }

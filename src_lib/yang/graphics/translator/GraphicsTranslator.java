@@ -109,7 +109,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private final YangList<Texture> mRegisteredTextures;
 	private final YangList<AbstractProgram> mPrograms;
 	private ShortBuffer mWireFrameIndexBuffer;
-	private int mMaxFPS;
 	private long mMinDrawFrameIntervalNanos;
 
 	//Helpers
@@ -153,6 +152,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void deleteBuffers(int[] bufIds);
 	protected abstract void deleteFrameBuffers(int[] bufIds);
 
+	public TextureDisplay createTextureDisplay() { return null; }
 	protected void postInit() { }
 	public void setSystemCursorEnabled(boolean enabled){ }
 
@@ -560,7 +560,6 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			fps = Integer.MAX_VALUE;
 		else
 			DebugYang.FPS_BAR_MAX_FRAMES = fps;
-		mMaxFPS = fps;
 		mMinDrawFrameIntervalNanos = 1000000000/fps;
 	}
 
@@ -996,6 +995,22 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	public int getDefaultMetaBaseKey() {
 		return Keys.F1;
+	}
+
+	public final TextureDisplay createTextureDisplay(Texture texture) {
+		TextureDisplay result = createTextureDisplay();
+		result.setTexture(texture);
+		result.run();
+		return result;
+	}
+
+	public final TextureDisplay displayTextureFullscreen(Texture texture,int screenId) {
+		TextureDisplay result = createTextureDisplay(texture);
+		if(result==null)
+			return null;
+		result.setProperties("Fullscreen tex",true,true,screenId);
+		result.setBounds(0,0, 320,240);
+		return result;
 	}
 
 }
