@@ -125,17 +125,16 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 
 	@Override
 	public void setFullscreen(int screenId) {
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice[] gs = ge.getScreenDevices();
-		if(screenId>=gs.length || screenId<0)
-			screenId = 0;
-		//gs[screenId].setFullScreenWindow(mFrame);
-		GraphicsDevice gd = gs[screenId];
-		GraphicsConfiguration conf = gd.getDefaultConfiguration();
-		Rectangle bounds = conf.getBounds();
-		mComponent.setPreferredSize(new Dimension(bounds.width,bounds.height));
+
+		int[] bounds = mGraphics.getScreenBounds(screenId);
+		if(bounds==null) {
+
+		}else{
+
+		}
+		mComponent.setPreferredSize(new Dimension(bounds[2],bounds[3]));
 		mFrame.pack();
-		mFrame.setLocation(bounds.x, bounds.y);
+		mFrame.setLocation(bounds[0], bounds[1]);
 		mFrame.setVisible(true);
 	}
 

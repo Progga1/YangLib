@@ -26,6 +26,7 @@ import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.graphics.translator.glconsts.GLTex;
 import yang.math.objects.Bounds;
+import yang.math.objects.Point2f;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
@@ -115,6 +116,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected final int[] mTempInt = new int[1];
 	protected final int[] mTempInt2 = new int[1];
 	protected final int[] mTempIntArray = new int[128];
+	protected final int[] mScreenBoundsInt = new int[4];
 	public int mRestartCount = 0;
 	public AbstractProgram mCurrentProgram = null;
 	public YangMatrix mSensorOrientationMatrix = new YangMatrix();
@@ -1011,6 +1013,26 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		result.setProperties("Fullscreen tex",true,true);
 		result.setFullscreen(screenId);
 		return result;
+	}
+
+	public int[] getScreenBounds(int screenId) {
+		if(screenId!=0)
+			return null;
+		else{
+			mScreenBoundsInt[0] = 0;
+			mScreenBoundsInt[1] = 1;
+			mScreenBoundsInt[2] = mScreenWidth;
+			mScreenBoundsInt[3] = mScreenHeight;
+			return mScreenBoundsInt;
+		}
+	}
+
+	public int getScreenWidth(int screenId) {
+		return getScreenBounds(screenId)[2];
+	}
+
+	public int getScreenHeight(int screenId) {
+		return getScreenBounds(screenId)[3];
 	}
 
 }

@@ -2,6 +2,10 @@ package yang.pc.gles;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
@@ -23,6 +27,7 @@ import yang.pc.PCEventHandler;
 import yang.pc.PCGraphics;
 import yang.pc.fileio.PCGFXLoader;
 import yang.surface.YangSurface;
+
 
 public class PCGL2ES2Graphics extends PCGraphics {
 
@@ -365,5 +370,22 @@ public class PCGL2ES2Graphics extends PCGraphics {
 	public TextureDisplay createTextureDisplay() {
 		return new PCGLTextureDisplay(this,mGles2.getContext(),mGlCapabilities,1);
 	}
+
+	@Override
+	public int[] getScreenBounds(int screenId) {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		if(screenId>=gs.length || screenId<0)
+			screenId = 0;
+		GraphicsDevice gd = gs[screenId];
+		GraphicsConfiguration conf = gd.getDefaultConfiguration();
+		Rectangle bounds = conf.getBounds();
+		mScreenBoundsInt[0] = bounds.x;
+		mScreenBoundsInt[1] = bounds.y;
+		mScreenBoundsInt[2] = bounds.width;
+		mScreenBoundsInt[3] = bounds.height;
+		return mScreenBoundsInt;
+	}
+
 
 }
