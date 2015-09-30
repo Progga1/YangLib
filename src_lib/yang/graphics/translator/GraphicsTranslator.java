@@ -1008,8 +1008,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		TextureDisplay result = createTextureDisplay(texture);
 		if(result==null)
 			return null;
-		result.setProperties("Fullscreen tex",true,true,screenId);
-		result.setBounds(0,0, 320,240);
+		result.setProperties("Fullscreen tex",true,true);
+		result.setFullscreen(screenId);
 		return result;
 	}
 

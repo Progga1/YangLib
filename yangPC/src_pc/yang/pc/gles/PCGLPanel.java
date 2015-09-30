@@ -3,7 +3,11 @@ package yang.pc.gles;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GL2;
@@ -98,6 +102,7 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 		return eventHandler;
 	}
 
+	@Override
 	public void run() {
 		mGLAnimator = new Animator((GLAutoDrawable)mComponent);
 	    mGLAnimator.start();
@@ -112,17 +117,32 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 	}
 
 	@Override
-	public void setProperties(String title, boolean undecorated,boolean alwaysOnTop, int screenId) {
+	public void setProperties(String title, boolean undecorated,boolean alwaysOnTop) {
 		mFrame.setTitle(title);
 		mFrame.setUndecorated(undecorated);
 		mFrame.setAlwaysOnTop(alwaysOnTop);
 	}
 
 	@Override
+	public void setFullscreen(int screenId) {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		if(screenId>=gs.length || screenId<0)
+			screenId = 0;
+		//gs[screenId].setFullScreenWindow(mFrame);
+		GraphicsDevice gd = gs[screenId];
+		GraphicsConfiguration conf = gd.getDefaultConfiguration();
+		Rectangle bounds = conf.getBounds();
+		mComponent.setPreferredSize(new Dimension(bounds.width,bounds.height));
+		mFrame.pack();
+		mFrame.setLocation(bounds.x, bounds.y);
+		mFrame.setVisible(true);
+	}
+
+	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		mComponent.setPreferredSize(new Dimension(width,height));
 		mFrame.setLocation(new Point(x,y));
-
 		mFrame.pack();
 		mFrame.setVisible(true);
 	}
