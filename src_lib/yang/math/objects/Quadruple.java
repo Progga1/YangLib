@@ -21,9 +21,17 @@ public class Quadruple {
 		set(v1,v2,v3,v4);
 	}
 
+	public Quadruple(float[] values,boolean referenced) {
+		if(referenced) {
+			mValues = values;
+		}else{
+			mValues = new float[4];
+			set(values);
+		}
+	}
+
 	public Quadruple(float[] values) {
-		this();
-		set(values);
+		this(values,false);
 	}
 
 	@Override

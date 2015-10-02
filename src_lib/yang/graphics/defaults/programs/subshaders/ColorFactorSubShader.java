@@ -26,7 +26,7 @@ public class ColorFactorSubShader extends SubShader {
 	}
 
 	public ColorFactorSubShader(float[] color) {
-		this(new FloatColor(color));
+		this(new FloatColor(color,true));
 	}
 
 	public ColorFactorSubShader(DefaultGraphics<?> graphics) {
