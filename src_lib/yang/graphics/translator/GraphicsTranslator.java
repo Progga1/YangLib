@@ -157,6 +157,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public TextureDisplay createTextureDisplay() { return null; }
 	protected void postInit() { }
 	public void setSystemCursorEnabled(boolean enabled){ }
+	public int getNumberOfScreens() { return 1; }
 
 	//TODO: glColorMask
 
@@ -1006,11 +1007,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return result;
 	}
 
-	public final TextureDisplay displayTextureFullscreen(Texture texture,int screenId) {
+	public final TextureDisplay displayTextureFullscreen(Texture texture,String title,int screenId) {
 		TextureDisplay result = createTextureDisplay(texture);
 		if(result==null)
 			return null;
-		result.setProperties("Fullscreen tex",true,true);
+		result.setProperties(title,true,true);
 		result.setFullscreen(screenId);
 		return result;
 	}

@@ -387,5 +387,10 @@ public class PCGL2ES2Graphics extends PCGraphics {
 		return mScreenBoundsInt;
 	}
 
+	@Override
+	public int getNumberOfScreens() {
+		return GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length;
+	}
+
 
 }
