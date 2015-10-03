@@ -431,4 +431,16 @@ public class Quaternion {
 		mW = 1;
 	}
 
+	public float getYaw() {
+		return (float)(Math.atan2(2*(mY*mW + mX*-mZ),1-2*(-mZ*-mZ + mW*mW)));
+	}
+	
+	public float getPitch() {
+		return (float)(Math.asin(2*(mY*-mZ - mW*mX)));
+	}
+	
+	public float getRoll() {
+		return (float)(Math.atan2(2*(mY*mX + -mZ*mW),1-2*(mX*mX + -mZ*-mZ)));
+	}
+
 }
