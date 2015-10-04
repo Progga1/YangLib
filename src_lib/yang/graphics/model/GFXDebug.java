@@ -42,6 +42,7 @@ public class GFXDebug implements PrintInterface {
 	public Texture mPointerTexture = null;
 	public boolean mDrawPointerContours = true;
 	public float mPointerSize = 0.06f;
+	public boolean mPointersAlwaysVisible = false;
 	public FloatColor[] mPointerColors = DEFAULT_PALETTE;
 	public Texture mDisplayTexture;
 	public float mDisplayTextureHeight = 1;
@@ -249,7 +250,7 @@ public class GFXDebug implements PrintInterface {
 				final float CLICK_FACTOR = 1.6f;
 				if(i<l)
 					f = CLICK_FACTOR;
-				else if(time-tracker.mLastMovementRealtime>ANIM_TIME)
+				else if(!mPointersAlwaysVisible && time-tracker.mLastMovementRealtime>ANIM_TIME)
 					continue;
 				else
 					f = (float)(CLICK_FACTOR-(time-tracker.mLastTouchRealtime)*CLICK_FACTOR/ANIM_TIME);
