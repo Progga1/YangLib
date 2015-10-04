@@ -26,7 +26,6 @@ import yang.graphics.translator.glconsts.GLMasks;
 import yang.graphics.translator.glconsts.GLOps;
 import yang.graphics.translator.glconsts.GLTex;
 import yang.math.objects.Bounds;
-import yang.math.objects.Point2f;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
@@ -35,7 +34,6 @@ import yang.model.DebugYang;
 import yang.model.SurfaceParameters;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
-import yang.pc.gles.PCGLPanel;
 import yang.util.YangList;
 
 public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,SurfaceParameters {

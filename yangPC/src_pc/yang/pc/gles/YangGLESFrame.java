@@ -58,11 +58,6 @@ public class YangGLESFrame extends PCFrame {
 
 		mGraphics.setMaxFPS(DEFAULT_MAX_FPS);
 
-//		if(autoBuild) {
-//			this.add(mGraphics.getPanel());
-//			this.pack();
-//		}
-
 		mPanel = mGraphics.getMainDisplay();
 
 		if(autoBuild) {

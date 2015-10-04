@@ -136,6 +136,10 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 		mFrame.setVisible(true);
 	}
 
+	public void setFullscreen() {
+		setFullscreen(mGraphics.getMainScreenId());
+	}
+
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		mComponent.setPreferredSize(new Dimension(width,height));
