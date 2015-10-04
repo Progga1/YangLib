@@ -21,6 +21,7 @@ import yang.graphics.translator.glconsts.GLDrawModes;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.YangMatrix;
+import yang.model.Boundaries3D;
 import yang.util.YangList;
 
 public class YangMesh {
@@ -48,6 +49,7 @@ public class YangMesh {
 	public float[] mSkinWeights;
 	public short[] mTriangleIndices;
 	public short[] mEdgeIndices;
+	public Boundaries3D mBoundaries;
 
 	public FloatColor mDefaultColor = FloatColor.WHITE.clone();
 	public Quadruple mSuppData = Quadruple.ZERO;
@@ -79,6 +81,16 @@ public class YangMesh {
 		mTextureProperties = textureProperties;
 		mMaterialSets = new YangList<YangMaterialSet>();
 		mMaterialSections = new YangList<YangMaterialSection>();
+	}
+
+	public Boundaries3D refreshBoundaries() {
+		if(mBoundaries==null)
+			mBoundaries = new Boundaries3D();
+		if(mDrawBatch!=null) {
+			mBoundaries.setMinMaxByXYZBuffer(mDrawBatch.mVertexBuffer.getFloatBuffer(DefaultGraphics.ID_POSITIONS));
+		}else
+			mBoundaries.setMinMaxByXYZArray(mPositions);
+		return mBoundaries;
 	}
 
 	protected void creationFinished() {
