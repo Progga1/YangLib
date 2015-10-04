@@ -35,6 +35,7 @@ import yang.model.DebugYang;
 import yang.model.SurfaceParameters;
 import yang.model.TransformationFactory;
 import yang.model.enums.ByteFormat;
+import yang.pc.gles.PCGLPanel;
 import yang.util.YangList;
 
 public abstract class GraphicsTranslator implements TransformationFactory,GLProgramFactory,SurfaceParameters {
@@ -158,6 +159,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected void postInit() { }
 	public void setSystemCursorEnabled(boolean enabled){ }
 	public int getNumberOfScreens() { return 1; }
+	public int getMainScreenId() { return 0; }
 
 	//TODO: glColorMask
 
@@ -1011,7 +1013,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		TextureDisplay result = createTextureDisplay(texture);
 		if(result==null)
 			return null;
-		result.setProperties(title,true,true);
+		result.setFrameProperties(title,true,true);
 		result.setFullscreen(screenId);
 		return result;
 	}
@@ -1034,6 +1036,10 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 
 	public int getScreenHeight(int screenId) {
 		return getScreenBounds(screenId)[3];
+	}
+
+	public GLHolder getMainDisplay() {
+		return null;
 	}
 
 }

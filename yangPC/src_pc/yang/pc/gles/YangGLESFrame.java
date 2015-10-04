@@ -1,5 +1,7 @@
 package yang.pc.gles;
 
+import java.awt.Component;
+
 import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
@@ -23,6 +25,7 @@ public class YangGLESFrame extends PCFrame {
 	public PCGL2ES2Graphics mGraphics;
 	public EventQueueHolder mEventListener;
 	public PCEventHandler mPCEventHandler;
+	public PCGLPanel mPanel;
 
 	public YangGLESFrame(String title) {
 		super();
@@ -55,9 +58,18 @@ public class YangGLESFrame extends PCFrame {
 
 		mGraphics.setMaxFPS(DEFAULT_MAX_FPS);
 
+//		if(autoBuild) {
+//			this.add(mGraphics.getPanel());
+//			this.pack();
+//		}
+
+		mPanel = mGraphics.getMainDisplay();
+
 		if(autoBuild) {
-			this.add(mGraphics.getPanel());
-			this.pack();
+			mPanel.setFramed(this);
+			pack();
+			setLocationRelativeTo(null);
+			mPanel.setVisible(true);
 		}
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,10 +106,11 @@ public class YangGLESFrame extends PCFrame {
 	public void setEventListener(EventQueueHolder eventListener) {
 		if(mEventListener==null) {
 			final PCEventHandler eventHandler = mGraphics.setMouseEventListener(eventListener);
-			addKeyListener(eventHandler);
-			mGraphics.getPanel().addKeyListener(eventHandler);
-			mGraphics.getPanel().addFocusListener(this);
-			mGraphics.getPanel().setFocusTraversalKeysEnabled(false);
+			mPanel.mFrame.addKeyListener(eventHandler);
+			Component comp = mPanel.getComponent();
+			comp.addKeyListener(eventHandler);
+			comp.addFocusListener(this);
+			comp.setFocusTraversalKeysEnabled(false);
 			mEventListener = eventListener;
 			mPCEventHandler = eventHandler;
 		}

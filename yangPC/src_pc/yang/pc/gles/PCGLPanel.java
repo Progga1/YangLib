@@ -117,7 +117,9 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 	}
 
 	@Override
-	public void setProperties(String title, boolean undecorated,boolean alwaysOnTop) {
+	public void setFrameProperties(String title, boolean undecorated,boolean alwaysOnTop) {
+		if(mFrame==null)
+			throw new RuntimeException("Not framed");
 		mFrame.setTitle(title);
 		mFrame.setUndecorated(undecorated);
 		mFrame.setAlwaysOnTop(alwaysOnTop);
@@ -125,13 +127,9 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 
 	@Override
 	public void setFullscreen(int screenId) {
-
+		if(mFrame==null)
+			throw new RuntimeException("Not framed");
 		int[] bounds = mGraphics.getScreenBounds(screenId);
-		if(bounds==null) {
-
-		}else{
-
-		}
 		mComponent.setPreferredSize(new Dimension(bounds[2],bounds[3]));
 		mFrame.pack();
 		mFrame.setLocation(bounds[0], bounds[1]);
@@ -153,8 +151,19 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 
 	@Override
 	public void setFramed() {
+		if(mFrame!=null)
+			return;
 		mFrame = new JFrame();
 		mFrame.add(mComponent);
+	}
+
+	public void setFramed(JFrame target) {
+		if(mFrame!=null && mFrame!=target)
+			throw new RuntimeException("Already framed");
+		if(mFrame==null) {
+			target.add(mComponent);
+			mFrame = target;
+		}
 	}
 
 }

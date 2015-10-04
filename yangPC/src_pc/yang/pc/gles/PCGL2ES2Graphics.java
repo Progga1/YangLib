@@ -1,6 +1,5 @@
 package yang.pc.gles;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
@@ -20,16 +19,16 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
+import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.TextureDisplay;
 import yang.model.enums.ByteFormat;
 import yang.pc.PCEventHandler;
-import yang.pc.PCGraphics;
 import yang.pc.fileio.PCGFXLoader;
 import yang.surface.YangSurface;
 
 
-public class PCGL2ES2Graphics extends PCGraphics {
+public class PCGL2ES2Graphics extends GraphicsTranslator {
 
 	protected GL2ES2 mGles2;
 	YangSurface mSurface;
@@ -236,8 +235,8 @@ public class PCGL2ES2Graphics extends PCGraphics {
 	}
 
 	@Override
-	public Component getPanel() {
-		return mPanel.mComponent;
+	public PCGLPanel getMainDisplay() {
+		return mPanel;
 	}
 
 	public PCEventHandler setMouseEventListener(EventQueueHolder eventListener) {
@@ -385,6 +384,19 @@ public class PCGL2ES2Graphics extends PCGraphics {
 		mScreenBoundsInt[2] = bounds.width;
 		mScreenBoundsInt[3] = bounds.height;
 		return mScreenBoundsInt;
+	}
+
+	@Override
+	public int getMainScreenId() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice[] gs = ge.getScreenDevices();
+		for(int i=0;i<gs.length;i++) {
+			GraphicsDevice gd = gs[i];
+			Rectangle bounds = gd.getDefaultConfiguration().getBounds();
+			if(bounds.x==0 && bounds.y==0)
+				return i;
+		}
+		return 0;
 	}
 
 	@Override
