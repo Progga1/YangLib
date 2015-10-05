@@ -17,6 +17,7 @@ import yang.graphics.translator.AbstractGraphics;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.util.VertexZSort;
 import yang.math.MatrixOps;
+import yang.math.objects.Point2f;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
 import yang.math.objects.YangMatrix;
@@ -436,6 +437,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public void drawLine(float fromX,float fromY, float toX,float toY, float width) {
 		drawLine(fromX,fromY,toX,toY,width,mTexIdentity);
+	}
+	
+	public void drawLine(Point2f fromPoint,Point2f toPoint, float width) {
+		drawLine(fromPoint.mX,fromPoint.mY, toPoint.mX,toPoint.mY, width);
 	}
 
 	// ---PUT-POSITIONS---
