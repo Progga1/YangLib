@@ -167,4 +167,8 @@ public class Texture extends AbstractTexture {
 		return mName+": STATUS="+statusToString()+", PROPS=("+(mProperties==null?"null":mProperties.toString())+"), ALPHAMAP="+mIsAlphaMap;
 	}
 
+	public float getRatioX() {
+		return (float)mWidth/mHeight;
+	}
+
 }

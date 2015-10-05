@@ -17,8 +17,9 @@ public class TextureData {
 	public int mHeight;
 	public int mChannels;
 	private int mCapacity;
-	private static byte[] tempArray = new byte[4];
-
+	private static byte[] tempArray4b = new byte[4];
+	private static byte[] tempArray3b = new byte[3];
+	
 	public TextureData(ByteBuffer data,int width,int height,int channels) {
 		mData = data;
 		mWidth = width;
@@ -55,10 +56,10 @@ public class TextureData {
 			}
 		}else{
 			//Copy converted
-			tempArray[0] = 0;
-			tempArray[1] = 0;
-			tempArray[2] = 0;
-			tempArray[3] = 0;
+			tempArray4b[0] = 0;
+			tempArray4b[1] = 0;
+			tempArray4b[2] = 0;
+			tempArray4b[3] = 0;
 			width/=downScale;
 			height/=downScale;
 
@@ -68,10 +69,10 @@ public class TextureData {
 				for(int j=0;j<width;j++) {
 					for(int d=0;d<downScale;d++)
 						for(int c=0;c<sourceChannels;c++) {
-							tempArray[c] = source.get();
+							tempArray4b[c] = source.get();
 						}
 					for(int c=0;c<mChannels;c++) {
-						mData.put(tempArray[c]);
+						mData.put(tempArray4b[c]);
 					}
 				}
 			}
@@ -179,16 +180,16 @@ public class TextureData {
 				mData.position(getIndex(left-borderX,y));
 				mTemp.position(getIndex(left,y));
 				for(int c=0;c<mChannels;c++)
-					tempArray[c] = mTemp.get();
+					tempArray4b[c] = mTemp.get();
 				for(int j=0;j<borderX;j++)
-					mData.put(tempArray,0,mChannels);
+					mData.put(tempArray4b,0,mChannels);
 				//right
 				mData.position(getIndex(right+1,y));
 				mTemp.position(getIndex(right,y));
 				for(int c=0;c<mChannels;c++)
-					tempArray[c] = mTemp.get();
+					tempArray4b[c] = mTemp.get();
 				for(int j=0;j<borderX;j++)
-					mData.put(tempArray,0,mChannels);
+					mData.put(tempArray4b,0,mChannels);
 			}
 		}
 
@@ -264,6 +265,45 @@ public class TextureData {
 			}
 		}
 	}
+	
+	public static void rgbaToBGRA(ByteBuffer buffer) {
+		int c = buffer.capacity();
+		buffer.position(0);
+		for(int i=0;i<c;i+=4) {
+			buffer.get(tempArray4b);
+			buffer.position(i);
+			buffer.put(tempArray4b[2]);
+			buffer.put(tempArray4b[1]);
+			buffer.put(tempArray4b[0]);
+			buffer.put(tempArray4b[3]);
+		}
+		buffer.position(0);
+	}
+	
+	public static void rgbaToBGRA(ByteBuffer buffer,byte[] colors) {
+		int c = buffer.capacity();
+		buffer.position(0);
+		for(int i=0;i<c;i+=4) {
+			buffer.put(colors[i+2]);
+			buffer.put(colors[i+1]);
+			buffer.put(colors[i]);
+			buffer.put(colors[i+3]);
+		}
+		buffer.position(0);
+	}
+	
+	public static void swapRGB(ByteBuffer buffer) {
+		int c = buffer.capacity();
+		buffer.position(0);
+		for(int i=0;i<c;i+=3) {
+			buffer.get(tempArray3b);
+			buffer.position(i);
+			buffer.put(tempArray3b[2]);
+			buffer.put(tempArray3b[1]);
+			buffer.put(tempArray3b[0]);
+		}
+		buffer.position(0);
+	}
 
 	public void resize(int newWidth, int newHeight,boolean forceRecreation) {
 		mCapacity = newWidth*newHeight*4;
@@ -273,21 +313,5 @@ public class TextureData {
 		mWidth = newWidth;
 		mHeight = newHeight;
 	}
-
-//	public void toABGR() {
-//		mData.rewind();
-//		int cap = mWidth*mHeight*mChannels;
-//		for (int i=0; i<cap; i+=4) {
-//			int r = mData.get();
-//			int g = mData.get();
-//			int b = mData.get();
-//			int a = mData.get();
-//			mData.position(i);
-//			mData.put((byte)a);
-//			mData.put((byte)b);
-//			mData.put((byte)g);
-//			mData.put((byte)r);
-//		}
-//	}
 
 }

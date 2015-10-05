@@ -215,8 +215,9 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		batch.mVertexBuffer.reset();
 		mCurBatch = batch;
 		mBatchRecording = true;
-		mTranslator.mFlushDisabled = true;
 		setVertexBuffer(batch.mVertexBuffer);
+		mTranslator.mFlushDisabled = true;
+		
 	}
 
 	public void startBatchRecording(IndexedVertexBuffer vertexBuffer) {
