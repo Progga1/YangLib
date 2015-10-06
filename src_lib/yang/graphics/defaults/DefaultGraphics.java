@@ -1,6 +1,8 @@
 package yang.graphics.defaults;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
@@ -68,7 +70,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	// Buffers
 	protected DrawableString mInterString = new DrawableString(2048);
 	public int mPositionDimension;
-	public ShortBuffer mIndexBuffer;
+	public Buffer mIndexBuffer;
 	public FloatBuffer mPositions;
 	public FloatBuffer mTextures;
 	public FloatBuffer mColors;
@@ -654,7 +656,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 
 	public String buffersToString() {
 		String res = "";
-		res += "Indices:\t" + Util.bufferToString(mIndexBuffer) + "\n";
+		if(mIndexBuffer instanceof IntBuffer)
+			res += "Indices(int):\t" + Util.bufferToString((IntBuffer)mIndexBuffer) + "\n";
+		else
+			res += "Indices:\t" + Util.bufferToString((ShortBuffer)mIndexBuffer) + "\n";
 		res += "Positions:\t" + Util.bufferToString(mPositions) + "\n";
 		res += "Textures:\t" + Util.bufferToString(mTextures) + "\n";
 		res += "Colors:\t\t" + Util.bufferToString(mColors) + "\n";
@@ -665,7 +670,11 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public boolean checkBufferIndices() {
 		mIndexBuffer.position(0);
 		for (int i = 0; i < mCurrentVertexBuffer.getIndexCount(); i++) {
-			final int index = mIndexBuffer.get();
+			final int index;
+			if(mIndexBuffer instanceof IntBuffer)
+				index = ((IntBuffer)mIndexBuffer).get();
+			else
+				index = ((ShortBuffer)mIndexBuffer).get();
 			if (index >= mCurrentVertexBuffer.getVertexCount())
 				throw new RuntimeException();
 		}

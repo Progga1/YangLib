@@ -5,8 +5,8 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL2ES2;
@@ -166,7 +166,7 @@ public class PCGL2ES2Graphics extends GraphicsTranslator {
 
 	//TODO proper modes
 	@Override
-	public void drawDefaultVertices(int bufferStart, int drawVertexCount, int mode, ShortBuffer indexBuffer) {
+	public void drawDefaultVertices(int bufferStart, int drawVertexCount, int mode, Buffer indexBuffer, boolean intIndices) {
 //		if(mode==T_TRIANGLES)
 //			gles2.glDrawElements(GL2ES2.GL_TRIANGLES, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
 //		else if(mode==T_LINELIST)
@@ -174,7 +174,7 @@ public class PCGL2ES2Graphics extends GraphicsTranslator {
 //		else{
 //			gles2.glDrawElements(GL2ES2.GL_POINTS, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
 //		}
-		mGles2.glDrawElements(mode, drawVertexCount, GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
+		mGles2.glDrawElements(mode, drawVertexCount, intIndices?GL2ES2.GL_UNSIGNED_INT:GL2ES2.GL_UNSIGNED_SHORT, indexBuffer);
 	}
 
 	@Override

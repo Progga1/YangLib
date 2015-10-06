@@ -1,7 +1,9 @@
 package yang.graphics.translator;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import yang.events.Keys;
@@ -108,7 +110,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	private final YangList<TextureRenderTarget> mRenderTargets;
 	private final YangList<Texture> mRegisteredTextures;
 	private final YangList<AbstractProgram> mPrograms;
-	private ShortBuffer mWireFrameIndexBuffer;
+	private IntBuffer mWireFrameIndexBuffer;
 	private long mMinDrawFrameIntervalNanos;
 
 	//Helpers
@@ -127,7 +129,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public abstract void setTextureRectData(int texId,int level,int offsetX,int offsetY,int width,int height,int channels, ByteBuffer data);
 	public abstract void setTextureParameter(int pName,int param);
 	public abstract void deleteTextures(int[] ids);
-	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, int mode, ShortBuffer indexBuffer);
+	protected abstract void drawDefaultVertices(int bufferStart, int vertexCount, int mode, Buffer indexBuffer,boolean intIndices);
 	public abstract void derivedSetAttributeBuffer(int handle,int bufferIndex,IndexedVertexBuffer vertexBuffer);
 	public abstract void enableAttributePointer(int handle);
 	public abstract void disableAttributePointer(int handle);
@@ -667,26 +669,43 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		assert preCheck("Draw vertices");
 		mPolygonCount += vertexCount/3;
 		mDrawCount++;
-		ShortBuffer indexBuffer = mCurrentVertexBuffer.mIndexBuffer;
+		Buffer indexBuffer = mCurrentVertexBuffer.getActiveIndexBuffer();
 		indexBuffer.position(bufferStart);
 
 		boolean wireFrames = mode==GLDrawModes.TRIANGLES && mForceWireFrames && mRenderTargetStackPos>=mMinForceWireFrameRenderTargetDepth;
 		if(wireFrames) {
 			final int cap = indexBuffer.capacity();
 			if(mWireFrameIndexBuffer==null || mWireFrameIndexBuffer.capacity()<cap*2)
-				mWireFrameIndexBuffer = ByteBuffer.allocateDirect(cap*2*2).order(ByteOrder.nativeOrder()).asShortBuffer();
+				mWireFrameIndexBuffer = ByteBuffer.allocateDirect(cap*4*2).order(ByteOrder.nativeOrder()).asIntBuffer();
 			mWireFrameIndexBuffer.position(0);
-			for(int i=0;i<vertexCount;i+=3) {
-				final short first = indexBuffer.get();
-				mWireFrameIndexBuffer.put(first);
-				short to =  indexBuffer.get();
-				mWireFrameIndexBuffer.put(to);
-				mWireFrameIndexBuffer.put(to);
-				to = indexBuffer.get();
-				mWireFrameIndexBuffer.put(to);
-				mWireFrameIndexBuffer.put(to);
-				mWireFrameIndexBuffer.put(first);
+			if(mCurrentVertexBuffer.isIntMode()) {
+				IntBuffer sIndexBuffer = (IntBuffer)indexBuffer;
+				for(int i=0;i<vertexCount;i+=3) {
+					final int first = sIndexBuffer.get();
+					mWireFrameIndexBuffer.put(first);
+					int to =  sIndexBuffer.get();
+					mWireFrameIndexBuffer.put(to);
+					mWireFrameIndexBuffer.put(to);
+					to = sIndexBuffer.get();
+					mWireFrameIndexBuffer.put(to);
+					mWireFrameIndexBuffer.put(to);
+					mWireFrameIndexBuffer.put(first);
+				}
+			}else{
+				ShortBuffer sIndexBuffer = (ShortBuffer)indexBuffer;
+				for(int i=0;i<vertexCount;i+=3) {
+					final short first = sIndexBuffer.get();
+					mWireFrameIndexBuffer.put(first);
+					short to =  sIndexBuffer.get();
+					mWireFrameIndexBuffer.put(to);
+					mWireFrameIndexBuffer.put(to);
+					to = sIndexBuffer.get();
+					mWireFrameIndexBuffer.put(to);
+					mWireFrameIndexBuffer.put(to);
+					mWireFrameIndexBuffer.put(first);
+				}
 			}
+			
 			indexBuffer.position(0);
 			indexBuffer = mWireFrameIndexBuffer;
 			indexBuffer.position(0);
@@ -695,7 +714,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mode = GLDrawModes.LINELIST;
 		}
 		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
-			drawDefaultVertices(bufferStart,vertexCount, mode,indexBuffer);
+			drawDefaultVertices(bufferStart,vertexCount, mode,indexBuffer,mCurrentVertexBuffer.isIntMode() || wireFrames);
 		}
 	}
 

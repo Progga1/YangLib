@@ -2,7 +2,9 @@ package yang.graphics.defaults;
 
 
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import yang.graphics.buffers.IndexedVertexBuffer;
@@ -336,7 +338,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private static float[] arr1 = new float[3];
 	private static float[] arr2 = new float[3];
 
-	public static void fillNormals(ShortBuffer indexBuffer,FloatBuffer positions,FloatBuffer normalsTarget,int startIndex) {
+	public static void fillNormals(Buffer indexBuffer,FloatBuffer positions,FloatBuffer normalsTarget,int startIndex) {
 		//Set zero
 		final int endNormal = positions.position();
 		int firstNormalId = normalsTarget.position();
@@ -347,27 +349,54 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		}
 
 		//Compute cross products
-		final int endIndex = indexBuffer.position()/3;
-		int i=0;
-		indexBuffer.rewind();
-		while(i<endIndex) {
-			final int v1 = indexBuffer.get()*POSITION_ELEM_SIZE;
-			final int v2 = indexBuffer.get()*POSITION_ELEM_SIZE;
-			final int v3 = indexBuffer.get()*POSITION_ELEM_SIZE;
-			vec1.set(positions.get(v2)-positions.get(v1), positions.get(v2+1)-positions.get(v1+1),positions.get(v2+2)-positions.get(v1+2));
-			vec2.set(positions.get(v3)-positions.get(v1), positions.get(v3+1)-positions.get(v1+1),positions.get(v3+2)-positions.get(v1+2));
-			vec3.cross(vec1, vec2);
-			vec3.normalize();
-			normalsTarget.put(v1, normalsTarget.get(v1)+vec3.mX);
-			normalsTarget.put(v1+1, normalsTarget.get(v1+1)+vec3.mY);
-			normalsTarget.put(v1+2, normalsTarget.get(v1+2)+vec3.mZ);
-			normalsTarget.put(v2, normalsTarget.get(v2)+vec3.mX);
-			normalsTarget.put(v2+1, normalsTarget.get(v2+1)+vec3.mY);
-			normalsTarget.put(v2+2, normalsTarget.get(v2+2)+vec3.mZ);
-			normalsTarget.put(v3, normalsTarget.get(v3)+vec3.mX);
-			normalsTarget.put(v3+1, normalsTarget.get(v3+1)+vec3.mY);
-			normalsTarget.put(v3+2, normalsTarget.get(v3+2)+vec3.mZ);
-			i++;
+		if(indexBuffer instanceof IntBuffer) {
+			IntBuffer iBuffer = (IntBuffer)indexBuffer;
+			final int endIndex = indexBuffer.position()/3;
+			int i=0;
+			indexBuffer.rewind();
+			while(i<endIndex) {
+				final int v1 = iBuffer.get()*POSITION_ELEM_SIZE;
+				final int v2 = iBuffer.get()*POSITION_ELEM_SIZE;
+				final int v3 = iBuffer.get()*POSITION_ELEM_SIZE;
+				vec1.set(positions.get(v2)-positions.get(v1), positions.get(v2+1)-positions.get(v1+1),positions.get(v2+2)-positions.get(v1+2));
+				vec2.set(positions.get(v3)-positions.get(v1), positions.get(v3+1)-positions.get(v1+1),positions.get(v3+2)-positions.get(v1+2));
+				vec3.cross(vec1, vec2);
+				vec3.normalize();
+				normalsTarget.put(v1, normalsTarget.get(v1)+vec3.mX);
+				normalsTarget.put(v1+1, normalsTarget.get(v1+1)+vec3.mY);
+				normalsTarget.put(v1+2, normalsTarget.get(v1+2)+vec3.mZ);
+				normalsTarget.put(v2, normalsTarget.get(v2)+vec3.mX);
+				normalsTarget.put(v2+1, normalsTarget.get(v2+1)+vec3.mY);
+				normalsTarget.put(v2+2, normalsTarget.get(v2+2)+vec3.mZ);
+				normalsTarget.put(v3, normalsTarget.get(v3)+vec3.mX);
+				normalsTarget.put(v3+1, normalsTarget.get(v3+1)+vec3.mY);
+				normalsTarget.put(v3+2, normalsTarget.get(v3+2)+vec3.mZ);
+				i++;
+			}
+		}else{
+			ShortBuffer sBuffer = (ShortBuffer)indexBuffer;
+			final int endIndex = indexBuffer.position()/3;
+			int i=0;
+			indexBuffer.rewind();
+			while(i<endIndex) {
+				final int v1 = sBuffer.get()*POSITION_ELEM_SIZE;
+				final int v2 = sBuffer.get()*POSITION_ELEM_SIZE;
+				final int v3 = sBuffer.get()*POSITION_ELEM_SIZE;
+				vec1.set(positions.get(v2)-positions.get(v1), positions.get(v2+1)-positions.get(v1+1),positions.get(v2+2)-positions.get(v1+2));
+				vec2.set(positions.get(v3)-positions.get(v1), positions.get(v3+1)-positions.get(v1+1),positions.get(v3+2)-positions.get(v1+2));
+				vec3.cross(vec1, vec2);
+				vec3.normalize();
+				normalsTarget.put(v1, normalsTarget.get(v1)+vec3.mX);
+				normalsTarget.put(v1+1, normalsTarget.get(v1+1)+vec3.mY);
+				normalsTarget.put(v1+2, normalsTarget.get(v1+2)+vec3.mZ);
+				normalsTarget.put(v2, normalsTarget.get(v2)+vec3.mX);
+				normalsTarget.put(v2+1, normalsTarget.get(v2+1)+vec3.mY);
+				normalsTarget.put(v2+2, normalsTarget.get(v2+2)+vec3.mZ);
+				normalsTarget.put(v3, normalsTarget.get(v3)+vec3.mX);
+				normalsTarget.put(v3+1, normalsTarget.get(v3+1)+vec3.mY);
+				normalsTarget.put(v3+2, normalsTarget.get(v3+2)+vec3.mZ);
+				i++;
+			}
 		}
 
 		//Normalize
@@ -384,11 +413,11 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public static void fillNormals(IndexedVertexBuffer vertexBuffer,int startIndex) {
-		fillNormals(vertexBuffer.mIndexBuffer,vertexBuffer.getFloatBuffer(ID_POSITIONS),vertexBuffer.getFloatBuffer(ID_NORMALS),startIndex);
+		fillNormals(vertexBuffer.mActiveBuffer,vertexBuffer.getFloatBuffer(ID_POSITIONS),vertexBuffer.getFloatBuffer(ID_NORMALS),startIndex);
 	}
 
 	public void fillNormals(int startIndex) {
-		fillNormals(mIndexBuffer,mPositions,mCurrentVertexBuffer.getFloatBuffer(ID_NORMALS),startIndex);
+		fillNormals(mCurrentVertexBuffer.getActiveIndexBuffer(),mPositions,mCurrentVertexBuffer.getFloatBuffer(ID_NORMALS),startIndex);
 	}
 
 	public void fillNormals() {
@@ -571,13 +600,13 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
 		indices.position(indexStart);
 		while(c<indexEnd) {
-			short curId = (short)(indices.get()*3);
+			int curId = indices.get()*3;
 			float x1 = positions.get(curId);
 			float y1 = positions.get(curId+1);
 			float z1 = positions.get(curId+2);
-			curId = (short)(indices.get()*3);
+			curId = indices.get()*3;
 			mTempVec1.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
-			curId = (short)(indices.get()*3);
+			curId = indices.get()*3;
 			mTempVec2.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
 			float crossMagn = Vector3f.crossMagn(mTempVec1,mTempVec2);
 			float triArea = crossMagn/2;
@@ -598,49 +627,50 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void removeTrianglesBelowScalar(int indexStart,int indexEnd, Vector3f direction, float dot) {
 		int c = indexStart;
-		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
-		int indPos = indices.position();
-		short startId = indices.get(indexStart);
-		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
-		indices.position(indexStart);
+		IndexedVertexBuffer buf = mCurrentVertexBuffer;
+		int indPos = buf.mActiveBuffer.position();
+		int startId = buf.readIndex(indexStart);
+		FloatBuffer positions = buf.getFloatBuffer(ID_POSITIONS);
+		buf.mActiveBuffer.position(indexStart);
 		while(c<indexEnd) {
-			short curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			int curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			float x1 = positions.get(curId);
 			float y1 = positions.get(curId+1);
 			float z1 = positions.get(curId+2);
-			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			mTempVec1.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
-			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			mTempVec2.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
 			mTempVec3.cross(mTempVec1,mTempVec2);
 			mTempVec3.normalize();
 			float vecDot = mTempVec3.dot(direction);
 			if(vecDot<dot) {
-				indices.position(c);
-				indices.put(startId);
-				indices.put(startId);
-				indices.put(startId);
+				buf.mActiveBuffer.position(c);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
 			}
 			c += 3;
 		}
-		indices.position(indPos);
+		buf.mActiveBuffer.position(indPos);
 	}
 
 	public void removeTrianglesBelowABRatio(int indexStart,int indexEnd, float ratio) {
 		int c = indexStart;
-		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
+		Buffer indices = mCurrentVertexBuffer.mActiveBuffer;
+		IndexedVertexBuffer buf = mCurrentVertexBuffer;
 		int indPos = indices.position();
-		short startId = indices.get(indexStart);
+		int startId = buf.readIndex(indexStart);
 		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
 		indices.position(indexStart);
 		while(c<indexEnd) {
-			short curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			int curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			float x1 = positions.get(curId);
 			float y1 = positions.get(curId+1);
 			float z1 = positions.get(curId+2);
-			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			mTempVec1.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
-			curId = (short)(indices.get()*POSITION_ELEM_SIZE);
+			curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			mTempVec2.setFromTo(x1,y1,z1, positions.get(curId),positions.get(curId+1),positions.get(curId+2));
 			float magn1 = mTempVec1.magn();
 			float magn2 = mTempVec2.magn();
@@ -666,9 +696,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 				tRatio = smallMagn/largeMagn;
 			if(tRatio<ratio) {
 				indices.position(c);
-				indices.put(startId);
-				indices.put(startId);
-				indices.put(startId);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
 			}
 			c += 3;
 		}
@@ -677,21 +707,22 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void removeTrianglesAboveAngleDot(int indexStart,int indexEnd, float dot) {
 		int c = indexStart;
-		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
+		Buffer indices = mCurrentVertexBuffer.mActiveBuffer;
+		IndexedVertexBuffer buf = mCurrentVertexBuffer;
 		int indPos = indices.position();
-		short startId = indices.get(indexStart);
+		int startId = buf.readIndex(indexStart);
 		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
 		indices.position(indexStart);
 		while(c<indexEnd) {
-			int curId = (indices.get()*POSITION_ELEM_SIZE);
+			int curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			float x1 = positions.get(curId);
 			float y1 = positions.get(curId+1);
 			float z1 = positions.get(curId+2);
-			curId = (indices.get()*POSITION_ELEM_SIZE);
+			curId = (buf.readIndex()*POSITION_ELEM_SIZE);
 			float x2 = positions.get(curId);
 			float y2 = positions.get(curId+1);
 			float z2 = positions.get(curId+2);
-			curId = (indices.get()*POSITION_ELEM_SIZE);
+			curId = (buf.readIndex()*POSITION_ELEM_SIZE);
 			float x3 = positions.get(curId);
 			float y3 = positions.get(curId+1);
 			float z3 = positions.get(curId+2);
@@ -706,9 +737,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			float dot3 = Math.abs(mTempVec3.dot(mTempVec1));
 			if(dot1>dot || dot2>dot || dot3>dot) {
 				indices.position(c);
-				indices.put(startId);
-				indices.put(startId);
-				indices.put(startId);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
 			}
 			c += 3;
 		}
@@ -717,21 +748,22 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	
 	public void removeTrianglesBelowPlane(int indexStart,int indexEnd, Point3f planeBase,Vector3f planeNormal) {
 		int c = indexStart;
-		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
+		Buffer indices = mCurrentVertexBuffer.mActiveBuffer;
+		IndexedVertexBuffer buf = mCurrentVertexBuffer;
 		int indPos = indices.position();
-		short startId = indices.get(indexStart);
+		int startId = buf.readIndex(indexStart);
 		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
 		indices.position(indexStart);
 		while(c<indexEnd) {
-			int curId = (indices.get()*POSITION_ELEM_SIZE);
+			int curId = buf.readIndex()*POSITION_ELEM_SIZE;
 			float x1 = positions.get(curId);
 			float y1 = positions.get(curId+1);
 			float z1 = positions.get(curId+2);
-			curId = (indices.get()*POSITION_ELEM_SIZE);
+			curId = (buf.readIndex()*POSITION_ELEM_SIZE);
 			float x2 = positions.get(curId);
 			float y2 = positions.get(curId+1);
 			float z2 = positions.get(curId+2);
-			curId = (indices.get()*POSITION_ELEM_SIZE);
+			curId = (buf.readIndex()*POSITION_ELEM_SIZE);
 			float x3 = positions.get(curId);
 			float y3 = positions.get(curId+1);
 			float z3 = positions.get(curId+2);
@@ -744,9 +776,9 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			
 			if(dot1<0 || dot2<0 || dot3<0) {
 				indices.position(c);
-				indices.put(startId);
-				indices.put(startId);
-				indices.put(startId);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
+				buf.putIndex(startId);
 			}
 			
 			c += 3;
