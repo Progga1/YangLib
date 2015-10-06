@@ -38,7 +38,6 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		mCurYCount = vertexCountY;
 		mCurDimX = width;
 		mCurDimY = height;
-		mCurValues = null;
 	}
 
 	public void putAllIndices() {
