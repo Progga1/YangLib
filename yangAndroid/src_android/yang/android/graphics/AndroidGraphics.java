@@ -1,7 +1,7 @@
 package yang.android.graphics;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 
 import yang.android.io.AndroidGFXLoader;
 import yang.graphics.buffers.IndexedVertexBuffer;
@@ -242,11 +242,11 @@ public class AndroidGraphics extends GraphicsTranslator {
 	}
 
 	@Override
-	protected void drawDefaultVertices(int bufferStart, int drawVertexCount,int mode,ShortBuffer indexBuffer) {
+	protected void drawDefaultVertices(int bufferStart, int drawVertexCount,int mode,Buffer indexBuffer,boolean intIndices) {
 		int lim = indexBuffer.capacity();
 		indexBuffer.position(bufferStart);
 		indexBuffer.limit(bufferStart+drawVertexCount);
-		GLES20.glDrawElements(mode, drawVertexCount, GLES20.GL_UNSIGNED_SHORT, indexBuffer);
+		GLES20.glDrawElements(mode, drawVertexCount, intIndices?GLES20.GL_UNSIGNED_INT:GLES20.GL_UNSIGNED_SHORT, indexBuffer);
 		indexBuffer.limit(lim);
 	}
 
