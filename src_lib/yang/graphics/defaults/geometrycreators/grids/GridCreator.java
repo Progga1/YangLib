@@ -170,6 +170,14 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		final float v = invertV?1:0;
 		putGridTextureRect(0,v,1,1-v);
 	}
+	
+	public void putGridTextureNormalRectScaleCentered(float scaleX,float scaleY) {
+		float width = 1/scaleX;
+		float height = 1/scaleY;
+		float cutX = (1-width)*0.5f;
+		float cutY = (1-height)*0.5f;
+		putGridTextureRect(cutX,cutY,1-cutX,1-cutY);
+	}
 
 	public void putGridTextureNormalRect() {
 		putGridTextureRect(0,0,1,1);

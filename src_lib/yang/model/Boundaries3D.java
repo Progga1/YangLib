@@ -2,6 +2,8 @@ package yang.model;
 
 import java.nio.FloatBuffer;
 
+import yang.math.objects.Point3f;
+
 public class Boundaries3D {
 
 	public float mMinX,mMaxX;
@@ -22,7 +24,11 @@ public class Boundaries3D {
 	}
 
 	public Boundaries3D(float dimX,float dimY,float dimZ) {
-		this(-dimX/2,dimX/2, -dimY,dimY, -dimZ,dimZ);
+		this(-dimX*0.5f,dimX*0.5f, -dimY*0.5f,dimY*0.5f, -dimZ*0.5f,dimZ*0.5f);
+	}
+	
+	public Boundaries3D(float size) {
+		this(size,size,size);
 	}
 
 	public Boundaries3D set(float minX,float maxX,float minY,float maxY,float minZ,float maxZ) {
@@ -36,7 +42,21 @@ public class Boundaries3D {
 	}
 
 	public Boundaries3D set(float dimX,float dimY,float dimZ) {
-		return set(-dimX/2,dimX/2, -dimY,dimY, -dimZ,dimZ);
+		return set(-dimX*0.5f,dimX*0.5f, -dimY*0.5f,dimY*0.5f, -dimZ*0.5f,dimZ*0.5f);
+	}
+	
+	public Boundaries3D set(float size) {
+		return set(size,size,size);
+	}
+	
+	public Boundaries3D setCentered(float x,float y,float z, float width,float height,float depth) {
+		mMinX = x - width*0.5f;
+		mMaxX = x + width*0.5f;
+		mMinY = y - height*0.5f;
+		mMaxY = y + height*0.5f;
+		mMinZ = z - depth*0.5f;
+		mMaxZ = z + depth*0.5f;
+		return this;
 	}
 
 	public float deltaX() {
@@ -132,6 +152,10 @@ public class Boundaries3D {
 		}
 	}
 
+	public boolean within(Point3f point) {
+		return mMinX<=point.mX && point.mX<=mMaxX && mMinY<=point.mY && point.mY<=mMaxY && mMinZ<=point.mZ && point.mZ<=mMaxZ;
+	}
+	
 	@Override
 	public String toString() {
 		return mMinX + "<=X<=" + mMaxX+"; " + mMinY + "<=Y<=" + mMaxY+"; " + mMinZ + "<=Z<=" + mMaxZ;
