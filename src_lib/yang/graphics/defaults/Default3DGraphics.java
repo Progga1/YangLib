@@ -700,7 +700,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			mTempVec3.setFromTo(x3,y3,z3, x1,y1,z1);
 			mTempVec1.normalize();
 			mTempVec2.normalize();
-			mTempVec3.normalize();//if(mTempVec1.magn()<=0)System.out.println("fnewklv");if(mTempVec2.magn()<=0)System.out.println("fnewklv");if(mTempVec3.magn()<=0)System.out.println("fnewklv");
+			mTempVec3.normalize();
 			float dot1 = Math.abs(mTempVec1.dot(mTempVec2));
 			float dot2 = Math.abs(mTempVec2.dot(mTempVec3));
 			float dot3 = Math.abs(mTempVec3.dot(mTempVec1));
@@ -710,6 +710,45 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 				indices.put(startId);
 				indices.put(startId);
 			}
+			c += 3;
+		}
+		indices.position(indPos);
+	}
+	
+	public void removeTrianglesBelowPlane(int indexStart,int indexEnd, Point3f planeBase,Vector3f planeNormal) {
+		int c = indexStart;
+		ShortBuffer indices = mCurrentVertexBuffer.mIndexBuffer;
+		int indPos = indices.position();
+		short startId = indices.get(indexStart);
+		FloatBuffer positions = mCurrentVertexBuffer.getFloatBuffer(ID_POSITIONS);
+		indices.position(indexStart);
+		while(c<indexEnd) {
+			int curId = (indices.get()*POSITION_ELEM_SIZE);
+			float x1 = positions.get(curId);
+			float y1 = positions.get(curId+1);
+			float z1 = positions.get(curId+2);
+			curId = (indices.get()*POSITION_ELEM_SIZE);
+			float x2 = positions.get(curId);
+			float y2 = positions.get(curId+1);
+			float z2 = positions.get(curId+2);
+			curId = (indices.get()*POSITION_ELEM_SIZE);
+			float x3 = positions.get(curId);
+			float y3 = positions.get(curId+1);
+			float z3 = positions.get(curId+2);
+			mTempVec1.setFromTo(planeBase, x1,y1,z1);
+			mTempVec2.setFromTo(planeBase, x2,y2,z2);
+			mTempVec3.setFromTo(planeBase, x3,y3,z3);
+			float dot1 = mTempVec1.dot(planeNormal);
+			float dot2 = mTempVec2.dot(planeNormal);
+			float dot3 = mTempVec3.dot(planeNormal);
+			
+			if(dot1<0 || dot2<0 || dot3<0) {
+				indices.position(c);
+				indices.put(startId);
+				indices.put(startId);
+				indices.put(startId);
+			}
+			
 			c += 3;
 		}
 		indices.position(indPos);

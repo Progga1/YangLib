@@ -195,6 +195,12 @@ public class Vector3f extends Point3f{
 		mY = y2-y1;
 		mZ = z2-z1;
 	}
+	
+	public void setFromTo(Point3f fromPoint, float x, float y, float z) {
+		mX = x-fromPoint.mX;
+		mY = y-fromPoint.mY;
+		mZ = z-fromPoint.mZ;
+	}
 
 	public void setFromToDirection(Point3f fromPoint, Point3f toPoint) {
 		mX = toPoint.mX-fromPoint.mX;
