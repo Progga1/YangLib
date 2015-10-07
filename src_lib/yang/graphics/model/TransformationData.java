@@ -52,6 +52,12 @@ public class TransformationData {
 		mScale.set(scale);
 	}
 
+	public void setBounds(float minX,float maxX, float minY,float maxY, float minZ,float maxZ) {
+		mOrientation.setIdentity();
+		mPosition.set((minX+maxX)*0.5f,(minY+maxY)*0.5f,(minZ+maxZ)*0.5f);
+		mScale.set(maxX-minX,maxY-minY,maxZ-minZ);
+	}
+	
 	@Override
 	public String toString() {
 		return "t;r;s = "+mPosition+";"+mOrientation+";"+mScale;
