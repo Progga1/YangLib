@@ -27,7 +27,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 	protected int mStartColumn;
 	protected float mRelationX;
 	protected float mRelationY;
-	private float[][] mCurValues;
+	protected float[][] mCurValues;
 
 	public GridCreator(GraphicsType graphics) {
 		super(graphics);
@@ -140,6 +140,10 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		for(final float[] row:coords) {
 			mGraphics.getCurrentVertexBuffer().putArray(DefaultGraphics.ID_TEXTURES,row);
 		}
+	}
+	
+	public void putGridTextureCoordinates(TextureCoordinatesQuad texCoords) {
+		putGridTextureRect(texCoords.getBiasedTop(),texCoords.getBiasedTop(), texCoords.getBiasedRight(),texCoords.getBiasedBottom());
 	}
 
 	public void putGridTextureRect(float left,float top, float right,float bottom) {

@@ -223,6 +223,14 @@ public class TextureCoordinatesQuad {
 	public TextureCoordinatesQuad init(float x1, float y1, float x2, float y2, Texture prefaceTexture) {
 		return init(x1,y1,x2,y2,prefaceTexture.getWidth(),prefaceTexture.getHeight());
 	}
+	
+	public void setWH(float left, float top, float width, float height) {
+		mLeft = left;
+		mTop = top;
+		mWidth = width;
+		mHeight = height;
+		refreshCoordArray();
+	}
 
 	public final float getWidth() {
 		return mWidth;

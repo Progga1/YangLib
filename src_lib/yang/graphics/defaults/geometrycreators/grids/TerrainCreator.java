@@ -94,14 +94,20 @@ public class TerrainCreator extends Grid3DCreator {
 //		}
 //	}
 
-	public float calcPoint(int row,int column,Point3f target) {
+	public float calcPointInterpolated(int row,int column,Point3f target) {
 		target.mX = mCurLeft+column*mCurXFac;
 		target.mY = mCurTop - mCurDimY + row*mCurYFac;
 		return target.mZ = interpolate(row,column);
 	}
+	
+	public float calcPointNearest(int row,int column,Point3f target) {
+		target.mX = mCurLeft+column*mCurXFac;
+		target.mY = mCurTop - mCurDimY + row*mCurYFac;
+		return target.mZ = mCurValues[row][column];
+	}
 
-	public float calcPoint(int pointNr,Point3f target) {
-		return calcPoint(pointNr/mCurXCount,pointNr%mCurXCount, target);
+	public float calcPointInterpolated(int pointNr,Point3f target) {
+		return calcPointInterpolated(pointNr/mCurXCount,pointNr%mCurXCount, target);
 	}
 
 	public void putTerrainPositionRect(float[][] heightValues,YangMatrix transform) {
