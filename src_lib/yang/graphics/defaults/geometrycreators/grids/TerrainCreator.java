@@ -99,7 +99,7 @@ public class TerrainCreator extends Grid3DCreator {
 		target.mY = mCurTop - mCurDimY + row*mCurYFac;
 		return target.mZ = interpolate(row,column);
 	}
-	
+
 	public float calcPointNearest(int row,int column,Point3f target) {
 		target.mX = mCurLeft+column*mCurXFac;
 		target.mY = mCurTop - mCurDimY + row*mCurYFac;
@@ -177,6 +177,10 @@ public class TerrainCreator extends Grid3DCreator {
 	public Texture createCoastTexture(float[][] heightValues, float waterLevel, KernelFunction kernel, TextureProperties textureSettings,float zeroWeight,float factor) {
 		final float[][] coast = createCoastArray(heightValues,waterLevel,kernel,zeroWeight,factor);
 		return mTranslator.createAndInitTexture(TextureCreator.createGrayScaleTexture(coast,4), textureSettings);
+	}
+
+	public boolean pointOk(Point3f point) {
+		return true;
 	}
 
 }
