@@ -19,7 +19,7 @@ public class TextureData {
 	private int mCapacity;
 	private static byte[] tempArray4b = new byte[4];
 	private static byte[] tempArray3b = new byte[3];
-	
+
 	public TextureData(ByteBuffer data,int width,int height,int channels) {
 		mData = data;
 		mWidth = width;
@@ -265,7 +265,7 @@ public class TextureData {
 			}
 		}
 	}
-	
+
 	public static void rgbaToBGRA(ByteBuffer buffer) {
 		int c = buffer.capacity();
 		buffer.position(0);
@@ -279,8 +279,19 @@ public class TextureData {
 		}
 		buffer.position(0);
 	}
-	
-	public static void rgbaToBGRA(ByteBuffer buffer,byte[] colors) {
+
+	public static void removeAlpha(ByteBuffer buffer,byte[] colors) {
+		int c = buffer.capacity();
+		buffer.position(0);
+		for(int i=0;i<c;i+=4) {
+			buffer.put(colors[i]);
+			buffer.put(colors[i+1]);
+			buffer.put(colors[i+2]);
+		}
+		buffer.position(0);
+	}
+
+	public static void bgraToRGBA(ByteBuffer buffer,byte[] colors) {
 		int c = buffer.capacity();
 		buffer.position(0);
 		for(int i=0;i<c;i+=4) {
@@ -291,7 +302,29 @@ public class TextureData {
 		}
 		buffer.position(0);
 	}
-	
+
+	public static void bgraToRGB(ByteBuffer buffer,byte[] colors) {
+		int c = buffer.capacity();
+		buffer.position(0);
+		for(int i=0;i<c;i+=4) {
+			buffer.put(colors[i+2]);
+			buffer.put(colors[i+1]);
+			buffer.put(colors[i]);
+		}
+		buffer.position(0);
+	}
+
+	public static void bgrToRGB(ByteBuffer buffer,byte[] colors) {
+		int c = buffer.capacity();
+		buffer.position(0);
+		for(int i=0;i<c;i+=3) {
+			buffer.put(colors[i+2]);
+			buffer.put(colors[i+1]);
+			buffer.put(colors[i]);
+		}
+		buffer.position(0);
+	}
+
 	public static void swapRGB(ByteBuffer buffer) {
 		int c = buffer.capacity();
 		buffer.position(0);
