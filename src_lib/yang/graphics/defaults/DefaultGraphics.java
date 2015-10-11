@@ -440,7 +440,7 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public void drawLine(float fromX,float fromY, float toX,float toY, float width) {
 		drawLine(fromX,fromY,toX,toY,width,mTexIdentity);
 	}
-	
+
 	public void drawLine(Point2f fromPoint,Point2f toPoint, float width) {
 		drawLine(fromPoint.mX,fromPoint.mY, toPoint.mX,toPoint.mY, width);
 	}
@@ -561,6 +561,10 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mCurrentVertexBuffer.putArray(ID_COLORS,color.mValues);
 	}
 
+	public void putColorMultiple(float[] color,int amount) {
+		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,color,amount);
+	}
+
 	public void putColorRect(float[] color) {
 		if(mCurrentProgram.mHasColor) {
 			mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,color,4);
@@ -647,11 +651,8 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putSuppData(data);
 	}
 
-	public void putSuppData(float[] data, int amount) {
-		while (amount > 0) {
-			putSuppData(data);
-			amount--;
-		}
+	public void putSuppDataMultiple(float[] data, int amount) {
+		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA,data,amount);
 	}
 
 	public String buffersToString() {

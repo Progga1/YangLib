@@ -364,7 +364,7 @@ public class OrthoStrokeCreator extends GeometryCreator<DefaultGraphics<?>> {
 	public void putColors() {
 		final int vCount = getVertexCount();
 		mGraphics.putColor(mColor.mValues, vCount);
-		mGraphics.putSuppData(mGraphics.mCurSuppData, vCount);
+		mGraphics.putSuppDataMultiple(mGraphics.mCurSuppData, vCount);
 	}
 
 	public void drawCompletely() {
