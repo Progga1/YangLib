@@ -1,6 +1,5 @@
 package yang.graphics.defaults.geometrycreators.grids;
 
-import yang.graphics.buffers.DrawBatch;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.defaults.geometrycreators.GeometryCreator;
@@ -141,7 +140,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 			mGraphics.getCurrentVertexBuffer().putArray(DefaultGraphics.ID_TEXTURES,row);
 		}
 	}
-	
+
 	public void putGridTextureCoordinates(TextureCoordinatesQuad texCoords) {
 		putGridTextureRect(texCoords.getBiasedTop(),texCoords.getBiasedTop(), texCoords.getBiasedRight(),texCoords.getBiasedBottom());
 	}
@@ -173,7 +172,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 		final float v = invertV?1:0;
 		putGridTextureRect(0,v,1,1-v);
 	}
-	
+
 	public void putGridTextureNormalRectScaleCentered(float scaleX,float scaleY) {
 		float width = 1/scaleX;
 		float height = 1/scaleY;
