@@ -155,7 +155,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void deleteBuffers(int[] bufIds);
 	protected abstract void deleteFrameBuffers(int[] bufIds);
 
-	public TextureDisplay createTextureDisplay() { return null; }
+	public TextureDisplay createTextureDisplay(boolean undecorated) { return null; }
 	protected void postInit() { }
 	public void setSystemCursorEnabled(boolean enabled){ }
 	public int getNumberOfScreens() { return 1; }
@@ -705,7 +705,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 					mWireFrameIndexBuffer.put(first);
 				}
 			}
-			
+
 			indexBuffer.position(0);
 			indexBuffer = mWireFrameIndexBuffer;
 			indexBuffer.position(0);
@@ -1019,22 +1019,23 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return Keys.F1;
 	}
 
-	public final TextureDisplay createTextureDisplay(Texture texture) {
-		TextureDisplay result = createTextureDisplay();
+	public final TextureDisplay createTextureDisplay(Texture texture,boolean undecorated) {
+		TextureDisplay result = createTextureDisplay(undecorated);
 		result.setTexture(texture);
-		result.setBounds(0,0, texture.mWidth,texture.mHeight);
-		result.run();
+		GLHolder glHolder = result.getGLHolder();
+		glHolder.setBounds(0,0, texture.mWidth,texture.mHeight);
+		glHolder.run();
 		return result;
 	}
 
 	public final TextureDisplay displayTextureFullscreen(Texture texture,String title,int screenId) {
-		TextureDisplay result = createTextureDisplay();
+		TextureDisplay result = createTextureDisplay(texture,true);
 		if(result==null)
 			return null;
-		result.setFrameProperties(title,true,true);
-		result.setFullscreen(screenId);
-		result.setTexture(texture);
-		result.run();
+		GLHolder glHolder = result.getGLHolder();
+		glHolder.setTitle(title);
+		glHolder.setAlwaysOnTop(true);
+		glHolder.setFullscreen(screenId);
 		return result;
 	}
 

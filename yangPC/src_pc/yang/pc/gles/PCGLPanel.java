@@ -3,11 +3,7 @@ package yang.pc.gles;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GL2;
@@ -25,7 +21,7 @@ import yang.pc.PCEventHandler;
 
 import com.jogamp.opengl.util.Animator;
 
-public class PCGLPanel implements GLEventListener,GLHolder {
+public class PCGLPanel extends GLHolder implements GLEventListener {
 
 	protected GL2ES2 mGles2;
 	protected int mPanelId;
@@ -117,11 +113,14 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 	}
 
 	@Override
-	public void setFrameProperties(String title, boolean undecorated,boolean alwaysOnTop) {
+	public void setTitle(String title) {
 		if(mFrame==null)
 			throw new RuntimeException("Not framed");
 		mFrame.setTitle(title);
-		mFrame.setUndecorated(undecorated);
+	}
+
+	@Override
+	public void setAlwaysOnTop(boolean alwaysOnTop) {
 		mFrame.setAlwaysOnTop(alwaysOnTop);
 	}
 
@@ -141,11 +140,29 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 	}
 
 	@Override
-	public void setBounds(int x, int y, int width, int height) {
+	public void setSize(int width, int height) {
 		mComponent.setPreferredSize(new Dimension(width,height));
-		mFrame.setLocation(new Point(x,y));
-		mFrame.pack();
-		mFrame.setVisible(true);
+		if(mFrame!=null) {
+			mFrame.pack();
+			mFrame.setVisible(true);
+		}
+	}
+
+	@Override
+	public void setLocation(int x, int y) {
+		if(mFrame!=null)
+			mFrame.setLocation(new Point(x,y));
+	}
+
+	@Override
+	public void setCentered() {
+		if(mFrame!=null)
+			mFrame.setLocationRelativeTo(null);
+	}
+
+	public void requestFocus() {
+		if(mFrame!=null)
+			mFrame.requestFocus();
 	}
 
 	@Override
@@ -154,10 +171,11 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 	}
 
 	@Override
-	public void setFramed() {
+	public void setFramed(boolean undecorated) {
 		if(mFrame!=null)
 			return;
 		mFrame = new JFrame();
+		mFrame.setUndecorated(undecorated);
 		mFrame.add(mComponent);
 	}
 
@@ -168,6 +186,11 @@ public class PCGLPanel implements GLEventListener,GLHolder {
 			target.add(mComponent);
 			mFrame = target;
 		}
+	}
+
+	@Override
+	public boolean isFramed() {
+		return mFrame!=null;
 	}
 
 }

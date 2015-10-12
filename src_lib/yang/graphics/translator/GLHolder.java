@@ -1,12 +1,20 @@
 package yang.graphics.translator;
 
-public interface GLHolder {
+public abstract class GLHolder {
 
-	public void setFrameProperties(String title,boolean undecorated,boolean alwaysOnTop);
-	public void setBounds(int x,int y,int width,int height);
-	public void setFullscreen(int screenId);
-	public void setVisible(boolean visible);
-	public void setFramed();
-	public void run();
+	public abstract void setTitle(String title);
+	public abstract void setAlwaysOnTop(boolean alwaysOnTop);
+	public abstract void setSize(int width,int height);
+	public abstract void setLocation(int x,int y);
+	public abstract void setCentered();
+	public abstract void setFullscreen(int screenId);
+	public abstract void setVisible(boolean visible);
+	public abstract void setFramed(boolean undecorated);
+	public abstract boolean isFramed();
+	public abstract void run();
 
+	public void setBounds(int x,int y,int width,int height) {
+		setLocation(x,y);
+		setSize(width,height);
+	}
 }

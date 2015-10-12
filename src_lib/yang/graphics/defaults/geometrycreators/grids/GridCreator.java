@@ -105,7 +105,7 @@ public class GridCreator<GraphicsType extends DefaultGraphics<?>> extends Geomet
 	}
 
 	public void putGridSuppData(float[] data) {
-		mGraphics.putSuppData(data, mCurXCount*mCurYCount);
+		mGraphics.putSuppDataMultiple(data, mCurXCount*mCurYCount);
 	}
 
 	public void putGridSuppData(float[][] SuppData) {
