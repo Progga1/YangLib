@@ -366,8 +366,8 @@ public class PCGL2ES2Graphics extends GraphicsTranslator {
 	}
 
 	@Override
-	public TextureDisplay createTextureDisplay() {
-		return new PCGLTextureDisplay(this,mGles2.getContext(),mGlCapabilities,1);
+	public TextureDisplay createTextureDisplay(boolean undecorated) {
+		return new PCGLTextureDisplay(this,mGles2.getContext(),mGlCapabilities,1,undecorated);
 	}
 
 	@Override

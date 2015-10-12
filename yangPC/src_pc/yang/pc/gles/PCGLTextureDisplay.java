@@ -11,6 +11,7 @@ import javax.media.opengl.awt.GLCanvas;
 import yang.graphics.buffers.UniversalVertexBuffer;
 import yang.graphics.model.FloatColor;
 import yang.graphics.programs.BasicProgram;
+import yang.graphics.translator.GLHolder;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.TextureDisplay;
 import yang.math.objects.YangMatrix;
@@ -24,8 +25,9 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 	public PCGL2ES2Graphics mGraphics;
 	public BasicProgram mProgram;
 	private UniversalVertexBuffer mVertices;
+	private boolean mFlipY = false;
 
-	public PCGLTextureDisplay(PCGL2ES2Graphics graphics, GLContext context,GLCapabilities glCapabilities,int panelIndex) {
+	public PCGLTextureDisplay(PCGL2ES2Graphics graphics, GLContext context,GLCapabilities glCapabilities,int panelIndex,boolean undecorated) {
 		super(graphics,glCapabilities,false,panelIndex);
 		mGraphics = graphics;
 		mPanelId = panelIndex;
@@ -33,7 +35,7 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 		mComponent = new GLCanvas(glCapabilities,context);
 		((GLCanvas)mComponent).addGLEventListener(this);
 
-		setFramed();
+		setFramed(undecorated);
 	}
 
 	@Override
@@ -43,8 +45,9 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 		mVertices = new UniversalVertexBuffer(true,true, 6,4);
 		mVertices.init(new int[]{3,2,4},new float[][]{{0,0,0},{0,0},{1,1,1,1}});
 
-		float s = 1;
-		mVertices.putVec12(0, -s,-s,0, s,-s,0, -s,s,0, s,s,0);
+		float w = 1;
+		float h = mFlipY?-1:1;
+		mVertices.putVec12(0, -w,-h,0, w,-h,0, -w,h,0, w,h,0);
 		mVertices.putRect2D(1, 0,0,1,1);
 		mVertices.putArrayMultiple(2, new float[]{1,1,1,1}, 4);
 
@@ -136,6 +139,16 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 	@Override
 	public void setTexture(Texture texture) {
 		mTexture = texture;
+	}
+
+	@Override
+	public GLHolder getGLHolder() {
+		return this;
+	}
+
+	@Override
+	public void setFlipY(boolean flipY) {
+		mFlipY = flipY;
 	}
 
 }
