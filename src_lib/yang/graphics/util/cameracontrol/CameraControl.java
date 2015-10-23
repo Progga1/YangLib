@@ -16,7 +16,7 @@ public abstract class CameraControl implements YangEventListener {
 	public int mShiftKey = Keys.SHIFT;
 	public float mZoomDelay = 0.1f;
 	public int mMoveCameraButton = SurfacePointerEvent.BUTTON_MIDDLE;
-	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
+	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_MIDDLE;
 
 	//Objects
 	protected final YangSurface mSurface;
@@ -62,8 +62,6 @@ public abstract class CameraControl implements YangEventListener {
 	@Override
 	public void pointerDown(float x, float y, SurfacePointerEvent event) {
 		mCurPointerDownCount++;
-		if(event.mId!=0)
-			return;
 	}
 
 	@Override

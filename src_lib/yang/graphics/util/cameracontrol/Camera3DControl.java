@@ -56,8 +56,9 @@ public class Camera3DControl extends CameraControl {
 			mCamera.setPerspectiveProjection(0.6f,100);
 		if(mInvertView)
 			mCamera.setLookOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
-		else
+		else{
 			mCamera.setLookAtAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+		}
 		return mCamera;
 	}
 

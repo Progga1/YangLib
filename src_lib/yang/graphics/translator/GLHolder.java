@@ -7,6 +7,7 @@ public abstract class GLHolder {
 	public abstract void setSize(int width,int height);
 	public abstract void setLocation(int x,int y);
 	public abstract void setCentered();
+	public abstract void requestFocus();
 	public abstract void setFullscreen(int screenId);
 	public abstract void setVisible(boolean visible);
 	public abstract void setFramed(boolean undecorated);
