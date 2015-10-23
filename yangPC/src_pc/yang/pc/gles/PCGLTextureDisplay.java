@@ -47,7 +47,7 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 
 		float w = 1;
 		float h = mFlipY?-1:1;
-		mVertices.putVec12(0, -w,-h,0, w,-h,0, -w,h,0, w,h,0);
+		mVertices.putVec12(0, -w,h,0, w,h,0, -w,-h,0, w,-h,0);
 		mVertices.putRect2D(1, 0,0,1,1);
 		mVertices.putArrayMultiple(2, new float[]{1,1,1,1}, 4);
 
