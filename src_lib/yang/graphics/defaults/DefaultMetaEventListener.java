@@ -48,13 +48,24 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 		}
 	}
 
-	public YangSurface mSurface;
+	//Properties
+	public int mMetaBaseKey = Keys.F1;
+	public boolean mDebugCameraControl = true;
+
+	//State
 	private boolean mCtrlPressed = false;
 	private boolean mShiftPressed = false;
 	private final EulerOrientation mOrientation = new EulerOrientation();
-	public int mMetaBaseKey = Keys.F1;
+
+	//Objects
+	public YangSurface mSurface;
 	private ImageCaptureData mScreenshotTarget;
 	private ScreenshotThread mScreenshotThread;
+
+	//Temps
+	private Vector3f mTempVec = new Vector3f();
+	private Vector3f mResVec = new Vector3f();
+
 
 	public static void forceScreenShotResolution(int width,int height) {
 		SCREENSHOT_FORCE_RES_X = width;
@@ -79,12 +90,14 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 
 	@Override
 	public void pointerDown(float x, float y, SurfacePointerEvent event) {
-		if(mCtrlPressed || mShiftPressed) {
-			if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
-				mOrientation.reset();
-				mSurface.mGraphics.setDebugPostCameraOrientation(mOrientation.getUpdatedMatrix());
-				mSurface.mGraphics.setDebugPostCameraPosition(Point3f.ZERO);
-				mSurface.mGraphics.setDebugPostCameraEnabled(false);
+		if(mDebugCameraControl) {
+			if(mCtrlPressed || mShiftPressed) {
+				if(event.mButton==SurfacePointerEvent.BUTTON_MIDDLE) {
+					mOrientation.reset();
+					mSurface.mGraphics.setDebugPostCameraOrientation(mOrientation.getUpdatedMatrix());
+					mSurface.mGraphics.setDebugPostCameraPosition(Point3f.ZERO);
+					mSurface.mGraphics.setDebugPostCameraEnabled(false);
+				}
 			}
 		}
 	}
@@ -96,33 +109,35 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 
 	@Override
 	public void pointerDragged(float x, float y, SurfacePointerEvent event) {
-		if(mCtrlPressed || mShiftPressed) {
-			mSurface.mGraphics.setDebugPostCameraEnabled(true);
-			float MOVE_SCALE = 1;
-
-			if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
-				if(mShiftPressed) {
-					mTempVec.set(-event.mDeltaX,-event.mDeltaY,-event.mDeltaZ);
-				}else if(mCtrlPressed) {
-					mTempVec.set(-event.mDeltaX,0,event.mDeltaY);
-				}else
-					return;
-				mTempVec.scale(MOVE_SCALE);
-				mOrientation.getUpdatedMatrix().apply3D(mTempVec,mResVec);
-				mSurface.mGraphics.moveDebugPostCamera(mResVec, null);
-			}
-
-			if(event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
+		if(mDebugCameraControl) {
+			if(mCtrlPressed || mShiftPressed) {
 				mSurface.mGraphics.setDebugPostCameraEnabled(true);
-				if(mShiftPressed) {
-					mOrientation.mYaw -= event.mDeltaX*MOVE_SCALE;
-					mOrientation.mPitch += event.mDeltaY*MOVE_SCALE;
-				}else if(mCtrlPressed) {
-					mOrientation.mRoll -= event.mDeltaX*MOVE_SCALE;
-					mOrientation.mPitch += event.mDeltaY*MOVE_SCALE;
-				}else
-					return;
-				mSurface.mGraphics.setDebugPostCameraOrientation(mOrientation.getUpdatedQuaternion());
+				float MOVE_SCALE = 1;
+
+				if(event.mButton==SurfacePointerEvent.BUTTON_LEFT) {
+					if(mShiftPressed) {
+						mTempVec.set(-event.mDeltaX,-event.mDeltaY,-event.mDeltaZ);
+					}else if(mCtrlPressed) {
+						mTempVec.set(-event.mDeltaX,0,event.mDeltaY);
+					}else
+						return;
+					mTempVec.scale(MOVE_SCALE);
+					mOrientation.getUpdatedMatrix().apply3D(mTempVec,mResVec);
+					mSurface.mGraphics.moveDebugPostCamera(mResVec, null);
+				}
+
+				if(event.mButton==SurfacePointerEvent.BUTTON_RIGHT) {
+					mSurface.mGraphics.setDebugPostCameraEnabled(true);
+					if(mShiftPressed) {
+						mOrientation.mYaw -= event.mDeltaX*MOVE_SCALE;
+						mOrientation.mPitch += event.mDeltaY*MOVE_SCALE;
+					}else if(mCtrlPressed) {
+						mOrientation.mRoll -= event.mDeltaX*MOVE_SCALE;
+						mOrientation.mPitch += event.mDeltaY*MOVE_SCALE;
+					}else
+						return;
+					mSurface.mGraphics.setDebugPostCameraOrientation(mOrientation.getUpdatedQuaternion());
+				}
 			}
 		}
 
@@ -133,9 +148,6 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 	public void pointerUp(float x, float y, SurfacePointerEvent event) {
 
 	}
-
-	private Vector3f mTempVec = new Vector3f();
-	private Vector3f mResVec = new Vector3f();
 
 	@Override
 	public void keyDown(int code) {
@@ -269,10 +281,12 @@ public class DefaultMetaEventListener implements YangEventListener,ScreenshotCal
 
 	@Override
 	public void zoom(float factor) {
-		mTempVec.set(0,0,factor);
-		mOrientation.getUpdatedMatrix().apply3D(mTempVec,mResVec);
-		mSurface.mGraphics.setDebugPostCameraEnabled(true);
-		mSurface.mGraphics.moveDebugPostCamera(mResVec, null);
+		if(mDebugCameraControl) {
+			mTempVec.set(0,0,factor);
+			mOrientation.getUpdatedMatrix().apply3D(mTempVec,mResVec);
+			mSurface.mGraphics.setDebugPostCameraEnabled(true);
+			mSurface.mGraphics.moveDebugPostCamera(mResVec, null);
+		}
 	}
 
 	@Override
