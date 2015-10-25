@@ -1,6 +1,6 @@
 package yang.graphics.interfaces;
 
-public interface Clock {
+public interface ClockInterface {
 
 	public double getTime();
 

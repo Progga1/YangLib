@@ -6,7 +6,7 @@ import yang.events.eventtypes.YangSensorEvent;
 import yang.events.listeners.YangEventListener;
 import yang.graphics.defaults.Default2DGraphics;
 import yang.graphics.defaults.Default3DGraphics;
-import yang.graphics.interfaces.Clock;
+import yang.graphics.interfaces.ClockInterface;
 import yang.graphics.translator.AbstractGFXLoader;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
@@ -15,7 +15,7 @@ import yang.surface.StringsXML;
 import yang.surface.YangSurface;
 import yang.systemdependent.AbstractResourceManager;
 
-public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener,Clock {
+public abstract class YangProgramState<StateSystemType extends YangProgramStateSystem> implements YangEventListener,ClockInterface {
 
 	public static final float PI = 3.1415926535f;
 
