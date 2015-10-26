@@ -1028,7 +1028,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return result;
 	}
 
-	public final TextureDisplay displayTextureFullscreen(Texture texture,String title,int screenId) {
+	public final TextureDisplay createTextureDisplay(Texture texture) {
+		return createTextureDisplay(texture,false);
+	}
+
+	public final TextureDisplay createTextureDisplayFullscreen(Texture texture,String title,int screenId) {
 		TextureDisplay result = createTextureDisplay(texture,true);
 		if(result==null)
 			return null;
