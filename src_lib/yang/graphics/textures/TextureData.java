@@ -117,6 +117,39 @@ public class TextureData {
 		targetBuffer.position(0);
 	}
 
+	public static void downscale(byte[] sourceArray,byte[] targetArray, int sourceWidth,int sourceHeight, int channels, int downScale) {
+		if(downScale==1) {
+			System.arraycopy(sourceArray,0, targetArray,0, sourceWidth*sourceHeight*channels);
+		}else{
+			int xSteps = downScale*channels;
+			int pitch = sourceWidth*channels;
+			int i=0;
+			for(int y=0;y<sourceHeight;y+=downScale) {
+				int curY = y*pitch;
+				if(channels==1) {
+					for(int x=0;x<pitch;x+=xSteps) {
+						targetArray[i++] = sourceArray[curY+x];
+					}
+				}else if(channels==3) {
+					for(int x=0;x<pitch;x+=xSteps) {
+						int sourceId = curY+x;
+						targetArray[i++] = sourceArray[sourceId++];
+						targetArray[i++] = sourceArray[sourceId++];
+						targetArray[i++] = sourceArray[sourceId++];
+					}
+				}else if(channels==4) {
+					for(int x=0;x<pitch;x+=xSteps) {
+						int sourceId = curY+x;
+						targetArray[i++] = sourceArray[sourceId++];
+						targetArray[i++] = sourceArray[sourceId++];
+						targetArray[i++] = sourceArray[sourceId++];
+						targetArray[i++] = sourceArray[sourceId++];
+					}
+				}
+			}
+		}
+	}
+
 	public int getIndex(int x,int y) {
 		return ((y*mWidth+x)*mChannels);
 	}
