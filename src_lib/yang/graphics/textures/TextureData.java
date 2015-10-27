@@ -79,6 +79,44 @@ public class TextureData {
 		}
 	}
 
+	public static void downscale(ByteBuffer sourceBuffer,ByteBuffer targetBuffer, int sourceWidth,int sourceHeight, int channels, int downScale) {
+		sourceBuffer.position(0);
+		targetBuffer.position(0);
+		if(downScale==1) {
+			sourceBuffer.limit(targetBuffer.capacity());
+			targetBuffer.put(sourceBuffer);
+		}else{
+			int xSteps = downScale*channels;
+			int pitch = sourceWidth*channels;
+			for(int y=0;y<sourceHeight;y+=downScale) {
+				int curY = y*pitch;
+				if(channels==1) {
+					for(int x=0;x<pitch;x+=xSteps) {
+						sourceBuffer.position(curY+x);
+						targetBuffer.put(sourceBuffer.get());
+					}
+				}else if(channels==3) {
+					for(int x=0;x<pitch;x+=xSteps) {
+						sourceBuffer.position(curY+x);
+						targetBuffer.put(sourceBuffer.get());
+						targetBuffer.put(sourceBuffer.get());
+						targetBuffer.put(sourceBuffer.get());
+					}
+				}else if(channels==4) {
+					for(int x=0;x<pitch;x+=xSteps) {
+						sourceBuffer.position(curY+x);
+						targetBuffer.put(sourceBuffer.get());
+						targetBuffer.put(sourceBuffer.get());
+						targetBuffer.put(sourceBuffer.get());
+						targetBuffer.put(sourceBuffer.get());
+					}
+				}
+			}
+		}
+		sourceBuffer.position(0);
+		targetBuffer.position(0);
+	}
+
 	public int getIndex(int x,int y) {
 		return ((y*mWidth+x)*mChannels);
 	}
@@ -281,7 +319,7 @@ public class TextureData {
 	}
 
 	public static void removeAlpha(ByteBuffer buffer,byte[] colors) {
-		int c = buffer.capacity();
+		int c = colors.length;
 		buffer.position(0);
 		for(int i=0;i<c;i+=4) {
 			buffer.put(colors[i]);
@@ -292,7 +330,7 @@ public class TextureData {
 	}
 
 	public static void bgraToRGBA(ByteBuffer buffer,byte[] colors) {
-		int c = buffer.capacity();
+		int c = colors.length;
 		buffer.position(0);
 		for(int i=0;i<c;i+=4) {
 			buffer.put(colors[i+2]);
@@ -304,7 +342,7 @@ public class TextureData {
 	}
 
 	public static void bgraToRGB(ByteBuffer buffer,byte[] colors) {
-		int c = buffer.capacity();
+		int c = colors.length;
 		buffer.position(0);
 		for(int i=0;i<c;i+=4) {
 			buffer.put(colors[i+2]);
@@ -315,7 +353,7 @@ public class TextureData {
 	}
 
 	public static void bgrToRGB(ByteBuffer buffer,byte[] colors) {
-		int c = buffer.capacity();
+		int c = colors.length;
 		buffer.position(0);
 		for(int i=0;i<c;i+=3) {
 			buffer.put(colors[i+2]);
