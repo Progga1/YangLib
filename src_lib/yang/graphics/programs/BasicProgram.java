@@ -62,6 +62,7 @@ public class BasicProgram extends AbstractProgram {
 	public int mTexSamplerHandle = -1;
 	public int mColorFactorHandle = -1;
 	public int mTimeHandle = -1;
+	public boolean mHasProjection = false;
 	public boolean mHasTextureCoords = false;
 	public boolean mHasColor = false;
 	public boolean mHasSuppData = false;
@@ -106,6 +107,7 @@ public class BasicProgram extends AbstractProgram {
 	@Override
 	public void postInit() {
 		mHasTextureCoords = (mTextureHandle>=0);
+		mHasProjection = (mProjHandle>=0);
 		mHasWorldTransform = (mWorldTransformHandle>=0);
 		mHasColor = (mColorHandle>=0);
 		mHasSuppData = (mSuppDataHandle>=0);

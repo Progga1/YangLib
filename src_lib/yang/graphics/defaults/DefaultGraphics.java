@@ -213,13 +213,15 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 			if (mWorldTransformEnabled) {
 				if (program.mHasWorldTransform) {
 					program.setWorldTransform(mWorldTransform.mValues);
-					program.setProjection(mCameraProjectionMatrix.mValues);
-				} else {
+					if(program.mHasProjection)
+						program.setProjection(mCameraProjectionMatrix.mValues);
+				} else if(program.mHasProjection) {
 					mResultTransformationMatrix.multiply(mCameraProjectionMatrix, mWorldTransform);
 					program.setProjection(mResultTransformationMatrix.mValues);
 				}
 			} else {
-				program.setProjection(mCameraProjectionMatrix.mValues);
+				if(program.mHasProjection)
+					program.setProjection(mCameraProjectionMatrix.mValues);
 				if (program.mHasWorldTransform)
 					program.setWorldTransform(MatrixOps.IDENTITY);
 			}

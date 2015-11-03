@@ -26,6 +26,7 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 	public BasicProgram mProgram;
 	private UniversalVertexBuffer mVertices;
 	private boolean mFlipY = false;
+	public YangMatrix mProjTransform = null;
 
 	public PCGLTextureDisplay(PCGL2ES2Graphics graphics, GLContext context,GLCapabilities glCapabilities,int panelIndex,boolean undecorated) {
 		super(graphics,glCapabilities,false,panelIndex);
@@ -54,8 +55,20 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 		mVertices.putRectIndices(0,1,2,3);
 		mVertices.reset();
 
-		mProgram = new BasicProgram();
-		mProgram.init(mGraphics);
+		if(mProgram==null) {
+			mProgram = new BasicProgram();
+			mProgram.init(mGraphics);
+		}
+	}
+
+	@Override
+	public void setProjectionMatrix(YangMatrix matrix) {
+		mProjTransform = matrix;
+	}
+
+	@Override
+	public void setShader(BasicProgram shader) {
+		mProgram = shader;
 	}
 
 	@Override
@@ -97,14 +110,15 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 			PCGLProgram prog = (PCGLProgram)mProgram.mProgram;
 			mGles2.glUseProgram(prog.mId);
 			checkErr("program");
-
 			bindBuf(mProgram.mPositionHandle,0);
 			bindBuf(mProgram.mTextureHandle,1);
 			bindBuf(mProgram.mColorHandle,2);
 			checkErr("bindbuf");
-			prog.setUniformMatrix4f(mProgram.mProjHandle, YangMatrix.IDENTITY.mValues);
+			if(mProgram.mHasProjection)
+				prog.setUniformMatrix4f(mProgram.mProjHandle, mProjTransform==null?YangMatrix.IDENTITY.mValues:mProjTransform.mValues);
 			prog.setUniformInt(mProgram.mTexSamplerHandle, 0);
-			prog.setUniform4f(mProgram.mColorFactorHandle, mColorFactor.mValues);
+			if(mProgram.mHasColor)
+				prog.setUniform4f(mProgram.mColorFactorHandle, mColorFactor.mValues);
 			checkErr("setUniform");
 
 			mVertices.reset();
