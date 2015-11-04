@@ -171,26 +171,26 @@ public class Quaternion {
 		if (diag > 0) {
 			mW = (float) Math.sqrt(1.0f + diag) * 0.5f;
 			final float w4 = 1 / (4.0f * mW);
-			mX = (m21 - m12) * w4;
-			mY = (m02 - m20) * w4;
-			mZ = (m10 - m01) * w4;
+			mX = (m12 - m21) * w4;
+			mY = (m20 - m02) * w4;
+			mZ = (m01 - m10) * w4;
 		} else if ((m00 > m11) & (m00 > m22)) {
 			final float S = (float) Math.sqrt(1.0 + m00 - m11 - m22) * 2;
-			mW = (m21 - m12) / S;
+			mW = (m12 - m21) / S;
 			mX = 0.25f * S;
-			mY = (m01 + m10) / S;
-			mZ = (m02 + m20) / S;
+			mY = (m10 + m01) / S;
+			mZ = (m20 + m02) / S;
 		} else if (m11 > m22) {
 			final float S = (float) Math.sqrt(1.0 + m11 - m00 - m22) * 2;
-			mW = (m02 - m20) / S;
-			mX = (m01 + m10) / S;
+			mW = (m20 - m02) / S;
+			mX = (m10 + m01) / S;
 			mY = 0.25f * S;
-			mZ = (m12 + m21) / S;
+			mZ = (m21 + m12) / S;
 		} else {
 			final float S = (float) Math.sqrt(1.0 + m22 - m00 - m11) * 2;
-			mW = (m10 - m01) / S;
-			mX = (m02 + m20) / S;
-			mY = (m12 + m21) / S;
+			mW = (m01 - m10) / S;
+			mX = (m20 + m02) / S;
+			mY = (m21 + m12) / S;
 			mZ = 0.25f * S;
 		}
 	}
