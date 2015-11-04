@@ -500,6 +500,25 @@ public class YangMatrix {
 		mValues[15] = (float)matrix[3][3];
 	}
 
+	public void setRowMajor3x3(double[][] matrix) {
+		mValues[0] = (float)matrix[0][0];
+		mValues[1] = (float)matrix[1][0];
+		mValues[2] = (float)matrix[2][0];
+		mValues[3] = 0;
+		mValues[4] = (float)matrix[0][1];
+		mValues[5] = (float)matrix[1][1];
+		mValues[6] = (float)matrix[2][1];
+		mValues[7] = 0;
+		mValues[8] = (float)matrix[0][2];
+		mValues[9] = (float)matrix[1][2];
+		mValues[10] = (float)matrix[2][2];
+		mValues[11] = 0;
+		mValues[12] = 0;
+		mValues[13] = 0;
+		mValues[14] = 0;
+		mValues[15] = 1;
+	}
+
 	public void setColumnMajor(double[][] matrix) {
 		mValues[0] = (float)matrix[0][0];
 		mValues[1] = (float)matrix[0][1];
@@ -982,6 +1001,30 @@ public class YangMatrix {
 
 	public float getScaleZ() {
 		return (float)Math.sqrt(mValues[8]*mValues[8] + mValues[9]*mValues[9] + mValues[10]*mValues[10]);
+	}
+
+	public void transpose() {
+		asTransposed(mBackMatrix);
+		mValues = mBackMatrix;
+	}
+
+	public void multiplyScalar(float scalar) {
+		for(int i=0;i<16;i++) {
+			mValues[i] *= scalar;
+		}
+	}
+
+	public void clean(float threshold) {
+		for(int i=0;i<16;i++) {
+			if(Math.abs(mValues[i])<threshold)
+				mValues[i] = 0;
+			if(Math.abs(mValues[i]-1)<threshold)
+				mValues[i] = 1;
+		}
+	}
+
+	public void clean() {
+		clean(0.000001f);
 	}
 
 }
