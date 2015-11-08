@@ -1066,5 +1066,13 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public GLHolder getMainDisplay() {
 		return null;
 	}
+	
+	public int normXToScreenX(float x) {
+		return (int)((x/getSurfaceRatioX()+1)*0.5f*getSurfaceWidth());
+	}
 
+	public int normYToScreenY(float y) {
+		return (int)((1-y/getSurfaceRatioY())*0.5f*getSurfaceHeight());
+	}
+	
 }
