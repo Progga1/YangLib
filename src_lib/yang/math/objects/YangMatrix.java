@@ -612,6 +612,10 @@ public class YangMatrix {
 		MatrixOps.applyFloatMatrix3DNormalized(mValues,x,y,z,target);
 	}
 
+	public void apply3DNormalized(Point3f source, Point3f target) {
+		MatrixOps.applyFloatMatrix3DNormalized(mValues,source.mX,source.mY,source.mZ,target);
+	}
+
 	public void setColumn(int col, Vector3f values) {
 		setColumn(col,values.mX,values.mY,values.mZ);
 	}

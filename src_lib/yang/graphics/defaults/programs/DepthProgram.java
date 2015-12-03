@@ -40,6 +40,7 @@ public class DepthProgram extends Basic3DProgram {
 	@Override
 	public void initHandles() {
 		mPositionHandle = mProgram.getAttributeLocation("vPosition");
+		mColorHandle = mProgram.getAttributeLocation("vColor");
 		mProjHandle = mProgram.getUniformLocation("projTransform");
 	}
 
