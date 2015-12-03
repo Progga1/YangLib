@@ -102,4 +102,8 @@ public class TextureRenderTarget implements SurfaceParameters {
 		return mTargetTexture.mHeight;
 	}
 
+	public int getByteCount() {
+		return mTargetTexture.getByteCount();
+	}
+
 }

@@ -79,6 +79,8 @@ public class PCGLPanel extends GLHolder implements GLEventListener {
 	@Override
 	public void display(GLAutoDrawable glAutoDrawable) {
 		mGraphics.mSurface.drawFrame();
+		if(mDisplayListener!=null)
+			mDisplayListener.onDisplay(this);
 	}
 
 	public void setCursorVisible(boolean enabled) {
@@ -160,6 +162,7 @@ public class PCGLPanel extends GLHolder implements GLEventListener {
 			mFrame.setLocationRelativeTo(null);
 	}
 
+	@Override
 	public void requestFocus() {
 		if(mFrame!=null)
 			mFrame.requestFocus();

@@ -1,5 +1,7 @@
 package yang.pc.gles;
 
+import java.nio.ByteBuffer;
+
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
@@ -15,6 +17,7 @@ import yang.graphics.translator.GLHolder;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.TextureDisplay;
 import yang.math.objects.YangMatrix;
+import yang.model.enums.ByteFormat;
 
 public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,TextureDisplay {
 
@@ -143,6 +146,23 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 		}
 
 		checkErr("post");
+
+		if(mDisplayListener!=null) {
+			mDisplayListener.onDisplay(this);
+		}
+	}
+
+	public void readPixels(int x, int y, int width, int height, int channels, ByteFormat byteFormat, ByteBuffer target) {
+		mGles2.glReadPixels(x, y, width, height, PCGL2ES2Graphics.channelsToConst(channels), PCGL2ES2Graphics.byteFormatToConst(byteFormat), target);
+		checkErr("Read pixels");
+	}
+
+	public void readPixels(ByteBuffer target,int channels,ByteFormat byteFormat) {
+		readPixels(0,0,this.getComponent().getWidth(),this.getComponent().getHeight(),channels,byteFormat,target);
+	}
+
+	public void readPixels(ByteBuffer target) {
+		readPixels(target,4,ByteFormat.BYTE);
 	}
 
 	@Override
