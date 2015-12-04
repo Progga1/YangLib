@@ -171,4 +171,8 @@ public class Texture extends AbstractTexture {
 		return (float)mWidth/mHeight;
 	}
 
+	public int getTexelCount() {
+		return mWidth*mHeight;
+	}
+
 }

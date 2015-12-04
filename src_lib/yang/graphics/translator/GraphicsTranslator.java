@@ -895,7 +895,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	}
 
 	public void readPixels(ByteBuffer target) {
-		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),4,ByteFormat.BYTE,target);
+		readPixels(0,0,mCurrentSurface.getSurfaceWidth(),mCurrentSurface.getSurfaceHeight(),4,ByteFormat.UNSIGNED_BYTE,target);
 	}
 
 //	public ByteBuffer createByteBufferWithScreenData(int channels,ByteFormat byteFormat) {
@@ -1066,7 +1066,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public GLHolder getMainDisplay() {
 		return null;
 	}
-	
+
 	public int normXToScreenX(float x) {
 		return (int)((x/getSurfaceRatioX()+1)*0.5f*getSurfaceWidth());
 	}
@@ -1074,5 +1074,5 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public int normYToScreenY(float y) {
 		return (int)((1-y/getSurfaceRatioY())*0.5f*getSurfaceHeight());
 	}
-	
+
 }
