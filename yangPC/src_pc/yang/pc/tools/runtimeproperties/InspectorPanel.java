@@ -9,15 +9,15 @@ import javax.swing.JPanel;
 
 import yang.util.YangList;
 
-public class RuntimePropertiesInspector {
+public class InspectorPanel {
 
 	protected JPanel mTopLevelPanel;
 	protected JPanel mPropertiesPanel;
-	protected RuntimePropertiesFrame mFrame;
-	protected RuntimePropertiesManager mManager;
-	protected YangList<RuntimePropertyCaption> mComponents = new YangList<RuntimePropertyCaption>();
+	protected InspectorFrame mFrame;
+	protected InspectorManager mManager;
+	protected YangList<InspectorProperty> mComponents = new YangList<InspectorProperty>();
 
-	protected RuntimePropertiesInspector(RuntimePropertiesFrame frame) {
+	protected InspectorPanel(InspectorFrame frame) {
 		mManager = frame.mManager;
 		mFrame = frame;
 //		mLayout = new FlowLayout(FlowLayout.LEADING,5,5);
@@ -34,27 +34,27 @@ public class RuntimePropertiesInspector {
 
 	protected void refreshLayout() {
 		mPropertiesPanel.removeAll();
-		for(RuntimePropertyCaption component:mComponents) {
+		for(InspectorProperty component:mComponents) {
 			mPropertiesPanel.add(component);
 		}
 		mTopLevelPanel.setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 	}
 
-	public void registerPropertyCostum(String name,Class<? extends RuntimePropertyComponent> componentType) {
-		RuntimePropertyComponent rtpComponent;
+	public void registerPropertyCostum(String name,Class<? extends InspectorComponent> componentType) {
+		InspectorComponent rtpComponent;
 		try {
 			rtpComponent = componentType.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 		rtpComponent.init(this, name);
-		RuntimePropertyCaption rtpHolder = new RuntimePropertyCaption(this,rtpComponent);
+		InspectorProperty rtpHolder = new InspectorProperty(this,rtpComponent);
 		mComponents.add(rtpHolder);
 		refreshLayout();
 	}
 
 	public void registerProperty(String name,Class<?> type) {
-		Class<? extends RuntimePropertyComponent> comp = mManager.getDefaultComponent(type);
+		Class<? extends InspectorComponent> comp = mManager.getDefaultComponent(type);
 		if(comp==null)
 			throw new RuntimeException("No default component for type: "+type.getName());
 		registerPropertyCostum(name,comp);
@@ -72,8 +72,8 @@ public class RuntimePropertiesInspector {
 		return mTopLevelPanel;
 	}
 
-	public void setValues(PropertyInterface object) {
-		for(RuntimePropertyCaption component:mComponents) {
+	public void setValues(InspectionInterface object) {
+		for(InspectorProperty component:mComponents) {
 			component.getRTPComponent().setValueByObject(object);
 		}
 	}

@@ -2,10 +2,10 @@ package yang.pc.tools.runtimeproperties;
 
 import java.awt.Component;
 
-public abstract class RuntimePropertyComponent {
+public abstract class InspectorComponent {
 
 	public String mName;
-	public RuntimePropertiesInspector mPropPanel;
+	public InspectorPanel mPropPanel;
 	private boolean mEnabled = true;
 	private boolean mWasChanged = false;
 
@@ -15,7 +15,7 @@ public abstract class RuntimePropertyComponent {
 
 	public abstract Component getComponent();
 
-	public final void init(RuntimePropertiesInspector propertyPanel, String name) {
+	public final void init(InspectorPanel propertyPanel, String name) {
 		mPropPanel = propertyPanel;
 		mName = name;
 		postInit();
@@ -25,7 +25,7 @@ public abstract class RuntimePropertyComponent {
 		return mName;
 	}
 
-	public void setValueByObject(PropertyInterface object) {
+	public void setValueByObject(InspectionInterface object) {
 		if(mWasChanged) {
 			Object val = object.setProperty(mName,this.getValue());
 			if(val!=null)

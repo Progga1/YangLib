@@ -4,9 +4,9 @@ import java.awt.Component;
 
 import javax.swing.JTextField;
 
-import yang.pc.tools.runtimeproperties.RuntimePropertyComponent;
+import yang.pc.tools.runtimeproperties.InspectorComponent;
 
-public class PropertyTextField  extends RuntimePropertyComponent {
+public class PropertyTextField  extends InspectorComponent {
 
 	private JTextField mTextField;
 

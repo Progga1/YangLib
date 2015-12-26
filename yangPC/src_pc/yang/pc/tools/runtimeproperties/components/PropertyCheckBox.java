@@ -7,9 +7,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import yang.pc.tools.runtimeproperties.InspectorGUIDefinitions;
-import yang.pc.tools.runtimeproperties.RuntimePropertyComponent;
+import yang.pc.tools.runtimeproperties.InspectorComponent;
 
-public class PropertyCheckBox extends RuntimePropertyComponent implements ChangeListener {
+public class PropertyCheckBox extends InspectorComponent implements ChangeListener {
 
 	private JCheckBox mCheckBox;
 

@@ -1,6 +1,6 @@
 package yang.pc.tools.runtimeproperties;
 
-public interface PropertyInterface {
+public interface InspectionInterface {
 
 	public String getName();
 	public Object getProperty(String propertyName);

@@ -10,17 +10,17 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
-public class RuntimePropertyCaption extends JPanel {
+public class InspectorProperty extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private RuntimePropertiesInspector mRTPPanel;
+	private InspectorPanel mRTPPanel;
 	public JLabel mCaption;
 //	private JPanel mPanel;
 	private BorderLayout mLayout;
-	private RuntimePropertyComponent mRTPComponent;
+	private InspectorComponent mRTPComponent;
 
-	public RuntimePropertyCaption(RuntimePropertiesInspector panel,RuntimePropertyComponent rtpComponent) {
+	public InspectorProperty(InspectorPanel panel,InspectorComponent rtpComponent) {
 		mRTPPanel = panel;
 		mRTPComponent = rtpComponent;
 //		mPanel = new JPanel();
@@ -47,7 +47,7 @@ public class RuntimePropertyCaption extends JPanel {
 		mCaption.setText(caption);
 	}
 
-	public RuntimePropertyComponent getRTPComponent() {
+	public InspectorComponent getRTPComponent() {
 		return mRTPComponent;
 	}
 
