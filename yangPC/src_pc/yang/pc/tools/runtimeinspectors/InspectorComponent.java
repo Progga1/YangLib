@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeproperties;
+package yang.pc.tools.runtimeinspectors;
 
 import java.awt.Component;
 
@@ -31,14 +31,16 @@ public abstract class InspectorComponent {
 			if(val!=null)
 				postSetValue(val);
 		}else{
-			Object val = object.getProperty(mName);
-			if(val!=null) {
-				if(!mEnabled)
-					setEnabled(true);
-				postSetValue(val);
-			}else{
-				if(mEnabled)
-					setEnabled(false);
+			if(!hasFocus()) {
+				Object val = object.getProperty(mName);
+				if(val!=null) {
+					if(!mEnabled)
+						setEnabled(true);
+					postSetValue(val);
+				}else{
+					if(mEnabled)
+						setEnabled(false);
+				}
 			}
 		}
 		mWasChanged = false;
@@ -50,6 +52,10 @@ public abstract class InspectorComponent {
 
 	protected void setEnabled(boolean enabled) {
 		getComponent().setEnabled(enabled);
+	}
+
+	public boolean hasFocus() {
+		return getComponent().hasFocus();
 	}
 
 }

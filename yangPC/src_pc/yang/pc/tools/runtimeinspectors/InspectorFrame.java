@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeproperties;
+package yang.pc.tools.runtimeinspectors;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,7 +17,7 @@ public class InspectorFrame implements ActionListener {
 
 	protected InspectorManager mManager;
 	private JFrame mFrame;
-	private JPanel mPanel;
+	private JPanel mMainPanel;
 	private JPanel mTopPanel;
 	private JComboBox mObjectSelection;
 	private BorderLayout mLayout;
@@ -42,22 +42,22 @@ public class InspectorFrame implements ActionListener {
 
 	protected InspectorFrame(InspectorManager manager) {
 		mLayout = new BorderLayout();
-		mPanel = new JPanel();
-		mPanel.setLayout(mLayout);
-		mPanel.setPreferredSize(InspectorGUIDefinitions.INITIAL_DIMENSION);
+		mMainPanel = new JPanel();
+		mMainPanel.setLayout(mLayout);
+		mMainPanel.setPreferredSize(InspectorGUIDefinitions.INITIAL_DIMENSION);
 		mInspectedObjects = new YangList<ObjectAndInspector>();
 		mManager = manager;
 		mObjectSelection = new JComboBox();
 		mTopPanel = new JPanel();
 		mTopPanel.add(mObjectSelection);
 		mTopPanel.setLayout(new BoxLayout(mTopPanel,BoxLayout.PAGE_AXIS));
-		mPanel.add(mTopPanel,BorderLayout.NORTH);
+		mMainPanel.add(mTopPanel,BorderLayout.NORTH);
 		mObjectSelection.addActionListener(this);
 	}
 
 	public void setFramed() {
 		mFrame = new JFrame();
-		mFrame.add(mPanel);
+		mFrame.add(mMainPanel);
 		mFrame.pack();
 		mFrame.setTitle("Inspector");
 		mFrame.setVisible(true);
@@ -140,7 +140,7 @@ public class InspectorFrame implements ActionListener {
 		int selId = mObjectSelection.getSelectedIndex();
 		if(selId<0 || selId>=mInspectedObjects.size()) {
 			if(mActiveInspector!=null)
-				mPanel.remove(mActiveInspector.getComponent());
+				mMainPanel.remove(mActiveInspector.getComponent());
 			mActiveInspector = null;
 			return;
 		}
@@ -148,11 +148,13 @@ public class InspectorFrame implements ActionListener {
 		InspectorPanel insp = oi.mInspector;
 		if(insp!=mActiveInspector) {
 			if(mActiveInspector!=null)
-				mPanel.remove(mActiveInspector.getComponent());
-			mPanel.add(insp.getComponent(),BorderLayout.CENTER);
+				mMainPanel.remove(mActiveInspector.getComponent());
+			mMainPanel.add(insp.getComponent(),BorderLayout.CENTER);
 			mActiveInspector = insp;
 		}
 		mActiveInspector.setValues(oi.mObject);
+		mFrame.setVisible(true);
+		mFrame.repaint();
 	}
 
 	public void refreshLayout() {

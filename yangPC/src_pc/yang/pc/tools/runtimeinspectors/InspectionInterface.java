@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeproperties;
+package yang.pc.tools.runtimeinspectors;
 
 public interface InspectionInterface {
 

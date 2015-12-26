@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeproperties;
+package yang.pc.tools.runtimeinspectors;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeproperties;
+package yang.pc.tools.runtimeinspectors;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -42,24 +42,38 @@ public class InspectorPanel {
 		mTopLevelPanel.setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 	}
 
-	public void registerPropertyCostum(String name,Class<? extends InspectorComponent> componentType) {
-		InspectorComponent rtpComponent;
-		try {
-			rtpComponent = componentType.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-		rtpComponent.init(this, name);
-		InspectorProperty rtpHolder = new InspectorProperty(this,rtpComponent);
+//	public void registerPropertyCostum(String name,Class<? extends InspectorComponent> componentType) {
+//		InspectorComponent rtpComponent;
+//		try {
+//			rtpComponent = componentType.newInstance();
+//		} catch (InstantiationException | IllegalAccessException e) {
+//			throw new RuntimeException(e);
+//		}
+//		rtpComponent.init(this, name);
+//		InspectorProperty rtpHolder = new InspectorProperty(this,rtpComponent);
+//		mComponents.add(rtpHolder);
+//		refreshLayout();
+//	}
+//
+//	public void registerProperty(String name,Class<?> type) {
+//		Class<? extends InspectorComponent> comp = mManager.getDefaultComponent(type);
+//		if(comp==null)
+//			throw new RuntimeException("No default component for type: "+type.getName());
+//		registerPropertyCostum(name,comp);
+//	}
+
+	public void registerProperty(String name,InspectorComponent inspectorComponent) {
+		inspectorComponent.init(this, name);
+		InspectorProperty rtpHolder = new InspectorProperty(this,inspectorComponent);
 		mComponents.add(rtpHolder);
 		refreshLayout();
 	}
 
 	public void registerProperty(String name,Class<?> type) {
-		Class<? extends InspectorComponent> comp = mManager.getDefaultComponent(type);
+		InspectorComponent comp = mManager.createDefaultComponentInstance(type);
 		if(comp==null)
 			throw new RuntimeException("No default component for type: "+type.getName());
-		registerPropertyCostum(name,comp);
+		registerProperty(name,comp);
 	}
 
 	public int getCaptionWidth() {
