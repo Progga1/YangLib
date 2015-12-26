@@ -1,11 +1,16 @@
 package yang.pc.tools.runtimeproperties;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 public class InspectorGUIDefinitions {
+
+	public final static Dimension INITIAL_DIMENSION = new Dimension(360,600);
+	public final static int DEFAULT_CAPTION_WIDTH = 150;
+	public final static int DEFAULT_COMPONENT_HEIGHT = 22;
 
 	public final static Color CL_LABEL_BACKGROUND = new Color(225,225,225);
 	public final static Color CL_VALUE_DEFAULT_BACKGROUND = new Color(236,236,236);

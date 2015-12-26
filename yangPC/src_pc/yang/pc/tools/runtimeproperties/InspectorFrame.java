@@ -44,7 +44,7 @@ public class InspectorFrame implements ActionListener {
 		mLayout = new BorderLayout();
 		mPanel = new JPanel();
 		mPanel.setLayout(mLayout);
-		mPanel.setPreferredSize(new Dimension(360,600));
+		mPanel.setPreferredSize(InspectorGUIDefinitions.INITIAL_DIMENSION);
 		mInspectedObjects = new YangList<ObjectAndInspector>();
 		mManager = manager;
 		mObjectSelection = new JComboBox();
@@ -65,6 +65,11 @@ public class InspectorFrame implements ActionListener {
 
 	public void setFrameTitle(String title) {
 		mFrame.setTitle(title);
+	}
+
+	public void setSize(int width,int height) {
+		if(mFrame!=null)
+			mFrame.setSize(width,height);
 	}
 
 	public void registerDefaultInspector(Class<?> objectType,InspectorPanel inspector) {
@@ -135,7 +140,7 @@ public class InspectorFrame implements ActionListener {
 		int selId = mObjectSelection.getSelectedIndex();
 		if(selId<0 || selId>=mInspectedObjects.size()) {
 			if(mActiveInspector!=null)
-				mPanel.remove(mActiveInspector.getPanel());
+				mPanel.remove(mActiveInspector.getComponent());
 			mActiveInspector = null;
 			return;
 		}
@@ -143,8 +148,8 @@ public class InspectorFrame implements ActionListener {
 		InspectorPanel insp = oi.mInspector;
 		if(insp!=mActiveInspector) {
 			if(mActiveInspector!=null)
-				mPanel.remove(mActiveInspector.getPanel());
-			mPanel.add(insp.getPanel(),BorderLayout.CENTER);
+				mPanel.remove(mActiveInspector.getComponent());
+			mPanel.add(insp.getComponent(),BorderLayout.CENTER);
 			mActiveInspector = insp;
 		}
 		mActiveInspector.setValues(oi.mObject);

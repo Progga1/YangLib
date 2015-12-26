@@ -1,11 +1,11 @@
 package yang.pc.tools.runtimeproperties;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Component;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import yang.util.YangList;
 
@@ -15,6 +15,7 @@ public class InspectorPanel {
 	protected JPanel mPropertiesPanel;
 	protected InspectorFrame mFrame;
 	protected InspectorManager mManager;
+	protected JScrollPane mScrollPane;
 	protected YangList<InspectorProperty> mComponents = new YangList<InspectorProperty>();
 
 	protected InspectorPanel(InspectorFrame frame) {
@@ -26,6 +27,7 @@ public class InspectorPanel {
 		mPropertiesPanel = new JPanel();
 		mPropertiesPanel.setLayout(new BoxLayout(mPropertiesPanel,BoxLayout.Y_AXIS));
 		mTopLevelPanel.add(mPropertiesPanel,BorderLayout.NORTH);
+		mScrollPane = new JScrollPane(mTopLevelPanel);
 	}
 
 	public void setVisible(boolean visible) {
@@ -61,15 +63,16 @@ public class InspectorPanel {
 	}
 
 	public int getCaptionWidth() {
-		return 160;
+		return InspectorGUIDefinitions.DEFAULT_CAPTION_WIDTH;
 	}
 
 	public int getDefaultComponentHeight() {
-		return 24;
+		return InspectorGUIDefinitions.DEFAULT_COMPONENT_HEIGHT;
 	}
 
-	public JPanel getPanel() {
-		return mTopLevelPanel;
+	public Component getComponent() {
+//		return mTopLevelPanel;
+		return mScrollPane;
 	}
 
 	public void setValues(InspectionInterface object) {
