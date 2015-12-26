@@ -3,6 +3,7 @@ package yang.pc.tools.runtimeproperties;
 import java.util.HashMap;
 
 import yang.pc.tools.runtimeproperties.components.PropertyCheckBox;
+import yang.pc.tools.runtimeproperties.components.PropertyTextField;
 
 public class RuntimePropertiesManager {
 
@@ -10,6 +11,7 @@ public class RuntimePropertiesManager {
 
 	public RuntimePropertiesManager() {
 		registerType(Boolean.class,PropertyCheckBox.class);
+		registerType(String.class,PropertyTextField.class);
 	}
 
 	public void registerType(Class<?> type,Class<? extends RuntimePropertyComponent> component) {
@@ -22,6 +24,8 @@ public class RuntimePropertiesManager {
 
 	public RuntimePropertyComponent createDefaultComponentInstance(Class<?> type) {
 		Class<? extends RuntimePropertyComponent> compClass = getDefaultComponent(type);
+		if(compClass==null)
+			return null;
 		RuntimePropertyComponent component;
 		try {
 			component = compClass.newInstance();
@@ -37,8 +41,8 @@ public class RuntimePropertiesManager {
 		return frame;
 	}
 
-	public RuntimePropertiesInspector createInspector() {
-		return new RuntimePropertiesInspector(this);
+	public RuntimePropertiesInspector createInspector(RuntimePropertiesFrame frame) {
+		return new RuntimePropertiesInspector(frame);
 	}
 
 }

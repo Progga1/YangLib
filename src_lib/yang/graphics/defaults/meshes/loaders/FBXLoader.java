@@ -296,6 +296,7 @@ public class FBXLoader extends YangSceneLoader {
 					mLimbObjects.add(limbObj);
 				}else if(objType==OBJ_MESH) {
 					newObj = new MeshObject();
+					newObj.mName = name;
 					meshObj = (MeshObject)newObj;
 					meshObj.mMesh = startLoadingMesh();
 					mMeshObjects.add(meshObj);

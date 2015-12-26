@@ -3,16 +3,21 @@ package yang.pc.tools.runtimeproperties.components;
 import java.awt.Component;
 
 import javax.swing.JCheckBox;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import yang.pc.tools.runtimeproperties.InspectorGUIDefinitions;
 import yang.pc.tools.runtimeproperties.RuntimePropertyComponent;
 
-public class PropertyCheckBox extends RuntimePropertyComponent {
+public class PropertyCheckBox extends RuntimePropertyComponent implements ChangeListener {
 
 	private JCheckBox mCheckBox;
 
 	@Override
 	protected void postInit() {
 		mCheckBox = new JCheckBox();
+		mCheckBox.addChangeListener(this);
+		mCheckBox.setBackground(InspectorGUIDefinitions.CL_VALUE_DEFAULT_BACKGROUND);
 	}
 
 	@Override
@@ -31,8 +36,8 @@ public class PropertyCheckBox extends RuntimePropertyComponent {
 	}
 
 	@Override
-	protected void setEnabled(boolean enabled) {
-		mCheckBox.setEnabled(enabled);
+	public void stateChanged(ChangeEvent ev) {
+		setChanged();
 	}
 
 }

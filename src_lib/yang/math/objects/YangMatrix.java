@@ -1007,6 +1007,14 @@ public class YangMatrix {
 		return (float)Math.sqrt(mValues[8]*mValues[8] + mValues[9]*mValues[9] + mValues[10]*mValues[10]);
 	}
 
+	public void getScale(Vector3f target) {
+		target.set(
+				(float)Math.sqrt(mValues[0]*mValues[0] + mValues[1]*mValues[1] + mValues[2]*mValues[2]),
+				(float)Math.sqrt(mValues[4]*mValues[4] + mValues[5]*mValues[5] + mValues[6]*mValues[6]),
+				(float)Math.sqrt(mValues[8]*mValues[8] + mValues[9]*mValues[9] + mValues[10]*mValues[10])
+				);
+	}
+
 	public void transpose() {
 		asTransposed(mBackMatrix);
 		mValues = mBackMatrix;
@@ -1030,5 +1038,4 @@ public class YangMatrix {
 	public void clean() {
 		clean(0.000001f);
 	}
-
 }

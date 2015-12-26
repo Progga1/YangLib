@@ -187,4 +187,20 @@ public abstract class AbstractResourceManager {
 		return new File(resFilename);
 	}
 
+	public static String extractNameFromFilename(String filename) {
+		if(filename==null)
+			return null;
+		int startI = filename.lastIndexOf("/");
+		if(startI<0)
+			startI = filename.lastIndexOf("\\");
+		if(startI<0)
+			startI = 0;
+		if(startI>=filename.length()-1)
+			return null;
+		int endI = filename.lastIndexOf(".");
+		if(endI<0)
+			endI = filename.length();
+		return filename.substring(startI+1,endI);
+	}
+
 }

@@ -14,8 +14,6 @@ public class RuntimePropertyCaption extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Border paddingBorder = BorderFactory.createEmptyBorder(6,6,6,6);
-
 	private RuntimePropertiesInspector mRTPPanel;
 	public JLabel mCaption;
 //	private JPanel mPanel;
@@ -33,15 +31,16 @@ public class RuntimePropertyCaption extends JPanel {
 		add(rtpComponent.getComponent(),BorderLayout.CENTER);
 		mCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		mCaption.setVerticalAlignment(SwingConstants.CENTER);
-		mCaption.setBorder(paddingBorder);
-		setBackground(Color.yellow);
+		mCaption.setBorder(InspectorGUIDefinitions.PADDING_BORDER);
+		setBackground(InspectorGUIDefinitions.CL_LABEL_BACKGROUND);
+		setBorder(InspectorGUIDefinitions.PROPERTY_BORDER);
 		refreshLayout();
 	}
 
 	public void refreshLayout() {
 		setCaption(mRTPComponent.mName);
 		mCaption.setBackground(Color.RED);
-		mCaption.setPreferredSize(new Dimension(mRTPPanel.getDefaultCaptionWidth(),mRTPPanel.getDefaultComponentHeight()));
+		mCaption.setPreferredSize(new Dimension(mRTPPanel.getCaptionWidth(),mRTPPanel.getDefaultComponentHeight()));
 	}
 
 	public void setCaption(String caption) {

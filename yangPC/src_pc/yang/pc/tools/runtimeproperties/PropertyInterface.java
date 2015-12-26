@@ -2,7 +2,8 @@ package yang.pc.tools.runtimeproperties;
 
 public interface PropertyInterface {
 
+	public String getName();
 	public Object getProperty(String propertyName);
-	public void setProperty(String propertyName,Object value);
+	public Object setProperty(String propertyName,Object value);
 
 }

@@ -57,6 +57,7 @@ public class YangMesh {
 	public YangList<YangMaterialSection> mMaterialSections;
 
 	//SETTINGS
+	public String mName = "Mesh";
 	public boolean mDrawBackToFront = false;
 	protected final MeshMaterialHandles mHandles;
 	public TextureProperties mTextureProperties;

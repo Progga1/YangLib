@@ -8,6 +8,7 @@ import yang.graphics.model.material.YangMaterial;
 import yang.graphics.model.material.YangMaterialSet;
 import yang.graphics.textures.TextureProperties;
 import yang.math.objects.YangMatrix;
+import yang.systemdependent.AbstractResourceManager;
 import yang.util.filereader.TokenReader;
 
 public class OBJLoader extends YangSceneLoader {
@@ -149,6 +150,12 @@ public class OBJLoader extends YangSceneLoader {
 		finishLoadingMesh(useNormals,staticMesh);
 
 		return mMesh;
+	}
+
+	public YangMesh loadOBJ(String filename,YangMatrix transform,boolean useNormals,boolean staticMesh) throws IOException {
+		YangMesh result = loadOBJ(mGraphics.mTranslator.mGFXLoader.mResources.getAssetInputStream(filename),transform,useNormals,staticMesh);
+		result.mName = AbstractResourceManager.extractNameFromFilename(filename);
+		return result;
 	}
 
 	public void draw() {

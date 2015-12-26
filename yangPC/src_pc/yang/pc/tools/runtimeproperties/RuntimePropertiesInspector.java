@@ -13,11 +13,13 @@ public class RuntimePropertiesInspector {
 
 	protected JPanel mTopLevelPanel;
 	protected JPanel mPropertiesPanel;
+	protected RuntimePropertiesFrame mFrame;
 	protected RuntimePropertiesManager mManager;
 	protected YangList<RuntimePropertyCaption> mComponents = new YangList<RuntimePropertyCaption>();
 
-	protected RuntimePropertiesInspector(RuntimePropertiesManager manager) {
-		mManager = manager;
+	protected RuntimePropertiesInspector(RuntimePropertiesFrame frame) {
+		mManager = frame.mManager;
+		mFrame = frame;
 //		mLayout = new FlowLayout(FlowLayout.LEADING,5,5);
 		mTopLevelPanel = new JPanel();
 		mTopLevelPanel.setLayout(new BorderLayout());
@@ -35,7 +37,7 @@ public class RuntimePropertiesInspector {
 		for(RuntimePropertyCaption component:mComponents) {
 			mPropertiesPanel.add(component);
 		}
-		mTopLevelPanel.setBackground(Color.blue);
+		mTopLevelPanel.setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 	}
 
 	public void registerPropertyCostum(String name,Class<? extends RuntimePropertyComponent> componentType) {
@@ -52,11 +54,14 @@ public class RuntimePropertiesInspector {
 	}
 
 	public void registerProperty(String name,Class<?> type) {
-		registerPropertyCostum(name,mManager.getDefaultComponent(type));
+		Class<? extends RuntimePropertyComponent> comp = mManager.getDefaultComponent(type);
+		if(comp==null)
+			throw new RuntimeException("No default component for type: "+type.getName());
+		registerPropertyCostum(name,comp);
 	}
 
-	public int getDefaultCaptionWidth() {
-		return 180;
+	public int getCaptionWidth() {
+		return 160;
 	}
 
 	public int getDefaultComponentHeight() {
