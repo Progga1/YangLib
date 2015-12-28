@@ -22,7 +22,7 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 	@Override
 	protected void postInit() {
 		mNumTextField = new NumTextField();
-		mNumTextField.addActionListener(this);
+		mNumTextField.setActionListener(this);
 	}
 
 	@Override
