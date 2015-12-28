@@ -1,13 +1,14 @@
 package yang.pc.tools.runtimeinspectors.components;
 
-import java.awt.Container;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFormattedTextField;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
-public class NumTextField extends Container {
+public class NumTextField extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 

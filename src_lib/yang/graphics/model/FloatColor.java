@@ -31,6 +31,10 @@ public class FloatColor extends Quadruple {
 		set(red,green,blue,alpha);
 	}
 
+	public FloatColor(double[] values) {
+		set((float)values[0],(float)values[1],(float)values[2],(float)values[3]);
+	}
+
 	public FloatColor(float red,float green,float blue) {
 		this(red,green,blue,1);
 	}

@@ -11,8 +11,6 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 	public NumTextField mNumTextField;
 	public double mDefaultValue;
 
-	private boolean mDoubleMode = false;
-
 	public PropertyFloatNum(double defaultVal) {
 		mDefaultValue = defaultVal;
 	}
@@ -28,32 +26,33 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 	}
 
 	@Override
-	protected void postSetValue(Object value) {
-		mDoubleMode = value instanceof Double;
-		if(mDoubleMode) {
-			mNumTextField.setDouble((Double)value);
-		}else{
-			mNumTextField.setFloat((Float)value);
-		}
-	}
-
-	@Override
-	protected Object getValue() {
-		if(mDoubleMode) {
-			return mNumTextField.getDouble(0);
-		}else{
-			return mNumTextField.getFloat(0);
-		}
-	}
-
-	@Override
 	public Component getComponent() {
 		return mNumTextField;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		setChanged();
+		notifyValueUserInput();
+	}
+
+	@Override
+	public float getFloat() {
+		return mNumTextField.getFloat(0);
+	}
+
+	@Override
+	public void setFloat(float value) {
+		mNumTextField.setFloat(value);
+	}
+
+	@Override
+	public double getDouble() {
+		return mNumTextField.getDouble(0);
+	}
+
+	@Override
+	public void setDouble(double value) {
+		mNumTextField.setDouble(value);
 	}
 
 }

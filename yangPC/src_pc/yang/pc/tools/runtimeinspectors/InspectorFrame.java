@@ -126,6 +126,7 @@ public class InspectorFrame implements ActionListener {
 			return;
 		if(mRefreshingLayout)
 			return;
+
 		boolean refreshAll = false;
 		for(ObjectAndInspector elem:mInspectedObjects) {
 			if(elem.mOrigName!=elem.mObject.getName()) {
@@ -137,23 +138,24 @@ public class InspectorFrame implements ActionListener {
 		if(refreshAll) {
 			refreshLayout();
 		}
-		int selId = mObjectSelection.getSelectedIndex();
-		if(selId<0 || selId>=mInspectedObjects.size()) {
+		int selId = mObjectSelection.getSelectedIndex()-1;
+		boolean objSel = selId>-1;
+		ObjectAndInspector oi = objSel?mInspectedObjects.get(selId):null;
+		InspectorPanel insp = objSel?oi.mInspector:null;
+		boolean changedObject = insp!=mActiveInspector;
+		if(changedObject) {
 			if(mActiveInspector!=null)
 				mMainPanel.remove(mActiveInspector.getComponent());
-			mActiveInspector = null;
-			return;
-		}
-		ObjectAndInspector oi = mInspectedObjects.get(selId);
-		InspectorPanel insp = oi.mInspector;
-		if(insp!=mActiveInspector) {
-			if(mActiveInspector!=null)
-				mMainPanel.remove(mActiveInspector.getComponent());
-			mMainPanel.add(insp.getComponent(),BorderLayout.CENTER);
+			if(insp!=null)
+				mMainPanel.add(insp.getComponent(),BorderLayout.CENTER);
 			mActiveInspector = insp;
 		}
-		mActiveInspector.setValues(oi.mObject);
-		mFrame.setVisible(true);
+
+		if(mActiveInspector!=null)
+			mActiveInspector.setValuesByObject(oi.mObject);
+
+		if(changedObject)
+			mFrame.setVisible(true);
 		mFrame.repaint();
 	}
 
@@ -162,6 +164,7 @@ public class InspectorFrame implements ActionListener {
 			return;
 		mRefreshingLayout = true;
 		mObjectSelection.removeAllItems();
+		mObjectSelection.addItem("<none>");
 		for(ObjectAndInspector object:mInspectedObjects) {
 			mObjectSelection.addItem(object.mNameOrAlias);
 		}

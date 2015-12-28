@@ -9,29 +9,38 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 
 	public PropertyVector3(float defaultVal) {
 		super(3,defaultVal);
+		mValueRef = mVectorData;
 	}
 
 	public PropertyVector3() {
 		super(3);
+		mValueRef = mVectorData;
 	}
 
 	@Override
-	protected void postSetValue(Object value) {
-		Point3f pnt = (Point3f)value;
-		mTextFields[0].setFloat(pnt.mX);
-		mTextFields[1].setFloat(pnt.mY);
-		mTextFields[2].setFloat(pnt.mZ);
+	protected void postValueChanged() {
+		mTextFields[0].setFloat(mVectorData.mX);
+		mTextFields[1].setFloat(mVectorData.mY);
+		mTextFields[2].setFloat(mVectorData.mZ);
 	}
 
 	@Override
-	protected Object getValue() {
-
+	public void refreshValue() {
 		mVectorData.set(
 				mTextFields[0].getFloat((float)mDefaultVals[0]),
 				mTextFields[1].getFloat((float)mDefaultVals[1]),
 				mTextFields[2].getFloat((float)mDefaultVals[2])
 				);
+	}
+
+	@Override
+	public Object getValueReference() {
 		return mVectorData;
+	}
+
+	@Override
+	public void setValueFrom(Object value) {
+		mVectorData.set((Point3f)value);
 	}
 
 }

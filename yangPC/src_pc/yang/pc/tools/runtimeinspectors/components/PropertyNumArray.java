@@ -18,42 +18,54 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 		super(elemCount);
 	}
 
-	@Override
-	protected void postSetValue(Object value) {
-		if(value instanceof float[]) {
-			mDoubleMode = false;
-			float[] vals = (float[])value;
-			for(int i=0;i<mDefaultVals.length;i++) {
-				mTextFields[i].setFloat(vals[i]);
-			}
-		}else if(value instanceof double[]) {
-			mDoubleMode = true;
-			double[] vals = (double[])value;
-			for(int i=0;i<mDefaultVals.length;i++) {
-				mTextFields[i].setDouble(vals[i]);
-			}
-		}else
-			throw new RuntimeException("Invalid array type");
+	public PropertyNumArray setDoubleMode() {
+		mDoubleMode = true;
+		return this;
 	}
 
 	@Override
-	protected Object getValue() {
+	public void refreshValue() {
 		if(mDoubleMode) {
 			if(mDoubleValues==null)
 				mDoubleValues = new double[mDefaultVals.length];
 			for(int i=0;i<mDoubleValues.length;i++) {
 				mDoubleValues[i] = mTextFields[i].getDouble(mDefaultVals[i]);
 			}
-			return mDoubleValues;
+
 		}else{
 			if(mFloatValues==null)
 				mFloatValues = new float[mDefaultVals.length];
 			for(int i=0;i<mFloatValues.length;i++) {
 				mFloatValues[i] = mTextFields[i].getFloat((float)mDefaultVals[i]);
 			}
-			return mFloatValues;
 		}
+	}
 
+	@Override
+	public Object getValueReference() {
+		if(mDoubleMode)
+			return mDoubleValues;
+		else
+			return mFloatValues;
+	}
+
+	@Override
+	protected void postValueChanged() {
+		if(mDoubleMode) {
+			if(mDoubleValues==null)
+				mDoubleValues = new double[mDefaultVals.length];
+			mValueRef = mDoubleValues;
+			for(int i=0;i<mDefaultVals.length;i++) {
+				mTextFields[i].setDouble(mDoubleValues[i]);
+			}
+		}else {
+			if(mFloatValues==null)
+				mFloatValues = new float[mDefaultVals.length];
+			mValueRef = mFloatValues;
+			for(int i=0;i<mDefaultVals.length;i++) {
+				mTextFields[i].setFloat(mFloatValues[i]);
+			}
+		}
 	}
 
 }

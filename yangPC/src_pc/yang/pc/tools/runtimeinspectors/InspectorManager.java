@@ -2,9 +2,11 @@ package yang.pc.tools.runtimeinspectors;
 
 import java.util.HashMap;
 
+import yang.graphics.model.FloatColor;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.pc.tools.runtimeinspectors.components.PropertyCheckBox;
+import yang.pc.tools.runtimeinspectors.components.PropertyColorNums;
 import yang.pc.tools.runtimeinspectors.components.PropertyFloatNum;
 import yang.pc.tools.runtimeinspectors.components.PropertyTextField;
 import yang.pc.tools.runtimeinspectors.components.PropertyVector3;
@@ -20,6 +22,7 @@ public class InspectorManager {
 		registerType(Double.class,PropertyFloatNum.class);
 		registerType(Point3f.class,PropertyVector3.class);
 		registerType(Vector3f.class,PropertyVector3.class);
+		registerType(FloatColor.class,PropertyColorNums.class);
 	}
 
 	public void registerType(Class<?> type,Class<? extends InspectorComponent> component) {

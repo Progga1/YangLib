@@ -17,6 +17,7 @@ public class InspectorPanel {
 	protected InspectorManager mManager;
 	protected JScrollPane mScrollPane;
 	protected YangList<InspectorProperty> mComponents = new YangList<InspectorProperty>();
+	protected InspectionInterface mCurObject = null;
 
 	protected InspectorPanel(InspectorFrame frame) {
 		mManager = frame.mManager;
@@ -63,7 +64,7 @@ public class InspectorPanel {
 //	}
 
 	public void registerProperty(String name,InspectorComponent inspectorComponent) {
-		inspectorComponent.init(this, name);
+		inspectorComponent.init(this, name, false);
 		InspectorProperty rtpHolder = new InspectorProperty(this,inspectorComponent);
 		mComponents.add(rtpHolder);
 		refreshLayout();
@@ -74,6 +75,20 @@ public class InspectorPanel {
 		if(comp==null)
 			throw new RuntimeException("No default component for type: "+type.getName());
 		registerProperty(name,comp);
+	}
+
+	public void registerPropertyReferenced(String name,InspectorComponent inspectorComponent) {
+		inspectorComponent.init(this, name, true);
+		InspectorProperty rtpHolder = new InspectorProperty(this,inspectorComponent);
+		mComponents.add(rtpHolder);
+		refreshLayout();
+	}
+
+	public void registerPropertyReferenced(String name,Class<?> type) {
+		InspectorComponent comp = mManager.createDefaultComponentInstance(type);
+		if(comp==null)
+			throw new RuntimeException("No default component for type: "+type.getName());
+		registerPropertyReferenced(name,comp);
 	}
 
 	public int getCaptionWidth() {
@@ -89,10 +104,18 @@ public class InspectorPanel {
 		return mScrollPane;
 	}
 
-	public void setValues(InspectionInterface object) {
-		for(InspectorProperty component:mComponents) {
-			component.getRTPComponent().setValueByObject(object);
+	public void setValuesByObject(InspectionInterface object) {
+		if(mCurObject==object) {
+			for(InspectorProperty component:mComponents) {
+				if(!component.getRTPComponent().isReferenced() || component.getRTPComponent().mWasChanged)
+					component.getRTPComponent().update(object,false);
+			}
+		}else{
+			for(InspectorProperty component:mComponents) {
+				component.getRTPComponent().update(object,true);
+			}
 		}
+		mCurObject = object;
 	}
 
 }

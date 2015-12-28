@@ -21,12 +21,12 @@ public class PropertyCheckBox extends InspectorComponent implements ChangeListen
 	}
 
 	@Override
-	protected void postSetValue(Object value) {
-		mCheckBox.setSelected((Boolean)value);
+	public void setBool(boolean checked) {
+		mCheckBox.setSelected(checked);
 	}
 
 	@Override
-	protected Object getValue() {
+	public boolean getBool() {
 		return mCheckBox.isSelected();
 	}
 
@@ -37,7 +37,7 @@ public class PropertyCheckBox extends InspectorComponent implements ChangeListen
 
 	@Override
 	public void stateChanged(ChangeEvent ev) {
-		setChanged();
+		notifyValueUserInput();
 	}
 
 }

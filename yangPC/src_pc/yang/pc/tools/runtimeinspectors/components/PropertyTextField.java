@@ -4,9 +4,11 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
+import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 
 public class PropertyTextField  extends InspectorComponent implements ActionListener {
 
@@ -16,16 +18,7 @@ public class PropertyTextField  extends InspectorComponent implements ActionList
 	protected void postInit() {
 		mTextField = new JTextField();
 		mTextField.addActionListener(this);
-	}
-
-	@Override
-	protected void postSetValue(Object value) {
-		mTextField.setText((String)value);
-	}
-
-	@Override
-	protected Object getValue() {
-		return mTextField.getText();
+		mTextField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InspectorGUIDefinitions.CL_VALUE_DEFAULT_BACKGROUND, InspectorGUIDefinitions.COMPONENT_PADDING),mTextField.getBorder()));
 	}
 
 	@Override
@@ -35,7 +28,16 @@ public class PropertyTextField  extends InspectorComponent implements ActionList
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		setChanged();
+		notifyValueUserInput();
+	}
+
+	@Override
+	public String getString() {
+		return mTextField.getText();
+	}
+
+	public void setString(String value) {
+		mTextField.setText(value);
 	}
 
 }

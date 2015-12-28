@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
+import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 
 public abstract class PropertyNumArrayBase extends InspectorComponent implements ActionListener {
 
@@ -38,6 +39,7 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 		mTextFields = new NumTextField[mDefaultVals.length];
 		for(int i=0;i<mTextFields.length;i++) {
 			mTextFields[i] = new NumTextField();
+			mTextFields[i].setBorder(InspectorGUIDefinitions.COMPONENT_PADDING_BORDER);
 			mPanel.add(mTextFields[i]);
 			mTextFields[i].addActionListener(this);
 		}
@@ -59,7 +61,7 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		setChanged();
+		notifyValueUserInput();
 	}
 
 }

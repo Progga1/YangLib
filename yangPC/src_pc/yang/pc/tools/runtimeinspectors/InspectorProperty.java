@@ -3,8 +3,10 @@ package yang.pc.tools.runtimeinspectors;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -14,33 +16,38 @@ public class InspectorProperty extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private InspectorPanel mRTPPanel;
+	private InspectorPanel mInspector;
 	public JLabel mCaption;
-//	private JPanel mPanel;
+	private JPanel mCaptionPanel;
 	private BorderLayout mLayout;
-	private InspectorComponent mRTPComponent;
+	private InspectorComponent mInspectorComponent;
 
 	public InspectorProperty(InspectorPanel panel,InspectorComponent rtpComponent) {
-		mRTPPanel = panel;
-		mRTPComponent = rtpComponent;
+		mInspector = panel;
+		mInspectorComponent = rtpComponent;
 //		mPanel = new JPanel();
 		mLayout = new BorderLayout();
 		setLayout(mLayout);
+		mCaptionPanel = new JPanel();
+//		mCaptionPanel.setLayout(new BoxLayout(mCaptionPanel,BoxLayout.PAGE_AXIS));
+		mCaptionPanel.setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+		mCaptionPanel.setBackground(InspectorGUIDefinitions.CL_LABEL_BACKGROUND);
 		mCaption = new JLabel(rtpComponent.getName());
-		add(mCaption,BorderLayout.WEST);
+		mCaptionPanel.add(mCaption);
+		add(mCaptionPanel,BorderLayout.WEST);
 		add(rtpComponent.getComponent(),BorderLayout.CENTER);
-		mCaption.setHorizontalAlignment(SwingConstants.RIGHT);
-		mCaption.setVerticalAlignment(SwingConstants.CENTER);
-		mCaption.setBorder(InspectorGUIDefinitions.PADDING_BORDER);
-		setBackground(InspectorGUIDefinitions.CL_LABEL_BACKGROUND);
+//		mCaption.setHorizontalAlignment(SwingConstants.RIGHT);
+	//	mCaption.setVerticalAlignment(SwingConstants.CENTER);
+		mCaptionPanel.setBorder(InspectorGUIDefinitions.PADDING_BORDER);
+		setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 		setBorder(InspectorGUIDefinitions.PROPERTY_BORDER);
 		refreshLayout();
 	}
 
 	public void refreshLayout() {
-		setCaption(mRTPComponent.mName);
-		mCaption.setBackground(Color.RED);
-		mCaption.setPreferredSize(new Dimension(mRTPPanel.getCaptionWidth(),mRTPPanel.getDefaultComponentHeight()));
+		setCaption(mInspectorComponent.mName);
+		mCaptionPanel.setPreferredSize(new Dimension(mInspector.getCaptionWidth(),mInspector.getDefaultComponentHeight()));
+//		mCaption.setPreferredSize(new Dimension(mInspector.getCaptionWidth(),mInspector.getDefaultComponentHeight()));
 	}
 
 	public void setCaption(String caption) {
@@ -48,7 +55,7 @@ public class InspectorProperty extends JPanel {
 	}
 
 	public InspectorComponent getRTPComponent() {
-		return mRTPComponent;
+		return mInspectorComponent;
 	}
 
 }
