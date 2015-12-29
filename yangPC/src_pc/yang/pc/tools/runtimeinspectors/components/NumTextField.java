@@ -2,6 +2,7 @@ package yang.pc.tools.runtimeinspectors.components;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -11,11 +12,12 @@ import java.text.NumberFormat;
 import javax.swing.BorderFactory;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 
-public class NumTextField extends JPanel implements MouseMotionListener,MouseListener {
+public class NumTextField extends JPanel implements MouseMotionListener,MouseListener,ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,6 +31,9 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	private int mMaxDigits = 5;
 	private double mCurValue;
 	private int mMouseDown = -1;
+	private double mDefaultValue = 0;
+	private double mMinValue = -Double.MAX_VALUE;
+	private double mMaxValue = Double.MAX_VALUE;
 
 	private int mLstX = Integer.MAX_VALUE,mLstY = Integer.MAX_VALUE;
 
@@ -56,7 +61,21 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		this.setMinimumSize(new Dimension(12,0));
 		mTextField.setPreferredSize(new Dimension(12,0));
 		mTextField.setBorder(InspectorGUIDefinitions.TEXT_FIELD_BORDER);
+		mTextField.addActionListener(this);
+		mTextField.setHorizontalAlignment(SwingConstants.RIGHT);
 		mScrollWidget.setBorder(BORDER);
+	}
+
+	public void setMinValue(double minValue) {
+		mMinValue = minValue;
+	}
+
+	public void setMaxValue(double maxValue) {
+		mMaxValue = maxValue;
+	}
+
+	public void setDefaultValue(double defaultValue) {
+		mDefaultValue = defaultValue;
 	}
 
 	public void setMaxDigits(int maxDigits) {
@@ -76,44 +95,35 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mTextField.addActionListener(listener);
 	}
 
+	private void setVal(double val) {
+		if(val>mMaxValue)
+			mCurValue = mMaxValue;
+		else if(val<mMinValue)
+			mCurValue = mMinValue;
+		else
+			mCurValue = val;
+	}
+
 	public void setDouble(double val) {
 		if(val==mCurValue)
 			return;
-		mCurValue = val;
-		mTextField.setText(maxDigitsString(Double.toString(val),mMaxDigits));
+		setVal(val);
+		mTextField.setText(maxDigitsString(Double.toString(mCurValue),mMaxDigits));
 	}
 
 	public void setFloat(float val) {
 		if(val==mCurValue)
 			return;
-		mCurValue = val;
-		mTextField.setText(maxDigitsString(Float.toString(val),mMaxDigits));
+		setVal(val);
+		mTextField.setText(maxDigitsString(Double.toString(mCurValue),mMaxDigits));
 	}
 
-	public double getDouble(double defaultVal) {
-		double result;
-		String text = mTextField.getText();
-		if(text.equals(""))
-			return defaultVal;
-		try{
-			result = Double.parseDouble(text);
-		}catch(NumberFormatException ex) {
-			return defaultVal;
-		}
-		return result;
+	public double getDouble() {
+		return mCurValue;
 	}
 
-	public float getFloat(float defaultVal) {
-		float result;
-		String text = mTextField.getText();
-		if(text.equals(""))
-			return defaultVal;
-		try{
-			result = Float.parseFloat(text);
-		}catch(NumberFormatException ex) {
-			return defaultVal;
-		}
-		return result;
+	public float getFloat() {
+		return (float)mCurValue;
 	}
 
 	@Override
@@ -181,6 +191,24 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		mMouseDown = -1;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		String text = mTextField.getText();
+		if(text.equals("")) {
+//			mCurValue = mDefaultValue;
+		}else{
+			try{
+				mCurValue = Double.parseDouble(text);
+				if(mCurValue<mMinValue)
+					setDouble(mMinValue);
+				else if(mCurValue>mMaxValue)
+					setDouble(mMaxValue);
+			}catch(NumberFormatException ex) {
+//				mCurValue = mDefaultValue;
+			}
+		}
 	}
 
 }

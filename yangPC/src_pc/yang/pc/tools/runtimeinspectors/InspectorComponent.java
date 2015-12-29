@@ -7,7 +7,6 @@ public abstract class InspectorComponent {
 	public String mName;
 	public InspectorPanel mPropPanel;
 	protected boolean mWasChanged = false;
-	protected Object mValueRef = null;
 	private boolean mReferenced;
 	private boolean mVisible = true;
 
@@ -158,8 +157,9 @@ public abstract class InspectorComponent {
 	}
 
 	public String valueToString() {
-		if(mValueRef!=null)
-			return mValueRef.toString();
+		Object val = getValue();
+		if(val!=null)
+			return val.toString();
 		else
 			return "<unknown>";
 	}

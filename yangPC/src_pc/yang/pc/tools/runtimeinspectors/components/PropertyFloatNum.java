@@ -9,20 +9,31 @@ import yang.pc.tools.runtimeinspectors.InspectorComponent;
 public class PropertyFloatNum extends InspectorComponent implements ActionListener {
 
 	public NumTextField mNumTextField;
-	public double mDefaultValue;
-
-	public PropertyFloatNum(double defaultVal) {
-		mDefaultValue = defaultVal;
-	}
-
-	public PropertyFloatNum() {
-		this(0);
-	}
 
 	@Override
 	protected void postInit() {
 		mNumTextField = new NumTextField();
 		mNumTextField.setActionListener(this);
+	}
+
+	public PropertyFloatNum setDefaultValue(float defaultValue) {
+		mNumTextField.setDefaultValue(defaultValue);
+		return this;
+	}
+
+	public PropertyFloatNum setMinValue(float minValue) {
+		mNumTextField.setMinValue(minValue);
+		return this;
+	}
+
+	public PropertyFloatNum setMaxValue(float maxValue) {
+		mNumTextField.setMaxValue(maxValue);
+		return this;
+	}
+
+	public PropertyFloatNum setMaxDigits(int maxDigits) {
+		mNumTextField.setMaxDigits(maxDigits);
+		return this;
 	}
 
 	@Override
@@ -37,7 +48,7 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 
 	@Override
 	public float getFloat() {
-		return mNumTextField.getFloat(0);
+		return mNumTextField.getFloat();
 	}
 
 	@Override
@@ -47,7 +58,7 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 
 	@Override
 	public double getDouble() {
-		return mNumTextField.getDouble(0);
+		return mNumTextField.getDouble();
 	}
 
 	@Override

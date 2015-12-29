@@ -7,15 +7,18 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 	private FloatColor mColor;
 
 	public PropertyColorNums() {
-		super(4,1);
+		super(4);
 	}
 
 	@Override
 	public void postInit() {
 		super.postInit();
+		setDefaultValue(1);
+		setMaxDigits(3);
+		setMinValue(0);
+		setMaxValue(1);
 		if(!isReferenced()) {
-			mColor = new FloatColor(mDefaultVals);
-			mValueRef = mColor;
+			mColor = new FloatColor(1);
 		}
 	}
 
@@ -30,10 +33,10 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 	@Override
 	public void refreshValue() {
 		mColor.set(
-				mTextFields[0].getFloat((float)mDefaultVals[0]),
-				mTextFields[1].getFloat((float)mDefaultVals[1]),
-				mTextFields[2].getFloat((float)mDefaultVals[2]),
-				mTextFields[3].getFloat((float)mDefaultVals[2])
+				mTextFields[0].getFloat(),
+				mTextFields[1].getFloat(),
+				mTextFields[2].getFloat(),
+				mTextFields[3].getFloat()
 				);
 
 	}

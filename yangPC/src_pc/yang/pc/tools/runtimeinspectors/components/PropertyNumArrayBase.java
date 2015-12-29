@@ -14,35 +14,64 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 
 	protected JPanel mPanel;
 
-	protected double[] mDefaultVals;
 	protected NumTextField[] mTextFields;
-
-	public PropertyNumArrayBase(double... defaultVals) {
-		mDefaultVals = defaultVals;
-	}
-
-	public PropertyNumArrayBase(int elemCount,double defaultVal) {
-		mDefaultVals = new double[elemCount];
-		for(int i=0;i<elemCount;i++) {
-			mDefaultVals[i] = defaultVal;
-		}
-	}
+	protected int mElemCount;
 
 	public PropertyNumArrayBase(int elemCount) {
-		this(elemCount,0);
+		mElemCount = elemCount;
 	}
 
 	@Override
 	protected void postInit() {
 		mPanel = new JPanel();
 		mPanel.setLayout(new GridLayout(1,3));
-		mTextFields = new NumTextField[mDefaultVals.length];
+		mTextFields = new NumTextField[mElemCount];
 		for(int i=0;i<mTextFields.length;i++) {
 			mTextFields[i] = new NumTextField();
 			mTextFields[i].setBorder(InspectorGUIDefinitions.COMPONENT_PADDING_BORDER);
 			mPanel.add(mTextFields[i]);
 			mTextFields[i].setActionListener(this);
 		}
+	}
+
+	public void setDefaultValue(double defaultValue) {
+		for(NumTextField textField:mTextFields) {
+			textField.setDefaultValue(defaultValue);
+		}
+	}
+
+	public void setMinValue(double minValue) {
+		for(NumTextField textField:mTextFields) {
+			textField.setMinValue(minValue);
+		}
+	}
+
+	public void setMaxValue(double maxValue) {
+		for(NumTextField textField:mTextFields) {
+			textField.setMaxValue(maxValue);
+		}
+	}
+
+	public void setMaxDigits(int maxDigits) {
+		for(NumTextField textField:mTextFields) {
+			textField.setMaxDigits(maxDigits);
+		}
+	}
+
+	public void setDefaultValue(int id,double defaultValue) {
+		mTextFields[id].setDefaultValue(defaultValue);
+	}
+
+	public void setMinValue(int id,double minValue) {
+		mTextFields[id].setMinValue(minValue);
+	}
+
+	public void setMaxValue(int id,double maxValue) {
+		mTextFields[id].setMaxValue(maxValue);
+	}
+
+	public void setMaxDigits(int id,int maxDigits) {
+		mTextFields[id].setMaxDigits(maxDigits);
 	}
 
 	@Override

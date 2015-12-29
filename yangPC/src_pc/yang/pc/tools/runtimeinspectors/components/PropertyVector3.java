@@ -5,16 +5,18 @@ import yang.math.objects.Vector3f;
 
 public class PropertyVector3 extends PropertyNumArrayBase {
 
-	private Vector3f mVectorData = new Vector3f();
-
-	public PropertyVector3(float defaultVal) {
-		super(3,defaultVal);
-		mValueRef = mVectorData;
-	}
+	private Vector3f mVectorData;;
 
 	public PropertyVector3() {
 		super(3);
-		mValueRef = mVectorData;
+	}
+
+	@Override
+	protected void postInit() {
+		super.postInit();
+		if(!isReferenced()) {
+			mVectorData = new Vector3f();
+		}
 	}
 
 	@Override
@@ -27,9 +29,9 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 	@Override
 	public void refreshValue() {
 		mVectorData.set(
-				mTextFields[0].getFloat((float)mDefaultVals[0]),
-				mTextFields[1].getFloat((float)mDefaultVals[1]),
-				mTextFields[2].getFloat((float)mDefaultVals[2])
+				mTextFields[0].getFloat(),
+				mTextFields[1].getFloat(),
+				mTextFields[2].getFloat()
 				);
 	}
 
