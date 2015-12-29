@@ -5,7 +5,8 @@ import java.awt.Component;
 public abstract class InspectorComponent {
 
 	public String mName;
-	public InspectorPanel mPropPanel;
+	protected InspectorPanel mPropPanel;
+	protected InspectorComponent mParent = null;
 	protected boolean mWasChanged = false;
 	private boolean mReferenced;
 	private boolean mVisible = true;
@@ -21,6 +22,17 @@ public abstract class InspectorComponent {
 		postInit();
 	}
 
+	public final void init(InspectorComponent parent, String name, Object valueReference) {
+		init(parent.mPropPanel,name,valueReference!=null);
+		if(valueReference!=null)
+			setValueReference(valueReference);
+		setParent(parent);
+	}
+
+	protected void setParent(InspectorComponent parent) {
+		mParent = parent;
+	}
+
 	public String getName() {
 		return mName;
 	}
@@ -29,7 +41,7 @@ public abstract class InspectorComponent {
 
 	}
 
-	protected void refreshValue() {
+	protected void refreshOutValue() {
 
 	}
 
@@ -37,25 +49,17 @@ public abstract class InspectorComponent {
 
 	}
 
-	protected Object getValueReference() {
+	public Object getValueReference() {
 		return null;
 	}
 
 	protected void update(InspectionInterface object,boolean forceUpdate) {
 		if(mWasChanged) {
-			if(mReferenced) {
-				refreshValue();
-			}else{
-				Object val = object.setProperty(mName,this);
-			}
-//			if(val!=null) {
-//				if(mValueRef==null || mValueRef!=val)
-//					setValueFrom(val);
-//				refresh();
-//			}
+			refreshOutValue();
+			if(!mReferenced)
+				object.setProperty(mName,this);
 		}else{
 			if(!hasFocus() || forceUpdate) {
-//				Object val = object.getReferencedProperty(mName);
 				if(mReferenced) {
 					Object reference = object.getReferencedProperty(mName,this);
 					if(reference==null) {
@@ -73,15 +77,6 @@ public abstract class InspectorComponent {
 					object.readProperty(mName,this);
 					postValueChanged();
 				}
-
-//				if(val!=null) {
-//					if(!mEnabled)
-//						setEnabled(true);
-//					postSetValue(val);
-//				}else{
-//					if(mEnabled)
-//						setEnabled(false);
-//				}
 			}
 		}
 		mWasChanged = false;
@@ -101,6 +96,8 @@ public abstract class InspectorComponent {
 
 	protected void notifyValueUserInput() {
 		mWasChanged = true;
+		if(mParent!=null)
+			mParent.notifyValueUserInput();
 	}
 
 	public boolean hasFocus() {
@@ -112,7 +109,7 @@ public abstract class InspectorComponent {
 	}
 
 	public final Object getValue() {
-		refreshValue();
+//		refreshValue();
 		Object reference = getValueReference();
 		if(reference==null)
 			throw new RuntimeException("No object reference in type "+getClass().getName());
@@ -162,6 +159,10 @@ public abstract class InspectorComponent {
 			return val.toString();
 		else
 			return "<unknown>";
+	}
+
+	protected boolean useDefaultCaptionLayout() {
+		return true;
 	}
 
 }

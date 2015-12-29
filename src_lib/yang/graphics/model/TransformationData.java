@@ -57,7 +57,7 @@ public class TransformationData {
 		mPosition.set((minX+maxX)*0.5f,(minY+maxY)*0.5f,(minZ+maxZ)*0.5f);
 		mScale.set(maxX-minX,maxY-minY,maxZ-minZ);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "t;r;s = "+mPosition+";"+mOrientation+";"+mScale;
@@ -67,6 +67,30 @@ public class TransformationData {
 		YangMatrix result = new YangMatrix();
 		getMatrix(result);
 		return result;
+	}
+
+	public void set(TransformationData template) {
+		mPosition.set(template.mPosition);
+		mScale.set(template.mScale);
+		mOrientation.set(template.mOrientation);
+	}
+
+	public void setByMatrix(YangMatrix transform) {
+		transform.getTranslation(mPosition);
+		transform.getScale(mScale);
+		if(mScale.mX==0 || mScale.mY==0 || mScale.mZ==0)
+			mOrientation.setIdentity();
+		else{
+			float dScaleX = 1/mScale.mX;
+			float dScaleY = 1/mScale.mY;
+			float dScaleZ = 1/mScale.mZ;
+			float[] matrix = transform.mValues;
+			mOrientation.setFromTransform(
+					matrix[YangMatrix.M00]*dScaleX, matrix[YangMatrix.M10]*dScaleX, matrix[YangMatrix.M20]*dScaleX,
+					matrix[YangMatrix.M01]*dScaleY, matrix[YangMatrix.M11]*dScaleY, matrix[YangMatrix.M21]*dScaleY,
+					matrix[YangMatrix.M02]*dScaleZ, matrix[YangMatrix.M12]*dScaleZ, matrix[YangMatrix.M22]*dScaleZ
+					);
+		}
 	}
 
 }

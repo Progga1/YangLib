@@ -31,7 +31,7 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 	}
 
 	@Override
-	public void refreshValue() {
+	public void refreshOutValue() {
 		mColor.set(
 				mTextFields[0].getFloat(),
 				mTextFields[1].getFloat(),

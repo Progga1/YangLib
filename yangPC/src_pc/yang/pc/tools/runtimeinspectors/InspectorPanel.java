@@ -3,20 +3,16 @@ package yang.pc.tools.runtimeinspectors;
 import java.awt.BorderLayout;
 import java.awt.Component;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import yang.util.YangList;
 
 public class InspectorPanel {
 
 	protected JPanel mTopLevelPanel;
-	protected JPanel mPropertiesPanel;
+	protected PropertiesPanel mPropertiesPanel;
 	protected InspectorFrame mFrame;
 	protected InspectorManager mManager;
 	protected JScrollPane mScrollPane;
-	protected YangList<InspectorProperty> mComponents = new YangList<InspectorProperty>();
 	protected InspectionInterface mCurObject = null;
 
 	protected InspectorPanel(InspectorFrame frame) {
@@ -25,22 +21,14 @@ public class InspectorPanel {
 //		mLayout = new FlowLayout(FlowLayout.LEADING,5,5);
 		mTopLevelPanel = new JPanel();
 		mTopLevelPanel.setLayout(new BorderLayout());
-		mPropertiesPanel = new JPanel();
-		mPropertiesPanel.setLayout(new BoxLayout(mPropertiesPanel,BoxLayout.Y_AXIS));
+		mPropertiesPanel = new PropertiesPanel(this);
 		mTopLevelPanel.add(mPropertiesPanel,BorderLayout.NORTH);
+		mTopLevelPanel.setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 		mScrollPane = new JScrollPane(mTopLevelPanel);
 	}
 
 	public void setVisible(boolean visible) {
 		mTopLevelPanel.setVisible(visible);
-	}
-
-	protected void refreshLayout() {
-		mPropertiesPanel.removeAll();
-		for(InspectorProperty component:mComponents) {
-			mPropertiesPanel.add(component);
-		}
-		mTopLevelPanel.setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 	}
 
 //	public void registerPropertyCostum(String name,Class<? extends InspectorComponent> componentType) {
@@ -65,9 +53,8 @@ public class InspectorPanel {
 
 	public void registerProperty(String name,InspectorComponent inspectorComponent) {
 		inspectorComponent.init(this, name, false);
-		InspectorProperty rtpHolder = new InspectorProperty(this,inspectorComponent);
-		mComponents.add(rtpHolder);
-		refreshLayout();
+		InspectorItem rtpHolder = new InspectorItem(this,inspectorComponent);
+		mPropertiesPanel.add(rtpHolder);
 	}
 
 	public void registerProperty(String name,Class<?> type) {
@@ -79,9 +66,8 @@ public class InspectorPanel {
 
 	public void registerPropertyReferenced(String name,InspectorComponent inspectorComponent) {
 		inspectorComponent.init(this, name, true);
-		InspectorProperty rtpHolder = new InspectorProperty(this,inspectorComponent);
-		mComponents.add(rtpHolder);
-		refreshLayout();
+		InspectorItem rtpHolder = new InspectorItem(this,inspectorComponent);
+		mPropertiesPanel.add(rtpHolder);
 	}
 
 	public void registerPropertyReferenced(String name,Class<?> type) {
@@ -106,13 +92,13 @@ public class InspectorPanel {
 
 	public void setValuesByObject(InspectionInterface object) {
 		if(mCurObject==object) {
-			for(InspectorProperty component:mComponents) {
-				if(!component.getRTPComponent().isReferenced() || component.getRTPComponent().mWasChanged)
-					component.getRTPComponent().update(object,false);
+			for(InspectorItem component:mPropertiesPanel.getItems()) {
+				if(!component.getInspectorComponent().isReferenced() || component.getInspectorComponent().mWasChanged)
+					component.getInspectorComponent().update(object,false);
 			}
 		}else{
-			for(InspectorProperty component:mComponents) {
-				component.getRTPComponent().update(object,true);
+			for(InspectorItem component:mPropertiesPanel.getItems()) {
+				component.getInspectorComponent().update(object,true);
 			}
 		}
 		mCurObject = object;

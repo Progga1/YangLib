@@ -16,7 +16,7 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 	}
 
 	@Override
-	public void refreshValue() {
+	public void refreshOutValue() {
 		if(mDoubleMode) {
 			if(mDoubleValues==null)
 				mDoubleValues = new double[mElemCount];
@@ -35,10 +35,15 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 
 	@Override
 	public Object getValueReference() {
-		if(mDoubleMode)
+		if(mDoubleMode) {
+			if(mDoubleValues==null)
+				mDoubleValues = new double[mElemCount];
 			return mDoubleValues;
-		else
+		}else{
+			if(mFloatValues==null)
+				mFloatValues = new float[mElemCount];
 			return mFloatValues;
+		}
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import yang.math.objects.Vector3f;
 
 public class PropertyVector3 extends PropertyNumArrayBase {
 
-	private Vector3f mVectorData;;
+	private Point3f mVectorData;
 
 	public PropertyVector3() {
 		super(3);
@@ -27,7 +27,7 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 	}
 
 	@Override
-	public void refreshValue() {
+	public void refreshOutValue() {
 		mVectorData.set(
 				mTextFields[0].getFloat(),
 				mTextFields[1].getFloat(),
@@ -38,6 +38,11 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 	@Override
 	public Object getValueReference() {
 		return mVectorData;
+	}
+
+	@Override
+	protected void setValueReference(Object reference) {
+		mVectorData = (Point3f)reference;
 	}
 
 	@Override
