@@ -22,10 +22,8 @@ public abstract class InspectorComponent {
 		postInit();
 	}
 
-	public final void init(InspectorComponent parent, String name, Object valueReference) {
-		init(parent.mPropPanel,name,valueReference!=null);
-		if(valueReference!=null)
-			setValueReference(valueReference);
+	public final void init(InspectorComponent parent, String name, boolean referenced) {
+		init(parent.mPropPanel,name,referenced);
 		setParent(parent);
 	}
 

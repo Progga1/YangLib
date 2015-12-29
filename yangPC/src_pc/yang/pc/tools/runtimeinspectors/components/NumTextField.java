@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,7 +18,7 @@ import javax.swing.border.Border;
 
 import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 
-public class NumTextField extends JPanel implements MouseMotionListener,MouseListener,ActionListener {
+public class NumTextField extends JPanel implements MouseMotionListener,MouseListener,ActionListener,FocusListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -51,6 +53,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 //		mTextField.setValue(new Float(0));
 		mTextField.setText("0");
 		setLayout(new BorderLayout());
+		mTextField.addFocusListener(this);
 		add(mTextField,BorderLayout.CENTER);
 		add(mScrollWidget,BorderLayout.EAST);
 		setScrollWidgetWidth(10);
@@ -62,6 +65,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mTextField.setBorder(InspectorGUIDefinitions.TEXT_FIELD_BORDER);
 		mTextField.addActionListener(this);
 		mTextField.setHorizontalAlignment(SwingConstants.RIGHT);
+		mTextField.addMouseListener(this);
 		mScrollWidget.setBorder(BORDER);
 	}
 
@@ -161,22 +165,25 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent ev) {
+		if(ev.getClickCount()>1)
+			mTextField.selectAll();
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent ev) {
 
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mouseExited(MouseEvent ev) {
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent ev) {
+		if(ev.getSource()!=mScrollWidget)
+			return;
 		mLstX = Integer.MAX_VALUE;
 		mLstY = Integer.MAX_VALUE;
 		if(ev.getButton()==MouseEvent.BUTTON1)
@@ -188,12 +195,13 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent ev) {
+		if(ev.getSource()!=mScrollWidget)
+			return;
 		mMouseDown = -1;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent ev) {
+	private void updateCurValue() {
 		String text = mTextField.getText();
 		if(text.equals("")) {
 //			mCurValue = mDefaultValue;
@@ -208,6 +216,22 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 //				mCurValue = mDefaultValue;
 			}
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		updateCurValue();
+	}
+
+	@Override
+	public void focusGained(FocusEvent arg0) {
+//		mTextField.selectAll();
+	}
+
+	@Override
+	public void focusLost(FocusEvent arg0) {
+		updateCurValue();
+		this.mListener.actionPerformed(null);
 	}
 
 }
