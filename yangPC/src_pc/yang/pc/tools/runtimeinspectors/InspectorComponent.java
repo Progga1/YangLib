@@ -96,6 +96,8 @@ public abstract class InspectorComponent {
 		mWasChanged = true;
 		if(mParent!=null)
 			mParent.notifyValueUserInput();
+		else
+			mPropPanel.notifyValueUserInput();
 	}
 
 	public boolean hasFocus() {

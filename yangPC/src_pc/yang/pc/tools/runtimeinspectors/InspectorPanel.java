@@ -104,4 +104,8 @@ public class InspectorPanel {
 		mCurObject = object;
 	}
 
+	public void notifyValueUserInput() {
+		mFrame.notifyValueUserInput();
+	}
+
 }

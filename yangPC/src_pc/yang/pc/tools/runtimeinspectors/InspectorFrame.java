@@ -15,6 +15,8 @@ import yang.util.YangList;
 
 public class InspectorFrame implements ActionListener {
 
+	public float mUpdateMinTime = 0;
+
 	protected InspectorManager mManager;
 	private JFrame mFrame;
 	private JPanel mMainPanel;
@@ -25,6 +27,7 @@ public class InspectorFrame implements ActionListener {
 	private YangList<ObjectAndInspector> mInspectedObjects;
 	private HashMap<Class<?>,InspectorPanel> mDefaultInspectors = new HashMap<Class<?>,InspectorPanel>(32);
 	private boolean mRefreshingLayout = false;
+	private double mUpdateTimer = 0;
 
 	private class ObjectAndInspector {
 
@@ -119,7 +122,11 @@ public class InspectorFrame implements ActionListener {
 		addObjectToInspect(object,inspector);
 	}
 
-	public void refresh() {
+	public void refresh(float deltaTime) {
+		if((mUpdateTimer-=deltaTime)<=0) {
+			mUpdateTimer = mUpdateMinTime;
+		}else
+			return;
 		if(mFrame!=null && !mFrame.isVisible())
 			return;
 		if(mInspectedObjects.size()==0)
@@ -159,6 +166,10 @@ public class InspectorFrame implements ActionListener {
 		mFrame.repaint();
 	}
 
+	public void refresh() {
+		refresh(10000);
+	}
+
 	public void refreshLayout() {
 		if(mRefreshingLayout)
 			return;
@@ -178,6 +189,10 @@ public class InspectorFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ev) {
 		refresh();
+	}
+
+	public void notifyValueUserInput() {
+		mUpdateTimer = -1;
 	}
 
 }
