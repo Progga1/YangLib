@@ -42,6 +42,13 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public static final float[] CUBE_TOP = swapCoords(CUBE_FRONT,1,3,-2);
 	public static final float[] CUBE_BOTTOM = swapCoords(CUBE_FRONT,1,-3,2);
 
+	public static final float[] RECT_CENTERED = {
+		-0.5f, -0.5f, 0,
+		0.5f, -0.5f, 0,
+		-0.5f, 0.5f, 0,
+		0.5f, 0.5f, 0
+	};
+
 	protected boolean mBillboardMode;
 	private final YangMatrix mInterMatrix;
 	public YangMatrix mSavedCamera;
@@ -745,7 +752,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		}
 		indices.position(indPos);
 	}
-	
+
 	public void removeTrianglesBelowPlane(int indexStart,int indexEnd, Point3f planeBase,Vector3f planeNormal) {
 		int c = indexStart;
 		Buffer indices = mCurrentVertexBuffer.mActiveBuffer;
@@ -773,17 +780,21 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			float dot1 = mTempVec1.dot(planeNormal);
 			float dot2 = mTempVec2.dot(planeNormal);
 			float dot3 = mTempVec3.dot(planeNormal);
-			
+
 			if(dot1<0 || dot2<0 || dot3<0) {
 				indices.position(c);
 				buf.putIndex(startId);
 				buf.putIndex(startId);
 				buf.putIndex(startId);
 			}
-			
+
 			c += 3;
 		}
 		indices.position(indPos);
+	}
+
+	public void beginQuad() {
+		mCurrentVertexBuffer.beginQuad();
 	}
 
 }

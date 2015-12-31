@@ -23,6 +23,10 @@ public class TextureProperties {
 		mChannels = channels;
 	}
 
+	public TextureProperties(TextureWrap wrap,TextureFilter filter,int channels) {
+		this(wrap,wrap,filter,channels);
+	}
+
 	public TextureProperties(TextureWrap wrapX,TextureWrap wrapY,TextureFilter filter) {
 		this(wrapX,wrapY,filter,4);
 	}

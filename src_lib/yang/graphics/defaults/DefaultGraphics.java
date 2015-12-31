@@ -487,6 +487,20 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		mPositions.put(positions);
 	}
 
+	public void putPositionArray(float[] positions,YangMatrix transform) {
+		int l = positions.length;
+		for(int i = 0;i<l;) {
+			transform.apply3D(positions[i++],positions[i++],positions[i++], mInterArray, 0);
+			if(mInterArray[3]!=1) {
+				final float d = 1f/mInterArray[3];
+				mInterArray[0] *= d;
+				mInterArray[1] *= d;
+				mInterArray[2] *= d;
+			}
+			mPositions.put(mInterArray, 0, 3);
+		}
+	}
+
 	public void putPositionQuad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
 		mCurrentVertexBuffer.putVec8(ID_POSITIONS, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
@@ -570,6 +584,12 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public void putColorRect(float[] color) {
 		if(mCurrentProgram.mHasColor) {
 			mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,color,4);
+		}
+	}
+
+	public void putColorRect(FloatColor color) {
+		if(mCurrentProgram.mHasColor) {
+			mCurrentVertexBuffer.putArrayMultiple(ID_COLORS,color.mValues,4);
 		}
 	}
 
