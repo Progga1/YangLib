@@ -15,7 +15,7 @@ public class Camera3DControl extends CameraControl {
 	//Settings
 	public boolean 	mInvertView = false;
 	public boolean mOrthogonalProjection = true;
-	public float mViewDelay = 0.3f;
+	public float mAngleDelay = 0.3f;
 	public char mSwitchPerspectiveKey = 'p';
 	public char mInvertViewKey = 'v';
 
@@ -51,7 +51,7 @@ public class Camera3DControl extends CameraControl {
 			mTarViewValues.mZ += mVelRoll*deltaTime;
 			mTargetZoom += mVelZoom*deltaTime;
 		}
-		mViewValues.setDelayed(mTarViewValues,mViewDelay);
+		mViewValues.setDelayed(mTarViewValues,mAngleDelay);
 	}
 
 	@Override
@@ -66,6 +66,24 @@ public class Camera3DControl extends CameraControl {
 			mCamera.setLookAtAlphaBeta(mViewValues.mX,mViewValues.mY, mZoom, mFocus);
 		}
 		return mCamera;
+	}
+
+	public void set(Camera3DControl template) {
+		mTarViewValues.set(template.mTarViewValues);
+		mViewValues.set(template.mViewValues);
+		mFocus.set(template.mFocus);
+		mOrthogonalProjection = template.mOrthogonalProjection;
+		mAngleDelay = template.mAngleDelay;
+		mInvertView = template.mInvertView;
+		mInvertViewKey = template.mInvertViewKey;
+		mSwitchPerspectiveKey = template.mSwitchPerspectiveKey;
+		mVelAlpha = template.mVelAlpha;
+		mVelBeta = template.mVelBeta;
+		mVelRoll = template.mVelRoll;
+		mVelZoom = template.mVelZoom;
+		mTargetZoom = template.mTargetZoom;
+		mZoom = template.mZoom;
+		mZoomDelay = template.mZoomDelay;
 	}
 
 	@Override
@@ -148,10 +166,6 @@ public class Camera3DControl extends CameraControl {
 	@Override
 	public String toString() {
 		return "yaw = "+mViewValues.mX+" pitch = "+mViewValues.mY+" roll = "+mViewValues.mZ+" zoom = "+mZoom+" focus = "+mFocus+"";
-	}
-
-	public void set(Camera3DControl template) {
-
 	}
 
 	public float getViewAlpha() {

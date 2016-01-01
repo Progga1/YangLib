@@ -57,27 +57,20 @@ public abstract class InspectorComponent {
 			if(!mReferenced)
 				object.setProperty(mName,this);
 		}else{
+			if(!isVisible())
+				return;
 			if(!hasFocus() || forceUpdate) {
-				if(mReferenced) {
-					Object reference = object.getReferencedProperty(mName,this);
-					if(reference==null) {
-						setVisible(false);
-						mVisible = false;
-					}else{
-						setValueReference(reference);
-						postValueChanged();
-						if(!mVisible) {
-							setVisible(true);
-							mVisible = true;
-						}
-					}
-				}else{
+				if(!mReferenced) {
 					object.readProperty(mName,this);
-					postValueChanged();
 				}
+				postValueChanged();
 			}
 		}
 		mWasChanged = false;
+	}
+
+	public boolean isVisible() {
+		return mVisible;
 	}
 
 	public boolean isReferenced() {
@@ -89,6 +82,8 @@ public abstract class InspectorComponent {
 	}
 
 	public void setVisible(boolean visible) {
+		if(mVisible==visible)
+			return;
 		getComponent().setVisible(visible);
 	}
 
@@ -163,6 +158,16 @@ public abstract class InspectorComponent {
 
 	protected boolean useDefaultCaptionLayout() {
 		return true;
+	}
+
+	public void updateReference(InspectionInterface object) {
+		Object reference = object.getReferencedProperty(mName,this);
+		if(reference==null) {
+			setVisible(false);
+		}else{
+			setValueReference(reference);
+			setVisible(true);
+		}
 	}
 
 }

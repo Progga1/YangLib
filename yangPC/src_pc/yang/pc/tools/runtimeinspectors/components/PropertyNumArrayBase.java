@@ -64,6 +64,12 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 		}
 	}
 
+	public void setRange(float minValue,float maxValue) {
+		for(NumTextField textField:mTextFields) {
+			textField.setRange(minValue,maxValue);
+		}
+	}
+
 	public void setDefaultValue(int id,double defaultValue) {
 		mTextFields[id].setDefaultValue(defaultValue);
 	}
@@ -97,6 +103,22 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		notifyValueUserInput();
+	}
+
+	public void setFloat(int index,float value) {
+		mTextFields[index].setFloat(value);
+	}
+
+	public float getFloat(int index) {
+		return mTextFields[index].getFloat();
+	}
+
+	public void setDouble(int index,double value) {
+		mTextFields[index].setDouble(value);
+	}
+
+	public double getDouble(int index) {
+		return mTextFields[index].getDouble();
 	}
 
 }

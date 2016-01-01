@@ -93,11 +93,14 @@ public class InspectorPanel {
 	public void setValuesByObject(InspectionInterface object) {
 		if(mCurObject==object) {
 			for(InspectorItem component:mPropertiesPanel.getItems()) {
-				if(!component.getInspectorComponent().isReferenced() || component.getInspectorComponent().mWasChanged)
-					component.getInspectorComponent().update(object,false);
+//				if(!component.getInspectorComponent().isReferenced() || component.getInspectorComponent().mWasChanged)
+				component.getInspectorComponent().update(object,false);
 			}
 		}else{
 			for(InspectorItem component:mPropertiesPanel.getItems()) {
+				InspectorComponent inspComp = component.getInspectorComponent();
+				if(inspComp.isReferenced())
+					inspComp.updateReference(object);
 				component.getInspectorComponent().update(object,true);
 			}
 		}

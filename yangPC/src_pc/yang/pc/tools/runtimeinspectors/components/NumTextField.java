@@ -234,4 +234,9 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		this.mListener.actionPerformed(null);
 	}
 
+	public void setRange(float minValue, float maxValue) {
+		mMinValue = minValue;
+		mMaxValue = maxValue;
+	}
+
 }
