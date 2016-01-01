@@ -3,6 +3,7 @@ package yang.graphics.util.cameracontrol;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.camera.Camera3D;
 import yang.math.MathConst;
+import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.surface.YangSurface;
 
@@ -19,10 +20,10 @@ public class Camera3DControl extends CameraControl {
 	public char mInvertViewKey = 'v';
 
 	//State
-	public float mTargetViewAlpha = 0,mTargetViewBeta = 0;
-	public float mViewAlpha,mViewBeta;
-	public float mFocusX,mFocusY,mFocusZ;
-	public float mVelAlpha = 0,mVelBeta = 0,mVelZoom = 0;
+	public Vector3f mTarViewValues = new Vector3f();
+	public Vector3f mViewValues = new Vector3f();
+	public Point3f mFocus = new Point3f();
+	public float mVelAlpha = 0,mVelBeta = 0,mVelRoll = 0, mVelZoom = 0;
 
 	//Objects
 	protected Camera3D mCamera;
@@ -30,6 +31,11 @@ public class Camera3DControl extends CameraControl {
 	//Temp
 	private final Vector3f mCamRight = new Vector3f();
 	private final Vector3f mCamUp = new Vector3f();
+
+	public Camera3DControl() {
+		super();
+		mCamera = new Camera3D();
+	}
 
 	public Camera3DControl(YangSurface surface) {
 		super(surface);
@@ -40,12 +46,12 @@ public class Camera3DControl extends CameraControl {
 	public void step(float deltaTime) {
 		super.step(deltaTime);
 		if(mCurPointerDownCount==0) {
-			mTargetViewAlpha += mVelAlpha*deltaTime;
-			mTargetViewBeta += mVelBeta*deltaTime;
+			mTarViewValues.mX += mVelAlpha*deltaTime;
+			mTarViewValues.mY += mVelBeta*deltaTime;
+			mTarViewValues.mZ += mVelRoll*deltaTime;
 			mTargetZoom += mVelZoom*deltaTime;
 		}
-		mViewAlpha += (mTargetViewAlpha-mViewAlpha)*mViewDelay;
-		mViewBeta += (mTargetViewBeta-mViewBeta)*mViewDelay;
+		mViewValues.setDelayed(mTarViewValues,mViewDelay);
 	}
 
 	@Override
@@ -55,9 +61,9 @@ public class Camera3DControl extends CameraControl {
 		else
 			mCamera.setPerspectiveProjection(0.6f,100);
 		if(mInvertView)
-			mCamera.setLookOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+			mCamera.setLookOutwardsAlphaBeta(mViewValues.mX+MathConst.PI,-mViewValues.mY, mZoom, mFocus);
 		else{
-			mCamera.setLookAtAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+			mCamera.setLookAtAlphaBeta(mViewValues.mX,mViewValues.mY, mZoom, mFocus);
 		}
 		return mCamera;
 	}
@@ -74,29 +80,30 @@ public class Camera3DControl extends CameraControl {
 	}
 
 	public void setFocus(float x,float y,float z) {
-		mFocusX = x;
-		mFocusY = y;
-		mFocusZ = z;
+		mFocus.set(x,y,z);
 	}
 
 	public void shiftFocus(float dx, float dy, float dz) {
-		mFocusX += dx;
-		mFocusY += dy;
-		mFocusZ += dz;
+		mFocus.add(dx,dy,dz);
 	}
 
 	public void setViewAngle(float alpha,float beta) {
-		mViewAlpha = alpha;
-		mTargetViewAlpha = alpha;
-		mViewBeta = beta;
-		mTargetViewBeta = beta;
+		mTarViewValues.mX = alpha;
+		mViewValues.mX = alpha;
+		mTarViewValues.mY = beta;
+		mViewValues.mY = beta;
+	}
+
+	public void setViewAngle(float alpha,float beta,float roll) {
+		setViewAngle(alpha,beta);
+		mTarViewValues.mZ = roll;
+		mViewValues.mZ = roll;
 	}
 
 	@Override
 	public void snap() {
 		super.snap();
-		mViewAlpha = mTargetViewAlpha;
-		mViewBeta = mTargetViewBeta;
+		mViewValues.set(mViewValues);
 	}
 
 	@Override
@@ -108,12 +115,12 @@ public class Camera3DControl extends CameraControl {
 
 	@Override
 	protected void onDrag(SurfacePointerEvent event) {
-		mTargetViewAlpha -= event.mDeltaX*2;
-		mTargetViewBeta -= event.mDeltaY;
-		if(mTargetViewBeta<-MAX_BETA)
-			mTargetViewBeta = -MAX_BETA;
-		if(mTargetViewBeta>MAX_BETA)
-			mTargetViewBeta = MAX_BETA;
+		mTarViewValues.mX -= event.mDeltaX*2;
+		mTarViewValues.mY -= event.mDeltaY;
+		if(mTarViewValues.mY<-MAX_BETA)
+			mTarViewValues.mY = -MAX_BETA;
+		if(mTarViewValues.mY>MAX_BETA)
+			mTarViewValues.mY = MAX_BETA;
 	}
 
 	@Override
@@ -126,9 +133,37 @@ public class Camera3DControl extends CameraControl {
 
 	}
 
+	public void setAlpha(float alpha) {
+		mTarViewValues.mX = alpha;
+	}
+
+	public void setBeta(float beta) {
+		mTarViewValues.mY = beta;
+	}
+
+	public void setRoll(float roll) {
+		mTarViewValues.mZ = roll;
+	}
+
 	@Override
 	public String toString() {
-		return "yaw = "+mViewAlpha+" pitch = "+mViewBeta+" zoom = "+mZoom+" focus = ("+mFocusX+" "+mFocusY+" "+mFocusZ+")";
+		return "yaw = "+mViewValues.mX+" pitch = "+mViewValues.mY+" roll = "+mViewValues.mZ+" zoom = "+mZoom+" focus = "+mFocus+"";
+	}
+
+	public void set(Camera3DControl template) {
+
+	}
+
+	public float getViewAlpha() {
+		return mViewValues.mX;
+	}
+
+	public float getViewBeta() {
+		return mViewValues.mY;
+	}
+
+	public float getViewRoll() {
+		return mViewValues.mZ;
 	}
 
 }

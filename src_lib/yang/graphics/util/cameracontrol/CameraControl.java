@@ -19,7 +19,7 @@ public abstract class CameraControl implements YangEventListener {
 	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_MIDDLE;
 
 	//Objects
-	protected final YangSurface mSurface;
+	protected YangSurface mSurface = null;
 
 	//State
 	public float mZoom = 1;
@@ -33,10 +33,19 @@ public abstract class CameraControl implements YangEventListener {
 	public abstract YangCamera getUpdatedCameraInstance();
 	public abstract YangCamera getCameraInstance();
 
-	public CameraControl(YangSurface surface) {
-		mSurface = surface;
+	public CameraControl() {
 		mTargetZoom = 1;
 		mZoom = 1;
+	}
+
+	public CameraControl(YangSurface surface) {
+		this();
+		setSurface(surface);
+	}
+
+	public CameraControl setSurface(YangSurface surface) {
+		mSurface = surface;
+		return this;
 	}
 
 	public void step(float deltaTime) {
@@ -53,7 +62,7 @@ public abstract class CameraControl implements YangEventListener {
 	}
 
 	protected void checkSnap() {
-		if(mSurface.mPlaySpeed==0 || mSurface.mPaused) {
+		if(mSurface!=null && (mSurface.mPlaySpeed==0 || mSurface.mPaused)) {
 			snap();
 		}
 	}

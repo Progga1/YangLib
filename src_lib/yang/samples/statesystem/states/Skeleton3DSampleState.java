@@ -55,7 +55,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 		mSkeletonCreator.mBreastJoint.mFixed = false;
 		mSkeleton.setFriction(0.98f);
 		mCamera.setZoom(1.5f);
-		mCamera.mFocusY = 1;
+		mCamera.mFocus.mY = 1;
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class Skeleton3DSampleState extends SampleStateCameraControl {
 			mSkeleton.mConstantForceY = -0.025f;
 		}
 		if(code=='l') {
-			mLight.mDirection.setAlphaBeta(mCamera.mViewAlpha,mCamera.mViewBeta);
+			mLight.mDirection.setAlphaBeta(mCamera.getViewAlpha(),mCamera.getViewBeta());
 		}
 		if(code==Keys.CTRL)
 			mMultiSelect = true;

@@ -74,4 +74,8 @@ public class Camera3D extends YangCamera {
 				0,1,0);
 	}
 
+	public void setLookOutwardsAlphaBeta(float alpha, float beta, float distance, Point3f focus) {
+		setLookOutwardsAlphaBeta(alpha,beta,distance, focus.mX,focus.mY,focus.mZ);
+	}
+
 }

@@ -19,7 +19,7 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 	public YangBillboardWindow(InternalType internalObject,DefaultGraphics<?> graphics) {
 		super(internalObject,graphics);
 	}
-	
+
 	private void refreshTransform() {
 		mTargetPoint.lerp(mLookAtPoint.mX,mLookAtPoint.mY*mBetaWeight+mPosition.mY*(1-mBetaWeight),mLookAtPoint.mZ,mDelay);
 		mTransform.setPointFromTo(mPosition,mTargetPoint,Vector3f.UP);
@@ -55,6 +55,10 @@ public class YangBillboardWindow<InternalType extends RawEventListener & Drawabl
 			mLookAtPoint = new Point3f();
 		mLookAtPoint.set(x,y,z);
 		refreshTransform();
+	}
+
+	public void setLookAtPoint(Point3f point) {
+		setLookAtPoint(point.mX,point.mY,point.mZ);
 	}
 
 	public void setScale(float x,float y,float z) {

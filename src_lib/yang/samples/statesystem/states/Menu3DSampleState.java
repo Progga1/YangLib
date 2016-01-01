@@ -56,7 +56,7 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		super.initGraphics();
 		mCamera.mOrthogonalProjection = false;
 		super.mCamera.mInvertView = true;
-		super.mCamera.mFocusZ = 1;
+		super.mCamera.mFocus.mZ = 1;
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class Menu3DSampleState extends SampleStateCameraControl implements GUIAc
 		mGraphics.switchCulling(false);
 		mGraphics.switchZBuffer(false);
 		mWindow1.mPosition.set(0,-0.05f,(float)Math.cos(mStateTimer)*0.1f);
-		mWindow1.setLookAtPoint(mCamera.mFocusX, mCamera.mFocusY, mCamera.mFocusZ);
+		mWindow1.setLookAtPoint(mCamera.mFocus);
 		mWindow1.setScale(0.5f);
 		setCamera();
 		mWindow1.draw();

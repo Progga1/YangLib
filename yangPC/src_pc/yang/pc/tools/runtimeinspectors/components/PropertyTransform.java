@@ -1,6 +1,5 @@
 package yang.pc.tools.runtimeinspectors.components;
 
-import yang.graphics.model.FloatColor;
 import yang.graphics.model.TransformationData;
 import yang.math.objects.YangMatrix;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;

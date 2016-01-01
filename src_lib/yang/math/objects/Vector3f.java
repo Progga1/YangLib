@@ -48,6 +48,7 @@ public class Vector3f extends Point3f{
 		mY = y;
 	}
 
+	@Override
 	public void set(float xyz) {
 		mX = xyz;
 		mY = xyz;
@@ -195,7 +196,7 @@ public class Vector3f extends Point3f{
 		mY = y2-y1;
 		mZ = z2-z1;
 	}
-	
+
 	public void setFromTo(Point3f fromPoint, float x, float y, float z) {
 		mX = x-fromPoint.mX;
 		mY = y-fromPoint.mY;
@@ -262,6 +263,12 @@ public class Vector3f extends Point3f{
 		mX = vec1.mX + vec2.mX;
 		mY = vec1.mY + vec2.mY;
 		mZ = vec1.mZ + vec2.mZ;
+	}
+
+	public void setDelayed(Vector3f targetValues, float delay) {
+		mX += (targetValues.mX-mX)*delay;
+		mY += (targetValues.mY-mY)*delay;
+		mZ += (targetValues.mZ-mZ)*delay;
 	}
 
 }

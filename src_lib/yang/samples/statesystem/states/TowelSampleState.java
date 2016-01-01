@@ -84,7 +84,7 @@ public class TowelSampleState extends SampleStateCameraControl {
 		mLight.mDirection.setAlphaBeta(0.4f, 0.4f);
 		mSkeleton.setFriction(0.998f);
 		mCamera.setZoom(2.4f);
-		mCamera.mFocusY = 0.6f;
+		mCamera.mFocus.mY = 0.6f;
 		if(!NEUTRAL)
 			mCamera.setViewAngle(0.1f, 0.1f);
 
@@ -157,7 +157,7 @@ public class TowelSampleState extends SampleStateCameraControl {
 			mSkeleton.mConstantForceY = -0.025f;
 		}
 		if(code=='l') {
-			mLight.mDirection.setAlphaBeta(mCamera.mViewAlpha,mCamera.mViewBeta);
+			mLight.mDirection.setAlphaBeta(mCamera.getViewAlpha(),mCamera.getViewBeta());
 		}
 		if(code==Keys.CTRL)
 			mMultiSelect = true;
