@@ -3,6 +3,7 @@ package yang.graphics.camera;
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.math.MatrixOps;
+import yang.math.objects.EulerAngles;
 import yang.math.objects.Point3f;
 
 public class Camera3D extends YangCamera {
@@ -54,6 +55,17 @@ public class Camera3D extends YangCamera {
 		setLookAt(eye.mX,eye.mY,eye.mZ, lookAt.mX,lookAt.mY,lookAt.mZ);
 	}
 
+	public void setLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float roll) {
+		mPosition.set(eyeX,eyeY,eyeZ);
+		MatrixOps.setLookAt(mCameraTransform.mValues,eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, 0,1,0);
+		if(roll!=0)
+			mCameraTransform.rotateZ(roll);
+	}
+
+	public void setLookAt(Point3f eye,Point3f lookAt, float roll) {
+		setLookAt(eye.mX,eye.mY,eye.mZ, lookAt.mX,lookAt.mY,lookAt.mZ, roll);
+	}
+
 	public void setLookAtAlphaBeta(float alpha, float beta, float distance, float lookAtX, float lookAtY, float lookAtZ) {
 		MatrixOps.setLookAtAlphaBeta(mCameraTransform.mValues, lookAtX,lookAtY,lookAtZ,alpha,beta,distance, mPosition);
 	}
@@ -64,6 +76,16 @@ public class Camera3D extends YangCamera {
 
 	public void setLookAtAlphaBeta(float alpha, float beta, float distance) {
 		setLookAtAlphaBeta(alpha,beta, distance, 0,0,0);
+	}
+
+	public void setLookAtAlphaBeta(float alpha, float beta, float roll, float distance, Point3f lookAtPoint) {
+		MatrixOps.setLookAtAlphaBeta(mCameraTransform.mValues, lookAtPoint.mX,lookAtPoint.mY,lookAtPoint.mZ,alpha,beta,distance, mPosition);
+		if(roll!=0)
+			mCameraTransform.rotateZ(roll);
+	}
+
+	public void setLookAtAlphaBeta(EulerAngles angles, float distance, Point3f focus) {
+		setLookAtAlphaBeta(angles.mYaw,angles.mPitch,angles.mRoll, distance,focus);
 	}
 
 	public void setLookOutwardsAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {

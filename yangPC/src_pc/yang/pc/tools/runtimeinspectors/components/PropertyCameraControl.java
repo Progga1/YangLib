@@ -1,7 +1,6 @@
 package yang.pc.tools.runtimeinspectors.components;
 
 import yang.graphics.util.cameracontrol.Camera3DControl;
-import yang.math.objects.Vector3f;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.PropertyChain;
 
@@ -9,18 +8,15 @@ public class PropertyCameraControl extends PropertyChain {
 
 	private Camera3DControl mCamera;
 
-	private PropertyVector3 mViewAngleComp;
+	private PropertyEulerAngles mViewAngleComp;
 	private PropertyVector3 mPositionComp;
 	private PropertyFloatNum mDistanceComp;
 	private PropertyNumArray mDelayComp;
 
-	private Vector3f mAngleValues = new Vector3f();
-
 	@Override
 	protected InspectorComponent[] createComponents() {
-		mViewAngleComp = new PropertyVector3();
+		mViewAngleComp = new PropertyEulerAngles();
 		mViewAngleComp.init(this,"Yaw pitch roll",true);
-		mViewAngleComp.setValueReference(mAngleValues);
 
 		mPositionComp = new PropertyVector3();
 		mPositionComp.init(this,"Focus (xyz)",true);
@@ -32,7 +28,7 @@ public class PropertyCameraControl extends PropertyChain {
 		mDelayComp = new PropertyNumArray(2);
 		mDelayComp.init(this,"Delay (angle,zoom)",false);
 		mDelayComp.setDefaultValue(1);
-		mDelayComp.setRange(0,1);
+		mDelayComp.setRange(0.001f,1);
 
 		if(!isReferenced()) {
 			setValueReference(new Camera3DControl());
@@ -45,6 +41,7 @@ public class PropertyCameraControl extends PropertyChain {
 	public void setValueReference(Object camera) {
 		mCamera = (Camera3DControl)camera;
 		mPositionComp.setValueReference(mCamera.mFocus);
+		mViewAngleComp.setValueReference(mCamera.mTarViewValues);
 	}
 
 	@Override
@@ -52,13 +49,16 @@ public class PropertyCameraControl extends PropertyChain {
 		mDistanceComp.setFloat(mCamera.mTargetZoom);
 		mDelayComp.setFloat(0,mCamera.mAngleDelay);
 		mDelayComp.setFloat(1,mCamera.mZoomDelay);
+		super.postValueChanged();
 	}
 
 	@Override
 	public void refreshOutValue() {
 		mCamera.mTargetZoom = mDistanceComp.getFloat();
+		mCamera.mZoom = mCamera.mTargetZoom;
 		mCamera.mAngleDelay = mDelayComp.getFloat(0);
 		mCamera.mZoomDelay = mDelayComp.getFloat(1);
+		super.refreshOutValue();
 	}
 
 	@Override
@@ -68,7 +68,6 @@ public class PropertyCameraControl extends PropertyChain {
 
 	@Override
 	public void setValueFrom(Object value) {
-		System.out.println("fnekf");
 		mCamera.set((Camera3DControl)value);
 	}
 

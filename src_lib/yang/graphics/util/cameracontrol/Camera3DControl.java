@@ -3,6 +3,7 @@ package yang.graphics.util.cameracontrol;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.graphics.camera.Camera3D;
 import yang.math.MathConst;
+import yang.math.objects.EulerAngles;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 import yang.surface.YangSurface;
@@ -15,15 +16,15 @@ public class Camera3DControl extends CameraControl {
 	//Settings
 	public boolean 	mInvertView = false;
 	public boolean mOrthogonalProjection = true;
-	public float mAngleDelay = 0.3f;
+	public float mAngleDelay = 0.4f;
 	public char mSwitchPerspectiveKey = 'p';
 	public char mInvertViewKey = 'v';
 
 	//State
-	public Vector3f mTarViewValues = new Vector3f();
-	public Vector3f mViewValues = new Vector3f();
+	public EulerAngles mTarViewValues = new EulerAngles();
+	public EulerAngles mViewValues = new EulerAngles();
 	public Point3f mFocus = new Point3f();
-	public float mVelAlpha = 0,mVelBeta = 0,mVelRoll = 0, mVelZoom = 0;
+	public float mVelAlpha = 0, mVelBeta = 0, mVelRoll = 0, mVelZoom = 0;
 
 	//Objects
 	protected Camera3D mCamera;
@@ -46,9 +47,9 @@ public class Camera3DControl extends CameraControl {
 	public void step(float deltaTime) {
 		super.step(deltaTime);
 		if(mCurPointerDownCount==0) {
-			mTarViewValues.mX += mVelAlpha*deltaTime;
-			mTarViewValues.mY += mVelBeta*deltaTime;
-			mTarViewValues.mZ += mVelRoll*deltaTime;
+			mTarViewValues.mYaw += mVelAlpha*deltaTime;
+			mTarViewValues.mPitch += mVelBeta*deltaTime;
+			mTarViewValues.mRoll += mVelRoll*deltaTime;
 			mTargetZoom += mVelZoom*deltaTime;
 		}
 		mViewValues.setDelayed(mTarViewValues,mAngleDelay);
@@ -61,9 +62,9 @@ public class Camera3DControl extends CameraControl {
 		else
 			mCamera.setPerspectiveProjection(0.6f,100);
 		if(mInvertView)
-			mCamera.setLookOutwardsAlphaBeta(mViewValues.mX+MathConst.PI,-mViewValues.mY, mZoom, mFocus);
+			mCamera.setLookOutwardsAlphaBeta(mViewValues.mYaw+MathConst.PI,-mViewValues.mPitch, mZoom, mFocus);
 		else{
-			mCamera.setLookAtAlphaBeta(mViewValues.mX,mViewValues.mY, mZoom, mFocus);
+			mCamera.setLookAtAlphaBeta(mViewValues, mZoom, mFocus);
 		}
 		return mCamera;
 	}
@@ -106,16 +107,16 @@ public class Camera3DControl extends CameraControl {
 	}
 
 	public void setViewAngle(float alpha,float beta) {
-		mTarViewValues.mX = alpha;
-		mViewValues.mX = alpha;
-		mTarViewValues.mY = beta;
-		mViewValues.mY = beta;
+		mTarViewValues.mYaw = alpha;
+		mViewValues.mYaw = alpha;
+		mTarViewValues.mPitch = beta;
+		mViewValues.mPitch = beta;
 	}
 
 	public void setViewAngle(float alpha,float beta,float roll) {
 		setViewAngle(alpha,beta);
-		mTarViewValues.mZ = roll;
-		mViewValues.mZ = roll;
+		mTarViewValues.mRoll = roll;
+		mViewValues.mRoll = roll;
 	}
 
 	@Override
@@ -133,12 +134,12 @@ public class Camera3DControl extends CameraControl {
 
 	@Override
 	protected void onDrag(SurfacePointerEvent event) {
-		mTarViewValues.mX -= event.mDeltaX*2;
-		mTarViewValues.mY -= event.mDeltaY;
-		if(mTarViewValues.mY<-MAX_BETA)
-			mTarViewValues.mY = -MAX_BETA;
-		if(mTarViewValues.mY>MAX_BETA)
-			mTarViewValues.mY = MAX_BETA;
+		mTarViewValues.mYaw -= event.mDeltaX*2;
+		mTarViewValues.mPitch -= event.mDeltaY;
+		if(mTarViewValues.mPitch<-MAX_BETA)
+			mTarViewValues.mPitch = -MAX_BETA;
+		if(mTarViewValues.mPitch>MAX_BETA)
+			mTarViewValues.mPitch = MAX_BETA;
 	}
 
 	@Override
@@ -152,32 +153,32 @@ public class Camera3DControl extends CameraControl {
 	}
 
 	public void setAlpha(float alpha) {
-		mTarViewValues.mX = alpha;
+		mTarViewValues.mYaw = alpha;
 	}
 
 	public void setBeta(float beta) {
-		mTarViewValues.mY = beta;
+		mTarViewValues.mPitch = beta;
 	}
 
 	public void setRoll(float roll) {
-		mTarViewValues.mZ = roll;
+		mTarViewValues.mRoll = roll;
 	}
 
 	@Override
 	public String toString() {
-		return "yaw = "+mViewValues.mX+" pitch = "+mViewValues.mY+" roll = "+mViewValues.mZ+" zoom = "+mZoom+" focus = "+mFocus+"";
+		return mViewValues+", zoom="+mZoom+", focus="+mFocus;
 	}
 
 	public float getViewAlpha() {
-		return mViewValues.mX;
+		return mViewValues.mYaw;
 	}
 
 	public float getViewBeta() {
-		return mViewValues.mY;
+		return mViewValues.mPitch;
 	}
 
 	public float getViewRoll() {
-		return mViewValues.mZ;
+		return mViewValues.mRoll;
 	}
 
 }

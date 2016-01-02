@@ -63,4 +63,32 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 		}
 	}
 
+	@Override
+	public void setFloat(int index,float value) {
+		if(mFloatValues==null)
+			mFloatValues = new float[mElemCount];
+		mFloatValues[index] = value;
+	}
+
+	@Override
+	public float getFloat(int index) {
+		if(mFloatValues==null)
+			mFloatValues = new float[mElemCount];
+		return mFloatValues[index];
+	}
+
+	@Override
+	public void setDouble(int index,double value) {
+		if(mDoubleValues==null)
+			mDoubleValues = new double[mElemCount];
+		mDoubleValues[index] = value;
+	}
+
+	@Override
+	public double getDouble(int index) {
+		if(mDoubleValues==null)
+			mDoubleValues = new double[mElemCount];
+		return mDoubleValues[index];
+	}
+
 }
