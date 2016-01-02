@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
+import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 
 public class PropertyFloatNum extends InspectorComponent implements ActionListener {
 
@@ -13,6 +14,7 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 	@Override
 	protected void postInit() {
 		mNumTextField = new NumTextField();
+		mNumTextField.setBorder(InspectorGUIDefinitions.COMPONENT_PADDING_BORDER);
 		mNumTextField.setActionListener(this);
 	}
 
