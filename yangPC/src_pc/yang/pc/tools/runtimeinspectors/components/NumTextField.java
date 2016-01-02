@@ -16,9 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
+import yang.model.NumberIO;
 import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 
-public class NumTextField extends JPanel implements MouseMotionListener,MouseListener,ActionListener,FocusListener {
+public class NumTextField extends JPanel implements MouseMotionListener,MouseListener,ActionListener,FocusListener,NumberIO {
 
 	private static final long serialVersionUID = 1L;
 
@@ -69,14 +70,17 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mScrollWidget.setBorder(BORDER);
 	}
 
+	@Override
 	public void setMinValue(double minValue) {
 		mMinValue = minValue;
 	}
 
+	@Override
 	public void setMaxValue(double maxValue) {
 		mMaxValue = maxValue;
 	}
 
+	@Override
 	public void setDefaultValue(double defaultValue) {
 		mDefaultValue = defaultValue;
 	}
@@ -85,7 +89,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mMaxDigits = maxDigits;
 	}
 
-	public void setMouseScrollFactor(float stepsPerPixel) {
+	public void setScrollFactor(float stepsPerPixel) {
 		mScrollFactor = stepsPerPixel;
 	}
 
@@ -107,6 +111,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 			mCurValue = val;
 	}
 
+	@Override
 	public void setDouble(double val) {
 		if(val==mCurValue)
 			return;
@@ -121,6 +126,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mTextField.setText(maxDigitsString(Double.toString(mCurValue),mMaxDigits));
 	}
 
+	@Override
 	public double getDouble() {
 		return mCurValue;
 	}

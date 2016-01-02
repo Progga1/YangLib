@@ -11,7 +11,7 @@ import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
 import yang.pc.tools.runtimeinspectors.components.PropertyCameraControl;
-import yang.pc.tools.runtimeinspectors.components.PropertyCheckBox;
+import yang.pc.tools.runtimeinspectors.components.PropertyBooleanCheckBox;
 import yang.pc.tools.runtimeinspectors.components.PropertyColorNums;
 import yang.pc.tools.runtimeinspectors.components.PropertyEulerAngles;
 import yang.pc.tools.runtimeinspectors.components.PropertyFloatNum;
@@ -25,7 +25,7 @@ public class InspectorManager {
 	protected HashMap<Class<?>,Class<? extends InspectorComponent>> mTypes = new HashMap<Class<?>,Class<? extends InspectorComponent>>();
 
 	public InspectorManager() {
-		registerType(Boolean.class,PropertyCheckBox.class);
+		registerType(Boolean.class,PropertyBooleanCheckBox.class);
 		registerType(String.class,PropertyTextField.class);
 		registerType(Float.class,PropertyFloatNum.class);
 		registerType(Double.class,PropertyFloatNum.class);

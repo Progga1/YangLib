@@ -21,7 +21,7 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 		mTextFields[1].setRange(-PITCH_RANGE,PITCH_RANGE);
 		setMaxDigits(2);
 		setMouseScrollFactor(0.35f);
-		mTextFields[0].setMouseScrollFactor(0.5f);
+		mTextFields[0].setScrollFactor(0.5f);
 	}
 
 	@Override

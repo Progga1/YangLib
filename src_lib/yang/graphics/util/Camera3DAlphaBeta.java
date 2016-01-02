@@ -16,7 +16,7 @@ public class Camera3DAlphaBeta extends Camera3D {
 
 	public Camera3DAlphaBeta update() {
 		if(mInvertView)
-			setLookOutwardsAlphaBeta(mViewAlpha+MathConst.PI,-mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
+			setLookOutwardsAlphaBeta(mViewAlpha,mViewBeta,0, mZoom, mFocusX,mFocusY,mFocusZ);
 		else
 			setLookAtAlphaBeta(mViewAlpha,mViewBeta, mZoom, mFocusX,mFocusY,mFocusZ);
 		return this;

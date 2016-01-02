@@ -2,6 +2,7 @@ package yang.graphics.camera;
 
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.camera.projection.PerspectiveProjection;
+import yang.math.MathConst;
 import yang.math.MatrixOps;
 import yang.math.objects.EulerAngles;
 import yang.math.objects.Point3f;
@@ -88,16 +89,24 @@ public class Camera3D extends YangCamera {
 		setLookAtAlphaBeta(angles.mYaw,angles.mPitch,angles.mRoll, distance,focus);
 	}
 
-	public void setLookOutwardsAlphaBeta(float alpha, float beta, float distance, float focusX,float focusY,float focusZ) {
-		setLookAt(focusX,focusY,focusZ,
-				focusX+(float)(Math.sin(alpha)*Math.cos(beta))*distance,
-				focusY+(float)Math.sin(beta)*distance,
-				focusZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance,
+	public void setLookOutwardsAlphaBeta(float alpha, float beta, float roll, float distance, float pivotX,float pivotY,float pivotZ) {
+		alpha += MathConst.PI;
+		beta *= -1;
+		setLookAt(pivotX,pivotY,pivotZ,
+				pivotX+(float)(Math.sin(alpha)*Math.cos(beta))*distance,
+				pivotY+(float)Math.sin(beta)*distance,
+				pivotZ+(float)(Math.cos(alpha)*Math.cos(beta))*distance,
 				0,1,0);
+		if(roll!=0)
+			mCameraTransform.rotateZ(roll);
 	}
 
-	public void setLookOutwardsAlphaBeta(float alpha, float beta, float distance, Point3f focus) {
-		setLookOutwardsAlphaBeta(alpha,beta,distance, focus.mX,focus.mY,focus.mZ);
+	public void setLookOutwardsAlphaBeta(float alpha, float beta, float distance, Point3f pivot) {
+		setLookOutwardsAlphaBeta(alpha,beta,0, distance, pivot.mX,pivot.mY,pivot.mZ);
+	}
+
+	public void setLookOutwardsAlphaBeta(EulerAngles angles,float distance, Point3f pivot) {
+		setLookOutwardsAlphaBeta(angles.mYaw,angles.mPitch,angles.mRoll, distance, pivot.mX,pivot.mY,pivot.mZ);
 	}
 
 }

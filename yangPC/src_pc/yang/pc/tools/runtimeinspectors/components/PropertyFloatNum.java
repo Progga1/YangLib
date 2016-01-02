@@ -39,7 +39,7 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 	}
 
 	public PropertyFloatNum setMouseScrollFactor(float stepsPerPixel) {
-		mNumTextField.setMouseScrollFactor(stepsPerPixel);
+		mNumTextField.setScrollFactor(stepsPerPixel);
 		return this;
 	}
 

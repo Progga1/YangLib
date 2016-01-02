@@ -12,6 +12,7 @@ public class PropertyCameraControl extends PropertyChain {
 	private PropertyVector3 mPositionComp;
 	private PropertyFloatNum mDistanceComp;
 	private PropertyNumArray mDelayComp;
+	private PropertyBooleanCheckBox mInvertedComp;
 
 	@Override
 	protected InspectorComponent[] createComponents() {
@@ -25,6 +26,9 @@ public class PropertyCameraControl extends PropertyChain {
 		mDistanceComp.init(this,"Distance",false);
 		mDistanceComp.setMinValue(0.001f);
 
+		mInvertedComp = new PropertyBooleanCheckBox();
+		mInvertedComp.init(this,"Inside-out", false);
+
 		mDelayComp = new PropertyNumArray(2);
 		mDelayComp.init(this,"Delay (angle,zoom)",false);
 		mDelayComp.setDefaultValue(1);
@@ -34,7 +38,7 @@ public class PropertyCameraControl extends PropertyChain {
 			setValueReference(new Camera3DControl());
 		}
 
-		return new InspectorComponent[]{mViewAngleComp,mPositionComp,mDistanceComp,mDelayComp};
+		return new InspectorComponent[]{mViewAngleComp,mPositionComp,mDistanceComp,mDelayComp,mInvertedComp};
 	}
 
 	@Override
@@ -49,6 +53,7 @@ public class PropertyCameraControl extends PropertyChain {
 		mDistanceComp.setFloat(mCamera.mTargetZoom);
 		mDelayComp.setFloat(0,mCamera.mAngleDelay);
 		mDelayComp.setFloat(1,mCamera.mZoomDelay);
+		mInvertedComp.setBool(mCamera.mInvertView);
 		super.postValueChanged();
 	}
 
@@ -58,6 +63,7 @@ public class PropertyCameraControl extends PropertyChain {
 		mCamera.mZoom = mCamera.mTargetZoom;
 		mCamera.mAngleDelay = mDelayComp.getFloat(0);
 		mCamera.mZoomDelay = mDelayComp.getFloat(1);
+		mCamera.mInvertView = mInvertedComp.getBool();
 		super.refreshOutValue();
 	}
 
