@@ -6,6 +6,8 @@ import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+
 public class InspectorPanel {
 
 	protected JPanel mTopLevelPanel;

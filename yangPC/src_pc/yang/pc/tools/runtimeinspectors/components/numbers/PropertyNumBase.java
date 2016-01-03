@@ -17,7 +17,7 @@ public abstract class PropertyNumBase extends InspectorComponent implements Acti
 	@Override
 	protected void postInit() {
 		mNumTextField = createNumTextField();
-		mNumTextField.setBorder(InspectorGUIDefinitions.COMPONENT_PADDING_BORDER);
+		mNumTextField.setBorder(InspectorGUIDefinitions.COMPONENT_DEFAULT_BORDER);
 		mNumTextField.setActionListener(this);
 	}
 

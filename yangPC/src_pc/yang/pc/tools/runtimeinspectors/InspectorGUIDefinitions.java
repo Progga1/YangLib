@@ -24,7 +24,7 @@ public class InspectorGUIDefinitions {
 	public static final Border PADDING_BORDER = BorderFactory.createEmptyBorder(PADDING,PADDING,PADDING,PADDING);
 	public static final Border PROPERTY_BORDER = BorderFactory.createMatteBorder(0,0,1,0, CL_OUTLINE);
 	public static final Border SUB_PROPERTY_BORDER = BorderFactory.createMatteBorder(0,0,1,0, CL_WEAK_OUTLINE);
-	public static final Border COMPONENT_PADDING_BORDER = BorderFactory.createEmptyBorder(COMPONENT_PADDING,COMPONENT_PADDING,COMPONENT_PADDING,COMPONENT_PADDING);
+	public static final Border COMPONENT_DEFAULT_BORDER = BorderFactory.createEmptyBorder(COMPONENT_PADDING,COMPONENT_PADDING,COMPONENT_PADDING,COMPONENT_PADDING);
 	public static final Border TEXT_FIELD_BORDER = BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,1,1,1,CL_OUTLINE),BorderFactory.createEmptyBorder(1,1,1,1));
 
 //	public static final Border PROPERTY_BORDER = BorderFactory.createCompoundBorder(PADDING_BORDER,OUTLINE_BORDER);

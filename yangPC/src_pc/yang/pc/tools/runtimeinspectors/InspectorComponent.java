@@ -2,6 +2,7 @@ package yang.pc.tools.runtimeinspectors;
 
 import java.awt.Component;
 
+import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabel;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabelListener;
 
@@ -144,6 +145,14 @@ public abstract class InspectorComponent implements CheckLabelListener {
 		throw new RuntimeException(notSup("Double"));
 	}
 
+	public int getInt() {
+		throw new RuntimeException(notSup("Integer"));
+	}
+
+	public void setInt(int value) {
+		throw new RuntimeException(notSup("Integer"));
+	}
+
 	public void setDouble(double value) {
 		throw new RuntimeException(notSup("Double"));
 	}
@@ -152,7 +161,7 @@ public abstract class InspectorComponent implements CheckLabelListener {
 		throw new RuntimeException(notSup("String"));
 	}
 
-	public void setString() {
+	public void setString(String value) {
 		throw new RuntimeException(notSup("String"));
 	}
 

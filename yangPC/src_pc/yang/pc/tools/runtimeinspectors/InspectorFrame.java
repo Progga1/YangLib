@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.util.YangList;
 
 public class InspectorFrame implements ActionListener {

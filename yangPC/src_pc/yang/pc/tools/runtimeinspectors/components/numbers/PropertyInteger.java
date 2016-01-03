@@ -13,4 +13,13 @@ public class PropertyInteger extends PropertyNumBase {
 		return mIntTextField;
 	}
 
+	@Override
+	public int getInt() {
+		return mIntTextField.getInt();
+	}
+
+	public void setInt(int value) {
+		mIntTextField.setInt(value);
+	}
+
 }

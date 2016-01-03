@@ -37,6 +37,7 @@ public class PropertyTextField  extends InspectorComponent implements ActionList
 		return mTextField.getText();
 	}
 
+	@Override
 	public void setString(String value) {
 		mTextField.setText(value);
 	}
