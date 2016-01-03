@@ -62,10 +62,10 @@ public class PropertyCameraControl extends PropertyChain {
 	public void refreshOutValue() {
 		super.refreshOutValue();
 		mCamera.mTargetZoom = mDistanceComp.getFloat();
-		mCamera.mZoom = mCamera.mTargetZoom;
 		mCamera.mAngleDelay = mDelayComp.getFloat(0);
 		mCamera.mZoomDelay = mDelayComp.getFloat(1);
 		mCamera.mInvertView = mInvertedComp.getBool();
+		mCamera.snap();
 	}
 
 	@Override

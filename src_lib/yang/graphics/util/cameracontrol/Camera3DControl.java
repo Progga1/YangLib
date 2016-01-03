@@ -122,7 +122,7 @@ public class Camera3DControl extends CameraControl {
 	@Override
 	public void snap() {
 		super.snap();
-		mViewValues.set(mViewValues);
+		mViewValues.set(mTarViewValues);
 	}
 
 	@Override

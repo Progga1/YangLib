@@ -18,7 +18,9 @@ public class PropertyQuaternion extends PropertyNumArrayBase {
 			mQuaternion = new Quaternion();
 		}
 		super.setMaxDigits(2);
-		super.setScrollFactor(0.2f);
+		super.setScrollFactor(0.35f);
+		mTextFields[0].setCyclic(true);
+		mTextFields[2].setCyclic(true);
 	}
 
 	@Override

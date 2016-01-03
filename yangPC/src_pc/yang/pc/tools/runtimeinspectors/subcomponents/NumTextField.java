@@ -43,6 +43,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	private boolean mLinking = false;
 	private long mMouseDownTime = -1;
 	private double mStartDragValue = -1;
+	private boolean mCyclic = false;
 
 	private int mLstX = Integer.MAX_VALUE,mLstY = Integer.MAX_VALUE;
 
@@ -127,13 +128,31 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mLinks = links;
 	}
 
+	private double wrap(double val) {
+		if(mCyclic) {
+			if(mMaxValue==Double.MAX_VALUE || mMinValue==-Double.MIN_VALUE || mMaxValue==mMinValue) {
+				throw new RuntimeException("No range given, can't cycle");
+			}
+			double diff = mMaxValue-mMinValue;
+			while(val>mMaxValue) {
+				val -= diff;
+			}
+			while(val<mMinValue) {
+				val += diff;
+			}
+			return val;
+		}else{
+			if(val>mMaxValue)
+				return mMaxValue;
+			else if(val<mMinValue)
+				return mMinValue;
+			else
+				return val;
+		}
+	}
+
 	private void setVal(double val) {
-		if(val>mMaxValue)
-			mCurValue = mMaxValue;
-		else if(val<mMinValue)
-			mCurValue = mMinValue;
-		else
-			mCurValue = val;
+		mCurValue = wrap(val);
 	}
 
 	@Override
@@ -268,11 +287,9 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		if(!text.equals("")) {
 			try{
 				startLink();
-				mCurValue = Double.parseDouble(text);
-				if(mCurValue<mMinValue)
-					setDouble(mMinValue);
-				else if(mCurValue>mMaxValue)
-					setDouble(mMaxValue);
+				double val = Double.parseDouble(text);
+				if(mCurValue<mMinValue || mCurValue>mMaxValue)
+					setDouble(wrap(val));
 			}catch(NumberFormatException ex) {
 
 			}finally{
@@ -308,6 +325,14 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 			mLinks.removeComponent(this);
 			mLinks = null;
 		}
+	}
+
+	public boolean isCyclic() {
+		return mCyclic;
+	}
+
+	public void setCyclic(boolean cyclic) {
+		mCyclic = cyclic;
 	}
 
 }

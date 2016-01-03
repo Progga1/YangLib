@@ -2,11 +2,14 @@ package yang.pc.tools.runtimeinspectors.components;
 
 import yang.math.MathConst;
 import yang.math.objects.EulerAngles;
+import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 public class PropertyEulerAngles extends PropertyNumArrayBase {
 
 	private final static float PITCH_RANGE = 89.5f;
 	private EulerAngles mEulerAngles;
+
+	private NumTextField mTextFieldYaw,mTextFieldPitch,mTextFieldRoll;
 
 	public PropertyEulerAngles() {
 		super(3);
@@ -15,13 +18,20 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 	@Override
 	protected void postInit() {
 		super.postInit();
+		mTextFieldYaw = mTextFields[0];
+		mTextFieldPitch = mTextFields[1];
+		mTextFieldRoll = mTextFields[2];
 		if(!isReferenced()) {
 			mEulerAngles = new EulerAngles();
 		}
 		mTextFields[1].setRange(-PITCH_RANGE,PITCH_RANGE);
 		setMaxDigits(2);
 		setScrollFactor(0.35f);
-		mTextFields[0].setScrollFactor(0.5f);
+		mTextFieldYaw.setScrollFactor(0.5f);
+		mTextFieldYaw.setRange(0,360);
+		mTextFieldYaw.setCyclic(true);
+		mTextFieldRoll.setRange(0,360);
+		mTextFieldRoll.setCyclic(true);
 	}
 
 	@Override
