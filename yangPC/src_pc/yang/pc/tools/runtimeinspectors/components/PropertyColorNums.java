@@ -1,6 +1,7 @@
 package yang.pc.tools.runtimeinspectors.components;
 
 import yang.graphics.model.FloatColor;
+import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArrayBase;
 
 public class PropertyColorNums extends PropertyNumArrayBase {
 
@@ -61,7 +62,7 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 	}
 
 	@Override
-	protected void setValueReference(Object reference) {
+	public void setValueReference(Object reference) {
 		mColor = (FloatColor)reference;
 	}
 

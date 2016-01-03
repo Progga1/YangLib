@@ -186,29 +186,30 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	@Override
 	public void mouseDragged(MouseEvent ev) {
-		int x = ev.getX();
-		int y = ev.getY();
-		if(mLstX!=Integer.MAX_VALUE) {
-			double prevVal = mCurValue;
-			int deltaX = x-mLstX;
-			int deltaY = y-mLstY;
-			float fac = mScrollFactor;
-			switch(mMouseDown) {
-			case 1:
-				break;
-			case 3:
-				fac *= 0.1f;
-				break;
-			case 2:
-				fac *= 10;
-				break;
+		if(ev.getSource()==mScrollWidget) {
+			int x = ev.getX();
+			int y = ev.getY();
+			if(mLstX!=Integer.MAX_VALUE) {
+				int deltaX = x-mLstX;
+				int deltaY = y-mLstY;
+				float fac = mScrollFactor;
+				switch(mMouseDown) {
+				case 1:
+					break;
+				case 3:
+					fac *= 0.1f;
+					break;
+				case 2:
+					fac *= 10;
+					break;
+				}
+				setDouble(mCurValue - deltaY*fac + deltaX*fac);
+				notifyLinks();
+				mListener.actionPerformed(null);
 			}
-			setDouble(mCurValue - deltaY*fac + deltaX*fac);
-			notifyLinks();
-			mListener.actionPerformed(null);
+			mLstX = x;
+			mLstY = y;
 		}
-		mLstX = x;
-		mLstY = y;
 	}
 
 	@Override
@@ -290,6 +291,8 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 				double val = Double.parseDouble(text);
 				if(mCurValue<mMinValue || mCurValue>mMaxValue)
 					setDouble(wrap(val));
+				else
+					mCurValue = val;
 			}catch(NumberFormatException ex) {
 
 			}finally{

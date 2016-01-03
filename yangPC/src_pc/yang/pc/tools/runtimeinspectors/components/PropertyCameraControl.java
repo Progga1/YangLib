@@ -3,6 +3,9 @@ package yang.pc.tools.runtimeinspectors.components;
 import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.PropertyChain;
+import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
+import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArray;
+import yang.pc.tools.runtimeinspectors.components.rotation.PropertyEulerAngles;
 
 public class PropertyCameraControl extends PropertyChain {
 

@@ -31,6 +31,10 @@ public abstract class InspectorComponent implements CheckLabelListener {
 		setParent(parent);
 	}
 
+	public void setPreferredOutputType(Class<?> type) {
+
+	}
+
 	protected void setParent(InspectorComponent parent) {
 		mParent = parent;
 	}
@@ -47,7 +51,7 @@ public abstract class InspectorComponent implements CheckLabelListener {
 
 	}
 
-	protected void setValueReference(Object reference) {
+	public void setValueReference(Object reference) {
 
 	}
 

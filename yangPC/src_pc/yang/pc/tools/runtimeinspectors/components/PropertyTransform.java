@@ -4,6 +4,7 @@ import yang.graphics.model.TransformationData;
 import yang.math.objects.YangMatrix;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.PropertyChain;
+import yang.pc.tools.runtimeinspectors.components.rotation.PropertyQuaternion;
 
 public class PropertyTransform extends PropertyChain {
 
@@ -64,7 +65,7 @@ public class PropertyTransform extends PropertyChain {
 	}
 
 	@Override
-	protected void setValueReference(Object reference) {
+	public void setValueReference(Object reference) {
 		if(reference instanceof YangMatrix) {
 			if(mTransform==null)
 				mTransform = new TransformationData();

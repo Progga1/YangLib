@@ -2,6 +2,7 @@ package yang.pc.tools.runtimeinspectors.components;
 
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
+import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArrayBase;
 
 public class PropertyVector3 extends PropertyNumArrayBase {
 
@@ -41,7 +42,7 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 	}
 
 	@Override
-	protected void setValueReference(Object reference) {
+	public void setValueReference(Object reference) {
 		mVectorData = (Point3f)reference;
 	}
 

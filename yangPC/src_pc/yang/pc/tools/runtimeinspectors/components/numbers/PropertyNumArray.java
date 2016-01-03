@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeinspectors.components;
+package yang.pc.tools.runtimeinspectors.components.numbers;
 
 public class PropertyNumArray extends PropertyNumArrayBase {
 
@@ -10,9 +10,9 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 		super(elemCount);
 	}
 
-	public PropertyNumArray setDoubleMode() {
-		mDoubleMode = true;
-		return this;
+	@Override
+	public void setPreferredOutputType(Class<?> type) {
+		mDoubleMode = type==Double.class;
 	}
 
 	@Override

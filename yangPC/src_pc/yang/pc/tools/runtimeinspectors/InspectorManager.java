@@ -13,13 +13,13 @@ import yang.math.objects.YangMatrix;
 import yang.pc.tools.runtimeinspectors.components.PropertyBooleanCheckBox;
 import yang.pc.tools.runtimeinspectors.components.PropertyCameraControl;
 import yang.pc.tools.runtimeinspectors.components.PropertyColorNums;
-import yang.pc.tools.runtimeinspectors.components.PropertyEulerAngles;
-import yang.pc.tools.runtimeinspectors.components.PropertyFloatNum;
-import yang.pc.tools.runtimeinspectors.components.PropertyInteger;
-import yang.pc.tools.runtimeinspectors.components.PropertyQuaternion;
 import yang.pc.tools.runtimeinspectors.components.PropertyTextField;
 import yang.pc.tools.runtimeinspectors.components.PropertyTransform;
 import yang.pc.tools.runtimeinspectors.components.PropertyVector3;
+import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
+import yang.pc.tools.runtimeinspectors.components.numbers.PropertyInteger;
+import yang.pc.tools.runtimeinspectors.components.rotation.PropertyEulerAngles;
+import yang.pc.tools.runtimeinspectors.components.rotation.PropertyQuaternion;
 
 public class InspectorManager {
 
@@ -56,6 +56,7 @@ public class InspectorManager {
 		InspectorComponent component;
 		try {
 			component = compClass.newInstance();
+			component.setPreferredOutputType(type);
 			return component;
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);

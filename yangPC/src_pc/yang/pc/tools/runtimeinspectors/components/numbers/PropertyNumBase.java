@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeinspectors.components;
+package yang.pc.tools.runtimeinspectors.components.numbers;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

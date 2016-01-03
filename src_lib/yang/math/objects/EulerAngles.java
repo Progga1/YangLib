@@ -29,6 +29,12 @@ public class EulerAngles {
 		mPitch = pitch;
 	}
 
+	public void set(Quaternion quaternion) {
+		mYaw = quaternion.getYaw();
+		mPitch = quaternion.getPitch();
+		mRoll = quaternion.getRoll();
+	}
+
 	public void set(EulerAngles values) {
 		mYaw = values.mYaw;
 		mPitch = values.mPitch;

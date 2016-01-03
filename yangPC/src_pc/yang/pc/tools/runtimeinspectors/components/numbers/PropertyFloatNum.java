@@ -1,6 +1,5 @@
-package yang.pc.tools.runtimeinspectors.components;
+package yang.pc.tools.runtimeinspectors.components.numbers;
 
-import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 public class PropertyFloatNum extends PropertyNumBase {

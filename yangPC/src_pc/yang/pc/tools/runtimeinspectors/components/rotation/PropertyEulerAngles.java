@@ -1,13 +1,14 @@
-package yang.pc.tools.runtimeinspectors.components;
+package yang.pc.tools.runtimeinspectors.components.rotation;
 
 import yang.math.MathConst;
 import yang.math.objects.EulerAngles;
+import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArrayBase;
 import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 public class PropertyEulerAngles extends PropertyNumArrayBase {
 
-	private final static float PITCH_RANGE = 89.5f;
-	private EulerAngles mEulerAngles;
+	protected final static float PITCH_RANGE = 89.5f;
+	protected EulerAngles mEulerAngles;
 
 	private NumTextField mTextFieldYaw,mTextFieldPitch,mTextFieldRoll;
 
@@ -24,7 +25,7 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 		if(!isReferenced()) {
 			mEulerAngles = new EulerAngles();
 		}
-		mTextFields[1].setRange(-PITCH_RANGE,PITCH_RANGE);
+		mTextFieldPitch.setRange(-PITCH_RANGE,PITCH_RANGE);
 		setMaxDigits(2);
 		setScrollFactor(0.35f);
 		mTextFieldYaw.setScrollFactor(0.5f);
@@ -32,6 +33,11 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 		mTextFieldYaw.setCyclic(true);
 		mTextFieldRoll.setRange(0,360);
 		mTextFieldRoll.setCyclic(true);
+	}
+
+	@Override
+	public void setPreferredOutputType(Class<?> type) {
+
 	}
 
 	@Override
@@ -56,7 +62,7 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 	}
 
 	@Override
-	protected void setValueReference(Object reference) {
+	public void setValueReference(Object reference) {
 		mEulerAngles = (EulerAngles)reference;
 	}
 
