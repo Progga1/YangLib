@@ -30,8 +30,8 @@ public class PropertyTransform extends PropertyChain {
 		mScaleComp.init(this, "Scale", true);
 		mScaleComp.setLinkable();
 		mScaleComp.setMaxDigits(2);
-		mPositionComp.setMouseScrollFactor(0.005f);
-		mScaleComp.setMouseScrollFactor(0.005f);
+		mPositionComp.setScrollFactor(0.005f);
+		mScaleComp.setScrollFactor(0.005f);
 		mOrientationComp = new PropertyQuaternion();
 		mOrientationComp.init(this, "Orientation", true);
 

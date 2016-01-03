@@ -32,6 +32,7 @@ public class PropertyCameraControl extends PropertyChain {
 		mDelayComp = new PropertyNumArray(2);
 		mDelayComp.init(this,"Delay (angle,zoom)",false);
 		mDelayComp.setDefaultValue(1);
+		mDelayComp.setClickSteps(0.1f);
 		mDelayComp.setRange(0.001f,1);
 
 		if(!isReferenced()) {
@@ -59,12 +60,12 @@ public class PropertyCameraControl extends PropertyChain {
 
 	@Override
 	public void refreshOutValue() {
+		super.refreshOutValue();
 		mCamera.mTargetZoom = mDistanceComp.getFloat();
 		mCamera.mZoom = mCamera.mTargetZoom;
 		mCamera.mAngleDelay = mDelayComp.getFloat(0);
 		mCamera.mZoomDelay = mDelayComp.getFloat(1);
 		mCamera.mInvertView = mInvertedComp.getBool();
-		super.refreshOutValue();
 	}
 
 	@Override

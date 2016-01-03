@@ -19,8 +19,7 @@ public abstract class PropertyChain extends InspectorComponent {
 		mPanel.setLayout(new BoxLayout(mPanel,BoxLayout.Y_AXIS));
 		mComponents = createComponents();
 		for(InspectorComponent component:mComponents) {
-			InspectorItem item = mPanel.add(component);
-//			item.setBorder(InspectorGUIDefinitions.SUB_PROPERTY_BORDER);
+			mPanel.add(component);
 		}
 	}
 

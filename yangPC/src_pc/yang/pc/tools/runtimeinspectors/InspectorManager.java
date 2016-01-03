@@ -10,11 +10,12 @@ import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
-import yang.pc.tools.runtimeinspectors.components.PropertyCameraControl;
 import yang.pc.tools.runtimeinspectors.components.PropertyBooleanCheckBox;
+import yang.pc.tools.runtimeinspectors.components.PropertyCameraControl;
 import yang.pc.tools.runtimeinspectors.components.PropertyColorNums;
 import yang.pc.tools.runtimeinspectors.components.PropertyEulerAngles;
 import yang.pc.tools.runtimeinspectors.components.PropertyFloatNum;
+import yang.pc.tools.runtimeinspectors.components.PropertyInteger;
 import yang.pc.tools.runtimeinspectors.components.PropertyQuaternion;
 import yang.pc.tools.runtimeinspectors.components.PropertyTextField;
 import yang.pc.tools.runtimeinspectors.components.PropertyTransform;
@@ -26,9 +27,10 @@ public class InspectorManager {
 
 	public InspectorManager() {
 		registerType(Boolean.class,PropertyBooleanCheckBox.class);
-		registerType(String.class,PropertyTextField.class);
+		registerType(Integer.class,PropertyInteger.class);
 		registerType(Float.class,PropertyFloatNum.class);
 		registerType(Double.class,PropertyFloatNum.class);
+		registerType(String.class,PropertyTextField.class);
 		registerType(Point3f.class,PropertyVector3.class);
 		registerType(Vector3f.class,PropertyVector3.class);
 		registerType(EulerAngles.class,PropertyEulerAngles.class);

@@ -13,20 +13,22 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 	@Override
 	public void postInit() {
 		super.postInit();
+		if(!isReferenced()) {
+			mColor = new FloatColor(1);
+		}
 		setDefaultValue(1);
 		setMaxDigits(3);
 		setMinValue(0);
 		setMaxValue(1);
-		if(!isReferenced()) {
-			mColor = new FloatColor(1);
-		}
+		setScrollFactor(0.01f);
+		setClickSteps(0.1f);
 		setLinkable();
 	}
 
 	@Override
 	public void setLinkable() {
 		super.setLinkable();
-		mLinks.removeComponent(mTextFields[3]);
+		mTextFields[3].unlink();
 	}
 
 	@Override

@@ -23,7 +23,6 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 			for(int i=0;i<mDoubleValues.length;i++) {
 				mDoubleValues[i] = mTextFields[i].getDouble();
 			}
-
 		}else{
 			if(mFloatValues==null)
 				mFloatValues = new float[mElemCount];
@@ -64,24 +63,16 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 	}
 
 	@Override
+	public float getFloat(int index) {
+		return mTextFields[index].getFloat();
+	}
+
+	@Override
 	public void setFloat(int index,float value) {
 		if(mFloatValues==null)
 			mFloatValues = new float[mElemCount];
 		mFloatValues[index] = value;
-	}
-
-	@Override
-	public float getFloat(int index) {
-		if(mFloatValues==null)
-			mFloatValues = new float[mElemCount];
-		return mFloatValues[index];
-	}
-
-	@Override
-	public void setDouble(int index,double value) {
-		if(mDoubleValues==null)
-			mDoubleValues = new double[mElemCount];
-		mDoubleValues[index] = value;
+		mTextFields[index].setFloat(value);
 	}
 
 	@Override
@@ -89,6 +80,14 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 		if(mDoubleValues==null)
 			mDoubleValues = new double[mElemCount];
 		return mDoubleValues[index];
+	}
+
+	@Override
+	public void setDouble(int index,double value) {
+		if(mDoubleValues==null)
+			mDoubleValues = new double[mElemCount];
+		mDoubleValues[index] = value;
+		mTextFields[index].setDouble(value);
 	}
 
 }

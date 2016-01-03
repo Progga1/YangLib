@@ -1,22 +1,13 @@
 package yang.pc.tools.runtimeinspectors.components;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
-public class PropertyFloatNum extends InspectorComponent implements ActionListener {
-
-	public NumTextField mNumTextField;
+public class PropertyFloatNum extends PropertyNumBase {
 
 	@Override
-	protected void postInit() {
-		mNumTextField = new NumTextField();
-		mNumTextField.setBorder(InspectorGUIDefinitions.COMPONENT_PADDING_BORDER);
-		mNumTextField.setActionListener(this);
+	protected NumTextField createNumTextField() {
+		return new NumTextField();
 	}
 
 	public PropertyFloatNum setDefaultValue(float defaultValue) {
@@ -37,21 +28,6 @@ public class PropertyFloatNum extends InspectorComponent implements ActionListen
 	public PropertyFloatNum setMaxDigits(int maxDigits) {
 		mNumTextField.setMaxDigits(maxDigits);
 		return this;
-	}
-
-	public PropertyFloatNum setMouseScrollFactor(float stepsPerPixel) {
-		mNumTextField.setScrollFactor(stepsPerPixel);
-		return this;
-	}
-
-	@Override
-	public Component getComponent() {
-		return mNumTextField;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent ev) {
-		notifyValueUserInput();
 	}
 
 	@Override

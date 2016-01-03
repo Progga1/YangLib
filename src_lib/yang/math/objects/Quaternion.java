@@ -135,12 +135,12 @@ public class Quaternion {
 		rotateY(yaw);
 	}
 
-//	public void setFromEuler2(float yaw, float pitch, float roll) {
-//		setIdentity();
-//		rotateX(roll);
-//		rotateY(pitch);
-//		rotateZ(yaw);
-//	}
+	public void setFromEuler(EulerAngles eulerAngles) {
+		setIdentity();
+		rotateZ(eulerAngles.mRoll);
+		rotateX(eulerAngles.mPitch);
+		rotateY(eulerAngles.mYaw);
+	}
 
 	public void setFromAxis(Vector3f axis, float angle) {
 		final float sinA = (float) Math.sin(angle * AXIS_FAC);

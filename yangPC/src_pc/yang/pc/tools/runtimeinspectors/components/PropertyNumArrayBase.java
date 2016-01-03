@@ -73,9 +73,15 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 		}
 	}
 
-	public void setMouseScrollFactor(float stepsPerPixel) {
+	public void setScrollFactor(float stepsPerPixel) {
 		for(NumTextField textField:mTextFields) {
 			textField.setScrollFactor(stepsPerPixel);
+		}
+	}
+
+	public void setClickSteps(float stepsPerClick) {
+		for(NumTextField textField:mTextFields) {
+			textField.setClickSteps(stepsPerClick);
 		}
 	}
 

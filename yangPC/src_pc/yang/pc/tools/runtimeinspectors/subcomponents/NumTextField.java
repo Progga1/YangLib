@@ -24,6 +24,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	private static final long serialVersionUID = 1L;
 
+	public static final int MAX_CLICK_MILLIS = 200;
 	public static Border SCROLL_WIDGET_BORDER = BorderFactory.createBevelBorder(0);
 	public static Border BORDER = BorderFactory.createMatteBorder(1,0,1,1,InspectorGUIDefinitions.CL_OUTLINE);
 
@@ -31,21 +32,29 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	private JFormattedTextField mTextField;
 	private JPanel mScrollWidget;
 	private float mScrollFactor = 0.01f;
+	private float mClickSteps = 1;
 	private ActionListener mListener;
 	private int mMaxDigits = 3;
-	private double mCurValue;
+	protected double mCurValue;
 	private int mMouseDown = -1;
 	private double mDefaultValue = 0;
 	private double mMinValue = -Double.MAX_VALUE;
 	private double mMaxValue = Double.MAX_VALUE;
 	private boolean mLinking = false;
+	private long mMouseDownTime = -1;
+	private double mStartDragValue = -1;
 
 	private int mLstX = Integer.MAX_VALUE,mLstY = Integer.MAX_VALUE;
 
 	public static String maxDigitsString(String string,int maxDigits) {
 		int commaInd = string.indexOf(".");
-		if(commaInd>-1 && string.length()-1-commaInd>maxDigits)
-			string = string.substring(0,commaInd+maxDigits+1);
+		if(commaInd>-1) {
+			if(maxDigits<=0) {
+				string = string.substring(0,commaInd);
+			}
+			else if(string.length()-1-commaInd>maxDigits)
+				string = string.substring(0,commaInd+maxDigits+1);
+		}
 		return string;
 	}
 
@@ -99,6 +108,10 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	@Override
 	public void setScrollFactor(float stepsPerPixel) {
 		mScrollFactor = stepsPerPixel;
+	}
+
+	public void setClickSteps(float stepsPerClick) {
+		mClickSteps = stepsPerClick;
 	}
 
 	public void setScrollWidgetWidth(int pixels) {
@@ -186,7 +199,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	@Override
 	public void mouseClicked(MouseEvent ev) {
-		if(ev.getClickCount()>1)
+		if(ev.getSource()==mTextField && ev.getClickCount()>1)
 			mTextField.selectAll();
 	}
 
@@ -202,25 +215,33 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	@Override
 	public void mousePressed(MouseEvent ev) {
-		if(ev.getSource()!=mScrollWidget)
-			return;
-		mLstX = Integer.MAX_VALUE;
-		mLstY = Integer.MAX_VALUE;
-		if(ev.getButton()==MouseEvent.BUTTON1)
-			mMouseDown = 1;
-		if(ev.getButton()==MouseEvent.BUTTON2)
-			mMouseDown = 2;
-		if(ev.getButton()==MouseEvent.BUTTON3)
-			mMouseDown = 3;
-		startLink();
+		if(ev.getSource()==mScrollWidget) {
+			mLstX = Integer.MAX_VALUE;
+			mLstY = Integer.MAX_VALUE;
+			if(ev.getButton()==MouseEvent.BUTTON1)
+				mMouseDown = 1;
+			if(ev.getButton()==MouseEvent.BUTTON2)
+				mMouseDown = 2;
+			if(ev.getButton()==MouseEvent.BUTTON3)
+				mMouseDown = 3;
+			mMouseDownTime = System.currentTimeMillis();
+			mStartDragValue = mCurValue;
+			startLink();
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent ev) {
-		if(ev.getSource()!=mScrollWidget)
-			return;
-		mMouseDown = -1;
-		endLink();
+		if(ev.getSource()==mScrollWidget) {
+			mMouseDown = -1;
+			if(System.currentTimeMillis()-mMouseDownTime<=MAX_CLICK_MILLIS) {
+				int dir = ev.getButton()==MouseEvent.BUTTON1?1:(ev.getButton()==MouseEvent.BUTTON3?-1:0);
+				setDouble(mStartDragValue+mClickSteps*dir);
+				notifyLinks();
+				mListener.actionPerformed(null);
+			}
+			endLink();
+		}
 	}
 
 	private void startLink() {
@@ -252,10 +273,11 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 					setDouble(mMinValue);
 				else if(mCurValue>mMaxValue)
 					setDouble(mMaxValue);
-				notifyLinks();
-				endLink();
 			}catch(NumberFormatException ex) {
 
+			}finally{
+				notifyLinks();
+				endLink();
 			}
 		}
 	}
@@ -273,12 +295,19 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	@Override
 	public void focusLost(FocusEvent arg0) {
 		onValueUserInput();
-		this.mListener.actionPerformed(null);
+		mListener.actionPerformed(null);
 	}
 
 	public void setRange(float minValue, float maxValue) {
 		mMinValue = minValue;
 		mMaxValue = maxValue;
+	}
+
+	public void unlink() {
+		if(mLinks!=null) {
+			mLinks.removeComponent(this);
+			mLinks = null;
+		}
 	}
 
 }
