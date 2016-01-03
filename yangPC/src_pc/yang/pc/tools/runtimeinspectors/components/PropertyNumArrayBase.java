@@ -9,11 +9,16 @@ import javax.swing.JPanel;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
+import yang.pc.tools.runtimeinspectors.LinkedNumComponents;
+import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabel;
+import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 public abstract class PropertyNumArrayBase extends InspectorComponent implements ActionListener {
 
 	protected JPanel mPanel;
 
+	protected LinkedNumComponents mLinks;
+	protected CheckLabel mLinkCheckLabel = null;
 	protected NumTextField[] mTextFields;
 	protected int mElemCount;
 
@@ -31,6 +36,16 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 			mTextFields[i].setBorder(InspectorGUIDefinitions.COMPONENT_PADDING_BORDER);
 			mPanel.add(mTextFields[i]);
 			mTextFields[i].setActionListener(this);
+		}
+	}
+
+	public void setLinkable() {
+		if(mLinks!=null)
+			return;
+		mLinks = new LinkedNumComponents();
+		for(NumTextField textField:mTextFields) {
+			mLinks.addComponent(textField);
+			textField.setLinkedNumberIOs(mLinks);
 		}
 	}
 
@@ -119,6 +134,17 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 
 	public double getDouble(int index) {
 		return mTextFields[index].getDouble();
+	}
+
+	@Override
+	public boolean isLinkingSupported() {
+		return mLinks!=null;
+	}
+
+	@Override
+	public void selectionChanged(CheckLabel sender) {
+		if(mLinks!=null)
+			mLinks.mLinkActive = sender.isSelected();
 	}
 
 }

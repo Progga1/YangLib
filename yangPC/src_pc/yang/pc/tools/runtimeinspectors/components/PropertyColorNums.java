@@ -20,6 +20,13 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 		if(!isReferenced()) {
 			mColor = new FloatColor(1);
 		}
+		setLinkable();
+	}
+
+	@Override
+	public void setLinkable() {
+		super.setLinkable();
+		mLinks.removeComponent(mTextFields[3]);
 	}
 
 	@Override

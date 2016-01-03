@@ -2,10 +2,14 @@ package yang.pc.tools.runtimeinspectors;
 
 import java.awt.Component;
 
-public abstract class InspectorComponent {
+import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabel;
+import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabelListener;
+
+public abstract class InspectorComponent implements CheckLabelListener {
 
 	public String mName;
 	protected InspectorPanel mPropPanel;
+	protected InspectorItem mHolder;
 	protected InspectorComponent mParent = null;
 	protected boolean mWasChanged = false;
 	private boolean mReferenced;
@@ -15,8 +19,8 @@ public abstract class InspectorComponent {
 
 	protected abstract Component getComponent();
 
-	public final void init(InspectorPanel propertyPanel, String name, boolean referenced) {
-		mPropPanel = propertyPanel;
+	public final void init(InspectorPanel panel, String name, boolean referenced) {
+		mPropPanel = panel;
 		mName = name;
 		mReferenced = referenced;
 		postInit();
@@ -168,6 +172,15 @@ public abstract class InspectorComponent {
 			setValueReference(reference);
 			setVisible(true);
 		}
+	}
+
+	public boolean isLinkingSupported() {
+		return false;
+	}
+
+	@Override
+	public void selectionChanged(CheckLabel sender) {
+
 	}
 
 }

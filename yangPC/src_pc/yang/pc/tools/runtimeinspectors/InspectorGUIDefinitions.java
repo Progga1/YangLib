@@ -9,7 +9,7 @@ import javax.swing.border.Border;
 public class InspectorGUIDefinitions {
 
 	public final static Dimension INITIAL_DIMENSION = new Dimension(400,600);
-	public final static int DEFAULT_CAPTION_WIDTH = 150;
+	public final static int DEFAULT_CAPTION_WIDTH = 160;
 	public final static int DEFAULT_COMPONENT_HEIGHT = 26;
 
 	public final static Color CL_LABEL_BACKGROUND = new Color(225,225,225);

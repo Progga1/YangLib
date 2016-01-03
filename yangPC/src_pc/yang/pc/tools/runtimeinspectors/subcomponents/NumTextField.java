@@ -1,4 +1,4 @@
-package yang.pc.tools.runtimeinspectors.components;
+package yang.pc.tools.runtimeinspectors.subcomponents;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,6 +18,7 @@ import javax.swing.border.Border;
 
 import yang.model.NumberIO;
 import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
+import yang.pc.tools.runtimeinspectors.LinkedNumComponents;
 
 public class NumTextField extends JPanel implements MouseMotionListener,MouseListener,ActionListener,FocusListener,NumberIO {
 
@@ -26,16 +27,18 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	public static Border SCROLL_WIDGET_BORDER = BorderFactory.createBevelBorder(0);
 	public static Border BORDER = BorderFactory.createMatteBorder(1,0,1,1,InspectorGUIDefinitions.CL_OUTLINE);
 
+	private LinkedNumComponents mLinks;
 	private JFormattedTextField mTextField;
 	private JPanel mScrollWidget;
 	private float mScrollFactor = 0.01f;
 	private ActionListener mListener;
-	private int mMaxDigits = 5;
+	private int mMaxDigits = 3;
 	private double mCurValue;
 	private int mMouseDown = -1;
 	private double mDefaultValue = 0;
 	private double mMinValue = -Double.MAX_VALUE;
 	private double mMaxValue = Double.MAX_VALUE;
+	private boolean mLinking = false;
 
 	private int mLstX = Integer.MAX_VALUE,mLstY = Integer.MAX_VALUE;
 
@@ -89,6 +92,11 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mMaxDigits = maxDigits;
 	}
 
+	public void reset() {
+		setDouble(mDefaultValue);
+	}
+
+	@Override
 	public void setScrollFactor(float stepsPerPixel) {
 		mScrollFactor = stepsPerPixel;
 	}
@@ -100,6 +108,10 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	public void setActionListener(ActionListener listener) {
 		mListener = listener;
 		mTextField.addActionListener(listener);
+	}
+
+	public void setLinkedNumberIOs(LinkedNumComponents links) {
+		mLinks = links;
 	}
 
 	private void setVal(double val) {
@@ -145,6 +157,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		int x = ev.getX();
 		int y = ev.getY();
 		if(mLstX!=Integer.MAX_VALUE) {
+			double prevVal = mCurValue;
 			int deltaX = x-mLstX;
 			int deltaY = y-mLstY;
 			float fac = mScrollFactor;
@@ -159,6 +172,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 				break;
 			}
 			setDouble(mCurValue - deltaY*fac + deltaX*fac);
+			notifyLinks();
 			mListener.actionPerformed(null);
 		}
 		mLstX = x;
@@ -198,6 +212,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 			mMouseDown = 2;
 		if(ev.getButton()==MouseEvent.BUTTON3)
 			mMouseDown = 3;
+		startLink();
 	}
 
 	@Override
@@ -205,28 +220,49 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		if(ev.getSource()!=mScrollWidget)
 			return;
 		mMouseDown = -1;
+		endLink();
 	}
 
-	private void updateCurValue() {
+	private void startLink() {
+		if(mLinks!=null && mLinks.canStart()) {
+			mLinking = true;
+			mLinks.startUserInput(this);
+		}
+	}
+
+	private void notifyLinks() {
+		if(mLinking)
+			mLinks.valueChanged();
+	}
+
+	private void endLink() {
+		if(mLinking) {
+			mLinks.endUserInput();
+			mLinking = false;
+		}
+	}
+
+	private void onValueUserInput() {
 		String text = mTextField.getText();
-		if(text.equals("")) {
-//			mCurValue = mDefaultValue;
-		}else{
+		if(!text.equals("")) {
 			try{
+				startLink();
 				mCurValue = Double.parseDouble(text);
 				if(mCurValue<mMinValue)
 					setDouble(mMinValue);
 				else if(mCurValue>mMaxValue)
 					setDouble(mMaxValue);
+				notifyLinks();
+				endLink();
 			}catch(NumberFormatException ex) {
-//				mCurValue = mDefaultValue;
+
 			}
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		updateCurValue();
+		onValueUserInput();
 	}
 
 	@Override
@@ -236,7 +272,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		updateCurValue();
+		onValueUserInput();
 		this.mListener.actionPerformed(null);
 	}
 
