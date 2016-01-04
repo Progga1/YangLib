@@ -20,6 +20,8 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	protected YangList<NameInterface> mItems = new YangList<NameInterface>();
 	protected static Border BORDER = BorderFactory.createEmptyBorder(4,4,4,4);
 
+	protected boolean mLockChange = false;
+
 	public PropertyComboBox() {
 
 	}
@@ -60,6 +62,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	}
 
 	private void addToComboBox(String name) {
+		mLockChange = true;
 		int i = 0;
 		String origName = name;
 		while(nameExists(name)) {
@@ -67,6 +70,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			name = origName+"_"+i;
 		}
 		mComboBox.addItem(name);
+		mLockChange = false;
 	}
 
 	public void addItem(NameInterface item) {
@@ -102,6 +106,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 
 	@Override
 	public void setInt(int value) {
+		mLockChange = true;
 		int l = mComboBox.getItemCount()-1;
 		if(l<0)
 			return;
@@ -111,6 +116,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			mComboBox.setSelectedIndex(l);
 		else
 			mComboBox.setSelectedIndex(value);
+		mLockChange = false;
 	}
 
 	@Override
@@ -120,19 +126,23 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 
 	@Override
 	public void setString(String value) {
+		mLockChange = true;
 		int l = mComboBox.getItemCount();
 		for(int i=0;i<l;i++) {
 			if(value.equals(mComboBox.getItemAt(i))) {
 				mComboBox.setSelectedIndex(i);
+				mLockChange = false;
 				return;
 			}
 			i++;
 		}
+		mLockChange = false;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		notifyValueUserInput();
+		if(!mLockChange)
+			notifyValueUserInput();
 	}
 
 }

@@ -22,7 +22,7 @@ public class InspectorFrame implements ActionListener {
 	private JFrame mFrame;
 	private JPanel mMainPanel;
 	private JPanel mTopPanel;
-	private JComboBox mObjectSelection;
+	private JComboBox<String> mObjectSelection;
 	private BorderLayout mLayout;
 	private InspectorPanel mActiveInspector = null;
 	private YangList<ObjectAndInspector> mInspectedObjects;
@@ -51,7 +51,7 @@ public class InspectorFrame implements ActionListener {
 		mMainPanel.setPreferredSize(InspectorGUIDefinitions.INITIAL_DIMENSION);
 		mInspectedObjects = new YangList<ObjectAndInspector>();
 		mManager = manager;
-		mObjectSelection = new JComboBox();
+		mObjectSelection = new JComboBox<String>();
 		mTopPanel = new JPanel();
 		mTopPanel.add(mObjectSelection);
 		mTopPanel.setLayout(new BoxLayout(mTopPanel,BoxLayout.PAGE_AXIS));
