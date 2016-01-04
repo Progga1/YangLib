@@ -1,6 +1,8 @@
 package yang.pc.tools.runtimeinspectors;
 
 import java.awt.Component;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 import yang.model.wrappers.DoubleInterface;
 import yang.model.wrappers.FloatInterface;
@@ -40,6 +42,10 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	public void setPreferredOutputType(Class<?> type) {
+
+	}
+
+	public void loadFromStream(String value, BufferedReader reader) throws IOException {
 
 	}
 

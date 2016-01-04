@@ -1,6 +1,7 @@
 package yang.pc.tools.runtimeinspectors.components;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 
 import javax.swing.JCheckBox;
 import javax.swing.event.ChangeEvent;
@@ -12,6 +13,7 @@ import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
 public class PropertyBooleanCheckBox extends InspectorComponent implements ChangeListener {
 
 	private JCheckBox mCheckBox;
+	private boolean mChecked = false;
 
 	@Override
 	protected void postInit() {
@@ -22,12 +24,33 @@ public class PropertyBooleanCheckBox extends InspectorComponent implements Chang
 
 	@Override
 	public void setBool(boolean checked) {
-		mCheckBox.setSelected(checked);
+		mChecked = checked;
+	}
+
+//	@Override
+//	protected void refreshOutValue() {
+//		mChecked = mCheckBox.isSelected();
+//	}
+
+	@Override
+	protected String getFileOutputString() {
+		return Boolean.toString(mChecked);
+	}
+
+	@Override
+	protected void updateGUI() {
+		if(mChecked!=mCheckBox.isSelected())
+			mCheckBox.setSelected(mChecked);
+	}
+
+	@Override
+	public void loadFromStream(String value, BufferedReader reader) {
+		setBool(value.equals("true"));
 	}
 
 	@Override
 	public boolean getBool() {
-		return mCheckBox.isSelected();
+		return mChecked;
 	}
 
 	@Override
@@ -37,6 +60,7 @@ public class PropertyBooleanCheckBox extends InspectorComponent implements Chang
 
 	@Override
 	public void stateChanged(ChangeEvent ev) {
+		mChecked = mCheckBox.isSelected();
 		notifyValueUserInput();
 	}
 

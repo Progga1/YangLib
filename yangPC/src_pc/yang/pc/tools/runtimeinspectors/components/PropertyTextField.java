@@ -28,6 +28,11 @@ public class PropertyTextField  extends InspectorComponent implements ActionList
 	}
 
 	@Override
+	protected String getFileOutputString() {
+		return mTextField.getText();
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent ev) {
 		notifyValueUserInput();
 	}

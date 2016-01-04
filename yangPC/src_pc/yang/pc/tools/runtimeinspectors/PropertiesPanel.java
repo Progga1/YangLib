@@ -1,8 +1,12 @@
 package yang.pc.tools.runtimeinspectors;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.util.YangList;
 
 public class PropertiesPanel extends JPanel {
@@ -38,6 +42,39 @@ public class PropertiesPanel extends JPanel {
 		InspectorItem newItem = new InspectorItem(mInspector,component);
 		add(newItem);
 		return newItem;
+	}
+
+	public void loadFromStream(InspectionInterface object, BufferedReader reader) throws IOException {
+		while(true) {
+			String line = reader.readLine();
+			if(line==null)
+				break;
+			line = line.trim();
+			if(line.equals("}"))
+				break;
+			int eqId = line.indexOf("=");
+			if(eqId<0)
+				continue;
+			String key = line.substring(0,eqId);
+			String value = line.substring(eqId+1,line.length());
+			for(InspectorItem item:mItems) {
+				InspectorComponent comp = item.mInspectorComponent;
+				if(comp.mName.equals(key)) {
+					if(object!=null && comp.isReferenced()) {
+						Object ref = object.getReferencedProperty(comp.mName,comp);
+						if(ref==null)
+							continue;
+						comp.setValueReference(ref);
+					}
+					comp.loadFromStream(value,reader);
+					comp.refreshOutValue();
+					if(object!=null && !comp.isReferenced()) {
+						object.setProperty(comp.mName,comp);
+					}
+					break;
+				}
+			}
+		}
 	}
 
 }

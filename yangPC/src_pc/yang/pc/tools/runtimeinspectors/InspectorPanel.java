@@ -2,7 +2,9 @@ package yang.pc.tools.runtimeinspectors;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -128,10 +130,20 @@ public class InspectorPanel {
 		mSaving = false;
 	}
 
+	public void loadFromStream(InspectionInterface object,BufferedReader reader) throws IOException {
+		mPropertiesPanel.loadFromStream(object,reader);
+	}
+
 	public void saveToFile(InspectionInterface object, String filename) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 		saveToStream(object,writer);
 		writer.close();
+	}
+
+	public void loadFromFile(InspectionInterface object, String filename) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(filename));
+		loadFromStream(object,reader);
+		reader.close();
 	}
 
 	public boolean isSaving() {

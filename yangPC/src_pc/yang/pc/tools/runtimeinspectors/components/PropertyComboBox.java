@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -43,6 +44,11 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 		mComboBox.setPreferredSize(new Dimension(0,24));
 		mComboBox.addActionListener(this);
 		refreshLayout();
+	}
+
+	@Override
+	public void loadFromStream(String value, BufferedReader reader) {
+		setString(value);
 	}
 
 	public void refreshLayout() {
@@ -122,7 +128,8 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 		else if(value>l)
 			value = l;
 		if(mPropPanel.isSaving()) {
-			mOutputString = Integer.toString(value);
+			//mOutputString = Integer.toString(value);
+			mOutputString = mItems.get(value).getName();
 		}else{
 			mComboBox.setSelectedIndex(value);
 		}
@@ -138,12 +145,12 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	public void setString(String value) {
 		mLockChange = true;
 		int l = mComboBox.getItemCount();
+
 		for(int i=0;i<l;i++) {
 			if(value.equals(mComboBox.getItemAt(i))) {
 				setInt(i);
 				return;
 			}
-			i++;
 		}
 		mLockChange = false;
 	}

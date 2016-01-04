@@ -44,6 +44,14 @@ public class InspectorFrame implements ActionListener {
 			return mNameOrAlias +" ("+mOrigName+") - "+mObject;
 		}
 
+		public void saveToFile(InspectedObject inspObj,String filename) throws IOException {
+			mInspector.saveToFile(inspObj.mObject,filename);
+		}
+
+		public void loadFromFile(InspectedObject inspObj,String filename) throws IOException {
+			mInspector.loadFromFile(inspObj.mObject,filename);
+		}
+
 	}
 
 	protected InspectorFrame(InspectorManager manager) {
@@ -198,18 +206,24 @@ public class InspectorFrame implements ActionListener {
 		mUpdateTimer = -1;
 	}
 
-	private void saveToFile(InspectedObject inspObj,String filename) throws IOException {
-		inspObj.mInspector.saveToFile(inspObj.mObject,filename);
-	}
-
 	public void saveObjectToFile(Object object,String filename) throws IOException {
 		for(InspectedObject inspObj:mInspectedObjects) {
 			if(inspObj.mObject==object) {
-				saveToFile(inspObj,filename);
+				inspObj.saveToFile(inspObj,filename);
 				return;
 			}
 		}
-		throw new RuntimeException("Object not in inspected: "+object.toString());
+		throw new RuntimeException("Object not inspected: "+object.toString());
+	}
+
+	public void loadObjectFromFile(Object object,String filename) throws IOException {
+		for(InspectedObject inspObj:mInspectedObjects) {
+			if(inspObj.mObject==object) {
+				inspObj.loadFromFile(inspObj,filename);
+				return;
+			}
+		}
+		throw new RuntimeException("Object not inspected: "+object.toString());
 	}
 
 }

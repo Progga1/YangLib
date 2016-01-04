@@ -151,7 +151,8 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		}
 	}
 
-	public void updateText() {
+	@Override
+	public void updateGUI() {
 		mTextField.setText(maxDigitsString(mOrigText,mMaxDigits));
 	}
 
@@ -159,10 +160,10 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		double newVal = wrap(val);
 		if(mCurValue==newVal)
 			return;
-		mCurValue = val;
+		mCurValue = newVal;
 		mOrigText = Double.toString(mCurValue);
 		if(updateText)
-			updateText();
+			updateGUI();
 	}
 
 	@Override
@@ -174,10 +175,10 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		double newVal = wrap(val);
 		if(mCurValue==newVal)
 			return;
-		mCurValue = val;
+		mCurValue = newVal;
 		mOrigText = Float.toString((float)mCurValue);
 		if(updateText)
-			updateText();
+			updateGUI();
 	}
 
 	public void setFloat(float val) {
@@ -311,6 +312,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 					setDouble(wrap(val));
 				else
 					mCurValue = val;
+				mOrigText = text;
 			}catch(NumberFormatException ex) {
 
 			}finally{

@@ -3,6 +3,7 @@ package yang.pc.tools.runtimeinspectors.components.numbers;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.InspectorGUIDefinitions;
@@ -24,6 +25,11 @@ public abstract class PropertyNumBase extends InspectorComponent implements Acti
 	public PropertyNumBase setMouseScrollFactor(float stepsPerPixel) {
 		mNumTextField.setScrollFactor(stepsPerPixel);
 		return this;
+	}
+
+	@Override
+	public void loadFromStream(String value,BufferedReader reader) {
+		setDouble(Double.parseDouble(value));
 	}
 
 	@Override

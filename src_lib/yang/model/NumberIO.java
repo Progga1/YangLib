@@ -9,5 +9,6 @@ public interface NumberIO {
 	public void setMaxValue(double maxValue);
 	public void setDefaultValue(double defaultValue);
 	public void setScrollFactor(float stepsPerPixel);
+	public void updateGUI();
 
 }

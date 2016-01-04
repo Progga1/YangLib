@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 
 import javax.swing.JPanel;
 
@@ -56,8 +57,16 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 	@Override
 	protected void updateGUI() {
 		for(NumTextField textField:mTextFields) {
-			textField.updateText();
+			textField.updateGUI();
 		}
+	}
+
+	@Override
+	public void loadFromStream(String value,BufferedReader reader) {
+		String[] split = value.split(",");
+		int l = Math.min(mTextFields.length,split.length);
+		for(int i=0;i<l;i++)
+			setDouble(i,Double.parseDouble(split[i]));
 	}
 
 	public void setLinkable() {

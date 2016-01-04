@@ -36,6 +36,7 @@ public class LinkedNumComponents {
 					component.setDouble(curVal);
 				else
 					component.setDouble(compVal*ratio);
+				component.updateGUI();
 			}
 			i++;
 		}

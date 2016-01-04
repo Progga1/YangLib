@@ -1,11 +1,13 @@
 package yang.pc.tools.runtimeinspectors;
 
 import java.awt.Component;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 
 public abstract class PropertyChain extends InspectorComponent {
@@ -59,6 +61,11 @@ public abstract class PropertyChain extends InspectorComponent {
 	}
 
 	@Override
+	public void loadFromStream(String value,BufferedReader reader) throws IOException {
+		mPanel.loadFromStream(null,reader);
+	}
+
+	@Override
 	protected Component getComponent() {
 		return mPanel;
 	}
@@ -86,6 +93,15 @@ public abstract class PropertyChain extends InspectorComponent {
 
 	@Override
 	protected boolean useDefaultCaptionLayout() {
+		return false;
+	}
+
+	@Override
+	public boolean hasFocus() {
+		for(InspectorComponent component:mComponents) {
+			if(component.hasFocus())
+				return true;
+		}
 		return false;
 	}
 
