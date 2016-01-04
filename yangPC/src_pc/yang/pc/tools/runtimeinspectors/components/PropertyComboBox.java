@@ -20,6 +20,8 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	protected YangList<NameInterface> mItems = new YangList<NameInterface>();
 	protected static Border BORDER = BorderFactory.createEmptyBorder(4,4,4,4);
 
+	protected String mOutputString = null;
+
 	protected boolean mLockChange = false;
 
 	public PropertyComboBox() {
@@ -105,17 +107,25 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	}
 
 	@Override
+	protected String getFileOutputString() {
+		return mOutputString;
+	}
+
+	@Override
 	public void setInt(int value) {
 		mLockChange = true;
 		int l = mComboBox.getItemCount()-1;
 		if(l<0)
 			return;
 		if(value<0)
-			mComboBox.setSelectedIndex(0);
+			value = 0;
 		else if(value>l)
-			mComboBox.setSelectedIndex(l);
-		else
+			value = l;
+		if(mPropPanel.isSaving()) {
+			mOutputString = Integer.toString(value);
+		}else{
 			mComboBox.setSelectedIndex(value);
+		}
 		mLockChange = false;
 	}
 
@@ -130,8 +140,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 		int l = mComboBox.getItemCount();
 		for(int i=0;i<l;i++) {
 			if(value.equals(mComboBox.getItemAt(i))) {
-				mComboBox.setSelectedIndex(i);
-				mLockChange = false;
+				setInt(i);
 				return;
 			}
 			i++;

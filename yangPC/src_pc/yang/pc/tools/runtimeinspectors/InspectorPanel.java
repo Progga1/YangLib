@@ -2,6 +2,9 @@ package yang.pc.tools.runtimeinspectors;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,6 +19,7 @@ public class InspectorPanel {
 	protected InspectorManager mManager;
 	protected JScrollPane mScrollPane;
 	protected InspectionInterface mCurObject = null;
+	protected boolean mSaving = false;
 
 	protected InspectorPanel(InspectorFrame frame) {
 		mManager = frame.mManager;
@@ -111,6 +115,27 @@ public class InspectorPanel {
 
 	public void notifyValueUserInput() {
 		mFrame.notifyValueUserInput();
+	}
+
+	public void saveToStream(InspectionInterface object,BufferedWriter writer) throws IOException {
+		mSaving = true;
+		for(InspectorItem item:mPropertiesPanel.mItems) {
+			InspectorComponent comp = item.mInspectorComponent;
+			String outString = comp.getStringOutput(object);
+			if(outString!=null)
+				writer.write(outString+"\r\n");
+		}
+		mSaving = false;
+	}
+
+	public void saveToFile(InspectionInterface object, String filename) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+		saveToStream(object,writer);
+		writer.close();
+	}
+
+	public boolean isSaving() {
+		return mSaving;
 	}
 
 }

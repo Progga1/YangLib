@@ -1,9 +1,11 @@
 package yang.pc.tools.runtimeinspectors;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
@@ -25,12 +27,12 @@ public class InspectorFrame implements ActionListener {
 	private JComboBox<String> mObjectSelection;
 	private BorderLayout mLayout;
 	private InspectorPanel mActiveInspector = null;
-	private YangList<ObjectAndInspector> mInspectedObjects;
+	private YangList<InspectedObject> mInspectedObjects;
 	private HashMap<Class<?>,InspectorPanel> mDefaultInspectors = new HashMap<Class<?>,InspectorPanel>(32);
 	private boolean mRefreshingLayout = false;
 	private double mUpdateTimer = 0;
 
-	private class ObjectAndInspector {
+	private class InspectedObject {
 
 		String mNameOrAlias;
 		String mOrigName;
@@ -49,7 +51,7 @@ public class InspectorFrame implements ActionListener {
 		mMainPanel = new JPanel();
 		mMainPanel.setLayout(mLayout);
 		mMainPanel.setPreferredSize(InspectorGUIDefinitions.INITIAL_DIMENSION);
-		mInspectedObjects = new YangList<ObjectAndInspector>();
+		mInspectedObjects = new YangList<InspectedObject>();
 		mManager = manager;
 		mObjectSelection = new JComboBox<String>();
 		mTopPanel = new JPanel();
@@ -81,14 +83,14 @@ public class InspectorFrame implements ActionListener {
 	}
 
 	public boolean nameExists(String name) {
-		for(ObjectAndInspector elem:mInspectedObjects) {
+		for(InspectedObject elem:mInspectedObjects) {
 			if(name.equals(elem.mNameOrAlias))
 				return true;
 		}
 		return false;
 	}
 
-	private void refreshName(ObjectAndInspector elem) {
+	private void refreshName(InspectedObject elem) {
 		String name = elem.mOrigName;
 		int i=0;
 		elem.mNameOrAlias = null;
@@ -100,7 +102,7 @@ public class InspectorFrame implements ActionListener {
 	}
 
 	public void addObjectToInspect(InspectionInterface object,InspectorPanel inspector) {
-		ObjectAndInspector elem = new ObjectAndInspector();
+		InspectedObject elem = new InspectedObject();
 		elem.mObject = object;
 		elem.mInspector = inspector;
 
@@ -136,7 +138,7 @@ public class InspectorFrame implements ActionListener {
 			return;
 
 		boolean refreshAll = false;
-		for(ObjectAndInspector elem:mInspectedObjects) {
+		for(InspectedObject elem:mInspectedObjects) {
 			if(elem.mOrigName!=elem.mObject.getName()) {
 				System.out.println("NAME CHANGED "+elem.mOrigName);
 				refreshName(elem);
@@ -148,7 +150,7 @@ public class InspectorFrame implements ActionListener {
 		}
 		int selId = mObjectSelection.getSelectedIndex()-1;
 		boolean objSel = selId>-1;
-		ObjectAndInspector oi = objSel?mInspectedObjects.get(selId):null;
+		InspectedObject oi = objSel?mInspectedObjects.get(selId):null;
 		InspectorPanel insp = objSel?oi.mInspector:null;
 		boolean changedObject = insp!=mActiveInspector;
 		if(changedObject) {
@@ -177,7 +179,7 @@ public class InspectorFrame implements ActionListener {
 		mRefreshingLayout = true;
 		mObjectSelection.removeAllItems();
 		mObjectSelection.addItem("<none>");
-		for(ObjectAndInspector object:mInspectedObjects) {
+		for(InspectedObject object:mInspectedObjects) {
 			mObjectSelection.addItem(object.mNameOrAlias);
 		}
 		mRefreshingLayout = false;
@@ -194,6 +196,20 @@ public class InspectorFrame implements ActionListener {
 
 	public void notifyValueUserInput() {
 		mUpdateTimer = -1;
+	}
+
+	private void saveToFile(InspectedObject inspObj,String filename) throws IOException {
+		inspObj.mInspector.saveToFile(inspObj.mObject,filename);
+	}
+
+	public void saveObjectToFile(Object object,String filename) throws IOException {
+		for(InspectedObject inspObj:mInspectedObjects) {
+			if(inspObj.mObject==object) {
+				saveToFile(inspObj,filename);
+				return;
+			}
+		}
+		throw new RuntimeException("Object not in inspected: "+object.toString());
 	}
 
 }

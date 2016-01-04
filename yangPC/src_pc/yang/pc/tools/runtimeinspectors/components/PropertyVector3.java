@@ -21,6 +21,11 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 	}
 
 	@Override
+	protected String getFileOutputString() {
+		return mVectorData.mX+","+mVectorData.mY+","+mVectorData.mZ;
+	}
+
+	@Override
 	protected void postValueChanged() {
 		mTextFields[0].setFloat(mVectorData.mX);
 		mTextFields[1].setFloat(mVectorData.mY);

@@ -39,6 +39,27 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 		}
 	}
 
+	@Override
+	protected String getFileOutputString() {
+		String result = "";
+		boolean first = true;
+		for(NumTextField textField:mTextFields) {
+			if(!first) {
+				result += ",";
+			}else
+				first = false;
+			result += textField.getValueString();
+		}
+		return result;
+	}
+
+	@Override
+	protected void updateGUI() {
+		for(NumTextField textField:mTextFields) {
+			textField.updateText();
+		}
+	}
+
 	public void setLinkable() {
 		if(mLinks!=null)
 			return;

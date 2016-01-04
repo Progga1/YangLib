@@ -2,11 +2,14 @@ package yang.pc.tools.runtimeinspectors;
 
 import java.awt.Component;
 
+import yang.model.wrappers.DoubleInterface;
+import yang.model.wrappers.FloatInterface;
+import yang.model.wrappers.IntInterface;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabel;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabelListener;
 
-public abstract class InspectorComponent implements CheckLabelListener {
+public abstract class InspectorComponent implements CheckLabelListener,IntInterface,FloatInterface,DoubleInterface {
 
 	public String mName;
 	protected InspectorPanel mPropPanel;
@@ -15,10 +18,14 @@ public abstract class InspectorComponent implements CheckLabelListener {
 	protected boolean mWasChanged = false;
 	private boolean mReferenced;
 	private boolean mVisible = true;
+	protected InspectionInterface mCurObject;
 
 	protected abstract void postInit();
-
 	protected abstract Component getComponent();
+
+	protected static String floatToString(float val) {
+		return Float.toString(val);
+	}
 
 	public final void init(InspectorPanel panel, String name, boolean referenced) {
 		mPropPanel = panel;
@@ -44,8 +51,20 @@ public abstract class InspectorComponent implements CheckLabelListener {
 		return mName;
 	}
 
+	protected boolean isSaving() {
+		return mPropPanel.mSaving;
+	}
+
 	protected void postValueChanged() {
 
+	}
+
+	protected void updateGUI() {
+
+	}
+
+	protected String getFileOutputString() {
+		return null;
 	}
 
 	protected void refreshOutValue() {
@@ -61,6 +80,7 @@ public abstract class InspectorComponent implements CheckLabelListener {
 	}
 
 	protected void update(InspectionInterface object,boolean forceUpdate) {
+		mCurObject = object;
 		if(mWasChanged) {
 			refreshOutValue();
 			if(!mReferenced)
@@ -73,9 +93,27 @@ public abstract class InspectorComponent implements CheckLabelListener {
 					object.readProperty(mName,this);
 				}
 				postValueChanged();
+				updateGUI();
 			}
 		}
 		mWasChanged = false;
+	}
+
+	protected String getStringOutput(InspectionInterface object) {
+		if(mReferenced) {
+			Object ref = object.getReferencedProperty(mName,this);
+			if(ref==null)
+				return null;
+			setValueReference(ref);
+		}else{
+			object.readProperty(mName,this);
+		}
+		postValueChanged();
+		String result = getFileOutputString();
+		if(result==null)
+			return null;
+		else
+			return mName+"="+result;
 	}
 
 	public boolean isVisible() {
@@ -133,26 +171,32 @@ public abstract class InspectorComponent implements CheckLabelListener {
 		throw new RuntimeException(notSup("Bool"));
 	}
 
+	@Override
 	public float getFloat() {
 		throw new RuntimeException(notSup("Float"));
 	}
 
+	@Override
 	public void setFloat(float value) {
 		throw new RuntimeException(notSup("Float"));
 	}
 
+	@Override
 	public double getDouble() {
 		throw new RuntimeException(notSup("Double"));
 	}
 
+	@Override
 	public int getInt() {
 		throw new RuntimeException(notSup("Integer"));
 	}
 
+	@Override
 	public void setInt(int value) {
 		throw new RuntimeException(notSup("Integer"));
 	}
 
+	@Override
 	public void setDouble(double value) {
 		throw new RuntimeException(notSup("Double"));
 	}

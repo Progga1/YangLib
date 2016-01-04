@@ -18,8 +18,9 @@ public class PropertyInteger extends PropertyNumBase {
 		return mIntTextField.getInt();
 	}
 
+	@Override
 	public void setInt(int value) {
-		mIntTextField.setInt(value);
+		mIntTextField.setInt(value,!isSaving());
 	}
 
 }

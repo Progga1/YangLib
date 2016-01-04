@@ -26,6 +26,11 @@ public abstract class PropertyNumBase extends InspectorComponent implements Acti
 		return this;
 	}
 
+	@Override
+	protected String getFileOutputString() {
+		return mNumTextField.getValueString();
+	}
+
 	public void setCyclic(boolean cyclic) {
 		mNumTextField.setCyclic(cyclic);
 	}

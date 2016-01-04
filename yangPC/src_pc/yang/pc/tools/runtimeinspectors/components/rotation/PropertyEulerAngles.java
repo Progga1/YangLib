@@ -42,9 +42,12 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 
 	@Override
 	protected void postValueChanged() {
-		mTextFields[0].setFloat(mEulerAngles.mYaw*MathConst.TO_DEG);
-		mTextFields[1].setFloat(mEulerAngles.mPitch*MathConst.TO_DEG);
-		mTextFields[2].setFloat(mEulerAngles.mRoll*MathConst.TO_DEG);
+		float yaw = mEulerAngles.mYaw*MathConst.TO_DEG;
+		float pitch = mEulerAngles.mPitch*MathConst.TO_DEG;
+		float roll = mEulerAngles.mRoll*MathConst.TO_DEG;
+		mTextFields[0].setFloat(yaw);
+		mTextFields[1].setFloat(pitch);
+		mTextFields[2].setFloat(roll);
 	}
 
 	@Override

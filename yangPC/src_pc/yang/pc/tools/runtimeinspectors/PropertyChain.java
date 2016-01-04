@@ -5,6 +5,8 @@ import java.awt.Component;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+
 
 public abstract class PropertyChain extends InspectorComponent {
 
@@ -23,6 +25,39 @@ public abstract class PropertyChain extends InspectorComponent {
 		}
 	}
 
+//	@Override
+//	protected String getStringOutput(InspectionInterface object) {
+//		super.getStringOutput(object);
+//		if(mSaveString==null) {
+////			mSaveString = "-->"+mName+"\r\n";
+//			mSaveString = "{\r\n";
+//			for(InspectorComponent component:mComponents) {
+//				//String subStr = component.getStringOutput(object);
+//				String subStr = component.mSaveString;
+//				if(subStr!=null) {
+//					mSaveString += component.mName+"="+subStr+"\r\n";
+//				}
+//			}
+//			mSaveString += "}";
+//		}
+//
+//		return mName+"="+mSaveString;
+//	}
+
+	@Override
+	protected String getFileOutputString() {
+		String result = "{\r\n";
+		for(InspectorComponent component:mComponents) {
+			//String subStr = component.getStringOutput(object);
+			String subStr = component.getFileOutputString();
+			if(subStr!=null) {
+				result += component.mName+"="+subStr+"\r\n";
+			}
+		}
+		result += "}";
+		return result;
+	}
+
 	@Override
 	protected Component getComponent() {
 		return mPanel;
@@ -39,6 +74,13 @@ public abstract class PropertyChain extends InspectorComponent {
 	protected void postValueChanged() {
 		for(InspectorComponent component:mComponents) {
 			component.postValueChanged();
+		}
+	}
+
+	@Override
+	protected void updateGUI() {
+		for(InspectorComponent component:mComponents) {
+			component.updateGUI();
 		}
 	}
 

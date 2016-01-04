@@ -32,6 +32,8 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 		mTextFields[3].unlink();
 	}
 
+
+
 	@Override
 	protected void postValueChanged() {
 		mTextFields[0].setFloat(mColor.mValues[0]);

@@ -14,10 +14,11 @@ public class InspectorItem extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	protected InspectorPanel mInspector;
+	protected CheckLabel mLinkCheckLabel;
+	protected InspectorComponent mInspectorComponent;
 	public JLabel mCaption;
 	private JPanel mCaptionPanel;
-	protected CheckLabel mLinkCheckLabel;
-	private InspectorComponent mInspectorComponent;
+
 
 	public InspectorItem(InspectorPanel panel,InspectorComponent inspectorComponent) {
 		mInspector = panel;

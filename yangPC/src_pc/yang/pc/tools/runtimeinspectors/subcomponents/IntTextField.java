@@ -17,8 +17,12 @@ public class IntTextField extends NumTextField {
 		return (int)mCurValue;
 	}
 
+	public void setInt(int value,boolean updateText) {
+		setDouble(value,updateText);
+	}
+
 	public void setInt(int value) {
-		setDouble(value);
+		setInt(value,true);
 	}
 
 }

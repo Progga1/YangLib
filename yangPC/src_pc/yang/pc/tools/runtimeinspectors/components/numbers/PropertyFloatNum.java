@@ -1,25 +1,37 @@
 package yang.pc.tools.runtimeinspectors.components.numbers;
 
+import yang.model.wrappers.DoubleInterface;
+import yang.model.wrappers.FloatInterface;
 import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 public class PropertyFloatNum extends PropertyNumBase {
+
+//	protected FloatInterface mFloat;
+//	protected DoubleInterface mDouble;
 
 	@Override
 	protected NumTextField createNumTextField() {
 		return new NumTextField();
 	}
 
-	public PropertyFloatNum setDefaultValue(float defaultValue) {
+//	@Override
+//	public void setPreferredOutputType(Class<?> type) {
+//		if(type==Double.class) {
+//			mDoubleMode = true;
+//		}
+//	}
+
+	public PropertyFloatNum setDefaultValue(double defaultValue) {
 		mNumTextField.setDefaultValue(defaultValue);
 		return this;
 	}
 
-	public PropertyFloatNum setMinValue(float minValue) {
+	public PropertyFloatNum setMinValue(double minValue) {
 		mNumTextField.setMinValue(minValue);
 		return this;
 	}
 
-	public PropertyFloatNum setMaxValue(float maxValue) {
+	public PropertyFloatNum setMaxValue(double maxValue) {
 		mNumTextField.setMaxValue(maxValue);
 		return this;
 	}
@@ -36,7 +48,7 @@ public class PropertyFloatNum extends PropertyNumBase {
 
 	@Override
 	public void setFloat(float value) {
-		mNumTextField.setFloat(value);
+		mNumTextField.setFloat(value,!isSaving());
 	}
 
 	@Override

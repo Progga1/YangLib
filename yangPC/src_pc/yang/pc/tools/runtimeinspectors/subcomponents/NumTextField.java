@@ -28,6 +28,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	public static Border SCROLL_WIDGET_BORDER = BorderFactory.createBevelBorder(0);
 	public static Border BORDER = BorderFactory.createMatteBorder(1,0,1,1,InspectorGUIDefinitions.CL_OUTLINE);
 
+	private String mOrigText = "";
 	private LinkedNumComponents mLinks;
 	private JFormattedTextField mTextField;
 	private JPanel mScrollWidget;
@@ -61,11 +62,10 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	public NumTextField() {
 		mTextField = new JFormattedTextField();
+		mTextField.setText("0");
+		mOrigText = "0";
 		mScrollWidget = new JPanel();
 		mScrollWidget.setBackground(InspectorGUIDefinitions.CL_SCROLL_WIDGET);
-//		mScrollWidget.setBorder(SCROLL_WIDGET_BORDER);
-//		mTextField.setValue(new Float(0));
-		mTextField.setText("0");
 		setLayout(new BorderLayout());
 		mTextField.addFocusListener(this);
 		add(mTextField,BorderLayout.CENTER);
@@ -103,7 +103,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	}
 
 	public void reset() {
-		setDouble(mDefaultValue);
+		setDouble(mDefaultValue,true);
 	}
 
 	@Override
@@ -151,23 +151,41 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		}
 	}
 
-	private void setVal(double val) {
-		mCurValue = wrap(val);
+	public void updateText() {
+		mTextField.setText(maxDigitsString(mOrigText,mMaxDigits));
+	}
+
+	public void setDouble(double val,boolean updateText) {
+		double newVal = wrap(val);
+		if(mCurValue==newVal)
+			return;
+		mCurValue = val;
+		mOrigText = Double.toString(mCurValue);
+		if(updateText)
+			updateText();
 	}
 
 	@Override
 	public void setDouble(double val) {
-		if(val==mCurValue)
+		 setDouble(val,false);
+	}
+
+	public void setFloat(float val,boolean updateText) {
+		double newVal = wrap(val);
+		if(mCurValue==newVal)
 			return;
-		setVal(val);
-		mTextField.setText(maxDigitsString(Double.toString(mCurValue),mMaxDigits));
+		mCurValue = val;
+		mOrigText = Float.toString((float)mCurValue);
+		if(updateText)
+			updateText();
 	}
 
 	public void setFloat(float val) {
-		if(val==mCurValue)
-			return;
-		setVal(val);
-		mTextField.setText(maxDigitsString(Double.toString(mCurValue),mMaxDigits));
+		setFloat(val,false);
+	}
+
+	public String getValueString() {
+		return mOrigText;
 	}
 
 	@Override
@@ -203,7 +221,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 					fac *= 10;
 					break;
 				}
-				setDouble(mCurValue - deltaY*fac + deltaX*fac);
+				setDouble(mCurValue - deltaY*fac + deltaX*fac,true);
 				notifyLinks();
 				mListener.actionPerformed(null);
 			}
@@ -256,7 +274,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 			mMouseDown = -1;
 			if(System.currentTimeMillis()-mMouseDownTime<=MAX_CLICK_MILLIS) {
 				int dir = ev.getButton()==MouseEvent.BUTTON1?1:(ev.getButton()==MouseEvent.BUTTON3?-1:0);
-				setDouble(mStartDragValue+mClickSteps*dir);
+				setDouble(mStartDragValue+mClickSteps*dir,true);
 				notifyLinks();
 				mListener.actionPerformed(null);
 			}
