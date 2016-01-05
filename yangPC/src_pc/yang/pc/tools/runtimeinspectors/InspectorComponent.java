@@ -61,7 +61,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		return mPropPanel.mSaving;
 	}
 
-	protected void postValueChanged() {
+	protected void refreshInValue() {
 
 	}
 
@@ -97,7 +97,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 					if(!mReferenced) {
 						object.readProperty(mName,this);
 					}
-					postValueChanged();
+					refreshInValue();
 					updateGUI();
 				}
 			}
@@ -114,7 +114,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		}else{
 			object.readProperty(mName,this);
 		}
-		postValueChanged();
+		refreshInValue();
 		String result = getFileOutputString();
 		if(result==null)
 			return null;

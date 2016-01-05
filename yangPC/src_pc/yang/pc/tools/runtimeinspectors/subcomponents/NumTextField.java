@@ -76,7 +76,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mTextField.setMinimumSize(new Dimension(12,0));
 		this.setMinimumSize(new Dimension(12,0));
 		mTextField.setPreferredSize(new Dimension(12,0));
-		mTextField.setBorder(InspectorGUIDefinitions.TEXT_FIELD_BORDER);
+		mTextField.setBorder(InspectorGUIDefinitions.BORDER_TEXT_FIELD);
 		mTextField.addActionListener(this);
 		mTextField.setHorizontalAlignment(SwingConstants.RIGHT);
 		mTextField.addMouseListener(this);

@@ -29,7 +29,7 @@ public abstract class PropertyChain extends InspectorComponent implements MouseL
 //		mCaptionPanel.setLayout(new BoxLayout(mCaptionPanel,BoxLayout.PAGE_AXIS));
 		mCaptionPanel.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
 		mCaptionPanel.setBackground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_BACKGROUND);
-		mCaptionPanel.setBorder(InspectorGUIDefinitions.CHAIN_COMPONENT_CAPTION_BORDER);
+		mCaptionPanel.setBorder(InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT_CAPTION);
 		mCaption = new JLabel(mName);
 		mCaption.setForeground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_FONT);
 		mCaptionPanel.add(mCaption);
@@ -41,7 +41,7 @@ public abstract class PropertyChain extends InspectorComponent implements MouseL
 		mTopLevelPanel.setLayout(new BorderLayout());
 		mTopLevelPanel.add(mMainPanel,BorderLayout.CENTER);
 		mTopLevelPanel.add(mCaptionPanel,BorderLayout.NORTH);
-		mTopLevelPanel.setBorder(InspectorGUIDefinitions.CHAIN_COMPONENT_BORDER);
+		mTopLevelPanel.setBorder(InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT);
 		mCaption.addMouseListener(this);
 		mTopLevelPanel.addMouseListener(this);
 	}
@@ -97,9 +97,9 @@ public abstract class PropertyChain extends InspectorComponent implements MouseL
 	}
 
 	@Override
-	protected void postValueChanged() {
+	protected void refreshInValue() {
 		for(InspectorComponent component:mComponents) {
-			component.postValueChanged();
+			component.refreshInValue();
 		}
 	}
 

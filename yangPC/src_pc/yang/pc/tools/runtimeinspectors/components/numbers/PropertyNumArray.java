@@ -46,7 +46,7 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 	}
 
 	@Override
-	protected void postValueChanged() {
+	protected void refreshInValue() {
 		if(mDoubleMode) {
 			if(mDoubleValues==null)
 				mDoubleValues = new double[mElemCount];

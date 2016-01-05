@@ -19,7 +19,7 @@ public class PropertyBooleanCheckBox extends InspectorComponent implements Chang
 	protected void postInit() {
 		mCheckBox = new JCheckBox();
 		mCheckBox.addChangeListener(this);
-		mCheckBox.setBackground(InspectorGUIDefinitions.CL_VALUE_DEFAULT_BACKGROUND);
+		mCheckBox.setBackground(InspectorGUIDefinitions.CL_COMPONENT_DEFAULT_BACKGROUND);
 	}
 
 	@Override

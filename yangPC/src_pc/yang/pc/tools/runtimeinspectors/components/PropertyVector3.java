@@ -26,7 +26,7 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 	}
 
 	@Override
-	protected void postValueChanged() {
+	protected void refreshInValue() {
 		mTextFields[0].setFloat(mVectorData.mX);
 		mTextFields[1].setFloat(mVectorData.mY);
 		mTextFields[2].setFloat(mVectorData.mZ);

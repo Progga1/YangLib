@@ -40,8 +40,8 @@ public class InspectorItem extends JPanel {
 			}
 			add(mCaptionPanel,BorderLayout.WEST);
 			add(inspectorComponent.getComponent(),BorderLayout.CENTER);
-			mCaptionPanel.setBorder(InspectorGUIDefinitions.PADDING_BORDER);
-			setBorder(InspectorGUIDefinitions.PROPERTY_BORDER);
+			mCaptionPanel.setBorder(InspectorGUIDefinitions.BORDER_PADDING);
+			setBorder(InspectorGUIDefinitions.BORDER_PROPERTY);
 		}else{
 			mCaptionPanel = null;
 			setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));

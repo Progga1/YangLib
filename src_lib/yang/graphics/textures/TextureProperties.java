@@ -89,4 +89,55 @@ public class TextureProperties {
 		return this;
 	}
 
+	public String channelsToString() {
+		switch(mChannels) {
+		case 1:
+			return "Gray";
+		case 3:
+			return "RGB";
+		case 4:
+			return "RGBA";
+		default: return "<undef>";
+		}
+	}
+
+	public static String wrapToString(TextureWrap wrap) {
+		switch(wrap) {
+		case CLAMP:
+			return "Clamp";
+		case REPEAT:
+			return "Repeat";
+		case MIRROR:
+			return "Mirror";
+		default:
+			return "<undef>";
+		}
+	}
+
+	public String wrapToString() {
+		if(mWrapX==mWrapY)
+			return wrapToString(mWrapX);
+		else
+			return wrapToString(mWrapX)+"/"+wrapToString(mWrapY);
+	}
+
+	public static String filterToString(TextureFilter filter) {
+		switch(filter) {
+		case NEAREST:
+			return "Nearest";
+		case LINEAR:
+			return "Linear";
+		case LINEAR_MIP_LINEAR:
+			return "Linear-MIP-Linear";
+		case NEAREST_MIP_LINEAR:
+			return "Nearest-MIP-Linear";
+		default:
+			return "<undef>";
+		}
+	}
+
+	public String filterToString() {
+		return filterToString(mFilter);
+	}
+
 }

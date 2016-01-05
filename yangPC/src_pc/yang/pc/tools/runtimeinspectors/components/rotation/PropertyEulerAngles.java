@@ -52,7 +52,7 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 	}
 
 	@Override
-	protected void postValueChanged() {
+	protected void refreshInValue() {
 		float yaw = mEulerAngles.mYaw*MathConst.TO_DEG;
 		float pitch = mEulerAngles.mPitch*MathConst.TO_DEG;
 		float roll = mEulerAngles.mRoll*MathConst.TO_DEG;

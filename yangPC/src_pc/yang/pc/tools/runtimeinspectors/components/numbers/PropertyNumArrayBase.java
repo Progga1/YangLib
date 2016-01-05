@@ -34,7 +34,7 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 		mTextFields = new NumTextField[mElemCount];
 		for(int i=0;i<mTextFields.length;i++) {
 			mTextFields[i] = new NumTextField();
-			mTextFields[i].setBorder(InspectorGUIDefinitions.COMPONENT_DEFAULT_BORDER);
+			mTextFields[i].setBorder(InspectorGUIDefinitions.BORDER_COMPONENT_DEFAULT);
 			mPanel.add(mTextFields[i]);
 			mTextFields[i].setActionListener(this);
 		}

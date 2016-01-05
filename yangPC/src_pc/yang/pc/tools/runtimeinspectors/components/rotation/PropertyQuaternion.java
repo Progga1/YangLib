@@ -18,9 +18,9 @@ public class PropertyQuaternion extends PropertyEulerAngles {
 	}
 
 	@Override
-	protected void postValueChanged() {
+	protected void refreshInValue() {
 		mEulerAngles.set(mQuaternion);
-		super.postValueChanged();
+		super.refreshInValue();
 	}
 
 	@Override

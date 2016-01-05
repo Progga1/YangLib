@@ -40,10 +40,10 @@ public class PropertyTransform extends PropertyChain {
 	}
 
 	@Override
-	protected void postValueChanged() {
+	protected void refreshInValue() {
 		if(mMatrix!=null)
 			mTransform.setByMatrix(mMatrix);
-		super.postValueChanged();
+		super.refreshInValue();
 	}
 
 	@Override

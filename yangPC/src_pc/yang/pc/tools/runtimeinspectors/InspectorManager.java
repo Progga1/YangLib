@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import yang.graphics.model.FloatColor;
 import yang.graphics.model.TransformationData;
+import yang.graphics.translator.Texture;
 import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.math.objects.EulerAngles;
 import yang.math.objects.Point3f;
@@ -14,6 +15,7 @@ import yang.pc.tools.runtimeinspectors.components.PropertyBooleanCheckBox;
 import yang.pc.tools.runtimeinspectors.components.PropertyCameraControl;
 import yang.pc.tools.runtimeinspectors.components.PropertyColorNums;
 import yang.pc.tools.runtimeinspectors.components.PropertyTextField;
+import yang.pc.tools.runtimeinspectors.components.PropertyTexture;
 import yang.pc.tools.runtimeinspectors.components.PropertyTransform;
 import yang.pc.tools.runtimeinspectors.components.PropertyVector3;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
@@ -39,6 +41,7 @@ public class InspectorManager {
 		registerType(TransformationData.class,PropertyTransform.class);
 		registerType(YangMatrix.class,PropertyTransform.class);
 		registerType(Camera3DControl.class,PropertyCameraControl.class);
+		registerType(Texture.class,PropertyTexture.class);
 	}
 
 	public void registerType(Class<?> type,Class<? extends InspectorComponent> component) {

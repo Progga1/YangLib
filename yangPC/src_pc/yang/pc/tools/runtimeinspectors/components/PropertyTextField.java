@@ -19,7 +19,7 @@ public class PropertyTextField  extends InspectorComponent implements ActionList
 		mTextField = new JTextField();
 		mTextField.addActionListener(this);
 		//mTextField.getBorder()
-		mTextField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InspectorGUIDefinitions.CL_VALUE_DEFAULT_BACKGROUND, InspectorGUIDefinitions.COMPONENT_PADDING),InspectorGUIDefinitions.TEXT_FIELD_BORDER));
+		mTextField.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(InspectorGUIDefinitions.CL_COMPONENT_DEFAULT_BACKGROUND, InspectorGUIDefinitions.COMPONENT_PADDING),InspectorGUIDefinitions.BORDER_TEXT_FIELD));
 	}
 
 	@Override
