@@ -236,6 +236,15 @@ public class Quaternion {
 		mW *= magn;
 	}
 
+	public void getInverted(Quaternion target) {
+		float magn = calcMagnitude();
+		magn = 1 / (magn * magn);
+		target.mX = mX * -magn;
+		target.mY = mY * -magn;
+		target.mZ = mZ * -magn;
+		target.mZ = mZ * magn;
+	}
+
 	public void scale(float scalar) {
 		mX *= scalar;
 		mY *= scalar;
@@ -280,7 +289,7 @@ public class Quaternion {
 		mW = lhq.mW * rhq.mW - lhq.mX * rhq.mX - lhq.mY * rhq.mY - lhq.mZ * rhq.mZ;
 	}
 
-	public void multRight(Quaternion rhq) {
+	public void mult(Quaternion rhq) {
 		final float x = mX;
 		final float y = mY;
 		final float z = mZ;
@@ -290,7 +299,7 @@ public class Quaternion {
 		mW = mW * rhq.mW - x * rhq.mX - y * rhq.mY - z * rhq.mZ;
 	}
 
-	public void multRight(float rhqX, float rhqY, float rhqZ, float rhqW) {
+	public void mult(float rhqX, float rhqY, float rhqZ, float rhqW) {
 		final float x = mX;
 		final float y = mY;
 		final float z = mZ;

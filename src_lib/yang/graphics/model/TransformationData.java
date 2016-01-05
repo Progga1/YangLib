@@ -19,7 +19,7 @@ public class TransformationData {
 
 	public void concatTransform(TransformationData rightTransform) {
 		mPosition.add(rightTransform.mPosition);
-		mOrientation.multRight(rightTransform.mOrientation);
+		mOrientation.mult(rightTransform.mOrientation);
 		mScale.scale(rightTransform.mScale);
 	}
 
@@ -28,7 +28,7 @@ public class TransformationData {
 	 */
 	public void applyToTransform(TransformationData targetTransform) {
 		targetTransform.mPosition.add(mPosition);
-		targetTransform.mOrientation.multRight(mOrientation);
+		targetTransform.mOrientation.mult(mOrientation);
 		targetTransform.mScale.scale(mScale);
 	}
 

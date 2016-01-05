@@ -1002,7 +1002,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		if(shift!=null)
 			mDebugCamShift.add(shift);
 		if(orientation!=null)
-			mDebugCamOrientation.multRight(orientation);
+			mDebugCamOrientation.mult(orientation);
 		refreshDebugCamera();
 	}
 
