@@ -8,8 +8,8 @@ import javax.swing.border.Border;
 
 public class InspectorGUIDefinitions {
 
-	public final static Dimension INITIAL_DIMENSION = new Dimension(400,600);
-	public final static int DEFAULT_CAPTION_WIDTH = 160;
+	public final static Dimension INITIAL_DIMENSION = new Dimension(480,600);
+	public final static int DEFAULT_CAPTION_WIDTH = 200;
 	public final static int DEFAULT_COMPONENT_HEIGHT = 26;
 
 	public final static Color CL_LABEL_BACKGROUND = new Color(225,225,225);
@@ -18,6 +18,8 @@ public class InspectorGUIDefinitions {
 	public final static Color CL_OUTLINE = new Color(50,50,50);
 	public final static Color CL_WEAK_OUTLINE = new Color(190,190,190);
 	public final static Color CL_SCROLL_WIDGET = new Color(190,190,210);
+	public static final Color CL_LINKED = new Color(70,70,140);
+	public static final Color CL_UNLINKED = new Color(180,180,200);
 
 	public static final int PADDING = 6;
 	public static final int COMPONENT_PADDING = 3;

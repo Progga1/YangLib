@@ -12,8 +12,8 @@ public class CheckLabel extends JLabel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final Color DEFAULT_CL_SELECTED = new Color(60,60,90);
-	public static final Color DEFAULT_CL_UNSELECTED = new Color(180,180,200);
+	public static final Color DEFAULT_CL_SELECTED = new Color(60,60,60);
+	public static final Color DEFAULT_CL_UNSELECTED = new Color(180,180,180);
 
 	private boolean mSelected = false;
 	public Color mSelectedColor;

@@ -308,11 +308,13 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 			try{
 				startLink();
 				double val = Double.parseDouble(text);
-				if(mCurValue<mMinValue || mCurValue>mMaxValue)
+				if(val<mMinValue || val>mMaxValue) {
 					setDouble(wrap(val));
-				else
+					updateGUI();
+				}else{
 					mCurValue = val;
-				mOrigText = text;
+					mOrigText = text;
+				}
 			}catch(NumberFormatException ex) {
 
 			}finally{
