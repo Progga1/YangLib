@@ -57,6 +57,14 @@ public class LinkedNumComponents {
 	public void startUserInput(NumberIO sender) {
 		mCurSenderIndex = mLinkedComponents.indexOf(sender);
 		mCurSender = sender;
+	}
+
+	public void endUserInput() {
+		mCurSenderIndex = -1;
+		mCurSender = null;
+	}
+
+	public void refreshStartValues() {
 		int l = mLinkedComponents.size();
 		if(mStartValues==null || mStartValues.length<l)
 			mStartValues = new double[l];
@@ -65,11 +73,6 @@ public class LinkedNumComponents {
 			mStartValues[i] = component.getDouble();
 			i++;
 		}
-	}
-
-	public void endUserInput() {
-		mCurSenderIndex = -1;
-		mCurSender = null;
 	}
 
 }
