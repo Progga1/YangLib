@@ -27,7 +27,12 @@ public class Camera3D extends YangCamera {
 	}
 
 	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX) {
-		PerspectiveProjection.getTransformFovy(mProjectionTransform,fovy, stretchX,1, near, far);
+		PerspectiveProjection.getTransformFovy(mProjectionTransform,fovy, stretchX,1, near,far);
+		mProjectionUpdated = true;
+	}
+
+	public void setPerspectiveProjection(float fovy, float near, float far,float stretchX,float shiftX,float shiftY) {
+		PerspectiveProjection.getTransformFovy(mProjectionTransform, fovy, stretchX,1, near,far, shiftX,shiftY);
 		mProjectionUpdated = true;
 	}
 

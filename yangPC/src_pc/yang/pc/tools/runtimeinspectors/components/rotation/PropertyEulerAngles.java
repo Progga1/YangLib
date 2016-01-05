@@ -7,7 +7,7 @@ import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 public class PropertyEulerAngles extends PropertyNumArrayBase {
 
-	protected final static float PITCH_RANGE = 89.5f;
+	protected final static float CLAMP_PITCH_RANGE = 89.95f;
 	protected EulerAngles mEulerAngles;
 
 	private NumTextField mTextFieldYaw,mTextFieldPitch,mTextFieldRoll;
@@ -25,14 +25,25 @@ public class PropertyEulerAngles extends PropertyNumArrayBase {
 		if(!isReferenced()) {
 			mEulerAngles = new EulerAngles();
 		}
-		mTextFieldPitch.setRange(-PITCH_RANGE,PITCH_RANGE);
 		setMaxDigits(2);
 		setScrollFactor(0.35f);
 		mTextFieldYaw.setScrollFactor(0.5f);
 		mTextFieldYaw.setRange(0,360);
 		mTextFieldYaw.setCyclic(true);
+		setClampPitch(false);
 		mTextFieldRoll.setRange(0,360);
 		mTextFieldRoll.setCyclic(true);
+	}
+
+	public PropertyEulerAngles setClampPitch(boolean clampPitch) {
+		if(clampPitch) {
+			mTextFieldPitch.setRange(-CLAMP_PITCH_RANGE,CLAMP_PITCH_RANGE);
+			mTextFieldPitch.setCyclic(false);
+		}else{
+			mTextFieldPitch.setRange(-180,180);
+			mTextFieldPitch.setCyclic(true);
+		}
+		return this;
 	}
 
 	@Override

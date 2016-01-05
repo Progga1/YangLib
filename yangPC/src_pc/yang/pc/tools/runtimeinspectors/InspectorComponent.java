@@ -246,4 +246,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	}
 
+	public void setLinkable() {
+		throw new RuntimeException("No linking supported by "+getClass().getName());
+	}
+
 }

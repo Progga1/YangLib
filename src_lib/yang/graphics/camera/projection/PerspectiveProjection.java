@@ -8,17 +8,39 @@ public class PerspectiveProjection extends Projection {
 	public static float DEFAULT_FAR = 12f;
 	public static float DEFAULT_FOVY = 0.6f;
 
-	public static void getTransform(YangMatrix target,float nearRight,float nearTop,float near, float far) {
+	public static void getTransform(YangMatrix target, float nearRight,float nearTop, float near,float far) {
 		target.setRow(0, near/nearRight, 0, 0, 0);
 		target.setRow(1, 0, near/nearTop, 0, 0);
 		target.setRow(2, 0,0,-(far+near)/(far-near),-2*far*near/(far-near));
 		target.setRow(3, 0,0,-1,0);
 	}
 
-	public static float getTransformFovy(YangMatrix target,float fovy,float ratioX,float ratioY,float near, float far) {
+	public static void getTransform(YangMatrix target, float nearRight,float nearTop, float near,float far, float shiftX,float shiftY) {
+		float nearWidth = (nearRight*2);
+		float nearHeight = (nearTop*2);
+		shiftX *= nearHeight;
+		shiftY *= nearHeight;
+		float nearLeft = -nearRight+shiftX;
+		nearRight += shiftX;
+		float nearBottom = -nearTop+shiftY;
+		nearTop += shiftY;
+		target.setRow(0, 2*near/(nearRight-nearLeft), 0, (nearRight+nearLeft)/nearWidth, 0);
+		target.setRow(1, 0, 2*near/(nearTop-nearBottom), (nearTop+nearBottom)/nearHeight, 0);
+		target.setRow(2, 0,0,-(far+near)/(far-near),-2*far*near/(far-near));
+		target.setRow(3, 0,0,-1,0);
+	}
+
+	public static float getTransformFovy(YangMatrix target, float fovy, float ratioX,float ratioY, float near,float far) {
 		final float tan = (float)Math.tan(fovy);
 		float res = tan*near;
 		getTransform(target,res*ratioX,res*ratioY,near,far);
+		return res;
+	}
+
+	public static float getTransformFovy(YangMatrix target, float fovy, float ratioX,float ratioY, float near,float far, float shiftX,float shiftY) {
+		final float tan = (float)Math.tan(fovy);
+		float res = tan*near;
+		getTransform(target,res*ratioX,res*ratioY,near,far,shiftX,shiftY);
 		return res;
 	}
 

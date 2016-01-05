@@ -59,17 +59,18 @@ public class InspectorPanel {
 //		registerPropertyCostum(name,comp);
 //	}
 
-	public void registerProperty(String name,InspectorComponent inspectorComponent) {
+	public <ComponentType extends InspectorComponent> ComponentType registerProperty(String name,ComponentType inspectorComponent) {
 		inspectorComponent.init(this, name, false);
 		InspectorItem rtpHolder = new InspectorItem(this,inspectorComponent);
 		mPropertiesPanel.add(rtpHolder);
+		return inspectorComponent;
 	}
 
-	public void registerProperty(String name,Class<?> type) {
+	public InspectorComponent registerProperty(String name,Class<?> type) {
 		InspectorComponent comp = mManager.createDefaultComponentInstance(type);
 		if(comp==null)
 			throw new RuntimeException("No default component for type: "+type.getName());
-		registerProperty(name,comp);
+		return registerProperty(name,comp);
 	}
 
 	public void registerPropertyReferenced(String name,InspectorComponent inspectorComponent) {

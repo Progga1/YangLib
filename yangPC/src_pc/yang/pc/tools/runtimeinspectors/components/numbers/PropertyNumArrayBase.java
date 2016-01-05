@@ -69,6 +69,7 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 			setDouble(i,Double.parseDouble(split[i]));
 	}
 
+	@Override
 	public void setLinkable() {
 		if(mLinks!=null)
 			return;
@@ -77,6 +78,8 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 			mLinks.addComponent(textField);
 			textField.setLinkedNumberIOs(mLinks);
 		}
+		if(mHolder!=null)
+			mHolder.setLinkable();
 	}
 
 	public void setDefaultValue(double defaultValue) {

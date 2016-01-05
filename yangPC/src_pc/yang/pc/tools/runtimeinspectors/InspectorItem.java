@@ -35,9 +35,7 @@ public class InspectorItem extends JPanel {
 			mCaptionPanel.setBackground(InspectorGUIDefinitions.CL_LABEL_BACKGROUND);
 			mCaptionPanel.add(mCaption,BorderLayout.EAST);
 			if(inspectorComponent.isLinkingSupported()) {
-				mLinkCheckLabel = new CheckLabel("Link");
-				mCaptionPanel.add(mLinkCheckLabel,BorderLayout.WEST);
-				mLinkCheckLabel.setListener(inspectorComponent);
+				setLinkable();
 			}
 			add(mCaptionPanel,BorderLayout.WEST);
 			add(inspectorComponent.getComponent(),BorderLayout.CENTER);
@@ -51,6 +49,16 @@ public class InspectorItem extends JPanel {
 
 		setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 		refreshLayout();
+	}
+
+	public void setLinkable() {
+		if(mLinkCheckLabel!=null)
+			return;
+		if(!mInspectorComponent.isLinkingSupported())
+			mInspectorComponent.setLinkable();
+		mLinkCheckLabel = new CheckLabel("Link");
+		mCaptionPanel.add(mLinkCheckLabel,BorderLayout.WEST);
+		mLinkCheckLabel.setListener(mInspectorComponent);
 	}
 
 	public void refreshLayout() {

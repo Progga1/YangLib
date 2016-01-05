@@ -21,6 +21,7 @@ public class PropertyCameraControl extends PropertyChain {
 	protected InspectorComponent[] createComponents() {
 		mViewAngleComp = new PropertyEulerAngles();
 		mViewAngleComp.init(this,"Yaw pitch roll",true);
+		mViewAngleComp.setClampPitch(true);
 
 		mPositionComp = new PropertyVector3();
 		mPositionComp.init(this,"Focus (xyz)",true);
