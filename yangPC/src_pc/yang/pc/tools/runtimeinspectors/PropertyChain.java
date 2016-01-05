@@ -1,30 +1,49 @@
 package yang.pc.tools.runtimeinspectors;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import javax.swing.BoxLayout;
-
-import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
-import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 
-public abstract class PropertyChain extends InspectorComponent {
+public abstract class PropertyChain extends InspectorComponent implements MouseListener {
 
-	private PropertiesPanel mPanel;
+	private JPanel mCaptionPanel;
+	private PropertiesPanel mMainPanel;
+	private JPanel mTopLevelPanel;
+	private JLabel mCaption;
 	protected InspectorComponent mComponents[];
 
 	protected abstract InspectorComponent[] createComponents();
 
 	@Override
 	protected void postInit() {
-		mPanel = new PropertiesPanel(mPropPanel);
-		mPanel.setLayout(new BoxLayout(mPanel,BoxLayout.Y_AXIS));
+		mMainPanel = new PropertiesPanel(mPropPanel);
+		mCaptionPanel = new JPanel();
+//		mCaptionPanel.setLayout(new BoxLayout(mCaptionPanel,BoxLayout.PAGE_AXIS));
+		mCaptionPanel.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+		mCaptionPanel.setBackground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_BACKGROUND);
+		mCaptionPanel.setBorder(InspectorGUIDefinitions.CHAIN_COMPONENT_CAPTION_BORDER);
+		mCaption = new JLabel(mName);
+		mCaption.setForeground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_FONT);
+		mCaptionPanel.add(mCaption);
 		mComponents = createComponents();
 		for(InspectorComponent component:mComponents) {
-			mPanel.add(component);
+			mMainPanel.add(component);
 		}
+		mTopLevelPanel = new JPanel();
+		mTopLevelPanel.setLayout(new BorderLayout());
+		mTopLevelPanel.add(mMainPanel,BorderLayout.CENTER);
+		mTopLevelPanel.add(mCaptionPanel,BorderLayout.NORTH);
+		mTopLevelPanel.setBorder(InspectorGUIDefinitions.CHAIN_COMPONENT_BORDER);
+		mCaption.addMouseListener(this);
+		mTopLevelPanel.addMouseListener(this);
 	}
 
 //	@Override
@@ -62,12 +81,12 @@ public abstract class PropertyChain extends InspectorComponent {
 
 	@Override
 	public void loadFromStream(String value,BufferedReader reader) throws IOException {
-		mPanel.loadFromStream(null,reader);
+		mMainPanel.loadFromStream(null,reader);
 	}
 
 	@Override
 	protected Component getComponent() {
-		return mPanel;
+		return mTopLevelPanel;
 	}
 
 	@Override
@@ -103,6 +122,35 @@ public abstract class PropertyChain extends InspectorComponent {
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent ev) {
+		mMainPanel.setVisible(!mMainPanel.isVisible());
+		if(mMainPanel.isVisible()) {
+			mCaption.setText(mName);
+		}else
+			mCaption.setText(mName+" >>>");
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+
 	}
 
 }

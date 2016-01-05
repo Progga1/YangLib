@@ -25,6 +25,7 @@ public class InspectorItem extends JPanel {
 		mInspectorComponent = inspectorComponent;
 		inspectorComponent.mHolder = this;
 		mCaption = new JLabel(inspectorComponent.getName());
+		mCaption.setForeground(InspectorGUIDefinitions.CL_LABEL);
 //		mCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 //		mCaption.setVerticalAlignment(SwingConstants.CENTER);
 		if(mInspectorComponent.useDefaultCaptionLayout()) {

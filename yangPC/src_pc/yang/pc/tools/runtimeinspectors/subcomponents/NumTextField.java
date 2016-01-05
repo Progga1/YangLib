@@ -26,7 +26,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	public static final int MAX_CLICK_MILLIS = 200;
 	public static Border SCROLL_WIDGET_BORDER = BorderFactory.createBevelBorder(0);
-	public static Border BORDER = BorderFactory.createMatteBorder(1,0,1,1,InspectorGUIDefinitions.CL_OUTLINE);
+	public static Border BORDER = BorderFactory.createMatteBorder(1,0,1,1,InspectorGUIDefinitions.CL_DEFAULT_COMPONENT_OUTLINE);
 
 	private String mOrigText = "";
 	private LinkedNumComponents mLinks;
