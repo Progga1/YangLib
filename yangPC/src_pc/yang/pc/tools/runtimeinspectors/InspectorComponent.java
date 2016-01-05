@@ -87,19 +87,19 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	protected void update(InspectionInterface object,boolean forceUpdate) {
 		mCurObject = object;
-		if(mWasChanged) {
-			refreshOutValue();
-			if(!mReferenced)
-				object.setProperty(mName,this);
-		}else{
-			if(!isVisible())
-				return;
-			if(!hasFocus() || forceUpdate) {
-				if(!mReferenced) {
-					object.readProperty(mName,this);
+		if(isVisible()) {
+			if(mWasChanged) {
+				refreshOutValue();
+				if(!mReferenced)
+					object.setProperty(mName,this);
+			}else{
+				if(!hasFocus() || forceUpdate) {
+					if(!mReferenced) {
+						object.readProperty(mName,this);
+					}
+					postValueChanged();
+					updateGUI();
 				}
-				postValueChanged();
-				updateGUI();
 			}
 		}
 		mWasChanged = false;
@@ -122,9 +122,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 			return mName+"="+result;
 	}
 
-	public boolean isVisible() {
-		return mVisible;
-	}
+
 
 	public boolean isReferenced() {
 		return mReferenced;
@@ -134,9 +132,14 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		getComponent().setEnabled(enabled);
 	}
 
+	public boolean isVisible() {
+		return mVisible;
+	}
+
 	public void setVisible(boolean visible) {
 		if(mVisible==visible)
 			return;
+		mVisible = visible;
 		getComponent().setVisible(visible);
 	}
 
@@ -248,6 +251,14 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	public void setLinkable() {
 		throw new RuntimeException("No linking supported by "+getClass().getName());
+	}
+
+	public boolean is(String propertyName) {
+		return propertyName==mName;
+	}
+
+	public boolean isEq(String propertyName) {
+		return propertyName.equals(mName);
 	}
 
 }
