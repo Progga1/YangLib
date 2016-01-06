@@ -1,23 +1,16 @@
 package yang.pc.tools.runtimeinspectors;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import yang.pc.tools.runtimeinspectors.subcomponents.InspectorSubHeading;
 
 
-public abstract class PropertyChain extends InspectorComponent implements MouseListener {
+public abstract class PropertyChain extends InspectorComponent {
 
-	private JPanel mCaptionPanel;
 	private PropertiesPanel mMainPanel;
-	private JPanel mTopLevelPanel;
-	private JLabel mCaption;
+	private InspectorSubHeading mTopLevelPanel;
 	protected InspectorComponent mComponents[];
 
 	protected abstract InspectorComponent[] createComponents();
@@ -25,45 +18,12 @@ public abstract class PropertyChain extends InspectorComponent implements MouseL
 	@Override
 	protected void postInit() {
 		mMainPanel = new PropertiesPanel(mPropPanel);
-		mCaptionPanel = new JPanel();
-//		mCaptionPanel.setLayout(new BoxLayout(mCaptionPanel,BoxLayout.PAGE_AXIS));
-		mCaptionPanel.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-		mCaptionPanel.setBackground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_BACKGROUND);
-		mCaptionPanel.setBorder(InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT_CAPTION);
-		mCaption = new JLabel(mName);
-		mCaption.setForeground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_FONT);
-		mCaptionPanel.add(mCaption);
 		mComponents = createComponents();
 		for(InspectorComponent component:mComponents) {
 			mMainPanel.add(component);
 		}
-		mTopLevelPanel = new JPanel();
-		mTopLevelPanel.setLayout(new BorderLayout());
-		mTopLevelPanel.add(mMainPanel,BorderLayout.CENTER);
-		mTopLevelPanel.add(mCaptionPanel,BorderLayout.NORTH);
-		mTopLevelPanel.setBorder(InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT);
-		mCaption.addMouseListener(this);
-		mTopLevelPanel.addMouseListener(this);
+		mTopLevelPanel = new InspectorSubHeading(mMainPanel,mName);
 	}
-
-//	@Override
-//	protected String getStringOutput(InspectionInterface object) {
-//		super.getStringOutput(object);
-//		if(mSaveString==null) {
-////			mSaveString = "-->"+mName+"\r\n";
-//			mSaveString = "{\r\n";
-//			for(InspectorComponent component:mComponents) {
-//				//String subStr = component.getStringOutput(object);
-//				String subStr = component.mSaveString;
-//				if(subStr!=null) {
-//					mSaveString += component.mName+"="+subStr+"\r\n";
-//				}
-//			}
-//			mSaveString += "}";
-//		}
-//
-//		return mName+"="+mSaveString;
-//	}
 
 	@Override
 	protected String getFileOutputString() {
@@ -122,35 +82,6 @@ public abstract class PropertyChain extends InspectorComponent implements MouseL
 				return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent ev) {
-		mMainPanel.setVisible(!mMainPanel.isVisible());
-		if(mMainPanel.isVisible()) {
-			mCaption.setText(mName);
-		}else
-			mCaption.setText(mName+" >>>");
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-
 	}
 
 }

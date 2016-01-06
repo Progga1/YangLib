@@ -15,6 +15,7 @@ public class PropertiesPanel extends JPanel {
 
 	protected InspectorPanel mInspector;
 	protected YangList<InspectorItem> mItems = new YangList<InspectorItem>();
+	protected InspectionInterface mCurObject = null;
 
 	public PropertiesPanel(InspectorPanel inspector) {
 		mInspector = inspector;
@@ -42,6 +43,23 @@ public class PropertiesPanel extends JPanel {
 		InspectorItem newItem = new InspectorItem(mInspector,component);
 		add(newItem);
 		return newItem;
+	}
+
+	public void setValuesByObject(InspectionInterface object) {
+		if(mCurObject==object) {
+			for(InspectorItem component:getItems()) {
+//				if(!component.getInspectorComponent().isReferenced() || component.getInspectorComponent().mWasChanged)
+				component.getInspectorComponent().update(object,false);
+			}
+		}else{
+			for(InspectorItem component:getItems()) {
+				InspectorComponent inspComp = component.getInspectorComponent();
+				if(inspComp.isReferenced())
+					inspComp.updateReference(object);
+				component.getInspectorComponent().update(object,true);
+			}
+		}
+		mCurObject = object;
 	}
 
 	public void loadFromStream(InspectionInterface object, BufferedReader reader) throws IOException {

@@ -20,7 +20,6 @@ public class InspectorPanel {
 	protected InspectorFrame mFrame;
 	protected InspectorManager mManager;
 	protected JScrollPane mScrollPane;
-	protected InspectionInterface mCurObject = null;
 	protected boolean mSaving = false;
 
 	protected InspectorPanel(InspectorFrame frame) {
@@ -39,25 +38,17 @@ public class InspectorPanel {
 		mTopLevelPanel.setVisible(visible);
 	}
 
-//	public void registerPropertyCostum(String name,Class<? extends InspectorComponent> componentType) {
-//		InspectorComponent rtpComponent;
-//		try {
-//			rtpComponent = componentType.newInstance();
-//		} catch (InstantiationException | IllegalAccessException e) {
-//			throw new RuntimeException(e);
-//		}
-//		rtpComponent.init(this, name);
-//		InspectorProperty rtpHolder = new InspectorProperty(this,rtpComponent);
-//		mComponents.add(rtpHolder);
-//		refreshLayout();
-//	}
-//
-//	public void registerProperty(String name,Class<?> type) {
-//		Class<? extends InspectorComponent> comp = mManager.getDefaultComponent(type);
-//		if(comp==null)
-//			throw new RuntimeException("No default component for type: "+type.getName());
-//		registerPropertyCostum(name,comp);
-//	}
+	public InspectorManager getManager() {
+		return mManager;
+	}
+
+	public InspectorFrame getFrame() {
+		return mFrame;
+	}
+
+	public PropertiesPanel getPropertiesPanel() {
+		return mPropertiesPanel;
+	}
 
 	public <ComponentType extends InspectorComponent> ComponentType registerProperty(String name,ComponentType inspectorComponent) {
 		inspectorComponent.init(this, name, false);
@@ -100,20 +91,7 @@ public class InspectorPanel {
 	}
 
 	public void setValuesByObject(InspectionInterface object) {
-		if(mCurObject==object) {
-			for(InspectorItem component:mPropertiesPanel.getItems()) {
-//				if(!component.getInspectorComponent().isReferenced() || component.getInspectorComponent().mWasChanged)
-				component.getInspectorComponent().update(object,false);
-			}
-		}else{
-			for(InspectorItem component:mPropertiesPanel.getItems()) {
-				InspectorComponent inspComp = component.getInspectorComponent();
-				if(inspComp.isReferenced())
-					inspComp.updateReference(object);
-				component.getInspectorComponent().update(object,true);
-			}
-		}
-		mCurObject = object;
+		mPropertiesPanel.setValuesByObject(object);
 	}
 
 	public void notifyValueUserInput() {
@@ -149,6 +127,10 @@ public class InspectorPanel {
 
 	public boolean isSaving() {
 		return mSaving;
+	}
+
+	public InspectorPanel createNewInspector() {
+		return getManager().createInspector(getFrame());
 	}
 
 }
