@@ -51,4 +51,9 @@ public abstract class PropertyNumBase extends InspectorComponent implements Acti
 		notifyValueUserInput();
 	}
 
+	@Override
+	public void set(InspectorComponent template) {
+		mNumTextField.copyParameters(((PropertyNumBase)template).mNumTextField);
+	}
+
 }

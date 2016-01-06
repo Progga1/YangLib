@@ -4,12 +4,14 @@ import java.awt.Component;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.InspectorPanel;
+import yang.pc.tools.runtimeinspectors.PropertiesPanel;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.pc.tools.runtimeinspectors.subcomponents.InspectorSubHeading;
 
 public class PropertyInspectedObject extends InspectorComponent {
 
 	protected InspectorPanel mInspPanel;
+	protected PropertiesPanel mPropPanel;
 	protected InspectionInterface mInspectedObject;
 	protected InspectorSubHeading mTopLevelPanel;
 
@@ -21,7 +23,8 @@ public class PropertyInspectedObject extends InspectorComponent {
 	protected void postInit() {
 		if(!isReferenced())
 			throw new RuntimeException("Only referenced allowed for inspected object property.");
-		mTopLevelPanel = new InspectorSubHeading(mInspPanel.getPropertiesPanel());
+		mPropPanel = mInspPanel.getPropertiesPanel().clone();
+		mTopLevelPanel = new InspectorSubHeading(mPropPanel);
 	}
 
 	@Override
@@ -32,7 +35,7 @@ public class PropertyInspectedObject extends InspectorComponent {
 
 	@Override
 	public void refreshInValue() {
-		mInspPanel.getPropertiesPanel().setValuesByObject(mInspectedObject);
+		mPropPanel.setValuesByObject(mInspectedObject);
 	}
 
 	@Override
@@ -43,6 +46,11 @@ public class PropertyInspectedObject extends InspectorComponent {
 	@Override
 	protected boolean useDefaultCaptionLayout() {
 		return false;
+	}
+
+	@Override
+	public PropertyInspectedObject clone() {
+		return new PropertyInspectedObject(mInspPanel);
 	}
 
 }

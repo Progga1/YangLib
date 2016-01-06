@@ -189,4 +189,14 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 		}
 	}
 
+	@Override
+	public void set(InspectorComponent template) {
+		PropertyNumArrayBase conv = (PropertyNumArrayBase)template;
+		for(int i=0;i<mTextFields.length;i++) {
+			mTextFields[i].copyParameters(conv.mTextFields[i]);
+		}
+		if(conv.mLinks!=null)
+			setLinkable();
+	}
+
 }

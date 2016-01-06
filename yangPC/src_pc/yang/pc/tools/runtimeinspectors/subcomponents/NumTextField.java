@@ -28,23 +28,28 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	public static Border SCROLL_WIDGET_BORDER = BorderFactory.createBevelBorder(0);
 	public static Border BORDER = BorderFactory.createMatteBorder(1,0,1,1,InspectorGUIDefinitions.CL_DEFAULT_COMPONENT_OUTLINE);
 
+	//Properties
+	private int mMaxDigits = 3;
+	private double mDefaultValue = 0;
+	private double mMinValue = -Double.MAX_VALUE;
+	private double mMaxValue = Double.MAX_VALUE;
+	private boolean mCyclic = false;
+	private float mScrollFactor = 0.01f;
+	private float mClickSteps = 1;
+
+	//State
+	private boolean mLinking = false;
+	protected double mCurValue;
+	private int mMouseDown = -1;
+	private long mMouseDownTime = -1;
+	private double mStartDragValue = -1;
+
+	//Objects
 	private String mOrigText = "";
 	private LinkedNumComponents mLinks;
 	private JFormattedTextField mTextField;
 	private JPanel mScrollWidget;
-	private float mScrollFactor = 0.01f;
-	private float mClickSteps = 1;
 	private ActionListener mListener;
-	private int mMaxDigits = 3;
-	protected double mCurValue;
-	private int mMouseDown = -1;
-	private double mDefaultValue = 0;
-	private double mMinValue = -Double.MAX_VALUE;
-	private double mMaxValue = Double.MAX_VALUE;
-	private boolean mLinking = false;
-	private long mMouseDownTime = -1;
-	private double mStartDragValue = -1;
-	private boolean mCyclic = false;
 
 	private int mLstX = Integer.MAX_VALUE,mLstY = Integer.MAX_VALUE;
 
@@ -358,6 +363,15 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	public void setCyclic(boolean cyclic) {
 		mCyclic = cyclic;
+	}
+
+	public void copyParameters(NumTextField template) {
+		mMinValue = template.mMinValue;
+		mMaxValue = template.mMaxValue;
+		mScrollFactor = template.mScrollFactor;
+		mClickSteps = template.mClickSteps;
+		mCyclic = template.mCyclic;
+		mMaxDigits = template.mMaxDigits;
 	}
 
 }

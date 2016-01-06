@@ -290,6 +290,7 @@ public class YangList<E> extends LinkedList<E> {
 		return null;
 	}
 
+	@Override
 	public E removeLast() {
 		return remove(size-1);
 	}
@@ -475,4 +476,13 @@ public class YangList<E> extends LinkedList<E> {
 //		}
 //		System.out.println();
 //	}
+
+	@Override
+	public YangList<E> clone() {
+		YangList<E> result = new YangList<E>();
+		for(E elem:this)
+			result.add(elem);
+		return result;
+	}
+
 }

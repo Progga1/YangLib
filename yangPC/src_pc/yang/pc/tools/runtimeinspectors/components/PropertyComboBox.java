@@ -11,6 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.border.Border;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
+import yang.pc.tools.runtimeinspectors.InspectorPanel;
 import yang.pc.tools.runtimeinspectors.interfaces.NameHolder;
 import yang.pc.tools.runtimeinspectors.interfaces.NameInterface;
 import yang.util.YangList;
@@ -177,6 +178,11 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			else
 				setInt(newVal);
 		}
+	}
+
+	@Override
+	public void set(InspectorComponent template) {
+		mItems = ((PropertyComboBox)template).mItems.clone();
 	}
 
 }

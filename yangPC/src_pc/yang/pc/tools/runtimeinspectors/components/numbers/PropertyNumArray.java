@@ -90,4 +90,9 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 		mTextFields[index].setDouble(value);
 	}
 
+	@Override
+	public PropertyNumArray clone() {
+		return new PropertyNumArray(mElemCount);
+	}
+
 }

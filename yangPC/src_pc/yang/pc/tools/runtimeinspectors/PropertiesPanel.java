@@ -40,7 +40,7 @@ public class PropertiesPanel extends JPanel {
 	}
 
 	public InspectorItem add(InspectorComponent component) {
-		InspectorItem newItem = new InspectorItem(mInspector,component);
+		InspectorItem newItem = new InspectorItem(component);
 		add(newItem);
 		return newItem;
 	}
@@ -93,6 +93,15 @@ public class PropertiesPanel extends JPanel {
 				}
 			}
 		}
+	}
+
+	@Override
+	public PropertiesPanel clone() {
+		PropertiesPanel newPanel = new PropertiesPanel(mInspector);
+		for(InspectorItem item:mItems) {
+			newPanel.add(item.clone());
+		}
+		return newPanel;
 	}
 
 }

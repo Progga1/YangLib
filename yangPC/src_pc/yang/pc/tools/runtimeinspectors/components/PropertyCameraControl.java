@@ -1,7 +1,5 @@
 package yang.pc.tools.runtimeinspectors.components;
 
-import java.awt.event.MouseEvent;
-
 import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.PropertyChain;

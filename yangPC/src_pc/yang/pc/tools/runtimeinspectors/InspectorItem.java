@@ -20,8 +20,8 @@ public class InspectorItem extends JPanel {
 	private JPanel mCaptionPanel;
 
 
-	public InspectorItem(InspectorPanel panel,InspectorComponent inspectorComponent) {
-		mInspector = panel;
+	public InspectorItem(InspectorComponent inspectorComponent) {
+		mInspector = inspectorComponent.mPropPanel;
 		mInspectorComponent = inspectorComponent;
 		inspectorComponent.mHolder = this;
 		mCaption = new JLabel(inspectorComponent.getName());
@@ -74,6 +74,13 @@ public class InspectorItem extends JPanel {
 
 	public InspectorComponent getInspectorComponent() {
 		return mInspectorComponent;
+	}
+
+	@Override
+	public InspectorItem clone() {
+		InspectorComponent newComp = mInspectorComponent.cloneAndInit(mInspector);
+		InspectorItem newItem = new InspectorItem(newComp);
+		return newItem;
 	}
 
 }

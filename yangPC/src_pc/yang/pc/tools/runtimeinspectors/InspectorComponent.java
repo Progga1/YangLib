@@ -282,4 +282,24 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		return addShortCut(keyCode,0);
 	}
 
+	@Override
+	public InspectorComponent clone() {
+		try {
+			return this.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void set(InspectorComponent template) {
+
+	}
+
+	public InspectorComponent cloneAndInit(InspectorPanel targetPanel) {
+		InspectorComponent result = clone();
+		result.init(targetPanel,mName,isReferenced());
+		result.set(this);
+		return result;
+	}
+
 }
