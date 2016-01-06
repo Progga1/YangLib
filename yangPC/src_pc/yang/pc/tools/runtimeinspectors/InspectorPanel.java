@@ -8,11 +8,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import yang.pc.tools.runtimeinspectors.components.PropertyInspectedObject;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterfaceHolder;
 import yang.pc.tools.runtimeinspectors.subcomponents.InspectorShortCut;
 
 public class InspectorPanel {
@@ -157,6 +160,29 @@ public class InspectorPanel {
 			toolTip += "Ctrl+";
 		toolTip += (char)keyCode;
 		component.mHolder.setToolTipText(toolTip);
+	}
+
+	public void registerObjectSubInspectors(List<?> objects) {
+		for(Object object:objects) {
+			InspectionInterface inspObj = null;
+			if(object instanceof InspectionInterface)
+				inspObj = (InspectionInterface)object;
+			else if(object instanceof InspectionInterfaceHolder) {
+				inspObj = ((InspectionInterfaceHolder)object).getInspectionInterface();
+			}
+			if(inspObj!=null) {
+				String name = inspObj.getName();
+				if(!mPropertiesPanel.nameExists(name)) {
+					InspectorPanel inspector = mFrame.findInspector(inspObj.getClass());
+					if(inspector!=null) {
+						PropertiesPanel props = inspector.mPropertiesPanel.clone(this);
+						PropertyInspectedObject inspProp = new PropertyInspectedObject(props);
+						registerPropertyReferenced(name,inspProp);
+						inspProp.setFixedReference(inspObj);
+					}
+				}
+			}
+		}
 	}
 
 }

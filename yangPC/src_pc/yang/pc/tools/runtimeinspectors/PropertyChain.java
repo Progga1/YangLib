@@ -84,4 +84,6 @@ public abstract class PropertyChain extends InspectorComponent {
 		return false;
 	}
 
+	//TODO propagate set to sub components
+
 }

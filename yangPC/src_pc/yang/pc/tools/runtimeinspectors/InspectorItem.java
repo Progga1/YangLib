@@ -76,11 +76,4 @@ public class InspectorItem extends JPanel {
 		return mInspectorComponent;
 	}
 
-	@Override
-	public InspectorItem clone() {
-		InspectorComponent newComp = mInspectorComponent.cloneAndInit(mInspector);
-		InspectorItem newItem = new InspectorItem(newComp);
-		return newItem;
-	}
-
 }

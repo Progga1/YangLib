@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
@@ -72,11 +73,14 @@ public class InspectorFrame implements ActionListener {
 		mFrame.add(mMainPanel);
 		mFrame.pack();
 		mFrame.setTitle("Inspector");
-		mFrame.setVisible(true);
 	}
 
 	public void setFrameTitle(String title) {
 		mFrame.setTitle(title);
+	}
+
+	public String getTitle() {
+		return mFrame.getTitle();
 	}
 
 	public void setSize(int width,int height) {
@@ -119,24 +123,36 @@ public class InspectorFrame implements ActionListener {
 		refreshLayout();
 	}
 
-	public void addObjectToInspect(InspectionInterface object) {
-		Class<?> objType = object.getClass();
+	public InspectorPanel findInspector(Class<?> objType) {
 		InspectorPanel inspector = mDefaultInspectors.get(objType);
 		while(inspector==null && objType.getSuperclass()!=null) {
 			objType = objType.getSuperclass();
 			inspector = mDefaultInspectors.get(objType);
 		}
+		return inspector;
+	}
+
+	public InspectorPanel findInspector(Object object) {
+		return findInspector(object.getClass());
+	}
+
+	public void addObjectToInspect(InspectionInterface object) {
+		InspectorPanel inspector = findInspector(object.getClass());
 		if(inspector==null)
 			throw new RuntimeException("No default inspector for type: "+object.getClass());
 		addObjectToInspect(object,inspector);
 	}
 
-	public void refresh(float deltaTime) {
+	public boolean isVisible() {
+		return mFrame==null || mFrame.isVisible();
+	}
+
+	public void update(float deltaTime) {
 		if((mUpdateTimer-=deltaTime)<=0) {
 			mUpdateTimer = mUpdateMinTime;
 		}else
 			return;
-		if(mFrame!=null && !mFrame.isVisible())
+		if(!isVisible())
 			return;
 		if(mInspectedObjects.size()==0)
 			return;
@@ -175,8 +191,8 @@ public class InspectorFrame implements ActionListener {
 		mFrame.repaint();
 	}
 
-	public void refresh() {
-		refresh(10000);
+	public void update() {
+		update(10000);
 	}
 
 	public void refreshLayout() {
@@ -197,7 +213,7 @@ public class InspectorFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		refresh();
+		update();
 	}
 
 	public void notifyValueUserInput() {
@@ -252,6 +268,30 @@ public class InspectorFrame implements ActionListener {
 
 	public int getSelectionId() {
 		return mObjectSelection.getSelectedIndex()-1;
+	}
+
+	public void show() {
+		mFrame.setVisible(true);
+	}
+
+	public void hide() {
+		mFrame.setVisible(false);
+	}
+
+	public void clear() {
+		mInspectedObjects.clear();
+		refreshLayout();
+	}
+
+	public void createInspectorsByTemplate(InspectorFrame templateFrame) {
+		for(Entry<Class<?>,InspectorPanel> entry:templateFrame.mDefaultInspectors.entrySet()) {
+			registerDefaultInspector(entry.getKey(),entry.getValue());
+		}
+	}
+
+	@Override
+	public String toString() {
+		return getTitle();
 	}
 
 }

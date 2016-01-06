@@ -95,13 +95,30 @@ public class PropertiesPanel extends JPanel {
 		}
 	}
 
-	@Override
-	public PropertiesPanel clone() {
-		PropertiesPanel newPanel = new PropertiesPanel(mInspector);
+	public PropertiesPanel clone(InspectorPanel inspector) {
+		PropertiesPanel newPanel = new PropertiesPanel(inspector);
 		for(InspectorItem item:mItems) {
-			newPanel.add(item.clone());
+			InspectorComponent newComp = item.mInspectorComponent.cloneAndInit(inspector);
+			newPanel.add(newComp);
 		}
 		return newPanel;
+	}
+
+	@Override
+	public PropertiesPanel clone() {
+		return clone(mInspector);
+	}
+
+	public InspectorItem getItemByName(String name) {
+		for(InspectorItem item:mItems) {
+			if(name.equals(item.mInspectorComponent.getName()))
+				return item;
+		}
+		return null;
+	}
+
+	public boolean nameExists(String name) {
+		return getItemByName(name)!=null;
 	}
 
 }

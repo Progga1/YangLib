@@ -73,13 +73,22 @@ public class InspectorSubHeading extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent ev) {
-		mMainPanel.setVisible(!mMainPanel.isVisible());
+		setCollapsed(!isCollapsed());
 		refreshName();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent ev) {
 
+	}
+
+	public void setCollapsed(boolean collapsed) {
+		mMainPanel.setVisible(!collapsed);
+		refreshName();
+	}
+
+	public boolean isCollapsed() {
+		return !mMainPanel.isVisible();
 	}
 
 

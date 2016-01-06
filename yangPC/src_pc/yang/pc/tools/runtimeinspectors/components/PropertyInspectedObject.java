@@ -10,32 +10,41 @@ import yang.pc.tools.runtimeinspectors.subcomponents.InspectorSubHeading;
 
 public class PropertyInspectedObject extends InspectorComponent {
 
-	protected InspectorPanel mInspPanel;
+	protected PropertiesPanel mOrigPropPanel;
 	protected PropertiesPanel mPropPanel;
 	protected InspectionInterface mInspectedObject;
 	protected InspectorSubHeading mTopLevelPanel;
 
+	public PropertyInspectedObject(PropertiesPanel panel) {
+		mOrigPropPanel = panel;
+	}
+
 	public PropertyInspectedObject(InspectorPanel panel) {
-		mInspPanel = panel;
+		this(panel.getPropertiesPanel());
 	}
 
 	@Override
 	protected void postInit() {
 		if(!isReferenced())
 			throw new RuntimeException("Only referenced allowed for inspected object property.");
-		mPropPanel = mInspPanel.getPropertiesPanel().clone();
+		mPropPanel = mOrigPropPanel.clone();
 		mTopLevelPanel = new InspectorSubHeading(mPropPanel);
+		mTopLevelPanel.setCollapsed(true);
 	}
 
 	@Override
 	public void setValueReference(Object reference) {
 		mInspectedObject = (InspectionInterface)reference;
-		mTopLevelPanel.setName(mName+": "+mInspectedObject.getName());
+		if(mName.equals(mInspectedObject.getName()))
+			mTopLevelPanel.setName(mName);
+		else
+			mTopLevelPanel.setName(mName+": "+mInspectedObject.getName());
 	}
 
 	@Override
 	public void refreshInValue() {
-		mPropPanel.setValuesByObject(mInspectedObject);
+		if(!mTopLevelPanel.isCollapsed())
+			mPropPanel.setValuesByObject(mInspectedObject);
 	}
 
 	@Override
@@ -50,7 +59,9 @@ public class PropertyInspectedObject extends InspectorComponent {
 
 	@Override
 	public PropertyInspectedObject clone() {
-		return new PropertyInspectedObject(mInspPanel);
+		return new PropertyInspectedObject(mOrigPropPanel);
 	}
+
+	//TODO propagate set to sub components
 
 }
