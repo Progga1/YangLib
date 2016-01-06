@@ -22,7 +22,7 @@ public abstract class PropertyNumBase extends InspectorComponent implements Acti
 		mNumTextField.setActionListener(this);
 	}
 
-	public PropertyNumBase setMouseScrollFactor(float stepsPerPixel) {
+	public PropertyNumBase setScrollFactor(float stepsPerPixel) {
 		mNumTextField.setScrollFactor(stepsPerPixel);
 		return this;
 	}

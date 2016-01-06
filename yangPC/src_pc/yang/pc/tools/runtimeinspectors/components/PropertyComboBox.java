@@ -17,6 +17,9 @@ import yang.util.YangList;
 
 public class PropertyComboBox extends InspectorComponent implements ActionListener {
 
+	public static final int SHORTCUT_PREVIOUS = -1;
+	public static final int SHORTCUT_NEXT = 1;
+
 	protected JComboBox<String> mComboBox;
 	protected YangList<NameInterface> mItems = new YangList<NameInterface>();
 	protected static Border BORDER = BorderFactory.createEmptyBorder(4,4,4,4);
@@ -159,6 +162,21 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	public void actionPerformed(ActionEvent arg0) {
 		if(!mLockChange)
 			notifyValueUserInput();
+	}
+
+	@Override
+	public void handleShortCut(int code) {
+		if(code==0)
+			code = SHORTCUT_NEXT;
+		if(mComboBox.getItemCount()>0) {
+			int newVal = getInt()+code;
+			if(newVal<0)
+				setInt(mComboBox.getItemCount()-1);
+			else if(newVal>mComboBox.getItemCount()-1)
+				setInt(0);
+			else
+				setInt(newVal);
+		}
 	}
 
 }

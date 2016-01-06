@@ -22,10 +22,12 @@ import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyInteger;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyEulerAngles;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyQuaternion;
+import yang.util.YangList;
 
 public class InspectorManager {
 
 	protected HashMap<Class<?>,Class<? extends InspectorComponent>> mTypes = new HashMap<Class<?>,Class<? extends InspectorComponent>>();
+	protected YangList<InspectorFrame> mFrames = new YangList<InspectorFrame>();
 
 	public InspectorManager() {
 		registerType(Boolean.class,PropertyBooleanCheckBox.class);
@@ -69,11 +71,18 @@ public class InspectorManager {
 	public InspectorFrame createInspectionFrame() {
 		InspectorFrame frame = new InspectorFrame(this);
 		frame.setFramed();
+		mFrames.add(frame);
 		return frame;
 	}
 
 	public InspectorPanel createInspector(InspectorFrame frame) {
 		return new InspectorPanel(frame);
+	}
+
+	public void handleShortcut(boolean ctrlDown,int keyCode) {
+		for(InspectorFrame frame:mFrames) {
+			frame.handleShortCut(ctrlDown,keyCode);
+		}
 	}
 
 }

@@ -7,11 +7,13 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+import yang.pc.tools.runtimeinspectors.subcomponents.InspectorShortCut;
 
 public class InspectorPanel {
 
@@ -21,6 +23,7 @@ public class InspectorPanel {
 	protected InspectorManager mManager;
 	protected JScrollPane mScrollPane;
 	protected boolean mSaving = false;
+	protected HashMap<Integer,InspectorShortCut> mShortCuts = new HashMap<Integer,InspectorShortCut>(32);
 
 	protected InspectorPanel(InspectorFrame frame) {
 		mManager = frame.mManager;
@@ -32,6 +35,7 @@ public class InspectorPanel {
 		mTopLevelPanel.add(mPropertiesPanel,BorderLayout.NORTH);
 		mTopLevelPanel.setBackground(InspectorGUIDefinitions.CL_UNUSED_SPACE);
 		mScrollPane = new JScrollPane(mTopLevelPanel);
+		mScrollPane.getVerticalScrollBar().setUnitIncrement(20);
 	}
 
 	public void setVisible(boolean visible) {
@@ -131,6 +135,28 @@ public class InspectorPanel {
 
 	public InspectorPanel createNewInspector() {
 		return getManager().createInspector(getFrame());
+	}
+
+	protected int toKeyCode(boolean ctrlDown,int keyCode) {
+		return (ctrlDown?1024:0)+keyCode;
+	}
+
+	public void handleShortCut(boolean ctrlDown,int keyCode) {
+		InspectorShortCut shortCut = mShortCuts.get(toKeyCode(ctrlDown,keyCode));
+		if(shortCut!=null) {
+			InspectorComponent comp = shortCut.mComponent;
+			comp.handleShortCut(shortCut.mCode);
+			comp.mWasChanged = true;
+		}
+	}
+
+	protected void addShortCut(boolean ctrlDown,int keyCode, InspectorComponent component, int shortCutCode) {
+		mShortCuts.put(toKeyCode(ctrlDown,keyCode),new InspectorShortCut(keyCode,component,shortCutCode));
+		String toolTip = "Shortcut: ";
+		if(ctrlDown)
+			toolTip += "Ctrl+";
+		toolTip += (char)keyCode;
+		component.mHolder.setToolTipText(toolTip);
 	}
 
 }

@@ -1,7 +1,5 @@
 package yang.pc.tools.runtimeinspectors.components.numbers;
 
-import yang.model.wrappers.DoubleInterface;
-import yang.model.wrappers.FloatInterface;
 import yang.pc.tools.runtimeinspectors.subcomponents.NumTextField;
 
 public class PropertyFloatNum extends PropertyNumBase {
@@ -33,6 +31,12 @@ public class PropertyFloatNum extends PropertyNumBase {
 
 	public PropertyFloatNum setMaxValue(double maxValue) {
 		mNumTextField.setMaxValue(maxValue);
+		return this;
+	}
+
+	public PropertyFloatNum setRange(double minValue,double maxValue) {
+		setMinValue(minValue);
+		setMaxValue(maxValue);
 		return this;
 	}
 

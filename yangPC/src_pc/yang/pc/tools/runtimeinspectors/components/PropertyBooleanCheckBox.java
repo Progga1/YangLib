@@ -64,4 +64,9 @@ public class PropertyBooleanCheckBox extends InspectorComponent implements Chang
 		notifyValueUserInput();
 	}
 
+	@Override
+	protected void handleShortCut(int code) {
+		setBool(!getBool());
+	}
+
 }

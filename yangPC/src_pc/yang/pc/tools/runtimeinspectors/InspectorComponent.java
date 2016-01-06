@@ -261,4 +261,25 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		return propertyName.equals(mName);
 	}
 
+	protected void handleShortCut(int code) {
+
+	}
+
+	public InspectorComponent addShortCut(boolean ctrlDown,int keyCode,int shortCutCode) {
+		mPropPanel.addShortCut(ctrlDown,keyCode,this,shortCutCode);
+		return this;
+	}
+
+	public InspectorComponent addShortCut(boolean ctrlDown,int keyCode) {
+		return addShortCut(ctrlDown,keyCode,0);
+	}
+
+	public InspectorComponent addShortCut(int keyCode,int shortCutCode) {
+		return addShortCut(false,keyCode,shortCutCode);
+	}
+
+	public InspectorComponent addShortCut(int keyCode) {
+		return addShortCut(keyCode,0);
+	}
+
 }

@@ -3,8 +3,6 @@ package yang.pc.tools.runtimeinspectors;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -224,6 +222,11 @@ public class InspectorFrame implements ActionListener {
 			}
 		}
 		throw new RuntimeException("Object not inspected: "+object.toString());
+	}
+
+	public void handleShortCut(boolean ctrlDown,int keyCode) {
+		if(mActiveInspector!=null)
+			mActiveInspector.handleShortCut(ctrlDown,keyCode);
 	}
 
 }
