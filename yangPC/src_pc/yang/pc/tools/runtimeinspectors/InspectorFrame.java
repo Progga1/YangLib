@@ -229,4 +229,29 @@ public class InspectorFrame implements ActionListener {
 			mActiveInspector.handleShortCut(ctrlDown,keyCode);
 	}
 
+	public int getObjectId(InspectionInterface object) {
+		int i = 0;
+		for(InspectedObject obj:mInspectedObjects) {
+			if(obj.mObject==object) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+
+	public void setSelected(int id) {
+		mObjectSelection.setSelectedIndex(id+1);
+	}
+
+	public void setSelected(InspectionInterface object) {
+		int id = getObjectId(object);
+		if(id>=0)
+			setSelected(id);
+	}
+
+	public int getSelectionId() {
+		return mObjectSelection.getSelectedIndex()-1;
+	}
+
 }
