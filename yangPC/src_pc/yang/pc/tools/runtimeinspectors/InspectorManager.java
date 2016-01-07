@@ -2,6 +2,8 @@ package yang.pc.tools.runtimeinspectors;
 
 import java.util.HashMap;
 
+import javax.swing.JFrame;
+
 import yang.graphics.model.FloatColor;
 import yang.graphics.model.TransformationData;
 import yang.graphics.translator.Texture;
@@ -82,6 +84,19 @@ public class InspectorManager {
 	public void handleShortcut(boolean ctrlDown,int keyCode) {
 		for(InspectorFrame frame:mFrames) {
 			frame.handleShortCut(ctrlDown,keyCode);
+		}
+	}
+
+	public void arrangeFrames(int totalHeight,InspectorFrame... frames) {
+		int count = frames.length;
+		int ADD = 4;
+		int frameHeight = totalHeight/count;
+		int i=0;
+		for(InspectorFrame frame:frames) {
+			JFrame jFrame = frame.mFrame;
+			jFrame.setSize(jFrame.getWidth(),frameHeight+ADD*2);
+			jFrame.setLocation(0,i*frameHeight-ADD);
+			i++;
 		}
 	}
 

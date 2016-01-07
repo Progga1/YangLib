@@ -1069,6 +1069,14 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		return getScreenBounds(screenId)[3];
 	}
 
+	public int getScreenWidth() {
+		return getScreenWidth(getMainScreenId());
+	}
+
+	public int getScreenHeight() {
+		return getScreenHeight(getMainScreenId());
+	}
+
 	public GLHolder getMainDisplay() {
 		return null;
 	}

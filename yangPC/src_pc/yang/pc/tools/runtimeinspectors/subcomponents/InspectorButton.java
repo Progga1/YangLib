@@ -1,6 +1,6 @@
 package yang.pc.tools.runtimeinspectors.subcomponents;
 
-import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -25,7 +25,8 @@ public class InspectorButton extends JPanel implements MouseListener {
 		setBorder(InspectorGUIDefinitions.BORDER_BUTTON);
 		mCaption = new JLabel();
 		mCaption.addMouseListener(this);
-		this.setLayout(new FlowLayout(FlowLayout.CENTER));
+//		this.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+		this.setLayout(new GridBagLayout());
 		this.add(mCaption);
 		mCaption.setHorizontalAlignment(SwingConstants.CENTER);
 		mCaption.setVerticalAlignment(SwingConstants.CENTER);

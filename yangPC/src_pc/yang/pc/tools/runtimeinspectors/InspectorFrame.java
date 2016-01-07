@@ -41,7 +41,7 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 	private InspectorFrameListener mListener = null;
 
 	//GUI
-	private JFrame mFrame;
+	protected JFrame mFrame;
 	private JPanel mMainPanel;
 	private JPanel mNorthPanel;
 	private JPanel mSouthPanel;
@@ -378,6 +378,14 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public int getWidth() {
+		return mFrame.getWidth();
+	}
+
+	public int getHeight() {
+		return mFrame.getHeight();
 	}
 
 }

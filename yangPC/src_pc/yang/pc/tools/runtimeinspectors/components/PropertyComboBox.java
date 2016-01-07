@@ -183,6 +183,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	@Override
 	public void set(InspectorComponent template) {
 		mItems = ((PropertyComboBox)template).mItems.clone();
+		refreshLayout();
 	}
 
 }

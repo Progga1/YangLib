@@ -47,6 +47,6 @@ public class InspectorGUIDefinitions {
 	public static final Border BORDER_CHAIN_COMPONENT = BorderFactory.createMatteBorder(1,2,1,2, CL_CHAIN_COMPONENT_OUTLINE);
 	public static final Border BORDER_CHAIN_COMPONENT_BRIGHT = BorderFactory.createMatteBorder(1,2,1,2, CL_CHAIN_COMPONENT_OUTLINE_BRIGHT);
 	public static final Border BORDER_CHAIN_COMPONENT_CAPTION = BorderFactory.createEmptyBorder(3,4,4,4);
-	public static final Border BORDER_BUTTON = BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,1,1,1, CL_BUTTON_OUTLINE),BorderFactory.createMatteBorder(1,1,1,1, CL_BUTTON_INNER_LINE));
+	public static final Border BORDER_BUTTON = BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,1,1,1, CL_BUTTON_OUTLINE),BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1,1,1,1, CL_BUTTON_INNER_LINE),BorderFactory.createEmptyBorder(2,2,2,2)));
 
 }

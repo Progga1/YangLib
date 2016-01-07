@@ -47,7 +47,7 @@ public class PropertyInspectedObject extends InspectorComponent {
 
 	@Override
 	public void loadFromStream(String value,BufferedReader reader) throws IOException {
-		mPropPanel.loadFromStream(null,reader);
+		mPropPanel.loadFromStream(mInspectedObject,reader);
 	}
 
 	@Override

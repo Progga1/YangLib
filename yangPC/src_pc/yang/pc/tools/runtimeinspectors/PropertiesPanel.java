@@ -83,6 +83,7 @@ public class PropertiesPanel extends JPanel {
 						if(ref==null)
 							continue;
 						comp.setValueReference(ref);
+						comp.refreshInValue();
 					}
 					comp.loadFromStream(value,reader);
 					comp.refreshOutValue();
