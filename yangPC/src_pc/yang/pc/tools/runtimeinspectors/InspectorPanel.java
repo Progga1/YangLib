@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +14,6 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import yang.pc.tools.runtimeinspectors.components.PropertyInspectedObject;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterfaceHolder;
 import yang.pc.tools.runtimeinspectors.subcomponents.InspectorShortCut;
@@ -126,10 +126,14 @@ public class InspectorPanel {
 		writer.close();
 	}
 
-	public void loadFromFile(InspectionInterface object, String filename) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(filename));
+	public boolean loadFromFile(InspectionInterface object, String filename) throws IOException {
+		File file = new File(filename);
+		if(!file.exists())
+			return false;
+		BufferedReader reader = new BufferedReader(new FileReader(file));
 		loadFromStream(object,reader);
 		reader.close();
+		return true;
 	}
 
 	public boolean isSaving() {

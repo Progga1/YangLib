@@ -56,10 +56,12 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	public static String maxDigitsString(String string,int maxDigits) {
 		int commaInd = string.indexOf(".");
 		if(commaInd>-1) {
-			if(maxDigits<=0) {
+			int eId = string.indexOf("E");
+			if(eId>=0)
+				return "0";
+			else if(maxDigits<=0) {
 				string = string.substring(0,commaInd);
-			}
-			else if(string.length()-1-commaInd>maxDigits)
+			}else if(string.length()-1-commaInd>maxDigits)
 				string = string.substring(0,commaInd+maxDigits+1);
 		}
 		return string;

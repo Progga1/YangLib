@@ -64,7 +64,8 @@ public class InspectorButton extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent ev) {
-		mListener.buttonPressed(this,ev.getButton());
+		if(mListener!=null)
+			mListener.buttonPressed(this,ev.getButton());
 	}
 
 	@Override

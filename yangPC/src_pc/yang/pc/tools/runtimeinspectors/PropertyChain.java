@@ -22,7 +22,7 @@ public abstract class PropertyChain extends InspectorComponent {
 		for(InspectorComponent component:mComponents) {
 			mMainPanel.add(component);
 		}
-		mTopLevelPanel = new InspectorSubHeading(mMainPanel,mName);
+		mTopLevelPanel = new InspectorSubHeading(mMainPanel,mName,true);
 	}
 
 	@Override

@@ -66,6 +66,10 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	}
 
+	protected boolean isComponentsVisible() {
+		return true;
+	}
+
 	protected void updateGUI() {
 
 	}
@@ -85,6 +89,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	public void setFixedReference(Object reference) {
 		mFixedReference = true;
 		setValueReference(reference);
+		refreshInValue();
 	}
 
 	public Object getValueReference() {
@@ -103,8 +108,10 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 					if(!mReferenced) {
 						object.readProperty(mName,this);
 					}
-					refreshInValue();
-					updateGUI();
+					if(isComponentsVisible()) {
+						refreshInValue();
+						updateGUI();
+					}
 				}
 			}
 		}
@@ -113,10 +120,12 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	protected String getStringOutput(InspectionInterface object) {
 		if(mReferenced) {
-			Object ref = object.getReferencedProperty(mName,this);
-			if(ref==null)
-				return null;
-			setValueReference(ref);
+			if(!mFixedReference) {
+				Object ref = object.getReferencedProperty(mName,this);
+				if(ref==null)
+					return null;
+				setValueReference(ref);
+			}
 		}else{
 			object.readProperty(mName,this);
 		}

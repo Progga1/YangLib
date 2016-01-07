@@ -1,10 +1,9 @@
-package yang.pc.tools.runtimeinspectors.components;
+package yang.pc.tools.runtimeinspectors;
 
 import java.awt.Component;
+import java.io.BufferedReader;
+import java.io.IOException;
 
-import yang.pc.tools.runtimeinspectors.InspectorComponent;
-import yang.pc.tools.runtimeinspectors.InspectorPanel;
-import yang.pc.tools.runtimeinspectors.PropertiesPanel;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.pc.tools.runtimeinspectors.subcomponents.InspectorSubHeading;
 
@@ -28,8 +27,27 @@ public class PropertyInspectedObject extends InspectorComponent {
 		if(!isReferenced())
 			throw new RuntimeException("Only referenced allowed for inspected object property.");
 		mPropPanel = mOrigPropPanel.clone();
-		mTopLevelPanel = new InspectorSubHeading(mPropPanel);
+		mTopLevelPanel = new InspectorSubHeading(mPropPanel,false);
 		mTopLevelPanel.setCollapsed(true);
+	}
+
+	@Override
+	protected String getFileOutputString() {
+		String result = "{\r\n";
+		for(InspectorItem item:mPropPanel.getItems()) {
+			InspectorComponent component = item.getInspectorComponent();
+			String subStr = component.getFileOutputString();
+			if(subStr!=null) {
+				result += component.mName+"="+subStr+"\r\n";
+			}
+		}
+		result += "}";
+		return result;
+	}
+
+	@Override
+	public void loadFromStream(String value,BufferedReader reader) throws IOException {
+		mPropPanel.loadFromStream(null,reader);
 	}
 
 	@Override
@@ -43,8 +61,12 @@ public class PropertyInspectedObject extends InspectorComponent {
 
 	@Override
 	public void refreshInValue() {
-		if(!mTopLevelPanel.isCollapsed())
-			mPropPanel.setValuesByObject(mInspectedObject);
+		mPropPanel.setValuesByObject(mInspectedObject);
+	}
+
+	@Override
+	protected boolean isComponentsVisible() {
+		return !mTopLevelPanel.isCollapsed();
 	}
 
 	@Override

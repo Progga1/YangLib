@@ -1,6 +1,7 @@
 package yang.pc.tools.runtimeinspectors;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -14,13 +15,17 @@ import javax.swing.JPanel;
 
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectorFrameListener;
+import yang.pc.tools.runtimeinspectors.subcomponents.InspectorButton;
+import yang.pc.tools.runtimeinspectors.subcomponents.InspectorButtonListener;
 import yang.util.YangList;
 
-public class InspectorFrame implements ActionListener {
+public class InspectorFrame implements ActionListener,InspectorButtonListener {
 
 	//Properties
 	public float mUpdateMinTime = 0;
 	private boolean mAllowNoneSelection = true;
+	private String mFileDirectory = "output/objects/";
+	private String mFileEnding = ".yo";
 
 	//State
 	private boolean mRefreshingLayout = false;
@@ -30,13 +35,18 @@ public class InspectorFrame implements ActionListener {
 	protected InspectorManager mManager;
 	private InspectorPanel mActiveInspector = null;
 	private YangList<InspectedObject> mInspectedObjects;
-	private JFrame mFrame;
-	private JPanel mMainPanel;
-	private JPanel mTopPanel;
 	private JComboBox<String> mObjectSelection;
 	private BorderLayout mLayout;
 	private HashMap<Class<?>,InspectorPanel> mDefaultInspectors = new HashMap<Class<?>,InspectorPanel>(32);
 	private InspectorFrameListener mListener = null;
+
+	//GUI
+	private JFrame mFrame;
+	private JPanel mMainPanel;
+	private JPanel mNorthPanel;
+	private JPanel mSouthPanel;
+	private InspectorButton mSaveButton;
+	private InspectorButton mLoadButton;
 
 	private class InspectedObject {
 
@@ -68,11 +78,24 @@ public class InspectorFrame implements ActionListener {
 		mInspectedObjects = new YangList<InspectedObject>();
 		mManager = manager;
 		mObjectSelection = new JComboBox<String>();
-		mTopPanel = new JPanel();
-		mTopPanel.add(mObjectSelection);
-		mTopPanel.setLayout(new BoxLayout(mTopPanel,BoxLayout.PAGE_AXIS));
-		mMainPanel.add(mTopPanel,BorderLayout.NORTH);
+		mNorthPanel = new JPanel();
+		mNorthPanel.add(mObjectSelection);
+		mNorthPanel.setLayout(new BoxLayout(mNorthPanel,BoxLayout.PAGE_AXIS));
+		mMainPanel.add(mNorthPanel,BorderLayout.NORTH);
 		mObjectSelection.addActionListener(this);
+
+		mSouthPanel = new JPanel();
+		mSouthPanel.setBackground(InspectorGUIDefinitions.CL_BAR_BACKGROUND);
+		mSouthPanel.setLayout(new FlowLayout(FlowLayout.LEFT,5,5));
+
+		mLoadButton = new InspectorButton("Load");
+		mSouthPanel.add(mLoadButton);
+		mSaveButton = new InspectorButton("Save");
+		mSouthPanel.add(mSaveButton);
+		mLoadButton.setListener(this);
+		mSaveButton.setListener(this);
+
+		mMainPanel.add(mSouthPanel,BorderLayout.SOUTH);
 	}
 
 	public void setFramed() {
@@ -240,7 +263,7 @@ public class InspectorFrame implements ActionListener {
 		mUpdateTimer = -1;
 	}
 
-	public void saveObjectToFile(Object object,String filename) throws IOException {
+	public void saveObjectToFile(InspectionInterface object,String filename) throws IOException {
 		for(InspectedObject inspObj:mInspectedObjects) {
 			if(inspObj.mObject==object) {
 				inspObj.saveToFile(inspObj,filename);
@@ -250,7 +273,7 @@ public class InspectorFrame implements ActionListener {
 		throw new RuntimeException("Object not inspected: "+object.toString());
 	}
 
-	public void loadObjectFromFile(Object object,String filename) throws IOException {
+	public void loadObjectFromFile(InspectionInterface object,String filename) throws IOException {
 		for(InspectedObject inspObj:mInspectedObjects) {
 			if(inspObj.mObject==object) {
 				inspObj.loadFromFile(inspObj,filename);
@@ -258,6 +281,19 @@ public class InspectorFrame implements ActionListener {
 			}
 		}
 		throw new RuntimeException("Object not inspected: "+object.toString());
+	}
+
+	public String createFilename(InspectionInterface object) {
+		String typeString = object.getTypeName()!=null?object.getTypeName()+"_":"";
+		return mFileDirectory+typeString+object.getName()+mFileEnding;
+	}
+
+	public void saveObjectToFileByName(InspectionInterface object) throws IOException {
+		saveObjectToFile(object,createFilename(object));
+	}
+
+	public void loadObjectFromFileByName(InspectionInterface object) throws IOException {
+		loadObjectFromFile(object,createFilename(object));
 	}
 
 	public void handleShortCut(boolean ctrlDown,int keyCode) {
@@ -298,6 +334,10 @@ public class InspectorFrame implements ActionListener {
 		return mInspectedObjects.get(id).mObject;
 	}
 
+	public InspectionInterface getSelectedObject() {
+		return getObject(getSelectionId());
+	}
+
 	public void show() {
 		mFrame.setVisible(true);
 	}
@@ -320,6 +360,24 @@ public class InspectorFrame implements ActionListener {
 	@Override
 	public String toString() {
 		return getTitle();
+	}
+
+	@Override
+	public void buttonPressed(InspectorButton sender, int button) {
+		if(sender==mSaveButton) {
+			try {
+				saveObjectToFileByName(getSelectedObject());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if(sender==mLoadButton) {
+			try {
+				loadObjectFromFileByName(getSelectedObject());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

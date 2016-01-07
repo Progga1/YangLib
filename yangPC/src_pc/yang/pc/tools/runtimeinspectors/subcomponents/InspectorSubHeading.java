@@ -20,12 +20,12 @@ public class InspectorSubHeading extends JPanel implements MouseListener {
 	private JLabel mCaption;
 	private Component mMainPanel;
 
-	public InspectorSubHeading(Component innerComponent,String caption) {
+	public InspectorSubHeading(Component innerComponent,String caption,boolean bright) {
 		mMainPanel = innerComponent;
 		mCaptionPanel = new JPanel();
 //		mCaptionPanel.setLayout(new BoxLayout(mCaptionPanel,BoxLayout.PAGE_AXIS));
 		mCaptionPanel.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-		mCaptionPanel.setBackground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_BACKGROUND);
+		mCaptionPanel.setBackground(bright?InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_BACKGROUND_BRIGHT:InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_BACKGROUND);
 		mCaptionPanel.setBorder(InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT_CAPTION);
 		mCaption = new JLabel();
 		mCaption.setForeground(InspectorGUIDefinitions.CL_CHAIN_COMPONENT_CAPTION_FONT);
@@ -34,13 +34,13 @@ public class InspectorSubHeading extends JPanel implements MouseListener {
 		setLayout(new BorderLayout());
 		add(mMainPanel,BorderLayout.CENTER);
 		add(mCaptionPanel,BorderLayout.NORTH);
-		setBorder(InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT);
+		setBorder(bright?InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT_BRIGHT:InspectorGUIDefinitions.BORDER_CHAIN_COMPONENT);
 		mCaption.addMouseListener(this);
 		mCaptionPanel.addMouseListener(this);
 	}
 
-	public InspectorSubHeading(Component innerComponent) {
-		this(innerComponent,"");
+	public InspectorSubHeading(Component innerComponent,boolean bright) {
+		this(innerComponent,"",bright);
 	}
 
 	@Override
