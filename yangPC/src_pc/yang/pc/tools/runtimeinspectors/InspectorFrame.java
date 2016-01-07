@@ -13,23 +13,30 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+import yang.pc.tools.runtimeinspectors.interfaces.InspectorFrameListener;
 import yang.util.YangList;
 
 public class InspectorFrame implements ActionListener {
 
+	//Properties
 	public float mUpdateMinTime = 0;
+	private boolean mAllowNoneSelection = true;
 
+	//State
+	private boolean mRefreshingLayout = false;
+	private double mUpdateTimer = 0;
+
+	//Objects
 	protected InspectorManager mManager;
+	private InspectorPanel mActiveInspector = null;
+	private YangList<InspectedObject> mInspectedObjects;
 	private JFrame mFrame;
 	private JPanel mMainPanel;
 	private JPanel mTopPanel;
 	private JComboBox<String> mObjectSelection;
 	private BorderLayout mLayout;
-	private InspectorPanel mActiveInspector = null;
-	private YangList<InspectedObject> mInspectedObjects;
 	private HashMap<Class<?>,InspectorPanel> mDefaultInspectors = new HashMap<Class<?>,InspectorPanel>(32);
-	private boolean mRefreshingLayout = false;
-	private double mUpdateTimer = 0;
+	private InspectorFrameListener mListener = null;
 
 	private class InspectedObject {
 
@@ -111,6 +118,11 @@ public class InspectorFrame implements ActionListener {
 		elem.mNameOrAlias = name;
 	}
 
+	public void setAllowNoneSelection(boolean allowNone) {
+		mAllowNoneSelection = allowNone;
+		refreshLayout();
+	}
+
 	public void addObjectToInspect(InspectionInterface object,InspectorPanel inspector) {
 		InspectedObject elem = new InspectedObject();
 		elem.mObject = object;
@@ -170,7 +182,7 @@ public class InspectorFrame implements ActionListener {
 		if(refreshAll) {
 			refreshLayout();
 		}
-		int selId = mObjectSelection.getSelectedIndex()-1;
+		int selId = mObjectSelection.getSelectedIndex()-getSelOffset();
 		boolean objSel = selId>-1;
 		InspectedObject oi = objSel?mInspectedObjects.get(selId):null;
 		InspectorPanel insp = objSel?oi.mInspector:null;
@@ -186,13 +198,16 @@ public class InspectorFrame implements ActionListener {
 		if(mActiveInspector!=null)
 			mActiveInspector.setValuesByObject(oi.mObject);
 
-		if(changedObject)
+		if(changedObject) {
 			mFrame.setVisible(true);
+			if(mListener!=null)
+				mListener.onSelectObject(selId,this);
+		}
 		mFrame.repaint();
 	}
 
 	public void update() {
-		update(10000);
+		update(900000);
 	}
 
 	public void refreshLayout() {
@@ -200,11 +215,16 @@ public class InspectorFrame implements ActionListener {
 			return;
 		mRefreshingLayout = true;
 		mObjectSelection.removeAllItems();
-		mObjectSelection.addItem("<none>");
+		if(mAllowNoneSelection)
+			mObjectSelection.addItem("<none>");
 		for(InspectedObject object:mInspectedObjects) {
 			mObjectSelection.addItem(object.mNameOrAlias);
 		}
 		mRefreshingLayout = false;
+	}
+
+	public void setListener(InspectorFrameListener listener) {
+		mListener = listener;
 	}
 
 	public InspectorPanel createInspector() {
@@ -256,8 +276,12 @@ public class InspectorFrame implements ActionListener {
 		return -1;
 	}
 
+	private int getSelOffset() {
+		return mAllowNoneSelection?1:0;
+	}
+
 	public void setSelected(int id) {
-		mObjectSelection.setSelectedIndex(id+1);
+		mObjectSelection.setSelectedIndex(id+getSelOffset());
 	}
 
 	public void setSelected(InspectionInterface object) {
@@ -267,7 +291,11 @@ public class InspectorFrame implements ActionListener {
 	}
 
 	public int getSelectionId() {
-		return mObjectSelection.getSelectedIndex()-1;
+		return mObjectSelection.getSelectedIndex()-getSelOffset();
+	}
+
+	public InspectionInterface getObject(int id) {
+		return mInspectedObjects.get(id).mObject;
 	}
 
 	public void show() {

@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import yang.pc.tools.runtimeinspectors.interfaces.InspectorFrameListener;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabel;
 
 public class InspectorItem extends JPanel {
@@ -18,7 +19,6 @@ public class InspectorItem extends JPanel {
 	protected InspectorComponent mInspectorComponent;
 	public JLabel mCaption;
 	private JPanel mCaptionPanel;
-
 
 	public InspectorItem(InspectorComponent inspectorComponent) {
 		mInspector = inspectorComponent.mPropPanel;
