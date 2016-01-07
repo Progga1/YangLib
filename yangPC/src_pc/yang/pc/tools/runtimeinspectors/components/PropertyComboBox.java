@@ -131,7 +131,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			value = 0;
 		else if(value>l)
 			value = l;
-		if(mPropPanel.isSaving()) {
+		if(mInspectorPanel.isSaving()) {
 			//mOutputString = Integer.toString(value);
 			mOutputString = mItems.get(value).getName();
 		}else{

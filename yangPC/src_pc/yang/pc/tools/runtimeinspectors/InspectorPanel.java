@@ -60,7 +60,7 @@ public class InspectorPanel {
 	public <ComponentType extends InspectorComponent> ComponentType registerProperty(String name,ComponentType inspectorComponent) {
 		inspectorComponent.init(this, name, false);
 		InspectorItem rtpHolder = new InspectorItem(inspectorComponent);
-		mPropertiesPanel.add(rtpHolder);
+		mPropertiesPanel.addItem(rtpHolder);
 		return inspectorComponent;
 	}
 
@@ -71,10 +71,14 @@ public class InspectorPanel {
 		return registerProperty(name,comp);
 	}
 
+	public void moveComponent(InspectorComponent component,int index) {
+		mPropertiesPanel.moveItem(component.mHolder,index);
+	}
+
 	public InspectorComponent registerPropertyReferenced(String name,InspectorComponent inspectorComponent) {
 		inspectorComponent.init(this, name, true);
 		InspectorItem rtpHolder = new InspectorItem(inspectorComponent);
-		mPropertiesPanel.add(rtpHolder);
+		mPropertiesPanel.addItem(rtpHolder);
 		return inspectorComponent;
 	}
 

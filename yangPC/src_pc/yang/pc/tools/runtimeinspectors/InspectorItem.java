@@ -21,7 +21,7 @@ public class InspectorItem extends JPanel {
 	private JPanel mCaptionPanel;
 
 	public InspectorItem(InspectorComponent inspectorComponent) {
-		mInspector = inspectorComponent.mPropPanel;
+		mInspector = inspectorComponent.mInspectorPanel;
 		mInspectorComponent = inspectorComponent;
 		inspectorComponent.mHolder = this;
 		mCaption = new JLabel(inspectorComponent.getName());

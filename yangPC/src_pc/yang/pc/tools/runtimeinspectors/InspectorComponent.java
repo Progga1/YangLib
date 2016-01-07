@@ -8,13 +8,14 @@ import yang.model.wrappers.DoubleInterface;
 import yang.model.wrappers.FloatInterface;
 import yang.model.wrappers.IntInterface;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+import yang.pc.tools.runtimeinspectors.interfaces.InspectorInputListener;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabel;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabelListener;
 
 public abstract class InspectorComponent implements CheckLabelListener,IntInterface,FloatInterface,DoubleInterface {
 
 	public String mName;
-	protected InspectorPanel mPropPanel;
+	protected InspectorPanel mInspectorPanel;
 	protected InspectorItem mHolder;
 	protected InspectorComponent mParent = null;
 	protected boolean mWasChanged = false;
@@ -24,6 +25,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	protected boolean mFixedReference = false;
 	protected boolean mExcludeFromFileIO = false;
 
+	protected InspectorInputListener mListener = null;
+
 	protected abstract void postInit();
 	protected abstract Component getComponent();
 
@@ -32,14 +35,14 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	public final void init(InspectorPanel panel, String name, boolean referenced) {
-		mPropPanel = panel;
+		mInspectorPanel = panel;
 		mName = name;
 		mReferenced = referenced;
 		postInit();
 	}
 
 	public final void init(InspectorComponent parent, String name, boolean referenced) {
-		init(parent.mPropPanel,name,referenced);
+		init(parent.mInspectorPanel,name,referenced);
 		setParent(parent);
 	}
 
@@ -68,7 +71,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	protected boolean isSaving() {
-		return mPropPanel.mSaving;
+		return mInspectorPanel.mSaving;
 	}
 
 	protected void refreshInValue() {
@@ -105,6 +108,13 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		return null;
 	}
 
+	protected InspectionInterface getTargetObject() {
+		if(mParent==null)
+			return mInspectorPanel.mPropertiesPanel.mCurObject;
+		else
+			return mParent.getTargetObject();
+	}
+
 	protected void update(InspectionInterface object,boolean forceUpdate) {
 		mCurObject = object;
 		if(isVisible()) {
@@ -112,6 +122,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 				refreshOutValue();
 				if(!mReferenced)
 					object.setProperty(mName,this);
+				if(mListener!=null)
+					mListener.inspectorActionPerformed(this,getTargetObject());
 			}else{
 				if(!hasFocus() || forceUpdate || true) {
 					if(!mReferenced) {
@@ -148,6 +160,10 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 			return mName+"="+result;
 	}
 
+	public void setExternalListener(InspectorInputListener listener) {
+		mListener = listener;
+	}
+
 	public boolean isReferenced() {
 		return mReferenced;
 	}
@@ -172,7 +188,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		if(mParent!=null)
 			mParent.notifyValueUserInput();
 		else
-			mPropPanel.notifyValueUserInput();
+			mInspectorPanel.notifyValueUserInput();
 	}
 
 	public boolean hasFocus() {
@@ -292,7 +308,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	public InspectorComponent addShortCut(boolean ctrlDown,int keyCode,int shortCutCode) {
-		mPropPanel.addShortCut(ctrlDown,keyCode,this,shortCutCode);
+		mInspectorPanel.addShortCut(ctrlDown,keyCode,this,shortCutCode);
 		return this;
 	}
 
@@ -325,6 +341,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		InspectorComponent result = clone();
 		result.init(targetPanel,mName,isReferenced());
 		result.set(this);
+		result.mListener = mListener;
 		return result;
 	}
 

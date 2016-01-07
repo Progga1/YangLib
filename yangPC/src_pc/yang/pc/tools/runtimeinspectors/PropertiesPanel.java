@@ -33,15 +33,33 @@ public class PropertiesPanel extends JPanel {
 		return mItems;
 	}
 
-	public void add(InspectorItem property) {
+	public void addItem(InspectorItem property) {
 		mItems.add(property);
 		super.add(property);
 //		refreshLayout();
 	}
 
+	public void removeItem(InspectorItem item) {
+		mItems.remove(item);
+		super.remove(item);
+	}
+
+	public void moveItem(InspectorItem item,int index) {
+		mItems.remove(item);
+		mItems.add(index,item);
+		refreshLayout();
+	}
+
+	protected void refreshLayout() {
+		super.removeAll();
+		for(InspectorItem item:mItems) {
+			super.add(item);
+		}
+	}
+
 	public InspectorItem add(InspectorComponent component) {
 		InspectorItem newItem = new InspectorItem(component);
-		add(newItem);
+		addItem(newItem);
 		return newItem;
 	}
 
@@ -122,6 +140,16 @@ public class PropertiesPanel extends JPanel {
 
 	public boolean nameExists(String name) {
 		return getItemByName(name)!=null;
+	}
+
+	public void setParent(InspectorComponent parent) {
+		for(InspectorItem item:mItems) {
+			item.mInspectorComponent.setParent(parent);
+		}
+	}
+
+	public void notifyValueUserInput() {
+		mInspector.notifyValueUserInput();
 	}
 
 }

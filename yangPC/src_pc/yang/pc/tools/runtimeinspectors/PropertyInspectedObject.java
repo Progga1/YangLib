@@ -29,6 +29,7 @@ public class PropertyInspectedObject extends InspectorComponent {
 		mPropPanel = mOrigPropPanel.clone();
 		mTopLevelPanel = new InspectorSubHeading(mPropPanel,false);
 		mTopLevelPanel.setCollapsed(true);
+		mPropPanel.setParent(this);
 	}
 
 	@Override
@@ -65,6 +66,11 @@ public class PropertyInspectedObject extends InspectorComponent {
 	}
 
 	@Override
+	protected InspectionInterface getTargetObject() {
+		return mInspectedObject;
+	}
+
+	@Override
 	protected boolean isComponentsVisible() {
 		return !mTopLevelPanel.isCollapsed();
 	}
@@ -82,6 +88,11 @@ public class PropertyInspectedObject extends InspectorComponent {
 	@Override
 	public PropertyInspectedObject clone() {
 		return new PropertyInspectedObject(mOrigPropPanel);
+	}
+
+	@Override
+	protected void notifyValueUserInput() {
+		mPropPanel.notifyValueUserInput();
 	}
 
 	//TODO propagate set to sub components

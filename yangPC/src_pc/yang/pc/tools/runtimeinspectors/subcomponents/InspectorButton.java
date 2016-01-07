@@ -40,6 +40,10 @@ public class InspectorButton extends JPanel implements MouseListener {
 		this("");
 	}
 
+	public String getCaption() {
+		return mCaption.getText();
+	}
+
 	public void setCaption(String caption) {
 		mCaption.setText(caption);
 	}

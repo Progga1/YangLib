@@ -17,7 +17,7 @@ public abstract class PropertyChain extends InspectorComponent {
 
 	@Override
 	protected void postInit() {
-		mMainPanel = new PropertiesPanel(mPropPanel);
+		mMainPanel = new PropertiesPanel(mInspectorPanel);
 		mComponents = createComponents();
 		for(InspectorComponent component:mComponents) {
 			mMainPanel.add(component);
