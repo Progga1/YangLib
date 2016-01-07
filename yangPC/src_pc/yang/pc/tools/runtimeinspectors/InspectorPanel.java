@@ -71,17 +71,18 @@ public class InspectorPanel {
 		return registerProperty(name,comp);
 	}
 
-	public void registerPropertyReferenced(String name,InspectorComponent inspectorComponent) {
+	public InspectorComponent registerPropertyReferenced(String name,InspectorComponent inspectorComponent) {
 		inspectorComponent.init(this, name, true);
 		InspectorItem rtpHolder = new InspectorItem(inspectorComponent);
 		mPropertiesPanel.add(rtpHolder);
+		return inspectorComponent;
 	}
 
-	public void registerPropertyReferenced(String name,Class<?> type) {
+	public InspectorComponent registerPropertyReferenced(String name,Class<?> type) {
 		InspectorComponent comp = mManager.createDefaultComponentInstance(type);
 		if(comp==null)
 			throw new RuntimeException("No default component for type: "+type.getName());
-		registerPropertyReferenced(name,comp);
+		return registerPropertyReferenced(name,comp);
 	}
 
 	public int getCaptionWidth() {

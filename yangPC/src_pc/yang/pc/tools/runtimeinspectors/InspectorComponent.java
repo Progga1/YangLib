@@ -22,6 +22,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	private boolean mVisible = true;
 	protected InspectionInterface mCurObject;
 	protected boolean mFixedReference = false;
+	protected boolean mExcludeFromFileIO = false;
 
 	protected abstract void postInit();
 	protected abstract Component getComponent();
@@ -40,6 +41,14 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	public final void init(InspectorComponent parent, String name, boolean referenced) {
 		init(parent.mPropPanel,name,referenced);
 		setParent(parent);
+	}
+
+	public void setExcludeFromFileIO(boolean exclude) {
+		mExcludeFromFileIO = exclude;
+	}
+
+	public boolean isExcludeFromFileIO() {
+		return mExcludeFromFileIO;
 	}
 
 	public void setPreferredOutputType(Class<?> type) {
@@ -119,6 +128,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	protected String getStringOutput(InspectionInterface object) {
+		if(mExcludeFromFileIO)
+			return null;
 		if(mReferenced) {
 			if(!mFixedReference) {
 				Object ref = object.getReferencedProperty(mName,this);
@@ -136,8 +147,6 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		else
 			return mName+"="+result;
 	}
-
-
 
 	public boolean isReferenced() {
 		return mReferenced;

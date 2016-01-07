@@ -78,17 +78,19 @@ public class PropertiesPanel extends JPanel {
 			for(InspectorItem item:mItems) {
 				InspectorComponent comp = item.mInspectorComponent;
 				if(comp.mName.equals(key)) {
-					if(object!=null && comp.isReferenced() && !comp.mFixedReference) {
-						Object ref = object.getReferencedProperty(comp.mName,comp);
-						if(ref==null)
-							continue;
-						comp.setValueReference(ref);
-						comp.refreshInValue();
-					}
-					comp.loadFromStream(value,reader);
-					comp.refreshOutValue();
-					if(object!=null && !comp.isReferenced()) {
-						object.setProperty(comp.mName,comp);
+					if(!comp.mExcludeFromFileIO) {
+						if(object!=null && comp.isReferenced() && !comp.mFixedReference) {
+							Object ref = object.getReferencedProperty(comp.mName,comp);
+							if(ref==null)
+								continue;
+							comp.setValueReference(ref);
+							comp.refreshInValue();
+						}
+						comp.loadFromStream(value,reader);
+						comp.refreshOutValue();
+						if(object!=null && !comp.isReferenced()) {
+							object.setProperty(comp.mName,comp);
+						}
 					}
 					break;
 				}
