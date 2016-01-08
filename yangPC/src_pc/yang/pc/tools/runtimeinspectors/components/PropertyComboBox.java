@@ -11,7 +11,6 @@ import javax.swing.JComboBox;
 import javax.swing.border.Border;
 
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
-import yang.pc.tools.runtimeinspectors.InspectorPanel;
 import yang.pc.tools.runtimeinspectors.interfaces.NameHolder;
 import yang.pc.tools.runtimeinspectors.interfaces.NameInterface;
 import yang.util.YangList;
@@ -131,8 +130,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			value = 0;
 		else if(value>l)
 			value = l;
-		if(mInspectorPanel.isSaving()) {
-			//mOutputString = Integer.toString(value);
+		if(isSaving()) {
 			mOutputString = mItems.get(value).getName();
 		}else{
 			mComboBox.setSelectedIndex(value);

@@ -125,13 +125,14 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 				if(mListener!=null)
 					mListener.inspectorActionPerformed(this,getTargetObject());
 			}else{
-				if(!hasFocus() || forceUpdate || true) {
+				if(!hasFocus() || forceUpdate) { //|| true
 					if(!mReferenced) {
 						object.readProperty(mName,this);
 					}
 					if(isComponentsVisible()) {
 						refreshInValue();
-						updateGUI();
+						if(!isSaving())
+							updateGUI();
 					}
 				}
 			}

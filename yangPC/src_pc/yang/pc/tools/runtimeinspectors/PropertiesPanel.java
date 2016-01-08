@@ -63,13 +63,14 @@ public class PropertiesPanel extends JPanel {
 		return newItem;
 	}
 
-	public void setValuesByObject(InspectionInterface object) {
+	public void setValuesByObject(InspectionInterface object,boolean forceUpdate) {
 		if(mCurObject==object) {
 			for(InspectorItem component:getItems()) {
 //				if(!component.getInspectorComponent().isReferenced() || component.getInspectorComponent().mWasChanged)
-				component.getInspectorComponent().update(object,false);
+				component.getInspectorComponent().update(object,forceUpdate);
 			}
 		}else{
+			mCurObject = object;
 			for(InspectorItem component:getItems()) {
 				InspectorComponent inspComp = component.getInspectorComponent();
 				if(inspComp.isReferenced())
@@ -77,7 +78,7 @@ public class PropertiesPanel extends JPanel {
 				component.getInspectorComponent().update(object,true);
 			}
 		}
-		mCurObject = object;
+
 	}
 
 	public void loadFromStream(InspectionInterface object, BufferedReader reader) throws IOException {

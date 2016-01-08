@@ -103,7 +103,7 @@ public class InspectorPanel {
 	}
 
 	public void setValuesByObject(InspectionInterface object) {
-		mPropertiesPanel.setValuesByObject(object);
+		mPropertiesPanel.setValuesByObject(object,isSaving());
 	}
 
 	public void notifyValueUserInput() {

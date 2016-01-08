@@ -26,7 +26,7 @@ public class PropertyInspectedObject extends InspectorComponent {
 	protected void postInit() {
 		if(!isReferenced())
 			throw new RuntimeException("Only referenced allowed for inspected object property.");
-		mPropPanel = mOrigPropPanel.clone();
+		mPropPanel = mOrigPropPanel.clone(mInspectorPanel);
 		mTopLevelPanel = new InspectorSubHeading(mPropPanel,false);
 		mTopLevelPanel.setCollapsed(true);
 		mPropPanel.setParent(this);
@@ -62,7 +62,7 @@ public class PropertyInspectedObject extends InspectorComponent {
 
 	@Override
 	public void refreshInValue() {
-		mPropPanel.setValuesByObject(mInspectedObject);
+		mPropPanel.setValuesByObject(mInspectedObject,isSaving());
 	}
 
 	@Override
