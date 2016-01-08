@@ -153,13 +153,17 @@ public class InspectorPanel {
 		return (ctrlDown?1024:0)+keyCode;
 	}
 
-	public void handleShortCut(boolean ctrlDown,int keyCode) {
+	public InspectorComponent handleShortCut(boolean ctrlDown,int keyCode) {
 		InspectorShortCut shortCut = mShortCuts.get(toKeyCode(ctrlDown,keyCode));
 		if(shortCut!=null) {
 			InspectorComponent comp = shortCut.mComponent;
-			comp.handleShortCut(shortCut.mCode);
-			comp.mWasChanged = true;
+			if(comp.handleShortCut(shortCut.mCode)) {
+				comp.mWasChanged = true;
+				comp.update(comp.mCurObject,true);
+				return comp;
+			}
 		}
+		return null;
 	}
 
 	protected void addShortCut(boolean ctrlDown,int keyCode, InspectorComponent component, int shortCutCode) {

@@ -14,7 +14,10 @@ import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabelListener;
 
 public abstract class InspectorComponent implements CheckLabelListener,IntInterface,FloatInterface,DoubleInterface {
 
-	public String mName;
+	public static String NAME_SPLITTER = " > ";
+
+	protected String mName;
+	protected String mFullName;
 	protected InspectorPanel mInspectorPanel;
 	protected InspectorItem mHolder;
 	protected InspectorComponent mParent = null;
@@ -37,6 +40,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	public final void init(InspectorPanel panel, String name, boolean referenced) {
 		mInspectorPanel = panel;
 		mName = name;
+		mFullName = name;
 		mReferenced = referenced;
 		postInit();
 	}
@@ -64,10 +68,26 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	protected void setParent(InspectorComponent parent) {
 		mParent = parent;
+		mFullName = mParent.mFullName+NAME_SPLITTER+mName;
 	}
 
 	public String getName() {
 		return mName;
+	}
+
+	public String getFullName(boolean includeObject) {
+		if(includeObject)
+			return mCurObject.getName()+": "+mFullName;
+		else
+			return mFullName;
+	}
+
+	public String getFullName() {
+		return getFullName(false);
+	}
+
+	public String getFullNameInclObject() {
+		return mCurObject.getName();
 	}
 
 	protected boolean isSaving() {
@@ -117,7 +137,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	protected void update(InspectionInterface object,boolean forceUpdate) {
 		mCurObject = object;
-		if(isVisible()) {
+		if(isVisible() || forceUpdate) {
 			if(mWasChanged) {
 				refreshOutValue();
 				if(!mReferenced)
@@ -161,8 +181,9 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 			return mName+"="+result;
 	}
 
-	public void setExternalListener(InspectorInputListener listener) {
+	public InspectorComponent setExternalListener(InspectorInputListener listener) {
 		mListener = listener;
+		return this;
 	}
 
 	public boolean isReferenced() {
@@ -260,11 +281,12 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	public String valueToString() {
-		Object val = getValue();
-		if(val!=null)
-			return val.toString();
-		else
-			return "<unknown>";
+//		Object val = getValue();
+//		if(val!=null)
+//			return val.toString();
+//		else
+//			return "<unknown>";
+		return getFileOutputString();
 	}
 
 	protected boolean useDefaultCaptionLayout() {
@@ -304,8 +326,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		return propertyName.equals(mName);
 	}
 
-	protected void handleShortCut(int code) {
-
+	protected boolean handleShortCut(int code) {
+		return false;
 	}
 
 	public InspectorComponent addShortCut(boolean ctrlDown,int keyCode,int shortCutCode) {
@@ -344,6 +366,20 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		result.set(this);
 		result.mListener = mListener;
 		return result;
+	}
+
+	public String createUserReadableString(boolean includeObjectName) {
+		String valStr = valueToString();
+		if(valStr==null)
+			return null;
+		String result = getFullName(includeObjectName);
+		result += " = ";
+		result += valStr;
+		return result;
+	}
+
+	public InspectionInterface getCurObject() {
+		return mCurObject;
 	}
 
 }

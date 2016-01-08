@@ -83,7 +83,8 @@ public class InspectorManager {
 
 	public void handleShortcut(boolean ctrlDown,int keyCode) {
 		for(InspectorFrame frame:mFrames) {
-			frame.handleShortCut(ctrlDown,keyCode);
+			if(frame.handleShortCut(ctrlDown,keyCode)!=null)
+				break;
 		}
 	}
 

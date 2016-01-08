@@ -82,4 +82,17 @@ public class PropertyButtons extends InspectorComponent implements InspectorButt
 		return mButtons[mPressedButtonId].getCaption();
 	}
 
+	@Override
+	public String createUserReadableString(boolean includeObjectName) {
+		if(mPressedButtonId<0)
+			return null;
+		return "ACTION "+getFullName(true)+NAME_SPLITTER+mButtons[mPressedButtonId].getCaption();
+	}
+
+	@Override
+	public boolean handleShortCut(int code) {
+		mPressedButtonId = code;
+		return true;
+	}
+
 }

@@ -16,6 +16,7 @@ public class PropertiesPanel extends JPanel {
 	protected InspectorPanel mInspector;
 	protected YangList<InspectorItem> mItems = new YangList<InspectorItem>();
 	protected InspectionInterface mCurObject = null;
+	protected boolean mFixedObjectReference = false;
 
 	public PropertiesPanel(InspectorPanel inspector) {
 		mInspector = inspector;
@@ -44,6 +45,10 @@ public class PropertiesPanel extends JPanel {
 		super.remove(item);
 	}
 
+	public void setFixedObject(InspectionInterface object) {
+		mFixedObjectReference = true;
+	}
+
 	public void moveItem(InspectorItem item,int index) {
 		mItems.remove(item);
 		mItems.add(index,item);
@@ -65,11 +70,10 @@ public class PropertiesPanel extends JPanel {
 
 	public void setValuesByObject(InspectionInterface object,boolean forceUpdate) {
 		if(mCurObject==object) {
-			for(InspectorItem component:getItems()) {
-//				if(!component.getInspectorComponent().isReferenced() || component.getInspectorComponent().mWasChanged)
-				component.getInspectorComponent().update(object,forceUpdate);
-			}
+			setValuesByObject(forceUpdate);
 		}else{
+			if(mCurObject!=null && mFixedObjectReference)
+				throw new RuntimeException("Reference is fixed");
 			mCurObject = object;
 			for(InspectorItem component:getItems()) {
 				InspectorComponent inspComp = component.getInspectorComponent();
@@ -78,7 +82,12 @@ public class PropertiesPanel extends JPanel {
 				component.getInspectorComponent().update(object,true);
 			}
 		}
+	}
 
+	public void setValuesByObject(boolean forceUpdate) {
+		for(InspectorItem component:getItems()) {
+			component.getInspectorComponent().update(mCurObject,forceUpdate);
+		}
 	}
 
 	public void loadFromStream(InspectionInterface object, BufferedReader reader) throws IOException {
@@ -151,6 +160,10 @@ public class PropertiesPanel extends JPanel {
 
 	public void notifyValueUserInput() {
 		mInspector.notifyValueUserInput();
+	}
+
+	public boolean isFixedReference() {
+		return mFixedObjectReference;
 	}
 
 }

@@ -158,6 +158,11 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 		refreshLayout();
 	}
 
+	public void addFixedObjectToInspect(InspectionInterface object,InspectorPanel inspector) {
+		addObjectToInspect(object,inspector);
+		inspector.mPropertiesPanel.setFixedObject(object);
+	}
+
 	public InspectorPanel findInspector(Class<?> objType) {
 		InspectorPanel inspector = mDefaultInspectors.get(objType);
 		while(inspector==null && objType.getSuperclass()!=null) {
@@ -296,9 +301,21 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 		loadObjectFromFile(object,createFilename(object));
 	}
 
-	public void handleShortCut(boolean ctrlDown,int keyCode) {
-		if(mActiveInspector!=null)
-			mActiveInspector.handleShortCut(ctrlDown,keyCode);
+	public InspectorComponent handleShortCut(boolean ctrlDown,int keyCode) {
+		InspectorComponent handled = null;
+		if(mActiveInspector!=null) {
+			handled = mActiveInspector.handleShortCut(ctrlDown,keyCode);
+		}
+		if(handled==null) {
+			for(InspectedObject inspObj:mInspectedObjects) {
+				if(inspObj.mInspector.mPropertiesPanel.isFixedReference())
+					handled = inspObj.mInspector.handleShortCut(ctrlDown,keyCode);
+			}
+		}
+		if(handled!=null && mListener!=null) {
+			mListener.onShortCut(handled,this);
+		}
+		return handled;
 	}
 
 	public int getObjectId(InspectionInterface object) {

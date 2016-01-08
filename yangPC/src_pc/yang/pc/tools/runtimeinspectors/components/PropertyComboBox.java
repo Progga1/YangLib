@@ -130,9 +130,8 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			value = 0;
 		else if(value>l)
 			value = l;
-		if(isSaving()) {
-			mOutputString = mItems.get(value).getName();
-		}else{
+		mOutputString = mItems.get(value).getName();
+		if(!isSaving()) {
 			mComboBox.setSelectedIndex(value);
 		}
 		mLockChange = false;
@@ -164,7 +163,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	}
 
 	@Override
-	public void handleShortCut(int code) {
+	public boolean handleShortCut(int code) {
 		if(code==0)
 			code = SHORTCUT_NEXT;
 		if(mComboBox.getItemCount()>0) {
@@ -176,6 +175,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			else
 				setInt(newVal);
 		}
+		return true;
 	}
 
 	@Override
