@@ -364,6 +364,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		InspectorComponent result = clone();
 		result.init(targetPanel,mName,isReferenced());
 		result.set(this);
+		if(isCollapsed())
+			result.setCollapsed(true);
 		result.mListener = mListener;
 		return result;
 	}
@@ -380,6 +382,18 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	public InspectionInterface getCurObject() {
 		return mCurObject;
+	}
+
+	public boolean isCollapsed() {
+		return false;
+	}
+
+	public InspectorComponent setCollapsed(boolean collapsed) {
+		return this;
+	}
+
+	public void move(int index) {
+		mHolder.mPropertiesPanel.moveItem(this.mHolder,index);
 	}
 
 }

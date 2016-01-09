@@ -48,6 +48,8 @@ public class PropertyTexture extends InspectorComponent implements InspectorButt
 
 	@Override
 	protected void refreshInValue() {
+		if(mTexture==null)
+			return;
 		String data = "<html><body>";
 		final String DATA_SPLITTER = " | ";
 		if(mTexture.mName!=null)

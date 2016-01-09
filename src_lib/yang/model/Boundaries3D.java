@@ -6,12 +6,15 @@ import yang.math.objects.Point3f;
 
 public class Boundaries3D {
 
+	public static float INF_POS = Float.MAX_VALUE;
+	public static float INF_NEG = -Float.MAX_VALUE;
+
 	public float mMinX,mMaxX;
 	public float mMinY,mMaxY;
 	public float mMinZ,mMaxZ;
 
 	public Boundaries3D() {
-
+		this(INF_NEG,INF_POS, INF_NEG,INF_POS, INF_NEG,INF_POS);
 	}
 
 	public Boundaries3D(float minX,float maxX,float minY,float maxY,float minZ,float maxZ) {
@@ -23,10 +26,14 @@ public class Boundaries3D {
 		mMaxZ = maxZ;
 	}
 
+	public Boundaries3D(Boundaries3D template) {
+		set(template);
+	}
+
 	public Boundaries3D(float dimX,float dimY,float dimZ) {
 		this(-dimX*0.5f,dimX*0.5f, -dimY*0.5f,dimY*0.5f, -dimZ*0.5f,dimZ*0.5f);
 	}
-	
+
 	public Boundaries3D(float size) {
 		this(size,size,size);
 	}
@@ -44,11 +51,20 @@ public class Boundaries3D {
 	public Boundaries3D set(float dimX,float dimY,float dimZ) {
 		return set(-dimX*0.5f,dimX*0.5f, -dimY*0.5f,dimY*0.5f, -dimZ*0.5f,dimZ*0.5f);
 	}
-	
+
 	public Boundaries3D set(float size) {
 		return set(size,size,size);
 	}
-	
+
+	public void set(Boundaries3D template) {
+		mMinX = template.mMinX;
+		mMaxX = template.mMaxX;
+		mMinY = template.mMinY;
+		mMaxY = template.mMaxY;
+		mMinZ = template.mMinZ;
+		mMaxZ = template.mMaxZ;
+	}
+
 	public Boundaries3D setCentered(float x,float y,float z, float width,float height,float depth) {
 		mMinX = x - width*0.5f;
 		mMaxX = x + width*0.5f;
@@ -155,10 +171,25 @@ public class Boundaries3D {
 	public boolean within(Point3f point) {
 		return mMinX<=point.mX && point.mX<=mMaxX && mMinY<=point.mY && point.mY<=mMaxY && mMinZ<=point.mZ && point.mZ<=mMaxZ;
 	}
-	
+
 	@Override
 	public String toString() {
 		return mMinX + "<=X<=" + mMaxX+"; " + mMinY + "<=Y<=" + mMaxY+"; " + mMinZ + "<=Z<=" + mMaxZ;
+	}
+
+	public boolean isFinite() {
+		return mMinX!=INF_NEG && mMaxX!=INF_POS && mMinY!=INF_NEG && mMaxY!=INF_POS && mMinZ!=INF_NEG && mMaxZ!=INF_POS;
+	}
+
+	public void setCornerPoints(Point3f[] pnts) {
+		pnts[0].set(mMinX,mMinY,mMinZ);
+		pnts[1].set(mMaxX,mMinY,mMinZ);
+		pnts[2].set(mMaxX,mMaxY,mMinZ);
+		pnts[3].set(mMinX,mMaxY,mMinZ);
+		pnts[4].set(mMinX,mMinY,mMaxZ);
+		pnts[5].set(mMaxX,mMinY,mMaxZ);
+		pnts[6].set(mMaxX,mMaxY,mMaxZ);
+		pnts[7].set(mMinX,mMaxY,mMaxZ);
 	}
 
 }

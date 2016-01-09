@@ -65,8 +65,9 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 	public void loadFromStream(String value,BufferedReader reader) {
 		String[] split = value.split(",");
 		int l = Math.min(mTextFields.length,split.length);
-		for(int i=0;i<l;i++)
-			setDouble(i,Double.parseDouble(split[i]));
+		for(int i=0;i<l;i++) {
+			mTextFields[i].setByString(split[i]);
+		}
 	}
 
 	@Override

@@ -35,6 +35,7 @@ public class PropertiesPanel extends JPanel {
 	}
 
 	public void addItem(InspectorItem property) {
+		property.mPropertiesPanel = this;
 		mItems.add(property);
 		super.add(property);
 //		refreshLayout();

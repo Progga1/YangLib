@@ -28,7 +28,7 @@ public class PropertyInspectedObject extends InspectorComponent {
 			throw new RuntimeException("Only referenced allowed for inspected object property.");
 		mPropPanel = mOrigPropPanel.clone(mInspectorPanel);
 		mTopLevelPanel = new InspectorSubHeading(mPropPanel,false);
-		mTopLevelPanel.setCollapsed(true);
+		setCollapsed(true);
 		mPropPanel.setParent(this);
 	}
 
@@ -93,6 +93,17 @@ public class PropertyInspectedObject extends InspectorComponent {
 	@Override
 	protected void notifyValueUserInput() {
 		mPropPanel.notifyValueUserInput();
+	}
+
+	@Override
+	public boolean isCollapsed() {
+		return mTopLevelPanel.isCollapsed();
+	}
+
+	@Override
+	public PropertyInspectedObject setCollapsed(boolean collapsed) {
+		mTopLevelPanel.setCollapsed(collapsed);
+		return this;
 	}
 
 	//TODO propagate set to sub components

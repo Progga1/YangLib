@@ -24,7 +24,9 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int MAX_CLICK_MILLIS = 200;
+	public static String STR_MAX = "MAX";
+	public static String STR_MIN = "MIN";
+	public static int MAX_CLICK_MILLIS = 200;
 	public static Border SCROLL_WIDGET_BORDER = BorderFactory.createBevelBorder(0);
 	public static Border BORDER = BorderFactory.createMatteBorder(1,0,1,1,InspectorGUIDefinitions.CL_DEFAULT_COMPONENT_OUTLINE);
 
@@ -168,7 +170,12 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		if(mCurValue==newVal)
 			return;
 		mCurValue = newVal;
-		mOrigText = Double.toString(mCurValue);
+		if(newVal==Double.MAX_VALUE)
+			mOrigText = STR_MAX;
+		else if(newVal==-Double.MAX_VALUE)
+			mOrigText = STR_MIN;
+		else
+			mOrigText = Double.toString(mCurValue);
 		if(updateText)
 			updateGUI();
 	}
@@ -183,7 +190,12 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		if(mCurValue==newVal)
 			return;
 		mCurValue = newVal;
-		mOrigText = Float.toString((float)mCurValue);
+		if(newVal==Float.MAX_VALUE)
+			mOrigText = STR_MAX;
+		else if(newVal==-Float.MAX_VALUE)
+			mOrigText = STR_MIN;
+		else
+			mOrigText = Float.toString((float)mCurValue);
 		if(updateText)
 			updateGUI();
 	}
@@ -202,7 +214,12 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	}
 
 	public float getFloat() {
-		return (float)mCurValue;
+		if(mCurValue==Double.MAX_VALUE)
+			return Float.MAX_VALUE;
+		else if(mCurValue==-Double.MAX_VALUE)
+			return -Float.MAX_VALUE;
+		else
+			return (float)mCurValue;
 	}
 
 	@Override
@@ -212,7 +229,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 
 	@Override
 	public void mouseDragged(MouseEvent ev) {
-		if(ev.getSource()==mScrollWidget) {
+		if(ev.getSource()==mScrollWidget && !isMinMax()) {
 			int x = ev.getX();
 			int y = ev.getY();
 			if(mLstX!=Integer.MAX_VALUE) {
@@ -276,15 +293,21 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		}
 	}
 
+	public boolean isMinMax() {
+		return mCurValue==-Double.MAX_VALUE || mCurValue==Double.MAX_VALUE;
+	}
+
 	@Override
 	public void mouseReleased(MouseEvent ev) {
 		if(ev.getSource()==mScrollWidget) {
 			mMouseDown = -1;
 			if(System.currentTimeMillis()-mMouseDownTime<=MAX_CLICK_MILLIS) {
-				int dir = ev.getButton()==MouseEvent.BUTTON1?1:(ev.getButton()==MouseEvent.BUTTON3?-1:0);
-				setDouble(mStartDragValue+mClickSteps*dir,true);
-				notifyLinks();
-				mListener.actionPerformed(null);
+				if(!isMinMax()) {
+					int dir = ev.getButton()==MouseEvent.BUTTON1?1:(ev.getButton()==MouseEvent.BUTTON3?-1:0);
+					setDouble(mStartDragValue+mClickSteps*dir,true);
+					notifyLinks();
+					mListener.actionPerformed(null);
+				}
 			}
 			endLink();
 		}
@@ -309,26 +332,32 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		}
 	}
 
-	private void onValueUserInput() {
-		String text = mTextField.getText();
-		if(!text.equals("")) {
-			try{
-				startLink();
-				double val = Double.parseDouble(text);
-				if(val<mMinValue || val>mMaxValue) {
-					setDouble(wrap(val));
-					updateGUI();
-				}else{
-					mCurValue = val;
-					mOrigText = text;
-				}
-			}catch(NumberFormatException ex) {
-
-			}finally{
-				notifyLinks();
-				endLink();
+	public void setByString(String text) {
+		try{
+			double val = Double.parseDouble(text);
+			if(val<mMinValue || val>mMaxValue) {
+				setDouble(wrap(val));
+				updateGUI();
+			}else{
+				mCurValue = val;
+				mOrigText = text;
+			}
+		}catch(NumberFormatException ex) {
+			if(text.toUpperCase().equals(STR_MAX)) {
+				mCurValue = Double.MAX_VALUE;
+				mOrigText = STR_MAX;
+			}else if(text.toUpperCase().equals(STR_MIN)) {
+				mCurValue = -Double.MAX_VALUE;
+				mOrigText = STR_MIN;
 			}
 		}
+	}
+
+	private void onValueUserInput() {
+		startLink();
+		setByString(mTextField.getText());
+		notifyLinks();
+		endLink();
 	}
 
 	@Override

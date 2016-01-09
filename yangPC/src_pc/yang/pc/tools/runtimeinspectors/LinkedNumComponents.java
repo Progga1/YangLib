@@ -22,6 +22,12 @@ public class LinkedNumComponents {
 			return;
 		double curVal = mCurSender.getDouble();
 
+		if(curVal==Double.MAX_VALUE || curVal==Double.MIN_VALUE) {
+			for(NumberIO component:mLinkedComponents) {
+				component.setDouble(curVal);
+			}
+		}
+
 		double startVal = mStartValues[mCurSenderIndex];
 		double ratio;
 		if(startVal==0)
@@ -32,7 +38,9 @@ public class LinkedNumComponents {
 		for(NumberIO component:mLinkedComponents) {
 			if(component!=mCurSender) {
 				double compVal = mStartValues[i];
-				if(compVal==0 || ratio==0)
+				if(compVal==Double.MAX_VALUE || compVal==-Double.MAX_VALUE)
+					continue;
+				if(ratio==0)
 					component.setDouble(curVal);
 				else
 					component.setDouble(compVal*ratio);

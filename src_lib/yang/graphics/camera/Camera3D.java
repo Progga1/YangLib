@@ -2,6 +2,7 @@ package yang.graphics.camera;
 
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.camera.projection.PerspectiveProjection;
+import yang.graphics.model.TransformationData;
 import yang.math.MathConst;
 import yang.math.MatrixOps;
 import yang.math.objects.EulerAngles;
@@ -112,6 +113,12 @@ public class Camera3D extends YangCamera {
 
 	public void setLookOutwardsAlphaBeta(EulerAngles angles,float distance, Point3f pivot) {
 		setLookOutwardsAlphaBeta(angles.mYaw,angles.mPitch,angles.mRoll, distance, pivot.mX,pivot.mY,pivot.mZ);
+	}
+
+	public void setByTransform(TransformationData transform) {
+		mCameraTransform.loadIdentity();
+		mCameraTransform.translate(transform.mPosition);
+		mCameraTransform.multiplyQuaternionRight(transform.mOrientation);
 	}
 
 }

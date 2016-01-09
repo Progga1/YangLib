@@ -16,6 +16,7 @@ public class InspectorItem extends JPanel {
 
 	protected InspectorPanel mInspector;
 	protected CheckLabel mLinkCheckLabel;
+	protected PropertiesPanel mPropertiesPanel;
 	protected InspectorComponent mInspectorComponent;
 	public JLabel mCaption;
 	private JPanel mCaptionPanel;

@@ -29,7 +29,7 @@ public abstract class PropertyNumBase extends InspectorComponent implements Acti
 
 	@Override
 	public void loadFromStream(String value,BufferedReader reader) {
-		setDouble(Double.parseDouble(value));
+		mNumTextField.setByString(value);
 	}
 
 	@Override

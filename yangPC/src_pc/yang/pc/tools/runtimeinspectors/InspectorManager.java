@@ -13,7 +13,9 @@ import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
 import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
+import yang.model.Boundaries3D;
 import yang.pc.tools.runtimeinspectors.components.PropertyBooleanCheckBox;
+import yang.pc.tools.runtimeinspectors.components.PropertyBoundaries3D;
 import yang.pc.tools.runtimeinspectors.components.PropertyCameraControl;
 import yang.pc.tools.runtimeinspectors.components.PropertyColorNums;
 import yang.pc.tools.runtimeinspectors.components.PropertyTextField;
@@ -46,6 +48,7 @@ public class InspectorManager {
 		registerType(YangMatrix.class,PropertyTransform.class);
 		registerType(Camera3DControl.class,PropertyCameraControl.class);
 		registerType(Texture.class,PropertyTexture.class);
+		registerType(Boundaries3D.class,PropertyBoundaries3D.class);
 	}
 
 	public void registerType(Class<?> type,Class<? extends InspectorComponent> component) {

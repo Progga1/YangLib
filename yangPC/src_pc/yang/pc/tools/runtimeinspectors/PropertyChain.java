@@ -84,6 +84,17 @@ public abstract class PropertyChain extends InspectorComponent {
 		return false;
 	}
 
+	@Override
+	public boolean isCollapsed() {
+		return mTopLevelPanel.isCollapsed();
+	}
+
+	@Override
+	public PropertyChain setCollapsed(boolean collapsed) {
+		mTopLevelPanel.setCollapsed(collapsed);
+		return this;
+	}
+
 	//TODO propagate set to sub components
 
 }
