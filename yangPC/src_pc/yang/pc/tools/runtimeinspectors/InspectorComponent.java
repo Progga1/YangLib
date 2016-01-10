@@ -120,8 +120,14 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	public void setFixedReference(Object reference) {
 		mFixedReference = true;
-		setValueReference(reference);
-		refreshInValue();
+		if(reference==null) {
+			setVisible(false);
+		}else{
+			setVisible(true);
+			setValueReference(reference);
+			refreshInValue();
+		}
+
 	}
 
 	public Object getValueReference() {
@@ -137,7 +143,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	protected void update(InspectionInterface object,boolean forceUpdate) {
 		mCurObject = object;
-		if(isVisible() || forceUpdate) {
+		if(isVisible()) {
 			if(mWasChanged) {
 				refreshOutValue();
 				if(!mReferenced)
@@ -145,7 +151,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 				if(mListener!=null)
 					mListener.inspectorActionPerformed(this,getTargetObject());
 			}else{
-				if(!hasFocus() || forceUpdate) { //|| true
+				if(!hasFocus() || forceUpdate) {
 					if(!mReferenced) {
 						object.readProperty(mName,this);
 					}
@@ -366,6 +372,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		result.set(this);
 		if(isCollapsed())
 			result.setCollapsed(true);
+		if(isReadOnly())
+			result.setReadOnly(true);
 		result.mListener = mListener;
 		return result;
 	}
@@ -389,6 +397,15 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	public InspectorComponent setCollapsed(boolean collapsed) {
+		return this;
+	}
+
+	public boolean isReadOnly() {
+		return !getComponent().isEnabled();
+	}
+
+	public InspectorComponent setReadOnly(boolean readOnly) {
+		getComponent().setEnabled(!readOnly);
 		return this;
 	}
 

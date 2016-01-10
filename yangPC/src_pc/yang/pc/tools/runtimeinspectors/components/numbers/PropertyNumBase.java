@@ -47,6 +47,17 @@ public abstract class PropertyNumBase extends InspectorComponent implements Acti
 	}
 
 	@Override
+	public boolean isReadOnly() {
+		return mNumTextField.isReadOnly();
+	}
+
+	@Override
+	public PropertyNumBase setReadOnly(boolean readOnly) {
+		mNumTextField.setReadOnly(readOnly);
+		return this;
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent ev) {
 		notifyValueUserInput();
 	}

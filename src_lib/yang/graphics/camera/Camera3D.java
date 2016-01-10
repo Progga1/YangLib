@@ -37,6 +37,11 @@ public class Camera3D extends YangCamera {
 		mProjectionUpdated = true;
 	}
 
+	public void setPerspectiveProjectionByFactor(float facX,float facY, float near,float far,float shiftX,float shiftY) {
+		PerspectiveProjection.getTransform(mProjectionTransform, near*facX,near*facY, near,far, shiftX,shiftY);
+		mProjectionUpdated = true;
+	}
+
 	public void setPerspectiveProjection(float fovy, float near, float far) {
 		setPerspectiveProjection(fovy,near,far,1);
 	}

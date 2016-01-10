@@ -167,4 +167,12 @@ public class PropertiesPanel extends JPanel {
 		return mFixedObjectReference;
 	}
 
+	public InspectorComponent getProperty(String name) {
+		for(InspectorItem item:mItems) {
+			if(item.mInspectorComponent.mName.equals(name))
+				return item.mInspectorComponent;
+		}
+		return null;
+	}
+
 }

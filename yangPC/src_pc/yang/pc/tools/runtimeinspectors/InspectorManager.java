@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import yang.graphics.model.FloatColor;
 import yang.graphics.model.TransformationData;
+import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.math.objects.EulerAngles;
@@ -48,6 +49,7 @@ public class InspectorManager {
 		registerType(YangMatrix.class,PropertyTransform.class);
 		registerType(Camera3DControl.class,PropertyCameraControl.class);
 		registerType(Texture.class,PropertyTexture.class);
+		registerType(TextureRenderTarget.class,PropertyTexture.class);
 		registerType(Boundaries3D.class,PropertyBoundaries3D.class);
 	}
 

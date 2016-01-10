@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import yang.events.Keys;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterfaceHolder;
 import yang.pc.tools.runtimeinspectors.subcomponents.InspectorShortCut;
@@ -168,10 +169,10 @@ public class InspectorPanel {
 
 	protected void addShortCut(boolean ctrlDown,int keyCode, InspectorComponent component, int shortCutCode) {
 		mShortCuts.put(toKeyCode(ctrlDown,keyCode),new InspectorShortCut(keyCode,component,shortCutCode));
-		String toolTip = "Shortcut: ";
+		String toolTip = component.mHolder.getToolTipText()==null?"Shortcut: ":component.mHolder.getToolTipText()+", ";
 		if(ctrlDown)
 			toolTip += "Ctrl+";
-		toolTip += (char)keyCode;
+		toolTip += Keys.toString(keyCode);
 		component.mHolder.setToolTipText(toolTip);
 	}
 
@@ -196,6 +197,10 @@ public class InspectorPanel {
 				}
 			}
 		}
+	}
+
+	public InspectorComponent getProperty(String name) {
+		return mPropertiesPanel.getProperty(name);
 	}
 
 }

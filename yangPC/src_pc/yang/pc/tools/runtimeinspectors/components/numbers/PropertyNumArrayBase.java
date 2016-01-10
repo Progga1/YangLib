@@ -200,4 +200,17 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 			setLinkable();
 	}
 
+	@Override
+	public boolean isReadOnly() {
+		return mTextFields[0].isReadOnly();
+	}
+
+	@Override
+	public PropertyNumArrayBase setReadOnly(boolean readOnly) {
+		for(NumTextField textField:mTextFields) {
+			textField.setReadOnly(readOnly);
+		}
+		return this;
+	}
+
 }

@@ -38,6 +38,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	private boolean mCyclic = false;
 	private float mScrollFactor = 0.01f;
 	private float mClickSteps = 1;
+	private boolean mReadOnly = false;
 
 	//State
 	private boolean mLinking = false;
@@ -228,7 +229,36 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	}
 
 	@Override
+	public void mouseClicked(MouseEvent ev) {
+		if(mReadOnly)
+			return;
+		if(ev.getSource()==mTextField && ev.getClickCount()>1)
+			mTextField.selectAll();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent ev) {
+		if(mReadOnly)
+			return;
+		if(ev.getSource()==mScrollWidget) {
+			mLstX = Integer.MAX_VALUE;
+			mLstY = Integer.MAX_VALUE;
+			if(ev.getButton()==MouseEvent.BUTTON1)
+				mMouseDown = 1;
+			if(ev.getButton()==MouseEvent.BUTTON2)
+				mMouseDown = 2;
+			if(ev.getButton()==MouseEvent.BUTTON3)
+				mMouseDown = 3;
+			mMouseDownTime = System.currentTimeMillis();
+			mStartDragValue = mCurValue;
+			startLink();
+		}
+	}
+
+	@Override
 	public void mouseDragged(MouseEvent ev) {
+		if(mReadOnly)
+			return;
 		if(ev.getSource()==mScrollWidget && !isMinMax()) {
 			int x = ev.getX();
 			int y = ev.getY();
@@ -261,44 +291,9 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent ev) {
-		if(ev.getSource()==mTextField && ev.getClickCount()>1)
-			mTextField.selectAll();
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent ev) {
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent ev) {
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent ev) {
-		if(ev.getSource()==mScrollWidget) {
-			mLstX = Integer.MAX_VALUE;
-			mLstY = Integer.MAX_VALUE;
-			if(ev.getButton()==MouseEvent.BUTTON1)
-				mMouseDown = 1;
-			if(ev.getButton()==MouseEvent.BUTTON2)
-				mMouseDown = 2;
-			if(ev.getButton()==MouseEvent.BUTTON3)
-				mMouseDown = 3;
-			mMouseDownTime = System.currentTimeMillis();
-			mStartDragValue = mCurValue;
-			startLink();
-		}
-	}
-
-	public boolean isMinMax() {
-		return mCurValue==-Double.MAX_VALUE || mCurValue==Double.MAX_VALUE;
-	}
-
-	@Override
 	public void mouseReleased(MouseEvent ev) {
+		if(mReadOnly)
+			return;
 		if(ev.getSource()==mScrollWidget) {
 			mMouseDown = -1;
 			if(System.currentTimeMillis()-mMouseDownTime<=MAX_CLICK_MILLIS) {
@@ -311,6 +306,20 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 			}
 			endLink();
 		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent ev) {
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent ev) {
+
+	}
+
+	public boolean isMinMax() {
+		return mCurValue==-Double.MAX_VALUE || mCurValue==Double.MAX_VALUE;
 	}
 
 	private void startLink() {
@@ -332,7 +341,7 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		}
 	}
 
-	public void setByString(String text) {
+	public boolean setByString(String text) {
 		try{
 			double val = Double.parseDouble(text);
 			if(val<mMinValue || val>mMaxValue) {
@@ -349,13 +358,16 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 			}else if(text.toUpperCase().equals(STR_MIN)) {
 				mCurValue = -Double.MAX_VALUE;
 				mOrigText = STR_MIN;
-			}
+			}else
+				return false;
 		}
+		return true;
 	}
 
 	private void onValueUserInput() {
 		startLink();
-		setByString(mTextField.getText());
+		if(!setByString(mTextField.getText()))
+			updateGUI();
 		notifyLinks();
 		endLink();
 	}
@@ -403,6 +415,25 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		mClickSteps = template.mClickSteps;
 		mCyclic = template.mCyclic;
 		mMaxDigits = template.mMaxDigits;
+	}
+
+	public boolean isReadOnly() {
+		return mReadOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		mReadOnly = readOnly;
+		mTextField.setEnabled(!readOnly);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return !mReadOnly;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		setReadOnly(!enabled);
 	}
 
 }

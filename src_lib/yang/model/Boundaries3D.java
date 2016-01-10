@@ -181,15 +181,25 @@ public class Boundaries3D {
 		return mMinX!=INF_NEG && mMaxX!=INF_POS && mMinY!=INF_NEG && mMaxY!=INF_POS && mMinZ!=INF_NEG && mMaxZ!=INF_POS;
 	}
 
-	public void setCornerPoints(Point3f[] pnts) {
-		pnts[0].set(mMinX,mMinY,mMinZ);
-		pnts[1].set(mMaxX,mMinY,mMinZ);
-		pnts[2].set(mMaxX,mMaxY,mMinZ);
-		pnts[3].set(mMinX,mMaxY,mMinZ);
-		pnts[4].set(mMinX,mMinY,mMaxZ);
-		pnts[5].set(mMaxX,mMinY,mMaxZ);
-		pnts[6].set(mMaxX,mMaxY,mMaxZ);
+	public void setCornerPoints(Point3f[] pnts,float maxValue) {
+		float minX = mMinX==INF_NEG?-maxValue:mMinX;
+		float maxX = mMaxX==INF_POS?maxValue:mMaxX;
+		float minY = mMinY==INF_NEG?-maxValue:mMinY;
+		float maxY = mMaxY==INF_POS?maxValue:mMaxY;
+		float minZ = mMinZ==INF_NEG?-maxValue:mMinZ;
+		float maxZ = mMaxZ==INF_POS?maxValue:mMaxZ;
+		pnts[0].set(minX,minY,minZ);
+		pnts[1].set(maxX,minY,minZ);
+		pnts[2].set(maxX,maxY,minZ);
+		pnts[3].set(minX,maxY,minZ);
+		pnts[4].set(minX,minY,maxZ);
+		pnts[5].set(maxX,minY,maxZ);
+		pnts[6].set(maxX,maxY,maxZ);
 		pnts[7].set(mMinX,mMaxY,mMaxZ);
+	}
+
+	public boolean isInfinite() {
+		return mMinX==INF_NEG || mMaxX==INF_POS || mMinY==INF_NEG || mMaxY==INF_POS || mMinZ==INF_NEG || mMaxZ==INF_POS;
 	}
 
 }
