@@ -184,4 +184,8 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 		refreshLayout();
 	}
 
+	public void clear() {
+		mComboBox.removeAllItems();
+	}
+
 }

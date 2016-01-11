@@ -179,6 +179,7 @@ public class InspectorPanel {
 	public void registerObjectSubInspectors(List<?> objects) {
 		for(Object object:objects) {
 			InspectionInterface inspObj = null;
+
 			if(object instanceof InspectionInterface)
 				inspObj = (InspectionInterface)object;
 			else if(object instanceof InspectionInterfaceHolder) {
@@ -186,6 +187,7 @@ public class InspectorPanel {
 			}
 			if(inspObj!=null) {
 				String name = inspObj.getName();
+
 				if(!mPropertiesPanel.nameExists(name)) {
 					InspectorPanel inspector = mFrame.findInspector(inspObj.getClass());
 					if(inspector!=null) {

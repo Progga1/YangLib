@@ -42,7 +42,10 @@ public class PropertyTexture extends InspectorComponent implements InspectorButt
 	public void setValueReference(Object reference) {
 		if(reference instanceof TextureRenderTarget)
 			mTexture = ((TextureRenderTarget)reference).mTargetTexture;
-		else
+		else if(reference instanceof TextureDisplay) {
+			mTexDispl = ((TextureDisplay)reference);
+			mTexture = mTexDispl.getTexture();
+		}else
 			mTexture = (Texture)reference;
 	}
 

@@ -9,6 +9,7 @@ public class TextureCoordinatesQuad {
 	public static float BIASPIXELS = 0.5f;
 
 	public static final TextureCoordinatesQuad FULL_TEXTURE = new TextureCoordinatesQuad().init(0,0,1,1);
+	public static final TextureCoordinatesQuad FULL_TEXTURE_FLIP_Y = new TextureCoordinatesQuad().init(0,1,1,0);
 	public static final int ROTATE_NONE = 0;
 	public static final int ROTATE_CW90 = 1;
 	public static final int ROTATE_180 = 2;
@@ -223,7 +224,7 @@ public class TextureCoordinatesQuad {
 	public TextureCoordinatesQuad init(float x1, float y1, float x2, float y2, Texture prefaceTexture) {
 		return init(x1,y1,x2,y2,prefaceTexture.getWidth(),prefaceTexture.getHeight());
 	}
-	
+
 	public void setWH(float left, float top, float width, float height) {
 		mLeft = left;
 		mTop = top;

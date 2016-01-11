@@ -147,6 +147,10 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 	}
 
 	public void addObjectToInspect(InspectionInterface object,InspectorPanel inspector) {
+		for(InspectedObject obj:mInspectedObjects) {
+			if(obj.mObject==object)
+				return;
+		}
 		InspectedObject elem = new InspectedObject();
 		elem.mObject = object;
 		elem.mInspector = inspector;
