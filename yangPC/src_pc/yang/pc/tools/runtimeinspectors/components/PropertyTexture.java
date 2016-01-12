@@ -82,7 +82,7 @@ public class PropertyTexture extends InspectorComponent implements InspectorButt
 					title += mName+"("+mTexture.mName+")";
 				else
 					title += mName;
-				mTexDispl = mTexture.mGraphics.createTextureDisplay(mTexture,title);
+				mTexDispl = mTexture.mGraphics.createTextureDisplay(mTexture,title).show();
 			}else
 				mTexDispl.getGLHolder().setVisible(true);
 		}

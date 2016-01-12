@@ -27,6 +27,7 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 	//Objects
 	public PCGL2ES2Graphics mGraphics;
 	public BasicProgram mProgram;
+	private BasicProgram mDefaultProgram;
 	private UniversalVertexBuffer mVertices;
 	private boolean mFlipY = false;
 	public YangMatrix mProjTransform = null;
@@ -58,10 +59,17 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 		mVertices.putRectIndices(0,1,2,3);
 		mVertices.reset();
 
+		mDefaultProgram = new BasicProgram();
+		mDefaultProgram.init(mGraphics);
 		if(mProgram==null) {
-			mProgram = new BasicProgram();
-			mProgram.init(mGraphics);
+			mProgram = mDefaultProgram;
 		}
+	}
+
+	@Override
+	public TextureDisplay show() {
+		setVisible(true);
+		return this;
 	}
 
 	@Override
@@ -72,6 +80,11 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 	@Override
 	public void setShader(BasicProgram shader) {
 		mProgram = shader;
+	}
+
+	@Override
+	public void setDefaultShader() {
+		setShader(mDefaultProgram);
 	}
 
 	@Override

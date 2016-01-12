@@ -10,6 +10,8 @@ public interface TextureDisplay {
 	public void setTexture(Texture texture);
 	public void setFlipY(boolean flipY);
 	public void setShader(BasicProgram shader);
+	public void setDefaultShader();
 	public void setProjectionMatrix(YangMatrix matrix);
+	public TextureDisplay show();
 
 }

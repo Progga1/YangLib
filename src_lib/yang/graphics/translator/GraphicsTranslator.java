@@ -1023,7 +1023,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		TextureDisplay result = createTextureDisplay(undecorated);
 		result.setTexture(texture);
 		GLHolder glHolder = result.getGLHolder();
-		glHolder.setBounds(0,0, texture.mWidth,texture.mHeight);
+		if(texture!=null)
+			glHolder.setBounds(0,0, texture.mWidth,texture.mHeight);
 		glHolder.run();
 		return result;
 	}

@@ -24,7 +24,7 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 	//Properties
 	public float mUpdateMinTime = 0;
 	private boolean mAllowNoneSelection = true;
-	private String mFileDirectory = "output/objects/";
+	private String mFileDirectory = "objects/";
 	private String mFileEnding = ".yo";
 
 	//State

@@ -134,7 +134,7 @@ public class PCGLPanel extends GLHolder implements GLEventListener {
 		mComponent.setPreferredSize(new Dimension(bounds[2],bounds[3]));
 		mFrame.pack();
 		mFrame.setLocation(bounds[0], bounds[1]);
-		mFrame.setVisible(true);
+//		mFrame.setVisible(true);
 	}
 
 	public void setFullscreen() {
@@ -146,7 +146,7 @@ public class PCGLPanel extends GLHolder implements GLEventListener {
 		mComponent.setPreferredSize(new Dimension(width,height));
 		if(mFrame!=null) {
 			mFrame.pack();
-			mFrame.setVisible(true);
+//			mFrame.setVisible(true);
 		}
 	}
 

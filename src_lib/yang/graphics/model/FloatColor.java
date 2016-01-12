@@ -260,4 +260,16 @@ public class FloatColor extends Quadruple {
 		multBrightness(brightness);
 	}
 
+	public boolean equals(FloatColor color) {
+		return mValues[0]==color.mValues[0] && mValues[1]==color.mValues[1] && mValues[2]==color.mValues[2] && mValues[3]==color.mValues[3];
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if(!(object instanceof FloatColor))
+			return false;
+		else
+			return equals((FloatColor)object);
+	}
+
 }
