@@ -58,7 +58,7 @@ public class InspectorItem extends JPanel {
 			return;
 		if(!mInspectorComponent.isLinkingSupported())
 			mInspectorComponent.setLinkable();
-		mLinkCheckLabel = new CheckLabel("Link",InspectorGUIDefinitions.CL_LINKED,InspectorGUIDefinitions.CL_UNLINKED);
+		mLinkCheckLabel = new CheckLabel("Link",InspectorGUIDefinitions.CL_LINKED,InspectorGUIDefinitions.CL_UNLINKED,mInspectorComponent.isLinkingActive());
 		mCaptionPanel.add(mLinkCheckLabel,BorderLayout.WEST);
 		mLinkCheckLabel.setListener(mInspectorComponent);
 	}

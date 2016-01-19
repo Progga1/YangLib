@@ -142,6 +142,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	protected void update(InspectionInterface object,boolean forceUpdate) {
+		boolean switchObj = mCurObject!=object;
 		mCurObject = object;
 		if(isVisible()) {
 			if(mWasChanged) {
@@ -163,7 +164,13 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 				}
 			}
 		}
+		if(switchObj)
+			onSwitchObject();
 		mWasChanged = false;
+	}
+
+	protected void onSwitchObject() {
+
 	}
 
 	protected String getStringOutput(InspectionInterface object) {
@@ -315,9 +322,19 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		return false;
 	}
 
+	public void setLinkingActive(boolean active) {
+		if(mHolder!=null && mHolder.mLinkCheckLabel!=null) {
+			mHolder.mLinkCheckLabel.setSelected(active);
+		}
+	}
+
+	public boolean isLinkingActive() {
+		return false;
+	}
+
 	@Override
 	public void selectionChanged(CheckLabel sender) {
-
+		setLinkingActive(sender.isSelected());
 	}
 
 	public void setLinkable() {
@@ -374,6 +391,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 			result.setCollapsed(true);
 		if(isReadOnly())
 			result.setReadOnly(true);
+		if(isLinkingActive())
+			result.setLinkingActive(true);
 		result.mListener = mListener;
 		return result;
 	}

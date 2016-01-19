@@ -20,16 +20,17 @@ public class CheckLabel extends JLabel implements MouseListener {
 	public Color mUnselectedColor;
 	private CheckLabelListener mListener;
 
-	public CheckLabel(String caption,Color selectedColor,Color unselectedColor) {
+	public CheckLabel(String caption,Color selectedColor,Color unselectedColor,boolean initialValue) {
 		super(caption);
 		mSelectedColor = selectedColor;
 		mUnselectedColor = unselectedColor;
+		mSelected = initialValue;
 		addMouseListener(this);
 		refresh();
 	}
 
 	public CheckLabel(String caption) {
-		this(caption,DEFAULT_CL_SELECTED,DEFAULT_CL_UNSELECTED);
+		this(caption,DEFAULT_CL_SELECTED,DEFAULT_CL_UNSELECTED,false);
 	}
 
 	public boolean isSelected() {

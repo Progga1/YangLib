@@ -182,12 +182,24 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 	}
 
 	@Override
-	public void selectionChanged(CheckLabel sender) {
+	public void setLinkingActive(boolean active) {
 		if(mLinks!=null) {
-			mLinks.mLinkActive = sender.isSelected();
+			mLinks.mLinkActive = active;
 			if(mLinks.mLinkActive)
 				mLinks.refreshStartValues();
+			super.setLinkingActive(active);
 		}
+	}
+
+	@Override
+	public boolean isLinkingActive() {
+		return mLinks!=null && mLinks.mLinkActive;
+	}
+
+	@Override
+	protected void onSwitchObject() {
+		if(isLinkingActive())
+			mLinks.refreshStartValues();
 	}
 
 	@Override

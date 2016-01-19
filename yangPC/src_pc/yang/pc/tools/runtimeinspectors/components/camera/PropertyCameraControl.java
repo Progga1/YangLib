@@ -1,8 +1,10 @@
-package yang.pc.tools.runtimeinspectors.components;
+package yang.pc.tools.runtimeinspectors.components.camera;
 
 import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.PropertyChain;
+import yang.pc.tools.runtimeinspectors.components.PropertyBooleanCheckBox;
+import yang.pc.tools.runtimeinspectors.components.PropertyVector3;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArray;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyEulerAngles;
