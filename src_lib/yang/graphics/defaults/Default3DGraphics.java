@@ -58,7 +58,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	private Basic3DProgram mDefaultProgram;
 	private final SphereCreator mSphereCreator;
-	public final LineDrawer3D mLineDrawer;
+	public LineDrawer3D mLineDrawer;
 
 	private Camera3D mCamera3D = new Camera3D();
 
@@ -97,7 +97,15 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mInterMatrix = mTranslator.createTransformationMatrix();
 		mSphereCreator = new SphereCreator(this);
 		mBillboardMode = false;
+	}
+
+	@Override
+	public void init() {
+		super.init();
 		mLineDrawer = new LineDrawer3D(this);
+		mLineDrawer.mStartColor = mCurColor;
+		mLineDrawer.mSuppData = mCurSuppData;
+		mLineDrawer.mAutoFillTexCoords = true;
 	}
 
 	@Override
@@ -499,9 +507,8 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	private final Vector3f mTempVec2 = new Vector3f();
 
 	public void drawDebugVector(float baseX,float baseY,float baseZ, float vecX,float vecY,float vecZ,FloatColor color,float alpha,YangMatrix transform) {
-		color.copyToArray(mTemp4f);
-		mTemp4f[3] = alpha;
-		final int vertexCount = mLineDrawer.getLineVertexCount();
+		float preAlpha = mCurColor[3];
+		mCurColor[3] = alpha;
 		if(transform==null) {
 			mTempVec1.set(baseX,baseY,baseZ);
 			mTempVec2.set(baseX+vecX,baseY+vecY,baseZ+vecZ);
@@ -510,9 +517,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 			transform.apply3D(baseX+vecX,baseY+vecY,baseZ+vecZ, mTempVec2);
 		}
 		mLineDrawer.drawLine(mTempVec1, mTempVec2, DEBUG_AXIS_WIDTH*mDebugAxisWidthFactor,0);
-		mCurrentVertexBuffer.putArrayMultiple(ID_COLORS, mTemp4f, vertexCount);
-		mCurrentVertexBuffer.putArrayMultiple(ID_SUPPDATA, Quadruple.ZERO.mValues, vertexCount);
-		fillBuffers();
+		mCurColor[3] = preAlpha;
 	}
 
 	public void drawDebugVector(float baseX,float baseY,float baseZ, Vector3f vector,FloatColor color,float scale,float alpha,YangMatrix transform) {
@@ -540,12 +545,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	}
 
 	public void drawLine3D(float fromX,float fromY,float fromZ, float toX,float toY,float toZ, float startWidth,float endWidth) {
-		final int indexId = mCurrentVertexBuffer.getCurrentIndexWriteCount();
 		mLineDrawer.drawLine(fromX,fromY,fromZ, toX,toY,toZ, startWidth,endWidth);
-		mLineDrawer.mCylinder.putColor(mCurColor);
-		mLineDrawer.mCylinder.putSuppData(mCurSuppData);
-		mLineDrawer.mCylinder.putTextureCoordinates();
-		fillNormals(indexId);
 	}
 
 	public void drawLine3D(float fromX,float fromY,float fromZ, float toX,float toY,float toZ) {
@@ -795,6 +795,10 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 
 	public void beginQuad() {
 		mCurrentVertexBuffer.beginQuad();
+	}
+
+	public void putIndexRelative(int index) {
+		mCurrentVertexBuffer.putIndexRelative(index);
 	}
 
 }

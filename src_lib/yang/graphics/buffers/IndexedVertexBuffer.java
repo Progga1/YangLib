@@ -27,7 +27,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		mIndexBuffer = ByteBuffer.allocateDirect(mMaxIndexCount*2).order(ByteOrder.nativeOrder()).asShortBuffer();
 		mActiveBuffer = mIndexBuffer;
 	}
-	
+
 	public void setIntMode(boolean enabled) {
 		if(enabled) {
 			if(mIndexBufferInt==null)
@@ -37,7 +37,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			mActiveBuffer = mIndexBuffer;
 		}
 	}
-	
+
 	public boolean isIntMode() {
 		return mActiveBuffer == mIndexBufferInt;
 	}
@@ -61,7 +61,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 	public void putRelativeIndex(int index) {
 		mIndexBuffer.put((short)(getCurrentVertexWriteCount()+index));
 	}
-	
+
 	public void putRelativeIndexInt(int index) {
 		mIndexBufferInt.put(getCurrentVertexWriteCount()+index);
 	}
@@ -69,9 +69,17 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 	public void putIndex(short index) {
 		mIndexBuffer.put(index);
 	}
-	
+
 	public void putIndexInt(int index) {
 		mIndexBufferInt.put(index);
+	}
+
+	public void putIndexRelative(int index) {
+		mIndexBuffer.put((short)(getCurrentVertexWriteCount()+index));
+	}
+
+	public void putIndexRelativeInt(int index) {
+		mIndexBufferInt.put(getCurrentVertexWriteCount()+index);
 	}
 
 	@Override
@@ -87,7 +95,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 	public void putIndexArray(short[] indices,int offset,int count) {
 		mIndexBuffer.put(indices,offset,count);
 	}
-	
+
 	public void putIndexArray(int[] indices,int offset,int count) {
 		mIndexBufferInt.put(indices,offset,count);
 	}
@@ -96,11 +104,11 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 	public int readIndex() {
 		return mActiveBuffer==mIndexBufferInt?mIndexBufferInt.get():mIndexBuffer.get();
 	}
-	
+
 	public int readIndex(int pos) {
 		return mActiveBuffer==mIndexBufferInt?mIndexBufferInt.get(pos):mIndexBuffer.get(pos);
 	}
-	
+
 	public void putIndex(int index) {
 		if(mActiveBuffer==mIndexBufferInt)
 			mIndexBufferInt.put(index);
@@ -130,7 +138,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			mIndexBuffer.put(offset);
 		}
 	}
-	
+
 	public void beginQuadInt(boolean wireFrames) {
 		int offset = getCurrentVertexWriteCount();
 		if(wireFrames) {
@@ -156,7 +164,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 	public void beginQuad() {
 		beginQuad(false);
 	}
-	
+
 	public void beginQuadInt() {
 		beginQuadInt(false);
 	}
@@ -181,7 +189,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			mIndexBuffer.put(offset);
 		}
 	}
-	
+
 	public void beginQuadInt(boolean wireFrames,int offset) {
 		if(wireFrames) {
 			mIndexBufferInt.put(offset);
@@ -208,7 +216,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			beginQuad(false,(short)(i*4));
 		}
 	}
-	
+
 	public void putQuadIndicesMultipleInt(int count) {
 		for(int i=0;i<count;i++) {
 			beginQuadInt(false,(i*4));
@@ -223,7 +231,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 		mIndexBuffer.put((short)topLeft);
 		mIndexBuffer.put((short)bottomRight);
 	}
-	
+
 	public void putRectIndicesInt(int bottomLeft,int bottomRight,int topLeft,int topRight) {
 		mIndexBufferInt.put(bottomLeft);
 		mIndexBufferInt.put(bottomRight);
@@ -318,7 +326,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			c++;
 		}
 	}
-	
+
 	public void putGridIndicesInt(int width,int height) {
 		int c = getCurrentVertexWriteCount();
 		for(int i=0;i<height-1;i++) {
@@ -358,7 +366,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			mIndexBuffer.put((short)(c+1));
 		}
 	}
-	
+
 	public void putGridIndexPatchInt(int width, int patchX,int patchY) {
 		int c = getCurrentVertexWriteCount();
 		c += width*patchY + patchX;
@@ -397,7 +405,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			c += 2;
 		}
 	}
-	
+
 	public void putStripIndices(short startIndex,int triangleCount) {
 		short c = (short)(startIndex+2);
 
@@ -408,7 +416,7 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			c += 1;
 		}
 	}
-	
+
 	public void putStripIndicesInt(int startIndex,int triangleCount) {
 		int c = startIndex+2;
 

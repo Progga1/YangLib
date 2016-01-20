@@ -43,8 +43,8 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 	protected boolean mWorldTransformEnabled;
 	public ShaderType mCurrentProgram;
 	protected float mBold;
-	public float[] mCurColor;
-	public float[] mCurSuppData;
+	public float[] mCurColor = new float[4];
+	public float[] mCurSuppData = new float[4];
 	public float mNoCameraTransformStereoDistance = 0.15f;
 	private DrawBatch mCurBatch;
 
@@ -109,8 +109,6 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mTranslator.checkErrorInst("Matrices");
 		mInvViewProjectionTransform = new YangMatrix();
 		mInvViewProjectionTransform.loadIdentity();
-		mCurColor = new float[4];
-		mCurSuppData = new float[4];
 		mTime = 0;
 		mBold = 0;
 		mBufferElementSizes = getBufferElementSizes();
@@ -217,7 +215,7 @@ public abstract class AbstractGraphics<ShaderType extends AbstractProgram> imple
 		mBatchRecording = true;
 		setVertexBuffer(batch.mVertexBuffer);
 		mTranslator.mFlushDisabled = true;
-		
+
 	}
 
 	public void startBatchRecording(IndexedVertexBuffer vertexBuffer) {

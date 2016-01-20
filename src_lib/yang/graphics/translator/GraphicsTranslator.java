@@ -672,8 +672,8 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		Buffer indexBuffer = mCurrentVertexBuffer.getActiveIndexBuffer();
 		indexBuffer.position(bufferStart);
 
-		boolean wireFrames = mode==GLDrawModes.TRIANGLES && mForceWireFrames && mRenderTargetStackPos>=mMinForceWireFrameRenderTargetDepth;
-		if(wireFrames) {
+		boolean forceWireFrames = mode==GLDrawModes.TRIANGLES && mForceWireFrames && mRenderTargetStackPos>=mMinForceWireFrameRenderTargetDepth;
+		if(forceWireFrames) {
 			final int cap = indexBuffer.capacity();
 			if(mWireFrameIndexBuffer==null || mWireFrameIndexBuffer.capacity()<cap*2)
 				mWireFrameIndexBuffer = ByteBuffer.allocateDirect(cap*4*2).order(ByteOrder.nativeOrder()).asIntBuffer();
@@ -714,7 +714,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 			mode = GLDrawModes.LINELIST;
 		}
 		if(!mCurrentVertexBuffer.draw(bufferStart, vertexCount, mode)) {
-			drawDefaultVertices(bufferStart,vertexCount, mode,indexBuffer,mCurrentVertexBuffer.isIntMode() || wireFrames);
+			drawDefaultVertices(bufferStart,vertexCount, mode,indexBuffer,mCurrentVertexBuffer.isIntMode() || forceWireFrames);
 		}
 	}
 
