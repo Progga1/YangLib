@@ -30,9 +30,16 @@ public class PerspectiveProjection extends Projection {
 		target.setRow(3, 0,0,-1,0);
 	}
 
+	public static void getTransformByFactor(YangMatrix target,float factorX,float factorY,float near,float far) {
+		getTransform(target,factorX*near,factorY*near,near,far);
+	}
+
+	public static void getTransformFov(YangMatrix target,float fovx,float fovy,float near,float far) {
+		getTransform(target,(float)Math.tan(fovx)*near,(float)Math.tan(fovy)*near,near,far);
+	}
+
 	public static float getTransformFovy(YangMatrix target, float fovy, float ratioX,float ratioY, float near,float far) {
-		final float tan = (float)Math.tan(fovy);
-		float res = tan*near;
+		float res = (float)Math.tan(fovy)*near;
 		getTransform(target,res*ratioX,res*ratioY,near,far);
 		return res;
 	}

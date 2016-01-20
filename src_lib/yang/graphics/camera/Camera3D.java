@@ -126,4 +126,16 @@ public class Camera3D extends YangCamera {
 		mCameraTransform.multiplyQuaternionRight(transform.mOrientation);
 	}
 
+	public void set(Camera3D template) {
+		mPosition.set(template.mPosition);
+		mCameraTransform.set(template.mCameraTransform);
+		mViewTransform.set(template.mViewTransform);
+		mProjectionTransform.set(template.mProjectionTransform);
+		mInvProjectionTransform.set(template.mInvProjectionTransform);
+		mUnprojectCameraTransform.set(template.mUnprojectCameraTransform);
+		mNear = template.mNear;
+		mFar = template.mFar;
+		mAutoRefreshInverted = template.mAutoRefreshInverted;
+	}
+
 }

@@ -287,6 +287,20 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putSuppDataRect(mCurSuppData);
 	}
 
+	public void drawQuad(Point3f pointBL,Point3f pointBR,Point3f pointTL,Point3f pointTR, TextureCoordinatesQuad texCoordinates) {
+		mCurrentVertexBuffer.beginQuad();
+		putPosition(pointBL);
+		putPosition(pointBR);
+		putPosition(pointTL);
+		putPosition(pointTR);
+		if(texCoordinates!=null)
+			putTextureArray(texCoordinates.mAppliedCoordinates);
+		else
+			putTextureArray(RECT_TEXTURECOORDS);
+		putColorRect(mCurColor);
+		putSuppDataRect(mCurSuppData);
+	}
+
 	public void drawQuad(YangMatrix worldTransform, TextureCoordinatesQuad texCoordinates) {
 		mCurrentVertexBuffer.beginQuad();
 		putTransformedPositionRect(worldTransform);

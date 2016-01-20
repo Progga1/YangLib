@@ -272,6 +272,12 @@ public class YangMatrix {
 		mBackMatrix = swap;
 	}
 
+	public void rotate(EulerAngles eulerAngles) {
+		rotateY(eulerAngles.mYaw);
+		rotateX(eulerAngles.mPitch);
+		rotateZ(eulerAngles.mRoll);
+	}
+
 	public void rotateZAround(float angle,float anchorX,float anchorY) {
 		translate(-anchorX, -anchorY);
 		rotateZ(angle);
@@ -843,6 +849,10 @@ public class YangMatrix {
 		mValues[15] = 1;
 	}
 
+	public void setFromEulerAngles(EulerAngles angles) {
+		setFromEulerAngles(angles.mYaw,angles.mPitch,angles.mRoll);
+	}
+
 	public void getTranslation(Point3f target) {
 		target.mX = mValues[12];
 		target.mY = mValues[13];
@@ -1038,4 +1048,11 @@ public class YangMatrix {
 	public void clean() {
 		clean(0.000001f);
 	}
+
+	public void replaceTranslation(float x, float y, float z) {
+		mValues[M03] = x;
+		mValues[M13] = y;
+		mValues[M23] = z;
+	}
+
 }

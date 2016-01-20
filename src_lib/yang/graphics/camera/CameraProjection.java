@@ -5,8 +5,6 @@ import yang.math.objects.YangMatrix;
 
 public class CameraProjection extends CameraTransformations {
 
-	private YangMatrix mTempMat = new YangMatrix();
-
 	public void copyFrom(YangCamera camera,YangMatrix postTransform) {
 
 		if(postTransform!=null) {

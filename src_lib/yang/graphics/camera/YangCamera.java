@@ -45,6 +45,8 @@ public abstract class YangCamera extends CameraTransformations {
 
 	public void setPosition(float x, float y, float z) {
 		mPosition.set(x,y,z);
+		mCameraTransform.replaceTranslation(x,y,z);
+		updateTransformations(mAutoRefreshInverted,mAutoRefreshInverted);
 	}
 
 	@Override

@@ -215,6 +215,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		if(mVisible==visible)
 			return;
 		mVisible = visible;
+		mHolder.setVisible(visible);
 		getComponent().setVisible(visible);
 	}
 
