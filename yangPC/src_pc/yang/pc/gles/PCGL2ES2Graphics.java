@@ -356,6 +356,10 @@ public class PCGL2ES2Graphics extends GraphicsTranslator {
 		mGles2.glPolygonOffset(factor, units);
 	}
 
+	public void lineWidth(float width) {
+		mGles2.glLineWidth(width);
+	}
+
 	@Override
 	public void depthRange(float zNear,float zFar) {
 		mGles2.glDepthRange(zNear,zFar);

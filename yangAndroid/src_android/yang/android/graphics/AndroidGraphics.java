@@ -400,4 +400,9 @@ public class AndroidGraphics extends GraphicsTranslator {
 		GLES20.glDepthRangef(zNear, zFar);
 	}
 
+	@Override
+	public void lineWidth(float width) {
+		GLES20.glLineWidth(width);
+	}
+
 }

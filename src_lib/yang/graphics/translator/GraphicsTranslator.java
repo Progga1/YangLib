@@ -136,6 +136,7 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	protected abstract void setViewPort(int width,int height);
 	public abstract void setCullMode(boolean drawClockwise);
 	protected abstract void derivedSetScreenRenderTarget();
+	public abstract void lineWidth(float width);
 	public abstract void initRenderTarget(TextureRenderTarget target);
 	protected abstract void derivedSetTextureRenderTarget(TextureRenderTarget renderTarget);
 	public abstract void setDepthFunction(boolean less,boolean equal);
