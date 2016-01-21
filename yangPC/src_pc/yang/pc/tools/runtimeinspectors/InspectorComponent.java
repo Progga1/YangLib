@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import yang.math.objects.YangMatrix;
 import yang.model.wrappers.DoubleInterface;
 import yang.model.wrappers.FloatInterface;
 import yang.model.wrappers.IntInterface;

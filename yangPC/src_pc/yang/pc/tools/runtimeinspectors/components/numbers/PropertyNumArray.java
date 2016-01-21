@@ -5,6 +5,7 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 	private float[] mFloatValues;
 	private double[] mDoubleValues;
 	private boolean mDoubleMode = false;
+	protected int mStride = 0;
 
 	public PropertyNumArray(int elemCount) {
 		super(elemCount);
@@ -15,21 +16,56 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 		mDoubleMode = type==Double.class;
 	}
 
+	public PropertyNumArray setMaxColumns(int maxColumns) {
+		mMaxColumns = maxColumns;
+		return this;
+	}
+
 	@Override
 	public void refreshOutValue() {
 		if(mDoubleMode) {
 			if(mDoubleValues==null)
 				mDoubleValues = new double[mElemCount];
-			for(int i=0;i<mDoubleValues.length;i++) {
-				mDoubleValues[i] = mTextFields[i].getDouble();
+			if(mStride>0) {
+				int c = 0;
+				for(int i=0;i<mElemCount;i++) {
+					mDoubleValues[c++] = mTextFields[i].getDouble();
+					if((i+1)%mMaxColumns==0)
+						c += mStride;
+				}
+			}else{
+				for(int i=0;i<mElemCount;i++) {
+					mDoubleValues[i] = mTextFields[i].getDouble();
+				}
 			}
 		}else{
 			if(mFloatValues==null)
 				mFloatValues = new float[mElemCount];
-			for(int i=0;i<mFloatValues.length;i++) {
-				mFloatValues[i] = mTextFields[i].getFloat();
+			if(mStride>0) {
+				int c = 0;
+				for(int i=0;i<mElemCount;i++) {
+					mFloatValues[c++] = mTextFields[i].getFloat();
+					if((i+1)%mMaxColumns==0)
+						c += mStride;
+				}
+			}else{
+				for(int i=0;i<mElemCount;i++) {
+					mFloatValues[i] = mTextFields[i].getFloat();
+				}
 			}
 		}
+	}
+
+	@Override
+	public void setValueReference(Object reference) {
+		if(reference instanceof float[]) {
+			mDoubleMode = false;
+			mFloatValues = (float[])reference;
+		}else if(reference instanceof double[]) {
+			mDoubleMode = true;
+			mDoubleValues = (double[])reference;
+		}else
+			throw new RuntimeException("Reference type not supported: "+reference.getClass().getName());
 	}
 
 	@Override
@@ -50,14 +86,32 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 		if(mDoubleMode) {
 			if(mDoubleValues==null)
 				mDoubleValues = new double[mElemCount];
-			for(int i=0;i<mElemCount;i++) {
-				mTextFields[i].setDouble(mDoubleValues[i]);
+			if(mStride>0) {
+				int c = 0;
+				for(int i=0;i<mElemCount;i++) {
+					mTextFields[i].setDouble(mDoubleValues[c++]);
+					if((i+1)%mMaxColumns==0)
+						c += mStride;
+				}
+			}else{
+				for(int i=0;i<mElemCount;i++) {
+					mTextFields[i].setDouble(mDoubleValues[i]);
+				}
 			}
 		}else {
 			if(mFloatValues==null)
 				mFloatValues = new float[mElemCount];
-			for(int i=0;i<mElemCount;i++) {
-				mTextFields[i].setFloat(mFloatValues[i]);
+			if(mStride>0) {
+				int c = 0;
+				for(int i=0;i<mElemCount;i++) {
+					mTextFields[i].setFloat(mFloatValues[c++]);
+					if((i+1)%mMaxColumns==0)
+						c += mStride;
+				}
+			}else{
+				for(int i=0;i<mElemCount;i++) {
+					mTextFields[i].setFloat(mFloatValues[i]);
+				}
 			}
 		}
 	}
@@ -92,7 +146,9 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 
 	@Override
 	public PropertyNumArray clone() {
-		return new PropertyNumArray(mElemCount);
+		PropertyNumArray newInst = new PropertyNumArray(mElemCount);
+		newInst.mMaxColumns = mMaxColumns;
+		return newInst;
 	}
 
 }

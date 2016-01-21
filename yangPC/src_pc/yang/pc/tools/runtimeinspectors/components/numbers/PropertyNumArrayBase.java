@@ -1,6 +1,7 @@
 package yang.pc.tools.runtimeinspectors.components.numbers;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,8 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 	protected CheckLabel mLinkCheckLabel = null;
 	protected NumTextField[] mTextFields;
 	protected int mElemCount;
+	protected int mMaxColumns = Integer.MAX_VALUE;
+	protected boolean mColumnMajor = false;
 
 	public PropertyNumArrayBase(int elemCount) {
 		mElemCount = elemCount;
@@ -30,14 +33,29 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 	@Override
 	protected void postInit() {
 		mPanel = new JPanel();
-		mPanel.setLayout(new GridLayout(1,3));
+		int rows = mElemCount/mMaxColumns;
+		if(rows<1)
+			rows = 1;
+		int columns = mMaxColumns;
+		mPanel.setLayout(new GridLayout(rows,columns));
 		mTextFields = new NumTextField[mElemCount];
-		for(int i=0;i<mTextFields.length;i++) {
+		for(int i=0;i<mElemCount;i++) {
 			mTextFields[i] = new NumTextField();
 			mTextFields[i].setBorder(InspectorGUIDefinitions.BORDER_COMPONENT_DEFAULT);
-			mPanel.add(mTextFields[i]);
+			if(!mColumnMajor)
+				mPanel.add(mTextFields[i]);
 			mTextFields[i].setActionListener(this);
 		}
+		if(mColumnMajor) {
+			for(int i=0;i<mElemCount;i++) {
+				int row = i/columns;
+				int col = i%columns;
+				int newId = col*rows + row;
+				if(newId<mElemCount)
+					mPanel.add(mTextFields[newId]);
+			}
+		}
+		mPanel.setPreferredSize(new Dimension(0,rows*InspectorGUIDefinitions.DEFAULT_COMPONENT_HEIGHT));
 	}
 
 	@Override
