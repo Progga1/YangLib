@@ -158,7 +158,7 @@ public class InspectorPanel {
 		InspectorShortCut shortCut = mShortCuts.get(toKeyCode(ctrlDown,keyCode));
 		if(shortCut!=null) {
 			InspectorComponent comp = shortCut.mComponent;
-			if(comp.handleShortCut(shortCut.mCode)) {
+			if(comp.isVisible() && comp.handleShortCut(shortCut.mCode)) {
 				comp.mWasChanged = true;
 				comp.update(comp.mCurObject,true);
 				return comp;
@@ -203,6 +203,10 @@ public class InspectorPanel {
 
 	public InspectorComponent getProperty(String name) {
 		return mPropertiesPanel.getProperty(name);
+	}
+
+	public void removeProperty(String name) {
+		mPropertiesPanel.removeProperty(name);
 	}
 
 }

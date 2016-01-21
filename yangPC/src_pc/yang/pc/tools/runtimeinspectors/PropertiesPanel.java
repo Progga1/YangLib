@@ -175,4 +175,11 @@ public class PropertiesPanel extends JPanel {
 		return null;
 	}
 
+	public void removeProperty(String name) {
+		InspectorItem item = getItemByName(name);
+		item.setVisible(false);
+		mItems.remove(item);
+		super.remove(item);
+	}
+
 }
