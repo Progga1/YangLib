@@ -76,7 +76,7 @@ public class InspectorPanel {
 		mPropertiesPanel.moveItem(component.mHolder,index);
 	}
 
-	public InspectorComponent registerPropertyReferenced(String name,InspectorComponent inspectorComponent) {
+	public <ComponentType extends InspectorComponent> ComponentType registerPropertyReferenced(String name,ComponentType inspectorComponent) {
 		inspectorComponent.init(this, name, true);
 		InspectorItem rtpHolder = new InspectorItem(inspectorComponent);
 		mPropertiesPanel.addItem(rtpHolder);

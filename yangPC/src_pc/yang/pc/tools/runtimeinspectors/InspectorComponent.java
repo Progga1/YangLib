@@ -116,7 +116,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	public void setValueReference(Object reference) {
-
+		throw new RuntimeException("Type '"+reference.getClass().getName()+"' not supported by '"+this.getClass().getName()+"'");
 	}
 
 	public void setFixedReference(Object reference) {

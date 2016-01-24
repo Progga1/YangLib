@@ -23,4 +23,20 @@ public class PropertyInteger extends PropertyNumBase {
 		mIntTextField.setInt(value,!isSaving());
 	}
 
+	public PropertyInteger setMinValue(int minValue) {
+		mNumTextField.setMinValue(minValue);
+		return this;
+	}
+
+	public PropertyInteger setMaxValue(int maxValue) {
+		mNumTextField.setMaxValue(maxValue);
+		return this;
+	}
+
+	public PropertyInteger setRange(int minValue,int maxValue) {
+		setMinValue(minValue);
+		setMaxValue(maxValue);
+		return this;
+	}
+
 }

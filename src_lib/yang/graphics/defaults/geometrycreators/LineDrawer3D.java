@@ -35,7 +35,7 @@ public class LineDrawer3D extends GeometryCreator<Default3DGraphics> {
 	private final Vector3f vec3 = new Vector3f();
 
 	public void drawLine(float startX,float startY,float startZ, float endX,float endY,float endZ, float startWidth,float endWidth) {
-		if(mGraphics.mTranslator.mDrawMode==GLDrawModes.LINELIST) {
+		if(mTranslator.mDrawMode==GLDrawModes.LINELIST) {
 			mGraphics.putIndexRelative(0);
 			mGraphics.putIndexRelative(1);
 			mGraphics.putPosition(startX,startY,startZ);

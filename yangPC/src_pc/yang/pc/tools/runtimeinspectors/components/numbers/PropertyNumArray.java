@@ -147,7 +147,9 @@ public class PropertyNumArray extends PropertyNumArrayBase {
 	@Override
 	public PropertyNumArray clone() {
 		PropertyNumArray newInst = new PropertyNumArray(mElemCount);
+		newInst.mDoubleMode = mDoubleMode;
 		newInst.mMaxColumns = mMaxColumns;
+		newInst.mStride = mStride;
 		return newInst;
 	}
 
