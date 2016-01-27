@@ -158,10 +158,15 @@ public class InspectorPanel {
 		InspectorShortCut shortCut = mShortCuts.get(toKeyCode(ctrlDown,keyCode));
 		if(shortCut!=null) {
 			InspectorComponent comp = shortCut.mComponent;
-			if(comp.isVisible() && comp.handleShortCut(shortCut.mCode)) {
-				comp.mWasChanged = true;
-				comp.update(comp.mCurObject,true);
-				return comp;
+			if(comp.isVisible()) {
+				InspectorComponent handledBy = comp.handleShortCut(shortCut.mCode);
+				if(handledBy!=null) {
+					handledBy.notifyValueUserInput();
+//					handledBy.mWasChanged = true;
+					if(handledBy.mCurObject!=null)
+						handledBy.update(handledBy.mCurObject,true);
+				}
+				return handledBy;
 			}
 		}
 		return null;

@@ -65,9 +65,9 @@ public class PropertyBooleanCheckBox extends InspectorComponent implements Chang
 	}
 
 	@Override
-	protected boolean handleShortCut(int code) {
+	protected InspectorComponent handleShortCut(int code) {
 		setBool(!getBool());
-		return true;
+		return this;
 	}
 
 }

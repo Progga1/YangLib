@@ -21,6 +21,15 @@ public class PropertyTexture extends InspectorComponent implements InspectorButt
 	protected JLabel mDataText;
 	protected InspectorButton mShowButton;
 	protected TextureDisplay mTexDispl = null;
+	protected boolean mFlipY = false;
+
+	public PropertyTexture(boolean flipY) {
+		mFlipY = flipY;
+	}
+
+	public PropertyTexture() {
+		this(false);
+	}
 
 	@Override
 	protected void postInit() {
@@ -79,13 +88,19 @@ public class PropertyTexture extends InspectorComponent implements InspectorButt
 			if(mTexDispl==null) {
 				String title = mCurObject.getName()+" - ";
 				if(mTexture.mName!=null)
-					title += mName+"("+mTexture.mName+")";
+					title += mName+" ("+mTexture.mName+")";
 				else
 					title += mName;
 				mTexDispl = mTexture.mGraphics.createTextureDisplay(mTexture,title).show();
+				mTexDispl.setFlipY(mFlipY);
 			}else
 				mTexDispl.getGLHolder().setVisible(true);
 		}
+	}
+
+	@Override
+	public PropertyTexture clone() {
+		return new PropertyTexture(mFlipY);
 	}
 
 }

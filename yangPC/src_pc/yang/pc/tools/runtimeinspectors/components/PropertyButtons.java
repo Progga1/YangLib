@@ -90,9 +90,9 @@ public class PropertyButtons extends InspectorComponent implements InspectorButt
 	}
 
 	@Override
-	public boolean handleShortCut(int code) {
+	public InspectorComponent handleShortCut(int code) {
 		mPressedButtonId = code;
-		return true;
+		return this;
 	}
 
 }

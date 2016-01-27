@@ -163,7 +163,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 	}
 
 	@Override
-	public boolean handleShortCut(int code) {
+	public InspectorComponent handleShortCut(int code) {
 		if(code==0)
 			code = SHORTCUT_NEXT;
 		if(mComboBox.getItemCount()>0) {
@@ -175,7 +175,7 @@ public class PropertyComboBox extends InspectorComponent implements ActionListen
 			else
 				setInt(newVal);
 		}
-		return true;
+		return this;
 	}
 
 	@Override

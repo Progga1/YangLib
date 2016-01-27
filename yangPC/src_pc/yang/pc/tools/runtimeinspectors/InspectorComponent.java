@@ -77,7 +77,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	public String getFullName(boolean includeObject) {
-		if(includeObject)
+		if(includeObject && mCurObject!=null)
 			return mCurObject.getName()+": "+mFullName;
 		else
 			return mFullName;
@@ -351,8 +351,8 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		return propertyName.equals(mName);
 	}
 
-	protected boolean handleShortCut(int code) {
-		return false;
+	protected InspectorComponent handleShortCut(int code) {
+		return null;
 	}
 
 	public InspectorComponent addShortCut(boolean ctrlDown,int keyCode,int shortCutCode) {

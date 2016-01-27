@@ -95,6 +95,16 @@ public abstract class PropertyChain extends InspectorComponent {
 		return this;
 	}
 
+	@Override
+	public InspectorComponent handleShortCut(int code) {
+		for(InspectorComponent component:mComponents) {
+			InspectorComponent handledBy = component.handleShortCut(code);
+			if(handledBy!=null)
+				return handledBy;
+		}
+		return null;
+	}
+
 	//TODO propagate set to sub components
 
 }

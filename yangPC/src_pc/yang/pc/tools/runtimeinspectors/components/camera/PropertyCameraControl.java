@@ -16,6 +16,7 @@ public class PropertyCameraControl extends PropertyChain {
 	private PropertyEulerAngles mViewAngleComp;
 	private PropertyVector3 mPositionComp;
 	private PropertyFloatNum mDistanceComp;
+	private PropertyBooleanCheckBox mOrthographicComp;
 	private PropertyNumArray mDelayComp;
 	private PropertyBooleanCheckBox mInvertedComp;
 
@@ -33,7 +34,10 @@ public class PropertyCameraControl extends PropertyChain {
 		mDistanceComp.setMinValue(0.001f);
 
 		mInvertedComp = new PropertyBooleanCheckBox();
-		mInvertedComp.init(this,"Inside-out", false);
+		mInvertedComp.init(this,"Inside-out",false);
+
+		mOrthographicComp = new PropertyBooleanCheckBox();
+		mOrthographicComp.init(this,"Orthographic",false);
 
 		mDelayComp = new PropertyNumArray(2);
 		mDelayComp.init(this,"Delay (angle,zoom)",false);
@@ -45,7 +49,7 @@ public class PropertyCameraControl extends PropertyChain {
 			setValueReference(new Camera3DControl());
 		}
 
-		return new InspectorComponent[]{mViewAngleComp,mPositionComp,mDistanceComp,mDelayComp,mInvertedComp};
+		return new InspectorComponent[]{mViewAngleComp,mPositionComp,mDistanceComp,mOrthographicComp,mDelayComp,mInvertedComp};
 	}
 
 	@Override
@@ -58,6 +62,7 @@ public class PropertyCameraControl extends PropertyChain {
 	@Override
 	public void refreshInValue() {
 		mDistanceComp.setFloat(mCamera.mTargetZoom);
+		mOrthographicComp.setBool(mCamera.mOrthogonalProjection);
 		mDelayComp.setFloat(0,mCamera.mAngleDelay);
 		mDelayComp.setFloat(1,mCamera.mZoomDelay);
 		mInvertedComp.setBool(mCamera.mInvertView);
@@ -68,10 +73,15 @@ public class PropertyCameraControl extends PropertyChain {
 	public void refreshOutValue() {
 		super.refreshOutValue();
 		mCamera.mTargetZoom = mDistanceComp.getFloat();
+		mCamera.mOrthogonalProjection = mOrthographicComp.getBool();
 		mCamera.mAngleDelay = mDelayComp.getFloat(0);
 		mCamera.mZoomDelay = mDelayComp.getFloat(1);
 		mCamera.mInvertView = mInvertedComp.getBool();
 		mCamera.snap();
+	}
+
+	public PropertyBooleanCheckBox getOrthographicProperty() {
+		return mOrthographicComp;
 	}
 
 	@Override
