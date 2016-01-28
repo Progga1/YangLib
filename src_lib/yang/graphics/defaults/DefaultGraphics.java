@@ -287,6 +287,20 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 		putSuppDataRect(mCurSuppData);
 	}
 
+	public void drawQuad(float worldX1,float worldY1,float worldZ1,float worldX2,float worldY2,float worldZ2,float worldX3,float worldY3,float worldZ3,float worldX4,float worldY4,float worldZ4, TextureCoordinatesQuad texCoordinates) {
+		mCurrentVertexBuffer.beginQuad();
+		putPosition(worldX1,worldY1,worldZ1);
+		putPosition(worldX2,worldY2,worldZ2);
+		putPosition(worldX3,worldY3,worldZ3);
+		putPosition(worldX4,worldY4,worldZ4);
+		if(texCoordinates!=null)
+			putTextureArray(texCoordinates.mAppliedCoordinates);
+		else
+			putTextureArray(RECT_TEXTURECOORDS);
+		putColorRect(mCurColor);
+		putSuppDataRect(mCurSuppData);
+	}
+
 	public void drawQuad(Point3f pointBL,Point3f pointBR,Point3f pointTL,Point3f pointTR, TextureCoordinatesQuad texCoordinates) {
 		mCurrentVertexBuffer.beginQuad();
 		putPosition(pointBL);

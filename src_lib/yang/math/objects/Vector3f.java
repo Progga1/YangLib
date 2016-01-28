@@ -271,4 +271,10 @@ public class Vector3f extends Point3f{
 		mZ += (targetValues.mZ-mZ)*delay;
 	}
 
+	public void set(Vector3f vector, float scaleFactor) {
+		mX = vector.mX*scaleFactor;
+		mY = vector.mY*scaleFactor;
+		mZ = vector.mZ*scaleFactor;
+	}
+
 }

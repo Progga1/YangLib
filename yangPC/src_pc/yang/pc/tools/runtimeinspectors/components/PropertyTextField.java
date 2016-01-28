@@ -44,7 +44,10 @@ public class PropertyTextField  extends InspectorComponent implements ActionList
 
 	@Override
 	public void setString(String value) {
-		mTextField.setText(value);
+		if(value==null)
+			mTextField.setText("");
+		else
+			mTextField.setText(value);
 	}
 
 }
