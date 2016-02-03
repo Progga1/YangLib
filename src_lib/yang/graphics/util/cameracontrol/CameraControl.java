@@ -16,7 +16,7 @@ public abstract class CameraControl implements YangEventListener {
 	public int mShiftKey = Keys.SHIFT;
 	public float mZoomDelay = 0.1f;
 	public int mMoveCameraButton = SurfacePointerEvent.BUTTON_MIDDLE;
-	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_MIDDLE;
+	public int mMoveCameraAlternativeButton = SurfacePointerEvent.BUTTON_RIGHT;
 
 	//Objects
 	protected YangSurface mSurface = null;

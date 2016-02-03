@@ -93,7 +93,9 @@ public class PropertiesPanel extends JPanel {
 
 	public void loadFromStream(InspectionInterface object, BufferedReader reader) throws IOException {
 		while(true) {
+			
 			String line = reader.readLine();
+			System.out.println(line);
 			if(line==null)
 				break;
 			line = line.trim();
@@ -107,7 +109,7 @@ public class PropertiesPanel extends JPanel {
 			for(InspectorItem item:mItems) {
 				InspectorComponent comp = item.mInspectorComponent;
 				if(comp.mName.equals(key)) {
-					if(!comp.mExcludeFromFileIO) {
+//					if(!comp.mExcludeFromFileIO) {
 						if(object!=null && comp.isReferenced() && !comp.mFixedReference) {
 							Object ref = object.getReferencedProperty(comp.mName,comp);
 							if(ref==null)
@@ -120,7 +122,7 @@ public class PropertiesPanel extends JPanel {
 						if(object!=null && !comp.isReferenced()) {
 							object.setProperty(comp.mName,comp);
 						}
-					}
+//					}
 					break;
 				}
 			}

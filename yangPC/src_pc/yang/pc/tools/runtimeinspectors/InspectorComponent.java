@@ -157,11 +157,13 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 					if(!mReferenced) {
 						object.readProperty(mName,this);
 					}
+					
 					if(isComponentsVisible()) {
 						refreshInValue();
 						if(!isSaving())
 							updateGUI();
-					}
+					}else if(forceUpdate)
+						refreshInValue();
 				}
 			}
 		}
@@ -389,6 +391,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		InspectorComponent result = clone();
 		result.init(targetPanel,mName,isReferenced());
 		result.set(this);
+		result.mExcludeFromFileIO = mExcludeFromFileIO;
 		if(isCollapsed())
 			result.setCollapsed(true);
 		if(isReadOnly())
