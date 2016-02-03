@@ -243,12 +243,12 @@ public class PCGLPanel extends GLHolder implements GLEventListener,MouseMotionLi
 
 	@Override
 	public void mouseEntered(MouseEvent ev) {
-
+		mMouseListener.displayMouseEnter(this);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent ev) {
-
+		mMouseListener.displayMouseExit(this);
 	}
 
 	@Override
