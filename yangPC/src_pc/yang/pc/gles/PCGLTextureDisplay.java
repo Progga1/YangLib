@@ -41,6 +41,8 @@ public class PCGLTextureDisplay extends PCGLPanel implements GLEventListener,Tex
 		((GLCanvas)mComponent).addGLEventListener(this);
 
 		setFramed(undecorated);
+		
+		setCursorVisible(false);
 	}
 
 	@Override

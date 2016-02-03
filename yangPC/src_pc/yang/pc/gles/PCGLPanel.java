@@ -49,6 +49,8 @@ public class PCGLPanel extends GLHolder implements GLEventListener,MouseMotionLi
 			mComponent = new GLJPanel(glCapabilities);
 			((GLJPanel)mComponent).addGLEventListener(this);
 		}
+		
+		setCursorVisible(false);
 	}
 
 	public boolean isMainPanel() {

@@ -93,9 +93,7 @@ public class PropertiesPanel extends JPanel {
 
 	public void loadFromStream(InspectionInterface object, BufferedReader reader) throws IOException {
 		while(true) {
-			
 			String line = reader.readLine();
-			System.out.println(line);
 			if(line==null)
 				break;
 			line = line.trim();
