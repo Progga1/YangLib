@@ -3,6 +3,7 @@ package yang.graphics.translator;
 public abstract class GLHolder {
 
 	protected DisplayListener mDisplayListener = null;
+	protected DisplayMouseListener mMouseListener = null;
 
 	public abstract void setTitle(String title);
 	public abstract void setAlwaysOnTop(boolean alwaysOnTop);
@@ -18,6 +19,10 @@ public abstract class GLHolder {
 
 	public void setDisplayListener(DisplayListener listener) {
 		mDisplayListener = listener;
+	}
+
+	public void setMouseListener(DisplayMouseListener listener) {
+		mMouseListener = listener;
 	}
 
 	public void setBounds(int x,int y,int width,int height) {

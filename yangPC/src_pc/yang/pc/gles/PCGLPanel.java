@@ -4,6 +4,11 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GL2;
@@ -16,12 +21,14 @@ import javax.media.opengl.awt.GLJPanel;
 import javax.swing.JFrame;
 
 import yang.events.EventQueueHolder;
+import yang.events.eventtypes.YangPointerEvent;
+import yang.graphics.translator.DisplayMouseListener;
 import yang.graphics.translator.GLHolder;
 import yang.pc.PCEventHandler;
 
 import com.jogamp.opengl.util.Animator;
 
-public class PCGLPanel extends GLHolder implements GLEventListener {
+public class PCGLPanel extends GLHolder implements GLEventListener,MouseMotionListener,MouseListener,MouseWheelListener {
 
 	protected GL2ES2 mGles2;
 	protected int mPanelId;
@@ -194,6 +201,79 @@ public class PCGLPanel extends GLHolder implements GLEventListener {
 	@Override
 	public boolean isFramed() {
 		return mFrame!=null;
+	}
+
+	@Override
+	public void setMouseListener(DisplayMouseListener listener) {
+		boolean first = mMouseListener==null;
+		super.setMouseListener(listener);
+		if(first && listener!=null) {
+			mComponent.addMouseListener(this);
+			mComponent.addMouseMotionListener(this);
+			mComponent.addMouseWheelListener(this);
+		}else if(listener==null) {
+			mComponent.removeMouseListener(this);
+			mComponent.removeMouseMotionListener(this);
+			mComponent.removeMouseWheelListener(this);
+		}
+
+	}
+
+	protected float projMouseX(int mouseX) {
+		return mouseX;
+	}
+
+	protected float projMouseY(int mouseY) {
+		return mouseY;
+	}
+
+	protected int toYangMouseButton(int button) {
+		switch(button) {
+		case MouseEvent.BUTTON1: return YangPointerEvent.BUTTON_LEFT;
+		case MouseEvent.BUTTON2: return YangPointerEvent.BUTTON_MIDDLE;
+		case MouseEvent.BUTTON3: return YangPointerEvent.BUTTON_RIGHT;
+		default: return YangPointerEvent.BUTTON_NONE;
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent ev) {
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent ev) {
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent ev) {
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent ev) {
+		mMouseListener.displayMouseDown(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent ev) {
+		mMouseListener.displayMouseUp(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent ev) {
+		mMouseListener.displayMouseDrag(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent ev) {
+		mMouseListener.displayMouseMove(this, projMouseX(ev.getX()), projMouseY(ev.getY()));
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent ev) {
+		mMouseListener.displayMouseWheel(this, ev.getScrollAmount());
 	}
 
 }
