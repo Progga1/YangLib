@@ -32,6 +32,14 @@ public class CameraIntrinsics {
 		mMatrix.set(1,2, principalPointY);
 	}
 
+	public float getPrincipalPointX() {
+		return mMatrix.get(0,2);
+	}
+
+	public float getPrincipalPointY() {
+		return mMatrix.get(1,2);
+	}
+
 
 
 }
