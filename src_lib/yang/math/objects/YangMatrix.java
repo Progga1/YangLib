@@ -1055,4 +1055,8 @@ public class YangMatrix {
 		mValues[M23] = z;
 	}
 
+	public boolean isStackInitialized() {
+		return mStack!=null;
+	}
+
 }

@@ -157,7 +157,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 					if(!mReferenced) {
 						object.readProperty(mName,this);
 					}
-					
+
 					if(isComponentsVisible()) {
 						refreshInValue();
 						if(!isSaving())
@@ -177,7 +177,7 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 	}
 
 	protected String getStringOutput(InspectionInterface object) {
-		if(mExcludeFromFileIO)
+		if(mExcludeFromFileIO || isReadOnly())
 			return null;
 		if(mReferenced) {
 			if(!mFixedReference) {

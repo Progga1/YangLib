@@ -21,13 +21,16 @@ import yang.pc.tools.runtimeinspectors.subcomponents.InspectorShortCut;
 
 public class InspectorPanel {
 
+	//Objects
 	protected JPanel mTopLevelPanel;
 	protected PropertiesPanel mPropertiesPanel;
 	protected InspectorFrame mFrame;
 	protected InspectorManager mManager;
 	protected JScrollPane mScrollPane;
-	protected boolean mSaving = false;
 	protected HashMap<Integer,InspectorShortCut> mShortCuts = new HashMap<Integer,InspectorShortCut>(32);
+
+	//State
+	protected boolean mSaving = false;
 
 	protected InspectorPanel(InspectorFrame frame) {
 		mManager = frame.mManager;
@@ -99,7 +102,6 @@ public class InspectorPanel {
 	}
 
 	public Component getComponent() {
-//		return mTopLevelPanel;
 		return mScrollPane;
 	}
 
@@ -203,6 +205,15 @@ public class InspectorPanel {
 					}
 				}
 			}
+		}
+	}
+
+	public void registerObjectSubInspector(String name,Class<?> type) {
+		InspectorPanel inspector = mFrame.findInspector(type);
+		if(inspector!=null) {
+			PropertiesPanel props = inspector.mPropertiesPanel.clone(this);
+			PropertyInspectedObject inspProp = new PropertyInspectedObject(props);
+			registerPropertyReferenced(name,inspProp);
 		}
 	}
 

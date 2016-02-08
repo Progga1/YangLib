@@ -555,7 +555,7 @@ public class MatrixOps {
 			targetVector.mZ *= w;
 		}
 	}
-	
+
 	public static final void applyFloatMatrix3DTransposed(float[] matrix, float x, float y, float z, Point3f targetVector) {
 		targetVector.mX = matrix[0] * x + matrix[1] * y + matrix[2] * z + matrix[3];
 		targetVector.mY = matrix[4] * x + matrix[5] * y + matrix[6] * z + matrix[7];
@@ -568,7 +568,7 @@ public class MatrixOps {
 			targetVector.mZ *= w;
 		}
 	}
-	
+
 
 	public static final void applyFloatMatrix3D(float[] matrix, Point3f point, Point3f target) {
 		applyFloatMatrix3D(matrix,point.mX,point.mY,point.mZ,target);
