@@ -27,6 +27,8 @@ public abstract class PropertyChain extends InspectorComponent {
 
 	@Override
 	protected String getFileOutputString() {
+		if(mCurObject==null)
+			return null;
 		String result = "{\r\n";
 		for(InspectorComponent component:mComponents) {
 			//String subStr = component.getStringOutput(object);
