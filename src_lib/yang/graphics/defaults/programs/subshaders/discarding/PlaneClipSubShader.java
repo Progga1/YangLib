@@ -4,20 +4,23 @@ import yang.graphics.programs.GLProgram;
 import yang.graphics.programs.permutations.ShaderDeclarations;
 import yang.graphics.programs.permutations.ShaderPermutationsParser;
 import yang.graphics.programs.permutations.SubShader;
+import yang.math.objects.Plane;
 import yang.math.objects.Point3f;
 import yang.math.objects.Vector3f;
 
 
 public class PlaneClipSubShader extends SubShader {
 
-	public Point3f mPlaneBase;
-	public Vector3f mPlaneNormal;
+	public Plane mClipPlane;
 
 	public int mPlaneBaseHandle,mPlaneNormalHandle;
 
+	public PlaneClipSubShader(Plane clipPlane) {
+		mClipPlane = clipPlane;
+	}
+
 	public PlaneClipSubShader(Point3f planeBase,Vector3f planeNormal) {
-		mPlaneBase = planeBase;
-		mPlaneNormal = planeNormal;
+		this(new Plane(planeBase,planeNormal));
 	}
 
 	public PlaneClipSubShader() {
@@ -45,8 +48,8 @@ public class PlaneClipSubShader extends SubShader {
 
 	@Override
 	public void passData(GLProgram program) {
-		program.setUniform3f(mPlaneBaseHandle, mPlaneBase);
-		program.setUniform3f(mPlaneNormalHandle, mPlaneNormal);
+		program.setUniform3f(mPlaneBaseHandle, mClipPlane.mBase);
+		program.setUniform3f(mPlaneNormalHandle, mClipPlane.mNormal);
 	}
 
 }
