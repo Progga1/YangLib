@@ -87,6 +87,13 @@ public abstract class YangCamera extends CameraTransformations {
 		target.mZ = mat[10];
 	}
 
+	public void getForwardVector(float[] target) {
+		final float[] mat = mViewTransform.mValues;
+		target[0] = mat[2];
+		target[1] = mat[6];
+		target[2] = mat[10];
+	}
+
 //	public void setForwardVector(float x, float y, float z) {
 //		final float[] mat = mCameraTransform.mValues;
 //		mat[2] = x;

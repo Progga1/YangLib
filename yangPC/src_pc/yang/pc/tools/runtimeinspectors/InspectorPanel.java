@@ -189,9 +189,6 @@ public class InspectorPanel {
 
 			if(object instanceof InspectionInterface)
 				inspObj = (InspectionInterface)object;
-			else if(object instanceof InspectionInterfaceHolder) {
-				inspObj = ((InspectionInterfaceHolder)object).getInspectionInterface();
-			}
 			if(inspObj!=null) {
 				String name = inspObj.getName();
 
@@ -205,16 +202,24 @@ public class InspectorPanel {
 					}
 				}
 			}
+
+			if(object instanceof InspectionInterfaceHolder) {
+				inspObj = ((InspectionInterfaceHolder)object).getInspectionInterface();
+				PropertyInspectedObject inspProp = registerObjectSubInspector(inspObj.getName(),inspObj.getClass());
+				inspProp.setFixedReference(inspObj);
+			}
 		}
 	}
 
-	public void registerObjectSubInspector(String name,Class<?> type) {
+	public PropertyInspectedObject registerObjectSubInspector(String name,Class<?> type) {
 		InspectorPanel inspector = mFrame.findInspector(type);
 		if(inspector!=null) {
 			PropertiesPanel props = inspector.mPropertiesPanel.clone(this);
 			PropertyInspectedObject inspProp = new PropertyInspectedObject(props);
 			registerPropertyReferenced(name,inspProp);
-		}
+			return inspProp;
+		}else
+			return null;
 	}
 
 	public InspectorComponent getProperty(String name) {

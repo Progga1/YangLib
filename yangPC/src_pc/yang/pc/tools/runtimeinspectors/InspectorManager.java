@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 
 import yang.graphics.camera.CameraIntrinsics;
+import yang.graphics.defaults.programs.helpers.ShadowHelper;
 import yang.graphics.model.FloatColor;
 import yang.graphics.model.TransformationData;
 import yang.graphics.textures.TextureRenderTarget;
@@ -30,6 +31,7 @@ import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyInteger;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyEulerAngles;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyQuaternion;
+import yang.pc.tools.runtimeinspectors.components.utilobjects.PropertyShadowHelper;
 import yang.util.YangList;
 
 public class InspectorManager {
@@ -56,6 +58,7 @@ public class InspectorManager {
 		registerType(TextureDisplay.class,PropertyTexture.class);
 		registerType(Boundaries3D.class,PropertyBoundaries3D.class);
 		registerType(CameraIntrinsics.class,PropertyCameraIntrinsics.class);
+		registerType(ShadowHelper.class,PropertyShadowHelper.class);
 	}
 
 	public void registerType(Class<?> type,Class<? extends InspectorComponent> component) {

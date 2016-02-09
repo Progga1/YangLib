@@ -86,7 +86,7 @@ public class PropertyTexture extends InspectorComponent implements InspectorButt
 	public void buttonPressed(InspectorButton sender, int button) {
 		if(sender==mShowButton) {
 			if(mTexDispl==null) {
-				String title = mCurObject.getName()+" - ";
+				String title = mCurObject==null?"":mCurObject.getName()+" - ";
 				if(mTexture.mName!=null)
 					title += mName+" ("+mTexture.mName+")";
 				else

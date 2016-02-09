@@ -1,5 +1,6 @@
 package yang.graphics.defaults.programs.helpers;
 
+import yang.graphics.camera.YangCamera;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.programs.DepthProgram;
 import yang.graphics.defaults.programs.LightInterface;
@@ -19,7 +20,6 @@ import yang.math.objects.YangMatrix;
 public class ShadowHelper {
 
 	private final DepthProgram mDepthProgram = new DepthProgram();
-	private static YangMatrix depthTrafoCorrection;
 	public static TextureProperties defaultTextureSettings = createTextureSettings();
 	public static float DEFAULT_BIAS = 0.01f;
 
@@ -27,8 +27,9 @@ public class ShadowHelper {
 	public Default3DGraphics mGraphics3D;
 	public TextureRenderTarget mDepthMap;
 	public YangMatrix mDepthTransformation = new YangMatrix();
+	private YangMatrix mDepthTrafoCorrection;
 	public float[] mLightDirection;
-	public int mSize;
+	public int mResX,mResY;
 	public float mMinLight = 0.3f;
 	public float mMaxLight = 1.0f;
 	public float mAddLight = 0.1f;
@@ -54,16 +55,16 @@ public class ShadowHelper {
 	}
 
 	public synchronized YangMatrix refreshTransformation() {
-		if(depthTrafoCorrection==null) {
-			depthTrafoCorrection = new YangMatrix();
+		if(mDepthTrafoCorrection==null) {
+			mDepthTrafoCorrection = new YangMatrix();
 		}
-		depthTrafoCorrection.loadIdentity();
-		depthTrafoCorrection.translate(0.5f, 0.5f, 0.5f+mBias);
-		depthTrafoCorrection.scale(0.5f, 0.5f, -0.5f);
+		mDepthTrafoCorrection.loadIdentity();
+		mDepthTrafoCorrection.translate(0.5f, 0.5f, 0.5f+mBias);
+		mDepthTrafoCorrection.scale(0.5f, 0.5f, -0.5f);
 		mDepthTransformation.loadIdentity();
 		mDepthTransformation.setTranslation(0,0,-50);
-		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
-		return depthTrafoCorrection;
+		mDepthTransformation.multiplyLeft(mDepthTrafoCorrection);
+		return mDepthTrafoCorrection;
 	}
 
 	public void setLightSource(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ,boolean directional) {
@@ -75,6 +76,12 @@ public class ShadowHelper {
 		mLightDirection[0] = dX / dist;
 		mLightDirection[1] = dY / dist;
 		mLightDirection[2] = dZ / dist;
+		mLightDirection[3] = directional?0:1;
+	}
+
+	public void setLightByCamera(YangCamera camera,boolean directional) {
+		mGraphics3D.setCamera(camera);
+		camera.getForwardVector(mLightDirection);
 		mLightDirection[3] = directional?0:1;
 	}
 
@@ -94,14 +101,18 @@ public class ShadowHelper {
 		shadowSubShader.mMainShader.mProgram.setUniformMatrix4f(shadowSubShader.mDepthMapTransformHandle, mDepthTransformation.mValues);
 	}
 
-	public void init(Default3DGraphics graphics3D,int size) {
+	public void init(Default3DGraphics graphics3D,int resX,int resY) {
 		mGraphics3D = graphics3D;
 		mGraphics = graphics3D.mTranslator;
-		mSize = size;
-		mDepthMap = mGraphics.createRenderTarget(mSize, mSize, defaultTextureSettings);
-//		mDepthMap.mTargetTexture.fillWithColor(FloatColor.BLACK);	//TODO necessary?
+		mResX = resX;
+		mResY = resY;
+		mDepthMap = mGraphics.createRenderTarget(mResX, mResY, defaultTextureSettings);
 		getDepthProgram();
 		refreshTransformation();
+	}
+
+	public void init(Default3DGraphics graphics3D,int size) {
+		init(graphics3D,size,size);
 	}
 
 	public void beginDepthRendering() {
@@ -116,7 +127,7 @@ public class ShadowHelper {
 		if(!mRenderToScreen)
 			mGraphics.leaveTextureRenderTarget();
 		mDepthTransformation.set(mGraphics3D.mCameraProjectionMatrix);
-		mDepthTransformation.multiplyLeft(depthTrafoCorrection);
+		mDepthTransformation.multiplyLeft(mDepthTrafoCorrection);
 	}
 
 	public Texture getDepthMap() {
@@ -128,8 +139,14 @@ public class ShadowHelper {
 	}
 
 	public void setBias(float bias) {
+		if(mBias==bias)
+			return;
 		mBias = bias;
 		refreshTransformation();
+	}
+
+	public float getBias() {
+		return mBias;
 	}
 
 }
