@@ -7,6 +7,7 @@ import yang.graphics.defaults.programs.LightInterface;
 import yang.graphics.defaults.programs.ShadowInterface;
 import yang.graphics.defaults.programs.ShadowProgram;
 import yang.graphics.defaults.programs.subshaders.realistic.ShadowSubShader;
+import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.textures.enums.TextureFilter;
@@ -19,13 +20,14 @@ import yang.math.objects.YangMatrix;
 
 public class ShadowHelper {
 
-	private final DepthProgram mDepthProgram = new DepthProgram();
+	private final DepthProgram mDefaultDepthProgram = new DepthProgram();
 	public static TextureProperties defaultTextureSettings = createTextureSettings();
 	public static float DEFAULT_BIAS = 0.01f;
 
 	private GraphicsTranslator mGraphics;
 	public Default3DGraphics mGraphics3D;
 	public TextureRenderTarget mDepthMap;
+	public Basic3DProgram mDepthProgram = mDefaultDepthProgram;
 	public YangMatrix mDepthTransformation = new YangMatrix();
 	private YangMatrix mDepthTrafoCorrection;
 	public float[] mLightDirection;
@@ -47,11 +49,15 @@ public class ShadowHelper {
 		mLightDirection = new float[4];
 	}
 
-	public synchronized DepthProgram getDepthProgram() {
-		if(!mDepthProgram.mInitialized) {
-			mGraphics.addProgram(mDepthProgram);
+	public synchronized DepthProgram getDefaultDepthProgram() {
+		if(!mDefaultDepthProgram.mInitialized) {
+			mGraphics.addProgram(mDefaultDepthProgram);
 		}
-		return mDepthProgram;
+		return mDefaultDepthProgram;
+	}
+
+	public void setDepthProgram(Basic3DProgram program) {
+		mDepthProgram = program;
 	}
 
 	public synchronized YangMatrix refreshTransformation() {
@@ -107,7 +113,7 @@ public class ShadowHelper {
 		mResX = resX;
 		mResY = resY;
 		mDepthMap = mGraphics.createRenderTarget(mResX, mResY, defaultTextureSettings);
-		getDepthProgram();
+		getDefaultDepthProgram();
 		refreshTransformation();
 	}
 

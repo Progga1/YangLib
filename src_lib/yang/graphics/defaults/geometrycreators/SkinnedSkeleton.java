@@ -49,7 +49,7 @@ public class SkinnedSkeleton {
 			return;
 		mMesh.mWireFrames = mWireFrames;
 		mGraphics.mTranslator.switchCulling(!mWireFrames && mCulling);
-		if(mMesh.mBlockTextures)
+//		if(mMesh.mBlockTextures)
 			mGraphics.mTranslator.bindTexture(null);
 		if(mSkeleton!=null) {
 			if(mAutoRefresh)
