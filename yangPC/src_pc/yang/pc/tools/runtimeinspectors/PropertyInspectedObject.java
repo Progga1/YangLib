@@ -34,7 +34,7 @@ public class PropertyInspectedObject extends InspectorComponent {
 
 	@Override
 	protected String getFileOutputString() {
-		if(mCurObject==null || mInspectedObject==null)
+		if(mCurObject==null || mInspectedObject==null || isReadOnly() || mExcludeFromFileIO)
 			return null;
 		String result = "{\r\n";
 		for(InspectorItem item:mPropPanel.getItems()) {
