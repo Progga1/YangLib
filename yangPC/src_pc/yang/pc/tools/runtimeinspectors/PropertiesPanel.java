@@ -104,6 +104,7 @@ public class PropertiesPanel extends JPanel {
 				continue;
 			String key = line.substring(0,eqId);
 			String value = line.substring(eqId+1,line.length());
+			boolean foundComp = false;
 			for(InspectorItem item:mItems) {
 				InspectorComponent comp = item.mInspectorComponent;
 				if(comp.mName.equals(key)) {
@@ -121,7 +122,24 @@ public class PropertiesPanel extends JPanel {
 							object.setProperty(comp.mName,comp);
 						}
 //					}
+					foundComp = true;
 					break;
+				}
+			}
+			if(!foundComp) {
+				if(line.endsWith("{")) {
+					int bracketCount = 1;
+					do {
+						line = reader.readLine();
+						if(line==null)
+							break;
+						if(line.endsWith("{"))
+							bracketCount++;
+						if(line.endsWith("}"))
+							bracketCount--;
+					}while(bracketCount>0);
+					if(line==null)
+						break;
 				}
 			}
 		}
