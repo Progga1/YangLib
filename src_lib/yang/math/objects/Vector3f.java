@@ -277,4 +277,11 @@ public class Vector3f extends Point3f{
 		mZ = vector.mZ*scaleFactor;
 	}
 
+	public static void setLookAt(Vector3f direction, Vector3f up, Vector3f targetVecX, Vector3f targetVecY, Vector3f targetVecZ) {
+		targetVecZ.setNormalized(direction);
+		targetVecX.cross(up,direction);
+		targetVecX.normalize();
+		targetVecY.cross(targetVecZ,targetVecX);
+	}
+
 }

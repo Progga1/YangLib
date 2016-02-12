@@ -55,6 +55,28 @@ public class YangMatrix {
 		target[15] = 1;
 	}
 
+	public static void setBase4fNormalized(float[] target,Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+		float dX = 1/vec1.magn();
+		float dY = 1/vec2.magn();
+		float dZ = 1/vec3.magn();
+		target[0] = vec1.mX*dX;
+		target[1] = vec1.mY*dX;
+		target[2] = vec1.mZ*dX;
+		target[3] = 0;
+		target[4] = vec2.mX*dY;
+		target[5] = vec2.mY*dY;
+		target[6] = vec2.mZ*dY;
+		target[7] = 0;
+		target[8] = vec3.mX*dZ;
+		target[9] = vec3.mY*dZ;
+		target[10] = vec3.mZ*dZ;
+		target[11] = 0;
+		target[12] = 0;
+		target[13] = 0;
+		target[14] = 0;
+		target[15] = 1;
+	}
+
 	public static void setBase4f(float[] target,Vector3f vec1, Vector3f vec2, Vector3f vec3, Point3f position) {
 		target[0] = vec1.mX;
 		target[1] = vec1.mY;
@@ -714,6 +736,10 @@ public class YangMatrix {
 
 	public void setFromAxis(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
 		setBase4f(mValues,vec1,vec2,vec3);
+	}
+
+	public void setFromAxisNormalized(Vector3f vec1, Vector3f vec2, Vector3f vec3) {
+		setBase4fNormalized(mValues,vec1,vec2,vec3);
 	}
 
 	public void setFromAxisAndPosition(Vector3f right,Vector3f up, Vector3f forward, Point3f position) {
