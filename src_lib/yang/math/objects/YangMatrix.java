@@ -300,7 +300,7 @@ public class YangMatrix {
 		rotateX(eulerAngles.mPitch);
 		rotateZ(eulerAngles.mRoll);
 	}
-	
+
 	public void rotate(Quaternion quaternion) {
 		multiplyQuaternionRight(quaternion);
 	}
@@ -360,7 +360,7 @@ public class YangMatrix {
 		mValues = mBackMatrix;
 		mBackMatrix = swap;
 	}
-	
+
 	public void multiplyRight(TransformationData transform) {
 		translate(transform.mPosition);
 		rotate(transform.mOrientation);
@@ -936,6 +936,12 @@ public class YangMatrix {
 		target.mX = mValues[8];
 		target.mY = mValues[9];
 		target.mZ = mValues[10];
+	}
+
+	public void getAxes(Vector3f rightAxis, Vector3f upAxis, Vector3f forwardAxis) {
+		getRightVector(rightAxis);
+		getUpVector(upAxis);
+		getForwardVector(forwardAxis);
 	}
 
 	public void applyInverted(Point3f position, Point3f target) {
