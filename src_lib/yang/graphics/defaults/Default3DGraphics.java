@@ -509,6 +509,7 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 	public void drawDebugVector(float baseX,float baseY,float baseZ, float vecX,float vecY,float vecZ,FloatColor color,float alpha,YangMatrix transform) {
 		float preAlpha = mCurColor[3];
 		mCurColor[3] = alpha;
+		setColor(color);
 		if(transform==null) {
 			mTempVec1.set(baseX,baseY,baseZ);
 			mTempVec2.set(baseX+vecX,baseY+vecY,baseZ+vecZ);

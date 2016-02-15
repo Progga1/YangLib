@@ -1,5 +1,6 @@
 package yang.math.objects;
 
+import yang.graphics.model.TransformationData;
 import yang.math.MatrixOps;
 
 //TODO normal inversion only 3x3, autocreate inversed mat, save orthogonal etc information
@@ -299,6 +300,10 @@ public class YangMatrix {
 		rotateX(eulerAngles.mPitch);
 		rotateZ(eulerAngles.mRoll);
 	}
+	
+	public void rotate(Quaternion quaternion) {
+		multiplyQuaternionRight(quaternion);
+	}
 
 	public void rotateZAround(float angle,float anchorX,float anchorY) {
 		translate(-anchorX, -anchorY);
@@ -354,6 +359,12 @@ public class YangMatrix {
 		final float[] swap = mValues;
 		mValues = mBackMatrix;
 		mBackMatrix = swap;
+	}
+	
+	public void multiplyRight(TransformationData transform) {
+		translate(transform.mPosition);
+		rotate(transform.mOrientation);
+		scale(transform.mScale);
 	}
 
 	public void multiplyRightTransposed(float[] rhsMatrix) {
