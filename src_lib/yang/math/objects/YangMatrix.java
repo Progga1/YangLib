@@ -1107,8 +1107,22 @@ public class YangMatrix {
 		mValues[M23] = z;
 	}
 
+	public void replaceTranslation(Point3f translation) {
+		mValues[M03] = translation.mX;
+		mValues[M13] = translation.mY;
+		mValues[M23] = translation.mZ;
+	}
+
 	public boolean isStackInitialized() {
 		return mStack!=null;
+	}
+
+	public void setLookDir(float dirX,float dirY,float dirZ, float upX, float upY, float upZ) {
+		MatrixOps.setLookDir(mValues, dirX,dirY,dirZ, upX,upY,upZ);
+	}
+
+	public void setLookDir(Vector3f direction, Vector3f up) {
+		setLookDir(direction.mX,direction.mY,direction.mZ, up.mX,up.mY,up.mZ);
 	}
 
 }
