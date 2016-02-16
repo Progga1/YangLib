@@ -944,6 +944,15 @@ public class YangMatrix {
 		getForwardVector(forwardAxis);
 	}
 
+	public void getRotationAxes(Vector3f rightAxis, Vector3f upAxis, Vector3f forwardAxis) {
+		getRightVector(rightAxis);
+		getUpVector(upAxis);
+		getForwardVector(forwardAxis);
+		rightAxis.normalize();
+		upAxis.normalize();
+		forwardAxis.normalize();
+	}
+
 	public void applyInverted(Point3f position, Point3f target) {
 		asInverted(mBackMatrix);
 		MatrixOps.applyFloatMatrix3D(mBackMatrix, position, target);
