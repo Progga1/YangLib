@@ -60,6 +60,8 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 
 	@Override
 	protected String getFileOutputString() {
+		if(mExcludeFromFileIO || isReadOnly())
+			return null;
 		String result = "";
 		boolean first = true;
 		for(NumTextField textField:mTextFields) {
@@ -81,6 +83,8 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 
 	@Override
 	public void loadFromStream(String value,BufferedReader reader) {
+		if(mExcludeFromFileIO || isReadOnly())
+			return;
 		String[] split = value.split(",");
 		int l = Math.min(mTextFields.length,split.length);
 		for(int i=0;i<l;i++) {

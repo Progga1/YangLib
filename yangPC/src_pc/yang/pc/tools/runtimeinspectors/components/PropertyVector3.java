@@ -20,10 +20,12 @@ public class PropertyVector3 extends PropertyNumArrayBase {
 		}
 	}
 
-	@Override
-	protected String getFileOutputString() {
-		return mVectorData.mX+","+mVectorData.mY+","+mVectorData.mZ;
-	}
+//	@Override
+//	protected String getFileOutputString() {
+//		if(mVectorData==null)
+//			throw new RuntimeException("Vector not set: "+mName+(mCurObject!=null?" of "+mCurObject.getName():"")+"; Referenced="+isReferenced());
+//		return mVectorData.mX+","+mVectorData.mY+","+mVectorData.mZ;
+//	}
 
 	@Override
 	protected void refreshInValue() {

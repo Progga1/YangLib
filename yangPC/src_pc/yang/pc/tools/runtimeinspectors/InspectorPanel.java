@@ -185,28 +185,30 @@ public class InspectorPanel {
 
 	public void registerObjectSubInspectors(List<?> objects) {
 		for(Object object:objects) {
-			InspectionInterface inspObj = null;
-
-			if(object instanceof InspectionInterface)
-				inspObj = (InspectionInterface)object;
-			if(inspObj!=null) {
-				String name = inspObj.getName();
-
-				if(!mPropertiesPanel.nameExists(name)) {
-					InspectorPanel inspector = mFrame.findInspector(inspObj.getClass());
-					if(inspector!=null) {
-						PropertiesPanel props = inspector.mPropertiesPanel.clone(this);
-						PropertyInspectedObject inspProp = new PropertyInspectedObject(props);
-						registerPropertyReferenced(name,inspProp);
-						inspProp.setFixedReference(inspObj);
-					}
-				}
-			}
 
 			if(object instanceof InspectionInterfaceHolder) {
-				inspObj = ((InspectionInterfaceHolder)object).getInspectionInterface();
-				PropertyInspectedObject inspProp = registerObjectSubInspector(inspObj.getName(),inspObj.getClass());
-				inspProp.setFixedReference(inspObj);
+				InspectionInterface[] inspObjs = ((InspectionInterfaceHolder)object).getInspectionInterfaces();
+				for(InspectionInterface inspObj:inspObjs) {
+					PropertyInspectedObject inspProp = registerObjectSubInspector(inspObj.getName(),inspObj.getClass());
+					inspProp.setFixedReference(inspObj);
+				}
+			}else{
+				InspectionInterface inspObj = null;
+				if(object instanceof InspectionInterface)
+					inspObj = (InspectionInterface)object;
+				if(inspObj!=null) {
+					String name = inspObj.getName();
+
+					if(!mPropertiesPanel.nameExists(name)) {
+						InspectorPanel inspector = mFrame.findInspector(inspObj.getClass());
+						if(inspector!=null) {
+							PropertiesPanel props = inspector.mPropertiesPanel.clone(this);
+							PropertyInspectedObject inspProp = new PropertyInspectedObject(props);
+							registerPropertyReferenced(name,inspProp);
+							inspProp.setFixedReference(inspObj);
+						}
+					}
+				}
 			}
 		}
 	}
