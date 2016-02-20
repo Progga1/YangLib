@@ -203,6 +203,12 @@ public class YangMatrix {
 		mValues[13] += vector.mY;
 		mValues[14] += vector.mZ;
 	}
+	
+	public void postTranslate(Point3f vector,float factor) {
+		mValues[12] += vector.mX*factor;
+		mValues[13] += vector.mY*factor;
+		mValues[14] += vector.mZ*factor;
+	}
 
 	public void setTranslation(float x,float y,float z) {
 		System.arraycopy(MatrixOps.IDENTITY, 0, mValues, 0, 16);

@@ -1,7 +1,6 @@
 package yang.pc.tools.runtimeinspectors.components;
 
 import yang.graphics.model.FloatColor;
-import yang.pc.tools.runtimeinspectors.InspectorPanel;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArrayBase;
 
 public class PropertyColorNums extends PropertyNumArrayBase {

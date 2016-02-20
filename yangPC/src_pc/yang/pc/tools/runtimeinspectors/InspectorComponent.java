@@ -51,8 +51,9 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		setParent(parent);
 	}
 
-	public void setExcludeFromFileIO(boolean exclude) {
+	public InspectorComponent setExcludeFromFileIO(boolean exclude) {
 		mExcludeFromFileIO = exclude;
+		return this;
 	}
 
 	public boolean isExcludeFromFileIO() {

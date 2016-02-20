@@ -1,4 +1,4 @@
-package yang.model;
+package yang.math.objects;
 
 public class Rect {
 
@@ -30,6 +30,10 @@ public class Rect {
 
 	public float getHeight() {
 		return mTop-mBottom;
+	}
+	
+	public float getHeightYDown() {
+		return mBottom-mTop;
 	}
 	
 	public void move(float deltaX, float deltaY) {
@@ -68,6 +72,14 @@ public class Rect {
 		mLeft = (mLeft-midX)*factor+midX;
 		mRight = (mRight-midX)*factor+midX;
 	}
+	
+	public void setWidthAnchorLeft(float width) {
+		mRight = mLeft+width;
+	}
+	
+	public void setWidthAnchorRight(float width) {
+		mLeft = mRight-width;
+	}
 
 	public void setHeight(float height) {
 		float midY = (mTop+mBottom)*0.5f;
@@ -75,7 +87,15 @@ public class Rect {
 		mTop = (mTop-midY)*factor+midY;
 		mBottom = (mBottom-midY)*factor+midY;
 	}
+	
+	public void setHeightAnchorBottom(float height) {
+		mTop = mBottom+height;
+	}
 
+	public void setHeightAnchorTop(float height) {
+		mBottom = mTop-height;
+	}
+	
 	public float getCenterX() {
 		return (mLeft+mRight)*0.5f;
 	}

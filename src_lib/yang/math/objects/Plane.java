@@ -28,4 +28,9 @@ public class Plane {
 		mNormal.set(0,1,0);
 	}
 
+	public void set(Plane template) {
+		mBase.set(template.mBase);
+		mNormal.set(template.mNormal);
+	}
+
 }

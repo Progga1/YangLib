@@ -17,7 +17,7 @@ import yang.graphics.skeletons.animations.KeyFrame;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.util.Camera2DSmooth;
-import yang.model.Rect;
+import yang.math.objects.Rect;
 import yang.physics.massaggregation.SkeletonEditing;
 import yang.physics.massaggregation.elements.Joint;
 import yang.sound.AbstractSoundManager;

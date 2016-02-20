@@ -22,8 +22,8 @@ import yang.math.MatrixOps;
 import yang.math.objects.Point2f;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quadruple;
+import yang.math.objects.Rect;
 import yang.math.objects.YangMatrix;
-import yang.model.Rect;
 import yang.util.Util;
 
 public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends AbstractGraphics<ShaderType> {

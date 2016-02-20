@@ -8,6 +8,7 @@ import yang.graphics.camera.CameraIntrinsics;
 import yang.graphics.defaults.programs.helpers.ShadowHelper;
 import yang.graphics.model.FloatColor;
 import yang.graphics.model.TransformationData;
+import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.textures.TextureRenderTarget;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.TextureDisplay;
@@ -15,6 +16,7 @@ import yang.graphics.util.cameracontrol.Camera3DControl;
 import yang.math.objects.EulerAngles;
 import yang.math.objects.Point3f;
 import yang.math.objects.Quaternion;
+import yang.math.objects.Rect;
 import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
 import yang.model.Boundaries3D;
@@ -31,7 +33,9 @@ import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyInteger;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyEulerAngles;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyQuaternion;
+import yang.pc.tools.runtimeinspectors.components.utilobjects.PropertyRect;
 import yang.pc.tools.runtimeinspectors.components.utilobjects.PropertyShadowHelper;
+import yang.pc.tools.runtimeinspectors.components.utilobjects.PropertyTextureCoordinatesQuad;
 import yang.util.YangList;
 
 public class InspectorManager {
@@ -52,8 +56,10 @@ public class InspectorManager {
 		registerType(Quaternion.class,PropertyQuaternion.class);
 		registerType(TransformationData.class,PropertyTransform.class);
 		registerType(YangMatrix.class,PropertyTransform.class);
+		registerType(Rect.class,PropertyRect.class);
 		registerType(Camera3DControl.class,PropertyCameraControl.class);
 		registerType(Texture.class,PropertyTexture.class);
+		registerType(TextureCoordinatesQuad.class,PropertyTextureCoordinatesQuad.class);
 		registerType(TextureRenderTarget.class,PropertyTexture.class);
 		registerType(TextureDisplay.class,PropertyTexture.class);
 		registerType(Boundaries3D.class,PropertyBoundaries3D.class);

@@ -1,7 +1,7 @@
 package yang.graphics.buffers;
 
 import yang.math.objects.Point3f;
-import yang.model.Rect;
+import yang.math.objects.Rect;
 import yang.util.Util;
 import yang.util.YangList;
 
