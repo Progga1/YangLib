@@ -179,7 +179,10 @@ public class TextureCoordinatesQuad {
 		mBiasX = biasX;
 		mBiasY = biasY;
 		mRatio = 1;
-		mRatioWidth = mWidth/mHeight;
+		if(mHeight==0 || mWidth==0)
+			mRatioWidth = 1;
+		else
+			mRatioWidth = mWidth/mHeight;
 		setRotation(rotation);
 		return this;
 	}
@@ -203,9 +206,13 @@ public class TextureCoordinatesQuad {
 	public TextureCoordinatesQuad init(float x1, float y1, float widthAndHeight) {
 		return initBiased(x1,y1,x1+widthAndHeight,y1+widthAndHeight,0,0);
 	}
-	
+
+	public TextureCoordinatesQuad init(Rect rect,float biasX,float biasY) {
+		return initBiased(rect.mLeft,rect.mTop,rect.mRight,rect.mBottom, biasX,biasY);
+	}
+
 	public TextureCoordinatesQuad init(Rect rect) {
-		return init(rect.mLeft,rect.mTop,rect.mRight,rect.mBottom);
+		return init(rect,0,0);
 	}
 
 	public TextureCoordinatesQuad initBiased(float x1, float y1, float x2, float y2, float textureWidth, float textureHeight, float biasX,float biasY) {

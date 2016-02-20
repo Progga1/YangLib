@@ -64,8 +64,10 @@ public class PropertyTexture extends InspectorComponent implements InspectorButt
 			return;
 		String data = "<html><body>";
 		final String DATA_SPLITTER = " | ";
-		if(mTexture.mName!=null)
-			data += mTexture.mName+": ";
+		if(mTexture.mName!=null) {
+			String[] splitName = mTexture.mName.split("/");
+			data += splitName[splitName.length-1]+": ";
+		}
 		data += mTexture.getWidth()+"x"+mTexture.getHeight();
 		data += DATA_SPLITTER;
 		data += mTexture.mProperties.channelsToString();

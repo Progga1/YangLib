@@ -83,6 +83,7 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 		mNorthPanel.setLayout(new BoxLayout(mNorthPanel,BoxLayout.PAGE_AXIS));
 		mMainPanel.add(mNorthPanel,BorderLayout.NORTH);
 		mObjectSelection.addActionListener(this);
+		mObjectSelection.setMaximumRowCount(16);
 
 		mSouthPanel = new JPanel();
 		mSouthPanel.setBackground(InspectorGUIDefinitions.CL_BAR_BACKGROUND);

@@ -8,23 +8,24 @@ public class PropertyRect extends PropertyNumArrayBase {
 	private Rect mRect;
 
 	public boolean mYDown = false;
-	
+
 	public PropertyRect() {
 		super(4);
 	}
-	
-	public PropertyRect setDownwards(boolean yDownwards) {
+
+	public PropertyRect setYDown(boolean yDownwards) {
 		mYDown = yDownwards;
 		return this;
 	}
-	
+
+	@Override
 	public void postInit() {
 		super.postInit();
 		if(!isReferenced()) {
 			mRect = new Rect(0,0,1,1);
 		}
 	}
-	
+
 	@Override
 	public void setLinkable() {
 		super.setLinkable();
@@ -47,7 +48,7 @@ public class PropertyRect extends PropertyNumArrayBase {
 	@Override
 	public void refreshOutValue() {
 		mRect.mLeft = mTextFields[0].getFloat();
-		mRect.setWidth(mTextFields[2].getFloat());
+		mRect.setWidthAnchorLeft(mTextFields[2].getFloat());
 		if(mYDown) {
 			mRect.mTop = mTextFields[1].getFloat();
 			mRect.setHeightAnchorTop(-mTextFields[3].getFloat());
@@ -71,9 +72,10 @@ public class PropertyRect extends PropertyNumArrayBase {
 	public void setValueReference(Object reference) {
 		mRect = (Rect)reference;
 	}
-	
+
+	@Override
 	public PropertyRect clone() {
-		return new PropertyRect();
+		return new PropertyRect().setYDown(mYDown);
 	}
 
 }
