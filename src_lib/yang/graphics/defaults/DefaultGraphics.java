@@ -532,6 +532,13 @@ public abstract class DefaultGraphics<ShaderType extends BasicProgram> extends A
 	public void putPositionQuad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
 		mCurrentVertexBuffer.putVec8(ID_POSITIONS, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
+	
+	public void putPositionQuad(YangMatrix transform) {
+		putPosition(0,0, transform);
+		putPosition(1,0, transform);
+		putPosition(0,1, transform);
+		putPosition(1,1, transform);
+	}
 
 	public void putPositionRect(float x1, float y1, float x2, float y2, float bias) {
 		mCurrentVertexBuffer.putRect3D(ID_POSITIONS,x1+bias,y1+bias,x2-bias,y2-bias,mCurrentZ);

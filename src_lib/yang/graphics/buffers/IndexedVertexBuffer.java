@@ -189,6 +189,20 @@ public abstract class IndexedVertexBuffer extends AbstractVertexBuffer{
 			mIndexBuffer.put(offset);
 		}
 	}
+	
+	public void beginConnectedLines(int lineCount,boolean close) {
+		short index = (short)getCurrentVertexWriteCount();
+		if(close)
+			lineCount--;
+		for(int i=0;i<lineCount;i++) {
+			mIndexBuffer.put(index);
+			mIndexBuffer.put(++index);
+		}
+		if(close) {
+			mIndexBuffer.put(index);
+			mIndexBuffer.put((short)(index-lineCount));
+		}
+	}
 
 	public void beginQuadInt(boolean wireFrames,int offset) {
 		if(wireFrames) {

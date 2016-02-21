@@ -802,4 +802,8 @@ public class Default3DGraphics extends DefaultGraphics<Basic3DProgram> {
 		mCurrentVertexBuffer.putIndexRelative(index);
 	}
 
+	public void beginConnectedLines(int lineCount, boolean close) {
+		mCurrentVertexBuffer.beginConnectedLines(lineCount,close);
+	}
+
 }
