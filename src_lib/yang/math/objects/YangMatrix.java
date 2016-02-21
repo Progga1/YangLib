@@ -1131,4 +1131,9 @@ public class YangMatrix {
 		setLookDir(direction.mX,direction.mY,direction.mZ, up.mX,up.mY,up.mZ);
 	}
 
+	public void setFromTo(YangMatrix fromTransform,YangMatrix toTransform) {
+		fromTransform.asInverted(this.mValues);
+		multiplyLeft(toTransform);
+	}
+
 }
