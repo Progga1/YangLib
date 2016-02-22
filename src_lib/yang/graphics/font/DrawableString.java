@@ -61,6 +61,10 @@ public class DrawableString extends FixedString {
 	 */
 	public FloatColor[] mWorkingColors;
 
+	public static int anchorToInt(float horizontalAnchor) {
+		return (int)(horizontalAnchor*2);
+	}
+
 	public DrawableString() {
 		super();
 		setDefaults();
@@ -102,6 +106,10 @@ public class DrawableString extends FixedString {
 	public DrawableString setSize(float size) {
 		mSize = size;
 		return this;
+	}
+
+	public float getSize() {
+		return mSize;
 	}
 
 	public DrawableString setFont(BitmapFont font) {
@@ -530,6 +538,14 @@ public class DrawableString extends FixedString {
 
 	public DrawableString setLeftBottomJustified() {
 		return setAnchors(ANCHOR_LEFT,ANCHOR_BOTTOM);
+	}
+
+	public int getHorizonalAnchorInt() {
+		return anchorToInt(mHorizontalAnchor);
+	}
+
+	public int getVerticalAnchorInt() {
+		return anchorToInt(mVerticalAnchor);
 	}
 
 }

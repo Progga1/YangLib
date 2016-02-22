@@ -31,11 +31,11 @@ public class Rect {
 	public float getHeight() {
 		return mTop-mBottom;
 	}
-	
+
 	public float getHeightYDown() {
 		return mBottom-mTop;
 	}
-	
+
 	public void move(float deltaX, float deltaY) {
 		mLeft += deltaX;
 		mRight += deltaX;
@@ -72,11 +72,11 @@ public class Rect {
 		mLeft = (mLeft-midX)*factor+midX;
 		mRight = (mRight-midX)*factor+midX;
 	}
-	
+
 	public void setWidthAnchorLeft(float width) {
 		mRight = mLeft+width;
 	}
-	
+
 	public void setWidthAnchorRight(float width) {
 		mLeft = mRight-width;
 	}
@@ -87,7 +87,7 @@ public class Rect {
 		mTop = (mTop-midY)*factor+midY;
 		mBottom = (mBottom-midY)*factor+midY;
 	}
-	
+
 	public void setHeightAnchorBottom(float height) {
 		mTop = mBottom+height;
 	}
@@ -95,7 +95,7 @@ public class Rect {
 	public void setHeightAnchorTop(float height) {
 		mBottom = mTop-height;
 	}
-	
+
 	public float getCenterX() {
 		return (mLeft+mRight)*0.5f;
 	}
@@ -115,6 +115,10 @@ public class Rect {
 
 	public float normY(float y) {
 		return (y-mBottom)/(mTop-mBottom);
+	}
+
+	public boolean contains(float x, float y) {
+		return x>=mLeft && x<=mRight && y>=mBottom && y<=mTop;
 	}
 
 }
