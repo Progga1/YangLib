@@ -105,46 +105,53 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 			mHolder.setLinkable();
 	}
 
-	public void setDefaultValue(double defaultValue) {
+	public PropertyNumArrayBase setDefaultValue(double defaultValue) {
 		for(NumTextField textField:mTextFields) {
 			textField.setDefaultValue(defaultValue);
 		}
+		return this;
 	}
 
-	public void setMinValue(double minValue) {
+	public PropertyNumArrayBase setMinValue(double minValue) {
 		for(NumTextField textField:mTextFields) {
 			textField.setMinValue(minValue);
 		}
+		return this;
 	}
 
-	public void setMaxValue(double maxValue) {
+	public PropertyNumArrayBase setMaxValue(double maxValue) {
 		for(NumTextField textField:mTextFields) {
 			textField.setMaxValue(maxValue);
 		}
+		return this;
 	}
 
-	public void setMaxDigits(int maxDigits) {
+	public PropertyNumArrayBase setMaxDigits(int maxDigits) {
 		for(NumTextField textField:mTextFields) {
 			textField.setMaxDigits(maxDigits);
 		}
+		return this;
 	}
 
-	public void setScrollFactor(float stepsPerPixel) {
+	public PropertyNumArrayBase setScrollFactor(float stepsPerPixel) {
 		for(NumTextField textField:mTextFields) {
 			textField.setScrollFactor(stepsPerPixel);
 		}
+		return this;
 	}
 
-	public void setClickSteps(float stepsPerClick) {
+	public PropertyNumArrayBase setClickSteps(float stepsPerClick) {
 		for(NumTextField textField:mTextFields) {
 			textField.setClickSteps(stepsPerClick);
 		}
+		return this;
 	}
 
-	public void setRange(float minValue,float maxValue) {
+	public PropertyNumArrayBase setRange(float minValue,float maxValue) {
 		for(NumTextField textField:mTextFields) {
 			textField.setRange(minValue,maxValue);
 		}
+		return this;
 	}
 
 	public void setDefaultValue(int id,double defaultValue) {
