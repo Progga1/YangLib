@@ -15,6 +15,7 @@ public class FixedString {
 	public int mMarker;
 	public MarkInfo[] mFormatStringMarks;
 	protected int mSpaceCount;
+	protected String mOriginalString = null;
 
 	public FixedString() {
 
@@ -41,7 +42,12 @@ public class FixedString {
 	}
 
 	public FixedString allocString(String string) {
+		mOriginalString = string;
 		return allocString(string,string.length());
+	}
+
+	public String getOriginalString() {
+		return mOriginalString;
 	}
 
 	public static boolean isDigit(char character) {
@@ -178,7 +184,16 @@ public class FixedString {
 		mLength = 0;
 	}
 
+	public int getCapacity() {
+		return mCapacity;
+	}
+
+	public int getLength() {
+		return mLength;
+	}
+
 	public void setString(String string) {
+		mOriginalString = string;
 		if(string.length()>mCapacity) {
 			allocString(string);
 		}
@@ -242,7 +257,7 @@ public class FixedString {
 		}else{
 			if(neg) {
 				mChars[mMarker++] = '-';
-				value = -value;				
+				value = -value;
 			}
 
 			while(value>0) {
