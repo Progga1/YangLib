@@ -1,5 +1,6 @@
 package yang.graphics.camera.projection;
 
+import yang.graphics.camera.intrinsics.CameraIntrinsicsFOV;
 import yang.math.objects.YangMatrix;
 
 public class PerspectiveProjection extends Projection {
@@ -61,6 +62,10 @@ public class PerspectiveProjection extends Projection {
 
 	public static void getTransform(YangMatrix target) {
 		getTransformFovy(target,DEFAULT_FOVY,1,1,DEFAULT_NEAR,DEFAULT_FAR);
+	}
+
+	public static void getTransform(YangMatrix target,CameraIntrinsicsFOV intrinsics) {
+		 getTransform(target,intrinsics.mNear*intrinsics.getProjFacX(),intrinsics.mNear*intrinsics.getProjFacY(), intrinsics.mNear,intrinsics.mFar, intrinsics.getFOVShiftX(), intrinsics.getFOVShiftY());
 	}
 
 }

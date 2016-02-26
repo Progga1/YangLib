@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import javax.swing.JFrame;
 
-import yang.graphics.camera.CameraIntrinsics;
+import yang.graphics.camera.intrinsics.CameraIntrinsics;
 import yang.graphics.defaults.programs.helpers.ShadowHelper;
 import yang.graphics.font.DrawableString;
 import yang.graphics.model.FloatColor;

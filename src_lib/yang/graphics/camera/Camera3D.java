@@ -1,5 +1,6 @@
 package yang.graphics.camera;
 
+import yang.graphics.camera.intrinsics.CameraIntrinsicsFOV;
 import yang.graphics.camera.projection.OrthogonalProjection;
 import yang.graphics.camera.projection.PerspectiveProjection;
 import yang.graphics.model.TransformationData;
@@ -136,6 +137,14 @@ public class Camera3D extends YangCamera {
 		mNear = template.mNear;
 		mFar = template.mFar;
 		mAutoRefreshInverted = template.mAutoRefreshInverted;
+	}
+
+	public void setPerspectiveByIntrinsics(CameraIntrinsicsFOV intrinsics,float fovFactor) {
+		setPerspectiveProjectionByFactor(intrinsics.getProjFacX()*fovFactor,intrinsics.getProjFacY()*fovFactor, intrinsics.mNear,intrinsics.mFar, intrinsics.getFOVShiftX(),intrinsics.getFOVShiftY());
+	}
+	
+	public void setPerspectiveByIntrinsics(CameraIntrinsicsFOV intrinsics) {
+		setPerspectiveProjectionByFactor(intrinsics.getProjFacX(),intrinsics.getProjFacY(), intrinsics.mNear,intrinsics.mFar, intrinsics.getFOVShiftX(),intrinsics.getFOVShiftY());
 	}
 
 }

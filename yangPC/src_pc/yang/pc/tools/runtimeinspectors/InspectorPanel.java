@@ -216,12 +216,16 @@ public class InspectorPanel {
 	public PropertyInspectedObject registerObjectSubInspector(String name,Class<?> type) {
 		InspectorPanel inspector = mFrame.findInspector(type);
 		if(inspector!=null) {
-			PropertiesPanel props = inspector.mPropertiesPanel.clone(this);
-			PropertyInspectedObject inspProp = new PropertyInspectedObject(props);
-			registerPropertyReferenced(name,inspProp);
-			return inspProp;
+			return registerObjectSubInspector(name,inspector);
 		}else
 			return null;
+	}
+	
+	public PropertyInspectedObject registerObjectSubInspector(String name,InspectorPanel inspector) {
+		PropertiesPanel props = inspector.mPropertiesPanel.clone(this);
+		PropertyInspectedObject inspProp = new PropertyInspectedObject(props);
+		registerPropertyReferenced(name,inspProp);
+		return inspProp;
 	}
 
 	public InspectorComponent getProperty(String name) {

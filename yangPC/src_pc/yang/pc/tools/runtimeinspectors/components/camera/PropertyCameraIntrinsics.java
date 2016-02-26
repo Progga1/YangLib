@@ -1,6 +1,6 @@
 package yang.pc.tools.runtimeinspectors.components.camera;
 
-import yang.graphics.camera.CameraIntrinsics;
+import yang.graphics.camera.intrinsics.CameraIntrinsics;
 import yang.math.objects.YangMatrix;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.PropertyChain;
@@ -33,7 +33,7 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 		if(reference instanceof YangMatrix)
 			mIntrinsics = (YangMatrix)reference;
 		else if(reference instanceof CameraIntrinsics)
-			mIntrinsics = ((CameraIntrinsics)reference).mMatrix;
+			mIntrinsics = ((CameraIntrinsics)reference).mIntrinsicsMatrix;
 		else
 			super.setValueReference(reference);
 	}
