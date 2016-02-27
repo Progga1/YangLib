@@ -65,6 +65,7 @@ public class YangMesh {
 	protected int mSkinJointsPerVertex = 4;
 	public boolean mAutoSkinningUpdate = true;
 	public boolean mBlockTextures = false;
+	public boolean mAutoSetZBuffer = true;
 	public boolean mNormalizeNormals = true;
 	public YangArmaturePosture mCurArmature = null;
 	public boolean mWireFrames = false;
@@ -248,13 +249,15 @@ public class YangMesh {
 
 	private void drawBuffer(IndexedVertexBuffer vertexBuffer) {
 		mTranslator.setVertexBuffer(vertexBuffer);
-		if(mDrawBackToFront && !mWireFrames) {
-			mGraphics.sort();
-			mTranslator.switchZBuffer(true);
-			mTranslator.switchZWriting(false);
-		}else{
-			mTranslator.switchZBuffer(true);
-			mTranslator.switchZWriting(true);
+		if(mAutoSetZBuffer) {
+			if(mDrawBackToFront && !mWireFrames) {
+				mGraphics.sort();
+				mTranslator.switchZBuffer(true);
+				mTranslator.switchZWriting(false);
+			}else{
+				mTranslator.switchZBuffer(true);
+				mTranslator.switchZWriting(true);
+			}
 		}
 		mTranslator.prepareDraw();
 		mTranslator.mFlushDisabled = true;
