@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
+import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterfaceHolder;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectorFrameListener;
 import yang.pc.tools.runtimeinspectors.subcomponents.InspectorButton;
 import yang.pc.tools.runtimeinspectors.subcomponents.InspectorButtonListener;
@@ -182,10 +183,18 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 	}
 
 	public void addObjectToInspect(InspectionInterface object) {
-		InspectorPanel inspector = findInspector(object.getClass());
-		if(inspector==null)
-			throw new RuntimeException("No default inspector for type: "+object.getClass());
-		addObjectToInspect(object,inspector);
+		if(object instanceof InspectionInterfaceHolder) {
+			for(InspectionInterface obj:((InspectionInterfaceHolder)object).getInspectionInterfaces()) {
+				InspectorPanel inspector = findInspector(obj.getClass());
+				if(inspector!=null)
+					addObjectToInspect(obj,inspector);
+			}
+		}else{
+			InspectorPanel inspector = findInspector(object.getClass());
+			if(inspector==null)
+				throw new RuntimeException("No default inspector for type: "+object.getClass());
+			addObjectToInspect(object,inspector);
+		}
 	}
 
 	public boolean isVisible() {
@@ -299,10 +308,14 @@ public class InspectorFrame implements ActionListener,InspectorButtonListener {
 	}
 
 	public void saveObjectToFileByName(InspectionInterface object) throws IOException {
+		if(object==null)
+			return;
 		saveObjectToFile(object,createFilename(object));
 	}
 
 	public void loadObjectFromFileByName(InspectionInterface object) throws IOException {
+		if(object==null)
+			return;
 		loadObjectFromFile(object,createFilename(object));
 	}
 
