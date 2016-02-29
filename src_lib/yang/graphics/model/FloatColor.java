@@ -211,6 +211,12 @@ public class FloatColor extends Quadruple {
 		mValues[2] = (1-weight)*mValues[2] + weight*endColor.mValues[2];
 		mValues[3] = (1-weight)*mValues[3] + weight*endColor.mValues[3];
 	}
+	
+	public void setNegative(FloatColor color) {
+		mValues[0] = 1-color.mValues[0];
+		mValues[1] = 1-color.mValues[1];
+		mValues[2] = 1-color.mValues[2];
+	}
 
 	public void toArray(float[] target, int offset) {
 		target[offset] = mValues[0];
