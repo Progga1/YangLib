@@ -9,11 +9,22 @@ import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArray;
 
 public class PropertyCameraIntrinsics extends PropertyChain {
 
-	protected YangMatrix mIntrinsics;
+	private boolean mAdditionalFields;
+
+	protected YangMatrix mIntrinsicsMatrix;
+	protected CameraIntrinsics mIntrinsics;
 
 	protected PropertyFloatNum mSkewProp;
 	protected PropertyNumArray mPrincipalPointProp;
 	protected PropertyNumArray mFocalLengthsProp;
+
+	public PropertyCameraIntrinsics(boolean additionalFields) {
+		mAdditionalFields = additionalFields;
+	}
+
+	public PropertyCameraIntrinsics() {
+		this(true);
+	}
 
 	@Override
 	protected InspectorComponent[] createComponents() {
@@ -30,37 +41,46 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 
 	@Override
 	public void setValueReference(Object reference) {
-		if(reference instanceof YangMatrix)
-			mIntrinsics = (YangMatrix)reference;
-		else if(reference instanceof CameraIntrinsics)
-			mIntrinsics = ((CameraIntrinsics)reference).mIntrinsicsMatrix;
-		else
+		if(reference instanceof YangMatrix) {
+			mIntrinsics = null;
+			mIntrinsicsMatrix = (YangMatrix)reference;
+		}else if(reference instanceof CameraIntrinsics) {
+			mIntrinsics = (CameraIntrinsics)reference;
+			mIntrinsicsMatrix = mIntrinsics.mIntrinsicsMatrix;
+		}else
 			super.setValueReference(reference);
 	}
 
 	@Override
 	protected void refreshOutValue() {
 		super.refreshOutValue();
-		mIntrinsics.set(0,0,mFocalLengthsProp.getFloat(0));
-		mIntrinsics.set(1,1,mFocalLengthsProp.getFloat(1));
-		mIntrinsics.set(0,2,mPrincipalPointProp.getFloat(0));
-		mIntrinsics.set(1,2,mPrincipalPointProp.getFloat(1));
-		mIntrinsics.set(0,1,mSkewProp.getFloat());
+		if(mIntrinsics!=null) {
+			mIntrinsics.setFocalLength(mFocalLengthsProp.getFloat(0),mFocalLengthsProp.getFloat(1));
+			mIntrinsics.setPrincipalPoint(mPrincipalPointProp.getFloat(0),mPrincipalPointProp.getFloat(1));
+			mIntrinsics.setSkew(mSkewProp.getFloat());
+		}else{
+			mIntrinsicsMatrix.set(0,0,mFocalLengthsProp.getFloat(0));
+			mIntrinsicsMatrix.set(1,1,mFocalLengthsProp.getFloat(1));
+			mIntrinsicsMatrix.set(0,2,mPrincipalPointProp.getFloat(0));
+			mIntrinsicsMatrix.set(1,2,mPrincipalPointProp.getFloat(1));
+			mIntrinsicsMatrix.set(0,1,mSkewProp.getFloat());
+		}
+
 	}
 
 	@Override
 	protected void refreshInValue() {
-		mFocalLengthsProp.setFloat(0,mIntrinsics.get(0,0));
-		mFocalLengthsProp.setFloat(1,mIntrinsics.get(1,1));
-		mPrincipalPointProp.setFloat(0,mIntrinsics.get(0,2));
-		mPrincipalPointProp.setFloat(1,mIntrinsics.get(1,2));
-		mSkewProp.setFloat(mIntrinsics.get(0,1));
+		mFocalLengthsProp.setFloat(0,mIntrinsicsMatrix.get(0,0));
+		mFocalLengthsProp.setFloat(1,mIntrinsicsMatrix.get(1,1));
+		mPrincipalPointProp.setFloat(0,mIntrinsicsMatrix.get(0,2));
+		mPrincipalPointProp.setFloat(1,mIntrinsicsMatrix.get(1,2));
+		mSkewProp.setFloat(mIntrinsicsMatrix.get(0,1));
 		super.refreshInValue();
 	}
 
 	@Override
 	public PropertyCameraIntrinsics clone() {
-		return new PropertyCameraIntrinsics();
+		return new PropertyCameraIntrinsics(mAdditionalFields);
 	}
 
 }

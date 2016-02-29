@@ -12,6 +12,7 @@ public abstract class PropertyChain extends InspectorComponent {
 	private PropertiesPanel mMainPanel;
 	private InspectorSubHeading mTopLevelPanel;
 	protected InspectorComponent mComponents[];
+	public boolean mIndividualFocus = false;
 
 	protected abstract InspectorComponent[] createComponents();
 
@@ -68,7 +69,8 @@ public abstract class PropertyChain extends InspectorComponent {
 	@Override
 	protected void updateGUI() {
 		for(InspectorComponent component:mComponents) {
-			component.updateGUI();
+			if(!component.hasFocus())
+				component.updateGUI();
 		}
 	}
 
@@ -79,6 +81,8 @@ public abstract class PropertyChain extends InspectorComponent {
 
 	@Override
 	public boolean hasFocus() {
+		if(mIndividualFocus)
+			return false;
 		for(InspectorComponent component:mComponents) {
 			if(component.hasFocus())
 				return true;

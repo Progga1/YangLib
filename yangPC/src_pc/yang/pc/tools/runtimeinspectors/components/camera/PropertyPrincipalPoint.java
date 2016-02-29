@@ -20,4 +20,20 @@ public class PropertyPrincipalPoint extends PropertyNumArray {
 		setMinValue(1,1);
 	}
 
+	public float getImageWidth() {
+		return getFloat(0);
+	}
+
+	public float getImageHeight() {
+		return getFloat(1);
+	}
+
+	public float getPrincipalPointX() {
+		return getFloat(2);
+	}
+
+	public float getPrincipalPointY() {
+		return getFloat(3);
+	}
+
 }

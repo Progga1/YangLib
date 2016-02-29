@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 
 import yang.graphics.camera.intrinsics.CameraIntrinsics;
+import yang.graphics.camera.intrinsics.CameraIntrinsicsFOV;
 import yang.graphics.defaults.programs.helpers.ShadowHelper;
 import yang.graphics.font.DrawableString;
 import yang.graphics.model.FloatColor;
@@ -30,6 +31,7 @@ import yang.pc.tools.runtimeinspectors.components.PropertyTransform;
 import yang.pc.tools.runtimeinspectors.components.PropertyVector3;
 import yang.pc.tools.runtimeinspectors.components.camera.PropertyCameraControl;
 import yang.pc.tools.runtimeinspectors.components.camera.PropertyCameraIntrinsics;
+import yang.pc.tools.runtimeinspectors.components.camera.PropertyCameraIntrinsicsFOV;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyFloatNum;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyInteger;
 import yang.pc.tools.runtimeinspectors.components.rotation.PropertyEulerAngles;
@@ -68,6 +70,7 @@ public class InspectorManager {
 		registerType(CameraIntrinsics.class,PropertyCameraIntrinsics.class);
 		registerType(ShadowHelper.class,PropertyShadowHelper.class);
 		registerType(DrawableString.class,PropertyDrawableString.class);
+		registerType(CameraIntrinsicsFOV.class,PropertyCameraIntrinsicsFOV.class);
 	}
 
 	public void registerType(Class<?> type,Class<? extends InspectorComponent> component) {

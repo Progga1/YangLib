@@ -224,10 +224,17 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 
 	protected void notifyValueUserInput() {
 		mWasChanged = true;
-		if(mParent!=null)
+		if(mParent!=null) {
 			mParent.notifyValueUserInput();
-		else
+			mParent.childValueChanged(this);
+		}else
 			mInspectorPanel.notifyValueUserInput();
+	}
+
+	protected void childValueChanged(InspectorComponent sender) {
+		if(mParent!=null) {
+			mParent.childValueChanged(this);
+		}
 	}
 
 	public boolean hasFocus() {

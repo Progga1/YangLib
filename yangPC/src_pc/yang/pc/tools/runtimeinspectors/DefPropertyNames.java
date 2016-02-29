@@ -45,5 +45,6 @@ public class DefPropertyNames {
 	public static String ANCHOR = "Anchor";
 	public static String MATRIX = "Matrix";
 	public static String INTRINSICS = "Intrinsics";
-	
+	public static String INTRINSICS_MATRIX = "Intrinsics matrix";
+
 }

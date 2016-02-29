@@ -1,5 +1,6 @@
 package yang.graphics.camera.intrinsics;
 
+import augmentedreality.UtilAR;
 import yang.math.MathConst;
 import yang.pc.tools.runtimeinspectors.DefPropertyNames;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
@@ -24,53 +25,76 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 	public float mProjShiftX = 0;
 	public float mProjShiftY = 0;
 	public float mProjRatioX = 1;
-	public float mCurPrincipalImageWidth = 1;
-	public float mCurPrincipalImageHeight = 1;
+	public float mImageWidth = 1;
+	public float mImageHeight = 1;
 	protected YangList<IntrinsicsListener> mListeners = new YangList<IntrinsicsListener>();
-	
+
 	public CameraIntrinsicsFOV() {
 		mName = "Intrinsics";
 	}
-	
+
 	public void refreshProjection() {
 		for(IntrinsicsListener listener:mListeners) {
 			listener.onIntrinsicsChanged(this);
 		}
 	}
-	
+
 	public float getProjFacX() {
 		return mProjFacX;
 	}
-	
+
 	public float getProjFacY() {
 		return mProjFacY;
 	}
-	
+
 	public float getProjShiftX() {
 		return mProjShiftX;
 	}
-	
+
 	public float getProjShiftY() {
 		return mProjShiftY;
 	}
-	
+
+	public void updateIntrinsicsMatByFOV() {
+		mIntrinsicsMatrix.set(0,0, UtilAR.fovToFocalLength(getFOVX(),mImageWidth));
+		mIntrinsicsMatrix.set(1,1, UtilAR.fovToFocalLength(getFOVY(),mImageHeight));
+		mIntrinsicsMatrix.set(0,2, getPrincipalPointX());
+		mIntrinsicsMatrix.set(1,2, getPrincipalPointY());
+	}
+
+	public void updateFOVByIntrinsicsMat() {
+		mProjFacX = UtilAR.focalLengthToFactor(getFocalLengthX(),mImageWidth);
+		mProjFacY = UtilAR.focalLengthToFactor(getFocalLengthY(),mImageHeight);
+		mProjRatioX = mProjFacX/mProjFacY;
+		mProjShiftX = getProjShiftX(mImageWidth,mIntrinsicsMatrix.get(0,2));
+		mProjShiftY = getProjShiftY(mImageHeight,mIntrinsicsMatrix.get(1,2));
+	}
+
+	@Override
+	public void setFocalLength(float focalLengthX,float focalLengthY) {
+//		setFovByFac(UtilAR.focalLengthToFactor(focalLengthX,mImageWidth),UtilAR.focalLengthToFactor(focalLengthY,mImageHeight));
+		setFov(UtilAR.focalLengthToFOV(focalLengthX,mImageWidth),UtilAR.focalLengthToFOV(focalLengthY,mImageHeight));
+	}
+
 	public void setProjection(float near, float far, float fovy, float ratio) {
 		mNear = near;
 		mFar = far;
 		mProjRatioX = ratio;
 		setFovy(fovy);
 	}
-	
+
 	public void setFov(float fovx,float fovy) {
 		mProjFacX = (float)Math.tan(fovx);
 		mProjFacY = (float)Math.tan(fovy);
 		mProjRatioX = mProjFacX/mProjFacY;
+		updateIntrinsicsMatByFOV();
 		refreshProjection();
 	}
 
 	public void setFovy(float fovy) {
 		mProjFacY = (float)Math.tan(fovy);
 		mProjFacX = mProjFacY*mProjRatioX;
+		updateIntrinsicsMatByFOV();
 		refreshProjection();
 	}
 
@@ -82,6 +106,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 	public void setFovx(float fovx,float ratioX) {
 		mProjFacX = (float)Math.tan(fovx);
 		mProjFacY = mProjFacX/ratioX;
+		updateIntrinsicsMatByFOV();
 		refreshProjection();
 	}
 
@@ -89,6 +114,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 		mProjFacX = xFac;
 		mProjFacY = yFac;
 		mProjRatioX = mProjFacX/mProjFacY;
+		updateIntrinsicsMatByFOV();
 		refreshProjection();
 	}
 
@@ -101,35 +127,43 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 	}
 
 	public float getImageWidth() {
-		return mCurPrincipalImageWidth;
+		return mImageWidth;
 	}
 
 	public float getImageHeight() {
-		return mCurPrincipalImageHeight;
+		return mImageHeight;
+	}
+
+	public void setImageParameters(float imageWidth,float imageHeight) {
+		mImageWidth = imageWidth;
+		mImageHeight = imageHeight;
+		updateIntrinsicsMatByFOV();
+		refreshProjection();
 	}
 
 	public void setImageParameters(float imageWidth,float imageHeight,float principalPointX, float principalPointY) {
 		mProjShiftX = getProjShiftX(imageWidth,principalPointX);
 		mProjShiftY = getProjShiftY(imageHeight,principalPointY);
-		mCurPrincipalImageWidth = imageWidth;
-		mCurPrincipalImageHeight = imageHeight;
-		refreshProjection();
+		setImageParameters(imageWidth,imageHeight);
 	}
 
+	@Override
 	public void setPrincipalPoint(float x,float y) {
-		setImageParameters(mCurPrincipalImageWidth,mCurPrincipalImageHeight,x,y);
+		setImageParameters(mImageWidth,mImageHeight,x,y);
 	}
 
 	public void setPrincipalPointNorm(float x,float y) {
-		setPrincipalPoint(x*mCurPrincipalImageWidth,y*mCurPrincipalImageHeight);
+		setPrincipalPoint(x*mImageWidth,y*mImageHeight);
 	}
 
+	@Override
 	public float getPrincipalPointX() {
-		return (-mProjShiftX+0.5f)*mCurPrincipalImageWidth;
+		return (-mProjShiftX+0.5f)*mImageWidth;
 	}
 
+	@Override
 	public float getPrincipalPointY() {
-		return (mProjShiftY+0.5f)*mCurPrincipalImageHeight;
+		return (mProjShiftY+0.5f)*mImageHeight;
 	}
 
 	public void setProjRatioX(float ratio) {
@@ -167,25 +201,25 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 	public float getFOVY() {
 		return (float)(Math.atan(mProjFacY));
 	}
-	
+
 	public float getNear() {
 		return mNear;
 	}
-	
+
 	public float getFar() {
 		return mFar;
 	}
-	
+
 	public void set(CameraIntrinsicsFOV template) {
 		mProjFacX = template.mProjFacX;
 		mProjFacY = template.mProjFacY;
 		mProjRatioX = template.mProjRatioX;
 		mProjShiftX = template.mProjShiftX;
 		mProjShiftY = template.mProjShiftY;
-		mCurPrincipalImageWidth = template.mCurPrincipalImageWidth;
-		mCurPrincipalImageHeight = template.mCurPrincipalImageHeight;
+		mImageWidth = template.mImageWidth;
+		mImageHeight = template.mImageHeight;
 	}
-	
+
 	//---INSPECTOR---
 
 	@Override
@@ -197,7 +231,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 	public String getTypeName() {
 		return "CameraIntrinsics";
 	}
-	
+
 	@Override
 	public Object getReferencedProperty(String propertyName,InspectorComponent sender) {
 		if(propertyName==DefPropertyNames.MATRIX)
@@ -218,8 +252,8 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 			fovXY[1] = getFOVY()*MathConst.TO_DEG;
 		}else if(target.is(DefPropertyNames.IMAGE_PARAMETERS)) {
 			float[] fovShift = (float[])target.getValue();
-			fovShift[0] = mCurPrincipalImageWidth;
-			fovShift[1] = mCurPrincipalImageHeight;
+			fovShift[0] = mImageWidth;
+			fovShift[1] = mImageHeight;
 			fovShift[2] = getPrincipalPointX();
 			fovShift[3] = getPrincipalPointY();
 		}
@@ -252,7 +286,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 		inspector.registerProperty(DefPropertyNames.FAR, Float.class);
 		inspector.registerProperty(DefPropertyNames.IMAGE_PARAMETERS, new PropertyPrincipalPoint());
 		inspector.registerPropertyReferenced(DefPropertyNames.MATRIX, new PropertyMatrix(3,3));
-		
+
 		return inspector;
 	}
 
@@ -260,5 +294,5 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 		if(!mListeners.contains(listener))
 			mListeners.add(listener);
 	}
-	
+
 }
