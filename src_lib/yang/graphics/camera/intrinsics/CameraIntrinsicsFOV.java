@@ -1,11 +1,9 @@
 package yang.graphics.camera.intrinsics;
 
-import augmentedreality.UtilAR;
 import yang.math.MathConst;
 import yang.pc.tools.runtimeinspectors.DefPropertyNames;
 import yang.pc.tools.runtimeinspectors.InspectorComponent;
 import yang.pc.tools.runtimeinspectors.InspectorFrame;
-import yang.pc.tools.runtimeinspectors.InspectorManager;
 import yang.pc.tools.runtimeinspectors.InspectorPanel;
 import yang.pc.tools.runtimeinspectors.components.PropertyMatrix;
 import yang.pc.tools.runtimeinspectors.components.camera.PropertyFieldOfView;
@@ -14,6 +12,18 @@ import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.util.YangList;
 
 public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionInterface {
+
+	public static float fovToFocalLength(float fov,float pixels) {
+		return pixels*0.5f/(float)Math.tan(fov/2f);
+	}
+
+	public static float focalLengthToFOV(float focalLen,float pixels) {
+		return (float)(2*Math.atan(pixels*0.5f/focalLen));
+	}
+
+	public static float focalLengthToFactor(float focalLen,float pixels) {
+		return (pixels*0.5f)/focalLen;
+	}
 
 	//TODO more "privacy"
 	//Properties
@@ -56,15 +66,15 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 	}
 
 	public void updateIntrinsicsMatByFOV() {
-		mIntrinsicsMatrix.set(0,0, UtilAR.fovToFocalLength(getFOVX(),mImageWidth));
-		mIntrinsicsMatrix.set(1,1, UtilAR.fovToFocalLength(getFOVY(),mImageHeight));
+		mIntrinsicsMatrix.set(0,0, fovToFocalLength(getFOVX(),mImageWidth));
+		mIntrinsicsMatrix.set(1,1, fovToFocalLength(getFOVY(),mImageHeight));
 		mIntrinsicsMatrix.set(0,2, getPrincipalPointX());
 		mIntrinsicsMatrix.set(1,2, getPrincipalPointY());
 	}
 
 	public void updateFOVByIntrinsicsMat() {
-		mProjFacX = UtilAR.focalLengthToFactor(getFocalLengthX(),mImageWidth);
-		mProjFacY = UtilAR.focalLengthToFactor(getFocalLengthY(),mImageHeight);
+		mProjFacX = focalLengthToFactor(getFocalLengthX(),mImageWidth);
+		mProjFacY = focalLengthToFactor(getFocalLengthY(),mImageHeight);
 		mProjRatioX = mProjFacX/mProjFacY;
 		mProjShiftX = getProjShiftX(mImageWidth,mIntrinsicsMatrix.get(0,2));
 		mProjShiftY = getProjShiftY(mImageHeight,mIntrinsicsMatrix.get(1,2));
@@ -73,7 +83,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 	@Override
 	public void setFocalLength(float focalLengthX,float focalLengthY) {
 //		setFovByFac(UtilAR.focalLengthToFactor(focalLengthX,mImageWidth),UtilAR.focalLengthToFactor(focalLengthY,mImageHeight));
-		setFov(UtilAR.focalLengthToFOV(focalLengthX,mImageWidth),UtilAR.focalLengthToFOV(focalLengthY,mImageHeight));
+		setFov(focalLengthToFOV(focalLengthX,mImageWidth),focalLengthToFOV(focalLengthY,mImageHeight));
 	}
 
 	public void setProjection(float near, float far, float fovy, float ratio) {
