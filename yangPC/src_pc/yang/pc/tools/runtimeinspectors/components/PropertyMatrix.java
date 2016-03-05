@@ -5,15 +5,20 @@ import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArray;
 
 public class PropertyMatrix extends PropertyNumArray {
 
-	private int mRows,mCols;
+	private int mRows,mCols,mOrigCols;
 
-	public PropertyMatrix(int rows,int columns) {
+	public PropertyMatrix(int rows,int columns,int originalColumns) {
 		super(rows*columns);
 		mRows = rows;
 		mCols = columns;
-		mStride = 4-mCols;
+		mOrigCols = originalColumns;
+		mStride = originalColumns-mCols;
 		mColumnMajor = true;
 		super.mMaxColumns = columns;
+	}
+	
+	public PropertyMatrix(int rows,int columns) {
+		this(rows,columns,columns);
 	}
 
 	public PropertyMatrix() {
@@ -27,10 +32,30 @@ public class PropertyMatrix extends PropertyNumArray {
 		else
 			super.setValueReference(reference);
 	}
+	
+	public int getIndex(int row,int column) {
+		return row*mCols + column;
+	}
 
+	public float getFloat(int row,int column) {
+		return super.getFloat(getIndex(row,column));
+	}
+
+	public void setFloat(int row,int column,float value) {
+		super.setFloat(getIndex(row,column),value);
+	}
+
+	public double getDouble(int row,int column) {
+		return super.getDouble(getIndex(row,column));
+	}
+
+	public void setDouble(int row,int column,double value) {
+		super.setDouble(getIndex(row,column),value);
+	}
+	
 	@Override
 	public PropertyMatrix clone() {
-		return new PropertyMatrix(mRows,mCols);
+		return new PropertyMatrix(mRows,mCols,mOrigCols);
 	}
 
 }

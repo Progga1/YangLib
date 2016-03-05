@@ -24,7 +24,7 @@ public class PropertyCameraIntrinsicsFOVComb extends PropertyChain {
 		mSkewProp = new PropertyFloatNum();
 		mSkewProp.init(this,"Skew",false);
 		mSkewProp.setScrollFactor(0.1f);
-		mIntrinsicsMatrixProp = new PropertyMatrix(3,3);
+		mIntrinsicsMatrixProp = new PropertyMatrix(3,3,4);
 		mIntrinsicsMatrixProp.init(this,"Matrix",true);
 		mIndividualFocus = true;
 		return new InspectorComponent[]{mFOVProp,mPrincipalPointProp,mSkewProp,mIntrinsicsMatrixProp};

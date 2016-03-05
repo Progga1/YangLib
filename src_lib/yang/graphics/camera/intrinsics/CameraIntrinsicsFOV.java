@@ -11,7 +11,7 @@ import yang.pc.tools.runtimeinspectors.components.camera.PropertyPrincipalPoint;
 import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.util.YangList;
 
-public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionInterface {
+public class CameraIntrinsicsFOV extends CameraIntrinsics {
 
 	public static float fovToFocalLength(float fov,float pixels) {
 		return pixels*0.5f/(float)Math.tan(fov/2f);
@@ -228,76 +228,6 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics implements InspectionI
 		mProjShiftY = template.mProjShiftY;
 		mImageWidth = template.mImageWidth;
 		mImageHeight = template.mImageHeight;
-	}
-
-	//---INSPECTOR---
-
-	@Override
-	public String getName() {
-		return mName;
-	}
-
-	@Override
-	public String getTypeName() {
-		return "CameraIntrinsics";
-	}
-
-	@Override
-	public Object getReferencedProperty(String propertyName,InspectorComponent sender) {
-		if(propertyName==DefPropertyNames.MATRIX)
-			return mIntrinsicsMatrix;
-		else
-			return null;
-	}
-
-	@Override
-	public void readProperty(String propertyName,InspectorComponent target) {
-		if(target.is(DefPropertyNames.NEAR))
-			target.setFloat(mNear);
-		else if(target.is(DefPropertyNames.FAR))
-			target.setFloat(mFar);
-		else if(target.is(DefPropertyNames.FOV_XY)) {
-			float[] fovXY = (float[])target.getValue();
-			fovXY[0] = getFOVX()*MathConst.TO_DEG;
-			fovXY[1] = getFOVY()*MathConst.TO_DEG;
-		}else if(target.is(DefPropertyNames.IMAGE_PARAMETERS)) {
-			float[] fovShift = (float[])target.getValue();
-			fovShift[0] = mImageWidth;
-			fovShift[1] = mImageHeight;
-			fovShift[2] = getPrincipalPointX();
-			fovShift[3] = getPrincipalPointY();
-		}
-	}
-
-	@Override
-	public void setProperty(String propertyName,InspectorComponent value) {
-		if(value.is(DefPropertyNames.FOV)) {
-			setFovy(value.getFloat()/180*MathConst.PI);
-		}else if(value.is(DefPropertyNames.NEAR)) {
-			mNear = value.getFloat();
-			refreshProjection();
-		}else if(value.is(DefPropertyNames.FAR)) {
-			mFar = value.getFloat();
-			refreshProjection();
-		}
-		else if(value.is(DefPropertyNames.FOV_XY)) {
-			float[] vals = (float[])value.getValue();
-			setFov(vals[0]/180*MathConst.PI,vals[1]/180*MathConst.PI);
-		}else if(value.is(DefPropertyNames.IMAGE_PARAMETERS)) {
-			float[] vals = (float[])value.getValue();
-			setImageParameters((int)vals[0],(int)vals[1],vals[2],vals[3]);
-		}
-	}
-
-	public static InspectorPanel createInspector(InspectorFrame frame) {
-		InspectorPanel inspector = frame.createInspector();
-		inspector.registerProperty(DefPropertyNames.FOV_XY, new PropertyFieldOfView());
-		inspector.registerProperty(DefPropertyNames.NEAR, Float.class);
-		inspector.registerProperty(DefPropertyNames.FAR, Float.class);
-		inspector.registerProperty(DefPropertyNames.IMAGE_PARAMETERS, new PropertyPrincipalPoint());
-		inspector.registerPropertyReferenced(DefPropertyNames.MATRIX, new PropertyMatrix(3,3));
-
-		return inspector;
 	}
 
 	public void addListener(IntrinsicsListener listener) {
