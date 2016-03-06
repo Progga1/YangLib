@@ -63,8 +63,8 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics {
 	}
 
 	public void updateFOVByIntrinsicsMat() {
-		mProjFacX = focalLengthToFactor(getFocalLengthX(),mImageWidth);
-		mProjFacY = focalLengthToFactor(getFocalLengthY(),mImageHeight);
+		mProjFacX = focalLengthToFactor(getFocalLengthX(),mImageWidth)/2;
+		mProjFacY = focalLengthToFactor(getFocalLengthY(),mImageHeight)/2;
 		mProjRatioX = mProjFacX/mProjFacY;
 		mProjShiftX = getProjShiftX(mImageWidth,mIntrinsicsMatrix.get(0,2));
 		mProjShiftY = getProjShiftY(mImageHeight,mIntrinsicsMatrix.get(1,2));
@@ -73,7 +73,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics {
 	@Override
 	public void setFocalLength(float focalLengthX,float focalLengthY) {
 //		setFovByFac(UtilAR.focalLengthToFactor(focalLengthX,mImageWidth),UtilAR.focalLengthToFactor(focalLengthY,mImageHeight));
-		setFov(focalLengthToFOV(focalLengthX,mImageWidth),focalLengthToFOV(focalLengthY,mImageHeight));
+		setHalfFov(focalLengthToFOV(focalLengthX,mImageWidth)/2,focalLengthToFOV(focalLengthY,mImageHeight)/2);
 	}
 
 	public void setProjection(float near, float far, float fovy, float ratio) {
@@ -83,7 +83,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics {
 		setFovy(fovy);
 	}
 
-	public void setFov(float fovx,float fovy) {
+	public void setHalfFov(float fovx,float fovy) {
 		mProjFacX = (float)Math.tan(fovx);
 		mProjFacY = (float)Math.tan(fovy);
 		mProjRatioX = mProjFacX/mProjFacY;

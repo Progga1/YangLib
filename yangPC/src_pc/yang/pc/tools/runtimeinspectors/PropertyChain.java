@@ -25,10 +25,14 @@ public abstract class PropertyChain extends InspectorComponent {
 		}
 		mTopLevelPanel = new InspectorSubHeading(mMainPanel,mName,true);
 	}
+	
+	protected boolean isFileIO() {
+		return !hasObject() || mExcludeFromFileIO || isReadOnly();
+	}
 
 	@Override
 	protected String getFileOutputString() {
-		if(mCurObject==null || mExcludeFromFileIO || isReadOnly())
+		if(isFileIO())
 			return null;
 		String result = "{\r\n";
 		for(InspectorComponent component:mComponents) {

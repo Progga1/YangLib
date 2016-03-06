@@ -37,7 +37,7 @@ public class PropertyCameraIntrinsicsFOV extends PropertyChain {
 	@Override
 	protected void refreshOutValue() {
 		super.refreshOutValue();
-		mIntrinsics.setFov(mFOVProp.getFOVXRad(),mFOVProp.getFOVYRad());
+		mIntrinsics.setHalfFov(mFOVProp.getFOVXRad(),mFOVProp.getFOVYRad());
 		mIntrinsics.setImageParameters(mPrincipalPointProp.getImageWidth(),mPrincipalPointProp.getImageHeight(),mPrincipalPointProp.getPrincipalPointX(),mPrincipalPointProp.getPrincipalPointY());
 		mIntrinsics.setSkew(mSkewProp.getFloat());
 		mIntrinsics.updateIntrinsicsMatByFOV();

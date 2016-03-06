@@ -42,7 +42,7 @@ public class PropertyCameraIntrinsicsFOVComb extends PropertyChain {
 	@Override
 	protected void refreshOutValue() {
 		mIntrinsicsMatrixProp.refreshOutValue();
-		mIntrinsics.setFov(mFOVProp.getFOVXRad(),mFOVProp.getFOVYRad());
+		mIntrinsics.setHalfFov(mFOVProp.getFOVXRad(),mFOVProp.getFOVYRad());
 		mIntrinsics.setImageParameters(mPrincipalPointProp.getImageWidth(),mPrincipalPointProp.getImageHeight(),mPrincipalPointProp.getPrincipalPointX(),mPrincipalPointProp.getPrincipalPointY());
 		mIntrinsics.setSkew(mSkewProp.getFloat());
 	}
@@ -71,7 +71,7 @@ public class PropertyCameraIntrinsicsFOVComb extends PropertyChain {
 			updateFOV();
 			updatePrincipalPoint();
 		}else if(sender==mFOVProp) {
-			mIntrinsics.setFov(mFOVProp.getFOVXRad(),mFOVProp.getFOVYRad());
+			mIntrinsics.setHalfFov(mFOVProp.getFOVXRad(),mFOVProp.getFOVYRad());
 			updateIntrinsicsMat();
 		}else if(sender==mPrincipalPointProp) {
 			mIntrinsics.setImageParameters(mPrincipalPointProp.getImageWidth(),mPrincipalPointProp.getImageHeight(),mPrincipalPointProp.getPrincipalPointX(),mPrincipalPointProp.getPrincipalPointY());
