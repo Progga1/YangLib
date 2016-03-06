@@ -45,7 +45,7 @@ public class PropertyCameraIntrinsicsFOV extends PropertyChain {
 
 	@Override
 	protected void refreshInValue() {
-		mFOVProp.setFOVRad(mIntrinsics.getFOVX(),mIntrinsics.getFOVY());
+		mFOVProp.setFOVRad(mIntrinsics.getHalfFOVX(),mIntrinsics.getHalfFOVY());
 		mPrincipalPointProp.setFloat(0,mIntrinsics.getImageWidth());
 		mPrincipalPointProp.setFloat(1,mIntrinsics.getImageHeight());
 		mPrincipalPointProp.setFloat(2,mIntrinsics.getPrincipalPointX());

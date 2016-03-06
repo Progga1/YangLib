@@ -1,5 +1,6 @@
 package yang.pc.tools.runtimeinspectors.components.camera;
 
+import yang.graphics.camera.intrinsics.CameraIntrinsics;
 import yang.pc.tools.runtimeinspectors.components.numbers.PropertyNumArray;
 
 public class PropertyPrincipalPoint extends PropertyNumArray {
@@ -34,6 +35,17 @@ public class PropertyPrincipalPoint extends PropertyNumArray {
 
 	public float getPrincipalPointY() {
 		return getFloat(3);
+	}
+
+	public void set(float imageWidth,float imageHeight,float principalX,float principalY) {
+		setFloat(0,imageWidth);
+		setFloat(1,imageHeight);
+		setFloat(2,principalX);
+		setFloat(3,principalY);
+	}
+
+	public void set(CameraIntrinsics intrinsics) {
+		set(intrinsics.getImageWidth(),intrinsics.getImageHeight(),intrinsics.getPrincipalPointX(),intrinsics.getPrincipalPointY());
 	}
 
 }

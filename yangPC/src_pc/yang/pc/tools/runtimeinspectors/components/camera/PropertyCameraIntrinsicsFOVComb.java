@@ -52,7 +52,7 @@ public class PropertyCameraIntrinsicsFOVComb extends PropertyChain {
 	}
 
 	protected void updateFOV() {
-		mFOVProp.setFOVRad(mIntrinsics.getFOVX(),mIntrinsics.getFOVY());
+		mFOVProp.setFOVRad(mIntrinsics.getHalfFOVX(),mIntrinsics.getHalfFOVY());
 	}
 
 	protected void updatePrincipalPoint() {

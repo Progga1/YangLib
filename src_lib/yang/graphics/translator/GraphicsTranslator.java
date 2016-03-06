@@ -162,7 +162,12 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 	public int getNumberOfScreens() { return 1; }
 	public int getMainScreenId() { return 0; }
 
-	//TODO: glColorMask
+	//TODO reset program and texture
+	public void setTempContext(GLHolder holder) { }
+
+	public void resetContext() { }
+
+	//TODO glColorMask
 
 	public static String errorCodeToString(int code) {
 		switch(code) {

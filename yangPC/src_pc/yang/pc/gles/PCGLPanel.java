@@ -49,7 +49,7 @@ public class PCGLPanel extends GLHolder implements GLEventListener,MouseMotionLi
 			mComponent = new GLJPanel(glCapabilities);
 			((GLJPanel)mComponent).addGLEventListener(this);
 		}
-		
+
 		setCursorVisible(false);
 	}
 
@@ -68,6 +68,7 @@ public class PCGLPanel extends GLHolder implements GLEventListener,MouseMotionLi
 					break;
 				}
 			mGraphics.mGles2 = mGles2;
+			mGraphics.mOriginalContext = mGles2;
 			mGles2.glEnable(GL2.GL_TEXTURE_2D);
 			mGraphics.mSurface.onSurfaceCreated(true);
 

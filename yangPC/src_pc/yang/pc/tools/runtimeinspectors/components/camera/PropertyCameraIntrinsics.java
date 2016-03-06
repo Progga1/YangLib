@@ -15,7 +15,7 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 	protected CameraIntrinsics mIntrinsics;
 
 	protected PropertyFloatNum mSkewProp;
-	protected PropertyNumArray mPrincipalPointProp;
+	protected PropertyPrincipalPoint mPrincipalPointProp;
 	protected PropertyNumArray mFocalLengthsProp;
 
 	public PropertyCameraIntrinsics(boolean additionalFields) {
@@ -31,7 +31,7 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 		mFocalLengthsProp = new PropertyNumArray(2);
 		mFocalLengthsProp.init(this,"Focal lengths",false);
 		mFocalLengthsProp.setLinkable();
-		mPrincipalPointProp = new PropertyNumArray(2);
+		mPrincipalPointProp = new PropertyPrincipalPoint();
 		mPrincipalPointProp.init(this,"Principal point", false);
 		mSkewProp = new PropertyFloatNum();
 		mSkewProp.init(this,"Skew",false);
@@ -56,7 +56,7 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 		super.refreshOutValue();
 		if(mIntrinsics!=null) {
 			mIntrinsics.setFocalLength(mFocalLengthsProp.getFloat(0),mFocalLengthsProp.getFloat(1));
-			mIntrinsics.setPrincipalPoint(mPrincipalPointProp.getFloat(0),mPrincipalPointProp.getFloat(1));
+			mIntrinsics.setImageParameters(mPrincipalPointProp.getImageWidth(),mPrincipalPointProp.getImageHeight(),mPrincipalPointProp.getPrincipalPointX(),mPrincipalPointProp.getPrincipalPointY());
 			mIntrinsics.setSkew(mSkewProp.getFloat());
 		}else{
 			mIntrinsicsMatrix.set(0,0,mFocalLengthsProp.getFloat(0));
@@ -72,8 +72,14 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 	protected void refreshInValue() {
 		mFocalLengthsProp.setFloat(0,mIntrinsicsMatrix.get(0,0));
 		mFocalLengthsProp.setFloat(1,mIntrinsicsMatrix.get(1,1));
-		mPrincipalPointProp.setFloat(0,mIntrinsicsMatrix.get(0,2));
-		mPrincipalPointProp.setFloat(1,mIntrinsicsMatrix.get(1,2));
+		if(mIntrinsics!=null) {
+			mPrincipalPointProp.set(mIntrinsics);
+		}else{
+			mPrincipalPointProp.setFloat(0,1);
+			mPrincipalPointProp.setFloat(1,1);
+			mPrincipalPointProp.setFloat(2,mIntrinsicsMatrix.get(0,2));
+			mPrincipalPointProp.setFloat(3,mIntrinsicsMatrix.get(1,2));
+		}
 		mSkewProp.setFloat(mIntrinsicsMatrix.get(0,1));
 		super.refreshInValue();
 	}

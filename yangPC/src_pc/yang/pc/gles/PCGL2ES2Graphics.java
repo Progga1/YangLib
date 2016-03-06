@@ -19,6 +19,7 @@ import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.programs.GLProgram;
 import yang.graphics.textures.TextureProperties;
 import yang.graphics.textures.TextureRenderTarget;
+import yang.graphics.translator.GLHolder;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.graphics.translator.Texture;
 import yang.graphics.translator.TextureDisplay;
@@ -30,6 +31,7 @@ import yang.surface.YangSurface;
 
 public class PCGL2ES2Graphics extends GraphicsTranslator {
 
+	protected GL2ES2 mOriginalContext;
 	protected GL2ES2 mGles2;
 	YangSurface mSurface;
 	private PCGLPanel mPanel;
@@ -356,6 +358,7 @@ public class PCGL2ES2Graphics extends GraphicsTranslator {
 		mGles2.glPolygonOffset(factor, units);
 	}
 
+	@Override
 	public void lineWidth(float width) {
 		mGles2.glLineWidth(width);
 	}
@@ -408,5 +411,14 @@ public class PCGL2ES2Graphics extends GraphicsTranslator {
 		return GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length;
 	}
 
+	@Override
+	public void setTempContext(GLHolder holder) {
+		mGles2 = ((PCGLPanel)holder).mGles2;
+	}
+
+	@Override
+	public void resetContext() {
+		mGles2 = mOriginalContext;
+	}
 
 }

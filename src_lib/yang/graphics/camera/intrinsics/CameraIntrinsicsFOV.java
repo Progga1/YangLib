@@ -1,14 +1,5 @@
 package yang.graphics.camera.intrinsics;
 
-import yang.math.MathConst;
-import yang.pc.tools.runtimeinspectors.DefPropertyNames;
-import yang.pc.tools.runtimeinspectors.InspectorComponent;
-import yang.pc.tools.runtimeinspectors.InspectorFrame;
-import yang.pc.tools.runtimeinspectors.InspectorPanel;
-import yang.pc.tools.runtimeinspectors.components.PropertyMatrix;
-import yang.pc.tools.runtimeinspectors.components.camera.PropertyFieldOfView;
-import yang.pc.tools.runtimeinspectors.components.camera.PropertyPrincipalPoint;
-import yang.pc.tools.runtimeinspectors.interfaces.InspectionInterface;
 import yang.util.YangList;
 
 public class CameraIntrinsicsFOV extends CameraIntrinsics {
@@ -35,8 +26,7 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics {
 	public float mProjShiftX = 0;
 	public float mProjShiftY = 0;
 	public float mProjRatioX = 1;
-	public float mImageWidth = 1;
-	public float mImageHeight = 1;
+
 	protected YangList<IntrinsicsListener> mListeners = new YangList<IntrinsicsListener>();
 
 	public CameraIntrinsicsFOV() {
@@ -66,8 +56,8 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics {
 	}
 
 	public void updateIntrinsicsMatByFOV() {
-		mIntrinsicsMatrix.set(0,0, fovToFocalLength(getFOVX(),mImageWidth));
-		mIntrinsicsMatrix.set(1,1, fovToFocalLength(getFOVY(),mImageHeight));
+		mIntrinsicsMatrix.set(0,0, fovToFocalLength(getHalfFOVX()*2,mImageWidth));
+		mIntrinsicsMatrix.set(1,1, fovToFocalLength(getHalfFOVY()*2,mImageHeight));
 		mIntrinsicsMatrix.set(0,2, getPrincipalPointX());
 		mIntrinsicsMatrix.set(1,2, getPrincipalPointY());
 	}
@@ -136,34 +126,18 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics {
 		return -(0.5f-principalPointY/imgHeight);
 	}
 
-	public float getImageWidth() {
-		return mImageWidth;
-	}
-
-	public float getImageHeight() {
-		return mImageHeight;
-	}
-
-	public void setImageParameters(float imageWidth,float imageHeight) {
-		mImageWidth = imageWidth;
-		mImageHeight = imageHeight;
+	@Override
+	public void setPrincipalPoint(float principalPointX,float principalPointY) {
+		mProjShiftX = -principalPointX/mImageWidth+0.5f;
+		mProjShiftY = principalPointY/mImageHeight-0.5f;
 		updateIntrinsicsMatByFOV();
-		refreshProjection();
-	}
-
-	public void setImageParameters(float imageWidth,float imageHeight,float principalPointX, float principalPointY) {
-		mProjShiftX = getProjShiftX(imageWidth,principalPointX);
-		mProjShiftY = getProjShiftY(imageHeight,principalPointY);
-		setImageParameters(imageWidth,imageHeight);
 	}
 
 	@Override
-	public void setPrincipalPoint(float x,float y) {
-		setImageParameters(mImageWidth,mImageHeight,x,y);
-	}
-
-	public void setPrincipalPointNorm(float x,float y) {
-		setPrincipalPoint(x*mImageWidth,y*mImageHeight);
+	public void setImageDimensions(float imageWidth,float imageHeight) {
+		super.setImageDimensions(imageWidth,imageHeight);
+		updateIntrinsicsMatByFOV();
+		refreshProjection();
 	}
 
 	@Override
@@ -204,11 +178,11 @@ public class CameraIntrinsicsFOV extends CameraIntrinsics {
 		return mProjShiftY;
 	}
 
-	public float getFOVX() {
+	public float getHalfFOVX() {
 		return (float)(Math.atan(mProjFacX));
 	}
 
-	public float getFOVY() {
+	public float getHalfFOVY() {
 		return (float)(Math.atan(mProjFacY));
 	}
 
