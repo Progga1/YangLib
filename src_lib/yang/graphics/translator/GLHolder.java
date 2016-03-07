@@ -31,6 +31,10 @@ public abstract class GLHolder {
 		if(!mMouseListeners.contains(listener))
 			mMouseListeners.add(listener);
 	}
+	
+	public void removeMouseListener(DisplayMouseListener listener) {
+		mMouseListeners.remove(listener);
+	}
 
 	public void setBounds(int x,int y,int width,int height) {
 		setLocation(x,y);
