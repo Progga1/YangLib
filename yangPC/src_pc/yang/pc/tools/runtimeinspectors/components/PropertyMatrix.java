@@ -7,18 +7,22 @@ public class PropertyMatrix extends PropertyNumArray {
 
 	private int mRows,mCols,mOrigCols;
 
-	public PropertyMatrix(int rows,int columns,int originalColumns) {
+	public PropertyMatrix(int rows,int columns,int originalColumns,boolean rowMajor) {
 		super(rows*columns);
 		mRows = rows;
 		mCols = columns;
 		mOrigCols = originalColumns;
 		mStride = originalColumns-mCols;
-		mColumnMajor = true;
+		mColumnMajor = !rowMajor;
 		super.mMaxColumns = columns;
 	}
 	
+	public PropertyMatrix(int rows,int columns,boolean rowMajor) {
+		this(rows,columns,columns,rowMajor);
+	}
+	
 	public PropertyMatrix(int rows,int columns) {
-		this(rows,columns,columns);
+		this(rows,columns,false);
 	}
 
 	public PropertyMatrix() {
@@ -55,7 +59,7 @@ public class PropertyMatrix extends PropertyNumArray {
 	
 	@Override
 	public PropertyMatrix clone() {
-		return new PropertyMatrix(mRows,mCols,mOrigCols);
+		return new PropertyMatrix(mRows,mCols,mOrigCols,mColumnMajor);
 	}
 
 }

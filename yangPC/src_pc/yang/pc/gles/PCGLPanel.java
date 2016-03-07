@@ -208,18 +208,12 @@ public class PCGLPanel extends GLHolder implements GLEventListener,MouseMotionLi
 
 	@Override
 	public void setMouseListener(DisplayMouseListener listener) {
-		boolean first = mMouseListener==null;
-		super.setMouseListener(listener);
-		if(first && listener!=null) {
+		if(mMouseListeners==null) {
 			mComponent.addMouseListener(this);
 			mComponent.addMouseMotionListener(this);
 			mComponent.addMouseWheelListener(this);
-		}else if(listener==null) {
-			mComponent.removeMouseListener(this);
-			mComponent.removeMouseMotionListener(this);
-			mComponent.removeMouseWheelListener(this);
 		}
-
+		super.setMouseListener(listener);
 	}
 
 	protected float projMouseX(int mouseX) {
@@ -246,37 +240,44 @@ public class PCGLPanel extends GLHolder implements GLEventListener,MouseMotionLi
 
 	@Override
 	public void mouseEntered(MouseEvent ev) {
-		mMouseListener.displayMouseEnter(this);
+		for(DisplayMouseListener listener:mMouseListeners)
+			listener.displayMouseEnter(this);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent ev) {
-		mMouseListener.displayMouseExit(this);
+		for(DisplayMouseListener listener:mMouseListeners)
+			listener.displayMouseExit(this);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent ev) {
-		mMouseListener.displayMouseDown(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
+		for(DisplayMouseListener listener:mMouseListeners)
+			listener.displayMouseDown(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent ev) {
-		mMouseListener.displayMouseUp(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
+		for(DisplayMouseListener listener:mMouseListeners)
+			listener.displayMouseUp(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent ev) {
-		mMouseListener.displayMouseDrag(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
+		for(DisplayMouseListener listener:mMouseListeners)
+			listener.displayMouseDrag(this, projMouseX(ev.getX()), projMouseY(ev.getY()), toYangMouseButton(ev.getButton()));
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent ev) {
-		mMouseListener.displayMouseMove(this, projMouseX(ev.getX()), projMouseY(ev.getY()));
+		for(DisplayMouseListener listener:mMouseListeners)
+			listener.displayMouseMove(this, projMouseX(ev.getX()), projMouseY(ev.getY()));
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent ev) {
-		mMouseListener.displayMouseWheel(this, ev.getScrollAmount());
+		for(DisplayMouseListener listener:mMouseListeners)
+			listener.displayMouseWheel(this, ev.getScrollAmount());
 	}
 
 }

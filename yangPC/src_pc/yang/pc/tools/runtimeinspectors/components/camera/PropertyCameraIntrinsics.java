@@ -35,7 +35,8 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 		mPrincipalPointProp.init(this,"Principal point", false);
 		mSkewProp = new PropertyFloatNum();
 		mSkewProp.init(this,"Skew",false);
-		mSkewProp.setScrollFactor(0.1f);
+		mSkewProp.setScrollFactor(0.2f);
+		setScrollFactor(0.1f);
 		return new InspectorComponent[]{mFocalLengthsProp,mPrincipalPointProp,mSkewProp};
 	}
 
@@ -82,6 +83,11 @@ public class PropertyCameraIntrinsics extends PropertyChain {
 		}
 		mSkewProp.setFloat(mIntrinsicsMatrix.get(0,1));
 		super.refreshInValue();
+	}
+	
+	public void setScrollFactor(float factor) {
+		mPrincipalPointProp.setScrollFactor(factor);
+		mFocalLengthsProp.setScrollFactor(factor);
 	}
 
 	@Override

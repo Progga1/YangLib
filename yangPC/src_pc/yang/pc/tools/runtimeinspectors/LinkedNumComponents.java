@@ -12,6 +12,7 @@ public class LinkedNumComponents {
 	protected double[] mStartValues;
 	protected int mCurSenderIndex = -1;
 	protected NumberIO mCurSender = null;
+	public boolean mAutoStartLinking = true;
 
 	public LinkedNumComponents() {
 
@@ -63,6 +64,8 @@ public class LinkedNumComponents {
 	}
 
 	public void startUserInput(NumberIO sender) {
+		if(mAutoStartLinking)
+			refreshStartValues();
 		mCurSenderIndex = mLinkedComponents.indexOf(sender);
 		mCurSender = sender;
 	}
