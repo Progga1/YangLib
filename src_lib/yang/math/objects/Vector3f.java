@@ -18,6 +18,10 @@ public class Vector3f extends Point3f{
 	public Vector3f() {
 		set(0,0,0);
 	}
+	
+	public Vector3f(float xyz) {
+		set(xyz,xyz,xyz);
+	}
 
 	public Vector3f(float x,float y,float z) {
 		set(x,y,z);

@@ -93,9 +93,9 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 	}
 
 	@Override
-	public void setLinkable() {
+	public PropertyNumArrayBase setLinkable() {
 		if(mLinks!=null)
-			return;
+			return this;
 		mLinks = new LinkedNumComponents();
 		for(NumTextField textField:mTextFields) {
 			mLinks.addComponent(textField);
@@ -103,6 +103,7 @@ public abstract class PropertyNumArrayBase extends InspectorComponent implements
 		}
 		if(mHolder!=null)
 			mHolder.setLinkable();
+		return this;
 	}
 
 	public PropertyNumArrayBase setDefaultValue(double defaultValue) {

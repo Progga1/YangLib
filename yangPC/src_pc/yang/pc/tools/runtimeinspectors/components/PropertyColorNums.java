@@ -27,9 +27,10 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 	}
 
 	@Override
-	public void setLinkable() {
+	public PropertyColorNums setLinkable() {
 		super.setLinkable();
 		mTextFields[3].unlink();
+		return this;
 	}
 
 

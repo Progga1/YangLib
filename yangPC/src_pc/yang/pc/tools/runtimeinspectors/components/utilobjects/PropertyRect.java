@@ -27,9 +27,10 @@ public class PropertyRect extends PropertyNumArrayBase {
 	}
 
 	@Override
-	public void setLinkable() {
+	public PropertyRect setLinkable() {
 		super.setLinkable();
 		mTextFields[3].unlink();
+		return this;
 	}
 
 	@Override
