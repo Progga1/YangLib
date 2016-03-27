@@ -1136,4 +1136,17 @@ public class YangMatrix {
 		multiplyLeft(toTransform);
 	}
 
+	public void setLookAt(float eyeX,float eyeY,float eyeZ, float lookAtX,float lookAtY,float lookAtZ, float upX,float upY,float upZ) {
+		MatrixOps.setLookAt(mValues,eyeX,eyeY,eyeZ, lookAtX,lookAtY,lookAtZ, upX,upY,upZ);
+	}
+	
+	public void setLookAt(Point3f eye, Point3f lookAt, Vector3f up) {
+		MatrixOps.setLookAt(mValues,eye.mX,eye.mY,eye.mZ, lookAt.mX,lookAt.mY,lookAt.mZ, up.mX,up.mY,up.mZ);
+	}
+
+	public void setLookAtDirection(Point3f eye, Point3f lookAt, Vector3f up) {
+		MatrixOps.setLookAt(mValues,eye.mX,eye.mY,eye.mZ, lookAt.mX,lookAt.mY,lookAt.mZ, up.mX,up.mY,up.mZ);
+		clearTranslation();
+	}
+
 }

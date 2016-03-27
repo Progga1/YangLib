@@ -449,5 +449,9 @@ public abstract class InspectorComponent implements CheckLabelListener,IntInterf
 		else
 			return mCurObject!=null;
 	}
+	
+	public void moveAfter(String propertyName) {
+		mHolder.mPropertiesPanel.moveItemAfter(this.mHolder,propertyName);
+	}
 
 }

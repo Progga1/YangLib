@@ -55,6 +55,11 @@ public class PropertiesPanel extends JPanel {
 		mItems.add(index,item);
 		refreshLayout();
 	}
+	
+	public void moveItemAfter(InspectorItem item, String propertyName) {
+		int id = getItemIdByName(propertyName);
+		moveItem(item,id+1);
+	}
 
 	protected void refreshLayout() {
 		super.removeAll();
@@ -165,6 +170,16 @@ public class PropertiesPanel extends JPanel {
 				return item;
 		}
 		return null;
+	}
+	
+	public int getItemIdByName(String name) {
+		int i = 0;
+		for(InspectorItem item:mItems) {
+			if(name.equals(item.mInspectorComponent.getName()))
+				return i;
+			i++;
+		}
+		return -1;
 	}
 
 	public boolean nameExists(String name) {

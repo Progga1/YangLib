@@ -3,6 +3,7 @@ package yang.graphics.defaults.geometrycreators;
 import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.graphics.defaults.DefaultGraphics;
+import yang.graphics.model.FloatColor;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.math.objects.YangMatrix;
 
@@ -11,9 +12,13 @@ public class CylinderCreator extends GeometryCreator<Default3DGraphics> {
 	public int mSamples;
 	public boolean mClosed = true;
 
-	public CylinderCreator(Default3DGraphics graphics) {
+	public CylinderCreator(Default3DGraphics graphics,int samples) {
 		super(graphics);
-		mSamples = 8;
+		mSamples = samples;
+	}
+	
+	public CylinderCreator(Default3DGraphics graphics) {
+		this(graphics,8);
 	}
 
 	public void putPositionsAndIndices(YangMatrix transform,float bottomRadius,float topRadius) {
@@ -81,13 +86,17 @@ public class CylinderCreator extends GeometryCreator<Default3DGraphics> {
 			vertexBuffer.putVec4(DefaultGraphics.ID_TEXTURES, 1-x,0,1-x,1);
 		}
 	}
-
+	
 	public void drawCylinder(YangMatrix transform) {
-		putPositionsAndIndices(transform,1,1);
+		putPositionsAndIndices(transform, 1,1);
 	}
 
 	public void putColor(float[] color) {
 		mGraphics.mCurrentVertexBuffer.putArrayMultiple(DefaultGraphics.ID_COLORS, color, mSamples*2);
+	}
+	
+	public void putColor(FloatColor color) {
+		putColor(color.mValues);
 	}
 
 	public void putSuppData(float[] suppData) {
@@ -104,6 +113,10 @@ public class CylinderCreator extends GeometryCreator<Default3DGraphics> {
 			vertexBuffer.putArray(DefaultGraphics.ID_COLORS, startColor);
 			vertexBuffer.putArray(DefaultGraphics.ID_COLORS, endColor);
 		}
+	}
+	
+	public void putStartEndColors(FloatColor startColor,FloatColor endColor) {
+		putStartEndColors(startColor.mValues,endColor.mValues);
 	}
 
 }
