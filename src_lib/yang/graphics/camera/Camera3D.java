@@ -8,6 +8,7 @@ import yang.math.MathConst;
 import yang.math.MatrixOps;
 import yang.math.objects.EulerAngles;
 import yang.math.objects.Point3f;
+import yang.math.objects.Quaternion;
 
 public class Camera3D extends YangCamera {
 
@@ -95,6 +96,12 @@ public class Camera3D extends YangCamera {
 		MatrixOps.setLookAtAlphaBeta(mCameraTransform.mValues, lookAtPoint.mX,lookAtPoint.mY,lookAtPoint.mZ,alpha,beta,distance, mPosition);
 		if(roll!=0)
 			mCameraTransform.rotateZ(roll);
+	}
+	
+	public void setPositionOrientation(Point3f position,Quaternion direction) {
+		mCameraTransform.setTranslation(position);
+		mCameraTransform.multiplyQuaternionRight(direction);
+		mPosition.set(position);
 	}
 
 	public void setLookAtAlphaBeta(EulerAngles angles, float distance, Point3f focus) {
