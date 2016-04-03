@@ -3,9 +3,9 @@ package yang.graphics.defaults.geometrycreators;
 import yang.graphics.defaults.Default3DGraphics;
 import yang.math.objects.YangMatrix;
 
-public class RingCreator2D extends CylinderCreator {
+public class RingCreator extends CylinderCreator {
 
-	public RingCreator2D(Default3DGraphics graphics) {
+	public RingCreator(Default3DGraphics graphics) {
 		super(graphics);
 	}
 
