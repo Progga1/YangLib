@@ -1,6 +1,5 @@
 package yang.util.pools;
 
-import yang.model.DebugYang;
 
 public abstract class AbstractYangRingBuffer<ElemType> {
 

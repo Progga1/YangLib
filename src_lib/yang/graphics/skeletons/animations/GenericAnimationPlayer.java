@@ -2,7 +2,6 @@ package yang.graphics.skeletons.animations;
 
 import yang.graphics.skeletons.SkeletonCarrier;
 import yang.physics.massaggregation.MassAggregation;
-import yang.sound.AbstractSound;
 
 public class GenericAnimationPlayer<CarrierType extends SkeletonCarrier,AnimationType extends Animation<CarrierType>> extends AnimationPlayer<AnimationType> {
 

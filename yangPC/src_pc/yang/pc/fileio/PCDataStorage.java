@@ -1,11 +1,11 @@
 package yang.pc.fileio;
 
-import yang.systemdependent.AbstractDataStorage;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
+
+import yang.systemdependent.AbstractDataStorage;
 
 
 public class PCDataStorage extends AbstractDataStorage {

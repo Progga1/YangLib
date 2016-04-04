@@ -5,7 +5,6 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 
 public class InspectorGUIDefinitions {
 

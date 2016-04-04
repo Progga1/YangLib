@@ -1,6 +1,5 @@
 package yang.graphics.skeletons.pose;
 
-import yang.model.DebugYang;
 import yang.physics.massaggregation.MassAggregation;
 import yang.physics.massaggregation.elements.Joint;
 import yang.util.Util;

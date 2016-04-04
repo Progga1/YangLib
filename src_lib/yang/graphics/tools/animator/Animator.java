@@ -1,6 +1,5 @@
 package yang.graphics.tools.animator;
 
-import yang.events.Keys;
 import yang.events.eventtypes.SurfacePointerEvent;
 import yang.events.eventtypes.YangEvent;
 import yang.events.eventtypes.YangSensorEvent;

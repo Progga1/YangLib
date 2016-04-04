@@ -1,7 +1,6 @@
 package yang.graphics.util;
 
 import yang.graphics.camera.Camera3D;
-import yang.math.MathConst;
 
 public class Camera3DAlphaBeta extends Camera3D {
 

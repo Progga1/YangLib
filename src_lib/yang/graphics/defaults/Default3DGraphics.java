@@ -18,7 +18,6 @@ import yang.graphics.programs.Basic3DProgram;
 import yang.graphics.textures.TextureCoordinatesQuad;
 import yang.graphics.translator.GraphicsTranslator;
 import yang.math.objects.Point3f;
-import yang.math.objects.Quadruple;
 import yang.math.objects.Vector3f;
 import yang.math.objects.YangMatrix;
 

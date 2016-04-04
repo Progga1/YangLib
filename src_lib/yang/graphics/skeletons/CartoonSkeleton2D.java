@@ -1,7 +1,6 @@
 package yang.graphics.skeletons;
 
 import yang.graphics.buffers.DrawBatch;
-import yang.graphics.buffers.IndexedVertexBuffer;
 import yang.graphics.defaults.DefaultGraphics;
 import yang.graphics.model.FloatColor;
 import yang.graphics.skeletons.animations.Animation;

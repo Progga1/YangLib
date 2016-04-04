@@ -7,7 +7,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import yang.pc.tools.runtimeinspectors.interfaces.InspectorFrameListener;
 import yang.pc.tools.runtimeinspectors.subcomponents.CheckLabel;
 
 public class InspectorItem extends JPanel {

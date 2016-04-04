@@ -6,8 +6,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 
-import yang.pc.tools.runtimeinspectors.InspectorComponent;
-
 public class CheckLabel extends JLabel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
