@@ -14,7 +14,12 @@ public class IntTextField extends NumTextField {
 	}
 
 	public int getInt() {
-		return (int)mCurValue;
+		if(isMax())
+			return Integer.MAX_VALUE;
+		else if(isMin())
+			return Integer.MIN_VALUE;
+		else
+			return (int)mCurValue;
 	}
 
 	public void setInt(int value,boolean updateText) {

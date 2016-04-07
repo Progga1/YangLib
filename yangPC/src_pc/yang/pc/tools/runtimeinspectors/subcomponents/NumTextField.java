@@ -180,6 +180,14 @@ public class NumTextField extends JPanel implements MouseMotionListener,MouseLis
 		if(updateText)
 			updateGUI();
 	}
+	
+	public boolean isMax() {
+		return mCurValue==Double.MAX_VALUE;
+	}
+	
+	public boolean isMin() {
+		return mCurValue==Double.MIN_VALUE;
+	}
 
 	@Override
 	public void setDouble(double val) {

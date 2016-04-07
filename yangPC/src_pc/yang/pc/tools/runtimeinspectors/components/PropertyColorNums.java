@@ -20,7 +20,7 @@ public class PropertyColorNums extends PropertyNumArrayBase {
 		setDefaultValue(1);
 		setMaxDigits(3);
 		setMinValue(0);
-		setMaxValue(1);
+		setMaxValue(5);
 		setScrollFactor(0.01f);
 		setClickSteps(0.1f);
 		setLinkable();
