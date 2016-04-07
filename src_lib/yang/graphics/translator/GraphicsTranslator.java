@@ -662,6 +662,11 @@ public abstract class GraphicsTranslator implements TransformationFactory,GLProg
 		assert preCheck("clear");
 		clear(color.mValues[0], color.mValues[1], color.mValues[2],color.mValues[3],additionalMask);
 	}
+	
+	public void clear(FloatColor color,float alpha,int additionalMask) {
+		assert preCheck("clear");
+		clear(color.mValues[0], color.mValues[1], color.mValues[2],alpha,additionalMask);
+	}
 
 	public void setAttributeBuffer(int handle,int bufferIndex) {
 		if(!mCurrentVertexBuffer.bindBuffer(handle,bufferIndex)) {
