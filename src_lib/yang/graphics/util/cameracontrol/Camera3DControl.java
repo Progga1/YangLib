@@ -15,6 +15,7 @@ public class Camera3DControl extends CameraControl {
 
 	//Settings
 	public boolean 	mInvertView = false;
+	public float mFieldOfView = 0.6f;
 	public boolean mOrthogonalProjection = true;
 	public float mAngleDelay = 0.4f;
 	public char mSwitchPerspectiveKey = 'p';
@@ -60,7 +61,7 @@ public class Camera3DControl extends CameraControl {
 		if(mOrthogonalProjection)
 			mCamera.setOrthogonalProjection(-2, 20, mZoom);
 		else
-			mCamera.setPerspectiveProjection(0.6f,100);
+			mCamera.setPerspectiveProjection(mFieldOfView,100);
 		if(mInvertView)
 			mCamera.setLookOutwardsAlphaBeta(mViewValues, mZoom, mFocus);
 		else{
