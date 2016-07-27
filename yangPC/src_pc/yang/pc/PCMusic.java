@@ -16,6 +16,7 @@ public class PCMusic extends AbstractMusic {
 
 	@Override
 	public void play() {
+		mManager.setCurrentMusicTrack(this);
 		if (mMusic == null) return;
 		if (mManager.isMusicMuted()) return;
 		mMusic.setVolume(mVolume*mManager.getMusicVolume());
@@ -25,6 +26,7 @@ public class PCMusic extends AbstractMusic {
 
 	@Override
 	public void playLoop() {
+		mManager.setCurrentMusicTrack(this);
 		if (mMusic == null) return;
 		if (mManager.isMusicMuted()) return;
 		mMusic.setVolume(mVolume*mManager.getMusicVolume());

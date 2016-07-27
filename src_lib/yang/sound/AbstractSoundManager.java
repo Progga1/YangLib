@@ -18,10 +18,11 @@ public abstract class AbstractSoundManager {
 	protected float mMusicVolume;
 
 	protected static final String[] SOUND_EXT 	= {".mp3",".wav"};
-	protected String SOUND_PATH[] 				= {"sounds"+File.separatorChar};
+	protected String SOUND_PATH[] 				= {"sounds"+File.separatorChar, "music"+File.separatorChar};
 
 	protected HashMap<String, AbstractSound> mSounds;
 	protected HashMap<String, AbstractMusic> mMusics;
+	protected AbstractMusic mCurrentMusicTrack;
 
 	protected abstract AbstractSound derivedLoadSound(String name);
 	protected abstract AbstractMusic derivedLoadMusic(String name);
@@ -96,6 +97,11 @@ public abstract class AbstractSoundManager {
 
 	public void setMusicMuted(boolean enabled) {
 		mMusicMute = enabled;
+		
+		if(mCurrentMusicTrack != null) {
+			if(mMusicMute) mCurrentMusicTrack.pause();
+			else mCurrentMusicTrack.play();
+		}
 	}
 
 	public boolean isSoundMuted() {
@@ -120,5 +126,8 @@ public abstract class AbstractSoundManager {
 
 	public float getMusicVolume() {
 		return mMusicVolume;
+	}
+	public void setCurrentMusicTrack(AbstractMusic musicTrack) {
+		mCurrentMusicTrack = musicTrack;
 	}
 }

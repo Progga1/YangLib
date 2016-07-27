@@ -17,6 +17,7 @@ public class AndroidMusic extends AbstractMusic {
 
 	@Override
 	public void play() {
+		mManager.setCurrentMusicTrack(this);
 		if (mManager.isMusicMuted()) return;
 		if (mMusic == null) return;
 		mMusic.setLooping(false);
@@ -26,6 +27,7 @@ public class AndroidMusic extends AbstractMusic {
 
 	@Override
 	public void playLoop() {
+		mManager.setCurrentMusicTrack(this);
 		if (mManager.isMusicMuted()) return;
 		if (mMusic == null) return;
 		mMusic.setLooping(true);
