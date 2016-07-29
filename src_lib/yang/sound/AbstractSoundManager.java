@@ -103,6 +103,14 @@ public abstract class AbstractSoundManager {
 			else mCurrentMusicTrack.play();
 		}
 	}
+	
+	public void playCurrentSong() {
+		if(!mMusicMute && mCurrentMusicTrack != null) mCurrentMusicTrack.play();
+	}
+	
+	public void pauseCurrentSong() {
+		if(!mMusicMute && mCurrentMusicTrack != null) mCurrentMusicTrack.pause();
+	}
 
 	public boolean isSoundMuted() {
 		return mSoundMute;

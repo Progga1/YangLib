@@ -38,5 +38,10 @@ public class NoMusic extends AbstractMusic {
 	public void setBalance(float balance) {
 
 	}
+	
+	@Override
+	public boolean hasReachedEnd() {
+		return false;
+	}
 
 }

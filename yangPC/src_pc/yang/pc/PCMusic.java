@@ -1,6 +1,7 @@
 package yang.pc;
 
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.util.Duration;
 import yang.sound.AbstractMusic;
 import yang.sound.AbstractSoundManager;
@@ -22,6 +23,11 @@ public class PCMusic extends AbstractMusic {
 		mMusic.setVolume(mVolume*mManager.getMusicVolume());
 		mMusic.setCycleCount(1);
 		mMusic.play();
+	}
+	
+	@Override
+	public boolean hasReachedEnd() {
+		return mMusic.getCurrentTime().greaterThanOrEqualTo(mMusic.getTotalDuration());
 	}
 
 	@Override

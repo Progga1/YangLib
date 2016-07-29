@@ -42,4 +42,6 @@ public abstract class AbstractMusic {
 	 */
 	public abstract void setBalance(float balance);
 
+	public abstract boolean hasReachedEnd();
+
 }

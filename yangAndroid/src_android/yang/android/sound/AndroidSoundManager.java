@@ -52,6 +52,7 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 		try {
 			FileDescriptor fd = mContext.getAssets().openFd(filename).getFileDescriptor();
 			player.setDataSource(fd);
+			player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			player.prepareAsync();
 		} catch (Exception e) {
 			player.release();
@@ -59,6 +60,7 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 			System.err.println("failed loading sound: "+filename);
 		}
 
+		
 		music = new AndroidMusic(player, this);
 		return music;
 	}
@@ -77,5 +79,4 @@ public class AndroidSoundManager extends AbstractSoundManager implements OnLoadC
 	public SoundPool getSoundPool() {
 		return mSoundPool;
 	}
-
 }

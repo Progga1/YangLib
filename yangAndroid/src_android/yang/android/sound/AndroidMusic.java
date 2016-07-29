@@ -13,6 +13,7 @@ public class AndroidMusic extends AbstractMusic {
 	public AndroidMusic(MediaPlayer player, AbstractSoundManager mgr) {
 		super(mgr);
 		mMusic = player;
+		setBalance(0);
 	}
 
 	@Override
@@ -43,12 +44,13 @@ public class AndroidMusic extends AbstractMusic {
 
 	@Override
 	public void pause() {
-		if (mMusic == null) return;
+		if (mMusic == null || !mMusic.isPlaying()) return;
 		mMusic.pause();
 	}
 
 	@Override
 	public void seek(int time) {
+		if(!mMusic.isPlaying()) return;
 		if (mMusic == null) return;
 		mMusic.seekTo(time*1000);
 	}
@@ -57,5 +59,10 @@ public class AndroidMusic extends AbstractMusic {
 	public void setBalance(float balance) {
 		mVolLeft = (1-balance)/2;
 		mVolRight = (1+balance)/2;
+	}
+	
+	@Override
+	public boolean hasReachedEnd() {
+		return !mMusic.isPlaying();
 	}
 }
