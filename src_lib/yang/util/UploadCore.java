@@ -15,7 +15,7 @@ public class UploadCore {
 	private static String scriptUrl;
 
 	public interface UploadResponseListener {
-		public void uploadFinished(boolean successful, String response);
+		void uploadFinished(boolean successful, String response);
 	}
 
 	/**
@@ -24,32 +24,33 @@ public class UploadCore {
 	 * @param serverAddress Address of the server, i.e. "foo.org"
 	 * @param scriptAddress Address of the script in the server, i.e. "/some/path/script.php" 
 	 */
-	public static void init(UploadResponseListener callback, String serverAddress, String scriptAddress) {
+	public static void init(final UploadResponseListener callback, final String serverAddress, final String scriptAddress) {
 		listener = callback;
 		serverUrl = serverAddress;
 		scriptUrl = scriptAddress;
 	}
 
-	public static void uploadFile(final byte[] fileBuffer, UploadResponseListener callback, String serverAddress, String scriptAddress) {
+	public static void uploadFile(final byte[] fileBuffer, final UploadResponseListener callback, final String serverAddress, final String scriptAddress, final String param) {
 		init(callback, serverAddress, scriptAddress);
-		uploadFile(fileBuffer);
+		uploadFile(fileBuffer, param);
 	}
 
-	public static void uploadFile(final byte[] fileBuffer) {
-		Thread t = new Thread()  {
+	public static void uploadFile(final byte[] fileBuffer, final String param) {
+		final Thread t = new Thread()  {
 			@Override
 			public void run() {
-				HttpURLConnection connection = null;
-				DataOutputStream os = null;
+				final HttpURLConnection connection;
+				final DataOutputStream os;
 
-				String urlServer = "http://"+serverUrl+scriptUrl;
-				String lineEnd = "\r\n";
-				String twoHyphens = "--";
-				String boundary =  "*****";
+				final String urlServer = "http://"+serverUrl+scriptUrl;
+				final String charset = "UTF-8";
+				final String lineEnd = "\r\n";
+				final String twoHyphens = "--";
+				final String boundary = Long.toHexString(System.currentTimeMillis());
 
 				try	{
 
-					URL url = new URL(urlServer);
+					final URL url = new URL(urlServer);
 					connection = (HttpURLConnection) url.openConnection();
 
 					// Allow Inputs & Outputs
@@ -64,39 +65,48 @@ public class UploadCore {
 					connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
 
 					os = new DataOutputStream( connection.getOutputStream() );
+
+					// Send normal param.
 					os.writeBytes(twoHyphens + boundary + lineEnd);
-					os.writeBytes("Content-Disposition: form-data; name='data';filename='" + serverUrl +"'" + lineEnd);
+					os.writeBytes("Content-Disposition: form-data; name='param'" + lineEnd);
+					os.writeBytes("Content-Type: text/plain; charset=" + charset + lineEnd);
+					os.writeBytes(lineEnd + param + lineEnd);
+					os.flush();
+
+					// Send binary data
+					os.writeBytes(twoHyphens + boundary + lineEnd);
+					os.writeBytes("Content-Disposition: form-data; name='data'; filename='foo' " + lineEnd);
 					os.writeBytes(lineEnd);
+					os.flush();
 
 					os.write(fileBuffer, 0, fileBuffer.length);
+					os.flush();
 
 					os.writeBytes(lineEnd);
 					os.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+					os.flush();
+					os.close();
 
 					// Responses from the server
-					String responseMessage = connection.getResponseMessage();
+					final String responseMessage = connection.getResponseMessage();
 
-					InputStream is = connection.getInputStream();
-					BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-					String responseMsg = rd.readLine(); //we expect only one line as response anyways
+					final InputStream is = connection.getInputStream();
+					final BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+					String line;
+					String responseMsg = "";
+					while ((line = rd.readLine()) != null) {
+						responseMsg += line;
+					}
 					rd.close();
 
 					if (listener != null) listener.uploadFinished(responseMessage.equalsIgnoreCase("OK"), responseMsg);
 
-					os.flush();
-					os.close();
-
-				} catch (Exception ex) {
+				} catch (final Exception ex) {
 					ex.printStackTrace();
+					if (listener != null) listener.uploadFinished(false, ex.getMessage());
 				}
 			}
 		};
 		t.start();
-
-		try {
-			t.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 }
