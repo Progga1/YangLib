@@ -138,4 +138,7 @@ public abstract class AbstractSoundManager {
 	public void setCurrentMusicTrack(AbstractMusic musicTrack) {
 		mCurrentMusicTrack = musicTrack;
 	}
+	public void setSpeedOfCurrentSong(float playrate) {
+		mCurrentMusicTrack.setPlayrate(playrate);
+	}
 }

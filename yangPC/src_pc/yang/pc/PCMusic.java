@@ -64,4 +64,9 @@ public class PCMusic extends AbstractMusic {
 		mMusic.setBalance(balance);
 	}
 
+	@Override
+	public void setPlayrate(float playrate) {
+		mMusic.setRate(playrate);
+	}
+
 }

@@ -44,4 +44,8 @@ public class NoMusic extends AbstractMusic {
 		return false;
 	}
 
+	@Override
+	public void setPlayrate(float playrate) {
+
+	}
 }
