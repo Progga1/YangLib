@@ -44,6 +44,4 @@ public abstract class AbstractMusic {
 
 	public abstract boolean hasReachedEnd();
 
-	public abstract void setPlayrate(float playrate);
-
 }

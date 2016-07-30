@@ -3,21 +3,17 @@ package yang.android.sound;
 import yang.sound.AbstractMusic;
 import yang.sound.AbstractSoundManager;
 import android.media.MediaPlayer;
-import android.media.PlaybackParams;
 
 public class AndroidMusic extends AbstractMusic {
 
 	private MediaPlayer mMusic;
 	private float mVolLeft;
 	private float mVolRight;
-	private PlaybackParams params;
 
 	public AndroidMusic(MediaPlayer player, AbstractSoundManager mgr) {
 		super(mgr);
 		mMusic = player;
 		setBalance(0);
-		
-		params = new PlaybackParams();
 	}
 
 	@Override
@@ -68,13 +64,5 @@ public class AndroidMusic extends AbstractMusic {
 	@Override
 	public boolean hasReachedEnd() {
 		return !mMusic.isPlaying();
-	}
-
-	@Override
-	public void setPlayrate(float playrate) {
-		if (mMusic == null || !mMusic.isPlaying()) return;
-		params.setSpeed(playrate);
-		params.setPitch(playrate);
-		mMusic.setPlaybackParams(params);
 	}
 }
